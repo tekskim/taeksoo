@@ -1,4 +1,5 @@
 import { useState, useCallback, createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -193,6 +194,53 @@ function SubHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
+function matchesModalSearch(query: string, title: string, description: string, category?: string) {
+  const q = query.toLowerCase();
+  return (
+    title.toLowerCase().includes(q) ||
+    description.toLowerCase().includes(q) ||
+    (category != null && category.toLowerCase().includes(q))
+  );
+}
+
+interface FilteredGroupProps {
+  heading: string;
+  items: { title: string; description: string; category?: string }[];
+  children: ReactNode;
+}
+
+function FilteredGroup({ heading, items, children }: FilteredGroupProps) {
+  const searchQuery = useContext(ModalSearchContext);
+  if (
+    searchQuery &&
+    !items.some((i) => matchesModalSearch(searchQuery, i.title, i.description, i.category))
+  ) {
+    return null;
+  }
+  return (
+    <VStack gap={2}>
+      <SubHeading>{heading}</SubHeading>
+      <div className="flex flex-col gap-2">{children}</div>
+    </VStack>
+  );
+}
+
+interface FilteredDisclosureSectionProps {
+  allItems: { title: string; description: string; category?: string }[];
+  children: ReactNode;
+}
+
+function FilteredDisclosureSection({ allItems, children }: FilteredDisclosureSectionProps) {
+  const searchQuery = useContext(ModalSearchContext);
+  if (
+    searchQuery &&
+    !allItems.some((i) => matchesModalSearch(searchQuery, i.title, i.description, i.category))
+  ) {
+    return null;
+  }
+  return <>{children}</>;
+}
+
 export function ModalsPage() {
   const navigate = useNavigate();
 
@@ -265,20 +313,133 @@ export function ModalsPage() {
             {/* ============================================================
                COMPUTE
                ============================================================ */}
-            <Disclosure open={isSearching || isComputeOpen} onChange={setIsComputeOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <SectionHeader
-                  label="Compute"
-                  count={15}
-                  isOpen={isComputeOpen}
-                  isSearching={isSearching}
-                />
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  <VStack gap={2}>
-                    <SubHeading>Snapshot / Security group</SubHeading>
-                    <div className="flex flex-col gap-2">
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete snapshot',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Snapshot',
+                },
+                {
+                  title: 'Delete security group',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete security groups',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete rule',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete rules',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Detach volume',
+                  description: 'This action detaches the volume.',
+                  category: 'Volume',
+                },
+                {
+                  title: 'Restore backup',
+                  description: 'This action restores the backup.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Restore backup (medium)',
+                  description: 'This action restores the backup.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Restore backup (large)',
+                  description: 'This action restores the backup.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Disassociate floating IP',
+                  description:
+                    'Disassociating will detach the floating IP from the selected resource.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Disassociate floating IP (LB)',
+                  description:
+                    'Disassociating will detach the floating IP from this load balancer.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Release floating IP',
+                  description: 'This action releases the floating IP.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Release floating IPs',
+                  description: 'This action releases the floating IP.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Delete load balancer',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'LB',
+                },
+                {
+                  title: 'Release load balancers',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'LB',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isComputeOpen} onChange={setIsComputeOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Compute"
+                    count={15}
+                    isOpen={isComputeOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup
+                      heading="Snapshot / Security group"
+                      items={[
+                        {
+                          title: 'Delete snapshot',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Snapshot',
+                        },
+                        {
+                          title: 'Delete security group',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete security groups',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete rule',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete rules',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete snapshot"
                         description="Removing the selected instances is permanent and cannot be undone."
@@ -309,11 +470,32 @@ export function ModalsPage() {
                         category="Security"
                         onOpen={() => openModalFn('delete-rules')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Volume / Backup</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Volume / Backup"
+                      items={[
+                        {
+                          title: 'Detach volume',
+                          description: 'This action detaches the volume.',
+                          category: 'Volume',
+                        },
+                        {
+                          title: 'Restore backup',
+                          description: 'This action restores the backup.',
+                          category: 'Backup',
+                        },
+                        {
+                          title: 'Restore backup (medium)',
+                          description: 'This action restores the backup.',
+                          category: 'Backup',
+                        },
+                        {
+                          title: 'Restore backup (large)',
+                          description: 'This action restores the backup.',
+                          category: 'Backup',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Detach volume"
                         description="This action detaches the volume."
@@ -338,11 +520,46 @@ export function ModalsPage() {
                         category="Backup"
                         onOpen={() => openModalFn('restore-backup-lg')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Floating IP / Load balancer</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Floating IP / Load balancer"
+                      items={[
+                        {
+                          title: 'Disassociate floating IP',
+                          description:
+                            'Disassociating will detach the floating IP from the selected resource.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Disassociate floating IP (LB)',
+                          description:
+                            'Disassociating will detach the floating IP from this load balancer.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Release floating IP',
+                          description: 'This action releases the floating IP.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Release floating IPs',
+                          description: 'This action releases the floating IP.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Delete load balancer',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'LB',
+                        },
+                        {
+                          title: 'Release load balancers',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'LB',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Disassociate floating IP"
                         description="Disassociating will detach the floating IP from the selected resource."
@@ -379,29 +596,289 @@ export function ModalsPage() {
                         category="LB"
                         onOpen={() => openModalFn('release-lbs')}
                       />
-                    </div>
+                    </FilteredGroup>
                   </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* ============================================================
                IAM
                ============================================================ */}
-            <Disclosure open={isSearching || isIAMOpen} onChange={setIsIAMOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <SectionHeader
-                  label="IAM"
-                  count={39}
-                  isOpen={isIAMOpen}
-                  isSearching={isSearching}
-                />
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  <VStack gap={2}>
-                    <SubHeading>User management</SubHeading>
-                    <div className="flex flex-col gap-2">
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete user',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'User',
+                },
+                {
+                  title: 'Delete users',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'User',
+                },
+                {
+                  title: 'Confirm user password',
+                  description:
+                    'Review the username and password. The password can only be viewed at this step.',
+                  category: 'User',
+                },
+                {
+                  title: 'Unsaved changes',
+                  description: 'Any unsaved changes will be lost. Do you want to leave?',
+                  category: 'General',
+                },
+                {
+                  title: 'Detach user group',
+                  description: 'This action detaches the user from the group.',
+                  category: 'Group',
+                },
+                {
+                  title: 'Detach role',
+                  description: 'This action detaches the role from the user.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Remove OTP MFA',
+                  description: 'This action removes OTP MFA for the user.',
+                  category: 'MFA',
+                },
+                {
+                  title: 'Terminate all sessions',
+                  description: 'This action terminates all sessions for the user.',
+                  category: 'Session',
+                },
+                {
+                  title: 'Terminate session',
+                  description: 'This action terminates the session.',
+                  category: 'Session',
+                },
+                {
+                  title: 'Remove user',
+                  description: 'This action removes the user from the group.',
+                  category: 'Group',
+                },
+                {
+                  title: 'Delete role',
+                  description:
+                    'If this role has active temporary grants, deleting it removes all of those grants.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Delete roles',
+                  description:
+                    'If any selected roles have active temporary grants, deleting them removes all of those grants.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Revoke access',
+                  description:
+                    'Temporary access is revoked immediately, regardless of the scheduled end time.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Revoke access (bulk)',
+                  description:
+                    'Temporary access is revoked immediately, regardless of the scheduled end time.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Detach policy',
+                  description: 'This action detaches the policy from the role.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Delete policy',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Delete policies',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Revert policy version',
+                  description: 'This action reverts the policy to the selected version.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Delete policy version',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update MFA enforcement policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update OTP policy (enable)',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update OTP policy (disable)',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update email policy (enable)',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update email policy (disable)',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update general session policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Delete domain',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Domain',
+                },
+                {
+                  title: 'Switch to domain',
+                  description: 'Any unsaved changes may be lost when switching to another domain.',
+                  category: 'Domain',
+                },
+                {
+                  title: 'Delete system administrator',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Admin',
+                },
+                {
+                  title: 'Update password policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update account lockout policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update token policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Regenerate client secret',
+                  description: 'The current secret stops working immediately.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'New client secret (result)',
+                  description: 'Credentials are shown only once. Copy and store them securely.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'New API key (result)',
+                  description: 'Credentials are shown only once. Copy and store them securely.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'Reset API key',
+                  description: 'The current key stops working immediately.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'Delete API key',
+                  description: 'This key stops working immediately and cannot be restored.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'Delete service account',
+                  description: 'All credentials and permission bindings will be removed.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'Delete service accounts',
+                  description:
+                    'All credentials and permission bindings for these accounts will be removed.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'New client secret (close)',
+                  description: 'Credentials are shown only once. Uses Close button variant.',
+                  category: 'Service Account',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isIAMOpen} onChange={setIsIAMOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="IAM"
+                    count={39}
+                    isOpen={isIAMOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup
+                      heading="User management"
+                      items={[
+                        {
+                          title: 'Delete user',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'User',
+                        },
+                        {
+                          title: 'Delete users',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'User',
+                        },
+                        {
+                          title: 'Confirm user password',
+                          description:
+                            'Review the username and password. The password can only be viewed at this step.',
+                          category: 'User',
+                        },
+                        {
+                          title: 'Unsaved changes',
+                          description: 'Any unsaved changes will be lost. Do you want to leave?',
+                          category: 'General',
+                        },
+                        {
+                          title: 'Detach user group',
+                          description: 'This action detaches the user from the group.',
+                          category: 'Group',
+                        },
+                        {
+                          title: 'Detach role',
+                          description: 'This action detaches the role from the user.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Remove OTP MFA',
+                          description: 'This action removes OTP MFA for the user.',
+                          category: 'MFA',
+                        },
+                        {
+                          title: 'Terminate all sessions',
+                          description: 'This action terminates all sessions for the user.',
+                          category: 'Session',
+                        },
+                        {
+                          title: 'Terminate session',
+                          description: 'This action terminates the session.',
+                          category: 'Session',
+                        },
+                        {
+                          title: 'Remove user',
+                          description: 'This action removes the user from the group.',
+                          category: 'Group',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete user"
                         description="Removing the selected instances is permanent and cannot be undone."
@@ -462,11 +939,64 @@ export function ModalsPage() {
                         category="Group"
                         onOpen={() => openModalFn('remove-user')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Role / Policy</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Role / Policy"
+                      items={[
+                        {
+                          title: 'Delete role',
+                          description:
+                            'If this role has active temporary grants, deleting it removes all of those grants.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Delete roles',
+                          description:
+                            'If any selected roles have active temporary grants, deleting them removes all of those grants.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Revoke access',
+                          description:
+                            'Temporary access is revoked immediately, regardless of the scheduled end time.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Revoke access (bulk)',
+                          description:
+                            'Temporary access is revoked immediately, regardless of the scheduled end time.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Detach policy',
+                          description: 'This action detaches the policy from the role.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Delete policy',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Delete policies',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Revert policy version',
+                          description: 'This action reverts the policy to the selected version.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Delete policy version',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Policy',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete role"
                         description="If this role has active temporary grants, deleting it removes all of those grants."
@@ -521,11 +1051,42 @@ export function ModalsPage() {
                         category="Policy"
                         onOpen={() => openModalFn('delete-policy-version')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Policy settings</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Policy settings"
+                      items={[
+                        {
+                          title: 'Update MFA enforcement policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update OTP policy (enable)',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update OTP policy (disable)',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update email policy (enable)',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update email policy (disable)',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update general session policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Update MFA enforcement policy"
                         description="This action applies the changes."
@@ -562,11 +1123,45 @@ export function ModalsPage() {
                         category="Policy"
                         onOpen={() => openModalFn('update-session-policy')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Domain / Admin</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Domain / Admin"
+                      items={[
+                        {
+                          title: 'Delete domain',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Domain',
+                        },
+                        {
+                          title: 'Switch to domain',
+                          description:
+                            'Any unsaved changes may be lost when switching to another domain.',
+                          category: 'Domain',
+                        },
+                        {
+                          title: 'Delete system administrator',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Admin',
+                        },
+                        {
+                          title: 'Update password policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update account lockout policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update token policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete domain"
                         description="Removing the selected instances is permanent and cannot be undone."
@@ -603,11 +1198,56 @@ export function ModalsPage() {
                         category="Policy"
                         onOpen={() => openModalFn('update-token-policy')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Service Account</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Service Account"
+                      items={[
+                        {
+                          title: 'Regenerate client secret',
+                          description: 'The current secret stops working immediately.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'New client secret (result)',
+                          description:
+                            'Credentials are shown only once. Copy and store them securely.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'New API key (result)',
+                          description:
+                            'Credentials are shown only once. Copy and store them securely.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'Reset API key',
+                          description: 'The current key stops working immediately.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'Delete API key',
+                          description: 'This key stops working immediately and cannot be restored.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'Delete service account',
+                          description: 'All credentials and permission bindings will be removed.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'Delete service accounts',
+                          description:
+                            'All credentials and permission bindings for these accounts will be removed.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'New client secret (close)',
+                          description:
+                            'Credentials are shown only once. Uses Close button variant.',
+                          category: 'Service Account',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Regenerate client secret"
                         description="The current secret stops working immediately."
@@ -656,55 +1296,179 @@ export function ModalsPage() {
                         category="Service Account"
                         onOpen={() => openModalFn('new-client-secret-close')}
                       />
-                    </div>
+                    </FilteredGroup>
                   </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* ============================================================
                STORAGE
                ============================================================ */}
-            <Disclosure open={isSearching || isStorageOpen} onChange={setIsStorageOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <SectionHeader
-                  label="Storage"
-                  count={1}
-                  isOpen={isStorageOpen}
-                  isSearching={isSearching}
-                />
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Delete bucket"
-                      description="This action permanently deletes the bucket and all its contents."
-                      category="Bucket"
-                      onOpen={() => openModalFn('delete-bucket')}
-                    />
-                  </div>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete bucket',
+                  description: 'This action permanently deletes the bucket and all its contents.',
+                  category: 'Bucket',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isStorageOpen} onChange={setIsStorageOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Storage"
+                    count={1}
+                    isOpen={isStorageOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <div className="flex flex-col gap-2">
+                      <ModalListItem
+                        title="Delete bucket"
+                        description="This action permanently deletes the bucket and all its contents."
+                        category="Bucket"
+                        onOpen={() => openModalFn('delete-bucket')}
+                      />
+                    </div>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* ============================================================
                CONTAINER
                ============================================================ */}
-            <Disclosure open={isSearching || isContainerOpen} onChange={setIsContainerOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <SectionHeader
-                  label="Container"
-                  count={12}
-                  isOpen={isContainerOpen}
-                  isSearching={isSearching}
-                />
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  <VStack gap={2}>
-                    <SubHeading>Delete resources</SubHeading>
-                    <div className="flex flex-col gap-2">
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete cluster',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Cluster',
+                },
+                {
+                  title: 'Delete namespace',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Namespace',
+                },
+                {
+                  title: 'Delete pod',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Pod',
+                },
+                {
+                  title: 'Delete job',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Job',
+                },
+                {
+                  title: 'Delete CronJob',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'CronJob',
+                },
+                {
+                  title: 'Delete deployment',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Deployment',
+                },
+                {
+                  title: 'Delete StatefulSet',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'StatefulSet',
+                },
+                {
+                  title: 'Delete DaemonSet',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'DaemonSet',
+                },
+                {
+                  title: 'Redeploy deployment',
+                  description: 'Are you sure you want to redeploy this deployment?',
+                  category: 'Deployment',
+                },
+                {
+                  title: 'Redeploy StatefulSet',
+                  description: 'Are you sure you want to redeploy this StatefulSet?',
+                  category: 'StatefulSet',
+                },
+                {
+                  title: 'Redeploy DaemonSet',
+                  description: 'Are you sure you want to redeploy this DaemonSet?',
+                  category: 'DaemonSet',
+                },
+                {
+                  title: 'Roll back deployment',
+                  description: 'Select a revision to roll back to.',
+                  category: 'Deployment',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isContainerOpen} onChange={setIsContainerOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Container"
+                    count={12}
+                    isOpen={isContainerOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup
+                      heading="Delete resources"
+                      items={[
+                        {
+                          title: 'Delete cluster',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Cluster',
+                        },
+                        {
+                          title: 'Delete namespace',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Namespace',
+                        },
+                        {
+                          title: 'Delete pod',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Pod',
+                        },
+                        {
+                          title: 'Delete job',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Job',
+                        },
+                        {
+                          title: 'Delete CronJob',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'CronJob',
+                        },
+                        {
+                          title: 'Delete deployment',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Deployment',
+                        },
+                        {
+                          title: 'Delete StatefulSet',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'StatefulSet',
+                        },
+                        {
+                          title: 'Delete DaemonSet',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'DaemonSet',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete cluster"
                         description="Removing the selected instances is permanent and cannot be undone."
@@ -753,11 +1517,32 @@ export function ModalsPage() {
                         category="DaemonSet"
                         onOpen={() => openModalFn('delete-daemonset')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Workload actions</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Workload actions"
+                      items={[
+                        {
+                          title: 'Redeploy deployment',
+                          description: 'Are you sure you want to redeploy this deployment?',
+                          category: 'Deployment',
+                        },
+                        {
+                          title: 'Redeploy StatefulSet',
+                          description: 'Are you sure you want to redeploy this StatefulSet?',
+                          category: 'StatefulSet',
+                        },
+                        {
+                          title: 'Redeploy DaemonSet',
+                          description: 'Are you sure you want to redeploy this DaemonSet?',
+                          category: 'DaemonSet',
+                        },
+                        {
+                          title: 'Roll back deployment',
+                          description: 'Select a revision to roll back to.',
+                          category: 'Deployment',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Redeploy deployment"
                         description="Are you sure you want to redeploy this deployment?"
@@ -782,30 +1567,437 @@ export function ModalsPage() {
                         category="Deployment"
                         onOpen={() => openModalFn('rollback-deployment')}
                       />
-                    </div>
+                    </FilteredGroup>
                   </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* ============================================================
                COMPUTE ADMIN
                ============================================================ */}
-            <Disclosure open={isSearching || isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <SectionHeader
-                  label="Compute Admin"
-                  badgeVariant="warning"
-                  count={71}
-                  isOpen={isComputeAdminOpen}
-                  isSearching={isSearching}
-                />
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  <VStack gap={2}>
-                    <SubHeading>Instance actions (single)</SubHeading>
-                    <div className="flex flex-col gap-2">
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Stop instance',
+                  description: 'This action stops the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Reboot instance',
+                  description: 'This action reboots the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Soft reboot instance',
+                  description: 'This action performs a soft reboot of the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Confirm resize',
+                  description: 'This action confirms the resized state of the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Revert resize',
+                  description:
+                    'This action reverts the instance to its previous state before the resize.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Delete instance',
+                  description: 'Removing the instance is permanent and cannot be undone.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Shelve instance',
+                  description: 'This action shelves the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Start instances',
+                  description: 'This action starts the selected instances.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Stop instances',
+                  description: 'This action stops the selected instances.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Reboot instances',
+                  description: 'This action reboots the selected instances.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Delete instances',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Delete instance template',
+                  description: 'Deleting the instance template is permanent and cannot be undone.',
+                  category: 'Template',
+                },
+                {
+                  title: 'Delete instance templates',
+                  description:
+                    'Deleting the selected instance templates is permanent and cannot be undone.',
+                  category: 'Template',
+                },
+                {
+                  title: 'Delete image',
+                  description: 'Deleting the image is permanent and cannot be undone.',
+                  category: 'Image',
+                },
+                {
+                  title: 'Delete images',
+                  description: 'Deleting the selected images is permanent and cannot be undone.',
+                  category: 'Image',
+                },
+                {
+                  title: 'Delete snapshot',
+                  description: 'Deleting the snapshot is permanent and cannot be undone.',
+                  category: 'Snapshot',
+                },
+                {
+                  title: 'Delete snapshots',
+                  description: 'Deleting the selected snapshots is permanent and cannot be undone.',
+                  category: 'Snapshot',
+                },
+                {
+                  title: 'Delete volume',
+                  description: 'Deleting the volume is permanent and cannot be undone.',
+                  category: 'Volume',
+                },
+                {
+                  title: 'Delete volumes',
+                  description: 'Deleting the selected volumes is permanent and cannot be undone.',
+                  category: 'Volume',
+                },
+                {
+                  title: 'Delete volume type',
+                  description: 'Deleting the volume type is permanent and cannot be undone.',
+                  category: 'VolumeType',
+                },
+                {
+                  title: 'Delete volume types',
+                  description:
+                    'Deleting the selected volume types is permanent and cannot be undone.',
+                  category: 'VolumeType',
+                },
+                {
+                  title: 'Delete backup',
+                  description: 'Deleting the backup is permanent and cannot be undone.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Delete backups',
+                  description: 'Deleting the selected backups is permanent and cannot be undone.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Delete encryption',
+                  description:
+                    'This action removes the encryption configuration from the volume type.',
+                  category: 'Encryption',
+                },
+                {
+                  title: 'Delete extra spec',
+                  description: 'This action removes the extra specification from the volume type.',
+                  category: 'ExtraSpec',
+                },
+                {
+                  title: 'Delete extra specs',
+                  description:
+                    'Deleting the selected extra specifications is permanent and cannot be undone.',
+                  category: 'ExtraSpec',
+                },
+                {
+                  title: 'Delete QoS spec',
+                  description: 'This action removes the QoS specification.',
+                  category: 'QoS',
+                },
+                {
+                  title: 'Delete QoS specs',
+                  description: 'This action removes the selected QoS specifications.',
+                  category: 'QoS',
+                },
+                {
+                  title: 'Delete extra spec (QoS)',
+                  description: 'This action removes the extra specification from the volume type.',
+                  category: 'QoS',
+                },
+                {
+                  title: 'Delete extra specs (QoS)',
+                  description:
+                    'Deleting the selected extra specifications is permanent and cannot be undone.',
+                  category: 'QoS',
+                },
+                {
+                  title: 'Delete network',
+                  description: 'Deleting the network is permanent and cannot be undone.',
+                  category: 'Network',
+                },
+                {
+                  title: 'Delete networks',
+                  description: 'Removing the selected networks is permanent and cannot be undone.',
+                  category: 'Network',
+                },
+                {
+                  title: 'Delete subnet',
+                  description: 'Deleting the subnet is permanent and cannot be undone.',
+                  category: 'Subnet',
+                },
+                {
+                  title: 'Delete subnets',
+                  description: 'Deleting the selected subnets is permanent and cannot be undone.',
+                  category: 'Subnet',
+                },
+                {
+                  title: 'Delete port',
+                  description: 'Deleting the port is permanent and cannot be undone.',
+                  category: 'Port',
+                },
+                {
+                  title: 'Delete ports',
+                  description: 'Deleting the selected ports is permanent and cannot be undone.',
+                  category: 'Port',
+                },
+                {
+                  title: 'Delete router',
+                  description: 'Deleting the router is permanent and cannot be undone.',
+                  category: 'Router',
+                },
+                {
+                  title: 'Delete routers',
+                  description: 'Removing the selected routers is permanent and cannot be undone.',
+                  category: 'Router',
+                },
+                {
+                  title: 'Delete static routes',
+                  description:
+                    'Deleting the selected static routes is permanent and cannot be undone.',
+                  category: 'Router',
+                },
+                {
+                  title: 'Remove DHCP agents',
+                  description: 'This action removes the selected DHCP agents from the network.',
+                  category: 'Network',
+                },
+                {
+                  title: 'Release fixed IP',
+                  description: 'This action releases the fixed IP from the port.',
+                  category: 'Port',
+                },
+                {
+                  title: 'Delete allowed address pair',
+                  description: 'This action removes the allowed address pair from the port.',
+                  category: 'Port',
+                },
+                {
+                  title: 'Delete security group',
+                  description: 'Deleting the security group is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete security groups',
+                  description:
+                    'Deleting the selected security groups is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete firewall',
+                  description: 'Deleting the firewall is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewalls',
+                  description: 'Deleting the selected firewalls is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewall policy',
+                  description: 'Deleting the firewall policy is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewall policies',
+                  description:
+                    'Removing the selected firewall policies is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewall rule',
+                  description: 'Deleting the firewall rule is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewall rules',
+                  description:
+                    'Removing the selected firewall rules is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete rule',
+                  description: 'Removing the rule group is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete rules',
+                  description: 'Removing the rules is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Unsaved changes',
+                  description: 'Any unsaved changes will be lost. Do you want to leave?',
+                  category: 'General',
+                },
+                {
+                  title: 'Release floating IP',
+                  description: 'Releasing the floating IP is permanent and cannot be undone.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Release floating IPs',
+                  description: 'Releasing the floating IPs is permanent and cannot be undone.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Delete load balancer',
+                  description: 'Removing the load balancer is permanent and cannot be undone.',
+                  category: 'LB',
+                },
+                {
+                  title: 'Delete load balancers',
+                  description: 'Removing the load balancers is permanent and cannot be undone.',
+                  category: 'LB',
+                },
+                {
+                  title: 'Delete listener',
+                  description: 'Removing the listener is permanent and cannot be undone.',
+                  category: 'Listener',
+                },
+                {
+                  title: 'Delete listeners',
+                  description: 'Removing the listeners is permanent and cannot be undone.',
+                  category: 'Listener',
+                },
+                {
+                  title: 'Delete pool',
+                  description: 'Removing the pool is permanent and cannot be undone.',
+                  category: 'Pool',
+                },
+                {
+                  title: 'Delete pools',
+                  description: 'Removing the pools is permanent and cannot be undone.',
+                  category: 'Pool',
+                },
+                {
+                  title: 'Delete member',
+                  description: 'Removing the member is permanent and cannot be undone.',
+                  category: 'Member',
+                },
+                {
+                  title: 'Delete members',
+                  description: 'Removing the members is permanent and cannot be undone.',
+                  category: 'Member',
+                },
+                {
+                  title: 'Delete L7 policy',
+                  description: 'Removing the L7 policy is permanent and cannot be undone.',
+                  category: 'L7',
+                },
+                {
+                  title: 'Delete L7 policies',
+                  description: 'Removing the L7 policies is permanent and cannot be undone.',
+                  category: 'L7',
+                },
+                {
+                  title: 'Delete health monitor',
+                  description: 'Removing the health monitor is permanent and cannot be undone.',
+                  category: 'Health',
+                },
+                {
+                  title: 'Delete tenant',
+                  description: 'Deleting the tenant is permanent and cannot be undone.',
+                  category: 'Tenant',
+                },
+                {
+                  title: 'Delete tenants',
+                  description: 'Removing the selected tenants is permanent and cannot be undone.',
+                  category: 'Tenant',
+                },
+                {
+                  title: 'Delete metadata',
+                  description: 'This action removes the metadata.',
+                  category: 'Metadata',
+                },
+                {
+                  title: 'Delete metadata (bulk)',
+                  description: 'This action removes the selected metadata.',
+                  category: 'Metadata',
+                },
+                {
+                  title: 'Manage member',
+                  description: 'Redirect to IAM to manage users and user groups.',
+                  category: 'Tenant',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Compute Admin"
+                    badgeVariant="warning"
+                    count={71}
+                    isOpen={isComputeAdminOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup
+                      heading="Instance actions (single)"
+                      items={[
+                        {
+                          title: 'Stop instance',
+                          description: 'This action stops the instance.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Reboot instance',
+                          description: 'This action reboots the instance.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Soft reboot instance',
+                          description: 'This action performs a soft reboot of the instance.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Confirm resize',
+                          description: 'This action confirms the resized state of the instance.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Revert resize',
+                          description:
+                            'This action reverts the instance to its previous state before the resize.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Delete instance',
+                          description: 'Removing the instance is permanent and cannot be undone.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Shelve instance',
+                          description: 'This action shelves the instance.',
+                          category: 'Instance',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Stop instance"
                         description="This action stops the instance."
@@ -848,11 +2040,33 @@ export function ModalsPage() {
                         category="Instance"
                         onOpen={() => openModalFn('admin-shelve-instance')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Instance actions (bulk)</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Instance actions (bulk)"
+                      items={[
+                        {
+                          title: 'Start instances',
+                          description: 'This action starts the selected instances.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Stop instances',
+                          description: 'This action stops the selected instances.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Reboot instances',
+                          description: 'This action reboots the selected instances.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Delete instances',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Instance',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Start instances"
                         description="This action starts the selected instances."
@@ -877,11 +2091,46 @@ export function ModalsPage() {
                         category="Instance"
                         onOpen={() => openModalFn('admin-delete-instances')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Templates / Images / Snapshots</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Templates / Images / Snapshots"
+                      items={[
+                        {
+                          title: 'Delete instance template',
+                          description:
+                            'Deleting the instance template is permanent and cannot be undone.',
+                          category: 'Template',
+                        },
+                        {
+                          title: 'Delete instance templates',
+                          description:
+                            'Deleting the selected instance templates is permanent and cannot be undone.',
+                          category: 'Template',
+                        },
+                        {
+                          title: 'Delete image',
+                          description: 'Deleting the image is permanent and cannot be undone.',
+                          category: 'Image',
+                        },
+                        {
+                          title: 'Delete images',
+                          description:
+                            'Deleting the selected images is permanent and cannot be undone.',
+                          category: 'Image',
+                        },
+                        {
+                          title: 'Delete snapshot',
+                          description: 'Deleting the snapshot is permanent and cannot be undone.',
+                          category: 'Snapshot',
+                        },
+                        {
+                          title: 'Delete snapshots',
+                          description:
+                            'Deleting the selected snapshots is permanent and cannot be undone.',
+                          category: 'Snapshot',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete instance template"
                         description="Deleting the instance template is permanent and cannot be undone."
@@ -918,11 +2167,86 @@ export function ModalsPage() {
                         category="Snapshot"
                         onOpen={() => openModalFn('admin-delete-snapshots')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Volumes / Types / Backups</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Volumes / Types / Backups"
+                      items={[
+                        {
+                          title: 'Delete volume',
+                          description: 'Deleting the volume is permanent and cannot be undone.',
+                          category: 'Volume',
+                        },
+                        {
+                          title: 'Delete volumes',
+                          description:
+                            'Deleting the selected volumes is permanent and cannot be undone.',
+                          category: 'Volume',
+                        },
+                        {
+                          title: 'Delete volume type',
+                          description:
+                            'Deleting the volume type is permanent and cannot be undone.',
+                          category: 'VolumeType',
+                        },
+                        {
+                          title: 'Delete volume types',
+                          description:
+                            'Deleting the selected volume types is permanent and cannot be undone.',
+                          category: 'VolumeType',
+                        },
+                        {
+                          title: 'Delete backup',
+                          description: 'Deleting the backup is permanent and cannot be undone.',
+                          category: 'Backup',
+                        },
+                        {
+                          title: 'Delete backups',
+                          description:
+                            'Deleting the selected backups is permanent and cannot be undone.',
+                          category: 'Backup',
+                        },
+                        {
+                          title: 'Delete encryption',
+                          description:
+                            'This action removes the encryption configuration from the volume type.',
+                          category: 'Encryption',
+                        },
+                        {
+                          title: 'Delete extra spec',
+                          description:
+                            'This action removes the extra specification from the volume type.',
+                          category: 'ExtraSpec',
+                        },
+                        {
+                          title: 'Delete extra specs',
+                          description:
+                            'Deleting the selected extra specifications is permanent and cannot be undone.',
+                          category: 'ExtraSpec',
+                        },
+                        {
+                          title: 'Delete QoS spec',
+                          description: 'This action removes the QoS specification.',
+                          category: 'QoS',
+                        },
+                        {
+                          title: 'Delete QoS specs',
+                          description: 'This action removes the selected QoS specifications.',
+                          category: 'QoS',
+                        },
+                        {
+                          title: 'Delete extra spec (QoS)',
+                          description:
+                            'This action removes the extra specification from the volume type.',
+                          category: 'QoS',
+                        },
+                        {
+                          title: 'Delete extra specs (QoS)',
+                          description:
+                            'Deleting the selected extra specifications is permanent and cannot be undone.',
+                          category: 'QoS',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete volume"
                         description="Deleting the volume is permanent and cannot be undone."
@@ -1001,11 +2325,79 @@ export function ModalsPage() {
                         category="QoS"
                         onOpen={() => openModalFn('admin-delete-extra-specs-qos')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Networks / Subnets / Ports / Routers</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Networks / Subnets / Ports / Routers"
+                      items={[
+                        {
+                          title: 'Delete network',
+                          description: 'Deleting the network is permanent and cannot be undone.',
+                          category: 'Network',
+                        },
+                        {
+                          title: 'Delete networks',
+                          description:
+                            'Removing the selected networks is permanent and cannot be undone.',
+                          category: 'Network',
+                        },
+                        {
+                          title: 'Delete subnet',
+                          description: 'Deleting the subnet is permanent and cannot be undone.',
+                          category: 'Subnet',
+                        },
+                        {
+                          title: 'Delete subnets',
+                          description:
+                            'Deleting the selected subnets is permanent and cannot be undone.',
+                          category: 'Subnet',
+                        },
+                        {
+                          title: 'Delete port',
+                          description: 'Deleting the port is permanent and cannot be undone.',
+                          category: 'Port',
+                        },
+                        {
+                          title: 'Delete ports',
+                          description:
+                            'Deleting the selected ports is permanent and cannot be undone.',
+                          category: 'Port',
+                        },
+                        {
+                          title: 'Delete router',
+                          description: 'Deleting the router is permanent and cannot be undone.',
+                          category: 'Router',
+                        },
+                        {
+                          title: 'Delete routers',
+                          description:
+                            'Removing the selected routers is permanent and cannot be undone.',
+                          category: 'Router',
+                        },
+                        {
+                          title: 'Delete static routes',
+                          description:
+                            'Deleting the selected static routes is permanent and cannot be undone.',
+                          category: 'Router',
+                        },
+                        {
+                          title: 'Remove DHCP agents',
+                          description:
+                            'This action removes the selected DHCP agents from the network.',
+                          category: 'Network',
+                        },
+                        {
+                          title: 'Release fixed IP',
+                          description: 'This action releases the fixed IP from the port.',
+                          category: 'Port',
+                        },
+                        {
+                          title: 'Delete allowed address pair',
+                          description:
+                            'This action removes the allowed address pair from the port.',
+                          category: 'Port',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete network"
                         description="Deleting the network is permanent and cannot be undone."
@@ -1078,11 +2470,69 @@ export function ModalsPage() {
                         category="Port"
                         onOpen={() => openModalFn('admin-delete-address-pair')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Security groups / Firewalls</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Security groups / Firewalls"
+                      items={[
+                        {
+                          title: 'Delete security group',
+                          description:
+                            'Deleting the security group is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete security groups',
+                          description:
+                            'Deleting the selected security groups is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete firewall',
+                          description: 'Deleting the firewall is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewalls',
+                          description:
+                            'Deleting the selected firewalls is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewall policy',
+                          description:
+                            'Deleting the firewall policy is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewall policies',
+                          description:
+                            'Removing the selected firewall policies is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewall rule',
+                          description:
+                            'Deleting the firewall rule is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewall rules',
+                          description:
+                            'Removing the selected firewall rules is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete rule',
+                          description: 'Removing the rule group is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete rules',
+                          description: 'Removing the rules is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete security group"
                         description="Deleting the security group is permanent and cannot be undone."
@@ -1143,11 +2593,88 @@ export function ModalsPage() {
                         category="Security"
                         onOpen={() => openModalFn('admin-delete-sg-rules')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Floating IPs / Load balancers</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Floating IPs / Load balancers"
+                      items={[
+                        {
+                          title: 'Unsaved changes',
+                          description: 'Any unsaved changes will be lost. Do you want to leave?',
+                          category: 'General',
+                        },
+                        {
+                          title: 'Release floating IP',
+                          description:
+                            'Releasing the floating IP is permanent and cannot be undone.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Release floating IPs',
+                          description:
+                            'Releasing the floating IPs is permanent and cannot be undone.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Delete load balancer',
+                          description:
+                            'Removing the load balancer is permanent and cannot be undone.',
+                          category: 'LB',
+                        },
+                        {
+                          title: 'Delete load balancers',
+                          description:
+                            'Removing the load balancers is permanent and cannot be undone.',
+                          category: 'LB',
+                        },
+                        {
+                          title: 'Delete listener',
+                          description: 'Removing the listener is permanent and cannot be undone.',
+                          category: 'Listener',
+                        },
+                        {
+                          title: 'Delete listeners',
+                          description: 'Removing the listeners is permanent and cannot be undone.',
+                          category: 'Listener',
+                        },
+                        {
+                          title: 'Delete pool',
+                          description: 'Removing the pool is permanent and cannot be undone.',
+                          category: 'Pool',
+                        },
+                        {
+                          title: 'Delete pools',
+                          description: 'Removing the pools is permanent and cannot be undone.',
+                          category: 'Pool',
+                        },
+                        {
+                          title: 'Delete member',
+                          description: 'Removing the member is permanent and cannot be undone.',
+                          category: 'Member',
+                        },
+                        {
+                          title: 'Delete members',
+                          description: 'Removing the members is permanent and cannot be undone.',
+                          category: 'Member',
+                        },
+                        {
+                          title: 'Delete L7 policy',
+                          description: 'Removing the L7 policy is permanent and cannot be undone.',
+                          category: 'L7',
+                        },
+                        {
+                          title: 'Delete L7 policies',
+                          description:
+                            'Removing the L7 policies is permanent and cannot be undone.',
+                          category: 'L7',
+                        },
+                        {
+                          title: 'Delete health monitor',
+                          description:
+                            'Removing the health monitor is permanent and cannot be undone.',
+                          category: 'Health',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Unsaved changes"
                         description="Any unsaved changes will be lost. Do you want to leave?"
@@ -1232,11 +2759,38 @@ export function ModalsPage() {
                         category="Health"
                         onOpen={() => openModalFn('admin-delete-health-monitor')}
                       />
-                    </div>
-                  </VStack>
-                  <VStack gap={2}>
-                    <SubHeading>Tenants / Metadata</SubHeading>
-                    <div className="flex flex-col gap-2">
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Tenants / Metadata"
+                      items={[
+                        {
+                          title: 'Delete tenant',
+                          description: 'Deleting the tenant is permanent and cannot be undone.',
+                          category: 'Tenant',
+                        },
+                        {
+                          title: 'Delete tenants',
+                          description:
+                            'Removing the selected tenants is permanent and cannot be undone.',
+                          category: 'Tenant',
+                        },
+                        {
+                          title: 'Delete metadata',
+                          description: 'This action removes the metadata.',
+                          category: 'Metadata',
+                        },
+                        {
+                          title: 'Delete metadata (bulk)',
+                          description: 'This action removes the selected metadata.',
+                          category: 'Metadata',
+                        },
+                        {
+                          title: 'Manage member',
+                          description: 'Redirect to IAM to manage users and user groups.',
+                          category: 'Tenant',
+                        },
+                      ]}
+                    >
                       <ModalListItem
                         title="Delete tenant"
                         description="Deleting the tenant is permanent and cannot be undone."
@@ -1267,69 +2821,95 @@ export function ModalsPage() {
                         category="Tenant"
                         onOpen={() => openModalFn('admin-manage-member')}
                       />
-                    </div>
+                    </FilteredGroup>
                   </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* ============================================================
                CLOUD BUILDER
                ============================================================ */}
-            <Disclosure open={isSearching || isCloudBuilderOpen} onChange={setIsCloudBuilderOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <SectionHeader
-                  label="Cloud Builder"
-                  count={2}
-                  isOpen={isCloudBuilderOpen}
-                  isSearching={isSearching}
-                />
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Enable compute service"
-                      description="Change this service status to Enabled?"
-                      category="Service"
-                      onOpen={() => openModalFn('enable-compute-service')}
-                    />
-                    <ModalListItem
-                      title="Disable compute service"
-                      description="Change this service status to Disabled?"
-                      category="Service"
-                      onOpen={() => openModalFn('disable-compute-service')}
-                    />
-                  </div>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Enable compute service',
+                  description: 'Change this service status to Enabled?',
+                  category: 'Service',
+                },
+                {
+                  title: 'Disable compute service',
+                  description: 'Change this service status to Disabled?',
+                  category: 'Service',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isCloudBuilderOpen} onChange={setIsCloudBuilderOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Cloud Builder"
+                    count={2}
+                    isOpen={isCloudBuilderOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <div className="flex flex-col gap-2">
+                      <ModalListItem
+                        title="Enable compute service"
+                        description="Change this service status to Enabled?"
+                        category="Service"
+                        onOpen={() => openModalFn('enable-compute-service')}
+                      />
+                      <ModalListItem
+                        title="Disable compute service"
+                        description="Change this service status to Disabled?"
+                        category="Service"
+                        onOpen={() => openModalFn('disable-compute-service')}
+                      />
+                    </div>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* ============================================================
                AI AGENT
                ============================================================ */}
-            <Disclosure open={isSearching || isAIAgentOpen} onChange={setIsAIAgentOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <SectionHeader
-                  label="AI Agent"
-                  count={1}
-                  isOpen={isAIAgentOpen}
-                  isSearching={isSearching}
-                />
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  <div className="flex flex-col gap-2">
-                    <ModalListItem
-                      title="Delete agent source"
-                      description="Are you sure you want to delete this agent source? This action cannot be undone."
-                      category="Agent"
-                      onOpen={() => openModalFn('delete-agent-source')}
-                    />
-                  </div>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete agent source',
+                  description:
+                    'Are you sure you want to delete this agent source? This action cannot be undone.',
+                  category: 'Agent',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isAIAgentOpen} onChange={setIsAIAgentOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="AI Agent"
+                    count={1}
+                    isOpen={isAIAgentOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <div className="flex flex-col gap-2">
+                      <ModalListItem
+                        title="Delete agent source"
+                        description="Are you sure you want to delete this agent source? This action cannot be undone."
+                        category="Agent"
+                        onOpen={() => openModalFn('delete-agent-source')}
+                      />
+                    </div>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
           </VStack>
         </VStack>
       </ModalSearchContext.Provider>

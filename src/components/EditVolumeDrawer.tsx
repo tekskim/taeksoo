@@ -94,7 +94,7 @@ export function EditVolumeDrawer({ isOpen, onClose, volume, onSubmit }: EditVolu
         {/* Header */}
 
         {/* Volume Name Input */}
-        <FormField error={hasAttemptedSubmit && !!nameError}>
+        <FormField error={hasAttemptedSubmit && !!nameError} required>
           <FormField.Label>Volume name</FormField.Label>
           <FormField.Control>
             <Input

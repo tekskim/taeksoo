@@ -26,6 +26,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { EditVolumeDrawer } from '@/components/EditVolumeDrawer';
+import { UpdateVolumeStatusDrawer } from '@/components/UpdateVolumeStatusDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import containerIcon from '@/assets/appIcon/container.png';
@@ -264,12 +265,18 @@ export function ComputeAdminVolumesPage() {
 
   // Drawer states
   const [editVolumeOpen, setEditVolumeOpen] = useState(false);
+  const [updateStatusOpen, setUpdateStatusOpen] = useState(false);
   const [selectedVolumeForDrawer, setSelectedVolumeForDrawer] = useState<Volume | null>(null);
 
   // Drawer handlers
   const handleEditVolume = (volume: Volume) => {
     setSelectedVolumeForDrawer(volume);
     setEditVolumeOpen(true);
+  };
+
+  const handleUpdateStatus = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setUpdateStatusOpen(true);
   };
 
   // Default column config
@@ -356,10 +363,7 @@ export function ComputeAdminVolumesPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex items-center gap-2 min-w-0">
-          <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-            <img src={containerIcon} alt="Volume" className="w-4 h-4" />
-          </div>
-          <div className="flex flex-col gap-0.5 min-w-0">
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
             <Link
               to={`/compute-admin/volumes/${row.id}`}
               className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
@@ -374,6 +378,11 @@ export function ComputeAdminVolumesPage() {
               <InlineCopyId value={row.id} />
             </span>
           </div>
+          {row.attachedTo && (
+            <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+              <img src={containerIcon} alt="Attached to instance" className="w-4 h-4" />
+            </div>
+          )}
         </div>
       ),
     },
@@ -477,7 +486,7 @@ export function ComputeAdminVolumesPage() {
           {
             id: 'update-status',
             label: 'Update status',
-            onClick: () => console.log('Update status:', row.id),
+            onClick: () => handleUpdateStatus(row),
           },
           {
             id: 'migrate-volume',
@@ -655,6 +664,24 @@ export function ComputeAdminVolumesPage() {
               }
             : null
         }
+      />
+
+      {/* Update Volume Status Drawer */}
+      <UpdateVolumeStatusDrawer
+        isOpen={updateStatusOpen}
+        onClose={() => setUpdateStatusOpen(false)}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+                currentStatus: selectedVolumeForDrawer.status,
+              }
+            : null
+        }
+        onSubmit={(status) => {
+          console.log('Update volume status:', selectedVolumeForDrawer?.id, status);
+        }}
       />
     </PageShell>
   );

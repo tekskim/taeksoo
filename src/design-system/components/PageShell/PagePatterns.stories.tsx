@@ -644,15 +644,15 @@ function DashboardPageExample() {
           <SectionCard.Content>
             <SectionCard.DataRow
               label="web-server-01"
-              value={<StatusIndicator status="active" label="Started" />}
+              value={<StatusIndicator status="active" label="Started" layout="badge" />}
             />
             <SectionCard.DataRow
               label="db-server-02"
-              value={<StatusIndicator status="error" label="Failed" />}
+              value={<StatusIndicator status="error" label="Failed" layout="badge" />}
             />
             <SectionCard.DataRow
               label="worker-03"
-              value={<StatusIndicator status="building" label="Building" />}
+              value={<StatusIndicator status="building" label="Building" layout="badge" />}
             />
           </SectionCard.Content>
         </SectionCard>

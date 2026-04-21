@@ -469,7 +469,7 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 - **Table**: `columns`, `data`, `selectable`, `sortable`
 - **Badge**: `variant="info|success|warning|danger"`, `size="sm|md"`
 - **Chip**: 태그/필터 표시
-- **StatusIndicator**: `status="active|error|muted|building"`
+- **StatusIndicator**: `status="active|error|muted|building"`, `layout="icon-only|badge"` (default: `icon-only`)
 - **Pagination**: 페이지 네비게이션
 - **ProgressBar**: 진행률 표시
 - **Tooltip**: 툴팁 표시

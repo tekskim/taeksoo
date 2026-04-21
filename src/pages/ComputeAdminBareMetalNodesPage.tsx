@@ -11,6 +11,7 @@ import {
   Badge,
   PageShell,
   PageHeader,
+  ContextMenu,
   type TableColumn,
   type FilterField,
   type AppliedFilter,
@@ -22,6 +23,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
+import { AssignTenantDrawer, type AssignTenantNodeInfo } from '@/components/AssignTenantDrawer';
 
 /* ----------------------------------------
    Types
@@ -179,6 +181,11 @@ export function ComputeAdminBareMetalNodesPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [isAssignTenantOpen, setIsAssignTenantOpen] = useState(false);
+  const [selectedNodeForAssign, setSelectedNodeForAssign] = useState<AssignTenantNodeInfo | null>(
+    null
+  );
+
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true },
     { id: 'serial', label: 'Serial', visible: true, locked: true },
@@ -330,16 +337,37 @@ export function ComputeAdminBareMetalNodesPage() {
         sticky: 'right',
         render: (_, row) => (
           <div onClick={(e) => e.stopPropagation()}>
-            <button
-              className="p-1 rounded-[var(--radius-md)] hover:bg-[var(--color-surface-hover)] transition-colors"
-              aria-label={`Actions for ${row.serial}`}
+            <ContextMenu
+              items={[
+                {
+                  id: 'assign',
+                  label: 'Assign',
+                  onClick: () => {
+                    setSelectedNodeForAssign({ id: row.id, serial: row.serial });
+                    setIsAssignTenantOpen(true);
+                  },
+                },
+                {
+                  id: 'return',
+                  label: 'Return to Cloud builder',
+                  status: 'danger',
+                  onClick: () => {},
+                },
+              ]}
+              trigger="click"
+              align="right"
             >
-              <IconDotsCircleHorizontal
-                size={16}
-                stroke={1.5}
-                className="text-[var(--color-text-muted)]"
-              />
-            </button>
+              <button
+                className="p-1 rounded-[var(--radius-md)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                aria-label={`Actions for ${row.serial}`}
+              >
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--color-text-muted)]"
+                />
+              </button>
+            </ContextMenu>
           </div>
         ),
       },
@@ -437,6 +465,17 @@ export function ComputeAdminBareMetalNodesPage() {
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
       />
+
+      {selectedNodeForAssign && (
+        <AssignTenantDrawer
+          isOpen={isAssignTenantOpen}
+          onClose={() => {
+            setIsAssignTenantOpen(false);
+            setSelectedNodeForAssign(null);
+          }}
+          node={selectedNodeForAssign}
+        />
+      )}
     </PageShell>
   );
 }
