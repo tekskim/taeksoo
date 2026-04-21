@@ -27,7 +27,6 @@ const TOOLTIP_GUIDELINES = `## Overview
 | padding | 6px 4px |
 | border-radius | 4px |
 | font-size | 11px |
-| min-width | 60px |
 | max-width | 240px |
 | arrow size | 4px |
 
@@ -77,7 +76,6 @@ const TOOLTIP_GUIDELINES = `## Overview
 
 | 속성 | 값 |
 | --- | --- |
-| min-width | 60px |
 | max-width | 240px |
 | 텍스트 정렬 | left (왼쪽 정렬) |
 | 텍스트 최대 줄 수 | 2줄 (권장), 3줄 (최대) |
@@ -669,8 +667,7 @@ export function TooltipPage() {
           <VStack gap={1}>
             <span className="text-label-md text-[var(--color-text-default)]">Default Tooltip</span>
             <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-              padding: 6×4px · radius: 4px · font-size: 11px · min-width: 60px · max-width: 240px ·
-              arrow: 4px
+              padding: 6×4px · radius: 4px · font-size: 11px · max-width: 240px · arrow: 4px
             </div>
           </VStack>
           <VStack gap={1}>

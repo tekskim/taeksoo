@@ -399,13 +399,12 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 --tooltip-padding-y: 0.25rem;   /* 4px */
 --tooltip-radius: 0.25rem;      /* 4px */
 --tooltip-font-size: 0.6875rem; /* 11px */
---tooltip-min-width: 60px;
 --tooltip-max-width: 240px;     /* ~37-41 chars per line (11px Mona Sans) */
 ```
 
 **Width rules:**
-- Tooltip uses `w-max` with `min-w-[var(--tooltip-min-width)]` and `max-w-[var(--tooltip-max-width)]`
-- Short text stays compact; long text wraps at 240px (~37-41 characters per line)
+- Tooltip uses `w-max` with `max-w-[var(--tooltip-max-width)]`
+- Short text stays compact (no min-width); long text wraps at 240px (~37-41 characters per line)
 - Do NOT use `whitespace-nowrap` — long tooltips must wrap to avoid overflowing into sidebars or off-screen
 
 ### Popover
