@@ -262,11 +262,11 @@ function BadgeTooltipExamples() {
           <StaticBadgeTooltip
             position="top"
             content={
-              <div className="p-3 min-w-[120px] max-w-[320px]">
-                <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+              <div className="p-3 max-w-[320px]">
+                <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2 whitespace-nowrap">
                   All Labels (4)
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 items-start">
                   <Badge theme="white" size="sm" className="w-fit">
                     app=nginx-ingress-controller
                   </Badge>
@@ -287,11 +287,11 @@ function BadgeTooltipExamples() {
           <StaticBadgeTooltip
             position="bottom"
             content={
-              <div className="p-3 min-w-[120px] max-w-[320px]">
+              <div className="p-3 min-w-[160px] max-w-[320px]">
                 <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                   All OSDs (4)
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                   <Badge theme="white" size="sm" className="w-fit">
                     osd.4
                   </Badge>
@@ -368,11 +368,11 @@ function BadgeTooltipExamples() {
             delay={200}
             hideDelay={150}
             content={
-              <div className="p-3 min-w-[120px] max-w-[320px]">
+              <div className="p-3 min-w-[160px] max-w-[320px]">
                 <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                   All labels (3)
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                   <Badge theme="white" size="sm" className="w-fit">
                     app=nginx
                   </Badge>
