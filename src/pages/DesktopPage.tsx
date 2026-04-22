@@ -266,6 +266,7 @@ function useDesktopIconDrag(
   }, [containerRef]);
 
   const handleMouseDown = useCallback((iconId: string, e: React.MouseEvent) => {
+    if (e.button !== 0) return;
     e.preventDefault();
     setDragState({
       iconId,
