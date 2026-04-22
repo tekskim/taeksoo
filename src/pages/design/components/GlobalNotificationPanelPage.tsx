@@ -72,12 +72,31 @@ function StaticPanelCard({
           <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
             <div className="flex flex-col">
               <span className="text-body-md text-[var(--color-text-default)]">
-                {message}
-                {statusIcon && (
-                  <span className="inline-flex items-center align-[-2px] ml-1 gap-1">
-                    {statusIcon}
-                  </span>
-                )}
+                {statusIcon
+                  ? (() => {
+                      const lastSpace = message.lastIndexOf(' ');
+                      if (lastSpace === -1)
+                        return (
+                          <span className="whitespace-nowrap">
+                            {message}
+                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
+                              {statusIcon}
+                            </span>
+                          </span>
+                        );
+                      return (
+                        <>
+                          {message.slice(0, lastSpace)}{' '}
+                          <span className="whitespace-nowrap">
+                            {message.slice(lastSpace + 1)}
+                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
+                              {statusIcon}
+                            </span>
+                          </span>
+                        </>
+                      );
+                    })()
+                  : message}
               </span>
             </div>
 
@@ -470,12 +489,32 @@ function InteractiveNotificationCard({
           <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
             <div className="flex flex-col">
               <span className="text-body-md text-[var(--color-text-default)]">
-                {notification.message}
-                {notification.statusIcon && (
-                  <span className="inline-flex items-center align-[-2px] ml-1 gap-1">
-                    {notification.statusIcon}
-                  </span>
-                )}
+                {notification.statusIcon
+                  ? (() => {
+                      const msg = notification.message;
+                      const lastSpace = msg.lastIndexOf(' ');
+                      if (lastSpace === -1)
+                        return (
+                          <span className="whitespace-nowrap">
+                            {msg}
+                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
+                              {notification.statusIcon}
+                            </span>
+                          </span>
+                        );
+                      return (
+                        <>
+                          {msg.slice(0, lastSpace)}{' '}
+                          <span className="whitespace-nowrap">
+                            {msg.slice(lastSpace + 1)}
+                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
+                              {notification.statusIcon}
+                            </span>
+                          </span>
+                        </>
+                      );
+                    })()
+                  : notification.message}
               </span>
             </div>
 
