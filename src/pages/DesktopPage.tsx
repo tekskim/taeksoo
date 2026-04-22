@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo, Suspense } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
 import {
   IconLayoutDashboard,
@@ -2106,8 +2107,8 @@ export function DesktopPage() {
         <>
           <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
           <div className="fixed z-[6001] top-[52px] right-0" onClick={(e) => e.stopPropagation()}>
-            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg">
-              <div className="relative pt-3 pb-0 rounded-t-lg overflow-hidden">
+            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+              <div className="relative pt-3 pb-0">
                 <button
                   type="button"
                   onClick={handleGnpMarkAllAsRead}
@@ -2148,7 +2149,15 @@ export function DesktopPage() {
                   No notifications
                 </div>
               ) : (
-                <div className="max-h-[420px] overflow-y-auto px-3 py-2 mr-[-6px] rounded-b-lg notification-scroll">
+                <OverlayScrollbarsComponent
+                  options={{
+                    overflow: { x: 'hidden', y: 'scroll' },
+                    scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                  }}
+                  defer={false}
+                  style={{ maxHeight: 420 }}
+                  className="px-3 py-2"
+                >
                   <div className="flex flex-col gap-2">
                     {gnpFiltered.map((n) => (
                       <GlobalNotificationCard
@@ -2158,7 +2167,7 @@ export function DesktopPage() {
                       />
                     ))}
                   </div>
-                </div>
+                </OverlayScrollbarsComponent>
               )}
             </div>
           </div>

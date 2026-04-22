@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
@@ -149,8 +150,8 @@ function GlobalPanelPreview() {
   return (
     <VStack gap={4}>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg">
-          <div className="relative pt-3 pb-0 rounded-t-lg overflow-hidden">
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+          <div className="relative pt-3 pb-0">
             <button
               type="button"
               className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)]"
@@ -363,9 +364,9 @@ function GlobalPanelDemo() {
         </Button>
       </div>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg">
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
           {/* Tabs header */}
-          <div className="relative pt-3 pb-0 rounded-t-lg overflow-hidden">
+          <div className="relative pt-3 pb-0">
             <button
               type="button"
               onClick={handleMarkAllAsRead}
@@ -408,7 +409,15 @@ function GlobalPanelDemo() {
               No notifications
             </div>
           ) : (
-            <div className="max-h-[420px] overflow-y-auto px-3 py-2 mr-[-6px] rounded-b-lg notification-scroll">
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'hidden', y: 'scroll' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              style={{ maxHeight: 420 }}
+              className="px-3 py-2"
+            >
               <div className="flex flex-col gap-2">
                 {filteredNotifications.map((n) => (
                   <InteractiveNotificationCard
@@ -418,7 +427,7 @@ function GlobalPanelDemo() {
                   />
                 ))}
               </div>
-            </div>
+            </OverlayScrollbarsComponent>
           )}
         </div>
       </div>
