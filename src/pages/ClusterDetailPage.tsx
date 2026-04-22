@@ -614,7 +614,7 @@ export function ClusterDetailPage() {
           </TabPanel>
 
           <TabPanel value="access-token">
-            <AccessTokenTab clusterName={clusterData.name} />
+            <AccessTokenTab clusterName={clusterData.name} clusterStatus={clusterData.status} />
           </TabPanel>
         </Tabs>
       </VStack>

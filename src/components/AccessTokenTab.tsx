@@ -26,6 +26,7 @@ interface TokenRecord {
 
 interface AccessTokenTabProps {
   clusterName?: string;
+  clusterStatus?: string;
 }
 
 const TTL_OPTIONS = [
@@ -174,7 +175,11 @@ function TokenForm({
 /*  Main Component                                                      */
 /* ------------------------------------------------------------------ */
 
-export function AccessTokenTab({ clusterName = 'default-cluster' }: AccessTokenTabProps) {
+export function AccessTokenTab({
+  clusterName = 'default-cluster',
+  clusterStatus,
+}: AccessTokenTabProps) {
+  const isProvisioned = clusterStatus === 'Provisioned';
   const [token, setToken] = useState<TokenRecord | null>(INITIAL_TOKEN);
   const [mode, setMode] = useState<DrawerMode>('view');
   const [justGenerated, setJustGenerated] = useState(false);
@@ -216,7 +221,13 @@ export function AccessTokenTab({ clusterName = 'default-cluster' }: AccessTokenT
             <VStack gap={4} className="max-w-[560px]">
               <InfoBox label="Cluster" value={clusterName} />
 
-              {token ? (
+              {!isProvisioned && (
+                <InlineMessage variant="warning">
+                  Access tokens can only be managed when the cluster is in Provisioned state.
+                </InlineMessage>
+              )}
+
+              {isProvisioned && token ? (
                 <>
                   <span className="text-body-md text-[var(--color-text-muted)]">
                     Created on {formatDisplayDate(token.createdAt)}, expires on{' '}
@@ -257,7 +268,7 @@ export function AccessTokenTab({ clusterName = 'default-cluster' }: AccessTokenT
                     />
                   )}
                 </>
-              ) : (
+              ) : isProvisioned ? (
                 <>
                   {mode === 'view' && (
                     <VStack gap={4}>
@@ -285,7 +296,7 @@ export function AccessTokenTab({ clusterName = 'default-cluster' }: AccessTokenT
                     />
                   )}
                 </>
-              )}
+              ) : null}
             </VStack>
           </SectionCard.Content>
         </SectionCard>

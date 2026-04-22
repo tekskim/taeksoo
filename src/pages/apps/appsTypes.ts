@@ -83,16 +83,31 @@ export interface TierPreset {
   values: Record<string, string>;
 }
 
+/**
+ * 앱 유형 (정책서 용어 정의 + 기능명세서 결정사항)
+ * - Application: Helm Chart 또는 CR 기반 서비스형 패키지. Namespace 범위.
+ * - Operator:    클러스터 전체 관리 소프트웨어. Cluster 범위. 클러스터당 1회.
+ */
+export type AppType = 'Application' | 'Operator';
+
 /** Catalog에 노출되는 앱 (Helm Chart 기반) */
 export interface CatalogChart {
   id: string;
+  /** slug (라우팅/ID용) */
   name: string;
+  /** 화면에 표시할 이름. 없으면 name을 변환해서 사용 */
+  displayName?: string;
   description: string;
   /** 현재 최신 안정(Stable) 버전 (기본 선택) */
   version: string;
   /** 선택 가능한 버전 목록 (최신순). 없으면 version 단일 항목으로 처리 */
   availableVersions?: string[];
   category: AppCategory;
+  /**
+   * 앱 유형 (정책서 §용어정의, 기능명세서 FR-001)
+   * Application: 기본값. Operator: Operators 탭에 노출, 테넌트 관리자만 설치 가능.
+   */
+  appType?: AppType;
   /** 로고 이미지 URL (없으면 아이콘 fallback) */
   logoUrl?: string;
   /**
@@ -148,6 +163,37 @@ export interface AppConnectionInfo {
   internalServiceDomain?: string;
   /** 서비스가 수신하는 포트 번호 (예: 5432) */
   port?: number;
+}
+
+/** Operator가 관리하는 CR Instance */
+export interface CRInstance {
+  id: string;
+  kind: string;
+  name: string;
+  namespace: string;
+  status: string;
+}
+
+/** 설치된 Operator 인스턴스 (FR-026, 정책서 §4-5) */
+export interface InstalledOperator {
+  id: string;
+  /** Operator 이름 (예: cnpg-operator) */
+  name: string;
+  /** 표시용 이름 (예: CNPG Operator) */
+  displayName: string;
+  version: string;
+  /** 설치 상태 */
+  status: InstalledAppStatus;
+  /** 설치된 네임스페이스 (일반적으로 전용 시스템 네임스페이스) */
+  namespace: string;
+  /** 설치 일시 */
+  installedAt: string;
+  /** 의존 CR Instance 수 (0이면 삭제 가능, 1 이상이면 삭제 차단 — 정책서 §4-5) */
+  crInstanceCount: number;
+  /** 로고 URL */
+  logoUrl?: string;
+  /** Kubernetes 리소스 목록 */
+  resources?: InstalledAppResource[];
 }
 
 /** 설치된 App (Helm Release) */

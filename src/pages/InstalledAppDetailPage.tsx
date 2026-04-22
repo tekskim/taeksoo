@@ -20,6 +20,8 @@ import {
 } from '@/design-system';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -149,6 +151,7 @@ export default function InstalledAppDetailPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const { isStandalone } = useAppCatalogMode();
   const [activeTab, setActiveTab] = useState('resources');
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
@@ -179,7 +182,7 @@ primary:
   const resourceColumns: TableColumn<AppResource>[] = [
     {
       key: 'type',
-      label: 'Type',
+      label: 'Kind',
       flex: 1,
       minWidth: columnMinWidths.type,
       sortable: true,
@@ -210,7 +213,11 @@ primary:
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        isStandalone ? (
+          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        ) : (
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        )
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -234,8 +241,8 @@ primary:
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Installed Apps', href: '/container/installed-apps' },
+                { label: 'App Catalog', href: '/container/appcatalog/catalog' },
+                { label: 'Installed Apps', href: '/container/appcatalog/installed-apps' },
                 { label: app.name },
               ]}
             />
@@ -261,7 +268,7 @@ primary:
               variant="secondary"
               size="sm"
               leftIcon={<IconEdit size={12} />}
-              onClick={() => navigate(`/container/installed-apps/${appId}/edit`)}
+              onClick={() => navigate(`/container/appcatalog/installed-apps/${appId}/edit`)}
             >
               Edit
             </Button>
@@ -364,7 +371,7 @@ primary:
             onClick={() => {
               console.log('Delete', app.id);
               setIsDeleteOpen(false);
-              navigate('/container/installed-apps');
+              navigate('/container/appcatalog/installed-apps');
             }}
             className="flex-1"
           >

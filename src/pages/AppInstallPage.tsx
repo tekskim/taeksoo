@@ -22,11 +22,14 @@ import {
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconAlertTriangle } from '@tabler/icons-react';
 import {
   catalogCharts,
   installedAppsMock,
+  installedOperatorsMock,
   namespaceOptions,
   clusterOptions,
 } from '@/pages/apps/appsMockData';
@@ -313,6 +316,7 @@ export function AppInstallPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const { isStandalone } = useAppCatalogMode();
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
   const chart = catalogCharts.find((c) => c.name === chartName);
@@ -323,7 +327,10 @@ export function AppInstallPage() {
   // Check dependency is installed
   const dependencyInstalled = useMemo(() => {
     if (!chart?.dependsOn) return true;
-    return installedAppsMock.some((a) => a.name === chart.dependsOn);
+    return (
+      installedAppsMock.some((a) => a.name === chart.dependsOn) ||
+      installedOperatorsMock.some((op) => op.name === chart.dependsOn)
+    );
   }, [chart]);
 
   // Section states
@@ -395,15 +402,19 @@ export function AppInstallPage() {
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
-    navigate('/container/apps/installed-apps');
+    navigate('/container/appcatalog/installed-apps');
   };
+
+  const sidebarNode = isStandalone ? (
+    <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+  ) : (
+    <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+  );
 
   if (!chart) {
     return (
       <PageShell
-        sidebar={
-          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-        }
+        sidebar={sidebarNode}
         sidebarWidth={sidebarWidth}
         contentClassName="pt-4 px-8 pb-6"
       >
@@ -411,7 +422,11 @@ export function AppInstallPage() {
           <p className="text-body-md text-[var(--color-text-muted)]">
             Chart not found: {chartName}
           </p>
-          <Button variant="secondary" size="sm" onClick={() => navigate('/container/catalog')}>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => navigate('/container/appcatalog/catalog')}
+          >
             Back to Catalog
           </Button>
         </VStack>
@@ -421,9 +436,7 @@ export function AppInstallPage() {
 
   return (
     <PageShell
-      sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      }
+      sidebar={sidebarNode}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -440,15 +453,15 @@ export function AppInstallPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation
-          onBack={() => navigate('/container/catalog')}
+          onBack={() => navigate('/container/appcatalog/catalog')}
           onForward={() => {}}
           breadcrumb={
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Catalog', href: '/container/catalog' },
-                { label: `Install ${toTitleCase(chart.name)}` },
+                { label: 'App Catalog', href: '/container/appcatalog/catalog' },
+                { label: 'Catalog', href: '/container/appcatalog/catalog' },
+                { label: `Install ${chart.displayName ?? toTitleCase(chart.name)}` },
               ]}
             />
           }
@@ -472,7 +485,7 @@ export function AppInstallPage() {
               fontWeight: 'var(--font-weight-semibold)',
             }}
           >
-            Install {toTitleCase(chart.name)}
+            Install {chart.displayName ?? toTitleCase(chart.name)}
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">{chart.description}</p>
         </div>
@@ -499,22 +512,24 @@ export function AppInstallPage() {
                       />
                     </FormField.Control>
                   </FormField>
-                  <FormField required>
-                    <FormField.Label>Namespace</FormField.Label>
-                    <FormField.Control>
-                      <Select
-                        options={namespaceOptions}
-                        value={namespace}
-                        onChange={(v) => setNamespace(v ?? '')}
-                        fullWidth
-                      />
-                    </FormField.Control>
-                  </FormField>
+                  {chart.appType !== 'Operator' && (
+                    <FormField required>
+                      <FormField.Label>Namespace</FormField.Label>
+                      <FormField.Control>
+                        <Select
+                          options={namespaceOptions}
+                          value={namespace}
+                          onChange={(v) => setNamespace(v ?? '')}
+                          fullWidth
+                        />
+                      </FormField.Control>
+                    </FormField>
+                  )}
                   <div className="flex justify-end">
                     <Button
                       variant="primary"
                       onClick={() => setStep({ target: 'done', version: 'active' })}
-                      disabled={!namespace}
+                      disabled={chart.appType !== 'Operator' && !namespace}
                     >
                       Next
                     </Button>
@@ -534,7 +549,9 @@ export function AppInstallPage() {
                     CURRENT_CLUSTER_ID
                   }
                 />
-                <DoneSectionRow label="Namespace" value={namespace} />
+                {chart.appType !== 'Operator' && (
+                  <DoneSectionRow label="Namespace" value={namespace} />
+                )}
               </DoneSection>
             )}
 
@@ -545,7 +562,7 @@ export function AppInstallPage() {
                 <SectionCard.Header title={SECTION_LABELS.version} showDivider />
                 <SectionCard.Content gap={6}>
                   <FormField required>
-                    <FormField.Label>Chart version</FormField.Label>
+                    <FormField.Label>Version</FormField.Label>
                     <FormField.Control>
                       <Select
                         options={versionOptions}
@@ -593,15 +610,6 @@ export function AppInstallPage() {
                       <strong>{chart.dependsOn}</strong> must be installed before this app. Please
                       install the Operator first from the App Catalog.
                     </InlineMessage>
-                  )}
-                  {/* Install type badge */}
-                  {chart?.installType && (
-                    <p className="text-body-sm text-[var(--color-text-subtle)]">
-                      Install type:{' '}
-                      <span className="font-medium text-[var(--color-text-default)]">
-                        {chart.installType}
-                      </span>
-                    </p>
                   )}
                   {/* App Name (Release Name) — auto-generated, read-only */}
                   <FormField>
@@ -656,7 +664,7 @@ export function AppInstallPage() {
           {/* Right: Summary Sidebar */}
           <SummarySidebar
             sectionStatus={sectionStatus}
-            onCancel={() => navigate('/container/catalog')}
+            onCancel={() => navigate('/container/appcatalog/catalog')}
             onInstall={handleInstall}
             isInstallDisabled={isInstallDisabled}
             submitting={submitting}

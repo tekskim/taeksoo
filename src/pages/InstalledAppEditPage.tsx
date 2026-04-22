@@ -19,6 +19,8 @@ import {
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconTerminal2, IconEdit, IconEye, IconEyeOff } from '@tabler/icons-react';
 
@@ -241,6 +243,7 @@ export default function InstalledAppEditPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
+  const { isStandalone } = useAppCatalogMode();
 
   const installedApp = installedAppData[appId || ''];
   const chartName = installedApp?.chartName || '';
@@ -268,39 +271,17 @@ export default function InstalledAppEditPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   // Validation errors
-  const [namespaceError, setNamespaceError] = useState<string | null>(null);
-  const [versionError, setVersionError] = useState<string | null>(null);
   const [adminPasswordError, setAdminPasswordError] = useState<string | null>(null);
   const [databaseNameError, setDatabaseNameError] = useState<string | null>(null);
   const [storageClassError, setStorageClassError] = useState<string | null>(null);
   const [storageSizeError, setStorageSizeError] = useState<string | null>(null);
 
-  // Wizard state
+  // Wizard state — Target/Version은 변경 불가이므로 처음부터 done, Configuration이 바로 active
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
-    target: 'active',
-    version: 'pre',
-    configuration: 'pre',
+    target: 'done',
+    version: 'done',
+    configuration: 'active',
   });
-
-  const validateTarget = () => {
-    let hasError = false;
-    if (!namespace) {
-      setNamespaceError('Please select a namespace.');
-      hasError = true;
-    } else {
-      setNamespaceError(null);
-    }
-    return !hasError;
-  };
-
-  const validateVersion = () => {
-    if (!selectedVersion) {
-      setVersionError('Please select a version.');
-      return false;
-    }
-    setVersionError(null);
-    return true;
-  };
 
   const validateConfiguration = () => {
     let hasError = false;
@@ -334,9 +315,7 @@ export default function InstalledAppEditPage() {
   const goToNextSection = useCallback(
     (currentSection: SectionStep) => {
       let isValid = true;
-      if (currentSection === 'target') isValid = validateTarget();
-      else if (currentSection === 'version') isValid = validateVersion();
-      else if (currentSection === 'configuration') isValid = validateConfiguration();
+      if (currentSection === 'configuration') isValid = validateConfiguration();
       if (!isValid) return;
 
       const currentIndex = SECTION_ORDER.indexOf(currentSection);
@@ -417,7 +396,7 @@ export default function InstalledAppEditPage() {
   const allDone = SECTION_ORDER.every((s) => sectionStatus[s] === 'done');
 
   const handleCancel = () => {
-    navigate(`/container/installed-apps/${appId}`);
+    navigate(`/container/appcatalog/installed-apps/${appId}`);
   };
 
   const handleSave = () => {
@@ -431,7 +410,7 @@ export default function InstalledAppEditPage() {
       storageClass,
       storageSize,
     });
-    navigate(`/container/installed-apps/${appId}`);
+    navigate(`/container/appcatalog/installed-apps/${appId}`);
   };
 
   const currentVersions = versionOptions[chartName] || [
@@ -441,7 +420,11 @@ export default function InstalledAppEditPage() {
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        isStandalone ? (
+          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        ) : (
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        )
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -465,8 +448,8 @@ export default function InstalledAppEditPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/installed-apps' },
-                { label: 'Installed Apps', href: '/container/installed-apps' },
+                { label: 'App Catalog', href: '/container/appcatalog/catalog' },
+                { label: 'Installed Apps', href: '/container/appcatalog/installed-apps' },
                 { label: `Edit ${appName}` },
               ]}
             />
@@ -497,170 +480,22 @@ export default function InstalledAppEditPage() {
         <HStack gap={6} align="start" className="w-full">
           {/* Left Column - Wizard Sections */}
           <VStack gap={4} className="flex-1">
-            {/* Target Section */}
-            {sectionStatus['target'] === 'writing' ? (
-              <WritingSection
-                title={SECTION_LABELS['target']}
-                onEdit={() => editSection('target')}
-              />
-            ) : (
-              <SectionCard isActive={sectionStatus['target'] === 'active'}>
-                <SectionCard.Header
-                  title={SECTION_LABELS['target']}
-                  showDivider={sectionStatus['target'] === 'done'}
-                  actions={
-                    sectionStatus['target'] === 'active' && isEditing ? (
-                      <HStack gap={2}>
-                        <Button variant="secondary" size="sm" onClick={cancelEditing}>
-                          Cancel
-                        </Button>
-                        <Button variant="primary" size="sm" onClick={doneEditing}>
-                          Done
-                        </Button>
-                      </HStack>
-                    ) : sectionStatus['target'] === 'done' ? (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconEdit size={12} />}
-                        onClick={() => editSection('target')}
-                      >
-                        Edit
-                      </Button>
-                    ) : undefined
-                  }
-                />
-                {sectionStatus['target'] === 'active' && (
-                  <SectionCard.Content showDividers={false}>
-                    <VStack gap={0}>
-                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                      <div className="py-6">
-                        <FormField>
-                          <FormField.Label>Cluster</FormField.Label>
-                          <FormField.Control>
-                            <Select
-                              options={[{ value: 'current', label: 'Cluster name (current)' }]}
-                              value="current"
-                              disabled
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                      </div>
-                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                      <div className="py-6">
-                        <FormField required error={!!namespaceError}>
-                          <FormField.Label>Namespace</FormField.Label>
-                          <FormField.Control>
-                            <Select
-                              value={namespace}
-                              onChange={(value) => {
-                                setNamespace(value);
-                                setNamespaceError(null);
-                              }}
-                              placeholder="Select namespace"
-                              options={namespaceOptions}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                          <FormField.ErrorMessage>{namespaceError}</FormField.ErrorMessage>
-                        </FormField>
-                      </div>
-                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                      {!isEditing && (
-                        <HStack justify="end" className="pt-3">
-                          <Button variant="primary" onClick={() => goToNextSection('target')}>
-                            Next
-                          </Button>
-                        </HStack>
-                      )}
-                    </VStack>
-                  </SectionCard.Content>
-                )}
-                {sectionStatus['target'] === 'done' && (
-                  <SectionCard.Content>
-                    <SectionCard.DataRow label="Cluster" value={releaseName || '-'} />
-                    <SectionCard.DataRow label="Namespace" value={namespace || '-'} />
-                  </SectionCard.Content>
-                )}
-              </SectionCard>
-            )}
+            {/* Target Section — read-only */}
+            <SectionCard>
+              <SectionCard.Header title={SECTION_LABELS['target']} showDivider />
+              <SectionCard.Content>
+                <SectionCard.DataRow label="Cluster" value={releaseName || '-'} />
+                <SectionCard.DataRow label="Namespace" value={namespace || '-'} />
+              </SectionCard.Content>
+            </SectionCard>
 
-            {/* Version Section */}
-            {sectionStatus['version'] === 'writing' ? (
-              <WritingSection
-                title={SECTION_LABELS['version']}
-                onEdit={() => editSection('version')}
-              />
-            ) : sectionStatus['version'] === 'pre' ? (
-              <PreSection title={SECTION_LABELS['version']} />
-            ) : (
-              <SectionCard isActive={sectionStatus['version'] === 'active'}>
-                <SectionCard.Header
-                  title={SECTION_LABELS['version']}
-                  showDivider={sectionStatus['version'] === 'done'}
-                  actions={
-                    sectionStatus['version'] === 'active' && isEditing ? (
-                      <HStack gap={2}>
-                        <Button variant="secondary" size="sm" onClick={cancelEditing}>
-                          Cancel
-                        </Button>
-                        <Button variant="primary" size="sm" onClick={doneEditing}>
-                          Done
-                        </Button>
-                      </HStack>
-                    ) : sectionStatus['version'] === 'done' ? (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconEdit size={12} />}
-                        onClick={() => editSection('version')}
-                      >
-                        Edit
-                      </Button>
-                    ) : undefined
-                  }
-                />
-                {sectionStatus['version'] === 'active' && (
-                  <SectionCard.Content showDividers={false}>
-                    <VStack gap={0}>
-                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                      <div className="py-6">
-                        <FormField required error={!!versionError}>
-                          <FormField.Label>Chart version</FormField.Label>
-                          <FormField.Control>
-                            <Select
-                              value={selectedVersion}
-                              onChange={(value) => {
-                                setSelectedVersion(value);
-                                setVersionError(null);
-                              }}
-                              placeholder="Select version"
-                              options={currentVersions}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                          <FormField.ErrorMessage>{versionError}</FormField.ErrorMessage>
-                        </FormField>
-                      </div>
-                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                      {!isEditing && (
-                        <HStack justify="end" className="pt-3">
-                          <Button variant="primary" onClick={() => goToNextSection('version')}>
-                            Next
-                          </Button>
-                        </HStack>
-                      )}
-                    </VStack>
-                  </SectionCard.Content>
-                )}
-                {sectionStatus['version'] === 'done' && (
-                  <SectionCard.Content>
-                    <SectionCard.DataRow label="Chart version" value={selectedVersion || '-'} />
-                  </SectionCard.Content>
-                )}
-              </SectionCard>
-            )}
+            {/* Version Section — read-only */}
+            <SectionCard>
+              <SectionCard.Header title={SECTION_LABELS['version']} showDivider />
+              <SectionCard.Content>
+                <SectionCard.DataRow label="Version" value={selectedVersion || '-'} />
+              </SectionCard.Content>
+            </SectionCard>
 
             {/* Configuration Section */}
             {sectionStatus['configuration'] === 'writing' ? (

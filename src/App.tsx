@@ -281,6 +281,8 @@ import InstalledAppsPage from '@/pages/InstalledAppsPage';
 import InstalledAppDetailPage from '@/pages/InstalledAppDetailPage';
 import { AppInstallPage } from '@/pages/AppInstallPage';
 import InstalledAppEditPage from '@/pages/InstalledAppEditPage';
+import InstalledOperatorsPage from '@/pages/InstalledOperatorsPage';
+import InstalledOperatorDetailPage from '@/pages/InstalledOperatorDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -988,11 +990,25 @@ function AppRoutes() {
       />
       <Route path="/container/pdb/:pdbName/edit" element={<CreatePodDisruptionBudgetPage />} />
       <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
-      <Route path="/container/catalog" element={<AppCatalogPage />} />
-      <Route path="/container/catalog/:chartName/install" element={<AppInstallPage />} />
-      <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
-      <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
-      <Route path="/container/installed-apps/:appId/edit" element={<InstalledAppEditPage />} />
+      <Route path="/container/appcatalog/catalog" element={<AppCatalogPage />} />
+      <Route path="/container/appcatalog/catalog/:chartName/install" element={<AppInstallPage />} />
+      <Route path="/container/appcatalog/installed-apps" element={<InstalledAppsPage />} />
+      <Route
+        path="/container/appcatalog/installed-apps/:appId"
+        element={<InstalledAppDetailPage />}
+      />
+      <Route
+        path="/container/appcatalog/installed-apps/:appId/edit"
+        element={<InstalledAppEditPage />}
+      />
+      <Route
+        path="/container/appcatalog/installed-operators"
+        element={<InstalledOperatorsPage />}
+      />
+      <Route
+        path="/container/appcatalog/installed-operators/:operatorId"
+        element={<InstalledOperatorDetailPage />}
+      />
       <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
       <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />

@@ -12,7 +12,7 @@
  *
  * Ref: https://www.notion.so/thakicloud/Edit-Options-33c9eddc34e68197a861e8047c9f05ae
  */
-import type { CatalogChart, InstalledApp } from './appsTypes';
+import type { CatalogChart, InstalledApp, InstalledOperator, CRInstance } from './appsTypes';
 
 export const CATEGORIES = [
   'All',
@@ -93,6 +93,15 @@ export const catalogCharts: CatalogChart[] = [
           RESOURCE_REQUEST_MEMORY: '512Mi',
           RESOURCE_LIMIT_MEMORY: '1Gi',
           STORAGE_SIZE: '10Gi',
+        },
+      },
+      XLarge: {
+        values: {
+          RESOURCE_REQUEST_CPU: '1000m',
+          RESOURCE_LIMIT_CPU: '2000m',
+          RESOURCE_REQUEST_MEMORY: '1Gi',
+          RESOURCE_LIMIT_MEMORY: '2Gi',
+          STORAGE_SIZE: '20Gi',
         },
       },
     },
@@ -219,6 +228,7 @@ export const catalogCharts: CatalogChart[] = [
       },
     ],
     defaultValuesYaml: `fullnameOverride: "\${FULLNAME_OVERRIDE}"
+
 image:
   registry: "\${IMAGE_REGISTRY}"
 
@@ -232,16 +242,19 @@ resources:
 
 auth:
   enabled: true
-  password: "\${AUTH_DEFAULT_PASSWORD}"
+  aclUsers:
+    default:
+      permissions: "~* &* +@all"
+      password: "\${AUTH_DEFAULT_PASSWORD}"
 
-primary:
-  persistence:
-    size: "\${STORAGE_SIZE}"
-    storageClass: "\${STORAGE_CLASS}"
+dataStorage:
+  enabled: true
+  requestedSize: "\${STORAGE_SIZE}"
+  className: "\${STORAGE_CLASS}"
 
 replica:
   enabled: \${REPLICA_ENABLED}
-  replicaCount: \${REPLICA_COUNT}
+  replicas: \${REPLICA_COUNT}
   persistence:
     size: "\${REPLICA_STORAGE_SIZE}"
     storageClass: "\${REPLICA_STORAGE_CLASS}"
@@ -252,6 +265,8 @@ replica:
   {
     id: 'chart-cnpg-operator',
     name: 'cnpg-operator',
+    displayName: 'CNPG Operator',
+    appType: 'Operator',
     installType: 'Operator (Step 1 of 2)',
     description:
       'CloudNativePG Operator for Kubernetes. Manages PostgreSQL clusters using the CNPG CRD. Install this first before creating PostgreSQL instances.',
@@ -444,6 +459,7 @@ monitoring:
   {
     id: 'chart-cnpg-instance',
     name: 'cnpg-instance',
+    displayName: 'CNPG',
     installType: 'Operator (Step 2 of 2)',
     dependsOn: 'cnpg-operator',
     allowMultiple: false,
@@ -530,7 +546,6 @@ monitoring:
         type: 'int',
         required: true,
         defaultValue: '3',
-        description: 'Recommended ≥3 for HA. Development: 1 is acceptable',
         group: 'Resources',
       },
       {
@@ -713,18 +728,18 @@ monitoring:
         showWhen: { key: 'POOLER_ENABLED', value: 'true' },
       },
     ],
-    defaultValuesYaml: `name: "\${FULLNAME_OVERRIDE}"
+    defaultValuesYaml: `fullnameOverride: "\${FULLNAME_OVERRIDE}"
 
 cluster:
-  instances: \${INSTANCE_COUNT}
   imageName: "\${POSTGRES_IMAGE_NAME}"
   imagePullPolicy: "\${IMAGE_PULL_POLICY}"
-
+  instances: \${INSTANCE_COUNT}
   primaryUpdateStrategy: "\${PRIMARY_UPDATE_STRATEGY}"
   primaryUpdateMethod: "\${PRIMARY_UPDATE_METHOD}"
-
   enableSuperuserAccess: \${ENABLE_SUPERUSER_ACCESS}
-
+  storage:
+    size: "\${STORAGE_SIZE}"
+    storageClass: "\${STORAGE_CLASS}"
   resources:
     requests:
       cpu: "\${RESOURCE_REQUEST_CPU}"
@@ -732,21 +747,20 @@ cluster:
     limits:
       cpu: "\${RESOURCE_LIMIT_CPU}"
       memory: "\${RESOURCE_LIMIT_MEMORY}"
-
-  storage:
-    size: "\${STORAGE_SIZE}"
-    storageClass: "\${STORAGE_CLASS}"
-
-  bootstrap:
-    initdb:
-      database: "\${APP_DATABASE_NAME}"
-      owner: "\${APP_USER_NAME}"
-
-  superuserSecret:
-    password: "\${SUPERUSER_PASSWORD}"
-
   monitoring:
     enablePodMonitor: \${CLUSTER_PODMONITOR_ENABLED}
+
+bootstrap:
+  database: "\${APP_DATABASE_NAME}"
+  owner: "\${APP_USER_NAME}"
+
+secrets:
+  app:
+    create: true
+    password: "\${APP_USER_PASSWORD}"
+  superuser:
+    create: true
+    password: "\${SUPERUSER_PASSWORD}"
 
 pooler:
   enabled: \${POOLER_ENABLED}
@@ -1282,29 +1296,6 @@ resources:
    ────────────────────────────────────────────────────────────── */
 export const installedAppsMock: InstalledApp[] = [
   {
-    id: 'release-cnpg-operator-system',
-    releaseName: 'cnpg-operator',
-    name: 'cnpg-operator',
-    status: 'Deployed',
-    namespace: 'cnpg-system',
-    chart: 'thakicloud/cnpg-operator',
-    version: '1.29.0',
-    installedAt: '2026-03-11 14:20',
-    lastDeployed: '2026-03-11 14:20',
-    chartInfo: {
-      name: 'cnpg-operator',
-      version: '1.29.0',
-      appVersion: '1.29.0',
-      description:
-        'CloudNativePG Operator — manages PostgreSQL clusters as Kubernetes-native resources.',
-    },
-    resources: [
-      { kind: 'Deployment', name: 'cnpg-operator', namespace: 'cnpg-system' },
-      { kind: 'ClusterRole', name: 'cnpg-operator' },
-      { kind: 'CustomResourceDefinition', name: 'clusters.postgresql.cnpg.io' },
-    ],
-  },
-  {
     id: 'release-cnpg-instance-default',
     releaseName: 'postgres',
     name: 'cnpg-instance',
@@ -1463,6 +1454,44 @@ primary:
     resources: [],
   },
 ];
+
+/* ──────────────────────────────────────────────────────────────
+   Installed Operators mock data (Policy §4-5, FR-026, FR-027)
+   Operators 탭은 테넌트 관리자에게만 표시.
+   crInstanceCount > 0 이면 삭제 차단 (정책서 §4-5).
+   ────────────────────────────────────────────────────────────── */
+export const installedOperatorsMock: InstalledOperator[] = [
+  {
+    id: 'op-cnpg-operator-system',
+    name: 'cnpg-operator',
+    displayName: 'CNPG Operator',
+    version: '1.29.0',
+    status: 'Deployed',
+    namespace: 'cnpg-system',
+    installedAt: '2026-03-11 14:20',
+    crInstanceCount: 2,
+    logoUrl: LOGO_URLS.postgresql,
+    resources: [
+      { kind: 'Deployment', name: 'cnpg-operator', namespace: 'cnpg-system' },
+      { kind: 'ClusterRole', name: 'cnpg-operator' },
+      { kind: 'CustomResourceDefinition', name: 'clusters.postgresql.cnpg.io' },
+    ],
+  },
+];
+
+/** CR Instances per Operator (operatorId → CRInstance[]) */
+export const crInstancesMock: Record<string, CRInstance[]> = {
+  'op-cnpg-operator-system': [
+    {
+      id: 'cr-1',
+      kind: 'Cluster',
+      name: 'cnpg-cluster-default',
+      namespace: 'default',
+      status: 'Healthy',
+    },
+    { id: 'cr-2', kind: 'Cluster', name: 'cnpg-cluster-ai', namespace: 'ai', status: 'Failed' },
+  ],
+};
 
 export const clusterOptions = [{ value: 'cluster-1', label: 'clusterName (current)' }];
 

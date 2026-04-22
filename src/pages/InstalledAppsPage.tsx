@@ -21,6 +21,8 @@ import {
 } from '@/design-system';
 import { Link, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconTerminal2, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
@@ -120,6 +122,7 @@ export default function InstalledAppsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const { isStandalone } = useAppCatalogMode();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<InstalledApp | null>(null);
@@ -136,7 +139,7 @@ export default function InstalledAppsPage() {
     {
       id: 'edit',
       label: 'Edit',
-      onClick: () => navigate(`/container/installed-apps/${row.id}/edit`),
+      onClick: () => navigate(`/container/appcatalog/installed-apps/${row.id}/edit`),
     },
     {
       id: 'delete',
@@ -164,7 +167,7 @@ export default function InstalledAppsPage() {
       minWidth: columnMinWidths.name,
       render: (value, row) => (
         <Link
-          to={`/container/installed-apps/${row.id}`}
+          to={`/container/appcatalog/installed-apps/${row.id}`}
           className="text-[var(--color-action-primary)] font-medium hover:underline truncate block min-w-0"
         >
           {value}
@@ -212,7 +215,11 @@ export default function InstalledAppsPage() {
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        isStandalone ? (
+          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        ) : (
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        )
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -236,7 +243,7 @@ export default function InstalledAppsPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
+                { label: 'App Catalog', href: '/container/appcatalog/catalog' },
                 { label: 'Installed Apps' },
               ]}
             />

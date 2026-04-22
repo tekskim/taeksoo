@@ -37,6 +37,7 @@ CON + 1Code(2) + 2Code(2) + 3Code(2) + [4Code(2)]
 | CON020104   | Cluster Detail                      | detail      | `/container/cluster-management/:clusterId`  | `Cluster management > Clusters > {clusterName}`  |
 | CON02010401 | Cluster Detail — Networking         | detail-tab  | `/container/cluster-management/:clusterId`  | `Cluster management > Clusters > {clusterName}`  |
 | CON02010402 | Cluster Detail — Node configuration | detail-tab  | `/container/cluster-management/:clusterId`  | `Cluster management > Clusters > {clusterName}`  |
+| CON02010403 | Cluster Detail — Access token       | detail-tab  | `/container/cluster-management/:clusterId`  | `Cluster management > Clusters > {clusterName}`  |
 
 ---
 
@@ -377,14 +378,14 @@ CON + 1Code(2) + 2Code(2) + 3Code(2) + [4Code(2)]
 | 섹션                  | List   | Create Form | Create YAML | Detail | Detail-Tab | Edit Config | Edit YAML | 소계    |
 | --------------------- | ------ | ----------- | ----------- | ------ | ---------- | ----------- | --------- | ------- |
 | 01 Global             | 1      | —           | —           | 1      | —          | —           | —         | 2       |
-| 02 Cluster Management | 1      | 1           | 1           | 1      | 2          | —           | —         | 6       |
+| 02 Cluster Management | 1      | 1           | 1           | 1      | 3          | —           | —         | 7       |
 | 03 Cluster            | 3      | 2           | 2           | 3      | 9          | 1           | 2         | 22      |
 | 04 Workloads          | 6      | 6           | 6           | 6      | 22         | 6           | 6         | 58      |
 | 05 Service Discovery  | 3      | 3           | 3           | 3      | 12         | 3           | 3         | 30      |
 | 06 Storage            | 5      | 5           | 5           | 5      | 17         | 5           | 5         | 47      |
 | 07 Policy             | 4      | 4           | 4           | 2      | 13         | 4           | 4         | 35      |
 | 08 App Catalog        | 2      | 1           | —           | 1      | 2          | 1           | —         | 7       |
-| **합계**              | **25** | **22**      | **21**      | **22** | **77**     | **20**      | **20**    | **207** |
+| **합계**              | **25** | **22**      | **21**      | **22** | **78**     | **20**      | **20**    | **208** |
 
 ---
 

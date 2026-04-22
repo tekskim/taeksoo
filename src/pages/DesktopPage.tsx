@@ -31,6 +31,7 @@ import { storageRoutes } from '@/routes/storage.routes';
 import { agentRoutes } from '@/routes/agent.routes';
 import { iamRoutes } from '@/routes/iam.routes';
 import { containerRoutes } from '@/routes/container.routes';
+import { appCatalogRoutes } from '@/routes/app-catalog.routes';
 import { ComputeHomePage } from './ComputeHomePage';
 import { StorageHomePage } from './StorageHomePage';
 import { HomePage } from './HomePage';
@@ -48,6 +49,7 @@ import imgStorageAdmin from '@/assets/appIcon/storageadmin.png';
 import imgComputeAdmin from '@/assets/appIcon/computeadmin.png';
 import imgCloud from '@/assets/appIcon/cloudbuilder.png';
 import imgAdminCenter from '@/assets/appIcon/admincenter.png';
+import imgAppCatalog from '@/assets/appIcon/appcatalog.png';
 
 // App Icons
 import appIconAIChat from '@/assets/appIcon/chat.png';
@@ -97,8 +99,9 @@ function getInitialIconLayout(): DesktopIconItem[] {
     { id: 'container', icon: imgContainer, label: 'Container' },
     { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
     { id: 'agent', icon: imgAgent, label: 'Agent Ops' },
-    { id: 'settings', icon: imgSettings, label: 'Settings' },
+    { id: 'app-catalog', icon: imgAppCatalog, label: 'App Catalog' },
     { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
+    { id: 'settings', icon: imgSettings, label: 'Settings' },
   ];
   const dockHeight = 64;
   const availableH = window.innerHeight - GRID.PAD_TOP - dockHeight;
@@ -855,7 +858,15 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
    Window Management Types
    ---------------------------------------- */
 
-type AppId = 'compute' | 'storage' | 'container' | 'agent' | 'ai-platform' | 'iam' | 'settings';
+type AppId =
+  | 'compute'
+  | 'storage'
+  | 'container'
+  | 'agent'
+  | 'ai-platform'
+  | 'iam'
+  | 'settings'
+  | 'app-catalog';
 
 interface WindowState {
   id: string;
@@ -920,6 +931,8 @@ function AppRoutes({ appId }: { appId: AppId }) {
       );
     case 'container':
       return <Routes>{containerRoutes}</Routes>;
+    case 'app-catalog':
+      return <Routes>{appCatalogRoutes}</Routes>;
     case 'agent':
       return (
         <Routes>
@@ -1254,6 +1267,7 @@ export function DesktopPage() {
     'ai-platform': { name: 'AI Platform', icon: imgAi, initialPath: '/ai-platform' },
     iam: { name: 'IAM', icon: imgIam, initialPath: '/iam' },
     settings: { name: 'Settings', icon: imgSettings, initialPath: '/settings' },
+    'app-catalog': { name: 'App Catalog', icon: imgAppCatalog, initialPath: '/container/catalog' },
   };
   // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Ops, Settings는 Pin만 되어있음
   const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(
@@ -1263,6 +1277,7 @@ export function DesktopPage() {
     'compute',
     'storage',
     'container',
+    'app-catalog',
     'ai-platform',
     'agent',
     'settings',
