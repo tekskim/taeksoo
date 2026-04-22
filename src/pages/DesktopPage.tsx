@@ -47,6 +47,8 @@ import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import DesktopBg from '@/assets/bg-01.jpg';
 import { computeRoutes } from '@/routes/compute.routes';
 import { storageRoutes } from '@/routes/storage.routes';
+import { storageDomainAdminRoutes } from '@/routes/storage-domain-admin.routes';
+import { storageMemberRoutes } from '@/routes/storage-member.routes';
 import { agentRoutes } from '@/routes/agent.routes';
 import { iamRoutes } from '@/routes/iam.routes';
 import { containerRoutes } from '@/routes/container.routes';
@@ -56,6 +58,8 @@ import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreateP
 import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
 import { ComputeHomePage } from './ComputeHomePage';
 import { StorageHomePage } from './StorageHomePage';
+import { StorageDomainAdminHomePage } from './StorageDomainAdminHomePage';
+import { StorageMemberHomePage } from './StorageMemberHomePage';
 import { HomePage } from './HomePage';
 import { AIPlatformPage } from './AIPlatformPage';
 import SettingsGeneralPage from './SettingsGeneralPage';
@@ -121,7 +125,9 @@ function getInitialIconLayout(): DesktopIconItem[] {
   const icons = [
     { id: 'iam', icon: imgIam, label: 'IAM' },
     { id: 'compute', icon: imgCompute, label: 'Compute' },
-    { id: 'storage', icon: imgStorage, label: 'Storage' },
+    { id: 'storage', icon: imgStorageAdmin, label: 'Storage - System admin' },
+    { id: 'storage-domain-admin', icon: imgStorageAdmin, label: 'Storage - Domain admin' },
+    { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
     { id: 'container', icon: imgContainer, label: 'Container' },
     { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
     { id: 'agent', icon: imgAgent, label: 'Agent Ops' },
@@ -1082,6 +1088,8 @@ function AdminCenterPanel({ isOpen, onClose, onOpenApp }: AdminPanelProps) {
 type AppId =
   | 'compute'
   | 'storage'
+  | 'storage-domain-admin'
+  | 'storage-member'
   | 'container'
   | 'agent'
   | 'ai-platform'
@@ -1161,6 +1169,20 @@ function AppRoutes({ appId }: { appId: AppId }) {
         <Routes>
           {storageRoutes}
           <Route path="/storage/*" element={<StorageHomePage />} />
+        </Routes>
+      );
+    case 'storage-domain-admin':
+      return (
+        <Routes>
+          {storageDomainAdminRoutes}
+          <Route path="/storage-domain-admin/*" element={<StorageDomainAdminHomePage />} />
+        </Routes>
+      );
+    case 'storage-member':
+      return (
+        <Routes>
+          {storageMemberRoutes}
+          <Route path="/storage-member/*" element={<StorageMemberHomePage />} />
         </Routes>
       );
     case 'container':
@@ -1720,7 +1742,17 @@ export function DesktopPage() {
   }, []);
   const appConfigs: Record<AppId, { name: string; icon: string; initialPath: string }> = {
     compute: { name: 'Compute', icon: imgCompute, initialPath: '/compute' },
-    storage: { name: 'Storage', icon: imgStorage, initialPath: '/storage' },
+    storage: { name: 'Storage - System admin', icon: imgStorageAdmin, initialPath: '/storage' },
+    'storage-domain-admin': {
+      name: 'Storage - Domain admin',
+      icon: imgStorageAdmin,
+      initialPath: '/storage-domain-admin',
+    },
+    'storage-member': {
+      name: 'Storage - Member',
+      icon: imgStorage,
+      initialPath: '/storage-member',
+    },
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
     agent: { name: 'Agent Ops', icon: imgAgent, initialPath: '/agent' },
     'ai-platform': { name: 'AI Platform', icon: imgAi, initialPath: '/ai-platform' },

@@ -14,7 +14,7 @@ import {
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
-import { StorageSidebar } from '@/components/StorageSidebar';
+import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
 import { useTabs } from '@/contexts/TabContext';
 import { IconRefresh, IconDownload, IconTrash, IconCheck } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
