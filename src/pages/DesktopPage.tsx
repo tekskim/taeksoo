@@ -1662,6 +1662,16 @@ export function DesktopPage() {
   const [showChatbot, setShowChatbot] = useState(false);
   const [showAdminCenter, setShowAdminCenter] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    if (!showNotifications) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowNotifications(false);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [showNotifications]);
+
   const adminCenterIconRef = useRef<HTMLButtonElement>(null);
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
   const desktopGridRef = useRef<HTMLDivElement>(null);
