@@ -476,6 +476,68 @@ function DesktopTopGNBGuidelines() {
         </TableWrapper>
       </VStack>
 
+      {/* 4.5 슬라이딩 중 인터랙션 정책 */}
+      <VStack gap={4}>
+        <SectionTitle>4.5 슬라이딩 중 인터랙션 정책</SectionTitle>
+        <Prose>
+          <p>
+            Auto-hide 슬라이딩(300ms) 도중에도 GNB 내부 요소(Dock 아이콘, 유틸리티 버튼 등)는{' '}
+            <strong>즉시 클릭 가능하다.</strong> CSS <code>transform</code> 애니메이션은{' '}
+            <code>pointer-events</code>를 차단하지 않으므로, 별도의 인터랙션 차단 처리를 하지
+            않는다.
+          </p>
+        </Prose>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[280px]">상황</Th>
+              <Th>pointer-events</Th>
+              <Th>설명</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>GNB 슬라이딩 진입 중 (slide-down)</Td>
+              <Td>
+                <code>auto</code> (기본값)
+              </Td>
+              <Td>GNB가 나타나는 즉시 Dock 아이콘, 버튼 등 클릭 가능</Td>
+            </tr>
+            <tr>
+              <Td>GNB 슬라이딩 퇴장 중 (slide-up)</Td>
+              <Td>
+                <code>auto</code> (기본값)
+              </Td>
+              <Td>사라지는 동안에도 클릭 가능하지만, 200ms delay로 실제 충돌은 희박</Td>
+            </tr>
+            <tr>
+              <Td>GNB 완전히 숨김 상태</Td>
+              <Td>
+                <code>auto</code> (기본값)
+              </Td>
+              <Td>
+                <code>translateY(-100%)</code>로 뷰포트 밖에 위치하므로 클릭 불가능 (자연스러운
+                차단)
+              </Td>
+            </tr>
+            <tr>
+              <Td>Hot Zone (6px 투명 영역)</Td>
+              <Td>
+                <code>auto</code> (기본값)
+              </Td>
+              <Td>항상 호버 감지 가능, 클릭은 아래 레이어로 통과하지 않음</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+        <Prose>
+          <p>
+            <strong>참고:</strong> 앱 창의 최소화(Minimize) 상태와 달리, GNB 슬라이딩에는{' '}
+            <code>pointerEvents: none</code>을 적용하지 않는다. 최소화된 창은 화면에 잔상으로 남아
+            클릭을 차단해야 하지만, GNB는 뷰포트 밖으로 완전히 이동하므로 추가 처리가 불필요하다.
+          </p>
+        </Prose>
+      </VStack>
+
       {/* 5. 앱 창 애니메이션 */}
       <VStack gap={4}>
         <SectionTitle>5. 앱 창 애니메이션</SectionTitle>
@@ -677,6 +739,62 @@ function DesktopTopGNBGuidelines() {
               <Td>pointerEvents</Td>
               <Td colSpan={2}>
                 최소화 시 <code>pointerEvents: none</code> (클릭 차단)
+              </Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
+        <SubSectionTitle>Dock 아이콘 등장 / 퇴장 (Appear / Disappear)</SubSectionTitle>
+        <Prose>
+          <p>
+            앱 실행 또는 Pin 시 Dock에 아이콘이 추가되고, Quit + Unpin 시 제거된다. 등장/퇴장 모두
+            framer-motion <code>AnimatePresence</code> + <code>Reorder.Item</code>으로 처리한다.
+          </p>
+        </Prose>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">속성</Th>
+              <Th>Appear (등장)</Th>
+              <Th>Disappear (퇴장)</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>라이브러리</Td>
+              <Td colSpan={2}>framer-motion (AnimatePresence + Reorder.Item)</Td>
+            </tr>
+            <tr>
+              <Td>initial / exit</Td>
+              <Td>
+                <code>opacity: 0, scale: 0.6</code>
+              </Td>
+              <Td>
+                <code>opacity: 0, scale: 0.6</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>animate</Td>
+              <Td colSpan={2}>
+                <code>opacity: 1, scale: 1</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>transition (등장)</Td>
+              <Td colSpan={2}>
+                <code>type: spring, stiffness: 400, damping: 30</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>transition (퇴장)</Td>
+              <Td colSpan={2}>
+                <code>duration: 200ms</code> (spring 없이 즉각 사라짐)
+              </Td>
+            </tr>
+            <tr>
+              <Td>layout</Td>
+              <Td colSpan={2}>
+                <code>layout</code> prop 활성화 — 주변 아이콘이 스프링으로 밀림
               </Td>
             </tr>
           </tbody>
@@ -912,9 +1030,106 @@ function DesktopTopGNBGuidelines() {
         </TableWrapper>
       </VStack>
 
-      {/* 10. 접근성 */}
+      {/* 10. CSS transition vs Framer-motion 사용 기준 */}
       <VStack gap={4}>
-        <SectionTitle>10. 접근성</SectionTitle>
+        <SectionTitle>10. CSS transition vs Framer-motion 사용 기준</SectionTitle>
+        <Prose>
+          <p>
+            Desktop Shell의 애니메이션은 <strong>CSS transition</strong>과{' '}
+            <strong>framer-motion</strong> 두 가지 방식을 혼용한다. 아래 기준에 따라 적절한 방식을
+            선택한다.
+          </p>
+        </Prose>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">기준</Th>
+              <Th>CSS transition</Th>
+              <Th>Framer-motion</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>DOM 존재 여부</strong>
+              </Td>
+              <Td>DOM에 항상 존재하며 속성만 변경</Td>
+              <Td>DOM에서 추가/제거 (mount/unmount)</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>대표 사례</strong>
+              </Td>
+              <Td>GNB 슬라이딩, Maximize/Restore (위치·크기 전환)</Td>
+              <Td>창 Open/Close (mount/unmount), Minimize, Dock 아이콘 등장/퇴장</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>exit 애니메이션</strong>
+              </Td>
+              <Td>불필요 (DOM이 유지되므로)</Td>
+              <Td>
+                필요 — <code>AnimatePresence</code>로 unmount 전 exit 애니메이션 실행
+              </Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>레이아웃 애니메이션</strong>
+              </Td>
+              <Td>제한적 (will-change 필요)</Td>
+              <Td>
+                <code>layout</code> prop으로 자동 처리 (Dock Reorder 등)
+              </Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>성능</strong>
+              </Td>
+              <Td>GPU 가속 (transform, opacity)</Td>
+              <Td>JS 기반이지만 spring physics 지원</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>선택 원칙</strong>
+              </Td>
+              <Td>DOM이 유지되면서 속성만 전환할 때</Td>
+              <Td>요소가 DOM에 추가/제거되거나, spring/layout 애니메이션이 필요할 때</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              <strong>GNB Auto-hide:</strong> GNB는 숨김 상태에서도 DOM에 존재하며{' '}
+              <code>translateY(-100%)</code>로 뷰포트 밖에 위치한다. unmount하지 않으므로{' '}
+              <strong>CSS transition</strong>이 적합하다.
+            </li>
+            <li>
+              <strong>Maximize/Restore:</strong> 창이 DOM에 유지된 채 위치와 크기만 변경되므로{' '}
+              <strong>CSS transition</strong>을 사용한다.
+            </li>
+            <li>
+              <strong>Window Open/Close:</strong> 창이 DOM에서 mount/unmount되므로 exit 애니메이션을
+              위해 <strong>framer-motion AnimatePresence</strong>를 사용한다.
+            </li>
+            <li>
+              <strong>Minimize:</strong> 시각적으로 사라지지만 DOM에서 제거되지 않는다. 그러나{' '}
+              <code>scale: 0.3</code> + <code>opacity: 0</code> 전환 후{' '}
+              <code>pointerEvents: none</code>을 적용해야 하므로, framer-motion의{' '}
+              <code>animate</code> 제어가 CSS보다 간결하다.
+            </li>
+            <li>
+              <strong>Dock 아이콘:</strong> 앱 실행/종료 시 아이콘이 mount/unmount되고, 드래그 시
+              layout 재정렬이 필요하므로 <strong>framer-motion Reorder</strong>를 사용한다.
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      {/* 11. 접근성 */}
+      <VStack gap={4}>
+        <SectionTitle>11. 접근성</SectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>Hot Zone은 마우스 기반 인터랙션이므로 키보드 접근성은 별도 고려가 필요하다.</li>
@@ -1152,6 +1367,42 @@ export function DesktopTopGNBPage() {
               </tr>
             </tbody>
           </TableWrapper>
+
+          <SubSectionTitle>Dock 아이콘 애니메이션 토큰</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[220px]">토큰</Th>
+                <Th>값</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>appear (등장)</Td>
+                <Td>
+                  scale 0.6→1, opacity 0→1, <strong>spring</strong> (stiffness: 400, damping: 30)
+                </Td>
+              </tr>
+              <tr>
+                <Td>disappear (퇴장)</Td>
+                <Td>
+                  scale 1→0.6, opacity 1→0, <strong>200ms</strong>
+                </Td>
+              </tr>
+              <tr>
+                <Td>drag lift</Td>
+                <Td>
+                  scale: 1.15, zIndex: 50, <strong>spring</strong> (stiffness: 400, damping: 25)
+                </Td>
+              </tr>
+              <tr>
+                <Td>layout reorder</Td>
+                <Td>
+                  <code>layout</code> prop + <code>dragElastic: 0.1</code>
+                </Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
         </VStack>
       }
       relatedLinks={[
@@ -1179,6 +1430,11 @@ export function DesktopTopGNBPage() {
           label: 'Desktop Icon Grid',
           path: '/design/patterns/desktop-grid',
           description: '데스크톱 바탕화면 아이콘 그리드',
+        },
+        {
+          label: 'Transitions',
+          path: '/design/foundation/transitions',
+          description: '애니메이션 토큰, 이징, 인터랙티브 데모',
         },
       ]}
     />

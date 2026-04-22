@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 
@@ -143,6 +143,20 @@ const cssPatterns = [
     duration: '150ms',
     easing: 'ease',
     components: 'Generic hover states',
+  },
+  {
+    pattern: 'GNB Auto-hide',
+    properties: 'transform, box-shadow',
+    duration: '300ms',
+    easing: 'ease-out',
+    components: 'DesktopTopBar (slide up/down)',
+  },
+  {
+    pattern: 'Window maximize',
+    properties: 'width, height, top, left, border-radius',
+    duration: '250ms',
+    easing: 'ease-out',
+    components: 'PageWindow (maximize/restore)',
   },
   {
     pattern: 'Theme switch',
@@ -344,6 +358,194 @@ stiffness: 400, damping: 25`}</pre>
   );
 }
 
+function AutoHideDemo() {
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [topBarVisible, setTopBarVisible] = useState(true);
+  const [animateTransition, setAnimateTransition] = useState(false);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
+    if (isMaximized) {
+      setAnimateTransition(false);
+      setTopBarVisible(true);
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = requestAnimationFrame(() => {
+          setAnimateTransition(true);
+          setTopBarVisible(false);
+        });
+      });
+    } else {
+      setAnimateTransition(true);
+      setTopBarVisible(true);
+    }
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [isMaximized]);
+
+  const handleMouseEnter = useCallback(() => {
+    if (!isMaximized) return;
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+    setAnimateTransition(true);
+    setTopBarVisible(true);
+  }, [isMaximized]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!isMaximized) return;
+    hideTimeoutRef.current = setTimeout(() => {
+      setAnimateTransition(true);
+      setTopBarVisible(false);
+    }, 200);
+  }, [isMaximized]);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+    };
+  }, []);
+
+  const isHidden = isMaximized && !topBarVisible;
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
+          {isMaximized
+            ? 'Hover the top edge to reveal the Top GNB — it slides down with 300ms ease-out'
+            : 'Click "Maximize" to activate auto-hide mode'}
+        </p>
+        <button
+          type="button"
+          onClick={() => setIsMaximized(!isMaximized)}
+          className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
+        >
+          {isMaximized ? 'Restore' : 'Maximize'}
+        </button>
+      </div>
+
+      <div className="relative w-full h-[280px] bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-[var(--radius-lg)] overflow-hidden border border-[var(--color-border-default)]">
+        {isMaximized && (
+          <div
+            className="absolute top-0 left-0 right-0 h-[6px] z-30"
+            onMouseEnter={handleMouseEnter}
+          />
+        )}
+
+        <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+          <div
+            className="absolute top-0 left-0 right-0 h-6 bg-black/30 flex items-center justify-between px-3 z-20"
+            style={{
+              transform: isHidden ? 'translateY(-100%)' : 'translateY(0)',
+              transition: animateTransition
+                ? 'transform 300ms ease-out, box-shadow 300ms ease-out'
+                : 'none',
+              boxShadow:
+                isMaximized && topBarVisible
+                  ? '0 2px 8px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1)'
+                  : 'none',
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-[9px] font-bold text-white/80">THAKI</span>
+              <div className="flex items-center gap-1.5">
+                {['Compute', 'Storage', 'IAM'].map((app) => (
+                  <div
+                    key={app}
+                    className="w-4 h-4 rounded bg-white/20 flex items-center justify-center"
+                  >
+                    <span className="text-[6px] font-bold text-white/70">{app[0]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[8px] text-white/50">Domain A</span>
+              <div className="w-3 h-3 rounded-full bg-white/20" />
+              <div className="w-3 h-3 rounded-full bg-white/20" />
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="absolute left-2 right-2 bg-[#1e293b] border border-white/10 rounded-md overflow-hidden"
+          style={{
+            top: isMaximized ? 0 : 30,
+            bottom: isMaximized ? 0 : 40,
+            transition: 'top 250ms ease-out, bottom 250ms ease-out, border-radius 250ms ease-out',
+            borderRadius: isMaximized ? 0 : undefined,
+            left: isMaximized ? 0 : undefined,
+            right: isMaximized ? 0 : undefined,
+          }}
+        >
+          <div className="h-4 bg-white/5 flex items-center justify-between px-2">
+            <span className="text-[7px] text-white/50">Compute — Instances</span>
+            <div className="flex items-center gap-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-400/60" />
+              <div className="w-1.5 h-1.5 rounded-full bg-green-400/60" />
+              <div className="w-1.5 h-1.5 rounded-full bg-red-400/60" />
+            </div>
+          </div>
+          <div className="p-3 space-y-2">
+            <div className="flex gap-2 mb-3">
+              <div className="w-16 h-2 rounded-full bg-white/10" />
+              <div className="w-10 h-2 rounded-full bg-white/5" />
+            </div>
+            {[...Array(5)].map((_, j) => (
+              <div key={j} className="flex gap-2">
+                <div className="w-24 h-1.5 rounded-full bg-white/5" />
+                <div className="w-16 h-1.5 rounded-full bg-white/5" />
+                <div className="w-12 h-1.5 rounded-full bg-white/5" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {!isMaximized && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-lg border border-white/20">
+            {['C', 'S', 'I'].map((letter) => (
+              <div
+                key={letter}
+                className="w-5 h-5 rounded bg-white/20 flex items-center justify-center"
+              >
+                <span className="text-[7px] font-bold text-white/70">{letter}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+          <span className="text-label-sm text-[var(--color-text-muted)]">GNB Slide Down</span>
+          <pre className="text-body-xs font-mono text-[var(--color-text-default)] mt-1">{`transform: translateY(0)
+transition: 300ms ease-out
+trigger: hover top edge`}</pre>
+        </div>
+        <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+          <span className="text-label-sm text-[var(--color-text-muted)]">GNB Slide Up</span>
+          <pre className="text-body-xs font-mono text-[var(--color-text-default)] mt-1">{`transform: translateY(-100%)
+transition: 300ms ease-out
+delay: 200ms (mouse leave)`}</pre>
+        </div>
+        <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+          <span className="text-label-sm text-[var(--color-text-muted)]">Hot Zone</span>
+          <pre className="text-body-xs font-mono text-[var(--color-text-default)] mt-1">{`height: 6px
+z-index: 10000
+position: fixed top-0`}</pre>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const framerMotionPatterns = [
   {
     name: 'Window Open / Close',
@@ -384,6 +586,26 @@ transition={{ type: 'spring', stiffness: 400, damping: 25 }}`,
 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
 layout dragElastic={0.1}`,
     usage: 'Reorder.Item — drag reorder with layout',
+  },
+  {
+    name: 'Dock Icon Appear / Disappear',
+    code: `initial={{ opacity: 0, scale: 0.6 }}
+animate={{ opacity: 1, scale: 1 }}
+exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.2 } }}
+transition={{ type: 'spring', stiffness: 400, damping: 30 }}`,
+    usage: 'Reorder.Item — dock icon enter/exit on app launch/quit',
+  },
+  {
+    name: 'Window Minimize / Restore',
+    code: `// Minimize
+animate={{ scale: 0.3, opacity: 0 }}
+transition={{ duration: 0.25, ease: 'easeIn' }}
+style={{ transformOrigin: 'top center' }}
+
+// Restore
+animate={{ scale: 1, opacity: 1 }}
+transition={{ duration: 0.2, ease: 'easeOut' }}`,
+    usage: 'PageWindow — minimize shrink + restore expand',
   },
   {
     name: 'Layout ID + AnimatePresence',
@@ -550,6 +772,21 @@ export function TransitionsPage() {
             <DesktopAppDemo />
           </div>
 
+          {/* GNB Auto-hide Animation Demo */}
+          <div className="space-y-4">
+            <h3 className="text-heading-h6 text-[var(--color-text-default)]">
+              GNB Auto-hide Animation
+            </h3>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              Interactive demo of the Desktop Top GNB auto-hide behavior. Click "Maximize" to
+              activate auto-hide mode, then hover the top edge to reveal the GNB. Uses{' '}
+              <span className="font-mono text-body-sm">CSS transition</span> (300ms ease-out) with
+              double <span className="font-mono text-body-sm">requestAnimationFrame</span> for
+              smooth slide-in/out.
+            </p>
+            <AutoHideDemo />
+          </div>
+
           {/* Motion Principles */}
           <div className="space-y-4">
             <h3 className="text-heading-h6 text-[var(--color-text-default)]">Motion Principles</h3>
@@ -656,6 +893,11 @@ export function TransitionsPage() {
         </div>
       }
       relatedLinks={[
+        {
+          label: 'Desktop Top GNB',
+          path: '/design/components/desktop-top-gnb',
+          description: 'Auto-hide animation spec & edge cases',
+        },
         {
           label: 'Shadows',
           path: '/design/foundation/shadows',
