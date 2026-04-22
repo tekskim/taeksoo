@@ -149,8 +149,8 @@ function GlobalPanelPreview() {
   return (
     <VStack gap={4}>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
-          <div className="relative pt-3 pb-0">
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg">
+          <div className="relative pt-3 pb-0 rounded-t-lg overflow-hidden">
             <button
               type="button"
               className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)]"
@@ -363,9 +363,9 @@ function GlobalPanelDemo() {
         </Button>
       </div>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg">
           {/* Tabs header */}
-          <div className="relative pt-3 pb-0">
+          <div className="relative pt-3 pb-0 rounded-t-lg overflow-hidden">
             <button
               type="button"
               onClick={handleMarkAllAsRead}
@@ -392,24 +392,24 @@ function GlobalPanelDemo() {
             </Tabs>
           </div>
 
-          {/* App Filter + Notification List share same scroll container */}
-          <div className="max-h-[480px] overflow-y-auto px-3 notification-scroll">
-            <div className="py-2 border-b border-[var(--color-border-subtle)] sticky top-0 z-10 bg-[var(--color-surface-default)]">
-              <Select
-                options={availableAppOptions}
-                value={activeApp}
-                onChange={(v) => setActiveApp(v)}
-                size="md"
-                fullWidth
-              />
-            </div>
+          {/* App Filter */}
+          <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
+            <Select
+              options={availableAppOptions}
+              value={activeApp}
+              onChange={(v) => setActiveApp(v)}
+              size="md"
+              fullWidth
+            />
+          </div>
 
-            {filteredNotifications.length === 0 ? (
-              <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
-                No notifications
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2 py-2">
+          {filteredNotifications.length === 0 ? (
+            <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
+              No notifications
+            </div>
+          ) : (
+            <div className="max-h-[420px] overflow-y-auto px-3 py-2 mr-[-6px] rounded-b-lg notification-scroll">
+              <div className="flex flex-col gap-2">
                 {filteredNotifications.map((n) => (
                   <InteractiveNotificationCard
                     key={n.id}
@@ -418,8 +418,8 @@ function GlobalPanelDemo() {
                   />
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </VStack>

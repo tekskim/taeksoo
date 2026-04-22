@@ -92,12 +92,11 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         rounded-lg
         border border-[var(--color-border-default)]
         shadow-lg
-        overflow-hidden
         ${className}
       `}
     >
       {/* Header with Tabs */}
-      <div className="relative pt-3 pb-0">
+      <div className="relative pt-3 pb-0 rounded-t-lg overflow-hidden">
         {/* Mark all as read button - positioned top right, vertically centered */}
         <button
           type="button"
@@ -164,7 +163,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       </div>
 
       {/* Notifications List */}
-      <div className="max-h-[400px] overflow-y-auto p-2 notification-scroll">
+      <div className="max-h-[400px] overflow-y-auto p-2 mr-[-6px] rounded-b-lg notification-scroll">
         {filteredNotifications.length === 0 ? (
           <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
             No notifications
