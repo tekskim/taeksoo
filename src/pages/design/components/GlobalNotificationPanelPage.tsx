@@ -170,7 +170,7 @@ function GlobalPanelPreview() {
             <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="md" fullWidth />
           </div>
 
-          <div className="max-h-[400px] overflow-y-auto px-3 py-2 drawer-scroll">
+          <div className="max-h-[400px] overflow-y-auto px-3 py-2 mr-[-6px] notification-scroll">
             <div className="flex flex-col gap-2">
               <StaticPanelCard
                 appIcon={AppIconCompute}
@@ -392,24 +392,24 @@ function GlobalPanelDemo() {
             </Tabs>
           </div>
 
-          {/* App Filter */}
-          <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
-            <Select
-              options={availableAppOptions}
-              value={activeApp}
-              onChange={(v) => setActiveApp(v)}
-              size="md"
-              fullWidth
-            />
-          </div>
-
-          {filteredNotifications.length === 0 ? (
-            <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
-              No notifications
+          {/* App Filter + Notification List share same scroll container */}
+          <div className="max-h-[480px] overflow-y-auto px-3 notification-scroll">
+            <div className="py-2 border-b border-[var(--color-border-subtle)] sticky top-0 z-10 bg-[var(--color-surface-default)]">
+              <Select
+                options={availableAppOptions}
+                value={activeApp}
+                onChange={(v) => setActiveApp(v)}
+                size="md"
+                fullWidth
+              />
             </div>
-          ) : (
-            <div className="max-h-[420px] overflow-y-auto px-3 py-2 drawer-scroll">
-              <div className="flex flex-col gap-2">
+
+            {filteredNotifications.length === 0 ? (
+              <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
+                No notifications
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2 py-2">
                 {filteredNotifications.map((n) => (
                   <InteractiveNotificationCard
                     key={n.id}
@@ -418,8 +418,8 @@ function GlobalPanelDemo() {
                   />
                 ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </VStack>

@@ -164,7 +164,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       </div>
 
       {/* Notifications List */}
-      <div className="max-h-[400px] overflow-y-auto p-2 drawer-scroll">
+      <div className="max-h-[400px] overflow-y-auto p-2 notification-scroll">
         {filteredNotifications.length === 0 ? (
           <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
             No notifications

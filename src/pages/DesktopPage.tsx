@@ -2133,23 +2133,23 @@ export function DesktopPage() {
                 </Tabs>
               </div>
 
-              <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
-                <Select
-                  options={gnpAppOptions}
-                  value={gnpActiveApp}
-                  onChange={(v) => setGnpActiveApp(v)}
-                  size="md"
-                  fullWidth
-                />
-              </div>
-
-              {gnpFiltered.length === 0 ? (
-                <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
-                  No notifications
+              <div className="max-h-[480px] overflow-y-auto px-3 notification-scroll">
+                <div className="py-2 border-b border-[var(--color-border-subtle)] sticky top-0 z-10 bg-[var(--color-surface-default)]">
+                  <Select
+                    options={gnpAppOptions}
+                    value={gnpActiveApp}
+                    onChange={(v) => setGnpActiveApp(v)}
+                    size="md"
+                    fullWidth
+                  />
                 </div>
-              ) : (
-                <div className="max-h-[420px] overflow-y-auto px-3 py-2 drawer-scroll">
-                  <div className="flex flex-col gap-2">
+
+                {gnpFiltered.length === 0 ? (
+                  <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
+                    No notifications
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2 py-2">
                     {gnpFiltered.map((n) => (
                       <GlobalNotificationCard
                         key={n.id}
@@ -2158,8 +2158,8 @@ export function DesktopPage() {
                       />
                     ))}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </>
