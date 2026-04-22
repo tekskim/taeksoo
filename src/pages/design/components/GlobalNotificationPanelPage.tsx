@@ -175,13 +175,7 @@ function GlobalPanelPreview() {
               <StaticPanelCard
                 appIcon={AppIconCompute}
                 message={`Volume "backup-01" snapshot\nsuccessfully created`}
-                statusIcon={
-                  <IconCircleCheck
-                    size={14}
-                    stroke={1.5}
-                    className="text-[var(--color-state-success)]"
-                  />
-                }
+                statusIcon={successIcon}
                 time="10:23"
                 partition="proj-1"
                 isRead={false}
@@ -189,13 +183,7 @@ function GlobalPanelPreview() {
               <StaticPanelCard
                 appIcon={AppIconCompute}
                 message={`Volume "backup-01" create failed.`}
-                statusIcon={
-                  <IconAlertTriangle
-                    size={14}
-                    stroke={1.5}
-                    className="text-[var(--color-state-danger)]"
-                  />
-                }
+                statusIcon={errorIcon}
                 time="09:30"
                 partition="proj-2"
                 isRead={false}
@@ -206,22 +194,11 @@ function GlobalPanelPreview() {
                 }}
               />
               <StaticPanelCard
-                appIcon={AppIconIAM}
-                message={`Volume "backup-01" snapshot `}
-                statusIcon={
-                  <>
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      infomation
-                    </span>
-                    <IconInfoCircle
-                      size={14}
-                      stroke={1.5}
-                      className="text-[var(--color-state-info)]"
-                    />
-                  </>
-                }
+                appIcon={AppIconContainer}
+                message={`Deployment "api-gateway" scaled to 3 replicas.`}
+                statusIcon={infoIcon}
                 time="08:45"
-                partition="proj-1"
+                partition="default"
                 isRead={false}
               />
             </div>
@@ -242,11 +219,8 @@ const successIcon = (
 const errorIcon = (
   <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
 );
-const infoStatusIcon = (
-  <>
-    <span className="text-body-md text-[var(--color-text-default)]">infomation</span>
-    <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
-  </>
+const infoIcon = (
+  <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
 );
 
 const INITIAL_NOTIFICATIONS: PanelNotification[] = [
@@ -263,7 +237,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '2',
-    message: 'Volume "backup-01" create failed.',
+    message: 'Volume "data-vol-02" create failed.',
     statusIcon: errorIcon,
     time: '09:30',
     partition: 'proj-2',
@@ -278,20 +252,9 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '3',
-    message: 'Volume "backup-01" snapshot ',
-    statusIcon: infoStatusIcon,
+    message: 'API key "prod-key-01" has been rotated.',
+    statusIcon: infoIcon,
     time: '10:10',
-    partition: 'proj-1',
-    app: 'Compute',
-    appIcon: AppIconCompute,
-    isRead: true,
-    href: '/compute/volumes',
-  },
-  {
-    id: '4',
-    message: 'Volume "backup-01" snapshot ',
-    statusIcon: infoStatusIcon,
-    time: '08:45',
     partition: 'proj-1',
     app: 'IAM',
     appIcon: AppIconIAM,
@@ -299,19 +262,30 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
     href: '/iam/api-keys',
   },
   {
+    id: '4',
+    message: 'Deployment "api-gateway" scaled to 3 replicas.',
+    statusIcon: infoIcon,
+    time: '08:45',
+    partition: 'default',
+    app: 'Container',
+    appIcon: AppIconContainer,
+    isRead: true,
+    href: '/container/deployments',
+  },
+  {
     id: '5',
-    message: 'Volume "backup-01" snapshot\nsuccessfully created',
+    message: 'Instance "web-01" snapshot done.',
     statusIcon: successIcon,
     time: '08:30',
     partition: 'proj-1',
-    app: 'IAM',
-    appIcon: AppIconIAM,
+    app: 'Compute',
+    appIcon: AppIconCompute,
     isRead: true,
-    href: '/iam/policies',
+    href: '/compute/instances',
   },
   {
     id: '6',
-    message: 'Volume "backup-01" create failed.',
+    message: 'Pod "api-gateway" crash loop.',
     statusIcon: errorIcon,
     time: '09:55',
     partition: 'default',
@@ -320,6 +294,17 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
     isRead: false,
     href: '/container/pods',
     detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
+  },
+  {
+    id: '7',
+    message: 'Storage pool "pool-01" health check passed.',
+    statusIcon: successIcon,
+    time: '08:15',
+    partition: 'proj-1',
+    app: 'Storage',
+    appIcon: AppIconStorage,
+    isRead: true,
+    href: '/storage/pools',
   },
 ];
 
@@ -574,7 +559,7 @@ function PanelCardStates() {
         Notification card states
       </span>
       <p className="text-body-sm text-[var(--color-text-subtle)]">
-        10 visual states of a notification card: info/success/failed types, read/unread, hover
+        10 visual states of a notification card: info / success / error types, read/unread, hover
         mark-as-read, detail collapsed/expanded.
       </p>
       <div className="grid grid-cols-[320px_320px] gap-6">
@@ -583,8 +568,8 @@ function PanelCardStates() {
           <span className="text-label-sm text-[var(--color-text-subtle)]">Info — Default</span>
           <StaticPanelCard
             appIcon={AppIconCompute}
-            message={`Volume "backup-01" snapshot `}
-            statusIcon={infoStatusIcon}
+            message={`Deployment "api-gateway" scaled to 3 replicas.`}
+            statusIcon={infoIcon}
             time="10:33"
             partition={PARTITION}
           />
@@ -594,8 +579,8 @@ function PanelCardStates() {
           <span className="text-label-sm text-[var(--color-text-subtle)]">Info — Unread</span>
           <StaticPanelCard
             appIcon={AppIconCompute}
-            message={`Volume "backup-01" snapshot `}
-            statusIcon={infoStatusIcon}
+            message={`Deployment "api-gateway" scaled to 3 replicas.`}
+            statusIcon={infoIcon}
             time="10:33"
             partition={PARTITION}
             isRead={false}
@@ -609,8 +594,8 @@ function PanelCardStates() {
           </span>
           <StaticPanelCard
             appIcon={AppIconCompute}
-            message={`Volume "backup-01" snapshot `}
-            statusIcon={infoStatusIcon}
+            message={`Deployment "api-gateway" scaled to 3 replicas.`}
+            statusIcon={infoIcon}
             time="10:33"
             partition={PARTITION}
             isRead={false}

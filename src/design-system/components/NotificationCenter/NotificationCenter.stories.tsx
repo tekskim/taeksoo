@@ -24,7 +24,7 @@ const meta: Meta<typeof NotificationCenter> = {
 \`\`\`ts
 interface NotificationItem {
   id: string;
-  type: 'success' | 'error' | 'warning' | 'info';
+  type: 'success' | 'error' | 'info';
   message: string;
   time: string;
   project?: string;
@@ -82,8 +82,8 @@ const sampleNotifications: NotificationItem[] = [
   },
   {
     id: '3',
-    type: 'warning',
-    message: 'Storage usage exceeded 80% threshold.',
+    type: 'info',
+    message: 'Scheduled maintenance completed successfully.',
     time: '1 hour ago',
     project: 'Storage',
     isRead: true,
@@ -227,15 +227,14 @@ export const WithDetails: Story = {
         },
         {
           id: '2',
-          type: 'warning',
-          message: 'High memory usage detected',
+          type: 'info',
+          message: 'Auto-scaling triggered for service "web-frontend"',
           time: '15 min ago',
           project: 'Monitoring',
           isRead: false,
           detail: {
-            code: 'MEM_HIGH',
-            message:
-              'Memory usage at 92%. Consider scaling up or optimizing memory-intensive processes.',
+            code: 'SCALE_UP',
+            message: 'Scaled from 2 to 4 replicas due to high CPU utilization (85%).',
           },
         },
       ]}
@@ -251,7 +250,7 @@ export const ManyNotifications: Story = {
     <NotificationCenter
       notifications={Array.from({ length: 20 }, (_, i) => ({
         id: String(i + 1),
-        type: (['success', 'error', 'warning', 'info'] as const)[i % 4],
+        type: (['success', 'error', 'info'] as const)[i % 3],
         message: `Notification message ${i + 1}`,
         time: `${i + 1} min ago`,
         project: `Project ${(i % 3) + 1}`,

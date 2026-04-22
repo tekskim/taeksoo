@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo, Suspense } from 'react';
-import SettingsPage from './SettingsPage';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
 import {
   IconLayoutDashboard,
@@ -7,7 +6,7 @@ import {
   IconSelector,
   IconCircleCheck,
   IconAlertTriangle,
-  IconAlertCircle,
+  IconInfoCircle,
   IconCheckbox,
   IconChevronUp,
   IconChevronDown,
@@ -50,10 +49,18 @@ import { storageRoutes } from '@/routes/storage.routes';
 import { agentRoutes } from '@/routes/agent.routes';
 import { iamRoutes } from '@/routes/iam.routes';
 import { containerRoutes } from '@/routes/container.routes';
+import { computeAdminRoutes } from '@/routes/compute-admin.routes';
+import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
+import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreatePage';
+import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
 import { ComputeHomePage } from './ComputeHomePage';
 import { StorageHomePage } from './StorageHomePage';
 import { HomePage } from './HomePage';
 import { AIPlatformPage } from './AIPlatformPage';
+import SettingsGeneralPage from './SettingsGeneralPage';
+import SettingsAccountPage from './SettingsAccountPage';
+import SettingsNotificationsPage from './SettingsNotificationsPage';
+import SettingsInformationPage from './SettingsInformationPage';
 
 // App Icon Images
 import imgIam from '@/assets/appIcon/iam.png';
@@ -150,15 +157,15 @@ const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(functi
       ref={ref}
       type="button"
       className={`
-          absolute flex flex-col items-center gap-1 w-20 bg-transparent border-none p-0 select-none
-          ${isDragging ? 'opacity-50 pointer-events-none' : 'cursor-pointer transition-transform hover:-translate-y-0.5'}
+          absolute flex flex-col items-center gap-1 w-20 bg-transparent border-none p-0 select-none group
+          ${isDragging ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}
         `}
       style={style}
       onClick={isDragging ? undefined : onClick}
       onMouseDown={onMouseDown}
       aria-label={label}
     >
-      <div className="w-20 h-20 flex items-center justify-center rounded-[var(--radius-lg)]">
+      <div className="w-[72px] h-[72px] flex items-center justify-center rounded-lg transition-colors duration-150 group-hover:bg-[var(--desktop-icon-hover)] group-active:bg-[var(--desktop-icon-active)]">
         {iconSlot || (
           <img
             src={icon}
@@ -168,7 +175,7 @@ const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(functi
           />
         )}
       </div>
-      <span className="text-label-md text-[var(--desktop-text)] text-center whitespace-nowrap">
+      <span className="text-label-md text-[var(--desktop-text)] text-center whitespace-nowrap px-2 py-0.5 rounded transition-colors duration-150 group-hover:bg-[var(--desktop-icon-hover)] group-active:bg-[var(--desktop-icon-active)]">
         {label}
       </span>
     </button>
@@ -219,7 +226,7 @@ function DragGhost({ icon, label, x, y }: DragGhostProps) {
       className="fixed z-[9999] flex flex-col items-center gap-1 w-20 pointer-events-none opacity-80"
       style={{ left: x - GRID.ICON_W / 2, top: y - 40 }}
     >
-      <div className="w-20 h-20 flex items-center justify-center rounded-[var(--radius-lg)]">
+      <div className="w-[72px] h-[72px] flex items-center justify-center rounded-lg bg-[var(--desktop-icon-active)]">
         <img
           src={icon}
           alt={label}
@@ -227,7 +234,7 @@ function DragGhost({ icon, label, x, y }: DragGhostProps) {
           draggable={false}
         />
       </div>
-      <span className="text-label-md text-[var(--desktop-text)] text-center whitespace-nowrap">
+      <span className="text-label-md text-[var(--desktop-text)] text-center whitespace-nowrap px-2 py-0.5 rounded bg-[var(--desktop-icon-active)]">
         {label}
       </span>
     </div>
@@ -503,33 +510,38 @@ function DockIcons({
         onReorder={handleReorder}
         className="flex items-center gap-2"
       >
-        {localApps.map((app) => (
-          <Reorder.Item
-            key={app.id}
-            value={app}
-            as="div"
-            onDragStart={() => setIsDragging(true)}
-            onDragEnd={() => setIsDragging(false)}
-            dragListener={true}
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.15}
-            layout
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            whileDrag={{
-              scale: 1.15,
-              zIndex: 50,
-              cursor: 'grabbing',
-            }}
-            className="cursor-grab active:cursor-grabbing"
-          >
-            <DockIconItem
-              app={app}
-              isDragging={isDragging}
-              onAppClick={onAppClick}
-              getContextMenuItems={getContextMenuItems}
-            />
-          </Reorder.Item>
-        ))}
+        <AnimatePresence initial={false}>
+          {localApps.map((app) => (
+            <Reorder.Item
+              key={app.id}
+              value={app}
+              as="div"
+              onDragStart={() => setIsDragging(true)}
+              onDragEnd={() => setIsDragging(false)}
+              dragListener={true}
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0.15}
+              layout
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.2 } }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              whileDrag={{
+                scale: 1.15,
+                zIndex: 50,
+                cursor: 'grabbing',
+              }}
+              className="cursor-grab active:cursor-grabbing"
+            >
+              <DockIconItem
+                app={app}
+                isDragging={isDragging}
+                onAppClick={onAppClick}
+                getContextMenuItems={getContextMenuItems}
+              />
+            </Reorder.Item>
+          ))}
+        </AnimatePresence>
       </Reorder.Group>
     </div>
   );
@@ -541,7 +553,7 @@ function DockIcons({
 
 interface TopBarProps {
   onChatbotToggle: () => void;
-  onOpenSettings?: (tab?: 'general' | 'account' | 'notifications' | 'information') => void;
+  onOpenSettings?: () => void;
   onNotificationToggle?: () => void;
   notificationButtonRef?: React.RefObject<HTMLButtonElement>;
   dockIcons?: React.ReactNode;
@@ -874,7 +886,7 @@ function DesktopTopBar({
                 id: 'user-email',
                 label: 'thaki.kim@example.com',
                 onClick: () => {
-                  onOpenSettings?.('account');
+                  onOpenSettings?.();
                 },
                 tooltip: 'Open settings page',
                 tooltipPosition: 'left',
@@ -971,9 +983,10 @@ interface AdminPanelProps {
   isOpen: boolean;
   onClose: () => void;
   anchorRef: React.RefObject<HTMLButtonElement>;
+  onOpenApp?: (appId: AppId) => void;
 }
 
-function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
+function AdminCenterPanel({ isOpen, onClose, onOpenApp }: AdminPanelProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -997,8 +1010,11 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
               transition={{ duration: 0.2, ease: 'easeOut' }}
             >
               <button
-                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-                onClick={() => console.log('Storage Admin clicked')}
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('storage' as AppId);
+                  onClose();
+                }}
               >
                 <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
                 <span className="text-label-md text-[var(--desktop-text)] text-center">
@@ -1006,8 +1022,11 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
                 </span>
               </button>
               <button
-                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-                onClick={() => console.log('Compute Admin clicked')}
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('compute-admin');
+                  onClose();
+                }}
               >
                 <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
                 <span className="text-label-md text-[var(--desktop-text)] text-center">
@@ -1015,8 +1034,11 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
                 </span>
               </button>
               <button
-                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-                onClick={() => console.log('AI Platform Admin clicked')}
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('ai-platform' as AppId);
+                  onClose();
+                }}
               >
                 <img
                   src={imgAIPlatformAdmin}
@@ -1028,8 +1050,11 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
                 </span>
               </button>
               <button
-                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-                onClick={() => console.log('Cloud Builder clicked')}
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('cloud-builder');
+                  onClose();
+                }}
               >
                 <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
                 <span className="text-label-md text-[var(--desktop-text)] text-center">
@@ -1052,7 +1077,16 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
    Window Management Types
    ---------------------------------------- */
 
-type AppId = 'compute' | 'storage' | 'container' | 'agent' | 'ai-platform' | 'iam' | 'settings';
+type AppId =
+  | 'compute'
+  | 'storage'
+  | 'container'
+  | 'agent'
+  | 'ai-platform'
+  | 'iam'
+  | 'settings'
+  | 'compute-admin'
+  | 'cloud-builder';
 
 interface WindowState {
   id: string;
@@ -1092,7 +1126,7 @@ function IsolatedRouter({
       <UNSAFE_RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
         <MemoryRouter initialEntries={[initialPath]}>
           <SidebarProvider>
-            <TabProvider onLastTabClose={onClose}>
+            <TabProvider onLastTabClose={onClose} persistTabs={false}>
               <Suspense
                 fallback={
                   <div className="flex items-center justify-center h-full text-[var(--color-text-muted)]">
@@ -1145,6 +1179,29 @@ function AppRoutes({ appId }: { appId: AppId }) {
       );
     case 'iam':
       return <Routes>{iamRoutes}</Routes>;
+    case 'settings':
+      return (
+        <Routes>
+          <Route path="/settings" element={<SettingsGeneralPage />} />
+          <Route path="/settings/general" element={<SettingsGeneralPage />} />
+          <Route path="/settings/account" element={<SettingsAccountPage />} />
+          <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
+          <Route path="/settings/information" element={<SettingsInformationPage />} />
+          <Route path="/settings/*" element={<SettingsGeneralPage />} />
+        </Routes>
+      );
+    case 'compute-admin':
+      return <Routes>{computeAdminRoutes}</Routes>;
+    case 'cloud-builder':
+      return (
+        <Routes>
+          <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
+          <Route path="/cloudbuilder/:slug" element={<CloudBuilderConsolePage />} />
+          <Route path="/cloudbuilder/:slug/create" element={<CloudBuilderCreatePage />} />
+          <Route path="/cloudbuilder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
+          <Route path="/cloudbuilder/*" element={<CloudBuilderConsolePage />} />
+        </Routes>
+      );
     default:
       return null;
   }
@@ -1347,8 +1404,9 @@ function PageWindow({
       onClose,
       onDragStart: handleDragStart,
       onDoubleClick: handleMaximize,
+      isMaximized,
     }),
-    [handleMinimize, handleMaximize, onClose, handleDragStart]
+    [handleMinimize, handleMaximize, onClose, handleDragStart, isMaximized]
   );
 
   if (!isOpen) return null;
@@ -1491,97 +1549,116 @@ function GlobalNotificationCard({
   onMarkAsRead: () => void;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const hasDetail =
     notification.detail && (notification.detail.code || notification.detail.message);
+  const isUnread = !notification.isRead;
 
   return (
     <div
-      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] flex flex-col gap-4 p-3 ${
-        !notification.isRead
-          ? 'bg-[var(--color-surface-subtle)]'
-          : 'bg-[var(--color-surface-default)]'
-      }`}
+      className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div
         onClick={() => {
-          if (!notification.isRead) onMarkAsRead();
+          if (isUnread) onMarkAsRead();
         }}
-        className="flex gap-2 items-start cursor-pointer"
+        className="flex items-start justify-between px-3 cursor-pointer"
       >
-        <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
-        <div className="flex flex-col gap-2 flex-1 min-w-0">
-          <span className="text-body-md text-[var(--color-text-default)]">
-            {notification.message}
-            {notification.statusIcon && (
-              <span className="inline-flex align-[-2px] ml-1">{notification.statusIcon}</span>
-            )}
-          </span>
-          <div className="flex items-center gap-2">
-            <span className="text-body-xs text-[var(--color-text-muted)] whitespace-nowrap">
-              {notification.time}
-            </span>
+        <div className="flex gap-2 items-start w-[256px]">
+          <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
+          <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
+            <div className="text-body-md text-[var(--color-text-default)]">
+              {notification.message}
+              {notification.statusIcon && (
+                <>
+                  {' '}
+                  <span className="inline-flex items-center align-[-2px]">
+                    {notification.statusIcon}
+                  </span>
+                </>
+              )}
+            </div>
+
             {notification.project && (
-              <>
-                <div className="w-px h-[10px] bg-[var(--color-border-default)]" />
-                <span className="text-body-xs text-[var(--color-text-muted)] whitespace-nowrap">
-                  {notification.project}
-                </span>
-              </>
+              <span className="text-body-xs text-[var(--color-text-subtle)]">
+                {notification.project}
+              </span>
+            )}
+
+            {hasDetail && (
+              <div
+                className="flex flex-col gap-2 rounded-[var(--radius-sm)]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="group flex items-center gap-1"
+                >
+                  <span className="text-body-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] whitespace-nowrap">
+                    View detail
+                  </span>
+                  {isExpanded ? (
+                    <IconChevronUp
+                      size={12}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  ) : (
+                    <IconChevronDown
+                      size={12}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  )}
+                </button>
+
+                {isExpanded && (
+                  <>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <div className="flex flex-col gap-1 text-body-sm text-[var(--color-text-muted)]">
+                      {notification.detail?.code !== undefined && (
+                        <p>code: {notification.detail.code}</p>
+                      )}
+                      {notification.detail?.message && <p>{notification.detail.message}</p>}
+                    </div>
+                  </>
+                )}
+              </div>
             )}
           </div>
         </div>
+        <div className="flex flex-col items-end justify-end self-stretch shrink-0">
+          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+            {notification.time}
+          </span>
+        </div>
       </div>
 
-      {hasDetail && (
-        <div className="flex flex-col gap-2">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpanded(!isExpanded);
-            }}
-            className="flex items-center justify-end gap-1.5 w-full"
-          >
-            <span className="text-body-sm font-medium text-[var(--color-text-muted)]">
-              View detail
-            </span>
-            {isExpanded ? (
-              <IconChevronUp size={12} className="text-[var(--color-text-muted)]" />
-            ) : (
-              <IconChevronDown size={12} className="text-[var(--color-text-muted)]" />
-            )}
-          </button>
-          {isExpanded && (
-            <div
-              className={`p-3 rounded-[var(--radius-md)] flex flex-col gap-1 ${
-                !notification.isRead
-                  ? 'bg-[var(--color-surface-default)]'
-                  : 'bg-[var(--color-surface-subtle)]'
-              }`}
-            >
-              {notification.detail?.code !== undefined && (
-                <p className="text-label-sm text-[var(--color-text-default)]">
-                  code: {notification.detail.code}
-                </p>
-              )}
-              {notification.detail?.message && (
-                <p className="text-body-sm text-[var(--color-text-muted)]">
-                  {notification.detail.message}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
+      {isUnread && !isHovered && (
+        <div className="absolute top-3 right-3 size-1.5 rounded-full bg-[var(--color-action-primary)]" />
+      )}
+
+      {isUnread && isHovered && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onMarkAsRead();
+          }}
+          className="absolute top-[6px] right-[8px] size-4 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-muted)] transition-colors"
+          aria-label="Mark as read"
+        >
+          <IconCheckbox size={12} stroke={1.5} />
+        </button>
       )}
     </div>
   );
 }
 
 export function DesktopPage() {
-  const [showSettings, setShowSettings] = useState(false);
-  const [settingsTab, setSettingsTab] = useState<
-    'general' | 'account' | 'notifications' | 'information'
-  >('general');
   const [showChatbot, setShowChatbot] = useState(false);
   const [showAdminCenter, setShowAdminCenter] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -1620,14 +1697,23 @@ export function DesktopPage() {
     'ai-platform': { name: 'AI Platform', icon: imgAi, initialPath: '/ai-platform' },
     iam: { name: 'IAM', icon: imgIam, initialPath: '/iam' },
     settings: { name: 'Settings', icon: imgSettings, initialPath: '/settings' },
+    'compute-admin': {
+      name: 'Compute Admin',
+      icon: imgComputeAdmin,
+      initialPath: '/compute-admin',
+    },
+    'cloud-builder': { name: 'Cloud Builder', icon: imgCloud, initialPath: '/cloudbuilder' },
   };
   const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set());
   const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([]);
 
   const visibleDockApps = useMemo(() => {
-    return dockAppOrder.filter(
+    const visible = dockAppOrder.filter(
       (appId) => pinnedApps.has(appId) || windows.some((w) => w.appId === appId)
     );
+    const pinned = visible.filter((appId) => pinnedApps.has(appId));
+    const unpinned = visible.filter((appId) => !pinnedApps.has(appId));
+    return [...pinned, ...unpinned];
   }, [dockAppOrder, pinnedApps, windows]);
 
   // Window management functions
@@ -1803,9 +1889,9 @@ export function DesktopPage() {
     },
     {
       id: '3',
-      message: 'API key expires in 3 days.',
+      message: 'API key "prod-key-01" has been rotated.',
       statusIcon: (
-        <IconAlertCircle size={14} stroke={1.5} className="text-[var(--color-state-warning)]" />
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
       ),
       time: '08:45',
       app: 'IAM',
@@ -1893,11 +1979,8 @@ export function DesktopPage() {
       {/* Top Bar */}
       <DesktopTopBar
         onChatbotToggle={() => setShowChatbot(!showChatbot)}
-        onOpenSettings={(tab) => {
-          if (tab) {
-            setSettingsTab(tab);
-          }
-          setShowSettings(true);
+        onOpenSettings={() => {
+          focusApp('settings');
         }}
         onNotificationToggle={() => setShowNotifications(!showNotifications)}
         notificationButtonRef={notificationButtonRef}
@@ -1959,9 +2042,7 @@ export function DesktopPage() {
           const beingDragged = dragState?.isDragging && dragState.iconId === item.id;
 
           const handleClick = () => {
-            if (item.id === 'settings') {
-              setShowSettings(true);
-            } else if (item.id === 'admin-center') {
+            if (item.id === 'admin-center') {
               setShowAdminCenter(!showAdminCenter);
             } else {
               focusApp(item.id as AppId);
@@ -2003,13 +2084,7 @@ export function DesktopPage() {
         isOpen={showAdminCenter}
         onClose={() => setShowAdminCenter(false)}
         anchorRef={adminCenterIconRef}
-      />
-
-      {/* Settings Window */}
-      <SettingsPage
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        initialTab={settingsTab}
+        onOpenApp={focusApp}
       />
 
       {/* Chatbot Panel */}
@@ -2020,7 +2095,7 @@ export function DesktopPage() {
         <>
           <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
           <div className="fixed z-[6001] top-[52px] right-0" onClick={(e) => e.stopPropagation()}>
-            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
               <div className="relative pt-3 pb-0">
                 <button
                   type="button"
@@ -2084,7 +2159,7 @@ export function DesktopPage() {
         {!isSimulationMode &&
           windows.map((window) => {
             const config = appConfigs[window.appId];
-            if (!config || window.appId === 'settings') return null;
+            if (!config) return null;
 
             return (
               <PageWindow

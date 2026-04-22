@@ -104,7 +104,19 @@ function WindowControlGuidelines() {
             </tr>
             <tr>
               <Td>icon</Td>
-              <Td>12px</Td>
+              <Td>12px, stroke: 1</Td>
+            </tr>
+            <tr>
+              <Td>Minimize icon</Td>
+              <Td>IconMinus</Td>
+            </tr>
+            <tr>
+              <Td>Maximize icon</Td>
+              <Td>IconSquare (Normal) / IconSquares (Maximized → Restore)</Td>
+            </tr>
+            <tr>
+              <Td>Close icon</Td>
+              <Td>IconX</Td>
             </tr>
             <tr>
               <Td>radius</Td>
@@ -206,16 +218,36 @@ function WindowControlGuidelines() {
               <tr>
                 <Th className="w-[200px]">상태</Th>
                 <Th>아이콘</Th>
+                <Th>aria-label</Th>
+                <Th className="w-[80px]">미리보기</Th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <Td>Normal</Td>
-                <Td>Maximize icon</Td>
+                <Td>
+                  <code className="text-body-sm bg-[var(--color-surface-muted)] px-1.5 py-0.5 rounded">
+                    IconSquare
+                  </code>{' '}
+                  — 단일 사각형
+                </Td>
+                <Td>Maximize</Td>
+                <Td>
+                  <WindowControl type="maximize" />
+                </Td>
               </tr>
               <tr>
                 <Td>Maximized</Td>
-                <Td>Restore icon</Td>
+                <Td>
+                  <code className="text-body-sm bg-[var(--color-surface-muted)] px-1.5 py-0.5 rounded">
+                    IconSquares
+                  </code>{' '}
+                  — 겹친 사각형
+                </Td>
+                <Td>Restore</Td>
+                <Td>
+                  <WindowControl type="maximize" isMaximized />
+                </Td>
               </tr>
             </tbody>
           </TableWrapper>
@@ -293,6 +325,10 @@ export function WindowControlPage() {
                 <WindowControl type="maximize" />
               </VStack>
               <VStack gap={1} align="center">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Restore</span>
+                <WindowControl type="maximize" isMaximized />
+              </VStack>
+              <VStack gap={1} align="center">
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Close</span>
                 <WindowControl type="close" />
               </VStack>
@@ -312,10 +348,10 @@ export function WindowControlPage() {
           <VStack gap={3}>
             <VStack gap={1}>
               <span className="text-label-md text-[var(--color-text-default)]">
-                Title Bar 컨텍스트
+                Title Bar — Normal 상태
               </span>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                실제 사용 시 Title Bar 영역에 앱 타이틀과 함께 그룹으로 배치된다.
+                일반 상태의 창. Maximize 버튼은 단일 사각형(IconSquare) 아이콘을 표시한다.
               </span>
             </VStack>
             <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
@@ -323,6 +359,23 @@ export function WindowControlPage() {
                 Application Title
               </span>
               <WindowControls />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-md text-[var(--color-text-default)]">
+                Title Bar — Maximized 상태
+              </span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                최대화된 창. Restore 버튼은 겹친 사각형(IconSquares) 아이콘으로 전환된다.
+              </span>
+            </VStack>
+            <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
+              <span className="text-body-md font-medium text-[var(--color-text-default)]">
+                Application Title
+              </span>
+              <WindowControls isMaximized />
             </div>
           </VStack>
         </VStack>

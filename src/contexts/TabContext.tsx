@@ -105,6 +105,7 @@ interface TabProviderProps {
   children: React.ReactNode;
   defaultTabs?: TabItem[];
   onLastTabClose?: () => void;
+  persistTabs?: boolean;
 }
 
 // Helper function to get label from path - returns the most recent breadcrumb item
@@ -180,7 +181,12 @@ function getLabelFromPath(path: string): string {
   return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
 }
 
-export function TabProvider({ children, defaultTabs = [], onLastTabClose }: TabProviderProps) {
+export function TabProvider({
+  children,
+  defaultTabs = [],
+  onLastTabClose,
+  persistTabs = true,
+}: TabProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -190,28 +196,31 @@ export function TabProvider({ children, defaultTabs = [], onLastTabClose }: TabP
   // Initialize from localStorage or use defaultTabs
   const [tabs, setTabs] = useState<TabItem[]>(() => {
     const app = getAppFromPath(location.pathname);
-    const storageKeys = getStorageKeys(app);
-    try {
-      const stored = localStorage.getItem(storageKeys.tabs);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+    if (persistTabs) {
+      const storageKeys = getStorageKeys(app);
+      try {
+        const stored = localStorage.getItem(storageKeys.tabs);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
         }
+      } catch {
+        // Ignore parse errors
       }
-    } catch {
-      // Ignore parse errors
     }
-    // Return default home tab for the app
     return [getDefaultHomeTab(app)];
   });
 
   const [activeTabId, setActiveTabId] = useState<string>(() => {
     const app = getAppFromPath(location.pathname);
-    const storageKeys = getStorageKeys(app);
-    const stored = localStorage.getItem(storageKeys.activeTab);
-    if (stored) {
-      return stored;
+    if (persistTabs) {
+      const storageKeys = getStorageKeys(app);
+      const stored = localStorage.getItem(storageKeys.activeTab);
+      if (stored) {
+        return stored;
+      }
     }
     return getDefaultHomeTab(app).id;
   });
@@ -242,15 +251,17 @@ export function TabProvider({ children, defaultTabs = [], onLastTabClose }: TabP
 
   // Persist tabs to localStorage (app-specific)
   useEffect(() => {
+    if (!persistTabs) return;
     const storageKeys = getStorageKeys(currentApp);
     localStorage.setItem(storageKeys.tabs, JSON.stringify(tabs));
-  }, [tabs, currentApp]);
+  }, [tabs, currentApp, persistTabs]);
 
   // Persist active tab to localStorage (app-specific)
   useEffect(() => {
+    if (!persistTabs) return;
     const storageKeys = getStorageKeys(currentApp);
     localStorage.setItem(storageKeys.activeTab, activeTabId);
-  }, [activeTabId, currentApp]);
+  }, [activeTabId, currentApp, persistTabs]);
 
   // On initial mount, sync tabs with current URL (prioritize current URL over stored active tab)
   useEffect(() => {

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   IconCircleCheck,
-  IconAlertCircle,
   IconAlertTriangle,
   IconInfoCircle,
   IconCheckbox,
@@ -15,7 +14,7 @@ import { Chip } from '../Chip';
    Types
    ---------------------------------------- */
 
-export type NotificationType = 'success' | 'error' | 'warning' | 'info';
+export type NotificationType = 'success' | 'error' | 'info';
 
 export interface NotificationDetail {
   /** Error/Response code */
@@ -216,10 +215,6 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
       case 'error':
         return (
           <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
-        );
-      case 'warning':
-        return (
-          <IconAlertCircle size={16} stroke={1.5} className="text-[var(--color-state-warning)]" />
         );
       case 'info':
       default:

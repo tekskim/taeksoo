@@ -6,6 +6,7 @@ export interface DesktopWindowControls {
   onClose: () => void;
   onDragStart: (e: React.MouseEvent) => void;
   onDoubleClick: () => void;
+  isMaximized: boolean;
 }
 
 interface DesktopWindowContextValue {

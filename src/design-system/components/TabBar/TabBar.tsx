@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
+import { IconPlus, IconX, IconMinus, IconSquare, IconSquares } from '@tabler/icons-react';
 import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 /* ----------------------------------------
@@ -382,9 +382,13 @@ export const TabBar: React.FC<TabBarProps> = ({
               hover:bg-[var(--color-surface-subtle)]
               hover:text-[var(--color-text-default)]
             "
-            aria-label="Maximize"
+            aria-label={desktopControls!.isMaximized ? 'Restore' : 'Maximize'}
           >
-            <IconSquare size={12} stroke={1} />
+            {desktopControls!.isMaximized ? (
+              <IconSquares size={12} stroke={1} />
+            ) : (
+              <IconSquare size={12} stroke={1} />
+            )}
           </button>
           <button
             type="button"

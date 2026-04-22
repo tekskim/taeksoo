@@ -1084,7 +1084,7 @@ html.theme-transition *::after {
   /* ========================================
      Desktop Shell Tokens (Light)
      ======================================== */
-  --desktop-bg: #e8eaed;
+  --desktop-bg: #eff1f3;
   --desktop-wallpaper-opacity: 0.6;
   --desktop-wallpaper-filter: invert(1) brightness(1.1);
   --desktop-text: #1e293b;
@@ -1097,6 +1097,8 @@ html.theme-transition *::after {
   --desktop-topbar-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.06);
   --desktop-dropdown-bg: rgba(255, 255, 255, 0.9);
   --desktop-hover-bg: rgba(0, 0, 0, 0.05);
+  --desktop-icon-hover: rgba(0, 0, 0, 0.04);
+  --desktop-icon-active: rgba(0, 0, 0, 0.06);
   --desktop-active-bg: rgba(0, 0, 0, 0.08);
   --desktop-separator: rgba(0, 0, 0, 0.1);
   --desktop-icon-running-bg: rgba(0, 0, 0, 0.06);
@@ -1414,6 +1416,8 @@ html.theme-transition *::after {
   --desktop-dropdown-bg: rgba(0, 0, 0, 0.85);
   --desktop-hover-bg: rgba(255, 255, 255, 0.05);
   --desktop-active-bg: rgba(255, 255, 255, 0.1);
+  --desktop-icon-hover: rgba(255, 255, 255, 0.08);
+  --desktop-icon-active: rgba(255, 255, 255, 0.14);
   --desktop-separator: rgba(255, 255, 255, 0.2);
   --desktop-icon-running-bg: rgba(255, 255, 255, 0.1);
   --desktop-icon-running-border: rgba(255, 255, 255, 0.2);

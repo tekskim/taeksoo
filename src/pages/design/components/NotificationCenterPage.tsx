@@ -6,7 +6,6 @@ import { Button, Badge, NotificationCenter, VStack } from '@/design-system';
 import type { NotificationItem } from '@/design-system';
 import {
   IconCircleCheck,
-  IconAlertCircle,
   IconAlertTriangle,
   IconInfoCircle,
   IconRefresh,
@@ -27,7 +26,7 @@ function StaticNotificationCard({
   detail,
   isExpanded,
 }: {
-  type: 'success' | 'error' | 'warning' | 'info';
+  type: 'success' | 'error' | 'info';
   message: string;
   time: string;
   project?: string;
@@ -41,9 +40,6 @@ function StaticNotificationCard({
     ),
     error: (
       <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
-    ),
-    warning: (
-      <IconAlertCircle size={16} stroke={1.5} className="text-[var(--color-state-warning)]" />
     ),
     info: <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-state-info)]" />,
   };
@@ -150,7 +146,7 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 
 | 구성요소 | 설명 |
 | --- | --- |
-| Type icon | 알림 유형 (success/error/warning/info) |
+| Type icon | 알림 유형 (success / error / info) |
 | Message | 알림 메시지 |
 | Timestamp | 발생 시각 |
 | Partition info | 프로젝트/네임스페이스 등 |
@@ -251,12 +247,12 @@ const initialNotifications: NotificationItem[] = [
   },
   {
     id: '4',
-    type: 'warning',
-    message: 'Instance "db-server" is running low on disk space.',
+    type: 'info',
+    message: 'Instance "db-server" disk auto-expand completed.',
     time: '09:15',
     project: 'Proj1',
     isRead: true,
-    detail: { code: 'WARN_DISK_LOW', message: 'Disk usage is at 92%.' },
+    detail: { code: 'DISK_EXPAND', message: 'Disk expanded from 100GB to 200GB.' },
   },
   {
     id: '5',
@@ -363,17 +359,6 @@ export function NotificationCenterPage() {
               </div>
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
-                  <IconAlertCircle
-                    size={16}
-                    strokeWidth={1.5}
-                    className="text-[var(--color-state-warning)]"
-                  />
-                  <span className="text-label-md text-[var(--color-text-default)]">Warning</span>
-                </div>
-                <p className="text-body-sm text-[var(--color-text-muted)]">Attention needed</p>
-              </div>
-              <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <div className="flex items-center gap-2 mb-2">
                   <IconInfoCircle
                     size={16}
                     strokeWidth={1.5}
@@ -421,12 +406,12 @@ export function NotificationCenterPage() {
                   Read + Detail (collapsed)
                 </span>
                 <StaticNotificationCard
-                  type="warning"
-                  message='Instance "db-server" is running low on disk space.'
+                  type="info"
+                  message='Instance "db-server" disk auto-expand completed.'
                   time="09:15"
                   project="Proj1"
                   isRead
-                  detail={{ code: 'WARN_DISK_LOW', message: 'Disk usage is at 92%.' }}
+                  detail={{ code: 'DISK_EXPAND', message: 'Disk expanded from 100GB to 200GB.' }}
                 />
               </VStack>
 
