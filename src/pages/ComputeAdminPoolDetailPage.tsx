@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -24,7 +24,7 @@ import {
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconCircleMinus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -325,7 +325,11 @@ export default function PoolDetailPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={memberMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconCircleMinus
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -410,7 +414,7 @@ export default function PoolDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Name" value={pool.name} />
+                    <SectionCard.DataRow label="Pool name" value={pool.name} />
                     <SectionCard.DataRow label="Description" value={pool.description} />
                     <SectionCard.DataRow label="Admin state" value={pool.adminState} />
                     <SectionCard.DataRow label="Algorithm" value={pool.algorithm} />
@@ -426,26 +430,16 @@ export default function PoolDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Association" />
                   <SectionCard.Content>
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Listener
-                        </span>
-                        {pool.listener && pool.listener.id ? (
-                          <Link
-                            to={`/compute-admin/listeners/${pool.listener.id}`}
-                            className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                          >
-                            {pool.listener.name}
-                          </Link>
-                        ) : (
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                            -
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                    <SectionCard.DataRow
+                      label="Listener"
+                      value={pool.listener?.name ?? '-'}
+                      isLink={!!(pool.listener && pool.listener.id)}
+                      linkHref={
+                        pool.listener?.id
+                          ? `/compute-admin/listeners/${pool.listener.id}`
+                          : undefined
+                      }
+                    />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

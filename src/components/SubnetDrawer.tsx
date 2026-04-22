@@ -18,6 +18,7 @@ export interface SubnetDrawerProps {
   networkId?: string;
   networkName?: string;
   subnetQuota?: QuotaInfo;
+  hideDns?: boolean;
   onSubmit?: (data: SubnetFormData) => void;
 }
 
@@ -86,6 +87,7 @@ export function SubnetDrawer({
   networkId,
   networkName,
   subnetQuota = { used: 5, total: 10 },
+  hideDns,
   onSubmit,
 }: SubnetDrawerProps) {
   // Form state
@@ -226,16 +228,18 @@ export function SubnetDrawer({
             Specifies the gateway IP address for the subnet. Gateway must be an IP address within
             the subnet range, excluding the network and broadcast addresses.
           </FormField.Description>
-          <VStack gap={2}>
-            <Toggle
-              checked={gatewayEnabled}
-              onChange={(e) => setGatewayEnabled(e.target.checked)}
-              label={gatewayEnabled ? 'On' : 'Off'}
-            />
-            {gatewayEnabled && (
-              <Input value={gatewayIp} onChange={(e) => setGatewayIp(e.target.value)} fullWidth />
-            )}
-          </VStack>
+          <FormField.Control>
+            <VStack gap={2}>
+              <Toggle
+                checked={gatewayEnabled}
+                onChange={(e) => setGatewayEnabled(e.target.checked)}
+                label={gatewayEnabled ? 'On' : 'Off'}
+              />
+              {gatewayEnabled && (
+                <Input value={gatewayIp} onChange={(e) => setGatewayIp(e.target.value)} fullWidth />
+              )}
+            </VStack>
+          </FormField.Control>
         </FormField>
 
         {/* Advanced Options Disclosure */}
@@ -275,23 +279,27 @@ export function SubnetDrawer({
               </FormField>
 
               {/* DNS */}
-              <FormField>
-                <FormField.Label>DNS</FormField.Label>
-                <FormField.Description>
-                  The address of the server that acts like a phonebook for the internet, translating
-                  domain names into IP addresses for your instances.
-                </FormField.Description>
-                <FormField.Control>
-                  <Textarea
-                    value={dns}
-                    onChange={(e) => setDns(e.target.value)}
-                    placeholder="e.g. 8.8.8.8"
-                    fullWidth
-                    rows={3}
-                  />
-                </FormField.Control>
-                <FormField.HelperText>Enter one DNS server address per line.</FormField.HelperText>
-              </FormField>
+              {!hideDns && (
+                <FormField>
+                  <FormField.Label>DNS</FormField.Label>
+                  <FormField.Description>
+                    The address of the server that acts like a phonebook for the internet,
+                    translating domain names into IP addresses for your instances.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <Textarea
+                      value={dns}
+                      onChange={(e) => setDns(e.target.value)}
+                      placeholder="e.g. 8.8.8.8"
+                      fullWidth
+                      rows={3}
+                    />
+                  </FormField.Control>
+                  <FormField.HelperText>
+                    Enter one DNS server address per line.
+                  </FormField.HelperText>
+                </FormField>
+              )}
 
               {/* Host Routes */}
               <FormField>

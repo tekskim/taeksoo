@@ -402,7 +402,7 @@ export default function L7PolicyDetailPage() {
                   </div>
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedL7Rules.length === 0}

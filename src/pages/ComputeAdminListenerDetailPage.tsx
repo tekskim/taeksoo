@@ -508,6 +508,7 @@ export default function ListenerDetailPage() {
       key: 'behavior',
       label: 'Behavior',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'position',
@@ -756,7 +757,7 @@ export default function ListenerDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Name" value={listener.name} />
+                    <SectionCard.DataRow label="Listener name" value={listener.name} />
                     <SectionCard.DataRow label="Description" value={listener.description} />
                     <SectionCard.DataRow label="Admin state" value={listener.adminState} />
                     <SectionCard.DataRow label="Protocol" value={listener.protocol} />
@@ -847,10 +848,11 @@ export default function ListenerDetailPage() {
                     <SectionCard.DataRow
                       label="Status"
                       value={
-                        <StatusIndicator
-                          layout="icon-only"
-                          status={poolStatusMap[mockPools[0]?.status] || 'down'}
-                        />
+                        mockPools[0]?.status === 'active'
+                          ? 'Active'
+                          : mockPools[0]?.status === 'down'
+                            ? 'Down'
+                            : 'Error'
                       }
                     />
                     <SectionCard.DataRow label="Description" value="-" />
@@ -893,7 +895,7 @@ export default function ListenerDetailPage() {
                   </div>
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedL7Policies.length === 0}

@@ -23,8 +23,9 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconEdit, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconDownload, IconSettings } from '@tabler/icons-react';
 import { InlineCopyId } from '@/components/InlineCopyId';
+import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDrawer';
 
 /* ----------------------------------------
    Types
@@ -330,6 +331,7 @@ export default function RouterDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isGatewayDrawerOpen, setIsGatewayDrawerOpen] = useState(false);
 
   // Get router data based on URL ID
   const router = id ? mockRoutersMap[id] || defaultRouterDetail : defaultRouterDetail;
@@ -563,6 +565,14 @@ export default function RouterDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{router.name}</DetailHeader.Title>
           <DetailHeader.Actions>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconSettings size={12} />}
+              onClick={() => setIsGatewayDrawerOpen(true)}
+            >
+              External gateway setting
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
               Edit
             </Button>
@@ -663,23 +673,25 @@ export default function RouterDetailPage() {
 
                 {/* Action Bar */}
                 <div className="flex items-center gap-2">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      value={portSearchTerm}
-                      onChange={(e) => {
-                        setPortSearchTerm(e.target.value);
-                        setPortCurrentPage(1);
-                      }}
-                      placeholder="Search interface by attributes"
+                  <div className="flex items-center gap-1">
+                    <div className="w-[var(--search-input-width)]">
+                      <SearchInput
+                        value={portSearchTerm}
+                        onChange={(e) => {
+                          setPortSearchTerm(e.target.value);
+                          setPortCurrentPage(1);
+                        }}
+                        placeholder="Search interface by attributes"
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
                     />
                   </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    iconOnly
-                    icon={<IconDownload size={12} />}
-                    aria-label="Download"
-                  />
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
                     variant="muted"
@@ -725,23 +737,25 @@ export default function RouterDetailPage() {
 
                 {/* Action Bar */}
                 <div className="flex items-center gap-2">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      value={routeSearchTerm}
-                      onChange={(e) => {
-                        setRouteSearchTerm(e.target.value);
-                        setRouteCurrentPage(1);
-                      }}
-                      placeholder="Search static route by attributes"
+                  <div className="flex items-center gap-1">
+                    <div className="w-[var(--search-input-width)]">
+                      <SearchInput
+                        value={routeSearchTerm}
+                        onChange={(e) => {
+                          setRouteSearchTerm(e.target.value);
+                          setRouteCurrentPage(1);
+                        }}
+                        placeholder="Search static route by attributes"
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
                     />
                   </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    iconOnly
-                    icon={<IconDownload size={12} />}
-                    aria-label="Download"
-                  />
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
                     variant="muted"
@@ -776,6 +790,12 @@ export default function RouterDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <AdminExternalGatewayDrawer
+        isOpen={isGatewayDrawerOpen}
+        onClose={() => setIsGatewayDrawerOpen(false)}
+        routerName={router.name}
+      />
     </PageShell>
   );
 }

@@ -25,6 +25,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
+import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDrawer';
 import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
@@ -263,6 +264,9 @@ export function ComputeAdminRoutersPage() {
   // Create router drawer state
   const [isCreateRouterDrawerOpen, setIsCreateRouterDrawerOpen] = useState(false);
 
+  // External gateway drawer state
+  const [gatewayDrawerRouter, setGatewayDrawerRouter] = useState<string | null>(null);
+
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -442,12 +446,17 @@ export function ComputeAdminRoutersPage() {
       width: fixedColumns.actions,
       align: 'center',
       sticky: 'right',
-      render: () => (
+      render: (_: unknown, row: Router) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
             items={[
               { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+              {
+                id: 'external-gateway',
+                label: 'External gateway setting',
+                onClick: () => setGatewayDrawerRouter(row.name),
+              },
+              { id: 'delete', label: 'Delete', status: 'danger', divider: true, onClick: () => {} },
             ]}
             trigger="click"
           >
@@ -617,6 +626,13 @@ export function ComputeAdminRoutersPage() {
       <CreateRouterDrawer
         isOpen={isCreateRouterDrawerOpen}
         onClose={() => setIsCreateRouterDrawerOpen(false)}
+      />
+
+      {/* External Gateway Setting Drawer */}
+      <AdminExternalGatewayDrawer
+        isOpen={!!gatewayDrawerRouter}
+        onClose={() => setGatewayDrawerRouter(null)}
+        routerName={gatewayDrawerRouter ?? ''}
       />
     </PageShell>
   );

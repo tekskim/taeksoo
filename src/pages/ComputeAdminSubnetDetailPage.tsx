@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -21,11 +21,12 @@ import {
   Tooltip,
   fixedColumns,
   Popover,
+  ListToolbar,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconCube, IconRouter } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconCube, IconRouter, IconDownload } from '@tabler/icons-react';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
@@ -144,6 +145,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'shutoff' | 'buildi
 
 export default function SubnetDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -485,17 +487,41 @@ export default function SubnetDetailPage() {
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
                 </div>
 
-                {/* Search */}
-                <div className="w-[var(--search-input-width)]">
-                  <SearchInput
-                    value={portSearchTerm}
-                    onChange={(e) => {
-                      setPortSearchTerm(e.target.value);
-                      setPortCurrentPage(1);
-                    }}
-                    placeholder="Search port by attributes"
-                  />
-                </div>
+                {/* Toolbar */}
+                <ListToolbar
+                  primaryActions={
+                    <ListToolbar.Actions>
+                      <SearchInput
+                        value={portSearchTerm}
+                        onChange={(e) => {
+                          setPortSearchTerm(e.target.value);
+                          setPortCurrentPage(1);
+                        }}
+                        placeholder="Search port by attributes"
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
+                    </ListToolbar.Actions>
+                  }
+                  bulkActions={
+                    <ListToolbar.Actions>
+                      <Button
+                        variant="muted"
+                        size="sm"
+                        leftIcon={<IconTrash size={12} />}
+                        disabled={selectedPorts.length === 0}
+                      >
+                        Delete
+                      </Button>
+                    </ListToolbar.Actions>
+                  }
+                />
 
                 {/* Pagination */}
                 <Pagination

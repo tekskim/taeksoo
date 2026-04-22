@@ -450,17 +450,25 @@ export default function SecurityGroupDetailPage() {
               </Button>
             </div>
 
-            {/* Info Row */}
+            {/* Info Grid — Row 1 */}
             <div className="flex items-center gap-2">
               {/* ID */}
               <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
-                <div className="flex items-center gap-1 mt-1.5">
-                  <p className="text-body-md text-[var(--color-text-default)]">
-                    {securityGroup.id}
-                  </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
                   <CopyButton value={securityGroup.id} size="sm" iconOnly />
                 </div>
+                <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
+                  {securityGroup.id}
+                </p>
+              </div>
+
+              {/* Description */}
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Description</span>
+                <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
+                  {securityGroup.description}
+                </p>
               </div>
 
               {/* Tenant */}
@@ -468,10 +476,28 @@ export default function SecurityGroupDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Tenant</span>
                 <p className="text-body-md text-[var(--color-text-default)] mt-1.5">tenantA</p>
               </div>
+            </div>
 
-              {/* Created at */}
+            {/* Info Grid — Row 2 */}
+            <div className="flex items-center gap-2 mt-3">
+              {/* Origin */}
               <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Origin</span>
+                <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
+                  Container(
+                  <Link
+                    to="/container"
+                    className="text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  >
+                    cluster-01
+                  </Link>
+                  )
+                </p>
+              </div>
+
+              {/* Created At */}
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Created At</span>
                 <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
                   {securityGroup.createdAt}
                 </p>

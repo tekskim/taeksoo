@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useLayoutEffect } from 'react';
 import { IconChevronUp, IconChevronDown, IconSelector } from '@tabler/icons-react';
 import { Checkbox } from '../Checkbox';
 import { Radio } from '../Radio';
@@ -454,6 +454,43 @@ export function Table<T extends Record<string, any>>({
     </div>
   );
 
+  const leftBodyRef = useRef<HTMLDivElement>(null);
+  const rightBodyRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!hasStickyColumns) return;
+    const leftBody = leftBodyRef.current;
+    const rightBody = rightBodyRef.current;
+    if (!leftBody || !rightBody) return;
+
+    const syncHeights = () => {
+      const leftRows = leftBody.querySelectorAll<HTMLElement>(':scope > [data-row-index]');
+      const rightRows = rightBody.querySelectorAll<HTMLElement>(':scope > [data-row-index]');
+      const count = Math.min(leftRows.length, rightRows.length);
+
+      for (let i = 0; i < count; i++) {
+        leftRows[i].style.height = '';
+        rightRows[i].style.height = '';
+      }
+
+      for (let i = 0; i < count; i++) {
+        const lh = leftRows[i].getBoundingClientRect().height;
+        const rh = rightRows[i].getBoundingClientRect().height;
+        const max = Math.max(lh, rh);
+        if (lh !== max) leftRows[i].style.height = `${max}px`;
+        if (rh !== max) rightRows[i].style.height = `${max}px`;
+      }
+    };
+
+    syncHeights();
+
+    const ro = new ResizeObserver(syncHeights);
+    const leftRows = leftBody.querySelectorAll<HTMLElement>(':scope > [data-row-index]');
+    leftRows.forEach((row) => ro.observe(row));
+
+    return () => ro.disconnect();
+  }, [hasStickyColumns, sortedData, loading, selectedKeys]);
+
   if (hasStickyColumns) {
     return (
       <div
@@ -499,7 +536,10 @@ export function Table<T extends Record<string, any>>({
               </div>
 
               {/* Body */}
-              <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full">
+              <div
+                ref={leftBodyRef}
+                className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full"
+              >
                 {loading ? (
                   renderSkeletonRows(scrollColumns, selectable)
                 ) : sortedData.length === 0 ? (
@@ -519,6 +559,7 @@ export function Table<T extends Record<string, any>>({
                     return (
                       <div
                         key={key}
+                        data-row-index={rowIndex}
                         className={cn(
                           'flex items-stretch min-h-[var(--table-row-height)] w-full',
                           'rounded-l-[var(--table-row-radius)] border border-[var(--color-border-default)] border-r-0',
@@ -588,7 +629,7 @@ export function Table<T extends Record<string, any>>({
             </div>
 
             {/* Body */}
-            <div className="flex flex-col gap-[var(--table-row-gap)]">
+            <div ref={rightBodyRef} className="flex flex-col gap-[var(--table-row-gap)]">
               {loading ? (
                 renderSkeletonRows(stickyRightColumns, false)
               ) : sortedData.length === 0 ? (
@@ -605,6 +646,7 @@ export function Table<T extends Record<string, any>>({
                   return (
                     <div
                       key={key}
+                      data-row-index={rowIndex}
                       className={cn(
                         'flex items-stretch min-h-[var(--table-row-height)]',
                         'rounded-r-[var(--table-row-radius)] border border-[var(--color-border-default)] border-l-0',

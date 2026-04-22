@@ -36,6 +36,7 @@ import {
 } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
+import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
    Types
@@ -56,6 +57,7 @@ interface FloatingIP {
   networkId: string;
   createdAt: string;
   status: FloatingIPStatus;
+  origin?: 'container';
 }
 
 /* ----------------------------------------
@@ -76,6 +78,7 @@ const mockFloatingIPs: FloatingIP[] = [
     networkId: 'net-001',
     createdAt: 'Oct 1, 2026 10:20:28',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'fip-002',
@@ -118,6 +121,7 @@ const mockFloatingIPs: FloatingIP[] = [
     networkId: 'net-003',
     createdAt: 'Sep 28, 2026 07:11:07',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'fip-005',
@@ -160,6 +164,7 @@ const mockFloatingIPs: FloatingIP[] = [
     networkId: 'net-001',
     createdAt: 'Sep 15, 2026 12:22:26',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'fip-008',
@@ -357,13 +362,31 @@ export function ComputeAdminFloatingIPsPage() {
       minWidth: columnMinWidths.floatingIp,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute-admin/floating-ips/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.floatingIp}
-        </Link>
+        <div className="flex items-center justify-between w-full gap-2">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute-admin/floating-ips/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.floatingIp}
+            </Link>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] truncate">
+              ID : {row.id}
+              <InlineCopyId value={row.id} />
+            </span>
+          </div>
+          {row.origin === 'container' && (
+            <Tooltip
+              content="This floating IP was created via the Container cluster."
+              position="top"
+            >
+              <div className="size-6 shrink-0 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
+                <img src={containerIcon} alt="Container" className="size-4 object-contain" />
+              </div>
+            </Tooltip>
+          )}
+        </div>
       ),
     },
     {

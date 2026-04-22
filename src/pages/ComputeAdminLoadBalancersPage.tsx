@@ -20,6 +20,7 @@ import {
   type AppliedFilter,
   Popover,
   Badge,
+  Tooltip,
   fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -30,6 +31,7 @@ import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
 import { IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
+import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
    Types
@@ -52,6 +54,7 @@ interface LoadBalancer {
   listenerCount: number;
   createdAt: string;
   status: LoadBalancerStatus;
+  origin?: 'container';
 }
 
 /* ----------------------------------------
@@ -74,6 +77,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerCount: 2,
     createdAt: 'Oct 3, 2026 00:46:02',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'lb-002',
@@ -122,6 +126,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerCount: 0,
     createdAt: 'Sep 28, 2026 07:11:07',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'lb-005',
@@ -170,6 +175,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerCount: 0,
     createdAt: 'Sep 15, 2026 12:22:26',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'lb-008',
@@ -389,20 +395,32 @@ export function ComputeAdminLoadBalancersPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute-admin/load-balancers/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-            <span className="truncate" title={row.id}>
-              ID : {row.id.slice(0, 8)}
+        <div className="flex items-center justify-between gap-1 w-full">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute-admin/load-balancers/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
             </span>
-            <InlineCopyId value={row.id} />
-          </span>
+          </div>
+          {row.origin === 'container' && (
+            <Tooltip
+              content="This load balancer was created via the Container cluster."
+              position="top"
+            >
+              <div className="size-6 shrink-0 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
+                <img src={containerIcon} alt="Container" className="size-4 object-contain" />
+              </div>
+            </Tooltip>
+          )}
         </div>
       ),
     },
@@ -487,7 +505,7 @@ export function ComputeAdminLoadBalancersPage() {
       label: 'Listeners',
       flex: 1,
       render: (_, row) => (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center justify-between gap-1 w-full">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-body-md text-[var(--color-text-default)]">{row.listeners}</span>
             <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">

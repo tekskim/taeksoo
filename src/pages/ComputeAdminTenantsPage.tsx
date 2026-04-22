@@ -113,9 +113,9 @@ export default function ComputeAdminTenantsPage() {
   const getTenantMenuItems = (tenant: Tenant): ContextMenuItem[] => [
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit tenant', tenant.id) },
     {
-      id: 'manage-quotas',
-      label: 'Manage quotas',
-      onClick: () => console.log('Manage quotas', tenant.id),
+      id: 'modify-quotas',
+      label: 'Modify quotas',
+      onClick: () => console.log('Modify quotas', tenant.id),
     },
     {
       id: 'manage-members',

@@ -25,6 +25,7 @@ import {
   PageShell,
   type TableColumn,
   fixedColumns,
+  ProgressBar,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -100,46 +101,10 @@ function SummarySidebar({
           <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Quota</h5>
 
           {/* Network Quota */}
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex items-center justify-between w-full">
-              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                Network
-              </span>
-              <span className="text-body-md leading-4 text-[var(--color-text-default)]">2/10</span>
-            </div>
-            <div className="flex h-1 w-full items-start isolate pr-1">
-              <div
-                className="bg-[var(--color-state-success)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[3]"
-                style={{ width: '20%' }}
-              />
-              <div
-                className="bg-[var(--color-state-success-bg)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[2]"
-                style={{ width: '10%' }}
-              />
-              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-[var(--radius-lg)] -mr-1 z-[1]" />
-            </div>
-          </div>
+          <ProgressBar variant="quota" label="Network" value={2} max={10} newValue={1} showValue />
 
           {/* Subnet Quota */}
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex items-center justify-between w-full">
-              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                Subnet
-              </span>
-              <span className="text-body-md leading-4 text-[var(--color-text-default)]">5/20</span>
-            </div>
-            <div className="flex h-1 w-full items-start isolate pr-1">
-              <div
-                className="bg-[var(--color-state-success)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[3]"
-                style={{ width: '25%' }}
-              />
-              <div
-                className="bg-[var(--color-state-success-bg)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[2]"
-                style={{ width: '5%' }}
-              />
-              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-[var(--radius-lg)] -mr-1 z-[1]" />
-            </div>
-          </div>
+          <ProgressBar variant="quota" label="Subnet" value={5} max={20} newValue={1} showValue />
         </div>
 
         {/* Action Buttons */}
@@ -199,6 +164,7 @@ export default function CreateNetworkPage() {
   const [networkNameError, setNetworkNameError] = useState<string | null>(null);
   const [tenantError, setTenantError] = useState(false);
   const [cidrError, setCidrError] = useState<string | null>(null);
+  const [subnetNameError, setSubnetNameError] = useState<string | null>(null);
 
   // Filter tenants based on search
   const filteredTenants = useMemo(() => {
@@ -738,7 +704,7 @@ export default function CreateNetworkPage() {
               {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Network name" value={networkName || '-'} />
-                  {description && <SectionCard.DataRow label="Description" value={description} />}
+                  <SectionCard.DataRow label="Description" value={description || '-'} />
                   <SectionCard.DataRow
                     label="Owned tenant"
                     value={
@@ -748,22 +714,22 @@ export default function CreateNetworkPage() {
                     }
                   />
                   <SectionCard.DataRow
-                    label="External network"
-                    value={externalNetwork ? 'Yes' : 'No'}
+                    label="Provider network type"
+                    value={providerNetworkType ? providerNetworkType.toUpperCase() : '-'}
                   />
-                  {externalNetwork && (
-                    <SectionCard.DataRow
-                      label="Provider network type"
-                      value={providerNetworkType.toUpperCase()}
-                    />
-                  )}
-                  {externalNetwork && (
-                    <SectionCard.DataRow label="Segmentation ID" value={segmentationId || '-'} />
-                  )}
-                  {mtu && <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} />}
+                  <SectionCard.DataRow
+                    label="Provider network"
+                    value={providerNetworkType || '-'}
+                  />
+                  <SectionCard.DataRow label="Segmentation ID" value={segmentationId || '-'} />
+                  <SectionCard.DataRow label="MTU" value={mtu ? `${mtu} bytes` : '-'} />
                   <SectionCard.DataRow label="Admin state" value={adminState ? 'Up' : 'Down'} />
                   <SectionCard.DataRow label="Port security" value={portSecurity ? 'On' : 'Off'} />
                   <SectionCard.DataRow label="Shared" value={shared ? 'Yes' : 'No'} />
+                  <SectionCard.DataRow
+                    label="External network"
+                    value={externalNetwork ? 'Yes' : 'No'}
+                  />
                 </SectionCard.Content>
               )}
             </SectionCard>
@@ -782,22 +748,22 @@ export default function CreateNetworkPage() {
                     }
                   />
                   <SectionCard.DataRow
-                    label="External network"
-                    value={externalNetwork ? 'Yes' : 'No'}
+                    label="Provider network type"
+                    value={providerNetworkType ? providerNetworkType.toUpperCase() : '-'}
                   />
-                  {externalNetwork && (
-                    <SectionCard.DataRow
-                      label="Provider network type"
-                      value={providerNetworkType.toUpperCase()}
-                    />
-                  )}
-                  {externalNetwork && (
-                    <SectionCard.DataRow label="Segmentation ID" value={segmentationId || '-'} />
-                  )}
+                  <SectionCard.DataRow
+                    label="Provider network"
+                    value={providerNetworkType || '-'}
+                  />
+                  <SectionCard.DataRow label="Segmentation ID" value={segmentationId || '-'} />
                   <SectionCard.DataRow label="MTU" value={mtu ? `${mtu} bytes` : '-'} />
                   <SectionCard.DataRow label="Admin state" value={adminState ? 'Up' : 'Down'} />
                   <SectionCard.DataRow label="Port security" value={portSecurity ? 'On' : 'Off'} />
                   <SectionCard.DataRow label="Shared" value={shared ? 'Yes' : 'No'} />
+                  <SectionCard.DataRow
+                    label="External network"
+                    value={externalNetwork ? 'Yes' : 'No'}
+                  />
                 </SectionCard.Content>
               </SectionCard>
             )}
@@ -843,18 +809,23 @@ export default function CreateNetworkPage() {
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                        {/* Subnet name (optional) */}
+                        {/* Subnet name */}
                         <div className="py-6">
-                          <FormField>
-                            <FormField.Label>Subnet name (optional)</FormField.Label>
+                          <FormField required error={!!subnetNameError}>
+                            <FormField.Label>Subnet name</FormField.Label>
                             <FormField.Control>
                               <Input
                                 placeholder="e.g. private-net-subnet-001"
                                 value={subnetName || '-'}
-                                onChange={(e) => setSubnetName(e.target.value)}
+                                onChange={(e) => {
+                                  setSubnetName(e.target.value);
+                                  setSubnetNameError(null);
+                                }}
                                 fullWidth
+                                error={!!subnetNameError}
                               />
                             </FormField.Control>
+                            <FormField.ErrorMessage>{subnetNameError}</FormField.ErrorMessage>
                             <FormField.HelperText>
                               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
                             </FormField.HelperText>
@@ -921,7 +892,7 @@ export default function CreateNetworkPage() {
                         {/* Advanced (optional) */}
                         <div className="py-6">
                           <Disclosure open={subnetAdvancedOpen} onChange={setSubnetAdvancedOpen}>
-                            <Disclosure.Trigger>Advanced (optional)</Disclosure.Trigger>
+                            <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                             <Disclosure.Panel>
                               <VStack gap={6} align="stretch" className="mt-4">
                                 {/* DHCP */}
@@ -978,6 +949,14 @@ export default function CreateNetworkPage() {
                         onClick={() => {
                           let hasError = false;
 
+                          // Validate subnet name if createSubnet is enabled
+                          if (createSubnet && !subnetName.trim()) {
+                            setSubnetNameError('Please enter a subnet name.');
+                            hasError = true;
+                          } else {
+                            setSubnetNameError(null);
+                          }
+
                           // Validate CIDR if createSubnet is enabled
                           if (createSubnet && !cidr.trim()) {
                             setCidrError('Please enter a CIDR.');
@@ -1003,18 +982,15 @@ export default function CreateNetworkPage() {
               )}
               {!isV2 && sectionStatus['subnet'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
-                  {createSubnet && subnetName && (
-                    <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
-                  )}
-                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr || '-'} />}
-                  {createSubnet && (
-                    <SectionCard.DataRow
-                      label="Gateway"
-                      value={gateway ? gatewayIp || 'Auto' : 'Off'}
-                    />
-                  )}
-                  {createSubnet && <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />}
+                  <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
+                  <SectionCard.DataRow label="CIDR" value={cidr || '-'} />
+                  <SectionCard.DataRow
+                    label="Gateway"
+                    value={gateway ? gatewayIp || 'Auto' : 'Off'}
+                  />
+                  <SectionCard.DataRow label="DHCP" value={dhcp ? 'Enabled' : 'Disabled'} />
+                  <SectionCard.DataRow label="Allocation pools" value={allocationPools || '-'} />
+                  <SectionCard.DataRow label="Host routes" value={hostRoutes || '-'} />
                 </SectionCard.Content>
               )}
             </SectionCard>
@@ -1022,18 +998,15 @@ export default function CreateNetworkPage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['subnet']} />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
-                  {createSubnet && (
-                    <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
-                  )}
-                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr || '-'} />}
-                  {createSubnet && (
-                    <SectionCard.DataRow
-                      label="Gateway"
-                      value={gateway ? gatewayIp || 'Auto' : 'Off'}
-                    />
-                  )}
-                  {createSubnet && <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />}
+                  <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
+                  <SectionCard.DataRow label="CIDR" value={cidr || '-'} />
+                  <SectionCard.DataRow
+                    label="Gateway"
+                    value={gateway ? gatewayIp || 'Auto' : 'Off'}
+                  />
+                  <SectionCard.DataRow label="DHCP" value={dhcp ? 'Enabled' : 'Disabled'} />
+                  <SectionCard.DataRow label="Allocation pools" value={allocationPools || '-'} />
+                  <SectionCard.DataRow label="Host routes" value={hostRoutes || '-'} />
                 </SectionCard.Content>
               </SectionCard>
             )}
