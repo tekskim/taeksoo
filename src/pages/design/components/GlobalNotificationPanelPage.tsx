@@ -170,7 +170,7 @@ function GlobalPanelPreview() {
             <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="md" fullWidth />
           </div>
 
-          <div className="max-h-[400px] overflow-y-auto px-3 py-2 mr-[-6px] notification-scroll">
+          <div className="px-3 py-2">
             <div className="flex flex-col gap-2">
               <StaticPanelCard
                 appIcon={AppIconCompute}
