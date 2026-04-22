@@ -1,13 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
-import {
-  TabBar,
-  TopBar,
-  Breadcrumb,
-  MonitoringToolbar,
-  PageShell,
-  PageHeader,
-} from '@/design-system';
+import { TabBar, TopBar, Breadcrumb, MonitoringToolbar, PageShell } from '@/design-system';
 import type { TimeRangeValue } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -345,8 +338,8 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
   };
 
   const statusColor = () => {
-    if (percentage >= 95) return getColor('--color-state-danger', chartColors.red400);
-    if (percentage >= 85) return getColor('--color-state-warning', chartColors.orange400);
+    if (percentage >= 90) return getColor('--color-state-danger', chartColors.red400);
+    if (percentage >= 70) return getColor('--color-state-warning', chartColors.orange400);
     return getColor('--color-state-success', chartColors.emerald400);
   };
 
@@ -463,11 +456,11 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-sm shrink-0 bg-[var(--color-state-warning)]" />
-          <span className="text-body-sm text-[var(--color-text-muted)]">Warning: 85%</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">Warning: 70%</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-sm shrink-0 bg-[var(--color-state-danger)]" />
-          <span className="text-body-sm text-[var(--color-text-muted)]">Danger: 95%</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">Danger: 90%</span>
         </div>
       </div>
     </div>
@@ -591,13 +584,12 @@ export function StorageHomePage() {
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
-          breadcrumb={<Breadcrumb items={[{ label: 'Storage Overview' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
         />
       }
     >
       {/* EntryPage Content */}
       <div className="py-2">
-        <PageHeader title="Storage Overview" />
         {/* Top Row - 2 Cards: Inventory and Capacity */}
         <div className="grid grid-cols-2 gap-6 mb-6">
           {/* INVENTORY */}

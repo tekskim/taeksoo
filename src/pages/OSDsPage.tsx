@@ -19,7 +19,7 @@ import {
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
-import { StorageSidebar } from '@/components/StorageSidebar';
+import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
 import { useTabs } from '@/contexts/TabContext';
 import { IconRefresh } from '@tabler/icons-react';
 

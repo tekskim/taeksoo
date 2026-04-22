@@ -16,7 +16,7 @@ import {
   MonitoringToolbar,
   PageShell,
 } from '@/design-system';
-import { StorageSidebar } from '@/components/StorageSidebar';
+import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
 import { useTabs } from '@/contexts/TabContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {

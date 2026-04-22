@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { VStack, MenuItem, MenuSection } from '@/design-system';
 import {
   IconHome,
@@ -13,8 +12,6 @@ import {
 } from '@tabler/icons-react';
 import { HardDrive } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import { ProjectSelector } from './ProjectSelector';
-import { mockProjects } from '@/contexts/ProjectContext';
 import { AppSwitcher } from './AppSwitcher';
 
 /* ----------------------------------------
@@ -27,7 +24,6 @@ interface StorageSidebarProps {
 }
 
 export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps) {
-  const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
   const location = useLocation();
 
   // Check if current path matches href
@@ -48,16 +44,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* App Switcher with Toggle */}
-      <AppSwitcher currentAppId="storage" onToggleSidebar={onToggle} />
-
-      {/* Project Selector */}
-      <div className="px-3 py-2">
-        <ProjectSelector
-          projects={mockProjects}
-          selectedProjectId={selectedProjectId}
-          onProjectSelect={setSelectedProjectId}
-        />
-      </div>
+      <AppSwitcher currentAppId="storage-system-admin" onToggleSidebar={onToggle} />
 
       {/* Navigation */}
       <nav

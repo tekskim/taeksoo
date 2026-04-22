@@ -19,7 +19,7 @@ import {
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import { StorageSidebar } from '@/components/StorageSidebar';
+import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import { useTabs } from '@/contexts/TabContext';
 import { useDarkMode } from '@/hooks/useDarkMode';
