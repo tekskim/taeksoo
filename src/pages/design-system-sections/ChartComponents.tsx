@@ -350,6 +350,7 @@ export function LineChart({
   onExitFullScreen,
   timeControls,
   headerExtra,
+  subHeader,
 }: {
   title: string;
   series: LineChartSeries[];
@@ -360,6 +361,7 @@ export function LineChart({
   onExitFullScreen?: () => void;
   timeControls?: React.ReactNode;
   headerExtra?: React.ReactNode;
+  subHeader?: React.ReactNode;
 }) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
     Object.fromEntries(series.map((s) => [s.name, true]))
@@ -551,6 +553,8 @@ export function LineChart({
         </div>
       </div>
 
+      {subHeader && !isFullScreen && <div className="mt-2 mb-4">{subHeader}</div>}
+
       {/* Chart Body */}
       <div className="chartBody">
         <div className="chartWrapper">
@@ -594,12 +598,14 @@ export function ChartWithFullScreen({
   yAxisFormatter = (v: number) => `${v}`,
   height = '100%',
   headerExtra,
+  subHeader,
 }: {
   title: string;
   series: LineChartSeries[];
   yAxisFormatter?: (value: number) => string;
   height?: string;
   headerExtra?: React.ReactNode;
+  subHeader?: React.ReactNode;
 }) {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [fullScreenTimeRange, setFullScreenTimeRange] = useState<TimeRangeValue>('30m');
@@ -626,6 +632,7 @@ export function ChartWithFullScreen({
         height={height}
         onFullScreen={() => setIsFullScreen(true)}
         headerExtra={headerExtra}
+        subHeader={subHeader}
       />
 
       {/* Full Screen via Portal */}

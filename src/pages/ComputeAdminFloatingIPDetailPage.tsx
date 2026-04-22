@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
+  HStack,
   PageShell,
   TabBar,
   TopBar,
@@ -13,10 +14,15 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  SearchInput,
+  Pagination,
+  Table,
+  InlineMessage,
+  type TableColumn,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconLinkOff } from '@tabler/icons-react';
+import { IconTrash, IconLinkOff, IconDownload, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -203,6 +209,24 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'shutoff' | 'erro
 };
 
 /* ----------------------------------------
+   Ingress ACL Mock Data
+   ---------------------------------------- */
+
+interface AclRule {
+  id: string;
+  priority: number;
+  sourceCidr: string;
+}
+
+const mockAclRules: AclRule[] = Array.from({ length: 115 }, (_, i) => ({
+  id: `acl-${i + 1}`,
+  priority: i + 1,
+  sourceCidr: '0.0.0.0/0',
+}));
+
+const ACL_ITEMS_PER_PAGE = 10;
+
+/* ----------------------------------------
    FloatingIPDetailPage Component
    ---------------------------------------- */
 
@@ -211,12 +235,17 @@ export default function FloatingIPDetailPage() {
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [copiedFqdn, setCopiedFqdn] = useState(false);
+
+  // Ingress ACL state
+  const [aclSearch, setAclSearch] = useState('');
+  const [aclPage, setAclPage] = useState(1);
 
   // Get floating IP data based on URL ID
   const floatingIP = id
@@ -233,6 +262,22 @@ export default function FloatingIPDetailPage() {
   const breadcrumbItems = [
     { label: 'Floating IPs', href: '/compute-admin/floating-ips' },
     { label: floatingIP.floatingIp },
+  ];
+
+  // Ingress ACL filtering & pagination
+  const filteredAclRules = useMemo(
+    () => mockAclRules.filter((r) => r.sourceCidr.toLowerCase().includes(aclSearch.toLowerCase())),
+    [aclSearch]
+  );
+  const totalAclPages = Math.ceil(filteredAclRules.length / ACL_ITEMS_PER_PAGE);
+  const paginatedAclRules = filteredAclRules.slice(
+    (aclPage - 1) * ACL_ITEMS_PER_PAGE,
+    aclPage * ACL_ITEMS_PER_PAGE
+  );
+
+  const aclColumns: TableColumn<AclRule>[] = [
+    { key: 'priority', label: 'Priority', width: '80px' },
+    { key: 'sourceCidr', label: 'Source CIDR', flex: 1 },
   ];
 
   // Convert tabs to TabBar format
@@ -300,7 +345,22 @@ export default function FloatingIPDetailPage() {
             />
             <DetailHeader.InfoCard label="ID" value={floatingIP.id} copyable />
             <DetailHeader.InfoCard label="Tenant" value="tenantA" />
-            <DetailHeader.InfoCard label="Created at" value={floatingIP.createdAt} />
+            <DetailHeader.InfoCard
+              label="Origin"
+              value={
+                <span>
+                  Container (
+                  <Link
+                    to="/container"
+                    className="text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  >
+                    cluster-01
+                  </Link>
+                  )
+                </span>
+              }
+            />
+            <DetailHeader.InfoCard label="Created At" value={floatingIP.createdAt} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
@@ -309,6 +369,7 @@ export default function FloatingIPDetailPage() {
           <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>
+              <Tab value="ingress-acl">Ingress ACL</Tab>
             </TabList>
 
             {/* Details Tab Panel */}
@@ -375,6 +436,83 @@ export default function FloatingIPDetailPage() {
                     />
                   </SectionCard.Content>
                 </SectionCard>
+
+                {/* QoS policy */}
+                <SectionCard>
+                  <SectionCard.Header title="QoS policy" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="QoS policy"
+                      value={
+                        <Link
+                          to="/compute-admin/qos-policies/qos-01"
+                          className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                        >
+                          QoS policy
+                        </Link>
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Ingress ACL Tab Panel */}
+            <TabPanel value="ingress-acl" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <HStack className="w-full justify-between items-center">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Ingress ACL rules
+                  </h3>
+                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                    Manage rules
+                  </Button>
+                </HStack>
+
+                {/* Info Banner */}
+                <InlineMessage variant="info">
+                  Only traffic from configured CIDR rules is allowed. All other traffic is denied by
+                  default.
+                </InlineMessage>
+
+                {/* Action Bar */}
+                <div className="flex items-center gap-1">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={aclSearch}
+                      onChange={(e) => {
+                        setAclSearch(e.target.value);
+                        setAclPage(1);
+                      }}
+                      placeholder="Search source CIDR"
+                      size="sm"
+                    />
+                  </div>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    iconOnly
+                    icon={<IconDownload size={12} />}
+                    aria-label="Download"
+                  />
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={aclPage}
+                  totalPages={totalAclPages}
+                  onPageChange={setAclPage}
+                  totalItems={filteredAclRules.length}
+                />
+
+                {/* Table */}
+                <Table<AclRule>
+                  columns={aclColumns}
+                  data={paginatedAclRules}
+                  rowKey="id"
+                  emptyMessage="No ACL rules found"
+                />
               </VStack>
             </TabPanel>
           </Tabs>

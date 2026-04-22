@@ -47,6 +47,13 @@ export const BadgeList = memo(function BadgeList({
   const visibleItems = items.slice(0, maxVisible);
   const remainingCount = items.length - maxVisible;
 
+  const POPOVER_CONTENT_WIDTH = 136;
+  const BADGE_H_PADDING = 12;
+  const CHAR_WIDTH = 6.6;
+  const hasLongBadge = items.some(
+    (item) => item.length * CHAR_WIDTH + BADGE_H_PADDING > POPOVER_CONTENT_WIDTH
+  );
+
   const renderBadge = (item: string, index: number, truncate?: boolean) =>
     renderItem ? (
       renderItem(item, index)
@@ -77,20 +84,22 @@ export const BadgeList = memo(function BadgeList({
           delay={100}
           hideDelay={100}
           content={
-            <div className="p-3 min-w-[120px] max-w-[320px]">
-              <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+            <div className={`p-3 max-w-[320px] ${hasLongBadge ? '' : 'min-w-[160px]'}`}>
+              <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2 whitespace-nowrap">
                 {popoverTitle ?? `All items (${items.length})`}
               </div>
-              <div className="flex flex-col gap-1">
+              <div
+                className={`flex gap-1 items-start ${hasLongBadge ? 'flex-col' : 'flex-wrap min-w-[136px]'}`}
+              >
                 {items.map((item, index) => (
                   <Badge
                     key={index}
                     size={size}
                     theme={theme}
                     type={type}
-                    className="w-fit max-w-full"
+                    className="shrink-0 whitespace-nowrap"
                   >
-                    <span className="break-all">{item}</span>
+                    {item}
                   </Badge>
                 ))}
               </div>

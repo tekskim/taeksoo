@@ -240,6 +240,11 @@ import {
 } from '@/components/ModifyQuotasDrawer';
 import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
 import { AssignTenantDrawer, type AssignTenantNodeInfo } from '@/components/AssignTenantDrawer';
+import { AddDhcpAgentDrawer } from '@/components/AddDhcpAgentDrawer';
+import { AdminCreateRouterDrawer } from '@/components/AdminCreateRouterDrawer';
+import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDrawer';
+import { ManageAclRulesDrawer } from '@/components/ManageAclRulesDrawer';
+import { AdminTenantDrawer } from '@/components/AdminTenantDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers ---------------------------------------- */
@@ -1213,12 +1218,47 @@ const COMPUTE_ADMIN_NETWORK_ITEMS: DrawerSearchItem[] = [
     description: 'Select rules from the list to add to the firewall policy.',
     category: 'Network',
   },
+  {
+    title: 'Create subnet',
+    description: 'Create a new subnet with CIDR, gateway, DHCP, and advanced network settings.',
+    category: 'Network',
+  },
+  {
+    title: 'Add DHCP agent',
+    description: 'Adds a DHCP agent to the network.',
+    category: 'Network',
+  },
+  {
+    title: 'Create router',
+    description: 'Create a virtual router to route traffic between different networks or subnets.',
+    category: 'Network',
+  },
+  {
+    title: 'External gateway setting',
+    description: 'Configures the external gateway for the router.',
+    category: 'Network',
+  },
+  {
+    title: 'Manage ACL rules',
+    description: 'Add or remove ingress ACL rules for a floating IP.',
+    category: 'Network',
+  },
 ];
 
 const COMPUTE_ADMIN_TENANT_ITEMS: DrawerSearchItem[] = [
   {
     title: 'Modify quotas',
     description: 'Modifies the resource usage limits allocated to the tenant.',
+    category: 'Tenant',
+  },
+  {
+    title: 'Create tenant',
+    description: 'Creates a new tenant and configures its basic properties.',
+    category: 'Tenant',
+  },
+  {
+    title: 'Edit tenant',
+    description: "Edit the tenant's name and description.",
     category: 'Tenant',
   },
 ];
@@ -2096,7 +2136,7 @@ export function DrawersPage() {
                         Drawers{' '}
                       </span>
                       <span className="text-body-md text-[var(--color-text-subtle)]">
-                        (19 drawers)
+                        (26 drawers)
                       </span>
                     </div>
                   </div>
@@ -2253,6 +2293,46 @@ export function DrawersPage() {
                         linked
                         linkedTo="Firewall policies"
                       />
+                      <DrawerCard
+                        title="Create subnet"
+                        description="Create a new subnet with CIDR, gateway, DHCP, and advanced network settings."
+                        category="Network"
+                        onOpen={() => openDrawerFn('admin-create-subnet')}
+                        linked
+                        linkedTo="Networks"
+                      />
+                      <DrawerCard
+                        title="Add DHCP agent"
+                        description="Adds a DHCP agent to the network."
+                        category="Network"
+                        onOpen={() => openDrawerFn('add-dhcp-agent')}
+                        linked
+                        linkedTo="Networks"
+                      />
+                      <DrawerCard
+                        title="Create router"
+                        description="Create a virtual router to route traffic between different networks or subnets."
+                        category="Network"
+                        onOpen={() => openDrawerFn('admin-create-router')}
+                        linked
+                        linkedTo="Routers"
+                      />
+                      <DrawerCard
+                        title="External gateway setting"
+                        description="Configures the external gateway for the router."
+                        category="Network"
+                        onOpen={() => openDrawerFn('admin-external-gateway')}
+                        linked
+                        linkedTo="Routers"
+                      />
+                      <DrawerCard
+                        title="Manage ACL rules"
+                        description="Add or remove ingress ACL rules for a floating IP."
+                        category="Network"
+                        onOpen={() => openDrawerFn('manage-acl-rules')}
+                        linked
+                        linkedTo="Floating IPs"
+                      />
                     </FilteredGroup>
 
                     {/* Tenant actions */}
@@ -2264,6 +2344,22 @@ export function DrawersPage() {
                         onOpen={() => openDrawerFn('modify-quotas')}
                         linked
                         linkedTo="Tenant detail"
+                      />
+                      <DrawerCard
+                        title="Create tenant"
+                        description="Creates a new tenant and configures its basic properties."
+                        category="Tenant"
+                        onOpen={() => openDrawerFn('admin-create-tenant')}
+                        linked
+                        linkedTo="Tenants"
+                      />
+                      <DrawerCard
+                        title="Edit tenant"
+                        description="Edit the tenant's name and description."
+                        category="Tenant"
+                        onOpen={() => openDrawerFn('admin-edit-tenant')}
+                        linked
+                        linkedTo="Tenants"
                       />
                     </FilteredGroup>
 
@@ -3822,6 +3918,77 @@ export function DrawersPage() {
         isOpen={openDrawer === 'assign-tenant-to-node'}
         onClose={closeDrawer}
         node={mockAssignTenantNode}
+      />
+
+      {/* Create Subnet Drawer (Admin) */}
+      <SubnetDrawer
+        isOpen={openDrawer === 'admin-create-subnet'}
+        onClose={closeDrawer}
+        networkId="network-01"
+        networkName="private-network"
+        hideDns
+        onSubmit={(data) => {
+          console.log('Admin create subnet:', data);
+        }}
+      />
+
+      {/* Add DHCP Agent Drawer */}
+      <AddDhcpAgentDrawer
+        isOpen={openDrawer === 'add-dhcp-agent'}
+        onClose={closeDrawer}
+        networkName="private-network"
+        onSubmit={(agentId) => {
+          console.log('Add DHCP agent:', agentId);
+        }}
+      />
+
+      {/* Admin Create Router Drawer */}
+      <AdminCreateRouterDrawer
+        isOpen={openDrawer === 'admin-create-router'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Admin create router:', data);
+        }}
+      />
+
+      {/* Admin External Gateway Setting Drawer */}
+      <AdminExternalGatewayDrawer
+        isOpen={openDrawer === 'admin-external-gateway'}
+        onClose={closeDrawer}
+        routerName="my-router"
+      />
+
+      {/* Manage ACL Rules Drawer */}
+      <ManageAclRulesDrawer
+        isOpen={openDrawer === 'manage-acl-rules'}
+        onClose={closeDrawer}
+        floatingIp="172.24.4.228"
+        onSubmit={(rules) => {
+          console.log('Manage ACL rules:', rules);
+        }}
+      />
+
+      {/* Admin Create Tenant Drawer */}
+      <AdminTenantDrawer
+        isOpen={openDrawer === 'admin-create-tenant'}
+        onClose={closeDrawer}
+        mode="create"
+        onSubmit={(data) => {
+          console.log('Create tenant:', data);
+        }}
+      />
+
+      {/* Admin Edit Tenant Drawer */}
+      <AdminTenantDrawer
+        isOpen={openDrawer === 'admin-edit-tenant'}
+        onClose={closeDrawer}
+        mode="edit"
+        initialName="tenantA"
+        initialDescription=""
+        initialEnabled={true}
+        onSubmit={(data) => {
+          console.log('Edit tenant:', data);
+        }}
       />
 
       {/* =============================================

@@ -68,12 +68,8 @@ const networkTrafficData = {
   transmit: [300, 350, 400, 380, 320, 350],
 };
 
-const tcpConnectionsData = {
-  connections: [100, 120, 150, 140, 110, 130],
-};
-
 const networkErrorsData = {
-  errors: [0, 1, 2, 1, 0, 1],
+  errors: [2, 5, 12, 8, 3, 6],
 };
 
 const networkDroppedData = {
@@ -121,7 +117,7 @@ function FileSystemCard() {
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl p-4 flex-1 min-w-0">
-      <div className="chartTitle mb-4">File System Used Space</div>
+      <div className="chartTitle mb-4">File system used space</div>
       <div className="space-y-[22px]">
         {filesystems.map((fs) => (
           <div key={fs.name} className="flex flex-col gap-1.5">
@@ -328,7 +324,7 @@ function AreaChartCard({
             <>
               <button className="toggleBtn" onClick={toggleAll}>
                 <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
-                <span>{allVisible ? 'Hide All' : 'View All'}</span>
+                <span>{allVisible ? 'Hide all' : 'View all'}</span>
               </button>
               <span className="toggleDivider">|</span>
             </>
@@ -347,7 +343,7 @@ function AreaChartCard({
             {menuOpen && (
               <div className="contextMenu">
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
-                  Download Image
+                  Download image
                 </button>
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
                   Download CSV
@@ -359,7 +355,7 @@ function AreaChartCard({
                     setShowDataView(true);
                   }}
                 >
-                  View Data
+                  View data
                 </button>
               </div>
             )}
@@ -530,14 +526,14 @@ function SystemLoadCard() {
   };
 
   const chartContent = (
-    <div className={`chartCard ${isFullScreen ? 'chartCardFullScreen' : ''}`}>
+    <div className={`chartCard flex-1 min-w-0 ${isFullScreen ? 'chartCardFullScreen' : ''}`}>
       {/* Header */}
       <div className="chartHeader">
-        <span className="chartTitle">System Load</span>
+        <span className="chartTitle">System load</span>
         <div className="chartControls">
           <button className="toggleBtn" onClick={toggleAll}>
             <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
-            <span>{allVisible ? 'Hide All' : 'View All'}</span>
+            <span>{allVisible ? 'Hide all' : 'View all'}</span>
           </button>
           <span className="toggleDivider">|</span>
           {/* Menu Button */}
@@ -554,7 +550,7 @@ function SystemLoadCard() {
             {menuOpen && (
               <div className="contextMenu">
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
-                  Download Image
+                  Download image
                 </button>
                 <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
                   Download CSV
@@ -566,7 +562,7 @@ function SystemLoadCard() {
                     setShowDataView(true);
                   }}
                 >
-                  View Data
+                  View data
                 </button>
               </div>
             )}
@@ -658,7 +654,7 @@ export default function ComputeAdminPhysicalNodesPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [{ label: 'Physical Nodes' }];
+  const breadcrumbItems = [{ label: 'Physical nodes' }];
 
   const timeRangeOptions = [
     { label: '1h', value: '1h' as TimeRangeValue },
@@ -716,7 +712,7 @@ export default function ComputeAdminPhysicalNodesPage() {
       }
     >
       <VStack gap={6}>
-        <PageHeader title="Physical Nodes" />
+        <PageHeader title="Physical nodes" />
 
         {/* Monitoring Toolbar with Node Selector */}
         <div className="flex items-center gap-2">
@@ -736,21 +732,21 @@ export default function ComputeAdminPhysicalNodesPage() {
         </div>
 
         {/* Row 1: Stat Cards */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex gap-4">
-            <StatCard title="CPU Cores" value={0} />
+        <div className="grid grid-cols-2 gap-6">
+          <div className="flex gap-6">
+            <StatCard title="CPU cores" value={0} />
             <StatCard title="Total RAM" value="2.56" unit="GiB" />
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             <StatCard title="System running time" value="2.56" unit="weeks" />
             <FileSystemCard />
           </div>
         </div>
 
         {/* Row 2: CPU Usage & RAM Usage */}
-        <div className="flex gap-4">
+        <div className="flex gap-6">
           <AreaChartCard
-            title="CPU Usage"
+            title="CPU usage"
             labels={timeLabels}
             series={[
               cpuUsageData.idle,
@@ -769,7 +765,7 @@ export default function ComputeAdminPhysicalNodesPage() {
             stacked={true}
           />
           <AreaChartCard
-            title="RAM Usage"
+            title="RAM usage"
             labels={timeLabels}
             series={[ramUsageData.used, ramUsageData.free]}
             colors={[chartColors.cyan400, chartColors.emerald400]}
@@ -779,7 +775,7 @@ export default function ComputeAdminPhysicalNodesPage() {
         </div>
 
         {/* Row 3: Disk IOPS & Disk Usage */}
-        <div className="flex gap-4">
+        <div className="flex gap-6">
           <AreaChartCard
             title="Disk IOPS"
             labels={timeLabels}
@@ -803,11 +799,9 @@ export default function ComputeAdminPhysicalNodesPage() {
           />
         </div>
 
-        {/* Row 4: System Load */}
-        <SystemLoadCard />
-
-        {/* Row 5: Network Traffic & TCP Connections */}
-        <div className="flex gap-4">
+        {/* Row 4: System Load & Network Traffic */}
+        <div className="flex gap-6">
+          <SystemLoadCard />
           <AreaChartCard
             title="Network traffic"
             labels={timeLabels}
@@ -815,17 +809,10 @@ export default function ComputeAdminPhysicalNodesPage() {
             colors={[chartColors.cyan400, chartColors.emerald400]}
             legendLabels={['Receive', 'Transmit']}
           />
-          <AreaChartCard
-            title="TCP Connections"
-            labels={['0', '4', '8', '12', '16', '20', '24', '28', '32']}
-            series={[tcpConnectionsData.connections]}
-            colors={[chartColors.cyan400]}
-            legendLabels={['Connections']}
-          />
         </div>
 
-        {/* Row 6: Network Errors & Dropped Packets */}
-        <div className="flex gap-4">
+        {/* Row 5: Network Errors & Dropped Packets */}
+        <div className="flex gap-6">
           <AreaChartCard
             title="Network errors"
             labels={timeLabels}

@@ -1063,14 +1063,14 @@ export function NodeDetailPage() {
                         delay={100}
                         hideDelay={100}
                         content={
-                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="p-3 min-w-[160px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                               All Labels ({Object.keys(node.labels).length})
                             </div>
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                               {Object.entries(node.labels).map(([k, v]) => (
                                 <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                  <span className="break-all">{v ? `${k}: ${v}` : k}</span>
+                                  {v ? `${k}: ${v}` : k}
                                 </Badge>
                               ))}
                             </div>
@@ -1112,14 +1112,14 @@ export function NodeDetailPage() {
                         delay={100}
                         hideDelay={100}
                         content={
-                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="p-3 min-w-[160px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                               All annotations ({Object.keys(node.annotations).length})
                             </div>
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                               {Object.entries(node.annotations).map(([k, v]) => (
                                 <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                  <span className="break-all">{v ? `${k}: ${v}` : k}</span>
+                                  {v ? `${k}: ${v}` : k}
                                 </Badge>
                               ))}
                             </div>
