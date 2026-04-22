@@ -528,13 +528,6 @@ export default function IAMUserGroupDetailPage() {
       sortable: true,
     },
     {
-      key: 'policyBadges',
-      label: 'Policies',
-      flex: 1,
-      minWidth: columnMinWidths.policies,
-      render: (row) => row.policies,
-    },
-    {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,

@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useCallback } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
@@ -1199,15 +1200,24 @@ function AppRoutes() {
   );
 }
 
+function AppWithTabs() {
+  const navigate = useNavigate();
+  const handleLastTabClose = useCallback(() => navigate('/'), [navigate]);
+
+  return (
+    <TabProvider defaultTabs={defaultTabs} onLastTabClose={handleLastTabClose}>
+      <AppRoutes />
+    </TabProvider>
+  );
+}
+
 function App() {
   return (
     <DarkModeProvider>
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <ProjectProvider>
           <SidebarProvider>
-            <TabProvider defaultTabs={defaultTabs}>
-              <AppRoutes />
-            </TabProvider>
+            <AppWithTabs />
           </SidebarProvider>
         </ProjectProvider>
       </BrowserRouter>

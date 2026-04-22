@@ -40,6 +40,8 @@ import {
 } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { DesktopWindowProvider } from '@/contexts/DesktopWindowContext';
+import { TabProvider } from '@/contexts/TabContext';
+import { SidebarProvider } from '@/contexts/SidebarContext';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import DesktopBg from '@/assets/bg-01.jpg';
@@ -375,7 +377,7 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
             }
           }}
           className={`
-            relative cursor-pointer flex items-center justify-center
+            relative cursor-pointer flex flex-col items-center
             ${isDragging ? 'z-50' : 'z-0'}
           `}
           whileDrag={{
@@ -383,17 +385,8 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
             zIndex: 50,
             boxShadow: '0 10px 30px color-mix(in srgb, var(--color-text-default) 30%, transparent)',
           }}
-          transition={
-            isDragging ? { type: 'spring', stiffness: 400, damping: 25 } : { duration: 0 }
-          }
         >
-          <div
-            className={`
-              w-7 h-7 rounded-[var(--radius-lg)] overflow-hidden
-              ${isRunning ? 'p-0.5 border border-[var(--desktop-icon-running-border)] bg-[var(--desktop-icon-running-bg)]' : ''}
-              ${isActive ? 'border-[var(--desktop-icon-active-border)] bg-[var(--desktop-icon-active-bg)]' : ''}
-            `}
-          >
+          <div className="w-7 h-7 rounded-[var(--radius-lg)] overflow-hidden">
             <img
               src={app.icon}
               alt={app.name}
@@ -401,6 +394,12 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
               draggable={false}
             />
           </div>
+          {isRunning && (
+            <div
+              className="mt-0.5 rounded-full bg-[var(--desktop-text-muted)]"
+              style={{ width: 3, height: 3 }}
+            />
+          )}
         </motion.div>
       </Tooltip>
     </ContextMenu>
@@ -441,19 +440,16 @@ function DockIcons({
         // 윈도우 상태에 따른 아이콘 결정
         let windowIcon: React.ReactNode;
         if (window.isMinimized) {
-          // Minimized 상태: Window_minimized 아이콘
-          windowIcon = <IconWindowMinimized size={16} stroke={1} />;
+          windowIcon = <IconWindowMinimized size={12} />;
         } else if (window.isActive) {
-          // Normal + Focus in 상태: Check + Window_active 아이콘
           windowIcon = (
             <span className="flex items-center gap-1">
-              <IconCheck size={16} stroke={1} />
-              <IconWindowActive size={16} stroke={1} />
+              <IconCheck size={12} />
+              <IconWindowActive size={12} />
             </span>
           );
         } else {
-          // Normal + Focus out 상태: Window_active 아이콘
-          windowIcon = <IconWindowActive size={16} stroke={1} />;
+          windowIcon = <IconWindowActive size={12} />;
         }
 
         items.push({
@@ -463,32 +459,33 @@ function DockIcons({
           onClick: () => onWindowClick(window.id),
         });
       });
-      // Divider after window list
-      items.push({ id: 'divider-windows', label: '', divider: true });
+      // 마지막 윈도우 아이템에 divider 추가
+      if (items.length > 0) {
+        items[items.length - 1].divider = true;
+      }
     }
 
     // New window
     items.push({
       id: 'new-window',
       label: 'New window',
+      divider: true,
       onClick: () => onNewWindow(app.id),
     });
-
-    items.push({ id: 'divider-3', divider: true });
 
     // Pin / Unpin
     items.push({
       id: 'pin',
       label: app.isPinned ? 'Unpin' : 'Pin',
+      divider: true,
       onClick: () => onTogglePin(app.id),
     });
-
-    items.push({ id: 'divider-4', divider: true });
 
     // Quit
     items.push({
       id: 'quit',
       label: 'Quit',
+      status: 'danger',
       onClick: () => onQuitApp(app.id),
     });
 
@@ -515,11 +512,9 @@ function DockIcons({
             onDragEnd={() => setIsDragging(false)}
             dragListener={true}
             dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.1}
-            layout={isDragging}
-            transition={
-              isDragging ? { type: 'spring', stiffness: 400, damping: 25 } : { duration: 0 }
-            }
+            dragElastic={0.15}
+            layout
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             whileDrag={{
               scale: 1.15,
               zIndex: 50,
@@ -985,7 +980,7 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
         <>
           {/* Overlay backdrop */}
           <motion.div
-            className="fixed inset-0 z-[500] bg-black/40"
+            className="fixed inset-0 z-[6000] bg-black/40"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -993,7 +988,7 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
             transition={{ duration: 0.2, ease: 'easeOut' }}
           />
           {/* Panel - centered on screen */}
-          <div className="fixed inset-0 z-[501] flex items-center justify-center pointer-events-none">
+          <div className="fixed inset-0 z-[6001] flex items-center justify-center pointer-events-none">
             <motion.div
               className="bg-[var(--desktop-glass-bg-strong)] backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center border border-[var(--desktop-glass-border-strong)] pointer-events-auto"
               initial={{ scale: 0.9, opacity: 0 }}
@@ -1067,6 +1062,8 @@ interface WindowState {
   isActive: boolean;
   zIndex: number;
   createdAt: number;
+  initialX: number;
+  initialY: number;
 }
 
 interface AppState {
@@ -1081,20 +1078,32 @@ interface AppState {
    Isolated Router — resets parent router context so MemoryRouter can nest
    ---------------------------------------- */
 
-function IsolatedRouter({ initialPath, appId }: { initialPath: string; appId: AppId }) {
+function IsolatedRouter({
+  initialPath,
+  appId,
+  onClose,
+}: {
+  initialPath: string;
+  appId: AppId;
+  onClose: () => void;
+}) {
   return (
     <UNSAFE_LocationContext.Provider value={null as any}>
       <UNSAFE_RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
         <MemoryRouter initialEntries={[initialPath]}>
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center h-full text-[var(--color-text-muted)]">
-                Loading...
-              </div>
-            }
-          >
-            <AppRoutes appId={appId} />
-          </Suspense>
+          <SidebarProvider>
+            <TabProvider onLastTabClose={onClose}>
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center h-full text-[var(--color-text-muted)]">
+                    Loading...
+                  </div>
+                }
+              >
+                <AppRoutes appId={appId} />
+              </Suspense>
+            </TabProvider>
+          </SidebarProvider>
         </MemoryRouter>
       </UNSAFE_RouteContext.Provider>
     </UNSAFE_LocationContext.Provider>
@@ -1157,6 +1166,8 @@ interface PageWindowProps {
   title: string;
   children: React.ReactNode;
   zIndex: number;
+  initialX: number;
+  initialY: number;
 }
 
 const TOP_BAR_HEIGHT = 52;
@@ -1175,11 +1186,13 @@ function PageWindow({
   title,
   children,
   zIndex,
+  initialX,
+  initialY,
 }: PageWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false);
   const [position, setPosition] = useState(() => ({
-    x: Math.max(0, Math.round((window.innerWidth - 1440) / 2)),
-    y: Math.max(TOP_BAR_HEIGHT, Math.round((window.innerHeight - 800) / 2 + TOP_BAR_HEIGHT / 2)),
+    x: initialX,
+    y: initialY,
   }));
   const [size, setSize] = useState({ width: 1440, height: 800 });
   const [preMaxState, setPreMaxState] = useState<{
@@ -1608,26 +1621,39 @@ export function DesktopPage() {
     iam: { name: 'IAM', icon: imgIam, initialPath: '/iam' },
     settings: { name: 'Settings', icon: imgSettings, initialPath: '/settings' },
   };
-  // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Ops, Settings는 Pin만 되어있음
-  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(
-    new Set(['ai-platform', 'agent', 'settings'])
-  );
-  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([
-    'compute',
-    'storage',
-    'container',
-    'ai-platform',
-    'agent',
-    'settings',
-  ]);
+  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set());
+  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([]);
+
+  const visibleDockApps = useMemo(() => {
+    return dockAppOrder.filter(
+      (appId) => pinnedApps.has(appId) || windows.some((w) => w.appId === appId)
+    );
+  }, [dockAppOrder, pinnedApps, windows]);
 
   // Window management functions
+  const CASCADE_OFFSET = 30;
+  const CASCADE_MAX = 180;
+  const WINDOW_WIDTH = 1440;
+  const WINDOW_HEIGHT = 800;
+
   const createWindow = useCallback(
     (appId: AppId) => {
       const config = appConfigs[appId];
       if (!config) return;
 
-      // 시뮬레이션 모드: 실제 UI 윈도우 없이 상태만 업데이트
+      const baseX = Math.max(0, Math.round((window.innerWidth - WINDOW_WIDTH) / 2));
+      const baseY = Math.max(
+        TOP_BAR_HEIGHT,
+        Math.round((window.innerHeight - WINDOW_HEIGHT) / 2 + TOP_BAR_HEIGHT / 2)
+      );
+
+      const openCount = windows.filter((w) => !w.isMinimized).length;
+      const offsetX = (openCount * CASCADE_OFFSET) % CASCADE_MAX;
+      const offsetY = (openCount * CASCADE_OFFSET) % CASCADE_MAX;
+
+      const maxX = window.innerWidth - 400;
+      const maxY = window.innerHeight - 200;
+
       const newWindow: WindowState = {
         id: `${appId}-${Date.now()}`,
         appId,
@@ -1636,6 +1662,8 @@ export function DesktopPage() {
         isActive: true,
         zIndex: nextZIndex,
         createdAt: Date.now(),
+        initialX: Math.min(baseX + offsetX, maxX),
+        initialY: Math.min(baseY + offsetY, maxY),
       };
 
       setWindows((prev) => prev.map((w) => ({ ...w, isActive: false })).concat(newWindow));
@@ -1644,7 +1672,7 @@ export function DesktopPage() {
       // Dock에 앱이 없으면 추가
       setDockAppOrder((prev) => (prev.includes(appId) ? prev : [...prev, appId]));
     },
-    [appConfigs, nextZIndex]
+    [appConfigs, nextZIndex, windows]
   );
 
   const closeWindow = useCallback((windowId: string) => {
@@ -1875,7 +1903,7 @@ export function DesktopPage() {
         notificationButtonRef={notificationButtonRef}
         dockIcons={
           <DockIcons
-            apps={dockAppOrder.map((appId) => ({
+            apps={visibleDockApps.map((appId) => ({
               id: appId,
               name: appConfigs[appId].name,
               icon: appConfigs[appId].icon,
@@ -2071,8 +2099,14 @@ export function DesktopPage() {
                 onMaximizeChange={handleMaximizeChange}
                 title={window.title}
                 zIndex={window.zIndex}
+                initialX={window.initialX}
+                initialY={window.initialY}
               >
-                <IsolatedRouter initialPath={config.initialPath} appId={window.appId} />
+                <IsolatedRouter
+                  initialPath={config.initialPath}
+                  appId={window.appId}
+                  onClose={() => closeWindow(window.id)}
+                />
               </PageWindow>
             );
           })}

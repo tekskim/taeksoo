@@ -11,10 +11,15 @@ export function LabLayout() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     mainRef.current?.scrollTo(0, 0);
   }, [location.pathname]);
+
+  useEffect(() => {
+    searchInputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     const mainElement = mainRef.current;
@@ -48,12 +53,9 @@ export function LabLayout() {
 
   const currentPath = location.pathname;
 
-  const [openGroups, setOpenGroups] = useState<Set<string>>(() => {
-    const activeGroup = labNavGroups.find((g) =>
-      g.items.some((item) => item.path === location.pathname)
-    );
-    return new Set(activeGroup ? [activeGroup.title] : []);
-  });
+  const [openGroups, setOpenGroups] = useState<Set<string>>(
+    () => new Set(labNavGroups.map((g) => g.title))
+  );
 
   useEffect(() => {
     const activeGroup = labNavGroups.find((g) => g.items.some((item) => item.path === currentPath));
@@ -91,6 +93,7 @@ export function LabLayout() {
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
               />
               <input
+                ref={searchInputRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

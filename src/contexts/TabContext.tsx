@@ -104,6 +104,7 @@ const TabContext = createContext<TabContextValue | null>(null);
 interface TabProviderProps {
   children: React.ReactNode;
   defaultTabs?: TabItem[];
+  onLastTabClose?: () => void;
 }
 
 // Helper function to get label from path - returns the most recent breadcrumb item
@@ -179,7 +180,7 @@ function getLabelFromPath(path: string): string {
   return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
 }
 
-export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
+export function TabProvider({ children, defaultTabs = [], onLastTabClose }: TabProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -334,14 +335,23 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   }, []);
 
   // Close a tab
+  const onLastTabCloseRef = useRef(onLastTabClose);
+  onLastTabCloseRef.current = onLastTabClose;
+
   const closeTab = useCallback(
     (tabId: string) => {
       setTabs((prev) => {
         const closedIndex = prev.findIndex((t) => t.id === tabId);
         const newTabs = prev.filter((t) => t.id !== tabId);
 
-        // 탭이 모두 닫히면 현재 앱의 홈 탭 생성
+        // 마지막 탭을 닫는 경우
         if (newTabs.length === 0) {
+          if (onLastTabCloseRef.current) {
+            // 콜백이 있으면 앱 종료 (Desktop: 윈도우 닫기, 일반: 엔트리 이동)
+            setTimeout(() => onLastTabCloseRef.current?.(), 0);
+            return prev; // setState 안에서는 상태를 유지하고, 콜백에서 처리
+          }
+          // 콜백이 없으면 기존 동작: 홈 탭 생성
           const homeTab = getDefaultHomeTab(currentApp);
           setActiveTabId(homeTab.id);
           navigate(homeTab.path);

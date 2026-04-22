@@ -83,7 +83,43 @@ function DesktopTopGNBGuidelines() {
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[ THAKI Logo ] [ Dock Menu ] [ App Launcher ]          [ Domain ] [ Settings ] [ Account ] [ Notifications ] | [ TCA ]`}</pre>
         </div>
 
-        <SubSectionTitle>2.1 Dock Menu (실행 중 앱)</SubSectionTitle>
+        <SubSectionTitle>2.1 Dock Menu (핀 / 실행 중 앱)</SubSectionTitle>
+        <Prose>
+          Dock에는 <strong>핀(Pin)된 앱</strong>과 <strong>실행 중인 앱</strong>만 표시됩니다. 초기
+          상태에서는 Dock이 비어 있으며, 앱을 실행하거나 Pin하면 아이콘이 나타납니다. Quit + Unpin
+          시 Dock에서 사라집니다.
+        </Prose>
+
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[180px]">속성</Th>
+              <Th>값</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>아이콘 크기</Td>
+              <Td>
+                <code>28 × 28</code> px (<code>w-7 h-7</code>)
+              </Td>
+            </tr>
+            <tr>
+              <Td>실행 중 인디케이터</Td>
+              <Td>
+                아이콘 하단 <code>3 × 3</code> px 원형 dot, 색상{' '}
+                <code>var(--desktop-text-muted)</code>, 간격 <code>mt-0.5</code> (2px)
+              </Td>
+            </tr>
+            <tr>
+              <Td>표시 조건</Td>
+              <Td>
+                <code>pinnedApps.has(appId) || windows.some(w =&gt; w.appId === appId)</code>
+              </Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
         <TableWrapper>
           <thead>
             <tr>
@@ -127,6 +163,51 @@ function DesktopTopGNBGuidelines() {
                 <strong>드래그 앤 드롭</strong>
               </Td>
               <Td>아이콘 순서 변경 (옆 아이콘 밀림)</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
+        <SubSectionTitle>Dock 컨텍스트 메뉴 스펙</SubSectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[180px]">항목</Th>
+              <Th className="w-[120px]">아이콘</Th>
+              <Th>설명</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>윈도우 목록</Td>
+              <Td>
+                <code>IconWindowActive</code> / <code>IconWindowMinimized</code> — size 12, stroke 2
+              </Td>
+              <Td>
+                Active + Focus: <code>IconCheck</code> + <code>IconWindowActive</code> 조합.
+                Minimized: <code>IconWindowMinimized</code>. Focus out:{' '}
+                <code>IconWindowActive</code> 단독
+              </Td>
+            </tr>
+            <tr>
+              <Td>New window</Td>
+              <Td>없음</Td>
+              <Td>
+                <code>divider: true</code> (하단 구분선)
+              </Td>
+            </tr>
+            <tr>
+              <Td>Pin / Unpin</Td>
+              <Td>없음</Td>
+              <Td>
+                <code>divider: true</code> (하단 구분선)
+              </Td>
+            </tr>
+            <tr>
+              <Td>Quit</Td>
+              <Td>없음</Td>
+              <Td>
+                <code>status: &apos;danger&apos;</code> — 빨간색 텍스트
+              </Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -429,6 +510,45 @@ function DesktopTopGNBGuidelines() {
           </tbody>
         </TableWrapper>
 
+        <SubSectionTitle>멀티 윈도우 Cascade 배치</SubSectionTitle>
+        <Prose>
+          여러 앱 창을 동시에 실행할 때, 새 창은 이전 창과 겹치지 않도록 계단식(cascade)으로
+          배치됩니다. macOS/Windows의 표준 윈도우 배치 전략과 동일합니다.
+        </Prose>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">속성</Th>
+              <Th>값</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>Cascade 오프셋</Td>
+              <Td>
+                <code>30px</code> — 각 새 창이 이전 창 대비 X/Y 방향으로 30px씩 이동
+              </Td>
+            </tr>
+            <tr>
+              <Td>순환 주기</Td>
+              <Td>
+                <code>180px</code> (6개 창) — 오프셋이 180px에 도달하면 시작 위치로 순환
+              </Td>
+            </tr>
+            <tr>
+              <Td>기준 카운트</Td>
+              <Td>현재 열려 있는(최소화 제외) 창 수 기반</Td>
+            </tr>
+            <tr>
+              <Td>경계 보호</Td>
+              <Td>
+                화면 밖으로 나가지 않도록 <code>maxX = viewport.width − 400</code>,{' '}
+                <code>maxY = viewport.height − 200</code> 으로 clamp
+              </Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
         <SubSectionTitle>열기 / 닫기 (Open / Close)</SubSectionTitle>
         <TableWrapper>
           <thead>
@@ -656,9 +776,29 @@ function DesktopTopGNBGuidelines() {
               <Td>Top GNB 내부 드롭다운</Td>
             </tr>
             <tr>
+              <Td>Settings 윈도우</Td>
+              <Td>2001</Td>
+              <Td>독립 윈도우 (앱 창과 동일 레벨)</Td>
+            </tr>
+            <tr>
               <Td>앱 창 (일반)</Td>
               <Td>2000 + n</Td>
               <Td>n은 창 생성 순서</Td>
+            </tr>
+            <tr>
+              <Td>Chatbot 패널</Td>
+              <Td>3000</Td>
+              <Td>앱 창 위에 표시</Td>
+            </tr>
+            <tr>
+              <Td>ContextMenu</Td>
+              <Td>5000</Td>
+              <Td>Dock 우클릭 메뉴 등</Td>
+            </tr>
+            <tr>
+              <Td>Admin Center / Notification</Td>
+              <Td>6000</Td>
+              <Td>오버레이 패널 — 앱 창 위에 표시</Td>
             </tr>
             <tr>
               <Td>Top GNB (Auto-hide)</Td>
@@ -758,6 +898,14 @@ function DesktopTopGNBGuidelines() {
               <Td>
                 <code>handleWrapperMouseLeave</code>에서 명시적으로{' '}
                 <code>setAnimateTransition(true)</code> 호출하여 항상 슬라이딩 보장
+              </Td>
+            </tr>
+            <tr>
+              <Td>마지막 탭 닫기 시 앱 종료</Td>
+              <Td>
+                TabBar에서 마지막 남은 탭의 X 버튼 클릭 시 홈 탭을 새로 생성하지 않고 앱 윈도우를
+                종료. Desktop에서는 <code>closeWindow</code> 호출, 일반 앱에서는 엔트리 페이지(/)로
+                이동. <code>TabProvider</code>의 <code>onLastTabClose</code> 콜백으로 제어
               </Td>
             </tr>
           </tbody>
