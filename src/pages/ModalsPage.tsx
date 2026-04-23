@@ -12,6 +12,8 @@ import {
   SearchInput,
   Badge,
   Disclosure,
+  InlineMessage,
+  InfoBox as TdsInfoBox,
 } from '@/design-system';
 import {
   IconAlertCircle,
@@ -1403,13 +1405,19 @@ export function ModalsPage() {
                   description: 'Select a revision to roll back to.',
                   category: 'Deployment',
                 },
+                {
+                  title: 'Operator required',
+                  description:
+                    'CNPG Operator is not installed. Install the operator before creating instances.',
+                  category: 'Catalog',
+                },
               ]}
             >
               <Disclosure open={isSearching || isContainerOpen} onChange={setIsContainerOpen}>
                 <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                   <SectionHeader
                     label="Container"
-                    count={12}
+                    count={13}
                     isOpen={isContainerOpen}
                     isSearching={isSearching}
                   />
@@ -1566,6 +1574,24 @@ export function ModalsPage() {
                         description="Select a revision to roll back to."
                         category="Deployment"
                         onOpen={() => openModalFn('rollback-deployment')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Catalog actions"
+                      items={[
+                        {
+                          title: 'Operator required',
+                          description:
+                            'CNPG Operator is not installed. Install the operator before creating instances.',
+                          category: 'Catalog',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Operator required"
+                        description="CNPG Operator is not installed. Install the operator before creating instances."
+                        category="Catalog"
+                        onOpen={() => openModalFn('operator-required')}
                       />
                     </FilteredGroup>
                   </VStack>
@@ -3793,6 +3819,24 @@ export function ModalsPage() {
         confirmText="Roll back"
         confirmVariant="primary"
       />
+      <Modal
+        isOpen={openModal === 'operator-required'}
+        onClose={closeModal}
+        title="Operator Required"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <InlineMessage variant="warning">
+            CNPG operator is not installed.
+            {'\n'}
+            CNPG is managed by CNPG operator. You must install the operator before creating
+            instances.
+          </InlineMessage>
+          <TdsInfoBox label="Application" value="CNPG" />
+          <TdsInfoBox label="Required operator" value="CNPG Operator" />
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Install" confirmVariant="primary" />
+      </Modal>
 
       {/* ================================================================
          MODAL INSTANCES — Compute Admin
