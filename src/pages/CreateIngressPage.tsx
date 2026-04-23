@@ -131,8 +131,12 @@ interface Certificate {
    ---------------------------------------- */
 function SummarySidebar({
   sectionStates,
+  onCreate,
+  createDisabled,
 }: {
   sectionStates: Record<IngressSectionStep, WizardSectionState>;
+  onCreate: () => void;
+  createDisabled: boolean;
 }) {
   const navigate = useNavigate();
 
@@ -152,7 +156,13 @@ function SummarySidebar({
           <Button variant="secondary" size="md" onClick={() => navigate('/container/ingresses')}>
             Cancel
           </Button>
-          <Button variant="primary" size="md" className="flex-1">
+          <Button
+            variant="primary"
+            size="md"
+            className="flex-1"
+            onClick={onCreate}
+            disabled={createDisabled}
+          >
             Create
           </Button>
         </HStack>
@@ -345,6 +355,11 @@ export default function CreateIngressPage() {
   const updateAnnotation = useCallback((id: string, field: 'key' | 'value', value: string) => {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
+
+  const handleCreate = useCallback(() => {
+    if (!name.trim()) return;
+    navigate('/container/ingresses');
+  }, [name, navigate]);
 
   return (
     <PageShell
@@ -897,7 +912,11 @@ export default function CreateIngressPage() {
           </VStack>
 
           {/* Summary Sidebar */}
-          <SummarySidebar sectionStates={getSectionStates()} />
+          <SummarySidebar
+            sectionStates={getSectionStates()}
+            onCreate={handleCreate}
+            createDisabled={!name.trim()}
+          />
         </HStack>
       </VStack>
     </PageShell>

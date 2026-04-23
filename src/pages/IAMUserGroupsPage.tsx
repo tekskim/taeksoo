@@ -12,6 +12,7 @@ import {
   PageShell,
   PageHeader,
   ListToolbar,
+  ConfirmModal,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -163,15 +164,6 @@ const filterFields: FilterField[] = [
       { value: 'Custom', label: 'Custom' },
     ],
   },
-  {
-    id: 'status',
-    label: 'Status',
-    type: 'select',
-    options: [
-      { value: 'active', label: 'Active' },
-      { value: 'inactive', label: 'Inactive' },
-    ],
-  },
   { id: 'roles', label: 'Roles', type: 'text' },
   { id: 'userCount', label: 'User count', type: 'text' },
   { id: 'description', label: 'Description', type: 'text' },
@@ -188,6 +180,8 @@ export function IAMUserGroupsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [userGroups, setUserGroups] = useState(mockUserGroups);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -202,18 +196,22 @@ export function IAMUserGroupsPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   const filteredGroups = useMemo(() => {
-    return mockUserGroups.filter((group) => {
+    return userGroups.filter((group) => {
       return appliedFilters.every((filter) => {
         const raw = group[filter.fieldId as keyof UserGroup];
         const value = String(typeof raw === 'number' ? raw : (raw ?? '')).toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
-  }, [appliedFilters]);
+  }, [userGroups, appliedFilters]);
 
   // Pagination
   const itemsPerPage = 10;
@@ -246,6 +244,12 @@ export function IAMUserGroupsPage() {
   const handleEditGroup = (group: UserGroup) => {
     setSelectedGroupForDrawer(group);
     setEditGroupOpen(true);
+  };
+
+  const handleBulkDelete = () => {
+    setUserGroups((prev) => prev.filter((g) => !selectedRows.includes(g.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
   };
 
   // Context menu items factory
@@ -418,6 +422,7 @@ export function IAMUserGroupsPage() {
                   size="sm"
                   icon={<IconDownload size={12} />}
                   aria-label="Download"
+                  onClick={() => console.log('Download')}
                 />
               </ListToolbar.Actions>
             }
@@ -428,6 +433,7 @@ export function IAMUserGroupsPage() {
                   size="sm"
                   disabled={!hasSelection}
                   leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Delete
                 </Button>
@@ -483,6 +489,19 @@ export function IAMUserGroupsPage() {
               }
             : undefined
         }
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected user groups"
+        description="Removing the selected user groups is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} user group(s)`}
       />
     </PageShell>
   );

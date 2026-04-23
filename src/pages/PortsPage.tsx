@@ -254,7 +254,7 @@ export function PortsPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [ports] = useState(mockPorts);
+  const [ports, setPorts] = useState(mockPorts);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'all';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -304,7 +304,7 @@ export function PortsPage() {
     { id: 'securityGroups', label: 'SG', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
-    { id: 'macAddress', label: 'Mac address', visible: true },
+    { id: 'macAddress', label: 'MAC Address', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -318,7 +318,16 @@ export function PortsPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Ports');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -347,13 +356,13 @@ export function PortsPage() {
       id: 'associate-floating-ip',
       label: 'Associate floating IP',
       onClick: () => handleAssociateFloatingIP(port),
-      disabled: !!port.floatingIp,
+      disabled: !!port.floatingIp && port.floatingIp !== '-',
     },
     {
       id: 'disassociate-floating-ip',
       label: 'Disassociate floating IP',
       onClick: () => console.log('Disassociate floating IP:', port.id),
-      disabled: !port.floatingIp,
+      disabled: !port.floatingIp || port.floatingIp === '-',
     },
     {
       id: 'allocate-ip',
@@ -453,8 +462,8 @@ export function PortsPage() {
                 <Link
                   to={
                     row.attachedType === 'router'
-                      ? `/routers/${row.attachedToId}`
-                      : `/instances/${row.attachedToId}`
+                      ? `/compute/routers/${row.attachedToId}`
+                      : `/compute/instances/${row.attachedToId}`
                   }
                   className="inline-flex items-center gap-1 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
@@ -571,13 +580,16 @@ export function PortsPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && portToDelete) {
-      // Handle delete
+      const id = portToDelete.id;
+      setPorts((prev) => prev.filter((p) => p.id !== id));
       setDeleteModalOpen(false);
       setPortToDelete(null);
+      setSelectedPorts((prev) => prev.filter((x) => x !== id));
     }
   };
 
   const handleBulkDelete = () => {
+    setPorts((prev) => prev.filter((p) => !selectedPorts.includes(p.id)));
     setIsBulkDeleteOpen(false);
     setSelectedPorts([]);
   };
@@ -646,6 +658,7 @@ export function PortsPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -680,6 +693,7 @@ export function PortsPage() {
           columns={visibleColumns}
           data={paginatedPorts}
           rowKey="id"
+          emptyMessage="No ports found"
           selectable
           selectedKeys={selectedPorts}
           onSelectionChange={setSelectedPorts}

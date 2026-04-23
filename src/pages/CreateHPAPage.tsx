@@ -157,9 +157,15 @@ interface SummarySidebarProps {
   sectionStates: Record<HPASectionStep, WizardSectionState>;
   onCancel: () => void;
   onSubmit: () => void;
+  createDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStates, onCancel, onSubmit }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStates,
+  onCancel,
+  onSubmit,
+  createDisabled,
+}: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = HPA_SECTION_ORDER.map((key) => ({
     key,
     label: HPA_SECTION_LABELS[key],
@@ -176,7 +182,7 @@ function SummarySidebar({ sectionStates, onCancel, onSubmit }: SummarySidebarPro
           <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={onSubmit} className="flex-1">
+          <Button variant="primary" onClick={onSubmit} className="flex-1" disabled={createDisabled}>
             Create
           </Button>
         </HStack>
@@ -1233,6 +1239,7 @@ export default function CreateHPAPage() {
             sectionStates={getSectionStates()}
             onCancel={handleCancel}
             onSubmit={handleSubmit}
+            createDisabled={!name.trim()}
           />
         </HStack>
       </VStack>

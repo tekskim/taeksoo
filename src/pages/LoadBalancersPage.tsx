@@ -246,8 +246,7 @@ export function LoadBalancersPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loadBalancers] = useState(mockLoadBalancers);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [loadBalancers, setLoadBalancers] = useState(mockLoadBalancers);
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -295,7 +294,16 @@ export function LoadBalancersPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Load Balancers');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -312,13 +320,13 @@ export function LoadBalancersPage() {
       id: 'associate-floating-ip',
       label: 'Associate floating IP',
       onClick: () => handleAssociateFloatingIP(lb),
-      disabled: !!lb.floatingIp,
+      disabled: !!lb.floatingIp && lb.floatingIp !== '-',
     },
     {
       id: 'disassociate-floating-ip',
       label: 'Disassociate floating IP',
       onClick: () => console.log('Disassociate floating IP:', lb.id),
-      disabled: !lb.floatingIp,
+      disabled: !lb.floatingIp || lb.floatingIp === '-',
     },
     {
       id: 'create-listener',
@@ -558,13 +566,15 @@ export function LoadBalancersPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && lbToDelete) {
-      // Handle delete
+      setLoadBalancers((prev) => prev.filter((lb) => lb.id !== lbToDelete.id));
       setDeleteModalOpen(false);
       setLbToDelete(null);
+      setSelectedLBs((prev) => prev.filter((id) => id !== lbToDelete.id));
     }
   };
 
   const handleBulkDelete = () => {
+    setLoadBalancers((prev) => prev.filter((lb) => !selectedLBs.includes(lb.id)));
     setIsBulkDeleteOpen(false);
     setSelectedLBs([]);
   };

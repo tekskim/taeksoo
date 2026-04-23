@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -21,6 +21,8 @@ import {
   ListToolbar,
   PageShell,
   DetailHeader,
+  ConfirmModal,
+  ErrorState,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -370,11 +372,13 @@ function PolicyDetails({ permissions }: PolicyDetailsProps) {
 export default function IAMRoleDetailPage() {
   const { roleName } = useParams<{ roleName: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'policies';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState<string>('policies');
   const [policiesSearchQuery, setPoliciesSearchQuery] = useState('');
   const [grantsSearchQuery, setGrantsSearchQuery] = useState('');
   const [policiesCurrentPage, setPoliciesCurrentPage] = useState(1);
@@ -383,6 +387,7 @@ export default function IAMRoleDetailPage() {
   const [selectedGrants, setSelectedGrants] = useState<string[]>([]);
   const [isGrantDrawerOpen, setIsGrantDrawerOpen] = useState(false);
   const [isManageLinkedPoliciesOpen, setIsManageLinkedPoliciesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [policySortKey, setPolicySortKey] = useState<keyof RolePolicy | null>(null);
   const [policySortDir, setPolicySortDir] = useState<'asc' | 'desc' | null>(null);
   const itemsPerPage = 10;
@@ -481,7 +486,7 @@ export default function IAMRoleDetailPage() {
   const policyColumns: TableColumn<RolePolicy>[] = [
     {
       key: 'name',
-      label: 'Status',
+      label: 'Name',
       flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
@@ -659,11 +664,37 @@ export default function IAMRoleDetailPage() {
       <PageShell
         sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
         sidebarWidth={sidebarWidth}
-        tabBar={null}
-        topBar={null}
-        contentClassName="flex items-center justify-center"
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={[{ label: 'Roles', href: '/iam/roles' }]} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-6"
       >
-        <p className="text-[var(--color-text-muted)]">Role not found</p>
+        <ErrorState
+          title="Role not found"
+          description="The requested role could not be found."
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/iam/roles')}>
+              Back to Roles
+            </Button>
+          }
+        />
       </PageShell>
     );
   }
@@ -715,10 +746,20 @@ export default function IAMRoleDetailPage() {
               >
                 Manage linked policies
               </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconEdit size={12} stroke={1.5} />}
+                onClick={() => console.log('Edit role', role.id)}
+              >
                 Edit
               </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconTrash size={12} stroke={1.5} />}
+                onClick={() => setIsDeleteOpen(true)}
+              >
                 Delete
               </Button>
             </DetailHeader.Actions>
@@ -745,7 +786,12 @@ export default function IAMRoleDetailPage() {
                     <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                       Attached policies
                     </h2>
-                    <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconSettings size={12} />}
+                      onClick={() => console.log('Manage policies', role.id)}
+                    >
                       Manage policies
                     </Button>
                   </HStack>
@@ -950,7 +996,7 @@ export default function IAMRoleDetailPage() {
                     primaryActions={
                       <ListToolbar.Actions>
                         <SearchInput
-                          placeholder="Search roles by attributes"
+                          placeholder="Search grants by attributes"
                           value={grantsSearchQuery}
                           onChange={(e) => setGrantsSearchQuery(e.target.value)}
                           className="w-[var(--search-input-width)]"
@@ -964,6 +1010,7 @@ export default function IAMRoleDetailPage() {
                           size="sm"
                           leftIcon={<IconArrowBackUp size={12} />}
                           disabled={selectedGrants.length === 0}
+                          onClick={() => console.log('Revoke grants', selectedGrants)}
                         >
                           Revoke
                         </Button>
@@ -983,6 +1030,7 @@ export default function IAMRoleDetailPage() {
                     columns={grantColumns}
                     data={paginatedGrants}
                     rowKey="id"
+                    emptyMessage="No grants found"
                     selectable
                     selectedKeys={selectedGrants}
                     onSelectionChange={setSelectedGrants}
@@ -1008,6 +1056,20 @@ export default function IAMRoleDetailPage() {
         description="Add or remove policies linked to this role."
         onSubmit={(data) => {
           console.log('Manage linked policies:', data);
+        }}
+      />
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Delete role"
+        description="Removing this role is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/iam/roles');
         }}
       />
     </>

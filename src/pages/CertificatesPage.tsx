@@ -215,12 +215,11 @@ export function CertificatesPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [certificates] = useState(mockCertificates);
+  const [certificates, setCertificates] = useState(mockCertificates);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'server';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -257,7 +256,16 @@ export function CertificatesPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Certificates');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -428,11 +436,16 @@ export function CertificatesPage() {
   }, [columns, columnConfig]);
 
   const handleDeleteConfirm = () => {
+    if (certToDelete) {
+      setCertificates((prev) => prev.filter((c) => c.id !== certToDelete.id));
+      setSelectedCerts((prev) => prev.filter((id) => id !== certToDelete.id));
+    }
     setDeleteModalOpen(false);
     setCertToDelete(null);
   };
 
   const handleBulkDelete = () => {
+    setCertificates((prev) => prev.filter((c) => !selectedCerts.includes(c.id)));
     setIsBulkDeleteOpen(false);
     setSelectedCerts([]);
   };
@@ -529,6 +542,7 @@ export function CertificatesPage() {
           columns={visibleColumns}
           data={paginatedCerts}
           rowKey="id"
+          emptyMessage="No certificates found"
           selectable
           selectedKeys={selectedCerts}
           onSelectionChange={setSelectedCerts}

@@ -117,6 +117,14 @@ export function CreateNamespacePage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
+  const handleCreate = useCallback(() => {
+    const trimmed = namespaceName.trim();
+    if (!trimmed) return;
+    navigate('/container/namespaces');
+  }, [namespaceName, navigate]);
+
+  const isCreateDisabled = !namespaceName.trim();
+
   return (
     <PageShell
       sidebar={
@@ -466,7 +474,12 @@ export function CreateNamespacePage() {
                 <Button variant="secondary" onClick={() => navigate('/container/namespaces')}>
                   Cancel
                 </Button>
-                <Button variant="primary" className="flex-1">
+                <Button
+                  variant="primary"
+                  className="flex-1"
+                  onClick={handleCreate}
+                  disabled={isCreateDisabled}
+                >
                   Create
                 </Button>
               </HStack>

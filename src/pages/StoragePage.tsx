@@ -20,6 +20,7 @@ import {
   type AppliedFilter,
   fixedColumns,
   columnMinWidths,
+  ConfirmModal,
 } from '@/design-system';
 import { AgentSidebar } from '@/components/AgentSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -144,8 +145,10 @@ const dataSourceFilterFields: FilterField[] = [
    ---------------------------------------- */
 export function StoragePage() {
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
   const [selectedDataSources, setSelectedDataSources] = useState<string[]>([]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -168,8 +171,12 @@ export function StoragePage() {
     setCurrentPage(1);
   }, [appliedFilters]);
 
+  useEffect(() => {
+    updateActiveTabLabel('Data Sources');
+  }, [updateActiveTabLabel]);
+
   // Mock data
-  const dataSources: DataSourceRow[] = [
+  const [dataSources, setDataSources] = useState<DataSourceRow[]>([
     {
       id: '1',
       favorite: false,
@@ -233,7 +240,13 @@ export function StoragePage() {
       size: '60 MB',
       createdAt: 'Nov 11, 2026, 2:51 PM',
     },
-  ];
+  ]);
+
+  const handleBulkDelete = () => {
+    setDataSources((prev) => prev.filter((ds) => !selectedDataSources.includes(ds.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedDataSources([]);
+  };
 
   // Status mapping for StatusIndicator
   const statusMap: Record<DataSourceRow['status'], 'active' | 'shutoff' | 'pending'> = {
@@ -452,7 +465,7 @@ export function StoragePage() {
         <PageHeader
           title="Data sources"
           actions={
-            <Button variant="primary" size="md" onClick={() => {}}>
+            <Button variant="primary" size="md" onClick={() => console.log('Create data source')}>
               Create data source
             </Button>
           }
@@ -491,6 +504,7 @@ export function StoragePage() {
                   size="sm"
                   leftIcon={<IconTrash size={12} />}
                   disabled={selectedDataSources.length === 0}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Delete
                 </Button>
@@ -520,6 +534,19 @@ export function StoragePage() {
           />
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected data sources"
+        description="Deleting the selected data sources is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedDataSources.length} data source(s)`}
+      />
     </PageShell>
   );
 }

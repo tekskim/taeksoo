@@ -13,6 +13,7 @@ import {
   PageShell,
   PageHeader,
   ListToolbar,
+  ConfirmModal,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -192,6 +193,8 @@ export function IAMUsersPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [users, setUsers] = useState(mockUsers);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -206,17 +209,21 @@ export function IAMUsersPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   const filteredUsers = useMemo(() => {
-    return mockUsers.filter((user) => {
+    return users.filter((user) => {
       return appliedFilters.every((filter) => {
         const value = String(user[filter.fieldId as keyof User] ?? '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
-  }, [appliedFilters]);
+  }, [users, appliedFilters]);
 
   // Pagination
   const itemsPerPage = 10;
@@ -249,6 +256,12 @@ export function IAMUsersPage() {
   const handleEditUser = (user: User) => {
     setSelectedUserForDrawer(user);
     setEditUserOpen(true);
+  };
+
+  const handleBulkDelete = () => {
+    setUsers((prev) => prev.filter((u) => !selectedRows.includes(u.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
   };
 
   // Table columns (using fixedColumns / columnMinWidths preset)
@@ -422,6 +435,7 @@ export function IAMUsersPage() {
                   size="sm"
                   icon={<IconDownload size={12} />}
                   aria-label="Download"
+                  onClick={() => console.log('Download')}
                 />
               </ListToolbar.Actions>
             }
@@ -432,6 +446,7 @@ export function IAMUsersPage() {
                   size="sm"
                   disabled={!hasSelection}
                   leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Delete
                 </Button>
@@ -480,6 +495,19 @@ export function IAMUsersPage() {
         isOpen={editUserOpen}
         onClose={() => setEditUserOpen(false)}
         userName={selectedUserForDrawer?.username}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected users"
+        description="Removing the selected users is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} user(s)`}
       />
     </PageShell>
   );

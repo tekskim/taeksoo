@@ -19,6 +19,8 @@ import {
   ContextMenu,
   Badge,
   PageShell,
+  ErrorState,
+  ConfirmModal,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -35,6 +37,7 @@ import {
   IconCirclePlus,
   IconDotsCircleHorizontal,
   IconDownload,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
@@ -130,20 +133,6 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
   },
 };
 
-const defaultLoadBalancer: LoadBalancerDetail = {
-  id: 'lb-default',
-  name: 'Unknown',
-  status: 'active',
-  adminState: 'Up',
-  vipAddress: '-',
-  createdAt: '-',
-  description: '-',
-  provider: 'ovn',
-  ownedNetwork: { name: '-', id: '' },
-  subnet: { name: '-', id: '' },
-  floatingIp: { name: '-', id: '' },
-};
-
 // Mock listeners data
 const mockListeners: Listener[] = Array.from({ length: 115 }, (_, i) => ({
   id: `29fg234${String(i).padStart(2, '0')}`,
@@ -207,22 +196,22 @@ export function LoadBalancerDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Get load balancer based on URL id
-  const loadBalancer = id ? mockLoadBalancersMap[id] || defaultLoadBalancer : defaultLoadBalancer;
+  const loadBalancer = id ? mockLoadBalancersMap[id] : undefined;
 
   // Update tab label when load balancer name changes
   useEffect(() => {
-    if (loadBalancer.name) {
+    if (loadBalancer?.name) {
       updateActiveTabLabel(loadBalancer.name);
     }
-  }, [loadBalancer.name, updateActiveTabLabel]);
+  }, [loadBalancer?.name, updateActiveTabLabel]);
 
-  const handleCopyId = () => {
-    navigator.clipboard.writeText(loadBalancer.id);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-  };
+  const breadcrumbItems = [
+    { label: 'Load Balancers', href: '/compute/load-balancers' },
+    { label: loadBalancer?.name ?? id ?? '—' },
+  ];
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -267,6 +256,59 @@ export function LoadBalancerDetailPage() {
     const start = (poolCurrentPage - 1) * poolsPerPage;
     return filteredPools.slice(start, start + poolsPerPage);
   }, [filteredPools, poolCurrentPage, poolsPerPage]);
+
+  if (!loadBalancer) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={48} stroke={1} />}
+          title="Load balancer not found"
+          description={`The load balancer with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/compute/load-balancers')}
+            >
+              Back to Load Balancers
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText(loadBalancer.id);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
 
   // Listener columns
   const listenerColumns: TableColumn<Listener>[] = [
@@ -525,14 +567,7 @@ export function LoadBalancerDetailPage() {
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Load Balancers', href: '/compute/load-balancers' },
-                { label: loadBalancer.name },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
@@ -542,19 +577,44 @@ export function LoadBalancerDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{loadBalancer.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconLinkPlus size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconLinkPlus size={12} />}
+              onClick={() => console.log('Associate floating IP', loadBalancer.id)}
+            >
               Associate floating IP
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconUnlink size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconUnlink size={12} />}
+              onClick={() => console.log('Disassociate floating IP', loadBalancer.id)}
+            >
               Disassociate floating IP
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} />}
+              onClick={() => console.log('Create listener', loadBalancer.id)}
+            >
               Create listener
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={() => console.log('Edit load balancer', loadBalancer.id)}
+            >
               Edit
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
           </DetailHeader.Actions>
@@ -653,7 +713,12 @@ export function LoadBalancerDetailPage() {
                   {/* Header */}
                   <div className="flex items-center justify-between">
                     <h3 className="text-heading-h5 text-[var(--color-text-default)]">Listener</h3>
-                    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} />}
+                      onClick={() => console.log('Create listener', loadBalancer.id)}
+                    >
                       Create listener
                     </Button>
                   </div>
@@ -684,6 +749,7 @@ export function LoadBalancerDetailPage() {
                       size="sm"
                       leftIcon={<IconTrash size={12} />}
                       disabled={selectedListeners.length === 0}
+                      onClick={() => console.log('Delete listeners', selectedListeners)}
                     >
                       Delete
                     </Button>
@@ -707,6 +773,7 @@ export function LoadBalancerDetailPage() {
                     columns={listenerColumns}
                     data={paginatedListeners}
                     rowKey="id"
+                    emptyMessage="No listeners found"
                     selectable
                     selectedKeys={selectedListeners}
                     onSelectionChange={setSelectedListeners}
@@ -717,6 +784,20 @@ export function LoadBalancerDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Delete load balancer"
+        description="Removing this load balancer is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/load-balancers');
+        }}
+      />
     </PageShell>
   );
 }

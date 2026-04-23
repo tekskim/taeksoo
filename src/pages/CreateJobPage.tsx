@@ -1074,7 +1074,7 @@ export function CreateJobPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const handleCancel = useCallback(() => {
-    navigate('/container/deployments');
+    navigate('/container/jobs');
   }, [navigate]);
 
   const handleCreate = useCallback(() => {

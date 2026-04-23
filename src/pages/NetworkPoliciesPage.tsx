@@ -8,22 +8,26 @@ import {
   Breadcrumb,
   Table,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ContextMenu,
   ListToolbar,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
+  ConfirmModal,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   IconDownload,
   IconTrash,
@@ -92,6 +96,14 @@ const networkPoliciesData: NetworkPolicyRow[] = [
   },
 ];
 
+const filterFields: FilterField[] = [
+  { id: 'status', label: 'Status', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'namespace', label: 'Namespace', type: 'text' },
+  { id: 'podSelector', label: 'Pod selector', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
 /* ----------------------------------------
    Component
    ---------------------------------------- */
@@ -108,13 +120,12 @@ export function NetworkPoliciesPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const [data, setData] = useState(networkPoliciesData);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -123,22 +134,53 @@ export function NetworkPoliciesPage() {
 
   const navigate = useNavigate();
 
-  const filteredData = useMemo(() => {
-    if (!searchTerm.trim()) return networkPoliciesData;
-    const q = searchTerm.toLowerCase();
-    return networkPoliciesData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(q) ||
-        item.namespace?.toLowerCase().includes(q) ||
-        item.status?.toLowerCase().includes(q) ||
-        item.podSelector?.toLowerCase().includes(q) ||
-        item.createdAt?.toLowerCase().includes(q)
-    );
-  }, [searchTerm]);
-
-  useEffect(() => {
+  const handleFiltersChange = (filters: AppliedFilter[]) => {
+    setAppliedFilters(filters);
     setCurrentPage(1);
-  }, [searchTerm]);
+  };
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters([]);
+    setCurrentPage(1);
+  };
+
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: filterFields.find((ff) => ff.id === f.fieldId)?.label ?? f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const filteredData = useMemo(() => {
+    let result = data;
+    appliedFilters.forEach((filter) => {
+      const val = filter.value.toLowerCase();
+      switch (filter.fieldId) {
+        case 'status':
+          result = result.filter((item) => item.status.toLowerCase().includes(val));
+          break;
+        case 'name':
+          result = result.filter((item) => item.name.toLowerCase().includes(val));
+          break;
+        case 'namespace':
+          result = result.filter((item) => item.namespace.toLowerCase().includes(val));
+          break;
+        case 'podSelector':
+          result = result.filter((item) => item.podSelector.toLowerCase().includes(val));
+          break;
+        case 'createdAt':
+          result = result.filter((item) => item.createdAt.toLowerCase().includes(val));
+          break;
+        default:
+          break;
+      }
+    });
+    return result;
+  }, [data, appliedFilters]);
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
@@ -220,13 +262,14 @@ export function NetworkPoliciesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <Link
+          to={`/container/network-policies/${row.id}`}
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0 block"
           title={value}
-          onClick={() => navigate(`/container/network-policies/${row.id}`)}
+          onClick={(e) => e.stopPropagation()}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -287,12 +330,10 @@ export function NetworkPoliciesPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
+  const handleBulkDeleteConfirm = () => {
+    setData((prev) => prev.filter((row) => !selectedRows.includes(row.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
   };
 
   // Create menu items
@@ -387,13 +428,14 @@ export function NetworkPoliciesPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onClear={() => setSearchTerm('')}
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={handleFiltersChange}
                 placeholder="Search network policy by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -412,6 +454,7 @@ export function NetworkPoliciesPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML:', selectedRows)}
               >
                 Download YAML
               </Button>
@@ -420,18 +463,15 @@ export function NetworkPoliciesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
-          filters={filters.map((f, i) => ({
-            id: String(i),
-            field: f.key,
-            value: f.value,
-          }))}
-          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-          onFiltersClear={handleClearFilters}
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
           clearFiltersLabel="Clear filters"
         />
 
@@ -456,6 +496,19 @@ export function NetworkPoliciesPage() {
           emptyMessage="No network policies found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete selected network policies"
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} network polic${selectedRows.length === 1 ? 'y' : 'ies'}`}
+      />
     </PageShell>
   );
 }

@@ -20,6 +20,7 @@ import {
   ContextMenu,
   PageShell,
   ErrorState,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -423,6 +424,7 @@ export default function NetworkDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Get network data based on the ID from URL
   const network = id ? mockNetworksMap[id] : undefined;
@@ -828,13 +830,28 @@ export default function NetworkDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{network.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} />}
+              onClick={() => console.log('Action:', network.id)}
+            >
               Create subnet
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={() => console.log('Action:', network.id)}
+            >
               Edit
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
           </DetailHeader.Actions>
@@ -914,7 +931,12 @@ export default function NetworkDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between h-7">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Subnets</h3>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() => console.log('Action:', network.id)}
+                  >
                     Create subnet
                   </Button>
                 </div>
@@ -1008,6 +1030,22 @@ export default function NetworkDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/networks');
+        }}
+        title="Delete network"
+        description="This will permanently delete this network. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Network"
+        infoValue={network.name}
+      />
     </PageShell>
   );
 }

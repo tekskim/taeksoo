@@ -286,7 +286,16 @@ export function NetworksPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Networks');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -498,9 +507,11 @@ export function NetworksPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && networkToDelete) {
-      // Handle delete
+      const id = networkToDelete.id;
+      setNetworks((prev) => prev.filter((n) => n.id !== id));
       setDeleteModalOpen(false);
       setNetworkToDelete(null);
+      setSelectedNetworks((prev) => prev.filter((x) => x !== id));
     }
   };
 
@@ -579,6 +590,7 @@ export function NetworksPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }

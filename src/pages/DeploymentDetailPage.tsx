@@ -19,6 +19,7 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -35,6 +36,7 @@ import {
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -670,9 +672,9 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
+      label: 'Status',
       flex: 1,
-      minWidth: columnMinWidths.size,
+      minWidth: columnMinWidths.phase,
       sortable: true,
     },
     {
@@ -894,7 +896,7 @@ export function DeploymentDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get deployment data
-  const deployment = mockDeploymentData[deploymentId || ''] || mockDeploymentData['1'];
+  const deployment = deploymentId ? mockDeploymentData[deploymentId] : null;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -902,8 +904,10 @@ export function DeploymentDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Deployment: ${deployment.name}`);
-  }, [updateActiveTabLabel, deployment.name]);
+    if (deployment) {
+      updateActiveTabLabel(`Deployment: ${deployment.name}`);
+    }
+  }, [updateActiveTabLabel, deployment]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -916,6 +920,61 @@ export function DeploymentDetailPage() {
 
   // Shell Panel state
   const shellPanel = useShellPanel();
+
+  if (!deployment) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Deployments', href: '/container/deployments' },
+                  { label: deploymentId ?? 'Deployment' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Deployment not found"
+          description={`The deployment "${deploymentId ?? ''}" does not exist.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/container/deployments')}
+            >
+              Back to Deployments
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {

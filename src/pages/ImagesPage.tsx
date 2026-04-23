@@ -270,7 +270,12 @@ export function ImagesPage() {
   }, [appliedFilters]);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Images');
+  }, [updateActiveTabLabel]);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;

@@ -19,6 +19,7 @@ import {
   ContextMenu,
   PageShell,
   ErrorState,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -328,6 +329,7 @@ export default function RouterDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Get router data based on URL ID
   const router = id ? mockRoutersMap[id] : undefined;
@@ -628,10 +630,20 @@ export default function RouterDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{router.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconLink size={12} />}
+              onClick={() => console.log('Connect subnet', router.id)}
+            >
               Connect subnet
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
             <ContextMenu
@@ -639,12 +651,20 @@ export default function RouterDetailPage() {
                 {
                   id: 'disconnect-subnet',
                   label: 'Disconnect subnet',
-                  onClick: () => {},
+                  onClick: () => console.log('Disconnect subnet', router.id),
                   status: 'danger',
                 },
-                { id: 'external-gateway', label: 'External gateway Setting', onClick: () => {} },
-                { id: 'create-static-route', label: 'Create static Route', onClick: () => {} },
-                { id: 'edit', label: 'Edit', onClick: () => {} },
+                {
+                  id: 'external-gateway',
+                  label: 'External gateway Setting',
+                  onClick: () => console.log('External gateway Setting', router.id),
+                },
+                {
+                  id: 'create-static-route',
+                  label: 'Create static Route',
+                  onClick: () => console.log('Create static Route', router.id),
+                },
+                { id: 'edit', label: 'Edit', onClick: () => console.log('Edit router', router.id) },
               ]}
               trigger="click"
             >
@@ -766,6 +786,7 @@ export default function RouterDetailPage() {
                     size="sm"
                     leftIcon={<IconLinkOff size={12} />}
                     disabled={selectedPorts.length === 0}
+                    onClick={() => console.log('Disconnect ports', selectedPorts)}
                   >
                     Disconnect
                   </Button>
@@ -785,6 +806,7 @@ export default function RouterDetailPage() {
                   columns={portColumns}
                   data={paginatedPorts}
                   rowKey="id"
+                  emptyMessage="No ports found"
                   sortBy={portSortBy}
                   sortDirection={portSortDirection}
                   onSort={handlePortSort}
@@ -801,7 +823,12 @@ export default function RouterDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between min-h-[28px]">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Static Route</h3>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() => console.log('Create static route', id)}
+                  >
                     Create static route
                   </Button>
                 </div>
@@ -824,6 +851,7 @@ export default function RouterDetailPage() {
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedRoutes.length === 0}
+                    onClick={() => console.log('Delete static routes', selectedRoutes)}
                   >
                     Delete
                   </Button>
@@ -843,6 +871,7 @@ export default function RouterDetailPage() {
                   columns={staticRouteColumns}
                   data={paginatedRoutes}
                   rowKey="id"
+                  emptyMessage="No static routes found"
                   selectable
                   selectedKeys={selectedRoutes}
                   onSelectionChange={setSelectedRoutes}
@@ -852,6 +881,20 @@ export default function RouterDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Delete router"
+        description="Removing this router is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/routers');
+        }}
+      />
     </PageShell>
   );
 }

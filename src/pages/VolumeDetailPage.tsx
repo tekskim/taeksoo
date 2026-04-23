@@ -19,6 +19,7 @@ import {
   ContextMenu,
   PageShell,
   ErrorState,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -124,7 +125,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   'vol-003': {
     id: 'vol-003',
     name: 'backup-vol',
-    status: 'active',
+    status: 'available',
     size: '2000GiB',
     createdAt: 'Sep 8, 2026 11:51:27',
     volumeName: 'backup-vol',
@@ -172,7 +173,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   'vol-006': {
     id: 'vol-006',
     name: 'media-storage',
-    status: 'active',
+    status: 'available',
     size: '5000GiB',
     createdAt: 'Aug 25, 2026 10:32:16',
     volumeName: 'media-storage',
@@ -188,7 +189,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   'vol-007': {
     id: 'vol-007',
     name: 'temp-vol',
-    status: 'pending',
+    status: 'creating',
     size: '50GiB',
     createdAt: 'Aug 20, 2026 23:27:51',
     volumeName: 'temp-vol',
@@ -220,7 +221,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   'vol-009': {
     id: 'vol-009',
     name: 'archive-vol',
-    status: 'active',
+    status: 'available',
     size: '10000GiB',
     createdAt: 'Aug 10, 2026 01:17:01',
     volumeName: 'archive-vol',
@@ -322,6 +323,7 @@ export function VolumeDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Volume data is already fetched based on ID above
   const snapshots = mockVolumeSnapshots;
@@ -380,17 +382,29 @@ export function VolumeDetailPage() {
 
   // Context menu items for snapshot actions
   const getSnapshotContextMenuItems = (_snapshot: VolumeSnapshot): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
-    { id: 'edit', label: 'Edit', onClick: () => {} },
-    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
+    {
+      id: 'create-volume',
+      label: 'Create volume',
+      onClick: () => console.log('Action:', id),
+    },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Action:', id) },
+    { id: 'delete', label: 'Delete', onClick: () => console.log('Action:', id), status: 'danger' },
   ];
 
   // Context menu items for backup actions
   const getBackupContextMenuItems = (_backup: VolumeBackup): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
-    { id: 'restore-backup', label: 'Restore backup', onClick: () => {} },
-    { id: 'edit', label: 'Edit', onClick: () => {} },
-    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
+    {
+      id: 'create-volume',
+      label: 'Create volume',
+      onClick: () => console.log('Action:', id),
+    },
+    {
+      id: 'restore-backup',
+      label: 'Restore backup',
+      onClick: () => console.log('Action:', id),
+    },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Action:', id) },
+    { id: 'delete', label: 'Delete', onClick: () => console.log('Action:', id), status: 'danger' },
   ];
 
   // Snapshot table columns
@@ -624,10 +638,20 @@ export function VolumeDetailPage() {
           <DetailHeader.Actions>
             {activeDetailTab === 'details' ? (
               <>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={() => console.log('Action:', volume.id)}
+                >
                   Create transfer
                 </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsDeleteOpen(true)}
+                >
                   Delete
                 </Button>
                 <ContextMenu
@@ -667,13 +691,28 @@ export function VolumeDetailPage() {
               </>
             ) : (
               <>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={() => console.log('Action:', volume.id)}
+                >
                   Update status
                 </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconEdit size={12} />}
+                  onClick={() => console.log('Action:', volume.id)}
+                >
                   Edit
                 </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsDeleteOpen(true)}
+                >
                   Delete
                 </Button>
                 <ContextMenu
@@ -765,7 +804,11 @@ export function VolumeDetailPage() {
 
                 {/* Source */}
                 <SectionCard>
-                  <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
+                  <SectionCard.Header
+                    title="Source"
+                    showEditButton
+                    onEdit={() => console.log('Action:', volume.id)}
+                  />
                   <SectionCard.Content>
                     <SectionCard.DataRow
                       label="Volume snapshot"
@@ -794,7 +837,11 @@ export function VolumeDetailPage() {
 
                 {/* Specifications */}
                 <SectionCard>
-                  <SectionCard.Header title="Specifications" showEditButton onEdit={() => {}} />
+                  <SectionCard.Header
+                    title="Specifications"
+                    showEditButton
+                    onEdit={() => console.log('Action:', volume.id)}
+                  />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Size" value={volume.size} />
                     <SectionCard.DataRow label="Volume type" value={volume.volumeType} />
@@ -844,6 +891,7 @@ export function VolumeDetailPage() {
                     iconOnly
                     icon={<IconDownload size={12} stroke={1.5} />}
                     aria-label="Download"
+                    onClick={() => console.log('Action:', volume.id)}
                   />
                 </div>
 
@@ -893,6 +941,7 @@ export function VolumeDetailPage() {
                     iconOnly
                     icon={<IconDownload size={12} stroke={1.5} />}
                     aria-label="Download"
+                    onClick={() => console.log('Action:', volume.id)}
                   />
                 </div>
 
@@ -916,6 +965,22 @@ export function VolumeDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/volumes');
+        }}
+        title="Delete volume"
+        description="This will permanently delete this volume. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Volume"
+        infoValue={volume.name}
+      />
     </PageShell>
   );
 }

@@ -12,6 +12,7 @@ import {
   PageShell,
   PageHeader,
   ListToolbar,
+  ConfirmModal,
   StatusIndicator,
   fixedColumns,
   columnMinWidths,
@@ -170,6 +171,8 @@ export function IAMServiceAccountsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [serviceAccounts, setServiceAccounts] = useState(mockServiceAccounts);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [managePoliciesAccount, setManagePoliciesAccount] = useState<ServiceAccount | null>(null);
   const [editingAccount, setEditingAccount] = useState<ServiceAccount | null>(null);
@@ -186,17 +189,21 @@ export function IAMServiceAccountsPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   const filteredAccounts = useMemo(() => {
-    return mockServiceAccounts.filter((account) => {
+    return serviceAccounts.filter((account) => {
       return appliedFilters.every((filter) => {
         const raw = account[filter.fieldId as keyof ServiceAccount];
         const value = String(typeof raw === 'number' ? raw : (raw ?? '')).toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
-  }, [appliedFilters]);
+  }, [serviceAccounts, appliedFilters]);
 
   const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
@@ -206,6 +213,12 @@ export function IAMServiceAccountsPage() {
   );
 
   const hasSelection = selectedRows.length > 0;
+
+  const handleBulkDelete = () => {
+    setServiceAccounts((prev) => prev.filter((a) => !selectedRows.includes(a.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
+  };
 
   const getContextMenuItems = (row: ServiceAccount): ContextMenuItem[] => [
     {
@@ -353,6 +366,7 @@ export function IAMServiceAccountsPage() {
                   size="sm"
                   icon={<IconDownload size={12} />}
                   aria-label="Download"
+                  onClick={() => console.log('Download')}
                 />
               </ListToolbar.Actions>
             }
@@ -363,6 +377,7 @@ export function IAMServiceAccountsPage() {
                   size="sm"
                   disabled={!hasSelection}
                   leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Delete
                 </Button>
@@ -383,6 +398,7 @@ export function IAMServiceAccountsPage() {
             columns={columns}
             data={paginatedAccounts}
             rowKey="id"
+            emptyMessage="No service accounts found"
             selectable
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
@@ -407,6 +423,19 @@ export function IAMServiceAccountsPage() {
         initialName={editingAccount?.name ?? ''}
         initialDescription={editingAccount?.description ?? ''}
         initialActive={editingAccount?.status === 'active'}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected service accounts"
+        description="Removing the selected service accounts is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} service account(s)`}
       />
     </PageShell>
   );

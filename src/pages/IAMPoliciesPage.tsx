@@ -13,6 +13,7 @@ import {
   ListToolbar,
   PageShell,
   PageHeader,
+  ConfirmModal,
   Table,
   type ContextMenuItem,
   type FilterField,
@@ -378,6 +379,8 @@ export default function IAMPoliciesPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [policies, setPolicies] = useState<Policy[]>(mockPolicies);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
@@ -391,12 +394,16 @@ export default function IAMPoliciesPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter policies
   const filteredPolicies = useMemo(() => {
-    if (appliedFilters.length === 0) return mockPolicies;
-    return mockPolicies.filter((policy) =>
+    if (appliedFilters.length === 0) return policies;
+    return policies.filter((policy) =>
       appliedFilters.every((f) => {
         if (f.fieldId === 'type') return policy.type === f.value;
         const val = policy[f.fieldId as keyof Policy];
@@ -406,7 +413,7 @@ export default function IAMPoliciesPage() {
         return true;
       })
     );
-  }, [appliedFilters]);
+  }, [appliedFilters, policies]);
 
   // Pagination
   const totalPages = Math.ceil(filteredPolicies.length / itemsPerPage);
@@ -414,6 +421,12 @@ export default function IAMPoliciesPage() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const handleBulkDeletePolicies = () => {
+    setPolicies((prev) => prev.filter((p) => !selectedRows.includes(p.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
 
   // Toggle policy expansion
   const togglePolicyExpansion = (policyId: string) => {
@@ -591,6 +604,7 @@ export default function IAMPoliciesPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -601,6 +615,7 @@ export default function IAMPoliciesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -634,6 +649,19 @@ export default function IAMPoliciesPage() {
           }}
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeletePolicies}
+        title="Delete selected policies"
+        description="Removing the selected policies is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} policy(s)`}
+      />
     </PageShell>
   );
 }

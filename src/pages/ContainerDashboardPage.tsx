@@ -479,7 +479,7 @@ export function ContainerDashboardPage() {
               label="CPU (Reserved)"
               used={3.6}
               total={16.0}
-              unit="GiB"
+              unit="cores"
               percentage={50.2}
             />
             <CapacityProgressBar

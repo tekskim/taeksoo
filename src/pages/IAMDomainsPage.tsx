@@ -155,6 +155,10 @@ export default function IAMDomainsPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -243,6 +247,7 @@ export default function IAMDomainsPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
             title="Open console"
             aria-label="Open console"
+            onClick={() => console.log('Open console')}
           >
             <ArrowRightLeft
               size={16}
@@ -324,6 +329,7 @@ export default function IAMDomainsPage() {
                     size="sm"
                     icon={<IconDownload size={12} />}
                     aria-label="Download"
+                    onClick={() => console.log('Download')}
                   />
                 </ListToolbar.Actions>
               }

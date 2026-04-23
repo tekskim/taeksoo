@@ -149,8 +149,12 @@ const MATCHING_PODS_COLUMNS = [
    ---------------------------------------- */
 function SummarySidebar({
   sectionStates,
+  onCreate,
+  createDisabled,
 }: {
   sectionStates: Record<NetworkPolicySectionStep, WizardSectionState>;
+  onCreate: () => void;
+  createDisabled: boolean;
 }) {
   const navigate = useNavigate();
 
@@ -173,7 +177,13 @@ function SummarySidebar({
           >
             Cancel
           </Button>
-          <Button variant="primary" size="md" className="flex-1">
+          <Button
+            variant="primary"
+            size="md"
+            className="flex-1"
+            onClick={onCreate}
+            disabled={createDisabled}
+          >
             Create
           </Button>
         </HStack>
@@ -1267,6 +1277,11 @@ export function CreateNetworkPolicyPage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
+  const handleCreate = useCallback(() => {
+    if (!policyName.trim()) return;
+    navigate('/container/network-policies');
+  }, [policyName, navigate]);
+
   return (
     <PageShell
       sidebar={
@@ -1634,7 +1649,11 @@ export function CreateNetworkPolicyPage() {
           </VStack>
 
           {/* Summary Sidebar */}
-          <SummarySidebar sectionStates={getSectionStates()} />
+          <SummarySidebar
+            sectionStates={getSectionStates()}
+            onCreate={handleCreate}
+            createDisabled={!policyName.trim()}
+          />
         </HStack>
       </VStack>
     </PageShell>

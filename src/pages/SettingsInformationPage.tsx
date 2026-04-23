@@ -1,4 +1,13 @@
-import { VStack, SectionCard, DetailHeader, PageShell, TabBar } from '@/design-system';
+import { useState } from 'react';
+import {
+  Breadcrumb,
+  VStack,
+  SectionCard,
+  DetailHeader,
+  PageShell,
+  TabBar,
+  TopBar,
+} from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 import { IconExternalLink } from '@tabler/icons-react';
 
@@ -6,20 +15,31 @@ import { IconExternalLink } from '@tabler/icons-react';
    Settings Information Page ---------------------------------------- */
 
 export default function SettingsInformationPage() {
-  const sidebarWidth = 200;
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   return (
     <PageShell
-      sidebar={<SettingsSidebar />}
+      sidebar={
+        <SettingsSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={<TabBar tabs={[]} activeTab="" onTabChange={() => {}} showAddButton={false} />}
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={false}
+          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'Information' }]} />}
+        />
+      }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         {/* Header */}
         <div>
           <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-            Information{' '}
+            Information
           </h1>
           <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
             View application version and related resources.

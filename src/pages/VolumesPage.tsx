@@ -335,7 +335,24 @@ export function VolumesPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, openInNewTab, addNewTab, moveTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    closeTab,
+    selectTab,
+    openInNewTab,
+    addNewTab,
+    moveTab,
+    updateActiveTabLabel,
+  } = useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Volumes');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -645,7 +662,11 @@ export function VolumesPage() {
           title="Volumes"
           actions={
             <>
-              <Button variant="primary" size="md">
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => console.log('Accept volume transfer')}
+              >
                 Accept Volume Transfer
               </Button>
               <Button size="md" as={Link} to="/compute/volumes/create">
@@ -672,6 +693,7 @@ export function VolumesPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -720,7 +742,7 @@ export function VolumesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete volume"
-        description="Removing the selected volumes is permanent and cannot be undone."
+        description="Removing this volume is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

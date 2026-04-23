@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -20,6 +20,9 @@ import {
   type TableColumn,
   fixedColumns,
   columnMinWidths,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
 } from '@/design-system';
 import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
 import { useTabs } from '@/contexts/TabContext';
@@ -184,6 +187,36 @@ const mockPhysicalDisks: PhysicalDisk[] = [
   },
 ];
 
+const physicalDiskFilterFields: FilterField[] = [
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'available', label: 'Available' },
+      { value: 'in-use', label: 'In use' },
+      { value: 'error', label: 'Error' },
+      { value: 'offline', label: 'Offline' },
+    ],
+  },
+  { id: 'hostname', label: 'Hostname', type: 'text' },
+  { id: 'devicePath', label: 'Device path', type: 'text' },
+  {
+    id: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [
+      { value: 'HDD', label: 'HDD' },
+      { value: 'SSD', label: 'SSD' },
+      { value: 'NVMe', label: 'NVMe' },
+    ],
+  },
+  { id: 'vendor', label: 'Vendor', type: 'text' },
+  { id: 'model', label: 'Model', type: 'text' },
+  { id: 'size', label: 'Size', type: 'text' },
+  { id: 'osds', label: 'OSDs', type: 'text' },
+];
+
 /* ----------------------------------------
    Status Cell Component
    ---------------------------------------- */
@@ -260,7 +293,7 @@ function IdentifyCell({ timer, onIdentify }: IdentifyCellProps) {
 export function PhysicalDisksPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
   const [loading, setLoading] = useState(true);
@@ -312,7 +345,12 @@ export function PhysicalDisksPage() {
   }, [diskTimers]);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Physical Disks');
+  }, [updateActiveTabLabel]);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -324,19 +362,29 @@ export function PhysicalDisksPage() {
     closable: tab.closable,
   }));
 
-  // Filter disks based on search
-  const filteredDisks = useMemo(
-    () =>
-      mockPhysicalDisks.filter(
-        (disk) =>
-          disk.hostname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          disk.devicePath.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          disk.vendor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          disk.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          disk.type.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    [searchQuery]
-  );
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  // Filter disks by applied filters
+  const filteredDisks = useMemo(() => {
+    if (appliedFilters.length === 0) return mockPhysicalDisks;
+    return mockPhysicalDisks.filter((disk) => {
+      return appliedFilters.every((filter) => {
+        if (filter.fieldId === 'osds') {
+          return disk.osds.join(' ').toLowerCase().includes(filter.value.toLowerCase());
+        }
+        const value = String(disk[filter.fieldId as keyof PhysicalDisk] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [appliedFilters]);
 
   const totalPages = Math.ceil(filteredDisks.length / rowsPerPage);
   const totalItems = filteredDisks.length;
@@ -490,19 +538,24 @@ export function PhysicalDisksPage() {
           showDivider={false}
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
-                placeholder="Search physical disks by attributes"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery('')}
+              <FilterSearchInput
+                filters={physicalDiskFilterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={(f) => {
+                  setAppliedFilters(f);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
                 size="sm"
                 icon={<IconDownload size={12} stroke={1.5} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
               <Button
                 variant="secondary"
@@ -513,6 +566,9 @@ export function PhysicalDisksPage() {
               />
             </ListToolbar.Actions>
           }
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={() => setAppliedFilters([])}
         />
 
         {/* Pagination */}

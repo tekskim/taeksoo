@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Breadcrumb,
   VStack,
   SectionCard,
   Select,
@@ -7,6 +8,7 @@ import {
   FormField,
   PageShell,
   TabBar,
+  TopBar,
   useToast,
 } from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
@@ -48,9 +50,10 @@ const timezoneOptions = [
 export default function SettingsGeneralPage() {
   const { theme, setTheme } = useDarkMode();
   const { success } = useToast();
-  const sidebarWidth = 200;
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => localStorage.getItem('tds-language') || 'en');
   const [timezone, setTimezone] = useState('Asia/Seoul');
   const [useLocationTimezone, setUseLocationTimezone] = useState(false);
 
@@ -61,15 +64,25 @@ export default function SettingsGeneralPage() {
 
   return (
     <PageShell
-      sidebar={<SettingsSidebar />}
+      sidebar={
+        <SettingsSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={<TabBar tabs={[]} activeTab="" onTabChange={() => {}} showAddButton={false} />}
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={false}
+          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'General' }]} />}
+        />
+      }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         {/* Header */}
         <div>
-          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">General </h1>
+          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">General</h1>
           <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
             Configure your display and localization preferences.
           </p>
@@ -96,6 +109,7 @@ export default function SettingsGeneralPage() {
                 value={language}
                 onChange={(val) => {
                   setLanguage(val);
+                  localStorage.setItem('tds-language', val);
                   success('Language updated successfully.');
                 }}
                 options={languageOptions}

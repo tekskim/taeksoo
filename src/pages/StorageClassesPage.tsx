@@ -13,6 +13,7 @@ import {
   PageShell,
   PageHeader,
   ListToolbar,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -182,6 +183,8 @@ export function StorageClassesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [storageClassRows, setStorageClassRows] = useState(storageClassesData);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -198,9 +201,9 @@ export function StorageClassesPage() {
   }, [appliedFilters]);
 
   const filteredData = useMemo(() => {
-    if (appliedFilters.length === 0) return storageClassesData;
+    if (appliedFilters.length === 0) return storageClassRows;
 
-    return storageClassesData.filter((item) => {
+    return storageClassRows.filter((item) => {
       return appliedFilters.every((filter) => {
         if (filter.fieldId === 'allowVolumeExpansion') {
           return String(item.allowVolumeExpansion) === filter.value;
@@ -212,7 +215,13 @@ export function StorageClassesPage() {
         return true;
       });
     });
-  }, [appliedFilters]);
+  }, [appliedFilters, storageClassRows]);
+
+  const handleBulkDeleteStorageClasses = () => {
+    setStorageClassRows((prev) => prev.filter((r) => !selectedRows.includes(r.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
 
   const navigate = useNavigate();
 
@@ -483,6 +492,7 @@ export function StorageClassesPage() {
                 size="sm"
                 aria-label="Download"
                 className="!p-0 !w-7 !h-7 !min-w-7"
+                onClick={() => console.log('Download')}
               >
                 <IconDownload size={12} stroke={1.5} />
               </Button>
@@ -495,6 +505,7 @@ export function StorageClassesPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML')}
               >
                 Download YAML
               </Button>
@@ -503,6 +514,7 @@ export function StorageClassesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -530,6 +542,19 @@ export function StorageClassesPage() {
           emptyMessage="No storage classes found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteStorageClasses}
+        title="Delete selected storage classes"
+        description="Removing the selected storage classes is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} storage class(es)`}
+      />
     </PageShell>
   );
 }

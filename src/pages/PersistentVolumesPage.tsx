@@ -8,22 +8,26 @@ import {
   Breadcrumb,
   Table,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ListToolbar,
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
+  ConfirmModal,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   IconDownload,
   IconTrash,
@@ -124,6 +128,16 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
 ];
 
+const filterFields: FilterField[] = [
+  { id: 'status', label: 'Status', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'reclaimPolicy', label: 'Reclaim Policy', type: 'text' },
+  { id: 'persistentVolumeClaim', label: 'Persistent volume claim', type: 'text' },
+  { id: 'source', label: 'Source', type: 'text' },
+  { id: 'reason', label: 'Reason', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
 /* ----------------------------------------
    Component
    ---------------------------------------- */
@@ -140,12 +154,11 @@ export function PersistentVolumesPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const [data, setData] = useState(persistentVolumesData);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -159,23 +172,59 @@ export function PersistentVolumesPage() {
     updateActiveTabLabel('Persistent volumes');
   }, [updateActiveTabLabel]);
 
-  useEffect(() => {
+  const handleFiltersChange = (filters: AppliedFilter[]) => {
+    setAppliedFilters(filters);
     setCurrentPage(1);
-  }, [searchTerm]);
+  };
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters([]);
+    setCurrentPage(1);
+  };
+
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: filterFields.find((ff) => ff.id === f.fieldId)?.label ?? f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
 
   const filteredData = useMemo(() => {
-    if (!searchTerm.trim()) return persistentVolumesData;
-    const q = searchTerm.toLowerCase();
-    return persistentVolumesData.filter(
-      (item) =>
-        item.status.toLowerCase().includes(q) ||
-        item.name.toLowerCase().includes(q) ||
-        item.reclaimPolicy.toLowerCase().includes(q) ||
-        item.persistentVolumeClaim.toLowerCase().includes(q) ||
-        item.source.toLowerCase().includes(q) ||
-        item.reason.toLowerCase().includes(q)
-    );
-  }, [searchTerm]);
+    let result = data;
+    appliedFilters.forEach((filter) => {
+      const val = filter.value.toLowerCase();
+      switch (filter.fieldId) {
+        case 'status':
+          result = result.filter((item) => item.status.toLowerCase().includes(val));
+          break;
+        case 'name':
+          result = result.filter((item) => item.name.toLowerCase().includes(val));
+          break;
+        case 'reclaimPolicy':
+          result = result.filter((item) => item.reclaimPolicy.toLowerCase().includes(val));
+          break;
+        case 'persistentVolumeClaim':
+          result = result.filter((item) => item.persistentVolumeClaim.toLowerCase().includes(val));
+          break;
+        case 'source':
+          result = result.filter((item) => item.source.toLowerCase().includes(val));
+          break;
+        case 'reason':
+          result = result.filter((item) => item.reason.toLowerCase().includes(val));
+          break;
+        case 'createdAt':
+          result = result.filter((item) => item.createdAt.toLowerCase().includes(val));
+          break;
+        default:
+          break;
+      }
+    });
+    return result;
+  }, [data, appliedFilters]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -250,16 +299,14 @@ export function PersistentVolumesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <Link
+          to={`/container/persistent-volumes/${row.id}`}
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0 block"
           title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/persistent-volumes/${row.id}`);
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -276,12 +323,14 @@ export function PersistentVolumesPage() {
       sortable: true,
       render: (value: string) =>
         value ? (
-          <span
-            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          <Link
+            to={`/container/pvc/${encodeURIComponent(value)}`}
+            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0 block"
             title={value}
+            onClick={(e) => e.stopPropagation()}
           >
             {value}
-          </span>
+          </Link>
         ) : (
           <span className="text-[var(--color-text-subtle)]">-</span>
         ),
@@ -346,12 +395,10 @@ export function PersistentVolumesPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
+  const handleBulkDeleteConfirm = () => {
+    setData((prev) => prev.filter((row) => !selectedRows.includes(row.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
   };
 
   // Create menu items
@@ -447,13 +494,14 @@ export function PersistentVolumesPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={handleFiltersChange}
                 placeholder="Search Persistent Volumes by attributes"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onClear={() => setSearchTerm('')}
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -470,6 +518,7 @@ export function PersistentVolumesPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML:', selectedRows)}
               >
                 Download YAML
               </Button>
@@ -478,18 +527,15 @@ export function PersistentVolumesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
-          filters={filters.map((filter, index) => ({
-            id: String(index),
-            field: filter.key,
-            value: filter.value,
-          }))}
-          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-          onFiltersClear={handleClearFilters}
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
         />
 
         {/* Pagination */}
@@ -513,6 +559,19 @@ export function PersistentVolumesPage() {
           emptyMessage="No persistent volumes found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete selected persistent volumes"
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} persistent volume(s)`}
+      />
     </PageShell>
   );
 }

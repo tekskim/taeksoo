@@ -1051,7 +1051,7 @@ export function OSDDetailPage() {
 
         {/* Tabs Section */}
         <div className="w-full">
-          <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="devices">Devices</Tab>

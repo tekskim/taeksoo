@@ -1203,7 +1203,7 @@ export function CreateCronJobPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const handleCancel = useCallback(() => {
-    navigate('/container/deployments');
+    navigate('/container/cronjobs');
   }, [navigate]);
 
   const handleCreate = useCallback(() => {

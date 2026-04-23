@@ -191,7 +191,8 @@ export function PoolsPage() {
   const [loading, setLoading] = useState(true);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -201,6 +202,10 @@ export function PoolsPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [appliedFilters]);
+
+  useEffect(() => {
+    updateActiveTabLabel('Pools');
+  }, [updateActiveTabLabel]);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;

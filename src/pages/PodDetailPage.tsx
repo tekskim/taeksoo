@@ -18,6 +18,7 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -36,6 +37,7 @@ import {
   IconChevronDown,
   IconTrash,
   IconCheck,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
 
 const PAGE_SIZE = 10;
@@ -145,13 +147,13 @@ const mockPodData: Record<string, PodData> = {
   },
 };
 
-function getMockPodByRouteParam(podIdOrName: string | undefined): PodData {
-  if (!podIdOrName) return mockPodData['1'];
+function getMockPodByRouteParam(podIdOrName: string | undefined): PodData | null {
+  if (!podIdOrName) return null;
   const byKey = mockPodData[podIdOrName];
   if (byKey) return byKey;
   const byName = Object.values(mockPodData).find((p) => p.name === podIdOrName);
   if (byName) return byName;
-  return mockPodData['1'];
+  return null;
 }
 
 const mockContainersData: ContainerRow[] = [
@@ -429,9 +431,9 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
+      label: 'Status',
       flex: 1,
-      minWidth: columnMinWidths.size,
+      minWidth: columnMinWidths.phase,
       sortable: true,
     },
     {
@@ -657,8 +659,10 @@ export function PodDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Pod: ${pod.name}`);
-  }, [updateActiveTabLabel, pod.name]);
+    if (pod) {
+      updateActiveTabLabel(`Pod: ${pod.name}`);
+    }
+  }, [updateActiveTabLabel, pod]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -671,6 +675,54 @@ export function PodDetailPage() {
 
   // Shell Panel state
   const shellPanel = useShellPanel();
+
+  if (!pod) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Pods', href: '/container/pods' }, { label: podId ?? 'Pod' }]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Pod not found"
+          description={`The pod "${podId ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/pods')}>
+              Back to Pods
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {

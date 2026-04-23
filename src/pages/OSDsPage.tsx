@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   ListToolbar,
   Table,
   Pagination,
@@ -18,6 +18,9 @@ import {
   STATUS_THRESHOLDS,
   type TableColumn,
   columnMinWidths,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
 } from '@/design-system';
 import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
 import { useTabs } from '@/contexts/TabContext';
@@ -126,6 +129,29 @@ const mockOSDs: OSD[] = [
   },
 ];
 
+const osdFilterFields: FilterField[] = [
+  { id: 'id', label: 'ID', type: 'text' },
+  { id: 'host', label: 'Host', type: 'text' },
+  { id: 'status', label: 'Status', type: 'text' },
+  {
+    id: 'deviceClass',
+    label: 'Device class',
+    type: 'select',
+    options: [
+      { value: 'hdd', label: 'HDD' },
+      { value: 'ssd', label: 'SSD' },
+      { value: 'nvme', label: 'NVMe' },
+    ],
+  },
+  { id: 'pgs', label: 'PGs', type: 'text' },
+  { id: 'size', label: 'Size', type: 'text' },
+  { id: 'flags', label: 'Flags', type: 'text' },
+  { id: 'usage', label: 'Usage', type: 'text' },
+  { id: 'usageLabel', label: 'Usage label', type: 'text' },
+  { id: 'readOps', label: 'Read ops', type: 'text' },
+  { id: 'writeOps', label: 'Write ops', type: 'text' },
+];
+
 /* ----------------------------------------
    ID Cell Component (Hyperlink)
    ---------------------------------------- */
@@ -185,18 +211,23 @@ function UsageCell({ usage }: UsageCellProps) {
 export function OSDsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
   const [loading, setLoading] = useState(true);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    updateActiveTabLabel('OSDs');
+  }, [updateActiveTabLabel]);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -208,17 +239,38 @@ export function OSDsPage() {
     closable: tab.closable,
   }));
 
-  // Filter OSDs based on search
-  const filteredOSDs = useMemo(
-    () =>
-      mockOSDs.filter(
-        (osd) =>
-          osd.host.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          osd.id.toString().includes(searchQuery) ||
-          osd.deviceClass.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    [searchQuery]
-  );
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  // Filter OSDs by applied filters
+  const filteredOSDs = useMemo(() => {
+    if (appliedFilters.length === 0) return mockOSDs;
+    return mockOSDs.filter((osd) => {
+      return appliedFilters.every((filter) => {
+        if (filter.fieldId === 'status') {
+          return osd.status.join(' ').toLowerCase().includes(filter.value.toLowerCase());
+        }
+        if (filter.fieldId === 'id') {
+          return String(osd.id).toLowerCase().includes(filter.value.toLowerCase());
+        }
+        if (filter.fieldId === 'usage') {
+          return String(osd.usage).toLowerCase().includes(filter.value.toLowerCase());
+        }
+        if (filter.fieldId === 'pgs') {
+          return String(osd.pgs).toLowerCase().includes(filter.value.toLowerCase());
+        }
+        const value = String(osd[filter.fieldId as keyof OSD] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [appliedFilters]);
 
   const totalPages = Math.ceil(filteredOSDs.length / rowsPerPage);
 
@@ -343,13 +395,17 @@ export function OSDsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
-                placeholder="Search OSDs by attributes"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery('')}
+              <FilterSearchInput
+                filters={osdFilterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={(f) => {
+                  setAppliedFilters(f);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -360,6 +416,9 @@ export function OSDsPage() {
               />
             </ListToolbar.Actions>
           }
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={() => setAppliedFilters([])}
         />
 
         {/* Pagination */}

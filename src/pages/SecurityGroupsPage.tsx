@@ -224,7 +224,16 @@ export function SecurityGroupsPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Security Groups');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -375,9 +384,11 @@ export function SecurityGroupsPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && groupToDelete) {
-      // Handle delete
+      const id = groupToDelete.id;
+      setSecurityGroups((prev) => prev.filter((sg) => sg.id !== id));
       setDeleteModalOpen(false);
       setGroupToDelete(null);
+      setSelectedGroups((prev) => prev.filter((x) => x !== id));
     }
   };
 

@@ -11,6 +11,7 @@ import {
   ContextMenu,
   TabBar,
   ListToolbar,
+  ConfirmModal,
   PageShell,
   PageHeader,
   fixedColumns,
@@ -31,7 +32,10 @@ import { Link } from 'react-router-dom';
 
 interface ActiveSession {
   id: string;
+  /** Display label in the User column (may differ from IAM username). */
   user: string;
+  /** Username key for routes and mockUsersMap in IAMUserDetailPage. */
+  userId: string;
   started: string;
   lastAccess: string;
   ipAddress: string;
@@ -46,6 +50,7 @@ const mockSessions: ActiveSession[] = [
   {
     id: 'sess-001',
     user: 'user A',
+    userId: 'john.doe',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '10.2.40.25',
@@ -53,7 +58,8 @@ const mockSessions: ActiveSession[] = [
   },
   {
     id: 'sess-002',
-    user: 'thaki-kim',
+    user: 'thaki.kim',
+    userId: 'thaki-kim',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '192.168.1.100',
@@ -61,7 +67,8 @@ const mockSessions: ActiveSession[] = [
   },
   {
     id: 'sess-003',
-    user: 'alex.johnson',
+    user: 'Alex Johnson',
+    userId: 'alex.johnson',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '10.2.40.32',
@@ -70,6 +77,7 @@ const mockSessions: ActiveSession[] = [
   {
     id: 'sess-004',
     user: 'sarah.lee',
+    userId: 'sara.connor',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '172.16.0.50',
@@ -78,6 +86,7 @@ const mockSessions: ActiveSession[] = [
   {
     id: 'sess-005',
     user: 'mike.chen',
+    userId: 'mike.wilson',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '10.2.40.88',
@@ -86,6 +95,7 @@ const mockSessions: ActiveSession[] = [
   {
     id: 'sess-006',
     user: 'admin',
+    userId: 'jane.smith',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '10.2.40.1',
@@ -94,6 +104,7 @@ const mockSessions: ActiveSession[] = [
   {
     id: 'sess-007',
     user: 'jennifer.wang',
+    userId: 'lisa.park',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '192.168.2.75',
@@ -102,6 +113,7 @@ const mockSessions: ActiveSession[] = [
   {
     id: 'sess-008',
     user: 'david.park',
+    userId: 'david.lee',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '10.2.40.105',
@@ -110,6 +122,7 @@ const mockSessions: ActiveSession[] = [
   {
     id: 'sess-009',
     user: 'emily.brown',
+    userId: 'emily.chen',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '172.16.0.120',
@@ -118,6 +131,7 @@ const mockSessions: ActiveSession[] = [
   {
     id: 'sess-010',
     user: 'robert.kim',
+    userId: 'chris.taylor',
     started: 'Nov 4, 2026',
     lastAccess: 'Nov 4, 2026',
     ipAddress: '10.2.40.200',
@@ -146,6 +160,8 @@ export default function IAMActiveSessionsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [sessions, setSessions] = useState(mockSessions);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
 
@@ -158,16 +174,24 @@ export default function IAMActiveSessionsPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   const filteredSessions = useMemo(() => {
-    return mockSessions.filter((session) => {
+    return sessions.filter((session) => {
       return appliedFilters.every((filter) => {
+        if (filter.fieldId === 'user') {
+          const combined = `${session.user} ${session.userId}`.toLowerCase();
+          return combined.includes(filter.value.toLowerCase());
+        }
         const value = String(session[filter.fieldId as keyof ActiveSession] ?? '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
-  }, [appliedFilters]);
+  }, [sessions, appliedFilters]);
 
   // Pagination
   const totalPages = Math.ceil(filteredSessions.length / itemsPerPage);
@@ -175,6 +199,12 @@ export default function IAMActiveSessionsPage() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const handleBulkDelete = () => {
+    setSessions((prev) => prev.filter((s) => !selectedRows.includes(s.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
+  };
 
   // Context menu items factory
   const getContextMenuItems = (row: ActiveSession): ContextMenuItem[] => [
@@ -186,7 +216,7 @@ export default function IAMActiveSessionsPage() {
     {
       id: 'terminate-all',
       label: 'Terminate all sessions of this user',
-      onClick: () => console.log('Terminate all sessions of user', row.user),
+      onClick: () => console.log('Terminate all sessions of user', row.userId),
     },
   ];
 
@@ -201,9 +231,9 @@ export default function IAMActiveSessionsPage() {
       flex: 1,
       minWidth: columnMinWidths.user,
       sortable: true,
-      render: (value) => (
+      render: (value, row) => (
         <Link
-          to={`/iam/users/${value}`}
+          to={`/iam/users/${row.userId}`}
           className="text-[var(--color-action-primary)] font-medium hover:underline"
         >
           {value}
@@ -320,6 +350,7 @@ export default function IAMActiveSessionsPage() {
                   size="sm"
                   leftIcon={<IconCircleX size={12} stroke={1.5} />}
                   disabled={selectedRows.length === 0}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Terminate
                 </Button>
@@ -350,6 +381,19 @@ export default function IAMActiveSessionsPage() {
           />
         </VStack>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Terminate selected sessions"
+        description="The selected sessions will be ended. Users may need to sign in again."
+        confirmText="Terminate"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} session(s)`}
+      />
     </PageShell>
   );
 }

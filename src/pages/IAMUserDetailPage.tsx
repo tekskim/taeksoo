@@ -19,6 +19,8 @@ import {
   SectionCard,
   PageShell,
   DetailHeader,
+  ConfirmModal,
+  ErrorState,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -37,6 +39,7 @@ import {
   IconCircleX,
   IconCircleMinus,
   IconDotsCircleHorizontal,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -164,14 +167,6 @@ const mockUsersMap: Record<string, UserDetail> = {
     status: 'online',
     createdAt: 'Jan 28, 2026 15:33:27',
   },
-};
-
-const defaultUserDetail: UserDetail = {
-  username: 'Unknown User',
-  displayName: '-',
-  email: '-',
-  status: 'offline',
-  createdAt: '-',
 };
 
 const mockUserGroups: UserGroup[] = [
@@ -472,9 +467,10 @@ export function IAMUserDetailPage() {
   const [rolesCurrentPage, setRolesCurrentPage] = useState(1);
   const [sessionsSearchQuery, setSessionsSearchQuery] = useState('');
   const [sessionsCurrentPage, setSessionsCurrentPage] = useState(1);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Get user data based on URL username
-  const user = username ? mockUsersMap[username] || defaultUserDetail : defaultUserDetail;
+  const user: UserDetail | null = username ? (mockUsersMap[username] ?? null) : null;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -482,10 +478,10 @@ export function IAMUserDetailPage() {
 
   // Update tab label to username
   useEffect(() => {
-    if (user.username) {
+    if (user) {
       updateActiveTabLabel(user.username);
     }
-  }, [user.username, updateActiveTabLabel]);
+  }, [user, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -494,11 +490,58 @@ export function IAMUserDetailPage() {
     closable: tab.closable,
   }));
 
-  // Breadcrumb items
-  const breadcrumbItems = [{ label: 'Users', href: '/iam/users' }, { label: user.username }];
-
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
+
+  if (!user) {
+    return (
+      <PageShell
+        sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Users', href: '/iam/users' }, { label: username ?? 'User' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-6"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="User not found"
+          description={`The user "${username ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/iam/users')}>
+              Back to Users
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
+  // Breadcrumb items
+  const breadcrumbItems = [{ label: 'Users', href: '/iam/users' }, { label: user.username }];
 
   // Filter user groups by search query
   const filteredGroups = mockUserGroups.filter(
@@ -865,16 +908,36 @@ export function IAMUserDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{user.username}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} stroke={1.5} />}
+              onClick={() => console.log('Edit user', user.username)}
+            >
               Edit
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} stroke={1.5} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconLock size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconLock size={12} />}
+              onClick={() => console.log('Lock setting', user.username)}
+            >
               Lock setting
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconReload size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconReload size={12} />}
+              onClick={() => console.log('Reset password', user.username)}
+            >
               Reset password
             </Button>
             <ContextMenu
@@ -937,7 +1000,12 @@ export function IAMUserDetailPage() {
                   <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     User groups
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconSettings size={12} />}
+                    onClick={() => console.log('Manage user groups', user.username)}
+                  >
                     Manage user groups
                   </Button>
                 </HStack>
@@ -960,7 +1028,12 @@ export function IAMUserDetailPage() {
                 />
 
                 {/* Table */}
-                <Table<UserGroup> columns={groupColumns} data={paginatedGroups} rowKey="id" />
+                <Table<UserGroup>
+                  columns={groupColumns}
+                  data={paginatedGroups}
+                  rowKey="id"
+                  emptyMessage="No user groups found"
+                />
               </VStack>
             </TabPanel>
 
@@ -972,7 +1045,12 @@ export function IAMUserDetailPage() {
                   <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     Roles
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconSettings size={12} />}
+                    onClick={() => console.log('Manage roles', user.username)}
+                  >
                     Manage roles
                   </Button>
                 </HStack>
@@ -995,7 +1073,12 @@ export function IAMUserDetailPage() {
                 />
 
                 {/* Table */}
-                <Table<Role> columns={roleColumns} data={paginatedRoles} rowKey="id" />
+                <Table<Role>
+                  columns={roleColumns}
+                  data={paginatedRoles}
+                  rowKey="id"
+                  emptyMessage="No roles found"
+                />
               </VStack>
             </TabPanel>
 
@@ -1007,7 +1090,12 @@ export function IAMUserDetailPage() {
                   <SectionCard.Header
                     title="Password"
                     actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconReload size={12} />}>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconReload size={12} />}
+                        onClick={() => console.log('Reset password (section)', user.username)}
+                      >
                         Reset password
                       </Button>
                     }
@@ -1029,6 +1117,7 @@ export function IAMUserDetailPage() {
                         variant="secondary"
                         size="sm"
                         leftIcon={<IconCircleMinus size={12} />}
+                        onClick={() => console.log('Remove OTP MFA', user.username)}
                       >
                         Remove
                       </Button>
@@ -1085,8 +1174,14 @@ export function IAMUserDetailPage() {
                       size="sm"
                       icon={<IconRefresh size={12} stroke={1.5} />}
                       aria-label="Refresh"
+                      onClick={() => console.log('Refresh sessions', user.username)}
                     />
-                    <Button variant="secondary" size="sm" leftIcon={<IconCircleX size={12} />}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCircleX size={12} />}
+                      onClick={() => console.log('Terminate all sessions', user.username)}
+                    >
                       Terminate all sessions
                     </Button>
                   </div>
@@ -1101,12 +1196,31 @@ export function IAMUserDetailPage() {
                 />
 
                 {/* Table */}
-                <Table<Session> columns={sessionColumns} data={paginatedSessions} rowKey="id" />
+                <Table<Session>
+                  columns={sessionColumns}
+                  data={paginatedSessions}
+                  rowKey="id"
+                  emptyMessage="No sessions found"
+                />
               </VStack>
             </TabPanel>
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Delete user"
+        description="Removing this user is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/iam/users');
+        }}
+      />
     </PageShell>
   );
 }

@@ -207,7 +207,6 @@ export function VolumeBackupsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [backups, setBackups] = useState(mockVolumeBackups);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -263,7 +262,16 @@ export function VolumeBackupsPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Volume Backups');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -294,6 +302,7 @@ export function VolumeBackupsPage() {
   };
 
   const handleBulkDelete = () => {
+    setBackups((prev) => prev.filter((b) => !selectedBackups.includes(b.id)));
     setIsBulkDeleteOpen(false);
     setSelectedBackups([]);
   };
@@ -521,6 +530,7 @@ export function VolumeBackupsPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
