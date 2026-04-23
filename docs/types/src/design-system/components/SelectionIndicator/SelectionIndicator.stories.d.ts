@@ -1,0 +1,15 @@
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { SelectionIndicator } from './SelectionIndicator';
+declare const meta: Meta<typeof SelectionIndicator>;
+export default meta;
+type Story = StoryObj<typeof SelectionIndicator>;
+export declare const Default: Story;
+export declare const WithSelectedItems: Story;
+export declare const SingleSelection: Story;
+export declare const NonRemovable: Story;
+export declare const ErrorState: Story;
+export declare const WithRightContent: Story;
+export declare const ManyItems: Story;
+export declare const CustomEmptyText: Story;
+export declare const InFormContext: Story;
+export declare const ErrorWithRightContent: Story;

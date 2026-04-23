@@ -1,0 +1,983 @@
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import ReactECharts from 'echarts-for-react';
+import type { ECharts } from 'echarts';
+import {
+  VStack,
+  TabBar,
+  TopBar,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+  Table,
+  Badge,
+  SearchInput,
+  Pagination,
+  MonitoringToolbar,
+  PageShell,
+  columnMinWidths,
+  type TableColumn,
+} from '@/design-system';
+import { StorageDomainAdminSidebar as StorageSidebar } from '@/components/StorageDomainAdminSidebar';
+import { useTabs } from '@/contexts/TabContext';
+import { DataViewDrawer } from '@/components/DataViewDrawer';
+import {
+  IconDotsCircleHorizontal,
+  IconArrowsMaximize,
+  IconArrowsMinimize,
+} from '@tabler/icons-react';
+import { chartColors } from '@/pages/design-system-sections/ChartComponents';
+
+const resolvedChartColor = (varName: string, fallback: string) =>
+  typeof window === 'undefined'
+    ? fallback
+    : getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || fallback;
+
+/* ----------------------------------------
+   Performance Line Chart Component
+   ---------------------------------------- */
+
+interface ChartSeries {
+  name: string;
+  data: number[];
+  color: string;
+}
+
+interface PerformanceChartProps {
+  title: string;
+  series: ChartSeries[];
+  timeLabels: string[];
+  yAxisUnit?: string;
+  isFullScreen?: boolean;
+  onFullScreen?: () => void;
+  onExitFullScreen?: () => void;
+  timeControls?: React.ReactNode;
+}
+
+function PerformanceChart({
+  title,
+  series,
+  timeLabels,
+  yAxisUnit = '',
+  isFullScreen = false,
+  onFullScreen,
+  onExitFullScreen,
+  timeControls,
+}: PerformanceChartProps) {
+  const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
+    Object.fromEntries(series.map((s) => [s.name, true]))
+  );
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showDataView, setShowDataView] = useState(false);
+  const chartRef = useRef<ReactECharts>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Handle chart ready - resize to fill container
+  const handleChartReady = (chartInstance: ECharts) => {
+    setTimeout(() => {
+      try {
+        chartInstance.resize();
+      } catch {
+        // Instance might be disposed
+      }
+    }, 100);
+  };
+
+  // Detect dark mode changes
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  const allVisible = Object.values(visibleSeries).every((v) => v);
+  const toggleAll = () => {
+    const newState = !allVisible;
+    setVisibleSeries(Object.fromEntries(series.map((s) => [s.name, newState])));
+  };
+
+  const handleFullScreen = () => {
+    setMenuOpen(false);
+    if (onFullScreen) onFullScreen();
+  };
+
+  // Get theme-aware colors
+  const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
+  const splitLineOpacity = isDarkMode ? 1 : 0.5;
+  const tooltipBg = resolvedChartColor('--color-surface-default', '#ffffff');
+  const tooltipBorder = resolvedChartColor('--color-border-default', chartColors.slate100);
+  const tooltipTextColor = resolvedChartColor('--color-text-default', chartColors.slate800);
+
+  // Calculate max value for exactly 5 Y-axis labels
+  const allData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
+  const dataMax = Math.max(...allData, 0);
+
+  const rawInterval = dataMax / 4;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawInterval || 1)));
+  const normalizedInterval = rawInterval / magnitude;
+
+  let niceNormalizedInterval;
+  if (normalizedInterval <= 1) niceNormalizedInterval = 1;
+  else if (normalizedInterval <= 2) niceNormalizedInterval = 2;
+  else if (normalizedInterval <= 2.5) niceNormalizedInterval = 2.5;
+  else if (normalizedInterval <= 5) niceNormalizedInterval = 5;
+  else niceNormalizedInterval = 10;
+
+  const niceInterval = niceNormalizedInterval * magnitude;
+  const niceMax = niceInterval * 4;
+
+  const option = {
+    animation: false,
+    grid: {
+      left: '40px',
+      right: '16px',
+      top: '20px',
+      bottom: '16px',
+      containLabel: false,
+    },
+    xAxis: {
+      type: 'category' as const,
+      data: timeLabels,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+      },
+      boundaryGap: false,
+    },
+    yAxis: {
+      type: 'value' as const,
+      min: 0,
+      max: niceMax || 1,
+      interval: niceInterval || 0.25,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: {
+        lineStyle: { color: splitLineColor, opacity: splitLineOpacity },
+      },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+        formatter: (v: number) => `${v}${yAxisUnit}`,
+      },
+    },
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: tooltipBg,
+      borderColor: tooltipBorder,
+      textStyle: {
+        color: tooltipTextColor,
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+      },
+      formatter: (
+        params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>
+      ) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const time = params[0].axisValueLabel;
+        const items = params
+          .map(
+            (p) =>
+              `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+          )
+          .join('');
+        return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
+      },
+    },
+    series: series
+      .filter((s) => visibleSeries[s.name])
+      .map((s) => ({
+        name: s.name,
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        showSymbol: false,
+        lineStyle: { color: s.color, width: 1 },
+        itemStyle: { color: s.color },
+        areaStyle: { color: s.color, opacity: 0.1 },
+        data: s.data,
+      })),
+  };
+
+  return (
+    <div className={`chartCard ${isFullScreen ? 'chartCardFullScreen' : ''}`}>
+      {/* Header */}
+      <div className="chartHeader">
+        <span className="chartTitle">{title}</span>
+        {isFullScreen && timeControls && <div className="chartHeaderCenter">{timeControls}</div>}
+        <div className="chartControls">
+          {/* Toggle Button - only show for multiple series */}
+          {series.length > 1 && (
+            <>
+              <button className="toggleBtn" onClick={toggleAll}>
+                <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
+                <span>{allVisible ? 'Hide All' : 'View All'}</span>
+              </button>
+              <span className="toggleDivider">|</span>
+            </>
+          )}
+
+          {/* Menu Button */}
+          <div className="menuContainer">
+            <button
+              className="menuTrigger"
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen(!menuOpen);
+              }}
+            >
+              <IconDotsCircleHorizontal size={16} stroke={1.5} />
+            </button>
+            {menuOpen && (
+              <div className="contextMenu">
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download Image
+                </button>
+                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                  Download CSV
+                </button>
+                <button
+                  className="contextMenuItemLast"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setShowDataView(true);
+                  }}
+                >
+                  Data View
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Expand/Minimize Button */}
+          <button
+            className="expandTrigger"
+            title={isFullScreen ? 'Minimize' : 'Expand'}
+            onClick={isFullScreen ? onExitFullScreen : handleFullScreen}
+          >
+            {isFullScreen ? (
+              <IconArrowsMinimize size={16} stroke={1.5} />
+            ) : (
+              <IconArrowsMaximize size={16} stroke={1.5} />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Chart Body */}
+      <div className="chartBody">
+        <div className="chartWrapper" ref={wrapperRef}>
+          <ReactECharts
+            key={isFullScreen ? 'fullscreen' : 'normal'}
+            ref={chartRef}
+            option={option}
+            style={{
+              height: isFullScreen ? 'calc(100vh - 200px)' : '100%',
+              width: isFullScreen ? 'calc(100vw - 300px)' : '100%',
+            }}
+            notMerge={true}
+            onChartReady={handleChartReady}
+          />
+        </div>
+        <div className="chartLegend">
+          {series.map((s, i) => (
+            <div
+              key={i}
+              className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
+              onClick={() => setVisibleSeries((prev) => ({ ...prev, [s.name]: !prev[s.name] }))}
+            >
+              <div className="legendDot" style={{ backgroundColor: s.color }} />
+              <span>{s.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Data View Drawer */}
+      <DataViewDrawer
+        isOpen={showDataView}
+        onClose={() => setShowDataView(false)}
+        title={`${title} (RAW)`}
+        series={series}
+        timeLabels={timeLabels}
+      />
+    </div>
+  );
+}
+
+// Full Screen Chart Data Interface
+interface FullScreenChartData {
+  title: string;
+  series: ChartSeries[];
+  timeLabels: string[];
+  yAxisUnit?: string;
+}
+
+// ChartWithFullScreen Wrapper Component
+function ImageChartWithFullScreen({
+  title,
+  series,
+  timeLabels,
+  yAxisUnit = '',
+}: {
+  title: string;
+  series: ChartSeries[];
+  timeLabels: string[];
+  yAxisUnit?: string;
+}) {
+  const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
+  const fullScreenContainerRef = useRef<HTMLDivElement>(null);
+  const [containerReady, setContainerReady] = useState(false);
+
+  // Close on ESC key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && fullScreenChart) {
+        setFullScreenChart(null);
+        setContainerReady(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [fullScreenChart]);
+
+  // Wait for container to be ready before rendering chart
+  useEffect(() => {
+    if (fullScreenChart && fullScreenContainerRef.current) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setContainerReady(true);
+        });
+      });
+    } else {
+      setContainerReady(false);
+    }
+  }, [fullScreenChart]);
+
+  return (
+    <>
+      <PerformanceChart
+        title={title}
+        series={series}
+        timeLabels={timeLabels}
+        yAxisUnit={yAxisUnit}
+        onFullScreen={() => setFullScreenChart({ title, series, timeLabels, yAxisUnit })}
+      />
+
+      {fullScreenChart && (
+        <>
+          <div
+            className="fullScreenOverlay"
+            onClick={() => {
+              setFullScreenChart(null);
+              setContainerReady(false);
+            }}
+          />
+          <div className="fullScreenFloating" ref={fullScreenContainerRef}>
+            {containerReady && (
+              <PerformanceChart
+                title={fullScreenChart.title}
+                series={fullScreenChart.series}
+                timeLabels={fullScreenChart.timeLabels}
+                yAxisUnit={fullScreenChart.yAxisUnit}
+                isFullScreen={true}
+                onExitFullScreen={() => {
+                  setFullScreenChart(null);
+                  setContainerReady(false);
+                }}
+                timeControls={<MonitoringToolbar />}
+              />
+            )}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+interface ImageDetail {
+  id: string;
+  name: string;
+  pool: string;
+  dataPool: string;
+  created: string;
+  size: string;
+  objects: string;
+  objectSize: string;
+  features: string[];
+  provisioned: string;
+  totalProvisioned: string;
+  stripeUnit: string;
+  stripeCount: number;
+  parent: string;
+  blockNamePrefix: string;
+  order: number;
+  formatVersion: string;
+}
+
+interface ImageSnapshot {
+  id: string;
+  name: string;
+  size: string;
+  used: string;
+  state: 'protected' | 'unprotected';
+  created: string;
+}
+
+interface ImageConfig {
+  id: string;
+  name: string;
+  description: string;
+  key: string;
+  source: string;
+  value: string;
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+const mockImageDetail: ImageDetail = {
+  id: 'img-1',
+  name: 'volume-1f6b9382-6afe-4d37-acff-0bd507e6386d',
+  pool: 'volumes',
+  dataPool: '-',
+  created: '2026-05-12 14:45',
+  size: '10 GiB',
+  objects: '2.6 k',
+  objectSize: '4 MiB',
+  features: ['deep-flatten', 'exclusive-lock', 'fast-diff', 'layering', 'object-map'],
+  provisioned: '2 GiB',
+  totalProvisioned: '2 GiB',
+  stripeUnit: '4 MiB',
+  stripeCount: 1,
+  parent: '-',
+  blockNamePrefix: 'rbd_data.ca4ab71c7fe62c',
+  order: 22,
+  formatVersion: '2',
+};
+
+const mockSnapshots: ImageSnapshot[] = [
+  {
+    id: 'snap-1',
+    name: 'backup.2fb15b89-77fe-433e-a25b-2ca6d1ca074d.snap.1770597864.3632324',
+    size: '10 GiB',
+    used: '0 B',
+    state: 'unprotected',
+    created: '2026-02-09 09:46',
+  },
+  {
+    id: 'snap-2',
+    name: 'snapshot-69ed56eb-827d-483b-8fbd-8bca864c203b',
+    size: '10 GiB',
+    used: '0 B',
+    state: 'protected',
+    created: '2026-01-23 18:00',
+  },
+  {
+    id: 'snap-3',
+    name: 'volume-532ab768-bc2e-44ff-847f-c8cab2d7a42f.clone_snap',
+    size: '10 GiB',
+    used: '0 B',
+    state: 'protected',
+    created: '2026-01-28 18:09',
+  },
+];
+
+const mockConfigs: ImageConfig[] = [
+  {
+    id: 'cfg-1',
+    name: 'BPS Burst',
+    description: 'The desired burst limit of IO bytes.',
+    key: 'rbd_qos_bps_burst',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-2',
+    name: 'BPS Limit',
+    description: 'The desired limit of IO bytes per second.',
+    key: 'rbd_qos_bps_limit',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-3',
+    name: 'IOPS Burst',
+    description: 'The desired burst limit of IO operations.',
+    key: 'rbd_qos_iops_burst',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-4',
+    name: 'IOPS Limit',
+    description: 'The desired limit of IO operations per second.',
+    key: 'rbd_qos_iops_limit',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-5',
+    name: 'Read BPS Burst',
+    description: 'The desired burst limit of read bytes.',
+    key: 'rbd_qos_read_bps_burst',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-6',
+    name: 'Read BPS Limit',
+    description: 'The desired limit of read bytes per second.',
+    key: 'rbd_qos_read_bps_limit',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-7',
+    name: 'Read IOPS Burst',
+    description: 'The desired burst limit of read operations.',
+    key: 'rbd_qos_read_iops_burst',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-8',
+    name: 'Read IOPS Limit',
+    description: 'The desired limit of read operations per second.',
+    key: 'rbd_qos_read_iops_limit',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-9',
+    name: 'Write BPS Burst',
+    description: 'The desired burst limit of write bytes.',
+    key: 'rbd_qos_write_bps_burst',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-10',
+    name: 'Write BPS Limit',
+    description: 'The desired limit of write bytes per second.',
+    key: 'rbd_qos_write_bps_limit',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-11',
+    name: 'Write IOPS Burst',
+    description: 'The desired burst limit of write operations.',
+    key: 'rbd_qos_write_iops_burst',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-12',
+    name: 'Write IOPS Limit',
+    description: 'The desired limit of write operations per second.',
+    key: 'rbd_qos_write_iops_limit',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+];
+
+// Mock chart data
+const timeLabels = ['13:00', '13:10', '13:20', '13:30', '13:40', '13:50'];
+
+const iopsData = {
+  reads: [125, 128, 130, 127, 132, 135],
+  writes: [122, 125, 128, 124, 129, 131],
+};
+
+const throughputData = {
+  reads: [350, 380, 420, 390, 450, 480],
+  writes: [150, 160, 180, 170, 200, 220],
+};
+
+const latencyData = {
+  average: [125, 128, 130, 127, 132, 135],
+};
+
+/* ----------------------------------------
+   Image Detail Page
+   ---------------------------------------- */
+
+export function ImageDetailPage() {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'details';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  // Global tab management
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
+  // Use mock data (in real app, fetch based on id)
+  const imageData = mockImageDetail;
+
+  // Update tab label to match the image name (most recent breadcrumb)
+  useEffect(() => {
+    if (imageData?.name) {
+      updateActiveTabLabel(imageData.name);
+    }
+  }, [imageData?.name, updateActiveTabLabel]);
+
+  const LIST_PAGE_SIZE = 10;
+
+  const [snapshotsSearch, setSnapshotsSearch] = useState('');
+  const [snapshotsPage, setSnapshotsPage] = useState(1);
+  const [configurationSearch, setConfigurationSearch] = useState('');
+  const [configurationPage, setConfigurationPage] = useState(1);
+
+  const filteredSnapshots = useMemo(() => {
+    const q = snapshotsSearch.trim().toLowerCase();
+    if (!q) return mockSnapshots;
+    return mockSnapshots.filter((s) => {
+      const hay = [s.name, s.size, s.used, s.state, s.created].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [snapshotsSearch]);
+
+  const paginatedSnapshots = useMemo(
+    () =>
+      filteredSnapshots.slice((snapshotsPage - 1) * LIST_PAGE_SIZE, snapshotsPage * LIST_PAGE_SIZE),
+    [filteredSnapshots, snapshotsPage]
+  );
+
+  const filteredConfigs = useMemo(() => {
+    const q = configurationSearch.trim().toLowerCase();
+    if (!q) return mockConfigs;
+    return mockConfigs.filter((c) => {
+      const hay = [c.name, c.description, c.key, c.source, c.value].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [configurationSearch]);
+
+  const paginatedConfigs = useMemo(
+    () =>
+      filteredConfigs.slice(
+        (configurationPage - 1) * LIST_PAGE_SIZE,
+        configurationPage * LIST_PAGE_SIZE
+      ),
+    [filteredConfigs, configurationPage]
+  );
+
+  useEffect(() => {
+    setSnapshotsPage(1);
+  }, [snapshotsSearch]);
+
+  useEffect(() => {
+    setConfigurationPage(1);
+  }, [configurationSearch]);
+
+  // Convert tabs to TabBar format
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  const snapshotColumns: TableColumn<ImageSnapshot>[] = [
+    { key: 'name', label: 'Name', flex: 3, minWidth: columnMinWidths.nameWide, sortable: true },
+    {
+      key: 'state',
+      label: 'Protected',
+      flex: 1,
+      minWidth: columnMinWidths.status,
+      sortable: true,
+      render: (_, row) => (row.state === 'protected' ? 'Yes' : 'No'),
+    },
+    { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.status, sortable: true },
+    { key: 'used', label: 'Used', flex: 1, minWidth: columnMinWidths.status, sortable: true },
+    {
+      key: 'created',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.creationDate,
+      sortable: true,
+    },
+  ];
+
+  const configColumns: TableColumn<ImageConfig>[] = [
+    { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name, sortable: true },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 2,
+      minWidth: columnMinWidths.nameWide,
+      sortable: true,
+    },
+    { key: 'key', label: 'Key', flex: 1, minWidth: columnMinWidths.owner, sortable: true },
+    {
+      key: 'source',
+      label: 'Source',
+      flex: 1,
+      minWidth: columnMinWidths.status,
+      sortable: true,
+      render: (value) => (
+        <Badge theme="white" size="sm">
+          {value}
+        </Badge>
+      ),
+    },
+    { key: 'value', label: 'Value', flex: 1, minWidth: columnMinWidths.status, sortable: true },
+  ];
+
+  // Chart series
+  const iopsSeries: ChartSeries[] = [
+    { name: 'Reads', data: iopsData.reads, color: chartColors.emerald400 },
+    { name: 'Writes', data: iopsData.writes, color: chartColors.amber400 },
+  ];
+
+  const throughputSeries: ChartSeries[] = [
+    { name: 'Reads', data: throughputData.reads, color: chartColors.emerald400 },
+    { name: 'Writes', data: throughputData.writes, color: chartColors.amber400 },
+  ];
+
+  const latencySeries: ChartSeries[] = [
+    { name: 'Average latency', data: latencyData.average, color: chartColors.emerald400 },
+  ];
+
+  return (
+    <PageShell
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Images', href: '/storage-domain-admin/images' },
+                { label: imageData.name },
+              ]}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Page Header with Info Cards */}
+        <DetailHeader>
+          <DetailHeader.Title>{imageData.name}</DetailHeader.Title>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Pool" value={imageData.pool} />
+            <DetailHeader.InfoCard label="Size" value={imageData.size} />
+            <DetailHeader.InfoCard label="Objects" value={imageData.objects} />
+            <DetailHeader.InfoCard label="Object size" value={imageData.objectSize} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
+
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="snapshots">Snapshots</Tab>
+              <Tab value="configuration">Configuration</Tab>
+              <Tab value="performance">Performance</Tab>
+            </TabList>
+
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-4">
+              <SectionCard>
+                <SectionCard.Header title="Basic information" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Name" value={imageData.name} />
+                  <SectionCard.DataRow label="Pool" value={imageData.pool} />
+                  <SectionCard.DataRow label="Data Pool" value={imageData.dataPool} />
+                  <SectionCard.DataRow label="Created" value={imageData.created} />
+                  <SectionCard.DataRow label="Size" value={imageData.size} />
+                  <SectionCard.DataRow label="Objects" value={imageData.objects} />
+                  <SectionCard.DataRow label="Object size" value={imageData.objectSize} />
+                  <SectionCard.DataRow label="Features">
+                    <div className="flex flex-wrap gap-1">
+                      {imageData.features.map((feature) => (
+                        <Badge key={feature} theme="white" size="sm">
+                          {feature}
+                        </Badge>
+                      ))}
+                    </div>
+                  </SectionCard.DataRow>
+                  <SectionCard.DataRow label="Provisioned" value={imageData.provisioned} />
+                  <SectionCard.DataRow
+                    label="Total provisioned"
+                    value={imageData.totalProvisioned}
+                  />
+                  <SectionCard.DataRow label="Striping unit" value={imageData.stripeUnit} />
+                  <SectionCard.DataRow
+                    label="Striping count"
+                    value={String(imageData.stripeCount)}
+                  />
+                  <SectionCard.DataRow label="Parent" value={imageData.parent} />
+                  <SectionCard.DataRow
+                    label="Block name prefix"
+                    value={imageData.blockNamePrefix}
+                  />
+                  <SectionCard.DataRow label="Order" value={String(imageData.order)} />
+                  <SectionCard.DataRow label="Format Version" value={imageData.formatVersion} />
+                </SectionCard.Content>
+              </SectionCard>
+            </TabPanel>
+
+            {/* Snapshots Tab Panel */}
+            <TabPanel value="snapshots" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <div className="flex items-center h-7">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Snapshots</h3>
+                </div>
+
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    placeholder="Search snapshots by attributes"
+                    size="sm"
+                    fullWidth
+                    value={snapshotsSearch}
+                    onChange={(e) => setSnapshotsSearch(e.target.value)}
+                    onClear={() => setSnapshotsSearch('')}
+                  />
+                </div>
+
+                <Pagination
+                  currentPage={snapshotsPage}
+                  totalPages={Math.ceil(filteredSnapshots.length / LIST_PAGE_SIZE) || 1}
+                  onPageChange={setSnapshotsPage}
+                  totalItems={filteredSnapshots.length}
+                  itemsPerPage={LIST_PAGE_SIZE}
+                  showItemCount
+                />
+
+                <Table<ImageSnapshot>
+                  columns={snapshotColumns}
+                  data={paginatedSnapshots}
+                  rowKey="id"
+                  emptyMessage="No snapshots found"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Configuration Tab Panel */}
+            <TabPanel value="configuration" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <div className="flex items-center h-7">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Configuration
+                  </h3>
+                </div>
+
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    placeholder="Search configuration by attributes"
+                    size="sm"
+                    fullWidth
+                    value={configurationSearch}
+                    onChange={(e) => setConfigurationSearch(e.target.value)}
+                    onClear={() => setConfigurationSearch('')}
+                  />
+                </div>
+
+                <Pagination
+                  currentPage={configurationPage}
+                  totalPages={Math.ceil(filteredConfigs.length / LIST_PAGE_SIZE) || 1}
+                  onPageChange={setConfigurationPage}
+                  totalItems={filteredConfigs.length}
+                  itemsPerPage={LIST_PAGE_SIZE}
+                  showItemCount
+                />
+
+                <Table<ImageConfig>
+                  columns={configColumns}
+                  data={paginatedConfigs}
+                  rowKey="id"
+                  emptyMessage="No configuration found"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Performance Tab Panel */}
+            <TabPanel value="performance" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Monitoring Time Controls */}
+                <div className="flex justify-start w-full">
+                  <MonitoringToolbar />
+                </div>
+
+                {/* Charts - Two on top row, one below */}
+                <div className="flex gap-4 w-full">
+                  <div className="flex-1">
+                    <ImageChartWithFullScreen
+                      title="IOPS"
+                      series={iopsSeries}
+                      timeLabels={timeLabels}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ImageChartWithFullScreen
+                      title="Throughput"
+                      series={throughputSeries}
+                      timeLabels={timeLabels}
+                    />
+                  </div>
+                </div>
+
+                {/* Average Latency Chart - Half width below */}
+                <div className="flex gap-4 w-full">
+                  <div className="flex-1">
+                    <ImageChartWithFullScreen
+                      title="Average latency"
+                      series={latencySeries}
+                      timeLabels={timeLabels}
+                      yAxisUnit="ms"
+                    />
+                  </div>
+                  <div className="flex-1" />
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
+        </div>
+      </VStack>
+    </PageShell>
+  );
+}
+
+export default ImageDetailPage;

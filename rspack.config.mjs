@@ -26,6 +26,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    conditionNames: ['import', 'module', 'require', 'default'],
   },
   module: {
     rules: [

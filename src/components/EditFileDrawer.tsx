@@ -78,7 +78,7 @@ export function EditFileDrawer({
     setHasAttemptedSubmit(true);
 
     if (!name.trim()) {
-      setNameError('Please enter a folder name.');
+      setNameError('Please enter a file name.');
       return;
     }
     setNameError(null);
@@ -104,20 +104,20 @@ export function EditFileDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Edit object"
-      width={360}
+      title="Edit file"
+      width={696}
       footer={
-        <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-[152px]"
+            className="flex-1"
           >
-            {isSubmitting ? 'Saving...' : 'Create'}
+            {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
         </HStack>
       }
@@ -128,7 +128,7 @@ export function EditFileDrawer({
         <VStack gap={4} className="w-full">
           {/* Folder name Input */}
           <FormField required error={!!nameError}>
-            <FormField.Label>Folder name</FormField.Label>
+            <FormField.Label>File name</FormField.Label>
             <FormField.Control>
               <Input
                 value={name}
@@ -136,7 +136,7 @@ export function EditFileDrawer({
                   setName(e.target.value);
                   if (nameError) setNameError(null);
                 }}
-                placeholder="{Current Folder name}"
+                placeholder="file name"
                 fullWidth
                 error={!!nameError}
               />

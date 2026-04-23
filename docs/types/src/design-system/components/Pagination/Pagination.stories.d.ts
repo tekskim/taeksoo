@@ -1,0 +1,15 @@
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { Pagination } from './Pagination';
+declare const meta: Meta<typeof Pagination>;
+export default meta;
+type Story = StoryObj<typeof Pagination>;
+export declare const Default: Story;
+export declare const WithTotalItems: Story;
+export declare const WithSelection: Story;
+export declare const WithSettings: Story;
+export declare const ManyPages: Story;
+export declare const FewPages: Story;
+export declare const FirstPage: Story;
+export declare const LastPage: Story;
+export declare const Disabled: Story;
+export declare const FullExample: Story;

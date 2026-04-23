@@ -320,7 +320,7 @@ export function CreateFolderDrawer({
         </FormField>
 
         {/* Folder Path (read-only) */}
-        <FormField>
+        <FormField required>
           <FormField.Label>Folder path</FormField.Label>
           <FormField.Control>
             <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">

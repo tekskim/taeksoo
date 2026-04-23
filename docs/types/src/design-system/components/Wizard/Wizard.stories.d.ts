@@ -1,0 +1,13 @@
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { WizardSection } from './WizardSection';
+declare const meta: Meta<typeof WizardSection>;
+export default meta;
+type Story = StoryObj<typeof WizardSection>;
+export declare const StatusIcons: Story;
+export declare const PreSectionExample: Story;
+export declare const WritingSectionExample: Story;
+export declare const SkippedSectionExample: Story;
+export declare const DoneSectionExample: Story;
+export declare const AllStates: Story;
+export declare const FullWizardExample: Story;
+export declare const WithSkippedSteps: Story;

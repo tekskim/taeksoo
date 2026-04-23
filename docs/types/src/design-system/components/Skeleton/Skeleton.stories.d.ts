@@ -1,0 +1,17 @@
+import { Meta, StoryObj } from '@storybook/react';
+import { Skeleton } from './Skeleton';
+declare const meta: Meta<typeof Skeleton>;
+export default meta;
+type Story = StoryObj<typeof Skeleton>;
+export declare const Default: Story;
+export declare const Variants: Story;
+export declare const Animations: Story;
+export declare const MultipleLines: Story;
+export declare const TextPreset: Story;
+export declare const AvatarPreset: Story;
+export declare const ButtonPreset: Story;
+export declare const ImagePreset: Story;
+export declare const CardPreset: Story;
+export declare const TablePreset: Story;
+export declare const LoadingState: Story;
+export declare const CompositeExample: Story;

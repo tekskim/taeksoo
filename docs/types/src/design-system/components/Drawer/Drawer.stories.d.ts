@@ -1,0 +1,13 @@
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { Drawer } from './Drawer';
+declare const meta: Meta<typeof Drawer>;
+export default meta;
+type Story = StoryObj<typeof Drawer>;
+export declare const Default: Story;
+export declare const LeftSide: Story;
+export declare const WithFooter: Story;
+export declare const EditForm: Story;
+export declare const WideDrawer: Story;
+export declare const NoBackdropClose: Story;
+export declare const NoTitle: Story;
+export declare const ScrollableContent: Story;

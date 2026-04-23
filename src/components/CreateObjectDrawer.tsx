@@ -2,7 +2,16 @@ import { Fragment, useState } from 'react';
 import { Drawer, Button, Input, FormField, FileListSection } from '@/design-system';
 import type { FileItem } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconUpload, IconX, IconCirclePlus } from '@tabler/icons-react';
+import {
+  IconUpload,
+  IconX,
+  IconCirclePlus,
+  IconChevronDown,
+  IconChevronRight,
+  IconFolder,
+  IconFolderOpen,
+} from '@tabler/icons-react';
+import type { FolderNode } from './CreateFolderDrawer';
 
 /* ----------------------------------------
    Types
@@ -25,6 +34,123 @@ interface Tag {
 type AclType = 'individual' | 'inherit';
 type Grantee = 'owner' | 'everyone' | 'authenticated';
 type Permission = 'full' | 'read' | 'write';
+
+/* ----------------------------------------
+   FolderTreeItem Component
+   ---------------------------------------- */
+
+interface FolderTreeItemProps {
+  folder: FolderNode;
+  level: number;
+  selectedPath: string | null;
+  expandedFolders: Set<string>;
+  onSelect: (path: string) => void;
+  onToggle: (folderId: string) => void;
+}
+
+function FolderTreeItem({
+  folder,
+  level,
+  selectedPath,
+  expandedFolders,
+  onSelect,
+  onToggle,
+}: FolderTreeItemProps) {
+  const hasChildren = folder.children && folder.children.length > 0;
+  const isExpanded = expandedFolders.has(folder.id);
+  const isSelected = selectedPath === folder.path;
+
+  return (
+    <div className="w-full">
+      <div
+        className={`flex items-center gap-1 h-6 cursor-pointer rounded transition-colors hover:bg-[var(--color-surface-subtle)] ${
+          isSelected ? 'text-[var(--color-action-primary)]' : ''
+        }`}
+        style={{ paddingLeft: `${level * 16}px` }}
+        onClick={() => onSelect(folder.path)}
+      >
+        {hasChildren ? (
+          <button
+            type="button"
+            className="p-0 bg-transparent border-none cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggle(folder.id);
+            }}
+          >
+            {isExpanded ? (
+              <IconChevronDown size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+            ) : (
+              <IconChevronRight
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-subtle)]"
+              />
+            )}
+          </button>
+        ) : (
+          <div className="w-4" />
+        )}
+        {isExpanded && hasChildren ? (
+          <IconFolderOpen
+            size={16}
+            stroke={1.5}
+            className={
+              isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
+            }
+          />
+        ) : (
+          <IconFolder
+            size={16}
+            stroke={1.5}
+            className={
+              isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
+            }
+          />
+        )}
+        <span
+          className={`text-label-sm leading-4 truncate ${
+            isSelected ? ' text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'
+          }`}
+        >
+          {folder.name}
+        </span>
+      </div>
+      {hasChildren && isExpanded && (
+        <div>
+          {folder.children!.map((child) => (
+            <FolderTreeItem
+              key={child.id}
+              folder={child}
+              level={level + 1}
+              selectedPath={selectedPath}
+              expandedFolders={expandedFolders}
+              onSelect={onSelect}
+              onToggle={onToggle}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const DEFAULT_FOLDERS: FolderNode[] = [
+  {
+    id: 'folder-a',
+    name: 'folder A',
+    path: '/folder A',
+    children: [
+      { id: 'folder-b', name: 'folder B', path: '/folder A/folder B' },
+      {
+        id: 'folder-c',
+        name: 'folder C',
+        path: '/folder A/folder C',
+        children: [{ id: 'folder-d', name: 'folder D', path: '/folder A/folder C/folder D' }],
+      },
+    ],
+  },
+];
 
 export interface CreateObjectDrawerProps {
   isOpen: boolean;
@@ -80,6 +206,17 @@ export function CreateObjectDrawer({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [filesError, setFilesError] = useState<string | null>(null);
+  const [selectedPath, setSelectedPath] = useState<string | null>(DEFAULT_FOLDERS[0]?.path ?? null);
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['folder-a']));
+
+  const handleToggleFolder = (folderId: string) => {
+    setExpandedFolders((prev) => {
+      const next = new Set(prev);
+      if (next.has(folderId)) next.delete(folderId);
+      else next.add(folderId);
+      return next;
+    });
+  };
 
   const handleRemoveFile = (fileId: string) => {
     setFiles((prev) => prev.filter((f) => f.id !== fileId));
@@ -161,16 +298,44 @@ export function CreateObjectDrawer({
       <VStack gap={6}>
         {/* Header */}
         {/* Folder Path */}
-        <FormField>
+        <FormField required>
           <FormField.Label>Folder path</FormField.Label>
           <FormField.Control>
-            <Input value="" placeholder={currentPath} fullWidth readOnly />
+            <Input value={selectedPath ?? ''} placeholder={currentPath} fullWidth readOnly />
           </FormField.Control>
         </FormField>
+
+        {/* Folder Location Tree */}
+        <VStack gap={3} className="w-full">
+          <div className="w-full p-[13px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)]">
+            <VStack gap={3}>
+              <span className="text-label-lg text-[var(--color-text-default)] leading-5">
+                Folder location
+              </span>
+              <div className="w-full">
+                {DEFAULT_FOLDERS.map((folder) => (
+                  <FolderTreeItem
+                    key={folder.id}
+                    folder={folder}
+                    level={0}
+                    selectedPath={selectedPath}
+                    expandedFolders={expandedFolders}
+                    onSelect={setSelectedPath}
+                    onToggle={handleToggleFolder}
+                  />
+                ))}
+              </div>
+            </VStack>
+          </div>
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            Choose a parent folder to create this folder in.
+          </p>
+        </VStack>
 
         {/* Upload Files Section */}
         <FileListSection
           label="Upload Files"
+          required
           files={files.map(
             (f): FileItem => ({
               id: f.id,
@@ -194,11 +359,11 @@ export function CreateObjectDrawer({
           <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
 
           <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-            <div className="grid grid-cols-[1fr_1fr_20px] gap-1 items-center">
+            <div className="grid grid-cols-[1fr_1fr_20px] gap-2 items-center">
               {tags.length > 0 && (
                 <>
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">Key</span>
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Value</span>
                   <div />
                 </>
               )}
