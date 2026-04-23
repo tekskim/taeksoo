@@ -18,6 +18,7 @@ import {
   Tooltip,
   PageShell,
   PageHeader,
+  ConfirmModal,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -940,6 +941,12 @@ export function InstanceListPage() {
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
   const [selectedBareMetalInstances, setSelectedBareMetalInstances] = useState<string[]>([]);
 
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [instances, setInstances] = useState<Instance[]>(() => [...mockInstances]);
+  const [bareMetalInstances, setBareMetalInstances] = useState<BareMetalInstance[]>(() => [
+    ...mockBareMetalInstances,
+  ]);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -1007,7 +1014,12 @@ export function InstanceListPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultVMColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Instances');
+  }, [updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -1030,7 +1042,7 @@ export function InstanceListPage() {
   };
 
   // Filter instances based on appliedFilters
-  const filteredInstances = mockInstances.filter((instance) => {
+  const filteredInstances = instances.filter((instance) => {
     if (appliedFilters.length === 0) return true;
 
     return appliedFilters.every((filter) => {
@@ -1054,7 +1066,7 @@ export function InstanceListPage() {
     });
   });
 
-  const filteredBareMetalInstances = mockBareMetalInstances.filter((instance) => {
+  const filteredBareMetalInstances = bareMetalInstances.filter((instance) => {
     if (appliedFilters.length === 0) return true;
 
     return appliedFilters.every((filter) => {
@@ -1258,7 +1270,7 @@ export function InstanceListPage() {
     },
     {
       id: 'storage-snapshot',
-      label: 'Storage&Snapshot',
+      label: 'Storage & Snapshot',
       submenu: [
         {
           id: 'attach-volume',
@@ -1477,6 +1489,7 @@ export function InstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.vcpu,
       sortable: true,
+      align: 'right',
     },
     {
       key: 'ram',
@@ -1484,6 +1497,7 @@ export function InstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.ram,
       sortable: true,
+      align: 'right',
     },
     {
       key: 'disk',
@@ -1491,6 +1505,7 @@ export function InstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.disk,
       sortable: true,
+      align: 'right',
     },
     {
       key: 'gpu',
@@ -1498,6 +1513,7 @@ export function InstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.gpu,
       sortable: true,
+      align: 'right',
     },
     {
       key: 'az',
@@ -1646,6 +1662,7 @@ export function InstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.cpu,
       sortable: true,
+      align: 'right',
     },
     {
       key: 'ram',
@@ -1653,6 +1670,7 @@ export function InstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.ram,
       sortable: true,
+      align: 'right',
     },
     {
       key: 'disk',
@@ -1660,6 +1678,7 @@ export function InstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.disk,
       sortable: true,
+      align: 'right',
     },
     {
       key: 'gpu',
@@ -1667,6 +1686,7 @@ export function InstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.gpu,
       sortable: true,
+      align: 'right',
     },
     {
       key: 'az',
@@ -1787,6 +1807,7 @@ export function InstanceListPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -1801,6 +1822,13 @@ export function InstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => {
+                  if (activeTab === 'vm') {
+                    console.log('Start instances:', selectedInstances);
+                  } else {
+                    console.log('Start instances:', selectedBareMetalInstances);
+                  }
+                }}
               >
                 Start
               </Button>
@@ -1813,6 +1841,13 @@ export function InstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => {
+                  if (activeTab === 'vm') {
+                    console.log('Stop instances:', selectedInstances);
+                  } else {
+                    console.log('Stop instances:', selectedBareMetalInstances);
+                  }
+                }}
               >
                 Stop
               </Button>
@@ -1825,6 +1860,13 @@ export function InstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => {
+                  if (activeTab === 'vm') {
+                    console.log('Reboot instances:', selectedInstances);
+                  } else {
+                    console.log('Reboot instances:', selectedBareMetalInstances);
+                  }
+                }}
               >
                 Reboot
               </Button>
@@ -1837,6 +1879,7 @@ export function InstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -1845,6 +1888,28 @@ export function InstanceListPage() {
           filters={toolbarFilters}
           onFilterRemove={removeFilter}
           onFiltersClear={clearAllFilters}
+        />
+
+        <ConfirmModal
+          isOpen={isBulkDeleteOpen}
+          onClose={() => setIsBulkDeleteOpen(false)}
+          onConfirm={() => {
+            if (activeTab === 'vm') {
+              setInstances((prev) => prev.filter((i) => !selectedInstances.includes(i.id)));
+              setSelectedInstances([]);
+            } else {
+              setBareMetalInstances((prev) =>
+                prev.filter((i) => !selectedBareMetalInstances.includes(i.id))
+              );
+              setSelectedBareMetalInstances([]);
+            }
+            setIsBulkDeleteOpen(false);
+          }}
+          title={activeTab === 'vm' ? 'Delete instances' : 'Delete bare metal instances'}
+          description="Removing the selected instances is permanent and cannot be undone."
+          confirmText="Delete"
+          cancelText="Cancel"
+          confirmVariant="danger"
         />
 
         {/* Pagination */}

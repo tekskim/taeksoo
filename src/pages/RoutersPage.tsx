@@ -241,6 +241,7 @@ export function RoutersPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [routerToDelete, setRouterToDelete] = useState<Router | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Create router drawer state
   const [isCreateRouterDrawerOpen, setIsCreateRouterDrawerOpen] = useState(false);
@@ -270,7 +271,16 @@ export function RoutersPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Routers');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -402,15 +412,40 @@ export function RoutersPage() {
       width: fixedColumns.actions,
       align: 'center',
       sticky: 'right',
-      render: () => (
+      render: (_value: unknown, row: Router) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
             items={[
-              { id: 'connect-subnet', label: 'Connect subnet', onClick: () => {} },
-              { id: 'disconnect-subnet', label: 'Disconnect subnet', onClick: () => {} },
-              { id: 'external-gateway', label: 'External gateway Setting', onClick: () => {} },
-              { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+              {
+                id: 'connect-subnet',
+                label: 'Connect subnet',
+                onClick: () => navigate(`/compute/routers/${row.id}?tab=interfaces`),
+              },
+              {
+                id: 'disconnect-subnet',
+                label: 'Disconnect subnet',
+                onClick: () => navigate(`/compute/routers/${row.id}?tab=interfaces`),
+              },
+              {
+                id: 'external-gateway',
+                label: 'External gateway setting',
+                onClick: () => navigate(`/compute/routers/${row.id}?tab=details`),
+              },
+              {
+                id: 'edit',
+                label: 'Edit',
+                onClick: () => navigate(`/compute/routers/${row.id}?tab=details`),
+                divider: true,
+              },
+              {
+                id: 'delete',
+                label: 'Delete',
+                status: 'danger',
+                onClick: () => {
+                  setRouterToDelete(row);
+                  setDeleteModalOpen(true);
+                },
+              },
             ]}
             trigger="click"
           >
@@ -448,6 +483,11 @@ export function RoutersPage() {
     setRouterToDelete(null);
   };
 
+  const handleBulkDelete = () => {
+    setIsBulkDeleteOpen(false);
+    setSelectedRouters([]);
+  };
+
   return (
     <PageShell
       sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
@@ -474,6 +514,7 @@ export function RoutersPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Routers' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -503,6 +544,7 @@ export function RoutersPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -513,6 +555,7 @@ export function RoutersPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedRouters.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -574,6 +617,19 @@ export function RoutersPage() {
       <CreateRouterDrawer
         isOpen={isCreateRouterDrawerOpen}
         onClose={() => setIsCreateRouterDrawerOpen(false)}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected routers"
+        description="Removing the selected routers is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRouters.length} router(s)`}
       />
     </PageShell>
   );

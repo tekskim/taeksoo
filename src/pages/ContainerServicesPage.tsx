@@ -13,6 +13,7 @@ import {
   PageShell,
   PageHeader,
   ListToolbar,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -129,12 +130,27 @@ const servicesData: ServiceRow[] = [
 
 export function ContainerServicesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [services, setServices] = useState(servicesData);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    updateActiveTabLabel('Services');
+  }, [updateActiveTabLabel]);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -149,8 +165,8 @@ export function ContainerServicesPage() {
 
   const filteredServices = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
-    if (!q) return servicesData;
-    return servicesData.filter((row) => {
+    if (!q) return services;
+    return services.filter((row) => {
       if (row.name.toLowerCase().includes(q) || row.namespace.toLowerCase().includes(q)) {
         return true;
       }
@@ -166,7 +182,13 @@ export function ContainerServicesPage() {
       if (row.ipAddresses.some((ip) => ip.toLowerCase().includes(q))) return true;
       return false;
     });
-  }, [searchTerm]);
+  }, [searchTerm, services]);
+
+  const handleBulkDeleteServices = () => {
+    setServices((prev) => prev.filter((s) => !selectedRows.includes(s.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
 
   // Create menu items
   const createDropdownItems: ContextMenuItem[] = [
@@ -554,6 +576,7 @@ export function ContainerServicesPage() {
                 size="sm"
                 aria-label="Download"
                 className="!p-0 !w-7 !h-7 !min-w-7"
+                onClick={() => console.log('Download')}
               >
                 <IconDownload size={12} stroke={1.5} />
               </Button>
@@ -566,6 +589,7 @@ export function ContainerServicesPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML')}
               >
                 Download YAML
               </Button>
@@ -574,6 +598,7 @@ export function ContainerServicesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -611,6 +636,19 @@ export function ContainerServicesPage() {
           emptyMessage="No services found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteServices}
+        title="Delete selected services"
+        description="Removing the selected services is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} service(s)`}
+      />
     </PageShell>
   );
 }

@@ -25,9 +25,10 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconPlus } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
+import { CreateServerGroupDrawer } from '@/components/CreateServerGroupDrawer';
 
 /* ----------------------------------------
    Types
@@ -170,9 +171,13 @@ export function ServerGroupsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [serverGroups, setServerGroups] = useState(mockServerGroups);
 
+  // Create drawer state
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [serverGroupToDelete, setServerGroupToDelete] = useState<ServerGroup | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -195,7 +200,16 @@ export function ServerGroupsPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Server Groups');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -259,7 +273,7 @@ export function ServerGroupsPage() {
     }
   };
 
-  const handleBulkDelete = () => {
+  const performBulkDelete = () => {
     setServerGroups((prev) => prev.filter((sg) => !selectedServerGroups.includes(sg.id)));
     setSelectedServerGroups([]);
   };
@@ -427,13 +441,19 @@ export function ServerGroupsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Server Groups' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
         <PageHeader
           title="Server groups"
           actions={
-            <Button variant="primary" size="md">
+            <Button
+              variant="primary"
+              size="md"
+              leftIcon={<IconPlus size={12} />}
+              onClick={() => setIsCreateDrawerOpen(true)}
+            >
               Create Server Group
             </Button>
           }
@@ -455,6 +475,7 @@ export function ServerGroupsPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -465,7 +486,7 @@ export function ServerGroupsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedServerGroups.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -511,6 +532,20 @@ export function ServerGroupsPage() {
         infoValue={serverGroupToDelete?.name}
       />
 
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={() => {
+          performBulkDelete();
+          setIsBulkDeleteOpen(false);
+        }}
+        title="Delete selected server groups"
+        description="Removing the selected server groups is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+      />
+
       {/* View Preferences Drawer */}
       <ViewPreferencesDrawer
         isOpen={isPreferencesOpen}
@@ -520,6 +555,12 @@ export function ServerGroupsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Create Server Group Drawer */}
+      <CreateServerGroupDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
       />
     </PageShell>
   );

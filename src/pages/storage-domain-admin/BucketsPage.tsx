@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -14,9 +14,11 @@ import {
   PageHeader,
   fixedColumns,
   columnMinWidths,
+  ConfirmModal,
   type TableColumn,
   type FilterField,
   type AppliedFilter,
+  type FilterItem,
 } from '@/design-system';
 import { StorageDomainAdminSidebar as StorageSidebar } from '@/components/StorageDomainAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -189,7 +191,13 @@ function NameCell({ id, name }: NameCellProps) {
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
+  { id: 'domain', label: 'Domain', type: 'text' },
   { id: 'owner', label: 'Owner', type: 'text' },
+  { id: 'usedCapacity', label: 'Used capacity', type: 'text' },
+  { id: 'capacityLimit', label: 'Capacity limit', type: 'text' },
+  { id: 'objects', label: 'Objects', type: 'text' },
+  { id: 'objectLimit', label: 'Object limit', type: 'text' },
+  { id: 'creationDate', label: 'Created at', type: 'text' },
 ];
 
 export function BucketsPage() {
@@ -198,17 +206,23 @@ export function BucketsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [buckets, setBuckets] = useState<Bucket[]>(mockBuckets);
   const rowsPerPage = 10;
   const [loading, setLoading] = useState(true);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    updateActiveTabLabel('Buckets');
+  }, [updateActiveTabLabel]);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -220,16 +234,32 @@ export function BucketsPage() {
     closable: tab.closable,
   }));
 
-  // Filter buckets based on search
-  const filteredBuckets = useMemo(
-    () =>
-      mockBuckets.filter(
-        (bucket) =>
-          bucket.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          bucket.owner.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    [searchQuery]
-  );
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  // Filter buckets by applied filters
+  const filteredBuckets = useMemo(() => {
+    if (appliedFilters.length === 0) return buckets;
+    return buckets.filter((bucket) => {
+      return appliedFilters.every((filter) => {
+        const value = String(bucket[filter.fieldId as keyof Bucket] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [buckets, appliedFilters]);
+
+  const handleBulkDelete = () => {
+    setBuckets((prev) => prev.filter((b) => !selectedRows.includes(b.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
+  };
 
   // Calculate pagination
   const totalItems = filteredBuckets.length;
@@ -348,6 +378,7 @@ export function BucketsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Buckets' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -368,16 +399,18 @@ export function BucketsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <div className="w-[var(--search-input-width)]">
-                <SearchInput
-                  placeholder="Search buckets by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
-                  size="sm"
-                  fullWidth
-                />
-              </div>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={(f) => {
+                  setAppliedFilters(f);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
+              />
               <Button
                 variant="secondary"
                 size="sm"
@@ -401,11 +434,15 @@ export function BucketsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={!hasSelection}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={() => setAppliedFilters([])}
         />
 
         {/* Pagination */}
@@ -431,6 +468,19 @@ export function BucketsPage() {
           loading={loading}
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected buckets"
+        description="Deleting the selected buckets is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} bucket(s)`}
+      />
     </PageShell>
   );
 }

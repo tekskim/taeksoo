@@ -11,6 +11,7 @@ import {
   Pagination,
   ListToolbar,
   ContextMenu,
+  ConfirmModal,
   PageShell,
   PageHeader,
   type TableColumn,
@@ -101,12 +102,27 @@ const ingressesData: IngressRow[] = [
 
 export function ContainerIngressesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [ingresses, setIngresses] = useState(ingressesData);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    updateActiveTabLabel('Ingresses');
+  }, [updateActiveTabLabel]);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -149,8 +165,8 @@ export function ContainerIngressesPage() {
 
   const filteredData = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
-    if (!q) return ingressesData;
-    return ingressesData.filter((row) => {
+    if (!q) return ingresses;
+    return ingresses.filter((row) => {
       const haystack = [
         row.name,
         row.namespace,
@@ -164,7 +180,13 @@ export function ContainerIngressesPage() {
         .toLowerCase();
       return haystack.includes(q);
     });
-  }, [searchTerm]);
+  }, [searchTerm, ingresses]);
+
+  const handleBulkDeleteIngresses = () => {
+    setIngresses((prev) => prev.filter((r) => !selectedRows.includes(r.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
 
   // Pagination
   const rowsPerPage = 10;
@@ -426,6 +448,7 @@ export function ContainerIngressesPage() {
                 size="sm"
                 icon={<IconDownload size={12} stroke={1.5} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -436,6 +459,7 @@ export function ContainerIngressesPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML')}
               >
                 Download YAML
               </Button>
@@ -444,6 +468,7 @@ export function ContainerIngressesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -480,6 +505,19 @@ export function ContainerIngressesPage() {
           emptyMessage="No ingresses found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteIngresses}
+        title="Delete selected ingresses"
+        description="Removing the selected ingresses is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} ingress(es)`}
+      />
     </PageShell>
   );
 }

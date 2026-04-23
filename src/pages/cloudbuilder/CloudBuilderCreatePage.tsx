@@ -11,7 +11,8 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  WizardSectionStatusIcon,
+  WizardSummary,
+  type WizardSectionState,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -26,6 +27,14 @@ import {
 function isCloudBuilderSlug(v: string | undefined): v is CloudBuilderSlug {
   return !!v && (CLOUD_BUILDER_SLUGS as readonly string[]).includes(v);
 }
+
+type CloudBuilderSummaryKey = 'bmc' | 'discovered' | 'allocation';
+const SECTION_ORDER: CloudBuilderSummaryKey[] = ['bmc', 'discovered', 'allocation'];
+const SECTION_LABELS: Record<CloudBuilderSummaryKey, string> = {
+  bmc: 'BMC connection',
+  discovered: 'Discovered information',
+  allocation: 'Basic information',
+};
 
 interface SummarySidebarProps {
   bmcComplete: boolean;
@@ -44,40 +53,22 @@ function SummarySidebar({
   onRegister,
   isRegisterDisabled,
 }: SummarySidebarProps) {
+  const sectionStatus: Record<CloudBuilderSummaryKey, WizardSectionState> = {
+    bmc: bmcComplete ? 'done' : 'active',
+    discovered: discoveredComplete ? 'done' : 'active',
+    allocation: allocationComplete ? 'done' : 'active',
+  };
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
-          <VStack gap={4}>
-            <h5 className="text-heading-h6 text-[var(--color-text-default)]">Summary</h5>
-            <VStack gap={2}>
-              <HStack gap={2} align="center">
-                <WizardSectionStatusIcon status={bmcComplete ? 'done' : 'active'} size="sm" />
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  BMC connection
-                </span>
-              </HStack>
-              <HStack gap={2} align="center">
-                <WizardSectionStatusIcon
-                  status={discoveredComplete ? 'done' : 'active'}
-                  size="sm"
-                />
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  Discovered information
-                </span>
-              </HStack>
-              <HStack gap={2} align="center">
-                <WizardSectionStatusIcon
-                  status={allocationComplete ? 'done' : 'active'}
-                  size="sm"
-                />
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  Basic information
-                </span>
-              </HStack>
-            </VStack>
-          </VStack>
-        </div>
+        <WizardSummary
+          items={SECTION_ORDER.map((key) => ({
+            key,
+            label: SECTION_LABELS[key],
+            status: sectionStatus[key],
+          }))}
+        />
 
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel}>

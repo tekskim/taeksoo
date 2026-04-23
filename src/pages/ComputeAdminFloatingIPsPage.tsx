@@ -571,6 +571,7 @@ export function ComputeAdminFloatingIPsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Floating IPs' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader

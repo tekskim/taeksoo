@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import {
   VStack,
@@ -9,7 +10,6 @@ import {
   Table,
   Badge,
   PageShell,
-  PageHeader,
   type TableColumn,
 } from '@/design-system';
 import { columnMinWidths } from '@/design-system/presets/columnWidths';
@@ -225,6 +225,7 @@ function ResourceCard({ label, value }: ResourceCardProps) {
    ---------------------------------------- */
 
 export function IAMHomePage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -297,7 +298,12 @@ export function IAMHomePage() {
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'IAM' }, { label: 'Home' }]} />}
           actions={
-            <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+            <button
+              type="button"
+              aria-label="Search"
+              onClick={() => navigate('/iam/users')}
+              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+            >
               <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
             </button>
           }
@@ -306,7 +312,6 @@ export function IAMHomePage() {
       contentClassName="px-8 py-6"
     >
       <VStack gap={6}>
-        <PageHeader title="Dashboard" />
         {/* Row 1: Domain Info + Authentication Summary */}
         <div className="grid grid-cols-[320px_1fr] gap-6">
           {/* Domain Info Card */}

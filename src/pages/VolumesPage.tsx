@@ -229,6 +229,7 @@ export function VolumesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [volumeToDelete, setVolumeToDelete] = useState<Volume | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Selection state
   const [selectedVolumes, setSelectedVolumes] = useState<string[]>([]);
@@ -334,7 +335,24 @@ export function VolumesPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, openInNewTab, addNewTab, moveTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    closeTab,
+    selectTab,
+    openInNewTab,
+    addNewTab,
+    moveTab,
+    updateActiveTabLabel,
+  } = useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Volumes');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -367,6 +385,12 @@ export function VolumesPage() {
   const handleDeleteCancel = () => {
     setDeleteModalOpen(false);
     setVolumeToDelete(null);
+  };
+
+  const handleBulkDelete = () => {
+    setVolumes((prev) => prev.filter((v) => !selectedVolumes.includes(v.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedVolumes([]);
   };
 
   // Filter volumes by applied filters
@@ -638,7 +662,11 @@ export function VolumesPage() {
           title="Volumes"
           actions={
             <>
-              <Button variant="primary" size="md">
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => console.log('Accept volume transfer')}
+              >
                 Accept Volume Transfer
               </Button>
               <Button size="md" as={Link} to="/compute/volumes/create">
@@ -665,6 +693,7 @@ export function VolumesPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -675,6 +704,7 @@ export function VolumesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedVolumes.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -712,12 +742,25 @@ export function VolumesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete volume"
-        description="Removing the selected volumes is permanent and cannot be undone."
+        description="Removing this volume is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         infoLabel="Volume name"
         infoValue={volumeToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected volumes"
+        description="Removing the selected volumes is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedVolumes.length} volume(s)`}
       />
 
       {/* View Preferences Drawer */}

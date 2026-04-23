@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useCallback, useMemo, Suspense } fr
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
 import {
-  IconLayoutDashboard,
   IconCheck,
   IconSelector,
   IconCircleCheck,
@@ -31,7 +30,6 @@ import AppIconContainer from '@/assets/appIcon/container.png';
 import AppIconStorage from '@/assets/appIcon/storage.png';
 import { motion, Reorder, AnimatePresence } from 'framer-motion';
 import {
-  Link,
   MemoryRouter,
   Routes,
   Route,
@@ -2257,13 +2255,6 @@ export function DesktopPage() {
       </AnimatePresence>
 
       {/* Main Page Navigation Button - Bottom Left */}
-      <Link
-        to="/"
-        className="absolute bottom-6 left-6 flex items-center gap-2 px-4 py-2 bg-[var(--desktop-glass-bg)] hover:bg-[var(--desktop-glass-bg-strong)] backdrop-blur-sm rounded-[var(--radius-lg)] text-[var(--desktop-text)] text-sm font-medium transition-all hover:-translate-y-0.5"
-      >
-        <IconLayoutDashboard size={18} stroke={1.5} />
-        <span>Go to main page</span>
-      </Link>
     </div>
   );
 }

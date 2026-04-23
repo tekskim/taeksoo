@@ -18,7 +18,9 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
+  ErrorState,
   Chip,
+  ConfirmModal,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
@@ -261,26 +263,6 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     serverGroup: 'gpu-group',
     userData: '-',
   },
-};
-
-// Default instance detail for unknown IDs
-const defaultInstanceDetail: InstanceDetail = {
-  id: 'unknown',
-  name: 'Unknown Instance',
-  status: 'active',
-  host: 'compute-03',
-  createdAt: 'Jul 25, 2026 10:32:16',
-  availabilityZone: 'nova',
-  description: '-',
-  flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
-  image: 'Unknown',
-  os: 'Unknown',
-  origin: '-',
-  locked: false,
-  interfaces: 0,
-  keyPair: '-',
-  serverGroup: '-',
-  userData: '-',
 };
 
 const mockAttachedVolumes: AttachedVolume[] = [
@@ -1033,6 +1015,7 @@ export function InstanceDetailPage() {
     mockNetworkInterfaces[0]?.id || ''
   );
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Volumes tab — search & pagination
   const [volumeSearchTerm, setVolumeSearchTerm] = useState('');
@@ -1190,17 +1173,17 @@ export function InstanceDetailPage() {
   };
 
   // Get instance data based on the ID from URL
-  const instance = id ? mockInstancesMap[id] || defaultInstanceDetail : defaultInstanceDetail;
+  const instance = id ? mockInstancesMap[id] : undefined;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to instance name
   useEffect(() => {
-    if (instance.name) {
+    if (instance?.name) {
       updateActiveTabLabel(instance.name);
     }
-  }, [instance.name, updateActiveTabLabel]);
+  }, [instance?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -1208,6 +1191,49 @@ export function InstanceDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!instance) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Instances', href: '/compute/instances' }, { label: id ?? '—' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Instance not found"
+          description={`The instance with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/instances')}>
+              Back to instances
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell
@@ -1244,19 +1270,44 @@ export function InstanceDetailPage() {
           <DetailHeader.Title>{instance.name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTerminal2 size={12} />}
+              onClick={() => console.log('Action:', instance.id)}
+            >
               Console
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPlayerPlay size={12} />}
+              onClick={() => console.log('Action:', instance.id)}
+            >
               Start
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPlayerStop size={12} />}
+              onClick={() => console.log('Action:', instance.id)}
+            >
               Stop
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPower size={12} />}
+              onClick={() => console.log('Action:', instance.id)}
+            >
               Reboot
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
             <ContextMenu
@@ -1265,57 +1316,105 @@ export function InstanceDetailPage() {
                   id: 'instance-status',
                   label: 'Instance status',
                   submenu: [
-                    { id: 'soft-reboot-sub', label: 'Soft reboot', onClick: () => {} },
-                    { id: 'pause-sub', label: 'Pause', onClick: () => {} },
-                    { id: 'suspend-sub', label: 'Suspend', onClick: () => {} },
-                    { id: 'shelve-sub', label: 'Shelve', onClick: () => {} },
-                    { id: 'unpause-sub', label: 'Unpause', onClick: () => {} },
-                    { id: 'resume-sub', label: 'Resume', onClick: () => {} },
-                    { id: 'unshelve-sub', label: 'Unshelve', onClick: () => {} },
-                    { id: 'rescue-sub', label: 'Rescue', onClick: () => {} },
-                    { id: 'unrescue-sub', label: 'Unrescue', onClick: () => {} },
+                    {
+                      id: 'soft-reboot-sub',
+                      label: 'Soft reboot',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'pause-sub',
+                      label: 'Pause',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'suspend-sub',
+                      label: 'Suspend',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'shelve-sub',
+                      label: 'Shelve',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'unpause-sub',
+                      label: 'Unpause',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'resume-sub',
+                      label: 'Resume',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'unshelve-sub',
+                      label: 'Unshelve',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'rescue-sub',
+                      label: 'Rescue',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'unrescue-sub',
+                      label: 'Unrescue',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                   ],
                 },
                 {
                   id: 'storage-snapshot',
-                  label: 'Storage&Snapshot',
+                  label: 'Storage & Snapshot',
                   submenu: [
-                    { id: 'attach-volume', label: 'Attach volume', onClick: () => {} },
+                    {
+                      id: 'attach-volume',
+                      label: 'Attach volume',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                     {
                       id: 'detach-volume',
                       label: 'Detach volume',
                       status: 'danger',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
-                    { id: 'create-snapshot', label: 'Create instance snapshot', onClick: () => {} },
+                    {
+                      id: 'create-snapshot',
+                      label: 'Create instance snapshot',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                   ],
                 },
                 {
                   id: 'network',
                   label: 'Network',
                   submenu: [
-                    { id: 'attach-interface', label: 'Attach interface', onClick: () => {} },
+                    {
+                      id: 'attach-interface',
+                      label: 'Attach interface',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                     {
                       id: 'detach-interface',
                       label: 'Detach interface',
                       status: 'danger',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
                     {
                       id: 'associate-floating-ip',
                       label: 'Associate floating IP',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
                     {
                       id: 'disassociate-floating-ip',
                       label: 'Disassociate floating IP',
                       status: 'danger',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
                     {
                       id: 'manage-security-groups',
                       label: 'Manage security groups',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
                   ],
                 },
@@ -1323,15 +1422,44 @@ export function InstanceDetailPage() {
                   id: 'configuration',
                   label: 'Configuration',
                   submenu: [
-                    { id: 'lock-setting', label: 'Lock setting', onClick: () => {} },
-                    { id: 'rebuild', label: 'Rebuild', status: 'danger', onClick: () => {} },
-                    { id: 'resize', label: 'Resize', onClick: () => {} },
-                    { id: 'manage-tags', label: 'Manage tags', onClick: () => {} },
-                    { id: 'edit', label: 'Edit', onClick: () => {} },
+                    {
+                      id: 'lock-setting',
+                      label: 'Lock setting',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'rebuild',
+                      label: 'Rebuild',
+                      status: 'danger',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'resize',
+                      label: 'Resize',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'manage-tags',
+                      label: 'Manage tags',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'edit',
+                      label: 'Edit',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                   ],
                 },
-                { id: 'confirm-resize', label: 'Confirm resize', onClick: () => {} },
-                { id: 'revert-resize', label: 'Revert resize', onClick: () => {} },
+                {
+                  id: 'confirm-resize',
+                  label: 'Confirm resize',
+                  onClick: () => console.log('Action:', instance.id),
+                },
+                {
+                  id: 'revert-resize',
+                  label: 'Revert resize',
+                  onClick: () => console.log('Action:', instance.id),
+                },
               ]}
               trigger="click"
             >
@@ -1506,7 +1634,12 @@ export function InstanceDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Volumes</h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSquarePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconSquarePlus size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Attach volume
                   </Button>
                 </div>
@@ -1613,35 +1746,35 @@ export function InstanceDetailPage() {
                               {
                                 id: 'create-snapshot',
                                 label: 'Create volume snapshot',
-                                onClick: () => {},
+                                onClick: () => console.log('Action:', instance.id),
                               },
                               {
                                 id: 'create-backup',
                                 label: 'Create volume backup',
-                                onClick: () => {},
+                                onClick: () => console.log('Action:', instance.id),
                               },
                               {
                                 id: 'clone-volume',
                                 label: 'Clone volume',
-                                onClick: () => {},
+                                onClick: () => console.log('Action:', instance.id),
                               },
                             ],
                           },
                           {
                             id: 'extend-volume',
                             label: 'Extend volume',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'bootable',
                             label: 'Bootable',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'detach',
                             label: 'Detach',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
@@ -1676,7 +1809,12 @@ export function InstanceDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Interfaces</h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSquarePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconSquarePlus size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Attach interface
                   </Button>
                 </div>
@@ -1813,7 +1951,7 @@ export function InstanceDetailPage() {
                             id: 'detach',
                             label: 'Detach',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
@@ -1848,7 +1986,12 @@ export function InstanceDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Floating IPs</h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconLinkPlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconLinkPlus size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Associate floating IP
                   </Button>
                 </div>
@@ -1925,7 +2068,7 @@ export function InstanceDetailPage() {
                             id: 'disassociate',
                             label: 'Disassociate',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
@@ -1962,7 +2105,12 @@ export function InstanceDetailPage() {
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Security groups
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconSettings size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Manage security group
                   </Button>
                 </div>
@@ -2058,7 +2206,7 @@ export function InstanceDetailPage() {
                             id: 'detach',
                             label: 'Detach',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
@@ -2099,7 +2247,12 @@ export function InstanceDetailPage() {
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Instance snapshots
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Create Snapshot
                   </Button>
                 </div>
@@ -2205,23 +2358,23 @@ export function InstanceDetailPage() {
                           {
                             id: 'edit',
                             label: 'Edit',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'create-instance',
                             label: 'Create instance',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'create-volume',
                             label: 'Create volume',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'delete',
                             label: 'Delete',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
@@ -2531,6 +2684,22 @@ export function InstanceDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/instances');
+        }}
+        title="Delete instance"
+        description="This will permanently delete this instance. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Instance"
+        infoValue={instance.name}
+      />
     </PageShell>
   );
 }

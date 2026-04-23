@@ -246,12 +246,12 @@ export function LoadBalancersPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loadBalancers] = useState(mockLoadBalancers);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [loadBalancers, setLoadBalancers] = useState(mockLoadBalancers);
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [lbToDelete, setLbToDelete] = useState<LoadBalancer | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -294,7 +294,16 @@ export function LoadBalancersPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Load Balancers');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -311,13 +320,13 @@ export function LoadBalancersPage() {
       id: 'associate-floating-ip',
       label: 'Associate floating IP',
       onClick: () => handleAssociateFloatingIP(lb),
-      disabled: !!lb.floatingIp,
+      disabled: !!lb.floatingIp && lb.floatingIp !== '-',
     },
     {
       id: 'disassociate-floating-ip',
       label: 'Disassociate floating IP',
       onClick: () => console.log('Disassociate floating IP:', lb.id),
-      disabled: !lb.floatingIp,
+      disabled: !lb.floatingIp || lb.floatingIp === '-',
     },
     {
       id: 'create-listener',
@@ -557,10 +566,17 @@ export function LoadBalancersPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && lbToDelete) {
-      // Handle delete
+      setLoadBalancers((prev) => prev.filter((lb) => lb.id !== lbToDelete.id));
       setDeleteModalOpen(false);
       setLbToDelete(null);
+      setSelectedLBs((prev) => prev.filter((id) => id !== lbToDelete.id));
     }
+  };
+
+  const handleBulkDelete = () => {
+    setLoadBalancers((prev) => prev.filter((lb) => !selectedLBs.includes(lb.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedLBs([]);
   };
 
   return (
@@ -589,6 +605,7 @@ export function LoadBalancersPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Load Balancers' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -634,6 +651,7 @@ export function LoadBalancersPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedLBs.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -710,6 +728,19 @@ export function LoadBalancersPage() {
           id: selectedLBForDrawer?.id || '',
           name: selectedLBForDrawer?.name || '',
         }}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected load balancers"
+        description="Removing the selected load balancers is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedLBs.length} load balancer(s)`}
       />
     </PageShell>
   );

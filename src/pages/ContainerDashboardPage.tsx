@@ -67,7 +67,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
       bg: 'var(--color-state-success-bg)',
       darkBg: 'color-mix(in srgb, var(--color-state-success) 15%, transparent)',
       fill: 'var(--color-state-success)',
-      text: 'var(--color-green-600)',
+      text: 'var(--color-state-success-text)',
     },
     warning: {
       bg: 'var(--color-state-warning-bg)',
@@ -479,7 +479,7 @@ export function ContainerDashboardPage() {
               label="CPU (Reserved)"
               used={3.6}
               total={16.0}
-              unit="GiB"
+              unit="cores"
               percentage={50.2}
             />
             <CapacityProgressBar

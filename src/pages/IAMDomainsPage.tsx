@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
 import {
   Button,
   Pagination,
   Table,
-  SearchInput,
+  FilterSearchInput,
   TopBar,
   Breadcrumb,
   VStack,
@@ -15,10 +15,13 @@ import {
   StatusIndicator,
   PageShell,
   PageHeader,
+  ListToolbar,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { DomainCreateDrawer } from '@/components/DomainCreateDrawer';
@@ -112,15 +115,30 @@ const mockDomains: Domain[] = [
   },
 ];
 
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'inactive', label: 'Inactive' },
+      { value: 'pending', label: 'Pending' },
+    ],
+  },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
 /* ----------------------------------------
    IAM Domains Page
    ---------------------------------------- */
 export default function IAMDomainsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -137,15 +155,21 @@ export default function IAMDomainsPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter domains by search query
-  const filteredDomains = mockDomains.filter(
-    (domain) =>
-      domain.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      domain.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredDomains = useMemo(() => {
+    return mockDomains.filter((domain) => {
+      return appliedFilters.every((filter) => {
+        const value = String(domain[filter.fieldId as keyof Domain] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [appliedFilters]);
 
   // Pagination
   const totalPages = Math.ceil(filteredDomains.length / itemsPerPage);
@@ -223,6 +247,7 @@ export default function IAMDomainsPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
             title="Open console"
             aria-label="Open console"
+            onClick={() => console.log('Open console')}
           >
             <ArrowRightLeft
               size={16}
@@ -287,24 +312,28 @@ export default function IAMDomainsPage() {
 
           {/* Table Content */}
           <VStack gap={3} className="w-full">
-            {/* Action Bar */}
-            <HStack gap={2} align="center">
-              {/* Search */}
-              <HStack gap={1} align="center">
-                <SearchInput
-                  placeholder="Search domains by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-[var(--search-input-width)]"
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={<IconDownload size={12} />}
-                  aria-label="Download"
-                />
-              </HStack>
-            </HStack>
+            <ListToolbar
+              primaryActions={
+                <ListToolbar.Actions>
+                  <FilterSearchInput
+                    filters={filterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search domains by attributes"
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                    hideAppliedFilters
+                  />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconDownload size={12} />}
+                    aria-label="Download"
+                    onClick={() => console.log('Download')}
+                  />
+                </ListToolbar.Actions>
+              }
+            />
 
             {/* Pagination */}
             <Pagination
@@ -313,7 +342,6 @@ export default function IAMDomainsPage() {
               onPageChange={setCurrentPage}
               showSettings
               totalItems={filteredDomains.length}
-              selectedCount={selectedRows.length}
             />
 
             {/* Table */}

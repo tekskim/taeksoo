@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -12,11 +12,14 @@ import {
   PageShell,
   PageHeader,
   ListToolbar,
+  ConfirmModal,
   StatusIndicator,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { CreateServiceAccountDrawer } from '@/components/CreateServiceAccountDrawer';
@@ -140,6 +143,24 @@ const mockServiceAccounts: ServiceAccount[] = [
   },
 ];
 
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'id', label: 'ID', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'inactive', label: 'Inactive' },
+    ],
+  },
+  { id: 'description', label: 'Description', type: 'text' },
+  { id: 'apiKeysUsed', label: 'API keys used', type: 'text' },
+  { id: 'apiKeysMax', label: 'API keys max', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
 /* ----------------------------------------
    IAM Service Accounts Page
    ---------------------------------------- */
@@ -147,9 +168,11 @@ const mockServiceAccounts: ServiceAccount[] = [
 export function IAMServiceAccountsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [serviceAccounts, setServiceAccounts] = useState(mockServiceAccounts);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [managePoliciesAccount, setManagePoliciesAccount] = useState<ServiceAccount | null>(null);
   const [editingAccount, setEditingAccount] = useState<ServiceAccount | null>(null);
@@ -166,14 +189,21 @@ export function IAMServiceAccountsPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  const filteredAccounts = mockServiceAccounts.filter(
-    (account) =>
-      account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      account.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      account.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredAccounts = useMemo(() => {
+    return serviceAccounts.filter((account) => {
+      return appliedFilters.every((filter) => {
+        const raw = account[filter.fieldId as keyof ServiceAccount];
+        const value = String(typeof raw === 'number' ? raw : (raw ?? '')).toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [serviceAccounts, appliedFilters]);
 
   const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
@@ -183,6 +213,12 @@ export function IAMServiceAccountsPage() {
   );
 
   const hasSelection = selectedRows.length > 0;
+
+  const handleBulkDelete = () => {
+    setServiceAccounts((prev) => prev.filter((a) => !selectedRows.includes(a.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
+  };
 
   const getContextMenuItems = (row: ServiceAccount): ContextMenuItem[] => [
     {
@@ -300,6 +336,7 @@ export function IAMServiceAccountsPage() {
           }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -315,18 +352,21 @@ export function IAMServiceAccountsPage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <SearchInput
+                <FilterSearchInput
+                  filters={filterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
                   placeholder="Search service accounts by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
+                  size="sm"
                   className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
                 />
                 <Button
                   variant="secondary"
                   size="sm"
                   icon={<IconDownload size={12} />}
                   aria-label="Download"
+                  onClick={() => console.log('Download')}
                 />
               </ListToolbar.Actions>
             }
@@ -337,6 +377,7 @@ export function IAMServiceAccountsPage() {
                   size="sm"
                   disabled={!hasSelection}
                   leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Delete
                 </Button>
@@ -357,6 +398,7 @@ export function IAMServiceAccountsPage() {
             columns={columns}
             data={paginatedAccounts}
             rowKey="id"
+            emptyMessage="No service accounts found"
             selectable
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
@@ -381,6 +423,19 @@ export function IAMServiceAccountsPage() {
         initialName={editingAccount?.name ?? ''}
         initialDescription={editingAccount?.description ?? ''}
         initialActive={editingAccount?.status === 'active'}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected service accounts"
+        description="Removing the selected service accounts is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} service account(s)`}
       />
     </PageShell>
   );

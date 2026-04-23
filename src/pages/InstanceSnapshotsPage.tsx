@@ -62,7 +62,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     size: '16GiB',
     diskFormat: 'RAW',
     sourceInstance: 'web-server-01',
-    sourceInstanceId: 'vm-001',
+    sourceInstanceId: '2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e',
     description: 'Base web server snapshot',
     createdAt: 'Sep 12, 2026 15:43:35',
   },
@@ -73,7 +73,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     size: '32GiB',
     diskFormat: 'QCOW2',
     sourceInstance: 'db-server-01',
-    sourceInstanceId: 'vm-002',
+    sourceInstanceId: 'e5b8c0d31f2a49e7b6d4a3c2f1e09876',
     description: 'Database server backup',
     createdAt: 'Sep 10, 2026 01:17:01',
   },
@@ -83,8 +83,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '64GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'app-server-01',
-    sourceInstanceId: 'vm-003',
+    sourceInstance: 'analytics-01',
+    sourceInstanceId: 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9',
     description: 'Application server snapshot',
     createdAt: 'Sep 8, 2026 11:51:27',
   },
@@ -94,8 +94,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'creating',
     size: '128GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'ml-worker-01',
-    sourceInstanceId: 'vm-004',
+    sourceInstance: 'worker-node-01',
+    sourceInstanceId: '7284d9174e81431e93060a9bbcf2cdfd',
     description: 'ML worker with GPU config',
     createdAt: 'Sep 7, 2026 04:38:10',
   },
@@ -105,8 +105,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '24GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'k8s-node-01',
-    sourceInstanceId: 'vm-005',
+    sourceInstance: 'worker-node-02',
+    sourceInstanceId: 'a3f1e8b204c647d8b5921ac3def08712',
     description: 'Kubernetes node snapshot',
     createdAt: 'Sep 5, 2026 14:12:36',
   },
@@ -116,8 +116,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '8GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'gateway-01',
-    sourceInstanceId: 'vm-006',
+    sourceInstance: 'api-gateway-01',
+    sourceInstanceId: '3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
     description: 'Gateway server backup',
     createdAt: 'Sep 3, 2026 00:46:02',
   },
@@ -127,8 +127,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '80GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'win-server-01',
-    sourceInstanceId: 'vm-007',
+    sourceInstance: 'web-server-02',
+    sourceInstanceId: '8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d',
     description: 'Windows server snapshot',
     createdAt: 'Sep 1, 2026 10:20:28',
   },
@@ -138,8 +138,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'error',
     size: '48GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'enterprise-01',
-    sourceInstanceId: 'vm-008',
+    sourceInstance: 'master-node-01',
+    sourceInstanceId: 'c9d2f5a63b7e4019a8e4b1d07c6e3f9a',
     description: 'Enterprise app backup',
     createdAt: 'Aug 28, 2026 07:11:07',
   },
@@ -149,8 +149,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '20GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'dev-server-01',
-    sourceInstanceId: 'vm-009',
+    sourceInstance: 'gpu-node-01',
+    sourceInstanceId: '1a4b7c9d3e5f2a8b6c0d4e7f9a1b3c5d',
     description: 'Development environment',
     createdAt: 'Aug 25, 2026 10:32:16',
   },
@@ -160,8 +160,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '40GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'legacy-app-01',
-    sourceInstanceId: 'vm-010',
+    sourceInstance: 'gpu-node-02',
+    sourceInstanceId: 'f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5',
     description: 'Legacy application backup',
     createdAt: 'Aug 20, 2026 23:27:51',
   },
@@ -171,8 +171,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '12GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'custom-build-01',
-    sourceInstanceId: 'vm-011',
+    sourceInstance: 'cache-server-01',
+    sourceInstanceId: 'b0a1c2d3e4f5a6b7c8d9e0f1a2b3c4d5',
     description: 'Custom build environment',
     createdAt: 'Aug 18, 2026 09:01:17',
   },
@@ -182,8 +182,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '36GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'prod-server-01',
-    sourceInstanceId: 'vm-012',
+    sourceInstance: 'api-gateway-02',
+    sourceInstanceId: '4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c',
     description: 'Production server snapshot',
     createdAt: 'Aug 15, 2026 12:22:26',
   },
@@ -230,6 +230,7 @@ export function InstanceSnapshotsPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [snapshotToDelete, setSnapshotToDelete] = useState<InstanceSnapshot | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -279,7 +280,16 @@ export function InstanceSnapshotsPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Instance Snapshots');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -345,7 +355,7 @@ export function InstanceSnapshotsPage() {
   };
 
   // Bulk delete handler
-  const handleBulkDelete = () => {
+  const performBulkDelete = () => {
     setSnapshots((prev) => prev.filter((s) => !selectedSnapshots.includes(s.id)));
     setSelectedSnapshots([]);
   };
@@ -541,6 +551,7 @@ export function InstanceSnapshotsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Instance Snapshots' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -562,6 +573,7 @@ export function InstanceSnapshotsPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -572,7 +584,7 @@ export function InstanceSnapshotsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedSnapshots.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -616,6 +628,20 @@ export function InstanceSnapshotsPage() {
         confirmVariant="danger"
         infoLabel="Snapshot name"
         infoValue={snapshotToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={() => {
+          performBulkDelete();
+          setIsBulkDeleteOpen(false);
+        }}
+        title="Delete selected instance snapshots"
+        description="Removing the selected instance snapshots is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
       />
 
       {/* View Preferences Drawer */}

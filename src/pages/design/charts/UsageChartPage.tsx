@@ -64,7 +64,7 @@ function getCSSVar(name: string, fallback: string) {
 function statusColor(pct: number) {
   if (pct >= 95) return getCSSVar('--color-state-danger', '#dc2626');
   if (pct >= 70) return getCSSVar('--color-state-warning', '#ea580c');
-  return getCSSVar('--color-state-success', '#22c55e');
+  return getCSSVar('--color-state-success', '#10b981');
 }
 
 function GaugeHoverTooltip({
@@ -708,7 +708,7 @@ export function UsageChartPage() {
               </span>
             </VStack>
             <div className="flex gap-6 flex-wrap">
-              <DoughnutChartDemo title="Capacity Used" value={35} color="#22c55e" />
+              <DoughnutChartDemo title="Capacity Used" value={35} color="#10b981" />
               <DoughnutChartDemo title="OSD onode Hits Ratio" value={88} color="#ea580c" />
               <DoughnutChartDemo title="Memory Usage" value={98.3} color="#ef4444" />
             </div>

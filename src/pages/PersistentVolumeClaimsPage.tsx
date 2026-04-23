@@ -8,16 +8,20 @@ import {
   Breadcrumb,
   Table,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ListToolbar,
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
+  ConfirmModal,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
@@ -115,6 +119,18 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   },
 ];
 
+const filterFields: FilterField[] = [
+  { id: 'status', label: 'Status', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'namespace', label: 'Namespace', type: 'text' },
+  { id: 'volume', label: 'Volume', type: 'text' },
+  { id: 'capacity', label: 'Capacity', type: 'text' },
+  { id: 'accessModes', label: 'Access modes', type: 'text' },
+  { id: 'storageClass', label: 'Storage class', type: 'text' },
+  { id: 'volumeAttributesClass', label: 'VolumeAttributesClass', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
 /* ----------------------------------------
    Component
    ---------------------------------------- */
@@ -131,12 +147,11 @@ export function PersistentVolumeClaimsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const [data, setData] = useState(persistentVolumeClaimsData);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -150,25 +165,65 @@ export function PersistentVolumeClaimsPage() {
     updateActiveTabLabel('Persistent volume claims');
   }, [updateActiveTabLabel]);
 
-  useEffect(() => {
+  const handleFiltersChange = (filters: AppliedFilter[]) => {
+    setAppliedFilters(filters);
     setCurrentPage(1);
-  }, [searchTerm]);
+  };
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters([]);
+    setCurrentPage(1);
+  };
+
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: filterFields.find((ff) => ff.id === f.fieldId)?.label ?? f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
 
   const filteredData = useMemo(() => {
-    if (!searchTerm.trim()) return persistentVolumeClaimsData;
-    const q = searchTerm.toLowerCase();
-    return persistentVolumeClaimsData.filter(
-      (item) =>
-        item.status.toLowerCase().includes(q) ||
-        item.name.toLowerCase().includes(q) ||
-        item.namespace?.toLowerCase().includes(q) ||
-        item.volume.toLowerCase().includes(q) ||
-        item.capacity.toLowerCase().includes(q) ||
-        item.accessModes.toLowerCase().includes(q) ||
-        item.storageClass.toLowerCase().includes(q) ||
-        item.volumeAttributesClass.toLowerCase().includes(q)
-    );
-  }, [searchTerm]);
+    let result = data;
+    appliedFilters.forEach((filter) => {
+      const val = filter.value.toLowerCase();
+      switch (filter.fieldId) {
+        case 'status':
+          result = result.filter((item) => item.status.toLowerCase().includes(val));
+          break;
+        case 'name':
+          result = result.filter((item) => item.name.toLowerCase().includes(val));
+          break;
+        case 'namespace':
+          result = result.filter((item) => item.namespace.toLowerCase().includes(val));
+          break;
+        case 'volume':
+          result = result.filter((item) => item.volume.toLowerCase().includes(val));
+          break;
+        case 'capacity':
+          result = result.filter((item) => item.capacity.toLowerCase().includes(val));
+          break;
+        case 'accessModes':
+          result = result.filter((item) => item.accessModes.toLowerCase().includes(val));
+          break;
+        case 'storageClass':
+          result = result.filter((item) => item.storageClass.toLowerCase().includes(val));
+          break;
+        case 'volumeAttributesClass':
+          result = result.filter((item) => item.volumeAttributesClass.toLowerCase().includes(val));
+          break;
+        case 'createdAt':
+          result = result.filter((item) => item.createdAt.toLowerCase().includes(val));
+          break;
+        default:
+          break;
+      }
+    });
+    return result;
+  }, [data, appliedFilters]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -337,12 +392,10 @@ export function PersistentVolumeClaimsPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
+  const handleBulkDeleteConfirm = () => {
+    setData((prev) => prev.filter((row) => !selectedRows.includes(row.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
   };
 
   // Create menu items
@@ -415,6 +468,7 @@ export function PersistentVolumeClaimsPage() {
         />
       }
       bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -437,13 +491,14 @@ export function PersistentVolumeClaimsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={handleFiltersChange}
                 placeholder="Search PVCs by attributes"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onClear={() => setSearchTerm('')}
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -460,6 +515,7 @@ export function PersistentVolumeClaimsPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML:', selectedRows)}
               >
                 Download YAML
               </Button>
@@ -468,18 +524,15 @@ export function PersistentVolumeClaimsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
-          filters={filters.map((filter, index) => ({
-            id: String(index),
-            field: filter.key,
-            value: filter.value,
-          }))}
-          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-          onFiltersClear={handleClearFilters}
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
         />
 
         {/* Pagination */}
@@ -503,6 +556,19 @@ export function PersistentVolumeClaimsPage() {
           emptyMessage="No persistent volume claims found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete selected persistent volume claims"
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} persistent volume claim(s)`}
+      />
     </PageShell>
   );
 }

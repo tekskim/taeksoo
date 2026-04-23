@@ -19,6 +19,8 @@ import {
   Tooltip,
   ContextMenu,
   PageShell,
+  ErrorState,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -298,26 +300,6 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
   },
 };
 
-const defaultNetworkDetail: NetworkDetail = {
-  id: 'unknown',
-  name: 'Unknown Network',
-  status: 'active',
-  adminState: 'Up',
-  access: 'Project',
-  external: false,
-  createdAt: '-',
-  networkName: '-',
-  availabilityZone: '-',
-  availabilityZoneHint: '-',
-  description: '-',
-  mtu: 1500,
-  portSecurity: true,
-  routerExternal: false,
-  providerNetworkType: '-',
-  providerPhysicalNetwork: '-',
-  segmentationId: '-',
-};
-
 /** Private 192.168.n.0/24 subnets (n = 1…115) — gateway .1 */
 const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => {
   const thirdOctet = i + 1;
@@ -442,22 +424,23 @@ export default function NetworkDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Get network data based on the ID from URL
-  const network = id ? mockNetworksMap[id] || defaultNetworkDetail : defaultNetworkDetail;
+  const network = id ? mockNetworksMap[id] : undefined;
   const subnets = mockSubnets;
   const ports = mockPorts;
 
   // Update tab label to network name
   useEffect(() => {
-    if (network.name) {
+    if (network?.name) {
       updateActiveTabLabel(network.name);
     }
-  }, [network.name, updateActiveTabLabel]);
+  }, [network?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
     { label: 'Networks', href: '/compute/networks' },
-    { label: network.name },
+    { label: network?.name ?? id ?? '—' },
   ];
 
   // Filter and paginate subnets
@@ -546,6 +529,48 @@ export default function NetworkDetailPage() {
       setPortSortDirection('asc');
     }
   };
+
+  if (!network) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Network not found"
+          description={`The network with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/networks')}>
+              Back to networks
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Subnet columns
   const subnetColumns: TableColumn<Subnet>[] = [
@@ -805,13 +830,28 @@ export default function NetworkDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{network.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} />}
+              onClick={() => console.log('Action:', network.id)}
+            >
               Create subnet
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={() => console.log('Action:', network.id)}
+            >
               Edit
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
           </DetailHeader.Actions>
@@ -891,7 +931,12 @@ export default function NetworkDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between h-7">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Subnets</h3>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() => console.log('Action:', network.id)}
+                  >
                     Create subnet
                   </Button>
                 </div>
@@ -985,6 +1030,22 @@ export default function NetworkDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/networks');
+        }}
+        title="Delete network"
+        description="This will permanently delete this network. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Network"
+        infoValue={network.name}
+      />
     </PageShell>
   );
 }

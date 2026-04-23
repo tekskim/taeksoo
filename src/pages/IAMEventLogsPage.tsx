@@ -9,7 +9,7 @@ import {
 import {
   Button,
   Pagination,
-  SearchInput,
+  FilterSearchInput,
   ListToolbar,
   Badge,
   TopBar,
@@ -18,6 +18,10 @@ import {
   TabBar,
   PageShell,
   PageHeader,
+  Table,
+  type TableColumn,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -342,11 +346,28 @@ const mockEventLogs: EventLog[] = [
   },
 ];
 
+const eventLogFilterFields: FilterField[] = [
+  { id: 'eventName', label: 'Event', type: 'text' },
+  { id: 'eventId', label: 'Event ID', type: 'text' },
+  { id: 'user', label: 'User', type: 'text' },
+  { id: 'target', label: 'Target', type: 'text' },
+  {
+    id: 'result',
+    label: 'Result',
+    type: 'select',
+    options: [
+      { value: 'success', label: 'Success' },
+      { value: 'failure', label: 'Failure' },
+    ],
+  },
+  { id: 'ipAddress', label: 'IP address', type: 'text' },
+];
+
 /* ----------------------------------------
    Event Details Component (Console View)
    ---------------------------------------- */
-function EventDetailsConsole({ details }: { details: EventLog['details'] }) {
-  const jsonString = JSON.stringify(details, null, 2);
+function EventDetailsConsole({ event }: { event: EventLog }) {
+  const jsonString = JSON.stringify(event.details, null, 2);
 
   return (
     <div className="border-x border-b border-[var(--color-border-default)] rounded-b-md overflow-hidden">
@@ -363,11 +384,12 @@ function EventDetailsConsole({ details }: { details: EventLog['details'] }) {
 export default function IAMEventLogsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
+  const [expandedLogIds, setExpandedLogIds] = useState<Set<string>>(new Set());
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
   const itemsPerPage = 10;
@@ -377,17 +399,28 @@ export default function IAMEventLogsPage() {
     updateActiveTabLabel('Event logs');
   }, [updateActiveTabLabel]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter logs by search query
-  const filteredLogs = mockEventLogs.filter(
-    (log) =>
-      log.eventName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      log.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      log.ipAddress.includes(searchQuery) ||
-      log.eventId.includes(searchQuery)
-  );
+  // Filter logs
+  const filteredLogs = useMemo(() => {
+    if (appliedFilters.length === 0) return mockEventLogs;
+    return mockEventLogs.filter((log) =>
+      appliedFilters.every((f) => {
+        if (f.fieldId === 'result') return log.result === f.value;
+        const val = log[f.fieldId as keyof EventLog];
+        if (typeof val === 'string') {
+          return val.toLowerCase().includes(f.value.toLowerCase());
+        }
+        return true;
+      })
+    );
+  }, [appliedFilters]);
 
   // Sort
   const sortedLogs = useMemo(() => {
@@ -428,18 +461,131 @@ export default function IAMEventLogsPage() {
     return <IconChevronDown size={14} stroke={1} className="text-[var(--color-action-primary)]" />;
   };
 
-  // Toggle expanded log
-  const toggleExpanded = (logId: string) => {
-    setExpandedLogs((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(logId)) {
-        newSet.delete(logId);
-      } else {
-        newSet.add(logId);
-      }
-      return newSet;
+  const toggleExpansion = (logId: string) => {
+    setExpandedLogIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(logId)) next.delete(logId);
+      else next.add(logId);
+      return next;
     });
   };
+
+  const sortHeaderButton = (label: string, columnKey: string) => (
+    <button
+      type="button"
+      className="flex items-center gap-1 w-full min-w-0 cursor-pointer select-none text-left hover:text-[var(--color-action-primary)] transition-colors"
+      onClick={() => handleSort(columnKey)}
+    >
+      <span className="whitespace-nowrap truncate" title={label}>
+        {label}
+      </span>
+      <span className="flex-shrink-0">{renderSortIcon(columnKey)}</span>
+    </button>
+  );
+
+  const columns: TableColumn<EventLog>[] = [
+    {
+      key: 'eventName',
+      label: 'Event',
+      flex: 1.2,
+      minWidth: '200px',
+      sortable: false,
+      headerRender: () => sortHeaderButton('Event', 'eventName'),
+      render: (_value, log) => {
+        const isExpanded = expandedLogIds.has(log.id);
+        return (
+          <div className="flex items-center gap-2 min-w-0">
+            <button
+              type="button"
+              className="p-0.5 rounded hover:bg-[var(--color-surface-subtle)] transition-colors shrink-0"
+              aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
+              aria-expanded={isExpanded}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleExpansion(log.id);
+              }}
+            >
+              {isExpanded ? (
+                <IconChevronDown
+                  size={12}
+                  strokeWidth={2}
+                  className="text-[var(--color-text-default)]"
+                />
+              ) : (
+                <IconChevronRight
+                  size={12}
+                  strokeWidth={2}
+                  className="text-[var(--color-text-default)]"
+                />
+              )}
+            </button>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-body-md text-[var(--color-text-default)]">{log.eventName}</span>
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={log.eventId}>
+                  ID : {log.eventId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={log.eventId} />
+              </span>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      key: 'timestamp',
+      label: 'Time',
+      flex: 1,
+      sortable: false,
+      align: 'right',
+      headerRender: () => (
+        <button
+          type="button"
+          className="flex items-center gap-1 w-full min-w-0 cursor-pointer select-none justify-end text-right hover:text-[var(--color-action-primary)] transition-colors"
+          onClick={() => handleSort('timestamp')}
+        >
+          <span className="whitespace-nowrap truncate" title="Time">
+            Time
+          </span>
+          <span className="flex-shrink-0">{renderSortIcon('timestamp')}</span>
+        </button>
+      ),
+      render: (_value, log) => log.displayTime,
+    },
+    {
+      key: 'user',
+      label: 'User',
+      flex: 1,
+      sortable: false,
+      headerRender: () => sortHeaderButton('User', 'user'),
+    },
+    {
+      key: 'target',
+      label: 'Target',
+      flex: 1,
+      sortable: false,
+      headerRender: () => sortHeaderButton('Target', 'target'),
+    },
+    {
+      key: 'result',
+      label: 'Result',
+      flex: 0.9,
+      align: 'center',
+      sortable: false,
+      render: (_value, log) => (
+        <Badge variant={log.result === 'success' ? 'success' : 'error'} size="sm">
+          {log.result === 'success' ? 'Success' : 'Failure'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'ipAddress',
+      label: 'IP address',
+      flex: 1,
+      sortable: false,
+      headerRender: () => sortHeaderButton('IP address', 'ipAddress'),
+    },
+  ];
 
   return (
     <PageShell
@@ -465,6 +611,7 @@ export default function IAMEventLogsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Event Logs' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -475,11 +622,14 @@ export default function IAMEventLogsPage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <SearchInput
-                  placeholder="Search logs by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                <FilterSearchInput
+                  filters={eventLogFilterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
+                  placeholder="Search event logs by attributes"
+                  size="sm"
                   className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
                 />
                 <Button
                   variant="secondary"
@@ -497,133 +647,22 @@ export default function IAMEventLogsPage() {
             totalPages={totalPages}
             onPageChange={setCurrentPage}
             showSettings
-            totalItems={filteredLogs.length}
+            totalItems={sortedLogs.length}
           />
 
-          {/* Custom Table */}
-          <div className="w-full flex flex-col gap-1">
-            {/* Table Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              {[
-                { key: 'eventName', label: 'Event', sortable: true },
-                { key: 'timestamp', label: 'Time', sortable: true },
-                { key: 'user', label: 'User', sortable: true },
-                { key: 'target', label: 'Target', sortable: true },
-                { key: 'result', label: 'Result', sortable: false },
-                { key: 'ipAddress', label: 'IP address', sortable: true },
-              ].map((col, idx) => (
-                <div
-                  key={col.key}
-                  className={`flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center ${col.sortable ? 'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors' : ''} ${idx > 0 ? 'border-l border-[var(--color-border-default)]' : ''}`}
-                  onClick={col.sortable ? () => handleSort(col.key) : undefined}
-                >
-                  <div className="flex items-center gap-1">
-                    <span className="whitespace-nowrap truncate">{col.label}</span>
-                    {col.sortable && (
-                      <span className="flex-shrink-0">{renderSortIcon(col.key)}</span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Table Rows */}
-            {paginatedLogs.length === 0 ? (
-              <div className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-10 text-center text-body-md text-[var(--color-text-subtle)]">
-                No event logs found
-              </div>
-            ) : (
-              paginatedLogs.map((log) => {
-                const isExpanded = expandedLogs.has(log.id);
-                return (
-                  <div key={log.id} className="w-full">
-                    {/* Main Row */}
-                    <div
-                      className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] transition-colors hover:bg-[var(--table-row-hover-bg)] cursor-pointer ${isExpanded ? 'rounded-t-md border-b-0' : 'rounded-md'}`}
-                      onClick={() => toggleExpanded(log.id)}
-                    >
-                      {/* Event Cell */}
-                      <div className="flex-1 px-3 py-2 flex items-center gap-2">
-                        <button
-                          type="button"
-                          className="p-0.5 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
-                          aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
-                          aria-expanded={isExpanded}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleExpanded(log.id);
-                          }}
-                        >
-                          {isExpanded ? (
-                            <IconChevronDown
-                              size={12}
-                              strokeWidth={2}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          ) : (
-                            <IconChevronRight
-                              size={12}
-                              strokeWidth={2}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          )}
-                        </button>
-                        <div className="flex flex-col gap-0.5 min-w-0">
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            {log.eventName}
-                          </span>
-                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-                            <span className="truncate" title={log.eventId}>
-                              ID : {log.eventId.slice(0, 8)}
-                            </span>
-                            <InlineCopyId value={log.eventId} />
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Time Cell */}
-                      <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                        <span className="text-body-md text-[var(--color-text-default)]">
-                          {log.displayTime}
-                        </span>
-                      </div>
-
-                      {/* User Cell */}
-                      <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                        <span className="text-body-md text-[var(--color-text-default)]">
-                          {log.user}
-                        </span>
-                      </div>
-
-                      {/* Target Cell */}
-                      <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                        <span className="text-body-md text-[var(--color-text-default)]">
-                          {log.target}
-                        </span>
-                      </div>
-
-                      {/* Result Cell */}
-                      <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                        <Badge variant={log.result === 'success' ? 'success' : 'error'} size="sm">
-                          {log.result === 'success' ? 'Success' : 'Failure'}
-                        </Badge>
-                      </div>
-
-                      {/* IP Address Cell */}
-                      <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                        <span className="text-body-md text-[var(--color-text-default)]">
-                          {log.ipAddress}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Expanded Details */}
-                    {isExpanded && <EventDetailsConsole details={log.details} />}
-                  </div>
-                );
-              })
-            )}
-          </div>
+          <Table<EventLog>
+            resizable={false}
+            columns={columns}
+            data={paginatedLogs}
+            rowKey="id"
+            emptyMessage="No event logs found"
+            loading={loading}
+            onRowClick={(row) => toggleExpansion(row.id)}
+            expandedContent={(row) => {
+              if (!expandedLogIds.has(row.id)) return null;
+              return <EventDetailsConsole event={row} />;
+            }}
+          />
         </VStack>
       </VStack>
     </PageShell>

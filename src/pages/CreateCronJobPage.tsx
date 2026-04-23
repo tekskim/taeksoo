@@ -23,22 +23,17 @@ import {
   Pagination,
   Chip,
   PageShell,
-  WizardSectionStatusIcon,
+  WizardSummary,
   Tooltip,
   FilterSearchInput,
   Badge,
 } from '@/design-system';
+import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
-import {
-  IconCirclePlus,
-  IconX,
-  IconPlus,
-  IconChevronRight,
-  IconHelpCircle,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconX, IconPlus, IconHelpCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -261,64 +256,6 @@ interface PodAffinityTerm {
    Summary Sidebar Component
    ---------------------------------------- */
 
-// Status icon component for summary items — delegates to DS WizardSectionStatusIcon
-function StatusIcon({ status }: { status: 'complete' | 'in-progress' }) {
-  return <WizardSectionStatusIcon status={status === 'complete' ? 'done' : 'active'} />;
-}
-
-// Summary section header with collapse/expand
-interface SummarySectionHeaderProps {
-  label: string;
-  status: 'complete' | 'in-progress';
-  expanded: boolean;
-  onToggle: () => void;
-  hasChildren?: boolean;
-}
-
-function SummarySectionHeader({
-  label,
-  status,
-  expanded,
-  onToggle,
-  hasChildren = false,
-}: SummarySectionHeaderProps) {
-  return (
-    <button
-      onClick={onToggle}
-      className="flex items-center justify-between pr-2 w-full hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-    >
-      <div className="flex items-center gap-1.5">
-        {hasChildren ? (
-          <IconChevronRight
-            size={16}
-            stroke={1.5}
-            className={`text-[var(--color-text-muted)] transition-transform ${expanded ? 'rotate-90' : ''}`}
-          />
-        ) : (
-          <div className="w-3" />
-        )}
-        <span className="text-label-lg text-[var(--color-text-default)]">{label}</span>
-      </div>
-      <StatusIcon status={status} />
-    </button>
-  );
-}
-
-// Summary sub-item (child of a section)
-interface SummarySubItemProps {
-  label: string;
-  status: 'complete' | 'in-progress';
-}
-
-function SummarySubItem({ label, status }: SummarySubItemProps) {
-  return (
-    <div className="flex items-center justify-between px-2 py-1 w-full">
-      <span className="text-body-md text-[var(--color-text-default)]">{label}</span>
-      <StatusIcon status={status} />
-    </div>
-  );
-}
-
 interface SummarySidebarProps {
   name: string;
   containerTabs: ContainerTab[];
@@ -331,12 +268,11 @@ interface SummarySidebarProps {
 function SummarySidebar({
   name,
   containerTabs,
-  activeTab,
+  activeTab: _activeTab,
   onCancel,
   onCreate,
   isCreateDisabled,
 }: SummarySidebarProps) {
-  // Simple completion checks based on required fields
   const basicInfoComplete = name.trim().length > 0;
   const labelsComplete = true; // Labels are optional
   const scalingComplete = true; // Scaling are optional
@@ -344,116 +280,25 @@ function SummarySidebar({
   const podComplete = true; // All pod sections are optional
   const containersComplete = containerTabs.length > 0; // At least one container exists
 
-  // Determine which section to expand based on active tab
-  const isCronJobTab = activeTab === 'cronjob';
-  const isPodTab = activeTab === 'pod';
-  const activeContainerId = containerTabs.find((c) => c.id === activeTab)?.id;
+  const itemStatus = (complete: boolean): WizardSectionState => (complete ? 'done' : 'active');
 
-  // Pod section items matching actual sections
-  const podSections = [
-    'Basic Information',
-    'Labels & Annotations',
-    'Scaling and Upgrade Policy',
-    'Networking',
-    'Node Scheduling',
-    'Pod Scheduling',
-    'Resources',
-    'Security Context',
-    'Storage',
-  ];
-
-  // Container section items matching Figma design
-  const containerSections = [
-    'Basic Information',
-    'Image',
-    'Command',
-    'Environment Variables',
-    'Service Account Name',
-    'Lifecycle Hooks',
-    'Health Check',
-    'Resources',
-    'Security Context',
-    'Storage',
+  const summaryItems: WizardSummaryItem[] = [
+    { key: 'deployment', label: 'Deployment', status: itemStatus(deploymentComplete) },
+    { key: 'pod', label: 'Pod', status: itemStatus(podComplete) },
+    ...containerTabs.map((c) => ({
+      key: c.id,
+      label: c.name,
+      status: itemStatus(containersComplete),
+    })),
   ];
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
-        {/* Scrollable content area */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-          <VStack gap={4}>
-            <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-              Summary
-            </h5>
-
-            {/* Deployment Section */}
-            <VStack gap={2}>
-              <SummarySectionHeader
-                label="Deployment"
-                status={deploymentComplete ? 'complete' : 'in-progress'}
-                expanded={isCronJobTab}
-                onToggle={() => {}}
-                hasChildren
-              />
-              {isCronJobTab && (
-                <VStack gap={0} className="ml-3">
-                  <SummarySubItem
-                    label="Basic information"
-                    status={basicInfoComplete ? 'complete' : 'in-progress'}
-                  />
-                  <SummarySubItem
-                    label="Labels & Annotations"
-                    status={labelsComplete ? 'complete' : 'in-progress'}
-                  />
-                  <SummarySubItem
-                    label="Scaling and Upgrade Policy"
-                    status={scalingComplete ? 'complete' : 'in-progress'}
-                  />
-                </VStack>
-              )}
-            </VStack>
-
-            {/* Pod Section */}
-            <VStack gap={2}>
-              <SummarySectionHeader
-                label="Pod"
-                status={podComplete ? 'complete' : 'in-progress'}
-                expanded={isPodTab}
-                onToggle={() => {}}
-                hasChildren
-              />
-              {isPodTab && (
-                <VStack gap={0} className="ml-3">
-                  {podSections.map((section) => (
-                    <SummarySubItem key={section} label={section} status="complete" />
-                  ))}
-                </VStack>
-              )}
-            </VStack>
-
-            {/* Container Sections */}
-            {containerTabs.map((container) => (
-              <VStack key={container.id} gap={2}>
-                <SummarySectionHeader
-                  label={container.name}
-                  status={containersComplete ? 'complete' : 'in-progress'}
-                  expanded={activeContainerId === container.id}
-                  onToggle={() => {}}
-                  hasChildren
-                />
-                {activeContainerId === container.id && (
-                  <VStack gap={0} className="ml-3">
-                    {containerSections.map((section) => (
-                      <SummarySubItem key={section} label={section} status="complete" />
-                    ))}
-                  </VStack>
-                )}
-              </VStack>
-            ))}
-          </VStack>
+        <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
+          <WizardSummary items={summaryItems} />
         </div>
 
-        {/* Button Container */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel}>
             Cancel
@@ -1358,7 +1203,7 @@ export function CreateCronJobPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const handleCancel = useCallback(() => {
-    navigate('/container/deployments');
+    navigate('/container/cronjobs');
   }, [navigate]);
 
   const handleCreate = useCallback(() => {

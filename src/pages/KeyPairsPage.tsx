@@ -25,8 +25,9 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconPlus } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { CreateKeyPairDrawer } from '@/components/CreateKeyPairDrawer';
 
 /* ----------------------------------------
    Types
@@ -124,9 +125,13 @@ export function KeyPairsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [keyPairs, setKeyPairs] = useState(mockKeyPairs);
 
+  // Create drawer state
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [keyPairToDelete, setKeyPairToDelete] = useState<KeyPair | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -149,7 +154,16 @@ export function KeyPairsPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Key Pairs');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -213,7 +227,7 @@ export function KeyPairsPage() {
   };
 
   // Handle bulk delete
-  const handleBulkDelete = () => {
+  const performBulkDelete = () => {
     setKeyPairs((prev) => prev.filter((kp) => !selectedKeyPairs.includes(kp.id)));
     setSelectedKeyPairs([]);
   };
@@ -340,7 +354,12 @@ export function KeyPairsPage() {
         <PageHeader
           title="Key pairs"
           actions={
-            <Button variant="primary" size="md">
+            <Button
+              variant="primary"
+              size="md"
+              leftIcon={<IconPlus size={12} />}
+              onClick={() => setIsCreateDrawerOpen(true)}
+            >
               Create Key Pair
             </Button>
           }
@@ -362,6 +381,7 @@ export function KeyPairsPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -372,7 +392,7 @@ export function KeyPairsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedKeyPairs.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -418,6 +438,20 @@ export function KeyPairsPage() {
         infoValue={keyPairToDelete?.name}
       />
 
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={() => {
+          performBulkDelete();
+          setIsBulkDeleteOpen(false);
+        }}
+        title="Delete selected key pairs"
+        description="Removing the selected key pairs is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+      />
+
       {/* View Preferences Drawer */}
       <ViewPreferencesDrawer
         isOpen={isPreferencesOpen}
@@ -427,6 +461,12 @@ export function KeyPairsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Create Key Pair Drawer */}
+      <CreateKeyPairDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
       />
     </PageShell>
   );

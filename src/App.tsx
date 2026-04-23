@@ -5,6 +5,7 @@ import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
 import { ProjectProvider } from '@/contexts/ProjectContext';
+import { ToastProvider, ToastContainer } from '@/design-system';
 
 // Entry Page
 import { EntryPage } from '@/pages/EntryPage';
@@ -1269,7 +1270,10 @@ function App() {
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <ProjectProvider>
           <SidebarProvider>
-            <AppWithTabs />
+            <ToastProvider>
+              <AppWithTabs />
+              <ToastContainer position="bottom-right" />
+            </ToastProvider>
           </SidebarProvider>
         </ProjectProvider>
       </BrowserRouter>

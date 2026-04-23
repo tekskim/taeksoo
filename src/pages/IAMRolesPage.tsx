@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   IconDownload,
   IconTrash,
@@ -11,7 +11,7 @@ import {
   Button,
   Pagination,
   Table,
-  SearchInput,
+  FilterSearchInput,
   TopBar,
   Breadcrumb,
   VStack,
@@ -28,12 +28,15 @@ import {
   Tab,
   TabPanel,
   Modal,
+  ConfirmModal,
   InlineMessage,
   InfoBox,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { GrantAccessDrawer } from '@/components/GrantAccessDrawer';
@@ -278,19 +281,48 @@ const mockActiveGrants: ActiveGrant[] = [
   },
 ];
 
+const roleFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'roleType',
+    label: 'Type',
+    type: 'select',
+    options: [
+      { value: 'Built-in', label: 'Built-in' },
+      { value: 'Custom', label: 'Custom' },
+    ],
+  },
+  { id: 'policies', label: 'Policies', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
+  { id: 'scope', label: 'Scope', type: 'text' },
+  { id: 'linkedPolicy', label: 'Linked policy', type: 'text' },
+];
+
+const grantFilterFields: FilterField[] = [
+  { id: 'roleName', label: 'Role', type: 'text' },
+  { id: 'principalName', label: 'Principal', type: 'text' },
+  { id: 'reason', label: 'Reason', type: 'text' },
+  { id: 'starts', label: 'Starts', type: 'text' },
+  { id: 'ends', label: 'Ends', type: 'text' },
+];
+
 /* ----------------------------------------
    IAM Roles Page
    ---------------------------------------- */
 export default function IAMRolesPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'roles';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('roles');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [roleAppliedFilters, setRoleAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [roles, setRoles] = useState<Role[]>(mockRoles);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedGrants, setSelectedGrants] = useState<string[]>([]);
-  const [grantSearch, setGrantSearch] = useState('');
+  const [grantAppliedFilters, setGrantAppliedFilters] = useState<AppliedFilter[]>([]);
   const [grantPage, setGrantPage] = useState(1);
   const [revokeTarget, setRevokeTarget] = useState<ActiveGrant | null>(null);
   const [bulkRevokeOpen, setBulkRevokeOpen] = useState(false);
@@ -316,16 +348,42 @@ export default function IAMRolesPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [roleAppliedFilters, activeTab]);
+
+  useEffect(() => {
+    setGrantPage(1);
+  }, [grantAppliedFilters, activeTab]);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter roles by search query
-  const filteredRoles = mockRoles.filter(
-    (role) =>
-      role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      role.policies.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      role.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter roles
+  const filteredRoles = useMemo(() => {
+    if (roleAppliedFilters.length === 0) return roles;
+    return roles.filter((role) =>
+      roleAppliedFilters.every((f) => {
+        const q = f.value.toLowerCase();
+        switch (f.fieldId) {
+          case 'name':
+            return role.name.toLowerCase().includes(q);
+          case 'roleType':
+            return role.roleType === f.value;
+          case 'policies':
+            return role.policies.toLowerCase().includes(q);
+          case 'description':
+            return role.description.toLowerCase().includes(q);
+          case 'scope':
+            return role.scope.toLowerCase().includes(q);
+          case 'linkedPolicy':
+            return role.linkedPolicies.some((p) => p.toLowerCase().includes(q));
+          default:
+            return true;
+        }
+      })
+    );
+  }, [roleAppliedFilters, roles]);
 
   // Pagination
   const totalPages = Math.ceil(filteredRoles.length / itemsPerPage);
@@ -334,13 +392,19 @@ export default function IAMRolesPage() {
     currentPage * itemsPerPage
   );
 
+  const handleBulkDeleteRoles = () => {
+    setRoles((prev) => prev.filter((r) => !selectedRows.includes(r.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
+
   // Context menu items factory
   const getContextMenuItems = (rowId: string): ContextMenuItem[] => [
     {
       id: 'grant-access',
       label: 'Grant access',
       onClick: () => {
-        const role = mockRoles.find((r) => r.id === rowId);
+        const role = roles.find((r) => r.id === rowId);
         if (role) {
           setGrantTargetRole(role.name);
           setIsGrantDrawerOpen(true);
@@ -351,7 +415,7 @@ export default function IAMRolesPage() {
       id: 'manage-linked-policies',
       label: 'Manage linked policies',
       onClick: () => {
-        const role = mockRoles.find((r) => r.id === rowId);
+        const role = roles.find((r) => r.id === rowId);
         if (role) {
           setManageLinkedPoliciesRole(role.name);
           setIsManageLinkedPoliciesOpen(true);
@@ -362,7 +426,7 @@ export default function IAMRolesPage() {
       id: 'edit',
       label: 'Edit',
       onClick: () => {
-        const role = mockRoles.find((r) => r.id === rowId);
+        const role = roles.find((r) => r.id === rowId);
         if (role) {
           setEditRoleData({ name: role.name, description: role.description });
           setIsEditRoleOpen(true);
@@ -583,12 +647,18 @@ export default function IAMRolesPage() {
   );
 
   // Filtered active grants
-  const filteredGrants = mockActiveGrants.filter(
-    (grant) =>
-      grant.roleName.toLowerCase().includes(grantSearch.toLowerCase()) ||
-      grant.principalName.toLowerCase().includes(grantSearch.toLowerCase()) ||
-      grant.reason.toLowerCase().includes(grantSearch.toLowerCase())
-  );
+  const filteredGrants = useMemo(() => {
+    if (grantAppliedFilters.length === 0) return mockActiveGrants;
+    return mockActiveGrants.filter((grant) =>
+      grantAppliedFilters.every((f) => {
+        const fieldVal = grant[f.fieldId as keyof ActiveGrant];
+        if (typeof fieldVal === 'string') {
+          return fieldVal.toLowerCase().includes(f.value.toLowerCase());
+        }
+        return true;
+      })
+    );
+  }, [grantAppliedFilters]);
   const grantTotalPages = Math.ceil(filteredGrants.length / itemsPerPage);
   const paginatedGrants = filteredGrants.slice(
     (grantPage - 1) * itemsPerPage,
@@ -646,17 +716,21 @@ export default function IAMRolesPage() {
                 <ListToolbar
                   primaryActions={
                     <ListToolbar.Actions>
-                      <SearchInput
+                      <FilterSearchInput
+                        filters={roleFilterFields}
+                        appliedFilters={roleAppliedFilters}
+                        onFiltersChange={setRoleAppliedFilters}
                         placeholder="Search roles by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        size="sm"
                         className="w-[var(--search-input-width)]"
+                        hideAppliedFilters
                       />
                       <Button
                         variant="secondary"
                         size="sm"
                         icon={<IconDownload size={12} />}
                         aria-label="Download"
+                        onClick={() => console.log('Download')}
                       />
                     </ListToolbar.Actions>
                   }
@@ -667,6 +741,7 @@ export default function IAMRolesPage() {
                         size="sm"
                         leftIcon={<IconTrash size={12} />}
                         disabled={selectedRows.length === 0}
+                        onClick={() => setIsBulkDeleteOpen(true)}
                       >
                         Delete
                       </Button>
@@ -703,17 +778,21 @@ export default function IAMRolesPage() {
                 <ListToolbar
                   primaryActions={
                     <ListToolbar.Actions>
-                      <SearchInput
+                      <FilterSearchInput
+                        filters={grantFilterFields}
+                        appliedFilters={grantAppliedFilters}
+                        onFiltersChange={setGrantAppliedFilters}
                         placeholder="Search active grants by attributes"
-                        value={grantSearch}
-                        onChange={(e) => setGrantSearch(e.target.value)}
+                        size="sm"
                         className="w-[var(--search-input-width)]"
+                        hideAppliedFilters
                       />
                       <Button
                         variant="secondary"
                         size="sm"
                         icon={<IconDownload size={12} />}
                         aria-label="Download"
+                        onClick={() => console.log('Download')}
                       />
                     </ListToolbar.Actions>
                   }
@@ -865,6 +944,19 @@ export default function IAMRolesPage() {
           </Button>
         </div>
       </Modal>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteRoles}
+        title="Delete selected roles"
+        description="Removing the selected roles is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} role(s)`}
+      />
     </>
   );
 }

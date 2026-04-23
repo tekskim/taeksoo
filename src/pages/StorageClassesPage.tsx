@@ -7,14 +7,17 @@ import {
   Table,
   TableLink,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ContextMenu,
   PageShell,
   PageHeader,
   ListToolbar,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
   fixedColumns,
   columnMinWidths,
   Badge,
@@ -116,6 +119,52 @@ const storageClassesData: StorageClassRow[] = [
 ];
 
 /* ----------------------------------------
+   Filter fields
+   ---------------------------------------- */
+
+const storageClassFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'OK', label: 'OK' },
+      { value: 'Active', label: 'Active' },
+      { value: 'True', label: 'True' },
+    ],
+  },
+  { id: 'provisioner', label: 'Provisioner', type: 'text' },
+  {
+    id: 'reclaimPolicy',
+    label: 'Reclaim Policy',
+    type: 'select',
+    options: [
+      { value: 'Delete', label: 'Delete' },
+      { value: 'Retain', label: 'Retain' },
+    ],
+  },
+  {
+    id: 'volumeBindingMode',
+    label: 'Volume Binding Mode',
+    type: 'select',
+    options: [
+      { value: 'Immediate', label: 'Immediate' },
+      { value: 'WaitForFirstConsumer', label: 'WaitForFirstConsumer' },
+    ],
+  },
+  {
+    id: 'allowVolumeExpansion',
+    label: 'Allow Volume Expansion',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+];
+
+/* ----------------------------------------
    Component
    ---------------------------------------- */
 
@@ -132,9 +181,10 @@ export function StorageClassesPage() {
     updateActiveTabLabel,
   } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [storageClassRows, setStorageClassRows] = useState(storageClassesData);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -148,21 +198,30 @@ export function StorageClassesPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [appliedFilters]);
 
   const filteredData = useMemo(() => {
-    if (!searchTerm.trim()) return storageClassesData;
-    const q = searchTerm.toLowerCase();
-    return storageClassesData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(q) ||
-        item.status.toLowerCase().includes(q) ||
-        item.provisioner.toLowerCase().includes(q) ||
-        item.reclaimPolicy.toLowerCase().includes(q) ||
-        item.volumeBindingMode.toLowerCase().includes(q) ||
-        String(item.allowVolumeExpansion).toLowerCase().includes(q)
-    );
-  }, [searchTerm]);
+    if (appliedFilters.length === 0) return storageClassRows;
+
+    return storageClassRows.filter((item) => {
+      return appliedFilters.every((filter) => {
+        if (filter.fieldId === 'allowVolumeExpansion') {
+          return String(item.allowVolumeExpansion) === filter.value;
+        }
+        const value = item[filter.fieldId as keyof StorageClassRow];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        return true;
+      });
+    });
+  }, [appliedFilters, storageClassRows]);
+
+  const handleBulkDeleteStorageClasses = () => {
+    setStorageClassRows((prev) => prev.filter((r) => !selectedRows.includes(r.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
 
   const navigate = useNavigate();
 
@@ -346,14 +405,6 @@ export function StorageClassesPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
-  };
-
   return (
     <PageShell
       sidebar={
@@ -427,19 +478,21 @@ export function StorageClassesPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
+              <FilterSearchInput
+                filters={storageClassFilterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
                 placeholder="Search storage classes by attributes"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onClear={() => setSearchTerm('')}
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
                 size="sm"
                 aria-label="Download"
                 className="!p-0 !w-7 !h-7 !min-w-7"
+                onClick={() => console.log('Download')}
               >
                 <IconDownload size={12} stroke={1.5} />
               </Button>
@@ -452,6 +505,7 @@ export function StorageClassesPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML')}
               >
                 Download YAML
               </Button>
@@ -460,19 +514,12 @@ export function StorageClassesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
-          filters={filters.map((f, i) => ({
-            id: String(i),
-            field: f.key,
-            value: f.value,
-          }))}
-          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-          onFiltersClear={handleClearFilters}
-          clearFiltersLabel="Clear filters"
         />
 
         <Pagination
@@ -495,6 +542,19 @@ export function StorageClassesPage() {
           emptyMessage="No storage classes found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteStorageClasses}
+        title="Delete selected storage classes"
+        description="Removing the selected storage classes is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} storage class(es)`}
+      />
     </PageShell>
   );
 }

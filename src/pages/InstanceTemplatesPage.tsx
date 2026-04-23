@@ -227,6 +227,7 @@ export function InstanceTemplatesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<InstanceTemplate | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Selection state
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
@@ -253,7 +254,16 @@ export function InstanceTemplatesPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Instance Templates');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -346,7 +356,7 @@ export function InstanceTemplatesPage() {
   };
 
   // Bulk delete handler
-  const handleBulkDelete = () => {
+  const performBulkDelete = () => {
     setTemplates((prev) => prev.filter((t) => !selectedTemplates.includes(t.id)));
     setSelectedTemplates([]);
   };
@@ -528,6 +538,7 @@ export function InstanceTemplatesPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Instance Templates' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -543,8 +554,8 @@ export function InstanceTemplatesPage() {
         {/* Category Tabs */}
         <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
           <TabList>
-            <Tab value="favorites">Current tenant</Tab>
-            <Tab value="personal">Public</Tab>
+            <Tab value="favorites">Favorites</Tab>
+            <Tab value="personal">Personal</Tab>
           </TabList>
         </Tabs>
 
@@ -564,6 +575,7 @@ export function InstanceTemplatesPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -574,7 +586,7 @@ export function InstanceTemplatesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedTemplates.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -618,6 +630,20 @@ export function InstanceTemplatesPage() {
         confirmVariant="danger"
         infoLabel="Template name"
         infoValue={templateToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={() => {
+          performBulkDelete();
+          setIsBulkDeleteOpen(false);
+        }}
+        title="Delete selected templates"
+        description="Removing the selected instance templates is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
       />
 
       {/* View Preferences Drawer */}

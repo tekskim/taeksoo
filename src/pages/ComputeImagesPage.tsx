@@ -246,6 +246,7 @@ export function ComputeImagesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [imageToDelete, setImageToDelete] = useState<Image | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -295,7 +296,16 @@ export function ComputeImagesPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Images');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   // Handle window close - navigate to root
   const handleWindowClose = useCallback(() => {
@@ -368,7 +378,7 @@ export function ComputeImagesPage() {
   );
 
   // Handle bulk delete
-  const handleBulkDelete = () => {
+  const performBulkDelete = () => {
     setImages((prev) => prev.filter((img) => !selectedImages.includes(img.id)));
     setSelectedImages([]);
   };
@@ -537,6 +547,7 @@ export function ComputeImagesPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Images' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -575,6 +586,7 @@ export function ComputeImagesPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -585,7 +597,7 @@ export function ComputeImagesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedImages.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -629,6 +641,20 @@ export function ComputeImagesPage() {
         confirmVariant="danger"
         infoLabel="Image name"
         infoValue={imageToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={() => {
+          performBulkDelete();
+          setIsBulkDeleteOpen(false);
+        }}
+        title="Delete selected images"
+        description="Removing the selected images is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
       />
 
       {/* View Preferences Drawer */}

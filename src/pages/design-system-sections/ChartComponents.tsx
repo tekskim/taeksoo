@@ -1316,7 +1316,7 @@ export function HalfDoughnutChartDemo({
 
   const colorMap = {
     default: primaryChartColors[0],
-    success: getColor('--color-status-success', '#22c55e'),
+    success: getColor('--color-status-success', '#10b981'),
     warning: getColor('--color-status-warning', '#f97316'),
     error: getColor('--color-status-error', '#ef4444'),
   };

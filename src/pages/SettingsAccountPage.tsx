@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Breadcrumb,
   Button,
   VStack,
   SectionCard,
@@ -9,9 +10,11 @@ import {
   Pagination,
   PageShell,
   TabBar,
+  TopBar,
   CopyButton,
   FormField,
   columnMinWidths,
+  useToast,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
@@ -58,7 +61,9 @@ const generateActivitySessions = () => {
    Settings Account Page ---------------------------------------- */
 
 export default function SettingsAccountPage() {
-  const sidebarWidth = 200;
+  const { success } = useToast();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Account State
   const [name, setName] = useState('John Doe');
@@ -109,15 +114,25 @@ export default function SettingsAccountPage() {
 
   return (
     <PageShell
-      sidebar={<SettingsSidebar />}
+      sidebar={
+        <SettingsSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={<TabBar tabs={[]} activeTab="" onTabChange={() => {}} showAddButton={false} />}
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={false}
+          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'Account' }]} />}
+        />
+      }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         {/* Header */}
         <div>
-          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Account </h1>
+          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Account</h1>
           <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
             Manage your account information and security settings.
           </p>
@@ -148,6 +163,7 @@ export default function SettingsAccountPage() {
                       setName(draftName);
                       setEmail(draftEmail);
                       setIsEditingAccount(false);
+                      success('Profile updated successfully.');
                     }}
                     disabled={!draftName.trim() || !draftEmail.trim()}
                   >
@@ -267,6 +283,7 @@ export default function SettingsAccountPage() {
                         setIsEditingPassword(false);
                         setNewPassword('');
                         setConfirmPassword('');
+                        success('Password updated successfully.');
                       }}
                       disabled={!newPassword || !confirmPassword || newPassword !== confirmPassword}
                     >
@@ -357,7 +374,7 @@ export default function SettingsAccountPage() {
         </SectionCard>
 
         {/* Logout */}
-        <div className="pt-6 border-t border-[var(--color-border-default)] flex justify-end min-w-[600px]">
+        <div className="pt-6 border-t border-[var(--color-border-default)] flex justify-end">
           <Button variant="secondary" size="md" onClick={() => setShowLogoutModal(true)}>
             Logout{' '}
           </Button>
@@ -377,7 +394,7 @@ export default function SettingsAccountPage() {
             variant="primary"
             onClick={() => {
               setShowLogoutModal(false);
-              window.location.href = '/';
+              window.location.href = '/login';
             }}
           >
             Logout{' '}

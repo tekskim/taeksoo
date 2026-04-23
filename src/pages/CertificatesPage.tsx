@@ -215,16 +215,16 @@ export function CertificatesPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [certificates] = useState(mockCertificates);
+  const [certificates, setCertificates] = useState(mockCertificates);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'server';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [certToDelete, setCertToDelete] = useState<Certificate | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Register certificate drawer state
   const [isRegisterDrawerOpen, setIsRegisterDrawerOpen] = useState(false);
@@ -256,7 +256,16 @@ export function CertificatesPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Certificates');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -427,8 +436,18 @@ export function CertificatesPage() {
   }, [columns, columnConfig]);
 
   const handleDeleteConfirm = () => {
+    if (certToDelete) {
+      setCertificates((prev) => prev.filter((c) => c.id !== certToDelete.id));
+      setSelectedCerts((prev) => prev.filter((id) => id !== certToDelete.id));
+    }
     setDeleteModalOpen(false);
     setCertToDelete(null);
+  };
+
+  const handleBulkDelete = () => {
+    setCertificates((prev) => prev.filter((c) => !selectedCerts.includes(c.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedCerts([]);
   };
 
   return (
@@ -457,6 +476,7 @@ export function CertificatesPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Certificates' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -502,6 +522,7 @@ export function CertificatesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedCerts.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -521,6 +542,7 @@ export function CertificatesPage() {
           columns={visibleColumns}
           data={paginatedCerts}
           rowKey="id"
+          emptyMessage="No certificates found"
           selectable
           selectedKeys={selectedCerts}
           onSelectionChange={setSelectedCerts}
@@ -573,6 +595,19 @@ export function CertificatesPage() {
             intermediateCert,
           });
         }}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected certificates"
+        description="Removing the selected certificates is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedCerts.length} certificate(s)`}
       />
     </PageShell>
   );

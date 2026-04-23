@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -12,7 +12,11 @@ import {
   PageShell,
   PageHeader,
   columnMinWidths,
+  ConfirmModal,
   type TableColumn,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -63,6 +67,15 @@ const mockNFSExports: NFSExport[] = [
   },
 ];
 
+const nfsFilterFields: FilterField[] = [
+  { id: 'id', label: 'ID', type: 'text' },
+  { id: 'path', label: 'Path', type: 'text' },
+  { id: 'pseudo', label: 'Pseudo', type: 'text' },
+  { id: 'cluster', label: 'Cluster', type: 'text' },
+  { id: 'storageBackend', label: 'Storage backend', type: 'text' },
+  { id: 'accessType', label: 'Access type', type: 'text' },
+];
+
 /* ----------------------------------------
    NFS Page
    ---------------------------------------- */
@@ -72,10 +85,17 @@ export function NFSPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [nfsExports, setNfsExports] = useState<NFSExport[]>(mockNFSExports);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const rowsPerPage = 10;
 
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('NFS');
+  }, [updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -85,16 +105,31 @@ export function NFSPage() {
     closable: tab.closable,
   }));
 
-  const filteredExports = useMemo(
-    () =>
-      mockNFSExports.filter(
-        (nfs) =>
-          nfs.path.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          nfs.pseudo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          nfs.cluster.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    [searchQuery]
-  );
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  const filteredExports = useMemo(() => {
+    if (appliedFilters.length === 0) return nfsExports;
+    return nfsExports.filter((nfs) => {
+      return appliedFilters.every((filter) => {
+        const value = String(nfs[filter.fieldId as keyof NFSExport] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [nfsExports, appliedFilters]);
+
+  const handleBulkDelete = () => {
+    setNfsExports((prev) => prev.filter((nfs) => !selectedRows.includes(nfs.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
+  };
 
   const totalItems = filteredExports.length;
   const totalPages = Math.ceil(totalItems / rowsPerPage);
@@ -181,6 +216,7 @@ export function NFSPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'NFS' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -195,21 +231,24 @@ export function NFSPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <div className="w-[var(--search-input-width)]">
-                <SearchInput
-                  placeholder="Search NFS exports"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
-                  size="sm"
-                  fullWidth
-                />
-              </div>
+              <FilterSearchInput
+                filters={nfsFilterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={(f) => {
+                  setAppliedFilters(f);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
+              />
               <Button
                 variant="secondary"
                 size="sm"
                 icon={<IconDownload size={12} stroke={1.5} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
               <Button
                 variant="secondary"
@@ -227,11 +266,15 @@ export function NFSPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={!hasSelection}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={() => setAppliedFilters([])}
         />
 
         <Pagination
@@ -252,6 +295,19 @@ export function NFSPage() {
           emptyMessage="No NFS exports found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected NFS exports"
+        description="Deleting the selected NFS exports is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} NFS export(s)`}
+      />
     </PageShell>
   );
 }

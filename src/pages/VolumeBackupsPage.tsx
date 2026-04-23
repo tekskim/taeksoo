@@ -207,11 +207,11 @@ export function VolumeBackupsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [backups, setBackups] = useState(mockVolumeBackups);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [backupToDelete, setBackupToDelete] = useState<VolumeBackup | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Create backup drawer state
   const [isCreateBackupDrawerOpen, setIsCreateBackupDrawerOpen] = useState(false);
@@ -262,7 +262,16 @@ export function VolumeBackupsPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Volume Backups');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -290,6 +299,12 @@ export function VolumeBackupsPage() {
   const handleDeleteCancel = () => {
     setDeleteModalOpen(false);
     setBackupToDelete(null);
+  };
+
+  const handleBulkDelete = () => {
+    setBackups((prev) => prev.filter((b) => !selectedBackups.includes(b.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedBackups([]);
   };
 
   // Filter backups by search
@@ -515,6 +530,7 @@ export function VolumeBackupsPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -525,6 +541,7 @@ export function VolumeBackupsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedBackups.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -612,6 +629,19 @@ export function VolumeBackupsPage() {
         isOpen={isCreateBackupDrawerOpen}
         onClose={() => setIsCreateBackupDrawerOpen(false)}
         volume={null}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected volume backups"
+        description="Removing the selected volume backups is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedBackups.length} volume backup(s)`}
       />
     </PageShell>
   );

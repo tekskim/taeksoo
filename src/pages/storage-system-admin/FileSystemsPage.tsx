@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -12,7 +12,11 @@ import {
   PageShell,
   PageHeader,
   columnMinWidths,
+  ConfirmModal,
   type TableColumn,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -55,6 +59,20 @@ const mockFileSystems: FileSystem[] = [
   },
 ];
 
+const fileSystemFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'enabled',
+    label: 'Enabled',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+  { id: 'created', label: 'Created', type: 'text' },
+];
+
 /* ----------------------------------------
    Name Cell Component
    ---------------------------------------- */
@@ -85,10 +103,17 @@ export function FileSystemsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [fileSystems, setFileSystems] = useState<FileSystem[]>(mockFileSystems);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const rowsPerPage = 10;
 
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('File Systems');
+  }, [updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -98,10 +123,34 @@ export function FileSystemsPage() {
     closable: tab.closable,
   }));
 
-  const filteredFileSystems = useMemo(
-    () => mockFileSystems.filter((fs) => fs.name.toLowerCase().includes(searchQuery.toLowerCase())),
-    [searchQuery]
-  );
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  const filteredFileSystems = useMemo(() => {
+    if (appliedFilters.length === 0) return fileSystems;
+    return fileSystems.filter((fs) => {
+      return appliedFilters.every((filter) => {
+        if (filter.fieldId === 'enabled') {
+          return String(fs.enabled) === filter.value;
+        }
+        const value = String(fs[filter.fieldId as keyof FileSystem] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [fileSystems, appliedFilters]);
+
+  const handleBulkDelete = () => {
+    setFileSystems((prev) => prev.filter((fs) => !selectedRows.includes(fs.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
+  };
 
   const totalItems = filteredFileSystems.length;
   const totalPages = Math.ceil(totalItems / rowsPerPage);
@@ -170,6 +219,7 @@ export function FileSystemsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'File Systems' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -188,21 +238,24 @@ export function FileSystemsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <div className="w-[var(--search-input-width)]">
-                <SearchInput
-                  placeholder="Search file systems"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
-                  size="sm"
-                  fullWidth
-                />
-              </div>
+              <FilterSearchInput
+                filters={fileSystemFilterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={(f) => {
+                  setAppliedFilters(f);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
+              />
               <Button
                 variant="secondary"
                 size="sm"
                 icon={<IconDownload size={12} stroke={1.5} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
               <Button
                 variant="secondary"
@@ -220,11 +273,15 @@ export function FileSystemsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={!hasSelection}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={() => setAppliedFilters([])}
         />
 
         <Pagination
@@ -245,6 +302,19 @@ export function FileSystemsPage() {
           emptyMessage="No file systems found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected file systems"
+        description="Deleting the selected file systems is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} file system(s)`}
+      />
     </PageShell>
   );
 }

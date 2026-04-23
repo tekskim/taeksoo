@@ -47,11 +47,15 @@ import { InlineCopyId } from '@/components/InlineCopyId';
 
 type FloatingIPStatus = 'active' | 'error' | 'down';
 
+type AssociatedToResource = 'instance' | 'load-balancer';
+
 interface FloatingIP {
   id: string;
   floatingIp: string;
   associatedTo: string | null;
   associatedToId: string | null;
+  /** When set, controls detail-page routing; defaults to "instance" when associated. */
+  associatedToType?: AssociatedToResource;
   fixedIp: string;
   network: string;
   networkId: string;
@@ -113,6 +117,7 @@ const mockFloatingIPs: FloatingIP[] = [
     floatingIp: '172.24.4.232',
     associatedTo: 'load-balancer',
     associatedToId: 'lb-001',
+    associatedToType: 'load-balancer',
     fixedIp: '10.7.65.42',
     network: 'net-01',
     networkId: 'net-001',
@@ -186,6 +191,15 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'>
   down: 'down',
 };
 
+function pathForAssociatedResource(row: FloatingIP): string | null {
+  if (!row.associatedToId) return null;
+  const kind = row.associatedToType ?? 'instance';
+  if (kind === 'load-balancer') {
+    return `/compute/load-balancers/${row.associatedToId}`;
+  }
+  return `/compute/instances/${row.associatedToId}`;
+}
+
 /* ----------------------------------------
    Component
    ---------------------------------------- */
@@ -214,11 +228,12 @@ export function FloatingIPsPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [floatingIPs] = useState(mockFloatingIPs);
+  const [floatingIPs, setFloatingIPs] = useState(mockFloatingIPs);
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [floatingIPToDelete, setFloatingIPToDelete] = useState<FloatingIP | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Allocate floating IP drawer state
   const [isAllocateDrawerOpen, setIsAllocateDrawerOpen] = useState(false);
@@ -269,7 +284,16 @@ export function FloatingIPsPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Floating IPs');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -366,13 +390,18 @@ export function FloatingIPsPage() {
       label: 'Associated to',
       flex: 1,
       minWidth: columnMinWidths.associatedTo,
-      render: (_, row) =>
-        row.associatedTo ? (
+      render: (_, row) => {
+        if (!row.associatedTo) {
+          return <span className="block text-left w-full">-</span>;
+        }
+        const to = pathForAssociatedResource(row) ?? '#';
+        const isLb = (row.associatedToType ?? 'instance') === 'load-balancer';
+        return (
           <div className="flex items-center gap-2 justify-between w-full">
             <div className="flex flex-col gap-0.5 min-w-0 text-left">
               <Tooltip content={row.associatedTo} position="top">
                 <Link
-                  to={`/compute/instances/${row.associatedToId}`}
+                  to={to}
                   className="inline-flex items-center gap-1 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -384,21 +413,28 @@ export function FloatingIPsPage() {
                 </Link>
               </Tooltip>
               <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-                <span className="truncate" title={row.associatedToId?.substring(0, 8)}>
-                  ID : {row.associatedToId?.substring(0, 8).slice(0, 8)}
+                <span className="truncate" title={row.associatedToId ?? undefined}>
+                  ID : {row.associatedToId?.substring(0, 8)}
                 </span>
-                <InlineCopyId value={row.associatedToId?.substring(0, 8)} />
+                <InlineCopyId value={row.associatedToId} />
               </span>
             </div>
-            <Tooltip content="Instance" position="top">
+            <Tooltip content={isLb ? 'Load balancer' : 'Instance'} position="top">
               <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] cursor-default">
-                <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                {isLb ? (
+                  <IconBinaryTree
+                    size={12}
+                    stroke={1.5}
+                    className="text-[var(--color-text-subtle)]"
+                  />
+                ) : (
+                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                )}
               </div>
             </Tooltip>
           </div>
-        ) : (
-          <span className="block text-left w-full">-</span>
-        ),
+        );
+      },
     },
     {
       key: 'fixedIp',
@@ -483,10 +519,18 @@ export function FloatingIPsPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'release' && floatingIPToDelete) {
-      // Handle release
+      const id = floatingIPToDelete.id;
+      setFloatingIPs((prev) => prev.filter((f) => f.id !== id));
       setDeleteModalOpen(false);
       setFloatingIPToDelete(null);
+      setSelectedFloatingIPs((prev) => prev.filter((x) => x !== id));
     }
+  };
+
+  const handleBulkDelete = () => {
+    setFloatingIPs((prev) => prev.filter((f) => !selectedFloatingIPs.includes(f.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedFloatingIPs([]);
   };
 
   return (
@@ -515,6 +559,7 @@ export function FloatingIPsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Floating IPs' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -559,6 +604,7 @@ export function FloatingIPsPage() {
                 size="sm"
                 leftIcon={<IconUnlink size={12} />}
                 disabled={selectedFloatingIPs.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Release
               </Button>
@@ -603,6 +649,19 @@ export function FloatingIPsPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('release')}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Release selected floating IPs"
+        description="Releasing the selected floating IPs is permanent and cannot be undone."
+        confirmText="Release"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedFloatingIPs.length} floating IP(s)`}
       />
 
       {/* View Preferences Drawer */}

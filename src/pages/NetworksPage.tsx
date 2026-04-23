@@ -235,7 +235,7 @@ export function NetworksPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [networks] = useState(mockNetworks);
+  const [networks, setNetworks] = useState(mockNetworks);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'current';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -243,6 +243,7 @@ export function NetworksPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [networkToDelete, setNetworkToDelete] = useState<Network | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -285,7 +286,16 @@ export function NetworksPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Networks');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -497,10 +507,18 @@ export function NetworksPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && networkToDelete) {
-      // Handle delete
+      const id = networkToDelete.id;
+      setNetworks((prev) => prev.filter((n) => n.id !== id));
       setDeleteModalOpen(false);
       setNetworkToDelete(null);
+      setSelectedNetworks((prev) => prev.filter((x) => x !== id));
     }
+  };
+
+  const handleBulkDelete = () => {
+    setNetworks((prev) => prev.filter((n) => !selectedNetworks.includes(n.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedNetworks([]);
   };
 
   return (
@@ -529,6 +547,7 @@ export function NetworksPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Networks' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -571,6 +590,7 @@ export function NetworksPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -581,6 +601,7 @@ export function NetworksPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedNetworks.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -625,6 +646,19 @@ export function NetworksPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected networks"
+        description="Removing the selected networks is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedNetworks.length} network(s)`}
       />
 
       {/* View Preferences Drawer */}

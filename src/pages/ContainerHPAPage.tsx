@@ -106,12 +106,25 @@ const hpaData: HPARow[] = [
 
 export function ContainerHPAPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    updateActiveTabLabel('Horizontal pod autoscalers');
+  }, [updateActiveTabLabel]);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -379,7 +392,7 @@ export function ContainerHPAPage() {
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
-          breadcrumb={<Breadcrumb items={[{ label: 'HPA' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Horizontal pod autoscalers' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

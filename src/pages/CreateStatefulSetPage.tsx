@@ -1330,7 +1330,7 @@ export function CreateStatefulSetPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const handleCancel = useCallback(() => {
-    navigate('/container/deployments');
+    navigate('/container/statefulsets');
   }, [navigate]);
 
   const handleCreate = useCallback(() => {

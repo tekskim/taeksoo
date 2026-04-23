@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Breadcrumb,
   VStack,
   SectionCard,
   Select,
@@ -10,6 +11,8 @@ import {
   FormField,
   PageShell,
   TabBar,
+  TopBar,
+  useToast,
 } from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 
@@ -17,7 +20,9 @@ import { SettingsSidebar } from '@/components/SettingsSidebar';
    Settings Notifications Page ---------------------------------------- */
 
 export default function SettingsNotificationsPage() {
-  const sidebarWidth = 200;
+  const { success } = useToast();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Global Notifications State
   const [globalWhatToNotify, setGlobalWhatToNotify] = useState('all');
@@ -45,6 +50,7 @@ export default function SettingsNotificationsPage() {
       ...prev,
       [service]: { ...prev[service], [field]: value },
     }));
+    success('Notification preference updated.');
   };
 
   // Duration options
@@ -71,13 +77,21 @@ export default function SettingsNotificationsPage() {
       sidebar={<SettingsSidebar />}
       sidebarWidth={sidebarWidth}
       tabBar={<TabBar tabs={[]} activeTab="" onTabChange={() => {}} showAddButton={false} />}
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={false}
+          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'Notifications' }]} />}
+        />
+      }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         {/* Header */}
         <div>
           <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-            Notifications{' '}
+            Notifications
           </h1>
           <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
             Configure how you receive notifications.
@@ -90,13 +104,19 @@ export default function SettingsNotificationsPage() {
           <SectionCard.Content>
             {/* Global Notification Setting */}
             <VStack gap={4}>
-              <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
                 Global Notification Setting
               </span>
 
               <div className="pl-2">
                 <FormField label="What to Notify" spacing="loose">
-                  <RadioGroup value={globalWhatToNotify} onChange={setGlobalWhatToNotify}>
+                  <RadioGroup
+                    value={globalWhatToNotify}
+                    onChange={(val) => {
+                      setGlobalWhatToNotify(val);
+                      success('Notification preference updated.');
+                    }}
+                  >
                     <Radio value="all" label="All" />
                     <Radio value="errors" label="Errors only" />
                     <Radio value="off" label="Off" />
@@ -108,7 +128,10 @@ export default function SettingsNotificationsPage() {
                 <FormField label="Duration">
                   <Select
                     value={globalDuration}
-                    onChange={setGlobalDuration}
+                    onChange={(val) => {
+                      setGlobalDuration(val);
+                      success('Duration updated.');
+                    }}
                     options={durationOptions}
                     width="sm"
                     disabled={globalWhatToNotify === 'off'}
@@ -120,7 +143,10 @@ export default function SettingsNotificationsPage() {
                 <FormField label="Sound" spacing="loose">
                   <Toggle
                     checked={globalSound}
-                    onChange={(e) => setGlobalSound(e.target.checked)}
+                    onChange={(e) => {
+                      setGlobalSound(e.target.checked);
+                      success(e.target.checked ? 'Sound enabled.' : 'Sound disabled.');
+                    }}
                     disabled={globalWhatToNotify === 'off'}
                   />
                 </FormField>
@@ -129,8 +155,8 @@ export default function SettingsNotificationsPage() {
 
             {/* In-app Notification Setting */}
             <VStack gap={4}>
-              <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
-                In-app Notification Setting{' '}
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                In-app Notification Setting
               </span>
 
               {/* Service-specific settings */}

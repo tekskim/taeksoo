@@ -1402,8 +1402,9 @@ export default function CreateLoadBalancerPage() {
     navigate('/compute/load-balancers');
   };
 
-  // Check if create button should be disabled
-  const isCreateDisabled = !loadBalancerName || !selectedNetwork;
+  const isCreateDisabled = !SECTION_ORDER.every(
+    (s) => sectionStatus[s] === 'done' || sectionStatus[s] === 'skipped'
+  );
 
   return (
     <PageShell

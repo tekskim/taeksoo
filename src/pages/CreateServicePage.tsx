@@ -21,9 +21,9 @@ import {
   TableLink,
   Pagination,
   PageShell,
+  WizardSummary,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
-import { WizardSectionStatusIcon } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -148,14 +148,6 @@ const MOCK_MATCHING_PODS: MatchingPod[] = [
 ];
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  return <WizardSectionStatusIcon status={status} />;
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 
@@ -180,36 +172,16 @@ function SummarySidebar({
     return 'done';
   };
 
+  const summaryItems: WizardSummaryItem[] = SERVICE_SECTION_ORDER.map((key) => ({
+    key,
+    label: SERVICE_SECTION_LABELS[key],
+    status: mapState(sectionStatus[key]),
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
-        {/* Summary Content */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
-
-            <VStack gap={0}>
-              {SERVICE_SECTION_ORDER.map((key) => {
-                const status = mapState(sectionStatus[key]);
-                return (
-                  <HStack key={key} justify="between" align="center" className="py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SERVICE_SECTION_LABELS[key]}
-                    </span>
-                    {status === 'writing' ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <SummaryStatusIcon status={status} />
-                    )}
-                  </HStack>
-                );
-              })}
-            </VStack>
-          </VStack>
-        </div>
+        <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
         <HStack gap={2}>

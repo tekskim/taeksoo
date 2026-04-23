@@ -19,6 +19,7 @@ import {
   DetailHeader,
   PageShell,
   ErrorState,
+  ConfirmModal,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -399,6 +400,7 @@ export default function IAMPolicyDetailPage() {
 
   // Version history tab state
   const [expandedVersions, setExpandedVersions] = useState<Set<string>>(new Set(['v-004']));
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const itemsPerPage = 10;
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -647,10 +649,20 @@ export default function IAMPolicyDetailPage() {
           <DetailHeader.Title>{policy.name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={() => console.log('Edit policy', policy.id)}
+            >
               Edit
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
             <ContextMenu items={moreActionsItems} trigger="click" align="right">
@@ -686,7 +698,12 @@ export default function IAMPolicyDetailPage() {
                   <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     Permissions
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconEdit size={12} />}
+                    onClick={() => console.log('Edit permissions', policy.id)}
+                  >
                     Edit
                   </Button>
                 </HStack>
@@ -772,7 +789,12 @@ export default function IAMPolicyDetailPage() {
                   <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     Roles
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconSettings size={12} />}
+                    onClick={() => console.log('Manage roles', policy.id)}
+                  >
                     Manage roles
                   </Button>
                 </HStack>
@@ -891,6 +913,20 @@ export default function IAMPolicyDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Delete policy"
+        description="Removing this policy is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/iam/policies');
+        }}
+      />
     </PageShell>
   );
 }

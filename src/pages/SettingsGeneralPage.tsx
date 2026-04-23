@@ -1,5 +1,16 @@
 import { useState } from 'react';
-import { VStack, SectionCard, Select, Toggle, FormField, PageShell, TabBar } from '@/design-system';
+import {
+  Breadcrumb,
+  VStack,
+  SectionCard,
+  Select,
+  Toggle,
+  FormField,
+  PageShell,
+  TabBar,
+  TopBar,
+  useToast,
+} from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 import { useDarkMode } from '@/hooks/useDarkMode';
 
@@ -38,27 +49,40 @@ const timezoneOptions = [
 
 export default function SettingsGeneralPage() {
   const { theme, setTheme } = useDarkMode();
-  const sidebarWidth = 200;
+  const { success } = useToast();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => localStorage.getItem('tds-language') || 'en');
   const [timezone, setTimezone] = useState('Asia/Seoul');
   const [useLocationTimezone, setUseLocationTimezone] = useState(false);
 
   const handleThemeChange = (value: string) => {
     setTheme(value as 'light' | 'dark' | 'system');
+    success('Theme updated successfully.');
   };
 
   return (
     <PageShell
-      sidebar={<SettingsSidebar />}
+      sidebar={
+        <SettingsSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={<TabBar tabs={[]} activeTab="" onTabChange={() => {}} showAddButton={false} />}
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={false}
+          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'General' }]} />}
+        />
+      }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         {/* Header */}
         <div>
-          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">General </h1>
+          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">General</h1>
           <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
             Configure your display and localization preferences.
           </p>
@@ -83,7 +107,11 @@ export default function SettingsGeneralPage() {
             >
               <Select
                 value={language}
-                onChange={setLanguage}
+                onChange={(val) => {
+                  setLanguage(val);
+                  localStorage.setItem('tds-language', val);
+                  success('Language updated successfully.');
+                }}
                 options={languageOptions}
                 width="md"
               />
@@ -96,7 +124,10 @@ export default function SettingsGeneralPage() {
               >
                 <Select
                   value={timezone}
-                  onChange={setTimezone}
+                  onChange={(val) => {
+                    setTimezone(val);
+                    success('Time zone updated successfully.');
+                  }}
                   options={timezoneOptions}
                   width="md"
                   disabled={useLocationTimezone}
@@ -121,6 +152,11 @@ export default function SettingsGeneralPage() {
                         setTimezone(detectedTimezone);
                       }
                     }
+                    success(
+                      checked
+                        ? 'Location-based time zone enabled.'
+                        : 'Location-based time zone disabled.'
+                    );
                   }}
                 />
               </FormField>

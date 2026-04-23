@@ -315,7 +315,16 @@ export function FlavorsPage() {
   }, []);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Flavors');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -537,6 +546,7 @@ export function FlavorsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Flavors' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -548,7 +558,7 @@ export function FlavorsPage() {
             <Tab value="cpu">CPU</Tab>
             <Tab value="gpu">GPU</Tab>
             <Tab value="mpu">MPU</Tab>
-            <Tab value="custom">Bare metal</Tab>
+            <Tab value="custom">Custom</Tab>
           </TabList>
         </Tabs>
 
@@ -568,6 +578,7 @@ export function FlavorsPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }

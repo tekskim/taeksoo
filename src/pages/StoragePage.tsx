@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   Table,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ListToolbar,
   StatusIndicator,
@@ -16,8 +16,11 @@ import {
   PageHeader,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
   fixedColumns,
   columnMinWidths,
+  ConfirmModal,
 } from '@/design-system';
 import { AgentSidebar } from '@/components/AgentSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -113,14 +116,41 @@ interface DataSourceRow {
 }
 
 /* ----------------------------------------
+   Filter fields
+   ---------------------------------------- */
+const dataSourceFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [{ value: 'File', label: 'File' }],
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'completed', label: 'Completed' },
+      { value: 'error', label: 'Error' },
+      { value: 'processing', label: 'Processing' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'draft', label: 'Draft' },
+    ],
+  },
+];
+
+/* ----------------------------------------
    Main StoragePage Component
    ---------------------------------------- */
 export function StoragePage() {
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
   const [selectedDataSources, setSelectedDataSources] = useState<string[]>([]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
 
@@ -137,8 +167,16 @@ export function StoragePage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
+  useEffect(() => {
+    updateActiveTabLabel('Data Sources');
+  }, [updateActiveTabLabel]);
+
   // Mock data
-  const dataSources: DataSourceRow[] = [
+  const [dataSources, setDataSources] = useState<DataSourceRow[]>([
     {
       id: '1',
       favorite: false,
@@ -202,7 +240,13 @@ export function StoragePage() {
       size: '60 MB',
       createdAt: 'Nov 11, 2026, 2:51 PM',
     },
-  ];
+  ]);
+
+  const handleBulkDelete = () => {
+    setDataSources((prev) => prev.filter((ds) => !selectedDataSources.includes(ds.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedDataSources([]);
+  };
 
   // Status mapping for StatusIndicator
   const statusMap: Record<DataSourceRow['status'], 'active' | 'shutoff' | 'pending'> = {
@@ -213,16 +257,20 @@ export function StoragePage() {
     draft: 'pending',
   };
 
-  // Filter data sources by search
+  // Filter data sources
   const filteredDataSources = useMemo(() => {
-    if (!searchQuery) return dataSources;
+    if (appliedFilters.length === 0) return dataSources;
 
-    return dataSources.filter(
-      (ds) =>
-        ds.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        ds.type.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [dataSources, searchQuery]);
+    return dataSources.filter((ds) => {
+      return appliedFilters.every((filter) => {
+        const value = ds[filter.fieldId as keyof DataSourceRow];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        return true;
+      });
+    });
+  }, [dataSources, appliedFilters]);
 
   const totalPages = Math.ceil(filteredDataSources.length / rowsPerPage);
   const paginatedDataSources = useMemo(() => {
@@ -411,12 +459,13 @@ export function StoragePage() {
           }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         <PageHeader
           title="Data sources"
           actions={
-            <Button variant="primary" size="md" onClick={() => {}}>
+            <Button variant="primary" size="md" onClick={() => console.log('Create data source')}>
               Create data source
             </Button>
           }
@@ -437,16 +486,15 @@ export function StoragePage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <div className="w-[var(--search-input-width)]">
-                  <SearchInput
-                    placeholder="Search data sources by attributes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
-                    size="sm"
-                    fullWidth
-                  />
-                </div>
+                <FilterSearchInput
+                  filters={dataSourceFilterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
+                  placeholder="Search data sources by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
+                />
               </ListToolbar.Actions>
             }
             bulkActions={
@@ -456,6 +504,7 @@ export function StoragePage() {
                   size="sm"
                   leftIcon={<IconTrash size={12} />}
                   disabled={selectedDataSources.length === 0}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Delete
                 </Button>
@@ -485,6 +534,19 @@ export function StoragePage() {
           />
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected data sources"
+        description="Deleting the selected data sources is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedDataSources.length} data source(s)`}
+      />
     </PageShell>
   );
 }
