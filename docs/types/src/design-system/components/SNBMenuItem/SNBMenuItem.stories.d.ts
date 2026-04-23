@@ -1,0 +1,14 @@
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { SNBMenuItem } from './SNBMenuItem';
+declare const meta: Meta<typeof SNBMenuItem>;
+export default meta;
+type Story = StoryObj<typeof SNBMenuItem>;
+export declare const Default: Story;
+export declare const Hover: Story;
+export declare const Selected: Story;
+export declare const TextType: Story;
+export declare const TextTypeSelected: Story;
+export declare const AllStates: Story;
+export declare const NavigationMenu: Story;
+export declare const WithIsSelected: Story;
+export declare const Interactive: Story;

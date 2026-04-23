@@ -1,0 +1,10 @@
+import { Meta, StoryObj } from '@storybook/react';
+declare const meta: Meta;
+export default meta;
+type Story = StoryObj;
+export declare const AllIcons: Story;
+export declare const ByCategory: Story;
+export declare const Sizes: Story;
+export declare const StrokeWidth: Story;
+export declare const Colors: Story;
+export declare const UsageExample: Story;

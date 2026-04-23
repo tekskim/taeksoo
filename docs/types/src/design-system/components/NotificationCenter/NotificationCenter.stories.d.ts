@@ -1,0 +1,12 @@
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { NotificationCenter } from './NotificationCenter';
+declare const meta: Meta<typeof NotificationCenter>;
+export default meta;
+type Story = StoryObj<typeof NotificationCenter>;
+export declare const Default: Story;
+export declare const Interactive: Story;
+export declare const EmptyState: Story;
+export declare const AllRead: Story;
+export declare const OnlyErrors: Story;
+export declare const WithDetails: Story;
+export declare const ManyNotifications: Story;

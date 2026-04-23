@@ -1,0 +1,11 @@
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { MonitoringToolbar } from './MonitoringToolbar';
+declare const meta: Meta<typeof MonitoringToolbar>;
+export default meta;
+type Story = StoryObj<typeof MonitoringToolbar>;
+export declare const Default: Story;
+export declare const Controlled: Story;
+export declare const WithoutRefresh: Story;
+export declare const CustomOptions: Story;
+export declare const WithCustomPeriod: Story;
+export declare const InDashboardContext: Story;

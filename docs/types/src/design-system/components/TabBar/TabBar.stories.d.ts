@@ -1,0 +1,11 @@
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { TabBar } from './TabBar';
+declare const meta: Meta<typeof TabBar>;
+export default meta;
+type Story = StoryObj<typeof TabBar>;
+export declare const Default: Story;
+export declare const WithIcons: Story;
+export declare const WithoutWindowControls: Story;
+export declare const WithoutAddButton: Story;
+export declare const SingleTab: Story;
+export declare const ManyTabs: Story;

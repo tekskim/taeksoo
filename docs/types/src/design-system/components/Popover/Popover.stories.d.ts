@@ -1,0 +1,15 @@
+import { Meta, StoryObj } from '@storybook/react';
+import { Popover } from './Popover';
+declare const meta: Meta<typeof Popover>;
+export default meta;
+type Story = StoryObj<typeof Popover>;
+export declare const Default: Story;
+export declare const HoverTrigger: Story;
+export declare const WithMenu: Story;
+export declare const Positions: Story;
+export declare const NoArrow: Story;
+export declare const WithForm: Story;
+export declare const Controlled: Story;
+export declare const Disabled: Story;
+export declare const WithFormField: Story;
+export declare const InfoPopover: Story;
