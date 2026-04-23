@@ -41,13 +41,32 @@ import { ComputeAdminInstanceSnapshotDetailPage } from '@/pages/ComputeAdminInst
 import { ComputeAdminImagesPage } from '@/pages/ComputeAdminImagesPage';
 import { ComputeAdminImageDetailPage } from '@/pages/ComputeAdminImageDetailPage';
 import { ComputeAdminCreateImagePage } from '@/pages/ComputeAdminCreateImagePage';
-import { ImagesPage } from '@/pages/ImagesPage';
 import { ComputeImagesPage } from '@/pages/ComputeImagesPage';
-import { ImageDetailPage } from '@/pages/ImageDetailPage';
 import { ComputeImageDetailPage } from '@/pages/ComputeImageDetailPage';
-import { BucketsPage } from '@/pages/BucketsPage';
-import { BucketDetailPage } from '@/pages/BucketDetailPage';
-import CreateBucketPage from '@/pages/CreateBucketPage';
+
+// Storage - System Admin pages
+import { ImagesPage as SysAdminImagesPage } from '@/pages/storage-system-admin/ImagesPage';
+import { ImageDetailPage as SysAdminImageDetailPage } from '@/pages/storage-system-admin/ImageDetailPage';
+import { BucketsPage as SysAdminBucketsPage } from '@/pages/storage-system-admin/BucketsPage';
+import { BucketDetailPage as SysAdminBucketDetailPage } from '@/pages/storage-system-admin/BucketDetailPage';
+import SysAdminCreateBucketPage from '@/pages/storage-system-admin/CreateBucketPage';
+
+// Storage - Domain Admin pages
+import { ImagesPage as DomainAdminImagesPage } from '@/pages/storage-domain-admin/ImagesPage';
+import { ImageDetailPage as DomainAdminImageDetailPage } from '@/pages/storage-domain-admin/ImageDetailPage';
+import { BucketsPage as DomainAdminBucketsPage } from '@/pages/storage-domain-admin/BucketsPage';
+import { BucketDetailPage as DomainAdminBucketDetailPage } from '@/pages/storage-domain-admin/BucketDetailPage';
+import DomainAdminCreateBucketPage from '@/pages/storage-domain-admin/CreateBucketPage';
+import DomainAdminEditBucketPage from '@/pages/storage-domain-admin/EditBucketPage';
+import { OverallPerformancePage as DomainAdminOverallPerformancePage } from '@/pages/storage-domain-admin/OverallPerformancePage';
+import { PoolsPage as DomainAdminPoolsPage } from '@/pages/storage-domain-admin/PoolsPage';
+import { StoragePoolDetailPage as DomainAdminStoragePoolDetailPage } from '@/pages/storage-domain-admin/StoragePoolDetailPage';
+
+// Storage - Member pages
+import { BucketsPage as MemberBucketsPage } from '@/pages/storage-member/BucketsPage';
+import { BucketDetailPage as MemberBucketDetailPage } from '@/pages/storage-member/BucketDetailPage';
+import MemberCreateBucketPage from '@/pages/storage-member/CreateBucketPage';
+import MemberEditBucketPage from '@/pages/storage-member/EditBucketPage';
 import { FlavorsPage } from '@/pages/FlavorsPage';
 import { FlavorDetailPage } from '@/pages/FlavorDetailPage';
 import { ComputeAdminFlavorsPage } from '@/pages/ComputeAdminFlavorsPage';
@@ -161,18 +180,18 @@ import { CreateMCPTemplatePage } from '@/pages/CreateMCPTemplatePage';
 import { StorageHomePage } from '@/pages/StorageHomePage';
 import { StorageDomainAdminHomePage } from '@/pages/StorageDomainAdminHomePage';
 import { StorageMemberHomePage } from '@/pages/StorageMemberHomePage';
-import { PoolsPage } from '@/pages/PoolsPage';
-import { StoragePoolDetailPage } from '@/pages/StoragePoolDetailPage';
-import { HostsPage } from '@/pages/HostsPage';
-import HostDetailPage from '@/pages/HostDetailPage';
-import { OSDsPage } from '@/pages/OSDsPage';
-import { OSDDetailPage } from '@/pages/OSDDetailPage';
-import { PhysicalDisksPage } from '@/pages/PhysicalDisksPage';
-import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
-import { FileSystemsPage } from '@/pages/FileSystemsPage';
-import { FileSystemDetailPage } from '@/pages/FileSystemDetailPage';
-import { NFSPage } from '@/pages/NFSPage';
-import { NFSExportDetailPage } from '@/pages/NFSExportDetailPage';
+import { PoolsPage as SysAdminPoolsPage } from '@/pages/storage-system-admin/PoolsPage';
+import { StoragePoolDetailPage as SysAdminStoragePoolDetailPage } from '@/pages/storage-system-admin/StoragePoolDetailPage';
+import { HostsPage as SysAdminHostsPage } from '@/pages/storage-system-admin/HostsPage';
+import SysAdminHostDetailPage from '@/pages/storage-system-admin/HostDetailPage';
+import { OSDsPage as SysAdminOSDsPage } from '@/pages/storage-system-admin/OSDsPage';
+import { OSDDetailPage as SysAdminOSDDetailPage } from '@/pages/storage-system-admin/OSDDetailPage';
+import { PhysicalDisksPage as SysAdminPhysicalDisksPage } from '@/pages/storage-system-admin/PhysicalDisksPage';
+import { OverallPerformancePage as SysAdminOverallPerformancePage } from '@/pages/storage-system-admin/OverallPerformancePage';
+import { FileSystemsPage as SysAdminFileSystemsPage } from '@/pages/storage-system-admin/FileSystemsPage';
+import { FileSystemDetailPage as SysAdminFileSystemDetailPage } from '@/pages/storage-system-admin/FileSystemDetailPage';
+import { NFSPage as SysAdminNFSPage } from '@/pages/storage-system-admin/NFSPage';
+import { NFSExportDetailPage as SysAdminNFSExportDetailPage } from '@/pages/storage-system-admin/NFSExportDetailPage';
 
 // Pages - Container
 import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
@@ -728,66 +747,55 @@ function AppRoutes() {
 
       {/* Storage - System Admin Routes */}
       <Route path="/storage" element={<StorageHomePage />} />
-      <Route path="/storage/pools" element={<PoolsPage />} />
-      <Route path="/storage/pools/:id" element={<StoragePoolDetailPage />} />
-      <Route path="/storage/hosts" element={<HostsPage />} />
-      <Route path="/storage/hosts/:id" element={<HostDetailPage />} />
-      <Route path="/storage/osds" element={<OSDsPage />} />
-      <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
-      <Route path="/storage/physical-disks" element={<PhysicalDisksPage />} />
-      <Route path="/storage/images" element={<ImagesPage />} />
-      <Route path="/storage/images/:id" element={<ImageDetailPage />} />
-      <Route path="/storage/buckets" element={<BucketsPage />} />
-      <Route path="/storage/buckets/create" element={<CreateBucketPage />} />
-      <Route path="/storage/buckets/create-v2" element={<CreateBucketPage />} />
-      <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
-      <Route path="/storage/performance" element={<OverallPerformancePage />} />
-      <Route path="/storage/file-systems" element={<FileSystemsPage />} />
-      <Route path="/storage/file-systems/:id" element={<FileSystemDetailPage />} />
-      <Route path="/storage/nfs" element={<NFSPage />} />
-      <Route path="/storage/nfs/:id" element={<NFSExportDetailPage />} />
+      <Route path="/storage/pools" element={<SysAdminPoolsPage />} />
+      <Route path="/storage/pools/:id" element={<SysAdminStoragePoolDetailPage />} />
+      <Route path="/storage/hosts" element={<SysAdminHostsPage />} />
+      <Route path="/storage/hosts/:id" element={<SysAdminHostDetailPage />} />
+      <Route path="/storage/osds" element={<SysAdminOSDsPage />} />
+      <Route path="/storage/osds/:id" element={<SysAdminOSDDetailPage />} />
+      <Route path="/storage/physical-disks" element={<SysAdminPhysicalDisksPage />} />
+      <Route path="/storage/images" element={<SysAdminImagesPage />} />
+      <Route path="/storage/images/:id" element={<SysAdminImageDetailPage />} />
+      <Route path="/storage/buckets" element={<SysAdminBucketsPage />} />
+      <Route path="/storage/buckets/create" element={<SysAdminCreateBucketPage />} />
+      <Route path="/storage/buckets/create-v2" element={<SysAdminCreateBucketPage />} />
+      <Route path="/storage/buckets/:id" element={<SysAdminBucketDetailPage />} />
+      <Route path="/storage/performance" element={<SysAdminOverallPerformancePage />} />
+      <Route path="/storage/file-systems" element={<SysAdminFileSystemsPage />} />
+      <Route path="/storage/file-systems/:id" element={<SysAdminFileSystemDetailPage />} />
+      <Route path="/storage/nfs" element={<SysAdminNFSPage />} />
+      <Route path="/storage/nfs/:id" element={<SysAdminNFSExportDetailPage />} />
 
       {/* Storage - Domain Admin Routes */}
       <Route path="/storage-domain-admin" element={<StorageDomainAdminHomePage />} />
-      <Route path="/storage-domain-admin/pools" element={<PoolsPage />} />
-      <Route path="/storage-domain-admin/pools/:id" element={<StoragePoolDetailPage />} />
-      <Route path="/storage-domain-admin/hosts" element={<HostsPage />} />
-      <Route path="/storage-domain-admin/hosts/:id" element={<HostDetailPage />} />
-      <Route path="/storage-domain-admin/osds" element={<OSDsPage />} />
-      <Route path="/storage-domain-admin/osds/:id" element={<OSDDetailPage />} />
-      <Route path="/storage-domain-admin/physical-disks" element={<PhysicalDisksPage />} />
-      <Route path="/storage-domain-admin/images" element={<ImagesPage />} />
-      <Route path="/storage-domain-admin/images/:id" element={<ImageDetailPage />} />
-      <Route path="/storage-domain-admin/buckets" element={<BucketsPage />} />
-      <Route path="/storage-domain-admin/buckets/create" element={<CreateBucketPage />} />
-      <Route path="/storage-domain-admin/buckets/create-v2" element={<CreateBucketPage />} />
-      <Route path="/storage-domain-admin/buckets/:id" element={<BucketDetailPage />} />
-      <Route path="/storage-domain-admin/performance" element={<OverallPerformancePage />} />
-      <Route path="/storage-domain-admin/file-systems" element={<FileSystemsPage />} />
-      <Route path="/storage-domain-admin/file-systems/:id" element={<FileSystemDetailPage />} />
-      <Route path="/storage-domain-admin/nfs" element={<NFSPage />} />
-      <Route path="/storage-domain-admin/nfs/:id" element={<NFSExportDetailPage />} />
+      <Route path="/storage-domain-admin/pools" element={<DomainAdminPoolsPage />} />
+      <Route
+        path="/storage-domain-admin/pools/:id"
+        element={<DomainAdminStoragePoolDetailPage />}
+      />
+      <Route path="/storage-domain-admin/images" element={<DomainAdminImagesPage />} />
+      <Route path="/storage-domain-admin/images/:id" element={<DomainAdminImageDetailPage />} />
+      <Route path="/storage-domain-admin/buckets" element={<DomainAdminBucketsPage />} />
+      <Route
+        path="/storage-domain-admin/buckets/create"
+        element={<DomainAdminCreateBucketPage />}
+      />
+      <Route
+        path="/storage-domain-admin/buckets/:id/edit"
+        element={<DomainAdminEditBucketPage />}
+      />
+      <Route path="/storage-domain-admin/buckets/:id" element={<DomainAdminBucketDetailPage />} />
+      <Route
+        path="/storage-domain-admin/performance"
+        element={<DomainAdminOverallPerformancePage />}
+      />
 
       {/* Storage - Member Routes */}
       <Route path="/storage-member" element={<StorageMemberHomePage />} />
-      <Route path="/storage-member/pools" element={<PoolsPage />} />
-      <Route path="/storage-member/pools/:id" element={<StoragePoolDetailPage />} />
-      <Route path="/storage-member/hosts" element={<HostsPage />} />
-      <Route path="/storage-member/hosts/:id" element={<HostDetailPage />} />
-      <Route path="/storage-member/osds" element={<OSDsPage />} />
-      <Route path="/storage-member/osds/:id" element={<OSDDetailPage />} />
-      <Route path="/storage-member/physical-disks" element={<PhysicalDisksPage />} />
-      <Route path="/storage-member/images" element={<ImagesPage />} />
-      <Route path="/storage-member/images/:id" element={<ImageDetailPage />} />
-      <Route path="/storage-member/buckets" element={<BucketsPage />} />
-      <Route path="/storage-member/buckets/create" element={<CreateBucketPage />} />
-      <Route path="/storage-member/buckets/create-v2" element={<CreateBucketPage />} />
-      <Route path="/storage-member/buckets/:id" element={<BucketDetailPage />} />
-      <Route path="/storage-member/performance" element={<OverallPerformancePage />} />
-      <Route path="/storage-member/file-systems" element={<FileSystemsPage />} />
-      <Route path="/storage-member/file-systems/:id" element={<FileSystemDetailPage />} />
-      <Route path="/storage-member/nfs" element={<NFSPage />} />
-      <Route path="/storage-member/nfs/:id" element={<NFSExportDetailPage />} />
+      <Route path="/storage-member/buckets" element={<MemberBucketsPage />} />
+      <Route path="/storage-member/buckets/create" element={<MemberCreateBucketPage />} />
+      <Route path="/storage-member/buckets/:id/edit" element={<MemberEditBucketPage />} />
+      <Route path="/storage-member/buckets/:id" element={<MemberBucketDetailPage />} />
 
       {/* Container Routes */}
       <Route path="/container" element={<ContainerHomePage />} />

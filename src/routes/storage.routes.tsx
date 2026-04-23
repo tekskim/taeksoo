@@ -1,23 +1,23 @@
 import { lazy } from 'react';
 import { Route } from 'react-router-dom';
 
-// Lazy load all storage pages for code splitting
 const StorageHomePage = lazy(() => import('@/pages/StorageHomePage'));
-const StoragePoolDetailPage = lazy(() => import('@/pages/StoragePoolDetailPage'));
-const HostsPage = lazy(() => import('@/pages/HostsPage'));
-const HostDetailPage = lazy(() => import('@/pages/HostDetailPage'));
-const OSDsPage = lazy(() => import('@/pages/OSDsPage'));
-const OSDDetailPage = lazy(() => import('@/pages/OSDDetailPage'));
-const PoolsPage = lazy(() => import('@/pages/PoolsPage'));
-const BucketsPage = lazy(() => import('@/pages/BucketsPage'));
-const BucketDetailPage = lazy(() => import('@/pages/BucketDetailPage'));
-const CreateBucketPage = lazy(() => import('@/pages/CreateBucketPage'));
-const ImagesPage = lazy(() => import('@/pages/ImagesPage'));
-const ImageDetailPage = lazy(() => import('@/pages/ImageDetailPage'));
+const PoolsPage = lazy(() => import('@/pages/storage-system-admin/PoolsPage'));
+const StoragePoolDetailPage = lazy(
+  () => import('@/pages/storage-system-admin/StoragePoolDetailPage')
+);
+const HostsPage = lazy(() => import('@/pages/storage-system-admin/HostsPage'));
+const HostDetailPage = lazy(() => import('@/pages/storage-system-admin/HostDetailPage'));
+const OSDsPage = lazy(() => import('@/pages/storage-system-admin/OSDsPage'));
+const OSDDetailPage = lazy(() => import('@/pages/storage-system-admin/OSDDetailPage'));
+const BucketsPage = lazy(() => import('@/pages/storage-system-admin/BucketsPage'));
+const BucketDetailPage = lazy(() => import('@/pages/storage-system-admin/BucketDetailPage'));
+const CreateBucketPage = lazy(() => import('@/pages/storage-system-admin/CreateBucketPage'));
+const ImagesPage = lazy(() => import('@/pages/storage-system-admin/ImagesPage'));
+const ImageDetailPage = lazy(() => import('@/pages/storage-system-admin/ImageDetailPage'));
 
 export const storageRoutes = (
   <>
-    {/* Storage Routes */}
     <Route path="/storage" element={<StorageHomePage />} />
     <Route path="/storage/pools" element={<PoolsPage />} />
     <Route path="/storage/pools/:id" element={<StoragePoolDetailPage />} />

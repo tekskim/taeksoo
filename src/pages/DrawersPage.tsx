@@ -170,6 +170,7 @@ import { CreateFolderDrawer } from '@/components/CreateFolderDrawer';
 import { CreateObjectDrawer } from '@/components/CreateObjectDrawer';
 import { MoveFolderDrawer } from '@/components/MoveFolderDrawer';
 import { EditFileDrawer } from '@/components/EditFileDrawer';
+import { EditFolderDrawer } from '@/components/EditFolderDrawer';
 import { UserGroupsDrawer } from '@/components/UserGroupsDrawer';
 import { GroupMembersDrawer } from '@/components/GroupMembersDrawer';
 import { GroupRolesDrawer } from '@/components/GroupRolesDrawer';
@@ -1378,13 +1379,18 @@ const STORAGE_OBJECT_ITEMS: DrawerSearchItem[] = [
     category: 'Object storage',
   },
   {
-    title: 'Move files',
+    title: 'Move objects',
     description: 'Move files or folders to a different location within the bucket.',
     category: 'Object storage',
   },
   {
-    title: 'Edit object',
-    description: 'Edit object name and manage tags.',
+    title: 'Edit file',
+    description: 'Edit file name and manage tags.',
+    category: 'Object storage',
+  },
+  {
+    title: 'Edit folder',
+    description: 'Rename a folder within a bucket.',
     category: 'Object storage',
   },
 ];
@@ -2551,7 +2557,7 @@ export function DrawersPage() {
                         Drawers{' '}
                       </span>
                       <span className="text-body-md text-[var(--color-text-subtle)]">
-                        (5 drawers)
+                        (6 drawers)
                       </span>
                     </div>
                   </div>
@@ -2573,16 +2579,22 @@ export function DrawersPage() {
                         onOpen={() => openDrawerFn('create-object')}
                       />
                       <DrawerCard
-                        title="Move files"
+                        title="Move objects"
                         description="Move files or folders to a different location within the bucket."
                         category="Object storage"
                         onOpen={() => openDrawerFn('move-files')}
                       />
                       <DrawerCard
-                        title="Edit object"
-                        description="Edit object name and manage tags."
+                        title="Edit file"
+                        description="Edit file name and manage tags."
                         category="Object storage"
                         onOpen={() => openDrawerFn('edit-object')}
+                      />
+                      <DrawerCard
+                        title="Edit folder"
+                        description="Rename a folder within a bucket."
+                        category="Object storage"
+                        onOpen={() => openDrawerFn('edit-folder')}
                       />
                     </FilteredGroup>
 
@@ -3538,6 +3550,7 @@ export function DrawersPage() {
       <MoveFolderDrawer
         isOpen={openDrawer === 'move-files'}
         onClose={closeDrawer}
+        fileName="{file name}"
         currentPath="folder/~"
         onSubmit={(targetPath) => {
           console.log('Move files to:', targetPath);
@@ -3551,6 +3564,16 @@ export function DrawersPage() {
         objectName="{Current Folder Name}"
         onSubmit={(name, tags) => {
           console.log('Edit object:', name, tags);
+        }}
+      />
+
+      {/* Edit Folder Drawer */}
+      <EditFolderDrawer
+        isOpen={openDrawer === 'edit-folder'}
+        onClose={closeDrawer}
+        folderName="{Current Folder Name}"
+        onSubmit={(name) => {
+          console.log('Edit folder:', name);
         }}
       />
 

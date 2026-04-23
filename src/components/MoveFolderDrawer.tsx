@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, FormField } from '@/design-system';
+import { Drawer, Button, Input, FormField, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconChevronDown, IconChevronRight, IconFolder, IconFolderOpen } from '@tabler/icons-react';
 
@@ -17,6 +17,7 @@ export interface FolderNode {
 export interface MoveFolderDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  fileName?: string;
   currentPath?: string;
   folders?: FolderNode[];
   onSubmit?: (targetPath: string) => void;
@@ -195,6 +196,7 @@ const DEFAULT_FOLDERS: FolderNode[] = [
 export function MoveFolderDrawer({
   isOpen,
   onClose,
+  fileName = '{file name}',
   currentPath = 'folder/~',
   folders = DEFAULT_FOLDERS,
   onSubmit,
@@ -257,18 +259,18 @@ export function MoveFolderDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Move files"
+      title="Move objects"
       width={360}
       footer={
-        <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-[152px]"
+            className="flex-1"
           >
             {isSubmitting ? 'Moving...' : 'Move'}
           </Button>
@@ -276,21 +278,17 @@ export function MoveFolderDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-
-        {/* Folder Path and Location */}
         <VStack gap={3} className="w-full">
-          {/* Folder Path (read-only) */}
-          <FormField>
-            <FormField.Label>Folder path</FormField.Label>
-            <FormField.Control>
-              <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-                <span className="text-body-sm text-[var(--color-text-subtle)]">{currentPath}</span>
-              </div>
-            </FormField.Control>
+          <InfoBox label="File name" value={fileName} />
+          <InfoBox label="Current location" value={currentPath} />
+        </VStack>
+
+        {/* Destination and Folder Location */}
+        <VStack gap={3} className="w-full">
+          <FormField label="Destination">
+            <Input value={selectedPath ?? ''} placeholder={currentPath} fullWidth readOnly />
           </FormField>
 
-          {/* Folder Location Tree */}
           <div className="w-full p-[13px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)]">
             <VStack gap={3}>
               <span className="text-label-lg text-[var(--color-text-default)] leading-5">
@@ -319,7 +317,7 @@ export function MoveFolderDrawer({
             <span className="text-body-sm text-[var(--color-state-danger)]">{pathError}</span>
           )}
           <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-            Choose a parent folder to create this folder in.
+            Select the folder prefix to move into, or bucket root.
           </p>
         </VStack>
       </VStack>
