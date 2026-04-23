@@ -1258,7 +1258,7 @@ export function InstanceListPage() {
     },
     {
       id: 'storage-snapshot',
-      label: 'Storage&Snapshot',
+      label: 'Storage & Snapshot',
       submenu: [
         {
           id: 'attach-volume',

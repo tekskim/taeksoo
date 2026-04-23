@@ -170,6 +170,7 @@ export function FileSystemsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'File Systems' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader

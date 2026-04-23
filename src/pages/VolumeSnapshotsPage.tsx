@@ -189,6 +189,7 @@ export function VolumeSnapshotsPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [snapshotToDelete, setSnapshotToDelete] = useState<VolumeSnapshot | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -265,6 +266,12 @@ export function VolumeSnapshotsPage() {
   const handleDeleteCancel = () => {
     setDeleteModalOpen(false);
     setSnapshotToDelete(null);
+  };
+
+  const handleBulkDelete = () => {
+    setSnapshots((prev) => prev.filter((s) => !selectedSnapshots.includes(s.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedSnapshots([]);
   };
 
   // Filter snapshots by search
@@ -488,6 +495,7 @@ export function VolumeSnapshotsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedSnapshots.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -529,6 +537,19 @@ export function VolumeSnapshotsPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={handleDeleteConfirm}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected volume snapshots"
+        description="Removing the selected volume snapshots is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedSnapshots.length} volume snapshot(s)`}
       />
 
       {/* View Preferences Drawer */}

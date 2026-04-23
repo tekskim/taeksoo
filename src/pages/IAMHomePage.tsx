@@ -297,7 +297,12 @@ export function IAMHomePage() {
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'IAM' }, { label: 'Home' }]} />}
           actions={
-            <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+            <button
+              type="button"
+              aria-label="Search"
+              onClick={() => navigate('/iam/users')}
+              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+            >
               <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
             </button>
           }

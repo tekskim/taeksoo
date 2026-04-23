@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -17,6 +17,8 @@ import {
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -123,6 +125,14 @@ const mockSessions: ActiveSession[] = [
   },
 ];
 
+const filterFields: FilterField[] = [
+  { id: 'user', label: 'User', type: 'text' },
+  { id: 'started', label: 'Started', type: 'text' },
+  { id: 'lastAccess', label: 'Last access', type: 'text' },
+  { id: 'ipAddress', label: 'IP address', type: 'text' },
+  { id: 'device', label: 'Device', type: 'text' },
+];
+
 /* ----------------------------------------
    Main Component
    ---------------------------------------- */
@@ -133,7 +143,7 @@ export default function IAMActiveSessionsPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -150,13 +160,14 @@ export default function IAMActiveSessionsPage() {
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter sessions by search query
-  const filteredSessions = mockSessions.filter(
-    (session) =>
-      session.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      session.ipAddress.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      session.device.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredSessions = useMemo(() => {
+    return mockSessions.filter((session) => {
+      return appliedFilters.every((filter) => {
+        const value = String(session[filter.fieldId as keyof ActiveSession] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [appliedFilters]);
 
   // Pagination
   const totalPages = Math.ceil(filteredSessions.length / itemsPerPage);
@@ -274,6 +285,7 @@ export default function IAMActiveSessionsPage() {
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -284,11 +296,14 @@ export default function IAMActiveSessionsPage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <SearchInput
+                <FilterSearchInput
+                  filters={filterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
                   placeholder="Search session by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  size="sm"
                   className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
                 />
                 <Button
                   variant="secondary"

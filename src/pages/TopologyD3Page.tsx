@@ -37,7 +37,7 @@ import { Link, useNavigate } from 'react-router-dom';
    - #5eead4 teal300
    - #eab308 yellow500 — near --chart-color-3 (amber400 #fbbf24)
    - #fde047 yellow300
-   - #22c55e green500 — --color-state-success
+   - #10b981 emerald500 — --color-state-success
    - #94a3b8 slate400 — --chart-color-neutral
    - #ef4444 red500 — --color-state-danger
    - #f0fdfa teal-50 / #f1f5f9 slate-50 — --color-surface-subtle / --color-border-subtle family
@@ -51,7 +51,7 @@ const COLORS = {
   router: { active: '#6366f1', inactive: '#a5b4fc', error: '#ef4444' },
   subnet: { active: '#14b8a6', inactive: '#5eead4', error: '#ef4444' },
   loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' },
-  status: { active: '#22c55e', inactive: '#94a3b8', error: '#ef4444' },
+  status: { active: '#10b981', inactive: '#94a3b8', error: '#ef4444' },
   vpcPanel: { active: '#f0fdfa', inactive: '#f1f5f9', error: '#fee2e2', split: '#eef2ff' },
   vpcBorder: { active: '#5eead4', inactive: '#cbd5e1', error: '#fca5a5', split: '#a5b4fc' },
 };

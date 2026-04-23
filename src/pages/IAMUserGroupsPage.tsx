@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -16,6 +16,8 @@ import {
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -150,6 +152,32 @@ const mockUserGroups: UserGroup[] = [
   },
 ];
 
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [
+      { value: 'Built-in', label: 'Built-in' },
+      { value: 'Custom', label: 'Custom' },
+    ],
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'inactive', label: 'Inactive' },
+    ],
+  },
+  { id: 'roles', label: 'Roles', type: 'text' },
+  { id: 'userCount', label: 'User count', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
 /* ----------------------------------------
    IAM User groups Page
    ---------------------------------------- */
@@ -157,7 +185,7 @@ const mockUserGroups: UserGroup[] = [
 export function IAMUserGroupsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -177,13 +205,15 @@ export function IAMUserGroupsPage() {
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter user groups by search query
-  const filteredGroups = mockUserGroups.filter(
-    (group) =>
-      group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      group.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      group.roles.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredGroups = useMemo(() => {
+    return mockUserGroups.filter((group) => {
+      return appliedFilters.every((filter) => {
+        const raw = group[filter.fieldId as keyof UserGroup];
+        const value = String(typeof raw === 'number' ? raw : (raw ?? '')).toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [appliedFilters]);
 
   // Pagination
   const itemsPerPage = 10;
@@ -355,6 +385,7 @@ export function IAMUserGroupsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'User Groups' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -373,12 +404,14 @@ export function IAMUserGroupsPage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <SearchInput
+                <FilterSearchInput
+                  filters={filterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
                   placeholder="Search user groups by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
+                  size="sm"
                   className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
                 />
                 <Button
                   variant="secondary"

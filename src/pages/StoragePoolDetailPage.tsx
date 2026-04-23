@@ -15,6 +15,8 @@ import {
   DetailHeader,
   MonitoringToolbar,
   PageShell,
+  ErrorState,
+  Button,
 } from '@/design-system';
 import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
 import { useTabs } from '@/contexts/TabContext';
@@ -407,7 +409,7 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
   const statusColor = () => {
     if (percentage >= 95) return getColor('--color-state-danger', '#ef4444');
     if (percentage >= 85) return getColor('--color-state-warning', '#f97316');
-    return getColor('--color-state-success', '#22c55e');
+    return getColor('--color-state-success', '#10b981');
   };
 
   const usedColor = statusColor();
@@ -1006,6 +1008,10 @@ const mockStoragePoolDetail: StoragePoolDetail = {
   compressionAlgorithm: 'snappy',
 };
 
+const mockStoragePoolsMap: Record<string, StoragePoolDetail> = {
+  'pool-001': mockStoragePoolDetail,
+};
+
 /* ----------------------------------------
    StoragePoolDetailPage Component
    ---------------------------------------- */
@@ -1024,8 +1030,7 @@ export function StoragePoolDetailPage() {
   // Time labels for charts
   const timeLabels = ['16:00', '16:10', '16:20', '16:30', '16:40', '16:50'];
 
-  // In a real app, fetch based on id
-  const pool = mockStoragePoolDetail;
+  const pool = id ? mockStoragePoolsMap[id] : undefined;
 
   // Update tab label to match the pool name (most recent breadcrumb)
   useEffect(() => {
@@ -1034,7 +1039,10 @@ export function StoragePoolDetailPage() {
     }
   }, [pool?.name, updateActiveTabLabel]);
 
-  const breadcrumbItems = [{ label: 'Pools', href: '/storage/pools' }, { label: pool.name }];
+  const breadcrumbItems = [
+    { label: 'Pools', href: '/storage/pools' },
+    { label: pool?.name ?? id ?? '—' },
+  ];
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -1044,6 +1052,50 @@ export function StoragePoolDetailPage() {
   }));
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
+
+  if (!pool) {
+    return (
+      <PageShell
+        sidebar={
+          <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        <ErrorState
+          title="Storage pool not found"
+          description={`The storage pool with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/storage/pools')}>
+              Back to pools
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell

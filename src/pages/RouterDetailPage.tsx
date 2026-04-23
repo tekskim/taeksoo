@@ -18,6 +18,7 @@ import {
   Pagination,
   ContextMenu,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -258,24 +259,6 @@ const mockRoutersMap: Record<string, RouterDetail> = {
   },
 };
 
-const defaultRouterDetail: RouterDetail = {
-  id: 'unknown',
-  name: 'Unknown Router',
-  status: 'active',
-  adminState: 'Up',
-  access: 'Project',
-  externalGateway: false,
-  createdAt: '-',
-  routerName: '-',
-  availabilityZone: '-',
-  availabilityZoneHint: '-',
-  description: '-',
-  network: { name: '-', id: '' },
-  snat: false,
-  subnet: { name: '-', id: '' },
-  gatewayIp: '-',
-};
-
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => {
   const date = new Date(2026, 8 - Math.floor(i / 10), 12 - (i % 28));
   return {
@@ -325,9 +308,9 @@ export default function RouterDetailPage() {
 
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [searchParams] = useSearchParams();
-  const initialTab = searchParams.get('tab') || 'details';
-  const [activeDetailTab, setActiveDetailTab] = useState(initialTab);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeDetailTab = searchParams.get('tab') || 'details';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Port state
   const [portSearchTerm, setPortSearchTerm] = useState('');
@@ -347,18 +330,21 @@ export default function RouterDetailPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // Get router data based on URL ID
-  const router = id ? mockRoutersMap[id] || defaultRouterDetail : defaultRouterDetail;
+  const router = id ? mockRoutersMap[id] : undefined;
   const ports = mockPorts;
   const staticRoutes = mockStaticRoutes;
 
   // Update tab label to router name
   useEffect(() => {
-    if (router.name) {
+    if (router?.name) {
       updateActiveTabLabel(router.name);
     }
-  }, [router.name, updateActiveTabLabel]);
+  }, [router?.name, updateActiveTabLabel]);
 
-  const breadcrumbItems = [{ label: 'Routers', href: '/compute/routers' }, { label: router.name }];
+  const breadcrumbItems = [
+    { label: 'Routers', href: '/compute/routers' },
+    { label: router?.name ?? id ?? '—' },
+  ];
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -424,6 +410,48 @@ export default function RouterDetailPage() {
   }, [filteredRoutes, routeCurrentPage, routesPerPage]);
 
   const totalRoutePages = Math.ceil(filteredRoutes.length / routesPerPage);
+
+  if (!router) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Router not found"
+          description={`The router with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/routers')}>
+              Back to routers
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Port columns - matches Figma design
   const portColumns: TableColumn<Port>[] = [

@@ -262,6 +262,7 @@ export function PortsPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [portToDelete, setPortToDelete] = useState<Port | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -576,6 +577,11 @@ export function PortsPage() {
     }
   };
 
+  const handleBulkDelete = () => {
+    setIsBulkDeleteOpen(false);
+    setSelectedPorts([]);
+  };
+
   return (
     <PageShell
       sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
@@ -602,6 +608,7 @@ export function PortsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Ports' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -649,6 +656,7 @@ export function PortsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedPorts.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -735,6 +743,19 @@ export function PortsPage() {
           id: selectedPortForDrawer?.id || '',
           name: selectedPortForDrawer?.name || '',
         }}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected ports"
+        description="Removing the selected ports is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedPorts.length} port(s)`}
       />
     </PageShell>
   );

@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IconDownload, IconLock, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import {
   Button,
   Pagination,
   Table,
-  SearchInput,
+  FilterSearchInput,
   TopBar,
   Breadcrumb,
   VStack,
-  HStack,
+  ListToolbar,
   ContextMenu,
   TabBar,
   StatusIndicator,
@@ -19,6 +19,8 @@ import {
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -132,15 +134,38 @@ const mockSystemAdmins: SystemAdmin[] = [
   },
 ];
 
+const systemAdminFilterFields: FilterField[] = [
+  { id: 'username', label: 'Username', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'inactive', label: 'Inactive' },
+      { value: 'pending', label: 'Pending' },
+    ],
+  },
+  {
+    id: 'locked',
+    label: 'Locked',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+  { id: 'mfa', label: 'MFA', type: 'text' },
+];
+
 /* ----------------------------------------
    IAM System Administrators Page
    ---------------------------------------- */
 export default function IAMSystemAdministratorsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -159,12 +184,23 @@ export default function IAMSystemAdministratorsPage() {
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter admins by search query
-  const filteredAdmins = mockSystemAdmins.filter(
-    (admin) =>
-      admin.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      admin.mfa.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter admins
+  const filteredAdmins = useMemo(() => {
+    if (appliedFilters.length === 0) return mockSystemAdmins;
+    return mockSystemAdmins.filter((admin) =>
+      appliedFilters.every((f) => {
+        if (f.fieldId === 'status') return admin.status === f.value;
+        if (f.fieldId === 'locked') return String(admin.locked) === f.value;
+        if (f.fieldId === 'username') {
+          return admin.username.toLowerCase().includes(f.value.toLowerCase());
+        }
+        if (f.fieldId === 'mfa') {
+          return admin.mfa.toLowerCase().includes(f.value.toLowerCase());
+        }
+        return true;
+      })
+    );
+  }, [appliedFilters]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAdmins.length / itemsPerPage);
@@ -321,24 +357,27 @@ export default function IAMSystemAdministratorsPage() {
 
         {/* Table Content */}
         <VStack gap={3} className="w-full">
-          {/* Action Bar */}
-          <HStack gap={2} align="center">
-            {/* Search */}
-            <HStack gap={1} align="center">
-              <SearchInput
-                placeholder="Search accounts by attributes"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-[var(--search-input-width)]"
-              />
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<IconDownload size={12} />}
-                aria-label="Download"
-              />
-            </HStack>
-          </HStack>
+          <ListToolbar
+            primaryActions={
+              <ListToolbar.Actions>
+                <FilterSearchInput
+                  filters={systemAdminFilterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
+                  placeholder="Search system administrators by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<IconDownload size={12} />}
+                  aria-label="Download"
+                />
+              </ListToolbar.Actions>
+            }
+          />
 
           {/* Pagination */}
           <Pagination
@@ -347,7 +386,6 @@ export default function IAMSystemAdministratorsPage() {
             onPageChange={setCurrentPage}
             showSettings
             totalItems={filteredAdmins.length}
-            selectedCount={selectedRows.length}
           />
 
           {/* Table */}

@@ -18,6 +18,7 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
+  ErrorState,
   Chip,
   type ContextMenuItem,
   fixedColumns,
@@ -261,26 +262,6 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     serverGroup: 'gpu-group',
     userData: '-',
   },
-};
-
-// Default instance detail for unknown IDs
-const defaultInstanceDetail: InstanceDetail = {
-  id: 'unknown',
-  name: 'Unknown Instance',
-  status: 'active',
-  host: 'compute-03',
-  createdAt: 'Jul 25, 2026 10:32:16',
-  availabilityZone: 'nova',
-  description: '-',
-  flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
-  image: 'Unknown',
-  os: 'Unknown',
-  origin: '-',
-  locked: false,
-  interfaces: 0,
-  keyPair: '-',
-  serverGroup: '-',
-  userData: '-',
 };
 
 const mockAttachedVolumes: AttachedVolume[] = [
@@ -1190,17 +1171,17 @@ export function InstanceDetailPage() {
   };
 
   // Get instance data based on the ID from URL
-  const instance = id ? mockInstancesMap[id] || defaultInstanceDetail : defaultInstanceDetail;
+  const instance = id ? mockInstancesMap[id] : undefined;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to instance name
   useEffect(() => {
-    if (instance.name) {
+    if (instance?.name) {
       updateActiveTabLabel(instance.name);
     }
-  }, [instance.name, updateActiveTabLabel]);
+  }, [instance?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -1208,6 +1189,49 @@ export function InstanceDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!instance) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Instances', href: '/compute/instances' }, { label: id ?? '—' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Instance not found"
+          description={`The instance with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/instances')}>
+              Back to instances
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell
@@ -1278,7 +1302,7 @@ export function InstanceDetailPage() {
                 },
                 {
                   id: 'storage-snapshot',
-                  label: 'Storage&Snapshot',
+                  label: 'Storage & Snapshot',
                   submenu: [
                     { id: 'attach-volume', label: 'Attach volume', onClick: () => {} },
                     {

@@ -334,6 +334,7 @@ export function OSDsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'OSDs' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}

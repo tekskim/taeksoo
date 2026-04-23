@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -11,8 +11,11 @@ import {
   Badge,
   PageShell,
   PageHeader,
+  ListToolbar,
   columnMinWidths,
   type TableColumn,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
 import { useTabs } from '@/contexts/TabContext';
@@ -197,6 +200,34 @@ const mockImages: Image[] = [
 ];
 
 /* ----------------------------------------
+   Filter fields
+   ---------------------------------------- */
+
+const imageFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'pool',
+    label: 'Pool',
+    type: 'select',
+    options: [
+      { value: 'volumes', label: 'volumes' },
+      { value: 'images', label: 'images' },
+    ],
+  },
+  { id: 'namespace', label: 'Namespace', type: 'text' },
+  { id: 'parent', label: 'Parent', type: 'text' },
+  {
+    id: 'mirroring',
+    label: 'Mirroring',
+    type: 'select',
+    options: [
+      { value: 'Enabled', label: 'Enabled' },
+      { value: 'Disabled', label: 'Disabled' },
+    ],
+  },
+];
+
+/* ----------------------------------------
    Name Cell Component
    ---------------------------------------- */
 
@@ -224,7 +255,7 @@ function NameCell({ id, name }: NameCellProps) {
 export function ImagesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const rowsPerPage = 10;
@@ -233,6 +264,10 @@ export function ImagesPage() {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -247,17 +282,23 @@ export function ImagesPage() {
     closable: tab.closable,
   }));
 
-  // Filter images based on search
-  const filteredImages = useMemo(
-    () =>
-      mockImages.filter(
-        (image) =>
-          image.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          image.pool.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          image.parent.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    [searchQuery]
-  );
+  // Filter images
+  const filteredImages = useMemo(() => {
+    if (appliedFilters.length === 0) return mockImages;
+
+    return mockImages.filter((image) => {
+      return appliedFilters.every((filter) => {
+        const value = image[filter.fieldId as keyof Image];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        if (typeof value === 'number') {
+          return String(value).includes(filter.value);
+        }
+        return true;
+      });
+    });
+  }, [appliedFilters]);
 
   // Calculate pagination
   const totalItems = filteredImages.length;
@@ -388,21 +429,18 @@ export function ImagesPage() {
         {/* Page Header */}
         <PageHeader title="Images" />
 
-        {/* Search and Actions */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            {/* Search */}
-            <div className="flex items-center gap-1">
-              <div className="w-[var(--search-input-width)]">
-                <SearchInput
-                  placeholder="Search images by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
-                  size="sm"
-                  fullWidth
-                />
-              </div>
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={imageFilterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search images by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
+              />
               <Button
                 variant="secondary"
                 size="sm"
@@ -416,9 +454,9 @@ export function ImagesPage() {
                 aria-label="Refresh"
                 onClick={() => console.log('Refresh clicked')}
               />
-            </div>
-          </div>
-        </div>
+            </ListToolbar.Actions>
+          }
+        />
 
         {/* Pagination */}
         <Pagination

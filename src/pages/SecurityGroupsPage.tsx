@@ -175,11 +175,12 @@ export function SecurityGroupsPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [securityGroups] = useState(mockSecurityGroups);
+  const [securityGroups, setSecurityGroups] = useState(mockSecurityGroups);
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<SecurityGroup | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Create security group drawer state
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
@@ -380,6 +381,12 @@ export function SecurityGroupsPage() {
     }
   };
 
+  const handleBulkDelete = () => {
+    setSecurityGroups((prev) => prev.filter((sg) => !selectedGroups.includes(sg.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedGroups([]);
+  };
+
   return (
     <PageShell
       sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
@@ -406,6 +413,7 @@ export function SecurityGroupsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Security Groups' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -445,6 +453,7 @@ export function SecurityGroupsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedGroups.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -489,6 +498,19 @@ export function SecurityGroupsPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected security groups"
+        description="Removing the selected security groups is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedGroups.length} security group(s)`}
       />
 
       {/* View Preferences Drawer */}

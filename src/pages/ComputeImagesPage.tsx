@@ -537,6 +537,7 @@ export function ComputeImagesPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Images' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}

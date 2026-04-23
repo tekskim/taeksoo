@@ -229,6 +229,7 @@ export function VolumesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [volumeToDelete, setVolumeToDelete] = useState<Volume | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Selection state
   const [selectedVolumes, setSelectedVolumes] = useState<string[]>([]);
@@ -367,6 +368,12 @@ export function VolumesPage() {
   const handleDeleteCancel = () => {
     setDeleteModalOpen(false);
     setVolumeToDelete(null);
+  };
+
+  const handleBulkDelete = () => {
+    setVolumes((prev) => prev.filter((v) => !selectedVolumes.includes(v.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedVolumes([]);
   };
 
   // Filter volumes by applied filters
@@ -675,6 +682,7 @@ export function VolumesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedVolumes.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -718,6 +726,19 @@ export function VolumesPage() {
         confirmVariant="danger"
         infoLabel="Volume name"
         infoValue={volumeToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected volumes"
+        description="Removing the selected volumes is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedVolumes.length} volume(s)`}
       />
 
       {/* View Preferences Drawer */}

@@ -119,7 +119,7 @@ const getStatusColor = (status: ProgressBarStatus, isLight = false): string => {
   const colors: Record<ProgressBarStatus, { default: string; light: string }> = {
     success: {
       default: 'var(--color-state-success)',
-      light: 'var(--color-green-300)',
+      light: 'var(--color-emerald-300)',
     },
     warning: {
       default: 'var(--color-state-warning)',

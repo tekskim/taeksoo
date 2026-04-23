@@ -277,6 +277,7 @@ export function ComputeAdminHostAggregatesPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Host Aggregates' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader

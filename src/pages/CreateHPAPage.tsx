@@ -16,9 +16,9 @@ import {
   InlineMessage,
   FormField,
   PageShell,
+  WizardSummary,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
-import { WizardSectionStatusIcon } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -151,60 +151,25 @@ interface Metric {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  return <WizardSectionStatusIcon status={status} />;
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 interface SummarySidebarProps {
-  sections: HPASectionStep[];
-  sectionLabels: Record<HPASectionStep, string>;
   sectionStates: Record<HPASectionStep, WizardSectionState>;
   onCancel: () => void;
   onSubmit: () => void;
 }
 
-function SummarySidebar({
-  sections,
-  sectionLabels,
-  sectionStates,
-  onCancel,
-  onSubmit,
-}: SummarySidebarProps) {
+function SummarySidebar({ sectionStates, onCancel, onSubmit }: SummarySidebarProps) {
+  const summaryItems: WizardSummaryItem[] = HPA_SECTION_ORDER.map((key) => ({
+    key,
+    label: HPA_SECTION_LABELS[key],
+    status: sectionStates[key],
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
-        {/* Summary Content */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
-
-            <VStack gap={0}>
-              {sections.map((section) => {
-                const status = sectionStates[section];
-                return (
-                  <HStack key={section} justify="between" align="center" className="py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {sectionLabels[section]}
-                    </span>
-                    {status === 'writing' ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <SummaryStatusIcon status={status} />
-                    )}
-                  </HStack>
-                );
-              })}
-            </VStack>
-          </VStack>
-        </div>
+        <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
         <HStack gap={2}>
@@ -1265,8 +1230,6 @@ export default function CreateHPAPage() {
 
           {/* Summary Sidebar */}
           <SummarySidebar
-            sections={HPA_SECTION_ORDER}
-            sectionLabels={HPA_SECTION_LABELS}
             sectionStates={getSectionStates()}
             onCancel={handleCancel}
             onSubmit={handleSubmit}

@@ -212,6 +212,7 @@ export function VolumeBackupsPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [backupToDelete, setBackupToDelete] = useState<VolumeBackup | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Create backup drawer state
   const [isCreateBackupDrawerOpen, setIsCreateBackupDrawerOpen] = useState(false);
@@ -290,6 +291,11 @@ export function VolumeBackupsPage() {
   const handleDeleteCancel = () => {
     setDeleteModalOpen(false);
     setBackupToDelete(null);
+  };
+
+  const handleBulkDelete = () => {
+    setIsBulkDeleteOpen(false);
+    setSelectedBackups([]);
   };
 
   // Filter backups by search
@@ -525,6 +531,7 @@ export function VolumeBackupsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedBackups.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -612,6 +619,19 @@ export function VolumeBackupsPage() {
         isOpen={isCreateBackupDrawerOpen}
         onClose={() => setIsCreateBackupDrawerOpen(false)}
         volume={null}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected volume backups"
+        description="Removing the selected volume backups is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedBackups.length} volume backup(s)`}
       />
     </PageShell>
   );

@@ -769,6 +769,7 @@ export default function ComputeAdminFirewallsPage() {
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader

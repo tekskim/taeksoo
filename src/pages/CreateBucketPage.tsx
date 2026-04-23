@@ -16,8 +16,9 @@ import {
   Textarea,
   PageShell,
   PageHeader,
-  WizardSectionStatusIcon,
+  WizardSummary,
 } from '@/design-system';
+import type { WizardSummaryItem } from '@/design-system';
 import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
 import { useTabs } from '@/contexts/TabContext';
 import { IconEdit, IconCirclePlus, IconX } from '@tabler/icons-react';
@@ -131,35 +132,16 @@ function SummarySidebar({
   onCreate,
   isCreateEnabled,
 }: SummarySidebarProps) {
+  const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
+    key,
+    label: SECTION_LABELS[key],
+    status: sectionStatus[key],
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
-        {/* Summary Card */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
-          <VStack gap={3}>
-            <h5 className="text-heading-h5 text-[var(--color-text-default)]">Summary</h5>
-            <div className="flex flex-col">
-              {SECTION_ORDER.map((sectionKey) => {
-                const isWriting = sectionStatus[sectionKey] === 'writing';
-
-                return (
-                  <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SECTION_LABELS[sectionKey]}
-                    </span>
-                    {isWriting ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </VStack>
-        </div>
+        <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
         <div className="flex flex-row gap-2">

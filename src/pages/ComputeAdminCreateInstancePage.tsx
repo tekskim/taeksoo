@@ -34,7 +34,7 @@ import {
   PageShell,
   fixedColumns,
   columnMinWidths,
-  WizardSectionStatusIcon,
+  WizardSummary,
   FormField,
   Password,
 } from '@/design-system';
@@ -331,32 +331,13 @@ function QuotaSidebar({
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
-          <VStack gap={3}>
-            <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Summary</h5>
-            <div className="flex flex-col">
-              {SECTION_ORDER.map((sectionKey) => {
-                // Show "Writing..." for sections in 'writing' state
-                const isWriting = sectionStatus[sectionKey] === 'writing';
-
-                return (
-                  <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-body-md leading-5 text-[var(--color-text-default)]">
-                      {SECTION_LABELS[sectionKey]}
-                    </span>
-                    {isWriting ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </VStack>
-        </div>
+        <WizardSummary
+          items={SECTION_ORDER.map((key) => ({
+            key,
+            label: SECTION_LABELS[key],
+            status: sectionStatus[key],
+          }))}
+        />
 
         {/* Quota Card */}
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">

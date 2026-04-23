@@ -67,7 +67,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
       bg: 'var(--color-state-success-bg)',
       darkBg: 'color-mix(in srgb, var(--color-state-success) 15%, transparent)',
       fill: 'var(--color-state-success)',
-      text: 'var(--color-green-600)',
+      text: 'var(--color-state-success-text)',
     },
     warning: {
       bg: 'var(--color-state-warning-bg)',

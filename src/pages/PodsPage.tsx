@@ -443,6 +443,7 @@ export function PodsPage() {
         />
       }
       bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}

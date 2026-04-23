@@ -13,9 +13,9 @@ import {
   SectionCard,
   InlineMessage,
   PageShell,
+  WizardSummary,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
-import { WizardSectionStatusIcon } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
@@ -127,13 +127,6 @@ interface Certificate {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  return <WizardSectionStatusIcon status={status} />;
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 function SummarySidebar({
@@ -143,25 +136,16 @@ function SummarySidebar({
 }) {
   const navigate = useNavigate();
 
+  const summaryItems: WizardSummaryItem[] = INGRESS_SECTION_ORDER.map((key) => ({
+    key,
+    label: INGRESS_SECTION_LABELS[key],
+    status: sectionStates[key],
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
-        {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
-          <VStack gap={4}>
-            <span className="text-heading-h5">Summary</span>
-            <VStack gap={0}>
-              {INGRESS_SECTION_ORDER.map((step) => (
-                <HStack key={step} justify="between" className="py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {INGRESS_SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStates[step]} />
-                </HStack>
-              ))}
-            </VStack>
-          </VStack>
-        </div>
+        <WizardSummary items={summaryItems} />
 
         {/* Button row */}
         <HStack gap={2}>

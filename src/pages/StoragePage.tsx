@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   Table,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ListToolbar,
   StatusIndicator,
@@ -16,6 +16,8 @@ import {
   PageHeader,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -113,6 +115,31 @@ interface DataSourceRow {
 }
 
 /* ----------------------------------------
+   Filter fields
+   ---------------------------------------- */
+const dataSourceFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [{ value: 'File', label: 'File' }],
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'completed', label: 'Completed' },
+      { value: 'error', label: 'Error' },
+      { value: 'processing', label: 'Processing' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'draft', label: 'Draft' },
+    ],
+  },
+];
+
+/* ----------------------------------------
    Main StoragePage Component
    ---------------------------------------- */
 export function StoragePage() {
@@ -120,7 +147,7 @@ export function StoragePage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [selectedDataSources, setSelectedDataSources] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
 
@@ -136,6 +163,10 @@ export function StoragePage() {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Mock data
   const dataSources: DataSourceRow[] = [
@@ -213,16 +244,20 @@ export function StoragePage() {
     draft: 'pending',
   };
 
-  // Filter data sources by search
+  // Filter data sources
   const filteredDataSources = useMemo(() => {
-    if (!searchQuery) return dataSources;
+    if (appliedFilters.length === 0) return dataSources;
 
-    return dataSources.filter(
-      (ds) =>
-        ds.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        ds.type.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [dataSources, searchQuery]);
+    return dataSources.filter((ds) => {
+      return appliedFilters.every((filter) => {
+        const value = ds[filter.fieldId as keyof DataSourceRow];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        return true;
+      });
+    });
+  }, [dataSources, appliedFilters]);
 
   const totalPages = Math.ceil(filteredDataSources.length / rowsPerPage);
   const paginatedDataSources = useMemo(() => {
@@ -411,6 +446,7 @@ export function StoragePage() {
           }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         <PageHeader
@@ -437,16 +473,15 @@ export function StoragePage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <div className="w-[var(--search-input-width)]">
-                  <SearchInput
-                    placeholder="Search data sources by attributes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
-                    size="sm"
-                    fullWidth
-                  />
-                </div>
+                <FilterSearchInput
+                  filters={dataSourceFilterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
+                  placeholder="Search data sources by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
+                />
               </ListToolbar.Actions>
             }
             bulkActions={

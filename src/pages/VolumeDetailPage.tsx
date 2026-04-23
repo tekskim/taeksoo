@@ -18,6 +18,7 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -250,23 +251,6 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   },
 };
 
-const defaultVolumeDetail: VolumeDetail = {
-  id: 'unknown',
-  name: 'Unknown Volume',
-  status: 'available',
-  size: '0 GiB',
-  createdAt: '-',
-  volumeName: '-',
-  availabilityZone: '-',
-  description: '-',
-  attachedTo: null,
-  attachedToId: null,
-  dataSourceType: '-',
-  volumeType: '-',
-  bootable: false,
-  encryption: false,
-};
-
 // Mock volume snapshots
 const mockVolumeSnapshots: VolumeSnapshot[] = Array.from({ length: 115 }, (_, i) => ({
   id: `snap-${String(i + 1).padStart(3, '0')}`,
@@ -318,7 +302,7 @@ const backupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'p
 
 export function VolumeDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const volume = id ? mockVolumesMap[id] || defaultVolumeDetail : defaultVolumeDetail;
+  const volume = id ? mockVolumesMap[id] : undefined;
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -347,10 +331,10 @@ export function VolumeDetailPage() {
 
   // Update tab label to volume name
   useEffect(() => {
-    if (volume.name) {
+    if (volume?.name) {
       updateActiveTabLabel(volume.name);
     }
-  }, [volume.name, updateActiveTabLabel]);
+  }, [volume?.name, updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -358,7 +342,10 @@ export function VolumeDetailPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [{ label: 'Volumes', href: '/compute/volumes' }, { label: volume.name }];
+  const breadcrumbItems = [
+    { label: 'Volumes', href: '/compute/volumes' },
+    { label: volume?.name ?? id ?? '—' },
+  ];
 
   // Filter snapshots by search query
   const filteredSnapshots = useMemo(() => {
@@ -567,6 +554,44 @@ export function VolumeDetailPage() {
       ),
     },
   ];
+
+  if (!volume) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Volume not found"
+          description={`The volume with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/volumes')}>
+              Back to volumes
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell
@@ -784,7 +809,8 @@ export function VolumeDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Metadata" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="{metadata}" value="{value}" />
+                    <SectionCard.DataRow label="os_type" value="linux" />
+                    <SectionCard.DataRow label="attached_mode" value="rw" />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

@@ -10,6 +10,7 @@ import {
   FormField,
   PageShell,
   TabBar,
+  useToast,
 } from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 
@@ -17,6 +18,7 @@ import { SettingsSidebar } from '@/components/SettingsSidebar';
    Settings Notifications Page ---------------------------------------- */
 
 export default function SettingsNotificationsPage() {
+  const { success } = useToast();
   const sidebarWidth = 200;
 
   // Global Notifications State
@@ -45,6 +47,7 @@ export default function SettingsNotificationsPage() {
       ...prev,
       [service]: { ...prev[service], [field]: value },
     }));
+    success('Notification preference updated.');
   };
 
   // Duration options
@@ -90,13 +93,19 @@ export default function SettingsNotificationsPage() {
           <SectionCard.Content>
             {/* Global Notification Setting */}
             <VStack gap={4}>
-              <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
                 Global Notification Setting
               </span>
 
               <div className="pl-2">
                 <FormField label="What to Notify" spacing="loose">
-                  <RadioGroup value={globalWhatToNotify} onChange={setGlobalWhatToNotify}>
+                  <RadioGroup
+                    value={globalWhatToNotify}
+                    onChange={(val) => {
+                      setGlobalWhatToNotify(val);
+                      success('Notification preference updated.');
+                    }}
+                  >
                     <Radio value="all" label="All" />
                     <Radio value="errors" label="Errors only" />
                     <Radio value="off" label="Off" />
@@ -108,7 +117,10 @@ export default function SettingsNotificationsPage() {
                 <FormField label="Duration">
                   <Select
                     value={globalDuration}
-                    onChange={setGlobalDuration}
+                    onChange={(val) => {
+                      setGlobalDuration(val);
+                      success('Duration updated.');
+                    }}
                     options={durationOptions}
                     width="sm"
                     disabled={globalWhatToNotify === 'off'}
@@ -120,7 +132,10 @@ export default function SettingsNotificationsPage() {
                 <FormField label="Sound" spacing="loose">
                   <Toggle
                     checked={globalSound}
-                    onChange={(e) => setGlobalSound(e.target.checked)}
+                    onChange={(e) => {
+                      setGlobalSound(e.target.checked);
+                      success(e.target.checked ? 'Sound enabled.' : 'Sound disabled.');
+                    }}
                     disabled={globalWhatToNotify === 'off'}
                   />
                 </FormField>
@@ -129,8 +144,8 @@ export default function SettingsNotificationsPage() {
 
             {/* In-app Notification Setting */}
             <VStack gap={4}>
-              <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
-                In-app Notification Setting{' '}
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                In-app Notification Setting
               </span>
 
               {/* Service-specific settings */}

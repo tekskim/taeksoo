@@ -214,11 +214,12 @@ export function FloatingIPsPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [floatingIPs] = useState(mockFloatingIPs);
+  const [floatingIPs, setFloatingIPs] = useState(mockFloatingIPs);
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [floatingIPToDelete, setFloatingIPToDelete] = useState<FloatingIP | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Allocate floating IP drawer state
   const [isAllocateDrawerOpen, setIsAllocateDrawerOpen] = useState(false);
@@ -489,6 +490,12 @@ export function FloatingIPsPage() {
     }
   };
 
+  const handleBulkDelete = () => {
+    setFloatingIPs((prev) => prev.filter((f) => !selectedFloatingIPs.includes(f.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedFloatingIPs([]);
+  };
+
   return (
     <PageShell
       sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
@@ -515,6 +522,7 @@ export function FloatingIPsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Floating IPs' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -559,6 +567,7 @@ export function FloatingIPsPage() {
                 size="sm"
                 leftIcon={<IconUnlink size={12} />}
                 disabled={selectedFloatingIPs.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Release
               </Button>
@@ -603,6 +612,19 @@ export function FloatingIPsPage() {
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('release')}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Release selected floating IPs"
+        description="Releasing the selected floating IPs is permanent and cannot be undone."
+        confirmText="Release"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedFloatingIPs.length} floating IP(s)`}
       />
 
       {/* View Preferences Drawer */}

@@ -369,6 +369,7 @@ export function BucketsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Buckets' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}

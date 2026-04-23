@@ -225,6 +225,7 @@ export function CertificatesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [certToDelete, setCertToDelete] = useState<Certificate | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Register certificate drawer state
   const [isRegisterDrawerOpen, setIsRegisterDrawerOpen] = useState(false);
@@ -431,6 +432,11 @@ export function CertificatesPage() {
     setCertToDelete(null);
   };
 
+  const handleBulkDelete = () => {
+    setIsBulkDeleteOpen(false);
+    setSelectedCerts([]);
+  };
+
   return (
     <PageShell
       sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
@@ -457,6 +463,7 @@ export function CertificatesPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Certificates' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -502,6 +509,7 @@ export function CertificatesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedCerts.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -573,6 +581,19 @@ export function CertificatesPage() {
             intermediateCert,
           });
         }}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected certificates"
+        description="Removing the selected certificates is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedCerts.length} certificate(s)`}
       />
     </PageShell>
   );

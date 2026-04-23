@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   StatusIndicator,
   Pagination,
@@ -18,6 +18,8 @@ import {
   type TableColumn,
   type StatusType,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -161,6 +163,25 @@ const statusMap: Record<UserStatus, StatusType> = {
   locked: 'error',
 };
 
+const filterFields: FilterField[] = [
+  { id: 'username', label: 'Username', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'disabled', label: 'Disabled' },
+      { value: 'locked', label: 'Locked' },
+    ],
+  },
+  { id: 'userGroups', label: 'User groups', type: 'text' },
+  { id: 'roles', label: 'Roles', type: 'text' },
+  { id: 'lastSignIn', label: 'Last sign-in', type: 'text' },
+  { id: 'mfa', label: 'MFA', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
 /* ----------------------------------------
    IAM Users Page
    ---------------------------------------- */
@@ -168,7 +189,7 @@ const statusMap: Record<UserStatus, StatusType> = {
 export function IAMUsersPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -188,13 +209,14 @@ export function IAMUsersPage() {
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter users by search query
-  const filteredUsers = mockUsers.filter(
-    (user) =>
-      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.userGroups.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.roles.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredUsers = useMemo(() => {
+    return mockUsers.filter((user) => {
+      return appliedFilters.every((filter) => {
+        const value = String(user[filter.fieldId as keyof User] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [appliedFilters]);
 
   // Pagination
   const itemsPerPage = 10;
@@ -367,6 +389,7 @@ export function IAMUsersPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Users' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -385,12 +408,14 @@ export function IAMUsersPage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <SearchInput
+                <FilterSearchInput
+                  filters={filterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
                   placeholder="Search users by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
+                  size="sm"
                   className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
                 />
                 <Button
                   variant="secondary"

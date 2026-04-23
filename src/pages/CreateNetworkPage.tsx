@@ -224,6 +224,8 @@ export default function CreateNetworkPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -272,11 +274,11 @@ export default function CreateNetworkPage() {
                     {/* Network name */}
                     <div className="py-6">
                       <FormField required error={!!networkNameError}>
-                        <FormField.Label>Image name</FormField.Label>
+                        <FormField.Label>Network name</FormField.Label>
                         <FormField.Control>
                           <VStack gap={2}>
                             <Input
-                              placeholder="Enter image name"
+                              placeholder="Enter network name"
                               value={networkName}
                               onChange={(e) => {
                                 setNetworkName(e.target.value);

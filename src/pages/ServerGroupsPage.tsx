@@ -25,9 +25,10 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconPlus } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
+import { CreateServerGroupDrawer } from '@/components/CreateServerGroupDrawer';
 
 /* ----------------------------------------
    Types
@@ -169,6 +170,9 @@ export function ServerGroupsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [serverGroups, setServerGroups] = useState(mockServerGroups);
+
+  // Create drawer state
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -427,13 +431,19 @@ export function ServerGroupsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Server Groups' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
         <PageHeader
           title="Server groups"
           actions={
-            <Button variant="primary" size="md">
+            <Button
+              variant="primary"
+              size="md"
+              leftIcon={<IconPlus size={12} />}
+              onClick={() => setIsCreateDrawerOpen(true)}
+            >
               Create Server Group
             </Button>
           }
@@ -520,6 +530,12 @@ export function ServerGroupsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Create Server Group Drawer */}
+      <CreateServerGroupDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
       />
     </PageShell>
   );

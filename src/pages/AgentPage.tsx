@@ -333,6 +333,7 @@ export function AgentPage() {
           }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         <PageHeader

@@ -252,6 +252,7 @@ export function LoadBalancersPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [lbToDelete, setLbToDelete] = useState<LoadBalancer | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -563,6 +564,11 @@ export function LoadBalancersPage() {
     }
   };
 
+  const handleBulkDelete = () => {
+    setIsBulkDeleteOpen(false);
+    setSelectedLBs([]);
+  };
+
   return (
     <PageShell
       sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
@@ -589,6 +595,7 @@ export function LoadBalancersPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Load Balancers' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -634,6 +641,7 @@ export function LoadBalancersPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedLBs.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -710,6 +718,19 @@ export function LoadBalancersPage() {
           id: selectedLBForDrawer?.id || '',
           name: selectedLBForDrawer?.name || '',
         }}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected load balancers"
+        description="Removing the selected load balancers is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedLBs.length} load balancer(s)`}
       />
     </PageShell>
   );

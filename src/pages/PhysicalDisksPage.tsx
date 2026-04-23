@@ -479,6 +479,7 @@ export function PhysicalDisksPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Physical disks' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}

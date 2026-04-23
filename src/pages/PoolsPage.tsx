@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -10,8 +10,11 @@ import {
   Breadcrumb,
   PageShell,
   PageHeader,
+  ListToolbar,
   STATUS_THRESHOLDS,
   type TableColumn,
+  type FilterField,
+  type AppliedFilter,
   columnMinWidths,
 } from '@/design-system';
 import { StorageSidebarResolver as StorageSidebar } from '@/components/StorageSidebarResolver';
@@ -120,6 +123,27 @@ const mockPools: Pool[] = [
 ];
 
 /* ----------------------------------------
+   Filter fields
+   ---------------------------------------- */
+
+const poolFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'id', label: 'ID', type: 'text' },
+  { id: 'dataProtection', label: 'Data protection', type: 'text' },
+  {
+    id: 'applications',
+    label: 'Applications',
+    type: 'select',
+    options: [
+      { value: 'rbd', label: 'rbd' },
+      { value: 'cephfs', label: 'cephfs' },
+      { value: 'rgw', label: 'rgw' },
+    ],
+  },
+  { id: 'crushRuleset', label: 'Crush ruleset', type: 'text' },
+];
+
+/* ----------------------------------------
    Usage Cell Component
    ---------------------------------------- */
 
@@ -161,7 +185,7 @@ function UsageCell({ percent }: UsageCellProps) {
 export function PoolsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
   const [loading, setLoading] = useState(true);
@@ -174,6 +198,10 @@ export function PoolsPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -184,17 +212,23 @@ export function PoolsPage() {
     closable: tab.closable,
   }));
 
-  // Filter pools based on search
-  const filteredPools = useMemo(
-    () =>
-      mockPools.filter(
-        (pool) =>
-          pool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          pool.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          pool.applications.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    [searchQuery]
-  );
+  // Filter pools
+  const filteredPools = useMemo(() => {
+    if (appliedFilters.length === 0) return mockPools;
+
+    return mockPools.filter((pool) => {
+      return appliedFilters.every((filter) => {
+        const value = pool[filter.fieldId as keyof Pool];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        if (typeof value === 'number') {
+          return String(value).includes(filter.value);
+        }
+        return true;
+      });
+    });
+  }, [appliedFilters]);
 
   const totalPages = Math.ceil(filteredPools.length / rowsPerPage);
 
@@ -310,33 +344,34 @@ export function PoolsPage() {
           breadcrumb={<Breadcrumb items={[{ label: 'Pools' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
         <PageHeader title="Pools" />
 
-        {/* Search and Actions */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            <div className="w-[var(--search-input-width)]">
-              <SearchInput
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={poolFilterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
                 placeholder="Search pools by attributes"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery('')}
                 size="sm"
-                fullWidth
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
-            </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<IconRefresh size={12} stroke={1.5} />}
-              aria-label="Refresh"
-              onClick={() => console.log('Refresh clicked')}
-            />
-          </div>
-        </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconRefresh size={12} stroke={1.5} />}
+                aria-label="Refresh"
+                onClick={() => console.log('Refresh clicked')}
+              />
+            </ListToolbar.Actions>
+          }
+        />
 
         {/* Pagination */}
         <Pagination

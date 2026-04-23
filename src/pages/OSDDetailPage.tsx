@@ -14,17 +14,14 @@ import {
   Tab,
   TabPanel,
   DetailHeader,
-  DetailHeaderTitle,
-  DetailHeaderInfoCard,
   SectionCard,
-  SectionCardHeader,
-  SectionCardContent,
-  SectionCardDataRow,
   SearchInput,
   Pagination,
   Table,
   MonitoringToolbar,
   PageShell,
+  ErrorState,
+  Button,
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
@@ -861,8 +858,8 @@ const mockDeviceHealthList: DeviceHealth[] = [
 export function OSDDetailPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const osdId = parseInt(id || '1', 10);
-  const osd = mockOSDs[osdId] || mockOSDs[1];
+  const osdId = parseInt(id || '0', 10);
+  const osd = mockOSDs[osdId];
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -948,6 +945,54 @@ export function OSDDetailPage() {
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
+  if (!osd) {
+    return (
+      <PageShell
+        sidebar={
+          <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'OSDs', href: '/storage/osds' }, { label: 'Not found' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        <ErrorState
+          title="OSD not found"
+          description={`OSD with ID "${id}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/storage/osds')}>
+              Back to OSDs
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   return (
     <PageShell
       sidebar={
@@ -985,9 +1030,9 @@ export function OSDDetailPage() {
       <VStack gap={6} className="min-w-[1176px]">
         {/* OSD Header Card */}
         <DetailHeader>
-          <DetailHeaderTitle>{osd.host}</DetailHeaderTitle>
-          <div className="flex gap-2 w-full">
-            <DetailHeaderInfoCard
+          <DetailHeader.Title>{osd.host}</DetailHeader.Title>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
               label="Status"
               value={
                 <div className="flex gap-0.5">
@@ -1000,8 +1045,8 @@ export function OSDDetailPage() {
               }
               status={osd.status.includes('up') ? 'active' : 'error'}
             />
-            <DetailHeaderInfoCard label="ID" value={String(osd.id)} />
-          </div>
+            <DetailHeader.InfoCard label="ID" value={String(osd.id)} />
+          </DetailHeader.InfoGrid>
         </DetailHeader>
 
         {/* Tabs Section */}
@@ -1019,18 +1064,18 @@ export function OSDDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCardHeader title="Basic information" />
-                  <SectionCardContent>
-                    <SectionCardDataRow label="Device class" showDivider={false}>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Device class" showDivider={false}>
                       <Badge theme="white" size="sm">
                         {osd.deviceClass}
                       </Badge>
-                    </SectionCardDataRow>
-                    <SectionCardDataRow label="PGs" value={String(osd.pgs)} />
-                    <SectionCardDataRow label="Size" value={osd.size} />
-                    <SectionCardDataRow label="Flags" value={osd.flags} />
-                    <SectionCardDataRow label="Usage" value={`${osd.usage}%`} />
-                  </SectionCardContent>
+                    </SectionCard.DataRow>
+                    <SectionCard.DataRow label="PGs" value={String(osd.pgs)} />
+                    <SectionCard.DataRow label="Size" value={osd.size} />
+                    <SectionCard.DataRow label="Flags" value={osd.flags} />
+                    <SectionCard.DataRow label="Usage" value={`${osd.usage}%`} />
+                  </SectionCard.Content>
                 </SectionCard>
               </VStack>
             </TabPanel>
@@ -1140,22 +1185,22 @@ export function OSDDetailPage() {
 
                   {/* Content based on sub-tab */}
                   <SectionCard>
-                    <SectionCardHeader title="Device information" />
-                    <SectionCardContent>
-                      <SectionCardDataRow
+                    <SectionCard.Header title="Device information" />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow
                         label="Model number"
                         value={selectedHealthDevice.modelNumber}
                         showDivider={false}
                       />
-                      <SectionCardDataRow
+                      <SectionCard.DataRow
                         label="Serial number"
                         value={selectedHealthDevice.serialNumber}
                       />
-                      <SectionCardDataRow
+                      <SectionCard.DataRow
                         label="Firmware version"
                         value={selectedHealthDevice.firmwareVersion}
                       />
-                      <SectionCardDataRow
+                      <SectionCard.DataRow
                         label="Total capacity"
                         value={selectedHealthDevice.totalCapacity}
                       />
@@ -1171,7 +1216,7 @@ export function OSDDetailPage() {
                           </pre>
                         </div>
                       </div>
-                    </SectionCardContent>
+                    </SectionCard.Content>
                   </SectionCard>
                 </div>
               </div>
@@ -1190,8 +1235,8 @@ export function OSDDetailPage() {
 
                 {/* OSD Performance Section */}
                 <SectionCard>
-                  <SectionCardHeader title="OSD performance" showDivider={false} />
-                  <SectionCardContent>
+                  <SectionCard.Header title="OSD performance" showDivider={false} />
+                  <SectionCard.Content>
                     <div className="flex flex-col gap-4">
                       {/* Top row - 2 charts */}
                       <div className="grid grid-cols-2 gap-4">
@@ -1251,16 +1296,16 @@ export function OSDDetailPage() {
                         />
                       </div>
                     </div>
-                  </SectionCardContent>
+                  </SectionCard.Content>
                 </SectionCard>
 
                 {/* Physical Device Data Section */}
                 <SectionCard>
-                  <SectionCardHeader
+                  <SectionCard.Header
                     title={`Physical device data for OSD.${osdId}`}
                     showDivider={false}
                   />
-                  <SectionCardContent>
+                  <SectionCard.Content>
                     <div className="flex flex-col gap-4">
                       {/* Top row - 2 charts */}
                       <div className="grid grid-cols-2 gap-4">
@@ -1332,7 +1377,7 @@ export function OSDDetailPage() {
                         />
                       </div>
                     </div>
-                  </SectionCardContent>
+                  </SectionCard.Content>
                 </SectionCard>
               </VStack>
             </TabPanel>

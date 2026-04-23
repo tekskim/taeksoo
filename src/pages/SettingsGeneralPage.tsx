@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { VStack, SectionCard, Select, Toggle, FormField, PageShell, TabBar } from '@/design-system';
+import {
+  VStack,
+  SectionCard,
+  Select,
+  Toggle,
+  FormField,
+  PageShell,
+  TabBar,
+  useToast,
+} from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 import { useDarkMode } from '@/hooks/useDarkMode';
 
@@ -38,6 +47,7 @@ const timezoneOptions = [
 
 export default function SettingsGeneralPage() {
   const { theme, setTheme } = useDarkMode();
+  const { success } = useToast();
   const sidebarWidth = 200;
 
   const [language, setLanguage] = useState('en');
@@ -46,6 +56,7 @@ export default function SettingsGeneralPage() {
 
   const handleThemeChange = (value: string) => {
     setTheme(value as 'light' | 'dark' | 'system');
+    success('Theme updated successfully.');
   };
 
   return (
@@ -83,7 +94,10 @@ export default function SettingsGeneralPage() {
             >
               <Select
                 value={language}
-                onChange={setLanguage}
+                onChange={(val) => {
+                  setLanguage(val);
+                  success('Language updated successfully.');
+                }}
                 options={languageOptions}
                 width="md"
               />
@@ -96,7 +110,10 @@ export default function SettingsGeneralPage() {
               >
                 <Select
                   value={timezone}
-                  onChange={setTimezone}
+                  onChange={(val) => {
+                    setTimezone(val);
+                    success('Time zone updated successfully.');
+                  }}
                   options={timezoneOptions}
                   width="md"
                   disabled={useLocationTimezone}
@@ -121,6 +138,11 @@ export default function SettingsGeneralPage() {
                         setTimezone(detectedTimezone);
                       }
                     }
+                    success(
+                      checked
+                        ? 'Location-based time zone enabled.'
+                        : 'Location-based time zone disabled.'
+                    );
                   }}
                 />
               </FormField>

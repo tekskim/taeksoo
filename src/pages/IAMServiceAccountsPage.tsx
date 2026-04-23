@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -17,6 +17,8 @@ import {
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { CreateServiceAccountDrawer } from '@/components/CreateServiceAccountDrawer';
@@ -140,6 +142,24 @@ const mockServiceAccounts: ServiceAccount[] = [
   },
 ];
 
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'id', label: 'ID', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'inactive', label: 'Inactive' },
+    ],
+  },
+  { id: 'description', label: 'Description', type: 'text' },
+  { id: 'apiKeysUsed', label: 'API keys used', type: 'text' },
+  { id: 'apiKeysMax', label: 'API keys max', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
 /* ----------------------------------------
    IAM Service Accounts Page
    ---------------------------------------- */
@@ -147,7 +167,7 @@ const mockServiceAccounts: ServiceAccount[] = [
 export function IAMServiceAccountsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -168,12 +188,15 @@ export function IAMServiceAccountsPage() {
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  const filteredAccounts = mockServiceAccounts.filter(
-    (account) =>
-      account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      account.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      account.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredAccounts = useMemo(() => {
+    return mockServiceAccounts.filter((account) => {
+      return appliedFilters.every((filter) => {
+        const raw = account[filter.fieldId as keyof ServiceAccount];
+        const value = String(typeof raw === 'number' ? raw : (raw ?? '')).toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [appliedFilters]);
 
   const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
@@ -300,6 +323,7 @@ export function IAMServiceAccountsPage() {
           }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -315,12 +339,14 @@ export function IAMServiceAccountsPage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <SearchInput
+                <FilterSearchInput
+                  filters={filterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
                   placeholder="Search service accounts by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
+                  size="sm"
                   className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
                 />
                 <Button
                   variant="secondary"

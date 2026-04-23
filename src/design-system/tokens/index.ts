@@ -56,6 +56,18 @@ export const primitive = {
       700: 'var(--color-green-700)',
       800: 'var(--color-green-800)',
     },
+    emerald: {
+      50: 'var(--color-emerald-50)',
+      100: 'var(--color-emerald-100)',
+      200: 'var(--color-emerald-200)',
+      300: 'var(--color-emerald-300)',
+      400: 'var(--color-emerald-400)',
+      500: 'var(--color-emerald-500)',
+      600: 'var(--color-emerald-600)',
+      700: 'var(--color-emerald-700)',
+      800: 'var(--color-emerald-800)',
+      900: 'var(--color-emerald-900)',
+    },
     orange: {
       50: 'var(--color-orange-50)',
       100: 'var(--color-orange-100)',
@@ -477,8 +489,8 @@ export const component = {
     lineHeight: 'var(--inline-message-line-height)', // 16px
     text: 'var(--inline-message-text)', // text-default
     success: {
-      bg: 'var(--inline-message-success-bg)', // green-50
-      icon: 'var(--inline-message-success-icon)', // green-600
+      bg: 'var(--inline-message-success-bg)', // emerald-50
+      icon: 'var(--inline-message-success-icon)', // emerald-600
     },
     warning: {
       bg: 'var(--inline-message-warning-bg)', // orange-50
@@ -635,7 +647,7 @@ export const component = {
     fontSize: 'var(--status-font-size)', // 11px
     lineHeight: 'var(--status-line-height)', // 16px
     text: 'var(--status-text)', // white
-    activeBg: 'var(--status-active-bg)', // green-400
+    activeBg: 'var(--status-active-bg)', // emerald-400
     errorBg: 'var(--status-error-bg)', // red-400
     mutedBg: 'var(--status-muted-bg)', // slate-500
     buildingBg: 'var(--status-building-bg)', // blue-400

@@ -15,9 +15,9 @@ import {
   Checkbox,
   Table,
   Disclosure,
+  WizardSummary,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
-import { WizardSectionStatusIcon } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
@@ -145,13 +145,6 @@ const MATCHING_PODS_COLUMNS = [
 ];
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  return <WizardSectionStatusIcon status={status} />;
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 function SummarySidebar({
@@ -161,24 +154,16 @@ function SummarySidebar({
 }) {
   const navigate = useNavigate();
 
+  const summaryItems: WizardSummaryItem[] = NETWORK_POLICY_SECTION_ORDER.map((key) => ({
+    key,
+    label: NETWORK_POLICY_SECTION_LABELS[key],
+    status: sectionStates[key],
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
-          <VStack gap={4}>
-            <span className="text-heading-h5">Summary</span>
-            <VStack gap={0}>
-              {NETWORK_POLICY_SECTION_ORDER.map((step) => (
-                <HStack key={step} justify="between" className="py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {NETWORK_POLICY_SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStates[step]} />
-                </HStack>
-              ))}
-            </VStack>
-          </VStack>
-        </div>
+        <WizardSummary items={summaryItems} />
 
         <HStack gap={2}>
           <Button
