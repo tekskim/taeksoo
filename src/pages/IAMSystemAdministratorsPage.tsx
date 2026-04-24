@@ -31,7 +31,7 @@ import { useTabs } from '@/contexts/TabContext';
 interface SystemAdmin {
   id: string;
   username: string;
-  status: 'active' | 'inactive' | 'pending';
+  status: 'active' | 'deactivated';
   locked: boolean;
   lastSignIn: string;
   mfa: string;
@@ -72,7 +72,7 @@ const mockSystemAdmins: SystemAdmin[] = [
   {
     id: 'admin-004',
     username: 'john-doe',
-    status: 'inactive',
+    status: 'deactivated',
     locked: true,
     lastSignIn: 'Aug 25, 2026',
     mfa: '-',
@@ -99,7 +99,7 @@ const mockSystemAdmins: SystemAdmin[] = [
   {
     id: 'admin-007',
     username: 'emily-davis',
-    status: 'pending',
+    status: 'deactivated',
     locked: false,
     lastSignIn: '-',
     mfa: '-',
@@ -142,8 +142,7 @@ const systemAdminFilterFields: FilterField[] = [
     type: 'select',
     options: [
       { value: 'active', label: 'Active' },
-      { value: 'inactive', label: 'Inactive' },
-      { value: 'pending', label: 'Pending' },
+      { value: 'deactivated', label: 'Deactivated' },
     ],
   },
   {
@@ -242,7 +241,7 @@ export default function IAMSystemAdministratorsPage() {
       render: (value) => (
         <StatusIndicator
           layout="icon-only"
-          status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'}
+          status={value === 'active' ? 'active' : 'deactivated'}
         />
       ),
     },

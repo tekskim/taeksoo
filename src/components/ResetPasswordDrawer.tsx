@@ -189,26 +189,22 @@ export function ResetPasswordDrawer({
               <FormField>
                 <FormField.Label>New Password</FormField.Label>
                 <FormField.Control>
-                  <div className="relative w-full">
-                    <Input
-                      type={showNewPassword ? 'text' : 'password'}
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Enter new password"
-                      fullWidth
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
-                    >
-                      {showNewPassword ? (
-                        <IconEyeOff size={16} stroke={1.5} />
-                      ) : (
-                        <IconEye size={16} stroke={1.5} />
-                      )}
-                    </button>
-                  </div>
+                  <Input
+                    type={showNewPassword ? 'text' : 'password'}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    fullWidth
+                    rightElement={
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="hover:text-[var(--color-text-default)]"
+                      >
+                        {showNewPassword ? <IconEye size={12} /> : <IconEyeOff size={12} />}
+                      </button>
+                    }
+                  />
                 </FormField.Control>
               </FormField>
 
@@ -216,26 +212,22 @@ export function ResetPasswordDrawer({
               <FormField error={!!confirmPassword && !doPasswordsMatch}>
                 <FormField.Label>Confirm New Password</FormField.Label>
                 <FormField.Control>
-                  <div className="relative w-full">
-                    <Input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Enter new password again"
-                      fullWidth
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
-                    >
-                      {showConfirmPassword ? (
-                        <IconEyeOff size={16} stroke={1.5} />
-                      ) : (
-                        <IconEye size={16} stroke={1.5} />
-                      )}
-                    </button>
-                  </div>
+                  <Input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Enter new password again"
+                    fullWidth
+                    rightElement={
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="hover:text-[var(--color-text-default)]"
+                      >
+                        {showConfirmPassword ? <IconEye size={12} /> : <IconEyeOff size={12} />}
+                      </button>
+                    }
+                  />
                 </FormField.Control>
                 {confirmPassword && !doPasswordsMatch && (
                   <FormField.ErrorMessage>Passwords do not match</FormField.ErrorMessage>

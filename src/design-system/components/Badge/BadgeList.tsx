@@ -25,6 +25,8 @@ export interface BadgeListProps {
   renderItem?: (item: string, index: number) => ReactNode;
   /** Align the +N overflow trigger to the right, pushing it away from the badges */
   overflowAlign?: 'inline' | 'right';
+  /** Max width of the popover content (e.g. '160px'). Overrides the default 320px. */
+  popoverMaxWidth?: string;
 }
 
 /* ----------------------------------------
@@ -41,6 +43,7 @@ export const BadgeList = memo(function BadgeList({
   popoverTitle,
   renderItem,
   overflowAlign = 'inline',
+  popoverMaxWidth,
 }: BadgeListProps) {
   if (items.length === 0) return null;
 
@@ -84,12 +87,15 @@ export const BadgeList = memo(function BadgeList({
           delay={100}
           hideDelay={100}
           content={
-            <div className={`p-3 max-w-[320px] ${hasLongBadge ? '' : 'min-w-[160px]'}`}>
+            <div
+              className={`p-3 ${popoverMaxWidth ? '' : 'max-w-[320px]'} ${hasLongBadge || popoverMaxWidth ? '' : 'min-w-[160px]'}`}
+              style={popoverMaxWidth ? { maxWidth: popoverMaxWidth } : undefined}
+            >
               <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2 whitespace-nowrap">
                 {popoverTitle ?? `All items (${items.length})`}
               </div>
               <div
-                className={`flex gap-1 items-start ${hasLongBadge ? 'flex-col' : 'flex-wrap min-w-[136px]'}`}
+                className={`flex gap-1 items-start ${hasLongBadge || popoverMaxWidth ? 'flex-col' : 'flex-wrap min-w-[136px]'}`}
               >
                 {items.map((item, index) => (
                   <Badge

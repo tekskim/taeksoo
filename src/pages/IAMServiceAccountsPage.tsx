@@ -34,7 +34,7 @@ import { InlineCopyId } from '@/components/InlineCopyId';
    Types
    ---------------------------------------- */
 
-type AccountStatus = 'active' | 'inactive';
+type AccountStatus = 'active' | 'deactivated';
 
 interface ServiceAccount {
   id: string;
@@ -81,7 +81,7 @@ const mockServiceAccounts: ServiceAccount[] = [
   {
     id: 'sa-004',
     name: 'terraform-deployer',
-    status: 'inactive',
+    status: 'deactivated',
     apiKeysUsed: 3,
     apiKeysMax: 10,
     description: 'Infrastructure provisioning',
@@ -108,7 +108,7 @@ const mockServiceAccounts: ServiceAccount[] = [
   {
     id: 'sa-007',
     name: 'dns-updater',
-    status: 'inactive',
+    status: 'deactivated',
     apiKeysUsed: 0,
     apiKeysMax: 10,
     description: 'DNS record management',
@@ -135,7 +135,7 @@ const mockServiceAccounts: ServiceAccount[] = [
   {
     id: 'sa-010',
     name: 'audit-exporter',
-    status: 'inactive',
+    status: 'deactivated',
     apiKeysUsed: 0,
     apiKeysMax: 10,
     description: 'Audit log export to external SIEM',
@@ -152,7 +152,7 @@ const filterFields: FilterField[] = [
     type: 'select',
     options: [
       { value: 'active', label: 'Active' },
-      { value: 'inactive', label: 'Inactive' },
+      { value: 'deactivated', label: 'Deactivated' },
     ],
   },
   { id: 'description', label: 'Description', type: 'text' },
@@ -243,7 +243,10 @@ export function IAMServiceAccountsPage() {
       width: 64,
       align: 'center',
       render: (_value, row) => (
-        <StatusIndicator layout="icon-only" status={row.status === 'active' ? 'active' : 'muted'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status === 'active' ? 'active' : 'deactivated'}
+        />
       ),
     },
     {

@@ -35,7 +35,7 @@ interface Domain {
   id: string;
   name: string;
   description: string;
-  status: 'active' | 'inactive' | 'pending';
+  status: 'active' | 'deactivated';
   createdAt: string;
 }
 
@@ -75,7 +75,7 @@ const mockDomains: Domain[] = [
     id: 'domain-005',
     name: 'testing',
     description: 'Testing domain',
-    status: 'inactive',
+    status: 'deactivated',
     createdAt: 'Sep 1, 2026 16:52:07',
   },
   {
@@ -89,7 +89,7 @@ const mockDomains: Domain[] = [
     id: 'domain-007',
     name: 'sandbox',
     description: 'Sandbox environment',
-    status: 'pending',
+    status: 'deactivated',
     createdAt: 'Sep 10, 2026 13:38:21',
   },
   {
@@ -124,8 +124,7 @@ const filterFields: FilterField[] = [
     type: 'select',
     options: [
       { value: 'active', label: 'Active' },
-      { value: 'inactive', label: 'Inactive' },
-      { value: 'pending', label: 'Pending' },
+      { value: 'deactivated', label: 'Deactivated' },
     ],
   },
   { id: 'createdAt', label: 'Created at', type: 'text' },
@@ -205,7 +204,7 @@ export default function IAMDomainsPage() {
       render: (value) => (
         <StatusIndicator
           layout="icon-only"
-          status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'}
+          status={value === 'active' ? 'active' : 'deactivated'}
         />
       ),
     },

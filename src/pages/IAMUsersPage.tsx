@@ -14,6 +14,7 @@ import {
   PageHeader,
   ListToolbar,
   ConfirmModal,
+  BadgeList,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -29,21 +30,22 @@ import { GroupRolesDrawer } from '@/components/GroupRolesDrawer';
 import { UserEditDrawer } from '@/components/UserEditDrawer';
 import { IconDownload, IconTrash, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-type UserStatus = 'active' | 'disabled' | 'locked';
+type UserStatus = 'active' | 'deactivated';
 
 interface User {
   id: string;
   username: string;
   status: UserStatus;
-  userGroups: string;
-  roles: string;
+  userGroups: string[];
+  roles: string[];
   lastSignIn: string;
-  mfa: string;
+  mfa: string[];
   createdAt: string;
 }
 
@@ -56,100 +58,100 @@ const mockUsers: User[] = [
     id: 'user-001',
     username: 'thaki-kim',
     status: 'active',
-    userGroups: 'dev-admin-group (+2)',
-    roles: 'compute-admin (+3)',
+    userGroups: ['Compute:tenantA', 'Network:tenantB', 'Storage:tenantA'],
+    roles: ['compute-admin', 'network-viewer', 'storage-admin', 'iam-reader'],
     lastSignIn: 'Sep 12, 2026',
-    mfa: 'OTP / Email',
+    mfa: ['OTP', 'Email'],
     createdAt: 'Sep 12, 2026 09:23:41',
   },
   {
     id: 'user-002',
     username: 'alex.johnson',
     status: 'active',
-    userGroups: 'dev-team',
-    roles: 'viewer',
+    userGroups: ['dev-team'],
+    roles: ['viewer'],
     lastSignIn: 'Sep 11, 2026',
-    mfa: 'OTP',
+    mfa: ['OTP'],
     createdAt: 'Aug 15, 2026 14:07:22',
   },
   {
     id: 'user-003',
     username: 'sara.connor',
     status: 'active',
-    userGroups: 'ops-team (+1)',
-    roles: 'network-admin (+1)',
+    userGroups: ['ops-team', 'infra-team'],
+    roles: ['network-admin', 'compute-viewer'],
     lastSignIn: 'Sep 10, 2026',
-    mfa: 'Email',
+    mfa: ['Email'],
     createdAt: 'Jul 20, 2026 11:45:33',
   },
   {
     id: 'user-004',
     username: 'john.doe',
-    status: 'disabled',
-    userGroups: 'guest',
-    roles: 'viewer',
+    status: 'deactivated',
+    userGroups: ['guest'],
+    roles: ['viewer'],
     lastSignIn: 'Aug 1, 2026',
-    mfa: '-',
+    mfa: [],
     createdAt: 'Jun 10, 2026 16:52:08',
   },
   {
     id: 'user-005',
     username: 'jane.smith',
     status: 'active',
-    userGroups: 'admin-group',
-    roles: 'super-admin',
+    userGroups: ['admin-group'],
+    roles: ['super-admin'],
     lastSignIn: 'Sep 12, 2026',
-    mfa: 'OTP / Email',
+    mfa: ['OTP', 'Email'],
     createdAt: 'Jan 5, 2026 08:30:15',
   },
   {
     id: 'user-006',
     username: 'mike.wilson',
-    status: 'locked',
-    userGroups: 'dev-team',
-    roles: 'developer',
+    status: 'deactivated',
+    userGroups: ['dev-team'],
+    roles: ['developer'],
     lastSignIn: 'Sep 5, 2026',
-    mfa: 'OTP',
+    mfa: ['OTP'],
     createdAt: 'Apr 18, 2026 13:19:44',
   },
   {
     id: 'user-007',
     username: 'emily.chen',
     status: 'active',
-    userGroups: 'qa-team (+2)',
-    roles: 'qa-lead (+2)',
+    userGroups: ['qa-team', 'dev-team', 'release-team'],
+    roles: ['qa-lead', 'dev-viewer', 'release-manager'],
     lastSignIn: 'Sep 11, 2026',
-    mfa: 'Email',
+    mfa: ['Email'],
     createdAt: 'Mar 22, 2026 10:41:27',
   },
   {
     id: 'user-008',
     username: 'david.lee',
     status: 'active',
-    userGroups: 'ops-team',
-    roles: 'storage-admin',
+    userGroups: ['ops-team'],
+    roles: ['storage-admin'],
     lastSignIn: 'Sep 12, 2026',
-    mfa: 'OTP / Email',
+    mfa: ['OTP', 'Email'],
     createdAt: 'Feb 14, 2026 17:03:56',
   },
   {
     id: 'user-009',
     username: 'lisa.park',
-    status: 'disabled',
-    userGroups: 'external',
-    roles: 'viewer',
+    status: 'deactivated',
+    userGroups: ['external'],
+    roles: ['viewer'],
     lastSignIn: 'Jul 15, 2026',
-    mfa: '-',
+    mfa: [],
     createdAt: 'May 30, 2026 12:28:19',
   },
   {
     id: 'user-010',
     username: 'chris.taylor',
     status: 'active',
-    userGroups: 'dev-admin-group',
-    roles: 'iam-admin (+1)',
+    userGroups: ['dev-admin-group'],
+    roles: ['iam-admin', 'compute-viewer'],
     lastSignIn: 'Sep 12, 2026',
-    mfa: 'OTP',
+    mfa: ['OTP'],
     createdAt: 'Jan 28, 2026 15:55:02',
   },
 ];
@@ -160,8 +162,7 @@ const mockUsers: User[] = [
 
 const statusMap: Record<UserStatus, StatusType> = {
   active: 'active',
-  disabled: 'shutoff',
-  locked: 'error',
+  deactivated: 'deactivated',
 };
 
 const filterFields: FilterField[] = [
@@ -172,8 +173,7 @@ const filterFields: FilterField[] = [
     type: 'select',
     options: [
       { value: 'active', label: 'Active' },
-      { value: 'disabled', label: 'Disabled' },
-      { value: 'locked', label: 'Locked' },
+      { value: 'deactivated', label: 'Deactivated' },
     ],
   },
   { id: 'userGroups', label: 'User groups', type: 'text' },
@@ -281,13 +281,19 @@ export function IAMUsersPage() {
       flex: 1,
       minWidth: columnMinWidths.username,
       sortable: true,
-      render: (value) => (
-        <Link
-          to={`/iam/users/${value}`}
-          className="text-[var(--color-action-primary)] font-medium hover:underline"
-        >
-          {value}
-        </Link>
+      render: (value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/iam/users/${value}`}
+            className="text-[var(--color-action-primary)] font-medium hover:underline"
+          >
+            {value}
+          </Link>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)]">
+            <span className="truncate">ID: {row.id}</span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </div>
       ),
     },
     {
@@ -295,12 +301,16 @@ export function IAMUsersPage() {
       label: 'User groups',
       flex: 1,
       minWidth: columnMinWidths.userGroups,
-    },
-    {
-      key: 'roles',
-      label: 'Roles',
-      flex: 1,
-      minWidth: columnMinWidths.roles,
+      render: (value: string[]) => (
+        <BadgeList
+          items={value}
+          maxVisible={1}
+          maxBadgeWidth="140px"
+          popoverTitle={`All User Groups (${value.length})`}
+          overflowAlign="right"
+          popoverMaxWidth="160px"
+        />
+      ),
     },
     {
       key: 'lastSignIn',
@@ -314,6 +324,17 @@ export function IAMUsersPage() {
       label: 'MFA',
       flex: 1,
       minWidth: columnMinWidths.mfa,
+      render: (value: string[]) =>
+        value.length > 0 ? (
+          <BadgeList
+            items={value}
+            maxVisible={2}
+            theme="white"
+            popoverTitle={`MFA Methods (${value.length})`}
+          />
+        ) : (
+          <span className="text-[var(--color-text-subtle)]">-</span>
+        ),
     },
     {
       key: 'createdAt',
@@ -330,32 +351,31 @@ export function IAMUsersPage() {
       align: 'center',
       sticky: 'right',
       render: (_value, row) => {
-        const isDisabled = row.status === 'disabled';
+        const isDeactivated = row.status === 'deactivated';
         const menuItems: ContextMenuItem[] = [
           {
             id: 'manage-user-groups',
             label: 'Manage user groups',
-            disabled: isDisabled,
+            disabled: isDeactivated,
             onClick: () => handleManageUserGroups(row),
-          },
-          {
-            id: 'manage-roles',
-            label: 'Manage roles',
-            disabled: isDisabled,
-            onClick: () => handleManageRoles(row),
           },
           {
             id: 'reset-password',
             label: 'Reset password',
-            disabled: isDisabled,
+            disabled: isDeactivated,
             onClick: () => console.log('Reset password', row.id),
           },
-          { id: 'edit', label: 'Edit', disabled: isDisabled, onClick: () => handleEditUser(row) },
+          {
+            id: 'edit',
+            label: 'Edit',
+            disabled: isDeactivated,
+            onClick: () => handleEditUser(row),
+          },
           {
             id: 'delete',
             label: 'Delete',
-            status: isDisabled ? undefined : 'danger',
-            disabled: isDisabled,
+            status: isDeactivated ? undefined : 'danger',
+            disabled: isDeactivated,
             onClick: () => console.log('Delete', row.id),
           },
         ];
