@@ -95,7 +95,8 @@ function AIPlatformLogo() {
 export function AIPlatformSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
+  const { projects, selectedProjectId, setSelectedProjectId, primaryProjectId, setPrimaryProject } =
+    useProject();
 
   // Check if current path matches href
   const isActive = (href: string) => {
@@ -127,6 +128,8 @@ export function AIPlatformSidebar() {
           projects={projects}
           selectedProjectId={selectedProjectId}
           onProjectSelect={setSelectedProjectId}
+          primaryProjectId={primaryProjectId}
+          onSetPrimary={setPrimaryProject}
           variant="default"
         />
       </div>
