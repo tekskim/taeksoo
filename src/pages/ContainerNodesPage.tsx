@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -175,9 +175,8 @@ export function ContainerNodesPage() {
   } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -206,10 +205,22 @@ export function ContainerNodesPage() {
     navigate(`/container/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
+  // Filter by search
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return nodesData;
+    const term = searchTerm.toLowerCase();
+    return nodesData.filter(
+      (n) => n.name.toLowerCase().includes(term) || n.role.toLowerCase().includes(term)
+    );
+  }, [nodesData, searchTerm]);
+
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(nodesData.length / rowsPerPage);
-  const paginatedData = nodesData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 248 : 48;
@@ -455,6 +466,11 @@ export function ContainerNodesPage() {
                 placeholder="Search Nodes by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
               />
               <Button
                 variant="secondary"
@@ -501,7 +517,7 @@ export function ContainerNodesPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={nodesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

@@ -4,7 +4,6 @@ import {
   TopBar,
   Breadcrumb,
   PageShell,
-  PageHeader,
   VStack,
   Badge,
   ProgressBar,
@@ -219,7 +218,7 @@ function Card({
 }: CardProps) {
   return (
     <div
-      className={`p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
+      className={`p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
       <h6 className="text-heading-h6 mb-4">{title}</h6>
       {children}
@@ -277,9 +276,8 @@ export function ComputeAdminHomePage() {
       contentClassName="px-8 py-6"
     >
       <VStack gap={6}>
-        <PageHeader title="Dashboard" />
         {/* Top Row - 3 Cards */}
-        <div className="grid grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-3 gap-6">
           {/* CAPACITY SUMMARY */}
           <Card title="Capacity Summary">
             <div className="space-y-6">

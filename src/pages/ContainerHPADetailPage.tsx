@@ -18,6 +18,7 @@ import {
   Badge,
   SectionCard,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
@@ -28,7 +29,7 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -330,7 +331,7 @@ export function ContainerHPADetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get HPA data
-  const hpa = mockHPAData[hpaId || ''] || mockHPAData['1'];
+  const hpa = hpaId ? mockHPAData[hpaId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -338,8 +339,10 @@ export function ContainerHPADetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`HPA: ${hpa.name}`);
-  }, [updateActiveTabLabel, hpa.name]);
+    if (hpa) {
+      updateActiveTabLabel(`HPA: ${hpa.name}`);
+    }
+  }, [updateActiveTabLabel, hpa]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -357,6 +360,70 @@ export function ContainerHPADetailPage() {
   const handleOpenInNewTab = (tab: ShellTab) => {
     console.log('Open in new tab:', tab);
   };
+
+  if (!hpa) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'HPA', href: '/container/hpa' }, { label: hpaId ?? 'HPA' }]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="HPA not found"
+          description={`The HPA "${hpaId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/hpa')}>
+              Back to HPA
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   const getStatusType = (status: string): 'active' | 'building' | 'error' => {
     switch (status) {

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { IconDownload, IconTerminal2 } from '@tabler/icons-react';
 import { Select, Button, TabBar, TopBar, Breadcrumb, PageShell } from '@/design-system';
@@ -189,9 +190,14 @@ export function ConsolePage() {
       </div>
 
       {/* Log Content - Dark background */}
-      <div
-        ref={contentRef}
-        className="flex-1 overflow-auto p-4 font-mono text-body-md leading-5 bg-[var(--primitive-color-blue-gray900)] text-[var(--primitive-color-blue-gray300)] shell-scroll"
+      <OverlayScrollbarsComponent
+        ref={contentRef as any}
+        options={{
+          overflow: { x: 'scroll', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 p-4 font-mono text-body-md leading-5 bg-[var(--primitive-color-blue-gray900)] text-[var(--primitive-color-blue-gray300)] os-shell"
       >
         {content ? (
           <pre className="whitespace-pre-wrap break-all m-0">{content}</pre>
@@ -200,7 +206,7 @@ export function ConsolePage() {
             {connectionStatus === 'connecting' ? 'Connecting...' : 'No output'}
           </span>
         )}
-      </div>
+      </OverlayScrollbarsComponent>
 
       {/* Bottom Status Bar - Same as ShellPanel */}
       <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">

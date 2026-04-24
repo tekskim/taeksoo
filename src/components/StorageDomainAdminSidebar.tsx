@@ -1,6 +1,7 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconDatabase,
   IconDisc,
   IconBucket,
@@ -40,13 +41,19 @@ export function StorageDomainAdminSidebar({
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       <AppSwitcher currentAppId="storage-domain-admin" onToggleSidebar={onToggle} />
 
-      <nav
-        className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll"
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2"
         aria-label="Storage Domain Admin navigation"
       >
         <VStack gap={4} className="w-full min-w-0">
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
             label="Dashboard"
             href="/storage-domain-admin"
             active={isActive('/storage-domain-admin')}
@@ -88,7 +95,7 @@ export function StorageDomainAdminSidebar({
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

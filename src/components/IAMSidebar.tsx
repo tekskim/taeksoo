@@ -1,6 +1,7 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconUsers,
   IconUsersGroup,
   IconShieldLock,
@@ -49,8 +50,14 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
       <AppSwitcher currentAppId="iam" onToggleSidebar={onToggle} />
 
       {/* Navigation */}
-      <nav
-        className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll"
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2"
         aria-label="IAM navigation"
       >
         <VStack gap={4} className="w-full min-w-0">
@@ -58,7 +65,7 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
 
           {/* Home */}
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
             label="Dashboard"
             href="/iam"
             active={isActive('/iam')}
@@ -162,7 +169,7 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

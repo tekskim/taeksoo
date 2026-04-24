@@ -74,7 +74,9 @@ export default function SettingsNotificationsPage() {
 
   return (
     <PageShell
-      sidebar={<SettingsSidebar />}
+      sidebar={
+        <SettingsSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={<TabBar tabs={[]} activeTab="" onTabChange={() => {}} showAddButton={false} />}
       topBar={

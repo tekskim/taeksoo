@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   VStack,
@@ -127,8 +127,14 @@ const clustersData: ClusterRow[] = [
 
 export function ContainerHomePage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const pageSize = 10;
-  const paginatedData = clustersData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return clustersData;
+    const term = searchTerm.toLowerCase();
+    return clustersData.filter((c) => c.name.toLowerCase().includes(term));
+  }, [searchTerm]);
+  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -329,12 +335,17 @@ export function ContainerHomePage() {
                   placeholder="Search clusters by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
                 />
                 <Pagination
                   currentPage={currentPage}
-                  totalPages={Math.ceil(clustersData.length / pageSize)}
+                  totalPages={Math.ceil(filteredData.length / pageSize)}
                   onPageChange={setCurrentPage}
-                  totalItems={clustersData.length}
+                  totalItems={filteredData.length}
                 />
                 <Table<ClusterRow>
                   columns={columns}

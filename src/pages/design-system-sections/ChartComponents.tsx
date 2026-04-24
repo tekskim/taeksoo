@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { createPortal } from 'react-dom';
 import ReactECharts from 'echarts-for-react';
 import { Tooltip, MonitoringToolbar, Select, type TimeRangeValue } from '@/design-system';
@@ -947,7 +948,14 @@ export function PieChartDemo({
           opts={{ devicePixelRatio: window.devicePixelRatio }}
         />
       </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px]"
+      >
         {legendData.map((item, i) => (
           <div key={i} className="flex items-center gap-1.5">
             <div
@@ -957,7 +965,7 @@ export function PieChartDemo({
             <span className="text-body-sm text-[var(--color-text-muted)]">{item.label}</span>
           </div>
         ))}
-      </div>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }
@@ -1145,7 +1153,14 @@ export function MultiDonutChartDemo({ title, data }: { title: string; data: Donu
           opts={{ devicePixelRatio: window.devicePixelRatio }}
         />
       </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px]"
+      >
         {legendData.map((item, i) => (
           <div key={i} className="flex items-center gap-1.5">
             <div
@@ -1157,7 +1172,7 @@ export function MultiDonutChartDemo({ title, data }: { title: string; data: Donu
             </span>
           </div>
         ))}
-      </div>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }
@@ -1255,7 +1270,14 @@ export function MultiHalfDonutChartDemo({ title, data }: { title: string; data: 
           opts={{ devicePixelRatio: window.devicePixelRatio }}
         />
       </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px]"
+      >
         {legendData.map((item, i) => (
           <div key={i} className="flex items-center gap-1.5">
             <div
@@ -1267,7 +1289,7 @@ export function MultiHalfDonutChartDemo({ title, data }: { title: string; data: 
             </span>
           </div>
         ))}
-      </div>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }

@@ -22,6 +22,7 @@ import {
   Badge,
   SectionCard,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -32,6 +33,7 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import {
+  IconAlertTriangle,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
@@ -923,7 +925,7 @@ export function NodeDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get node data
-  const node = mockNodeData[nodeName || ''] || mockNodeData['node-control-plane-01'];
+  const node = nodeName ? mockNodeData[nodeName] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -931,8 +933,10 @@ export function NodeDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Node: ${node.name}`);
-  }, [updateActiveTabLabel, node.name]);
+    if (node) {
+      updateActiveTabLabel(`Node: ${node.name}`);
+    }
+  }, [updateActiveTabLabel, node]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -942,6 +946,57 @@ export function NodeDetailPage() {
 
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
+
+  if (!node) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Nodes', href: '/container/nodes' },
+                  { label: nodeName ?? 'Node' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Node not found"
+          description={`The node "${nodeName ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/nodes')}>
+              Back to Nodes
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Context menu items
   const moreActionsItems: ContextMenuItem[] = [

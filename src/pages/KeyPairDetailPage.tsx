@@ -14,6 +14,7 @@ import {
   DetailHeader,
   SectionCard,
   CopyButton,
+  ErrorState,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -121,15 +122,6 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
   },
 };
 
-const defaultKeyPairDetail: KeyPairDetail = {
-  id: 'unknown',
-  name: 'Unknown Key pair',
-  userId: '-',
-  fingerprint: '-',
-  publicKey: '-',
-  createdAt: '-',
-};
-
 /* ----------------------------------------
    Key pair Detail Page
    ---------------------------------------- */
@@ -144,7 +136,7 @@ export function KeyPairDetailPage() {
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get key pair data based on URL ID
-  const keyPair = id ? mockKeyPairsMap[id] || defaultKeyPairDetail : defaultKeyPairDetail;
+  const keyPair = id ? mockKeyPairsMap[id] : undefined;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -152,10 +144,10 @@ export function KeyPairDetailPage() {
 
   // Update tab label to key pair name
   useEffect(() => {
-    if (keyPair.name) {
+    if (keyPair?.name) {
       updateActiveTabLabel(keyPair.name);
     }
-  }, [keyPair.name, updateActiveTabLabel]);
+  }, [keyPair, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -163,6 +155,52 @@ export function KeyPairDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!keyPair) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Key Pairs', href: '/compute/key-pairs' }, { label: id ?? '—' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Key pair not found"
+          description={`The key pair "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/key-pairs')}>
+              Back to Key Pairs
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Breadcrumb items
   const breadcrumbItems = [

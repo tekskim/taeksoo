@@ -20,6 +20,7 @@ import {
   Pagination,
   Table,
   PageShell,
+  ErrorState,
   type ContextMenuItem,
   type TableColumn,
   columnMinWidths,
@@ -28,7 +29,7 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconChevronDown, IconCirclePlus, IconX } from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -160,17 +161,7 @@ export function NetworkPolicyDetailPage() {
   // Shell Panel state
   const shellPanel = useShellPanel();
 
-  // Load Network Policy data
-  const [networkPolicyData, setNetworkPolicyData] = useState<NetworkPolicyData | null>(null);
-
-  useEffect(() => {
-    if (networkPolicyId && mockNetworkPolicyData[networkPolicyId]) {
-      setNetworkPolicyData(mockNetworkPolicyData[networkPolicyId]);
-    } else {
-      // Default to first network policy if not found
-      setNetworkPolicyData(mockNetworkPolicyData['1']);
-    }
-  }, [networkPolicyId]);
+  const networkPolicyData = networkPolicyId ? mockNetworkPolicyData[networkPolicyId] : undefined;
 
   // Update tab label to match the Network Policy name (most recent breadcrumb)
   useEffect(() => {
@@ -194,15 +185,83 @@ export function NetworkPolicyDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
+  if (!networkPolicyData) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Network Policies', href: '/container/network-policies' },
+                  { label: networkPolicyId ?? 'Network policy' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Network policy not found"
+          description={`The network policy "${networkPolicyId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/container/network-policies')}
+            >
+              Back to Network Policies
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () =>
-        navigate(
-          `/container/network-policies/${networkPolicyData?.name ?? networkPolicyId}/edit-yaml`
-        ),
+      onClick: () => navigate(`/container/network-policies/${networkPolicyData.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -216,10 +275,6 @@ export function NetworkPolicyDetailPage() {
       onClick: () => console.log('Delete'),
     },
   ];
-
-  if (!networkPolicyData) {
-    return <div>Loading...</div>;
-  }
 
   // Format labels and annotations
   const labelsCount = Object.keys(networkPolicyData.labels).length;

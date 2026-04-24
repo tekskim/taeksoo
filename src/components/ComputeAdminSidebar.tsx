@@ -1,6 +1,7 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconCube,
   IconTemplate,
   IconCamera,
@@ -91,13 +92,21 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
       <AppSwitcher currentAppId="compute-admin" onToggleSidebar={onToggle} />
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2"
+      >
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
 
           {/* Home */}
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
             label="Dashboard"
             href="/compute-admin"
             active={isActive('/compute-admin')}
@@ -261,7 +270,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

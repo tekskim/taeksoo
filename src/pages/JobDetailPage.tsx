@@ -18,6 +18,7 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -30,6 +31,7 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
+  IconAlertTriangle,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
@@ -645,7 +647,7 @@ export function JobDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get job data
-  const job = mockJobData[jobId || '1'] || mockJobData['1'];
+  const job = jobId ? mockJobData[jobId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -653,8 +655,10 @@ export function JobDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Job: ${job.name}`);
-  }, [updateActiveTabLabel, job.name]);
+    if (job) {
+      updateActiveTabLabel(`Job: ${job.name}`);
+    }
+  }, [updateActiveTabLabel, job]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -682,6 +686,70 @@ export function JobDetailPage() {
   const handleExecuteShell = (podName: string) => {
     shellPanel.openConsole(podName, `Shell: ${podName}`);
   };
+
+  if (!job) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Jobs', href: '/container/jobs' }, { label: jobId ?? 'Job' }]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Job not found"
+          description={`The job "${jobId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/jobs')}>
+              Back to Jobs
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [

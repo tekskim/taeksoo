@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Drawer, VStack, SearchInput } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -170,7 +171,14 @@ export function ResourceTypeSearchDrawer({
         />
 
         {/* Resource List */}
-        <div className="overflow-auto border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] max-h-[calc(100vh-200px)] drawer-scroll">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] max-h-[calc(100vh-200px)]"
+        >
           {filteredCategories.map((category, categoryIndex) => {
             const isExpanded = expandedCategories[category.id] ?? true;
             const isCategoryHighlighted = category.id === selectedCategoryId;
@@ -247,7 +255,7 @@ export function ResourceTypeSearchDrawer({
               No resource types found
             </div>
           )}
-        </div>
+        </OverlayScrollbarsComponent>
       </VStack>
     </Drawer>
   );

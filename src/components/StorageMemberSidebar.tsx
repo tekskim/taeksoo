@@ -1,5 +1,6 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
-import { IconHome, IconBucket } from '@tabler/icons-react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { IconLayoutDashboard, IconBucket } from '@tabler/icons-react';
 import { useLocation } from 'react-router-dom';
 import { AppSwitcher } from './AppSwitcher';
 
@@ -31,13 +32,19 @@ export function StorageMemberSidebar({ isOpen = true, onToggle }: StorageMemberS
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       <AppSwitcher currentAppId="storage-member" onToggleSidebar={onToggle} />
 
-      <nav
-        className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll"
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2"
         aria-label="Storage Member navigation"
       >
         <VStack gap={4} className="w-full min-w-0">
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
             label="Dashboard"
             href="/storage-member"
             active={isActive('/storage-member')}
@@ -52,7 +59,7 @@ export function StorageMemberSidebar({ isOpen = true, onToggle }: StorageMemberS
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

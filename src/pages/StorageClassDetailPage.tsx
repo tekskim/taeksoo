@@ -19,6 +19,7 @@ import {
   Badge,
   Tooltip,
   PageShell,
+  ErrorState,
   type ContextMenuItem,
   Popover,
 } from '@/design-system';
@@ -26,7 +27,7 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -138,17 +139,7 @@ export function StorageClassDetailPage() {
   // Shell Panel state
   const shellPanel = useShellPanel();
 
-  // Load Storage Class data
-  const [scData, setScData] = useState<StorageClassData | null>(null);
-
-  useEffect(() => {
-    if (storageClassId && mockStorageClassData[storageClassId]) {
-      setScData(mockStorageClassData[storageClassId]);
-    } else {
-      // Default to first storage class if not found
-      setScData(mockStorageClassData['1']);
-    }
-  }, [storageClassId]);
+  const scData = storageClassId ? mockStorageClassData[storageClassId] : undefined;
 
   // Update tab label to match the Storage Class name (most recent breadcrumb)
   useEffect(() => {
@@ -172,6 +163,77 @@ export function StorageClassDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
+  if (!scData) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Storage Classes', href: '/container/storage-classes' },
+                  { label: storageClassId ?? 'Storage class' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Storage class not found"
+          description={`The storage class "${storageClassId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/container/storage-classes')}
+            >
+              Back to Storage Classes
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
@@ -182,8 +244,7 @@ export function StorageClassDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () =>
-        navigate(`/container/storage-classes/${scData?.name ?? storageClassId}/edit-yaml`),
+      onClick: () => navigate(`/container/storage-classes/${scData.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -197,10 +258,6 @@ export function StorageClassDetailPage() {
       onClick: () => console.log('Delete'),
     },
   ];
-
-  if (!scData) {
-    return <div>Loading...</div>;
-  }
 
   // Format labels
   const labelsCount = Object.keys(scData.labels).length;

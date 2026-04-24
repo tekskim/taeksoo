@@ -18,6 +18,7 @@ import {
   Badge,
   Tooltip,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
@@ -206,9 +207,14 @@ export function ContainerIngressDetailPage() {
     useTabs();
   const shellPanel = useShellPanel();
 
+  const [notFound, setNotFound] = useState(false);
+
   useEffect(() => {
     if (ingressId && mockIngressData[ingressId]) {
       setIngress(mockIngressData[ingressId]);
+      setNotFound(false);
+    } else {
+      setNotFound(true);
     }
   }, [ingressId]);
 
@@ -265,7 +271,7 @@ export function ContainerIngressDetailPage() {
     },
   ];
 
-  if (!ingress) {
+  if (notFound || !ingress) {
     return (
       <PageShell
         sidebar={
@@ -274,7 +280,15 @@ export function ContainerIngressDetailPage() {
         sidebarWidth={sidebarWidth}
         contentClassName="flex items-center justify-center"
       >
-        <p className="text-[var(--color-text-subtle)]">Loading...</p>
+        <ErrorState
+          title="Ingress not found"
+          description={`The ingress "${ingressId}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/ingresses')}>
+              Back to Ingresses
+            </Button>
+          }
+        />
       </PageShell>
     );
   }

@@ -590,7 +590,7 @@ export function CreateResourceQuotaPage() {
   const handleCreate = useCallback(() => {
     // Validate basic info first
     if (!resourceQuotaName.trim()) {
-      setResourceQuotaNameError('Limit range name is required.');
+      setResourceQuotaNameError('Resource quota name is required.');
       return;
     }
 

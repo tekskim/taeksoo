@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Button,
@@ -470,7 +471,15 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
             {/* Main Content */}
             <div className="flex flex-1 overflow-hidden">
               {/* Content Area */}
-              <main className="flex-1 overflow-y-auto settings-scroll p-6 bg-[var(--color-surface-default)]">
+              <OverlayScrollbarsComponent
+                element="main"
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+                className="flex-1 p-6 bg-[var(--color-surface-default)]"
+              >
                 <div className="max-w-[1000px]">
                   {/* Account Content */}
                   <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
@@ -750,7 +759,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                     </div>
                   </div>
                 </div>
-              </main>
+              </OverlayScrollbarsComponent>
             </div>
           </motion.div>
 
@@ -767,8 +776,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                 variant="primary"
                 onClick={() => {
                   setShowLogoutModal(false);
-                  // In real app: redirect to login screen
-                  window.location.href = '/login';
+                  window.location.href = '/';
                 }}
               >
                 Logout
@@ -996,7 +1004,6 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
               setSetupStep(1);
               setOtpCode('');
               setOtpError('');
-              setSecretKeyCopied(false);
               setCurrentSetupMethod(null);
             }}
             title="Set up the OTP App"

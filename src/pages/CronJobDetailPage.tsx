@@ -13,6 +13,7 @@ import {
   TabPanel,
   Pagination,
   PageShell,
+  ErrorState,
   Button,
   ContextMenu,
   SearchInput,
@@ -30,6 +31,7 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
+  IconAlertTriangle,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
@@ -525,7 +527,7 @@ export function CronJobDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get cronjob data
-  const cronjob = mockCronJobData[cronjobId || '1'] || mockCronJobData['1'];
+  const cronjob = cronjobId ? mockCronJobData[cronjobId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -533,8 +535,10 @@ export function CronJobDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`CronJob: ${cronjob.name}`);
-  }, [updateActiveTabLabel, cronjob.name]);
+    if (cronjob) {
+      updateActiveTabLabel(`CronJob: ${cronjob.name}`);
+    }
+  }, [updateActiveTabLabel, cronjob]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -552,6 +556,73 @@ export function CronJobDetailPage() {
   const handleOpenInNewTab = (tab: ShellTab) => {
     console.log('Open in new tab:', tab);
   };
+
+  if (!cronjob) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'CronJobs', href: '/container/cronjobs' },
+                  { label: cronjobId ?? 'CronJob' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="CronJob not found"
+          description={`The cron job "${cronjobId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/cronjobs')}>
+              Back to CronJobs
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [

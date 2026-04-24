@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback, useState, useId } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { createPortal } from 'react-dom';
 import { twMerge } from '../../utils/cn';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
@@ -144,7 +145,14 @@ export function Drawer({
         aria-describedby={title && description ? descriptionId : undefined}
       >
         {/* Content */}
-        <div className="flex-1 px-6 pt-4 pb-8 drawer-scroll">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex-1 px-6 pt-4 pb-8"
+        >
           {title && (
             <>
               <h2 id={titleId} className="text-heading-h5 text-[var(--color-text-default)]">
@@ -162,7 +170,7 @@ export function Drawer({
             </>
           )}
           {children}
-        </div>
+        </OverlayScrollbarsComponent>
 
         {/* Footer */}
         {footer && (

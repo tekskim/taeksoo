@@ -56,6 +56,7 @@ export interface NavItem {
   icon: ComponentType<{ size?: number; stroke?: number; className?: string }>;
   path: string;
   lastUpdated?: string;
+  external?: boolean;
 }
 
 export interface NavGroup {

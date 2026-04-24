@@ -76,7 +76,7 @@ export function YamlEditor({
           onScroll={handleScroll}
           readOnly={readOnly}
           className={twMerge(
-            'w-full h-full py-2 px-2.5 font-mono text-body-md leading-[18px] text-[var(--color-text-default)] bg-transparent border-none outline-none resize-none overflow-auto yaml-editor-scroll',
+            'w-full h-full py-2 px-2.5 font-mono text-body-md leading-[18px] text-[var(--color-text-default)] bg-transparent border-none outline-none resize-none overflow-auto',
             hasTrailing ? 'pr-20' : 'pr-12'
           )}
           spellCheck={false}

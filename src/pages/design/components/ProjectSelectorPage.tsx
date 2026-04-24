@@ -181,7 +181,7 @@ function StaticDropdown() {
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg p-3 flex flex-col gap-2 w-[280px]">
       <div className="flex items-center justify-between px-2.5 py-1.5 border border-[var(--color-border-strong)] rounded-md bg-[var(--color-surface-default)]">
         <span className="text-body-sm text-[var(--color-text-muted)]">Search projects</span>
-        <IconSearch size={16} className="text-[var(--color-text-muted)]" />
+        <IconSearch size={12} strokeWidth={2} className="text-[var(--color-text-subtle)]" />
       </div>
       <div className="flex flex-col gap-2">
         {mockProjects.map((project) => (
@@ -214,7 +214,7 @@ function ProjectCard({ project, isSelected = false }: { project: Project; isSele
             {project.name}
           </span>
           {isSelected && !isDisabled && (
-            <IconCheck size={20} className="text-[var(--color-action-primary)]" stroke={1} />
+            <IconCheck size={16} className="text-[var(--color-action-primary)]" stroke={1.5} />
           )}
           {isDisabled && (
             <span className="text-body-sm text-[var(--color-state-danger)]">Disabled</span>

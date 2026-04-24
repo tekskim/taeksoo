@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, ReactNode } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import {
   VStack,
@@ -131,7 +132,15 @@ export function AIPlatformSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-3"
+      >
         <VStack gap={1} className="w-full min-w-0">
           {/* Dashboard */}
           <MenuItem
@@ -283,7 +292,7 @@ export function AIPlatformSidebar() {
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

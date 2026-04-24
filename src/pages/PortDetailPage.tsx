@@ -18,6 +18,7 @@ import {
   ContextMenu,
   Modal,
   PageShell,
+  ErrorState,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -45,7 +46,7 @@ import { InlineCopyId } from '@/components/InlineCopyId';
    Types
    ---------------------------------------- */
 
-type PortStatus = 'active' | 'down' | 'build';
+type PortStatus = 'active' | 'down' | 'building';
 
 interface PortDetail {
   id: string;
@@ -176,7 +177,7 @@ const mockPortsMap: Record<string, PortDetail> = {
   'port-008': {
     id: 'port-008',
     name: 'monitor-port',
-    status: 'build',
+    status: 'building',
     createdAt: 'Aug 20, 2026 23:27:51',
     description: 'Monitoring port',
     portSecurity: true,
@@ -211,19 +212,6 @@ const mockPortsMap: Record<string, PortDetail> = {
   },
 };
 
-const defaultPortDetail: PortDetail = {
-  id: 'unknown',
-  name: 'Unknown Port',
-  status: 'active',
-  createdAt: '-',
-  description: '-',
-  portSecurity: false,
-  ownedNetwork: { name: '-', id: '' },
-  subnet: { name: '-', id: '' },
-  macAddress: '-',
-  attachedTo: null,
-};
-
 const mockFixedIPs: FixedIP[] = Array.from({ length: 115 }, (_, i) => ({
   id: `fixed-ip-${String(i + 1).padStart(3, '0')}`,
   fixedIp: `10.0.0.${5 + i}`,
@@ -252,7 +240,7 @@ const mockSecurityGroups: SecurityGroup[] = Array.from({ length: 115 }, (_, i) =
 const portStatusMap: Record<PortStatus, 'active' | 'shutoff' | 'building'> = {
   active: 'active',
   down: 'shutoff',
-  build: 'building',
+  building: 'building',
 };
 
 /* ----------------------------------------
@@ -298,17 +286,17 @@ export default function PortDetailPage() {
   const [securityGroupToDetach, setSecurityGroupToDetach] = useState<SecurityGroup | null>(null);
 
   // Get port data based on URL ID
-  const port = id ? mockPortsMap[id] || defaultPortDetail : defaultPortDetail;
+  const port = id ? mockPortsMap[id] : undefined;
   const fixedIPs = mockFixedIPs;
   const allowedAddressPairs = mockAllowedAddressPairs;
   const securityGroups = mockSecurityGroups;
 
   // Update tab label to port name
   useEffect(() => {
-    if (port.name) {
+    if (port?.name) {
       updateActiveTabLabel(port.name);
     }
-  }, [port.name, updateActiveTabLabel]);
+  }, [port, updateActiveTabLabel]);
 
   // Filter and paginate Fixed IPs
   const filteredFixedIPs = useMemo(() => {
@@ -587,6 +575,59 @@ export default function PortDetailPage() {
     },
   ];
 
+  // Convert tabs to TabBar format
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  if (!port) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Ports', href: '/compute/ports' }, { label: id ?? '—' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Port not found"
+          description={`The port "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/ports')}>
+              Back to Ports
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   const handleDetachSecurityGroup = () => {
     if (securityGroupToDetach) {
       console.log('Detaching security group', securityGroupToDetach.id, 'from port', port.id);
@@ -597,13 +638,6 @@ export default function PortDetailPage() {
   };
 
   const breadcrumbItems = [{ label: 'Ports', href: '/compute/ports' }, { label: port.name }];
-
-  // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map((tab) => ({
-    id: tab.id,
-    label: tab.label,
-    closable: tab.closable,
-  }));
 
   return (
     <PageShell

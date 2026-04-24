@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -932,7 +933,14 @@ function PolicyEditorSection({
                             </label>
 
                             {/* Actions List */}
-                            <div className="flex flex-col gap-2 mt-6 overflow-y-auto overflow-x-hidden flex-1 min-h-0 legend-scroll">
+                            <OverlayScrollbarsComponent
+                              options={{
+                                overflow: { x: 'hidden', y: 'scroll' },
+                                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                              }}
+                              defer={false}
+                              className="flex flex-col gap-2 mt-6 flex-1 min-h-0"
+                            >
                               {filteredActions.map((actionName) => {
                                 const isSelected = permission.detailedActions[actionName];
                                 return (
@@ -959,7 +967,7 @@ function PolicyEditorSection({
                                   </label>
                                 );
                               })}
-                            </div>
+                            </OverlayScrollbarsComponent>
                           </div>
                         );
                       })}

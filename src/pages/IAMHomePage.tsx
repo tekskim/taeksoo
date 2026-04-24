@@ -245,7 +245,7 @@ export function IAMHomePage() {
 
   // Update tab label on mount
   useEffect(() => {
-    updateActiveTabLabel('IAM home');
+    updateActiveTabLabel('Dashboard');
   }, [updateActiveTabLabel]);
 
   // Sidebar width
@@ -296,7 +296,7 @@ export function IAMHomePage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={<Breadcrumb items={[{ label: 'IAM' }, { label: 'Home' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
           actions={
             <button
               type="button"

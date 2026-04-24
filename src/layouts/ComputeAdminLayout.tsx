@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { TabBar, TopBar, Breadcrumb } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -127,9 +128,16 @@ export function ComputeAdminLayout() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex-1 min-w-[var(--layout-content-min-width)] overscroll-contain"
+        >
           <Outlet />
-        </div>
+        </OverlayScrollbarsComponent>
       </main>
     </div>
   );

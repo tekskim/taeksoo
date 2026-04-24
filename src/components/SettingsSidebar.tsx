@@ -1,4 +1,5 @@
 import { VStack, MenuItem } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { IconSettings, IconUser, IconBell, IconInfoCircle } from '@tabler/icons-react';
 import { useLocation } from 'react-router-dom';
 import { AppSwitcher } from './AppSwitcher';
@@ -34,8 +35,14 @@ export function SettingsSidebar({ isOpen = true, onToggle }: SettingsSidebarProp
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       <AppSwitcher currentAppId="settings" onToggleSidebar={onToggle} />
 
-      <nav
-        className="flex-1 px-3 py-2 pb-6 overflow-y-auto overflow-x-hidden sidebar-scroll"
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2 pb-6"
         aria-label="Settings navigation"
       >
         <VStack gap={0} className="w-full min-w-0">
@@ -64,7 +71,7 @@ export function SettingsSidebar({ isOpen = true, onToggle }: SettingsSidebarProp
             active={isActive('/settings/information')}
           />
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

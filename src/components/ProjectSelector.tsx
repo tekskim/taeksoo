@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { IconSearch, IconCheck, IconFolder } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type Project } from '@/contexts/ProjectContext';
 import { Tooltip } from '@/design-system';
 
@@ -180,22 +181,30 @@ export function ProjectSelector({
                 className="flex-1 bg-transparent text-body-sm text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] outline-none"
                 autoFocus
               />
-              <IconSearch size={16} className="text-[var(--color-text-muted)]" />
+              <IconSearch size={12} strokeWidth={2} className="text-[var(--color-text-subtle)]" />
             </div>
 
             {/* Project List */}
-            <div className="flex flex-col gap-2 overflow-y-auto max-h-[300px] sidebar-scroll">
-              {filteredProjects.map((project) => {
-                const isSelected = project.id === selectedProjectId;
-                const isDisabled = project.disabled;
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'hidden', y: 'scroll' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              style={{ maxHeight: 300 }}
+            >
+              <div className="flex flex-col gap-2">
+                {filteredProjects.map((project) => {
+                  const isSelected = project.id === selectedProjectId;
+                  const isDisabled = project.disabled;
 
-                return (
-                  <button
-                    type="button"
-                    key={project.id}
-                    onClick={() => handleProjectClick(project)}
-                    disabled={isDisabled}
-                    className={`
+                  return (
+                    <button
+                      type="button"
+                      key={project.id}
+                      onClick={() => handleProjectClick(project)}
+                      disabled={isDisabled}
+                      className={`
                       w-full text-left px-3 py-2 rounded-md border transition-colors
                       ${
                         isSelected
@@ -204,66 +213,67 @@ export function ProjectSelector({
                       }
                       ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}
                     `}
-                  >
-                    <div className="flex flex-col gap-1.5">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <span
-                          className={`text-label-md ${
+                    >
+                      <div className="flex flex-col gap-1.5">
+                        {/* Header */}
+                        <div className="flex items-center justify-between">
+                          <span
+                            className={`text-label-md ${
+                              isDisabled
+                                ? 'text-[var(--color-text-muted)]'
+                                : 'text-[var(--color-text-default)]'
+                            }`}
+                          >
+                            {project.name}
+                          </span>
+                          {isSelected && !isDisabled && (
+                            <IconCheck
+                              size={16}
+                              className="text-[var(--color-action-primary)]"
+                              stroke={1.5}
+                            />
+                          )}
+                          {isDisabled && (
+                            <span className="text-body-sm text-[var(--color-status-error)]">
+                              Disabled
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Description */}
+                        <p
+                          className={`text-body-sm leading-4 ${
                             isDisabled
                               ? 'text-[var(--color-text-muted)]'
-                              : 'text-[var(--color-text-default)]'
+                              : 'text-[var(--color-text-subtle)]'
                           }`}
                         >
-                          {project.name}
-                        </span>
-                        {isSelected && !isDisabled && (
-                          <IconCheck
-                            size={20}
-                            className="text-[var(--color-action-primary)]"
-                            stroke={1}
-                          />
-                        )}
-                        {isDisabled && (
-                          <span className="text-body-sm text-[var(--color-status-error)]">
-                            Disabled
-                          </span>
-                        )}
+                          {project.description}
+                        </p>
+
+                        {/* Footer */}
+                        <div
+                          className={`flex items-center justify-between text-body-xs ${
+                            isDisabled
+                              ? 'text-[var(--color-text-muted)]'
+                              : 'text-[var(--color-text-subtle)]'
+                          }`}
+                        >
+                          <span>ID: {project.id}</span>
+                          <span>{project.createdAt}</span>
+                        </div>
                       </div>
+                    </button>
+                  );
+                })}
 
-                      {/* Description */}
-                      <p
-                        className={`text-body-sm leading-4 ${
-                          isDisabled
-                            ? 'text-[var(--color-text-muted)]'
-                            : 'text-[var(--color-text-subtle)]'
-                        }`}
-                      >
-                        {project.description}
-                      </p>
-
-                      {/* Footer */}
-                      <div
-                        className={`flex items-center justify-between text-body-xs ${
-                          isDisabled
-                            ? 'text-[var(--color-text-muted)]'
-                            : 'text-[var(--color-text-subtle)]'
-                        }`}
-                      >
-                        <span>ID: {project.id}</span>
-                        <span>{project.createdAt}</span>
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-
-              {filteredProjects.length === 0 && (
-                <div className="text-center py-4 text-body-sm text-[var(--color-text-muted)]">
-                  No projects found
-                </div>
-              )}
-            </div>
+                {filteredProjects.length === 0 && (
+                  <div className="text-center py-4 text-body-sm text-[var(--color-text-muted)]">
+                    No projects found
+                  </div>
+                )}
+              </div>
+            </OverlayScrollbarsComponent>
           </div>,
           document.body
         )}

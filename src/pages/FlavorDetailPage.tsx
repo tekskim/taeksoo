@@ -18,6 +18,7 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -336,24 +337,6 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
   },
 };
 
-const defaultFlavorDetail: FlavorDetail = {
-  id: 'unknown',
-  name: 'Unknown Flavor',
-  category: '-',
-  vcpu: 0,
-  ram: '0GiB',
-  visibility: 'Public',
-  createdAt: '-',
-  architecture: '-',
-  ephemeralDisk: '0GiB',
-  numaNodes: '0',
-  cpuPolicy: '-',
-  cpuThreadPolicy: '-',
-  memoryPage: '-',
-  internalNetworkBandwidth: '-',
-  storageIOPS: '-',
-};
-
 // Mock flavor parameters (raw API response)
 const mockFlavorParameters = {
   id: 'b95aaf8a-80c5-4be0-ae67-5c983f5c9536',
@@ -403,7 +386,7 @@ const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i)
 
 export function FlavorDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const flavor = id ? mockFlavorsMap[id] || defaultFlavorDetail : defaultFlavorDetail;
+  const flavor = id ? mockFlavorsMap[id] : undefined;
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -426,20 +409,11 @@ export function FlavorDetailPage() {
 
   // Update tab label to flavor name
   useEffect(() => {
-    if (flavor.name) {
+    if (flavor?.name) {
       updateActiveTabLabel(flavor.name);
     }
-  }, [flavor.name, updateActiveTabLabel]);
+  }, [flavor, updateActiveTabLabel]);
 
-  const tabBarTabs = tabs.map((tab) => ({
-    id: tab.id,
-    label: tab.label,
-    closable: tab.closable,
-  }));
-
-  const breadcrumbItems = [{ label: 'Flavors', href: '/compute/flavors' }, { label: flavor.name }];
-
-  // Filter instances by search query
   const filteredInstances = useMemo(() => {
     if (!instanceSearchQuery) return instances;
     const query = instanceSearchQuery.toLowerCase();
@@ -451,6 +425,56 @@ export function FlavorDetailPage() {
         inst.fixedIP.toLowerCase().includes(query)
     );
   }, [instances, instanceSearchQuery]);
+
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  if (!flavor) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Flavors', href: '/compute/flavors' }, { label: id ?? '—' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Flavor not found"
+          description={`The flavor "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/flavors')}>
+              Back to Flavors
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
+  const breadcrumbItems = [{ label: 'Flavors', href: '/compute/flavors' }, { label: flavor.name }];
 
   const instanceTotalPages = Math.ceil(filteredInstances.length / instancesPerPage);
   const paginatedInstances = filteredInstances.slice(

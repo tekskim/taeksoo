@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import {
   Section,
@@ -3807,7 +3808,15 @@ export function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-hidden z-50 sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] z-50"
+      >
         <div className="p-4 overflow-hidden">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-4">
@@ -3861,7 +3870,14 @@ export function DesignSystemPage() {
 
             {/* Search Results Dropdown */}
             {sidebarSearchQuery.trim() && isSidebarSearchFocused && (
-              <div className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
+              <OverlayScrollbarsComponent
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+                className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px]"
+              >
                 {filteredSidebarNavItems.length > 0 ? (
                   <div className="p-2 min-w-0">
                     {filteredSidebarNavItems.map(({ id, label, icon: Icon }, index) => (
@@ -3899,7 +3915,7 @@ export function DesignSystemPage() {
                     No results found
                   </div>
                 )}
-              </div>
+              </OverlayScrollbarsComponent>
             )}
           </div>
 
@@ -4114,7 +4130,7 @@ export function DesignSystemPage() {
             </VStack>
           </VStack>
         </div>
-      </nav>
+      </OverlayScrollbarsComponent>
 
       {/* Main Content */}
       <main
@@ -4172,7 +4188,14 @@ export function DesignSystemPage() {
 
                 {/* Search Results Dropdown */}
                 {mainSearchQuery.trim() && isMainSearchFocused && (
-                  <div className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
+                  <OverlayScrollbarsComponent
+                    options={{
+                      overflow: { x: 'hidden', y: 'scroll' },
+                      scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                    }}
+                    defer={false}
+                    className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px]"
+                  >
                     {filteredMainNavItems.length > 0 ? (
                       <div className="p-2 min-w-0">
                         {filteredMainNavItems.map(({ id, label, icon: Icon }, index) => (
@@ -4210,7 +4233,7 @@ export function DesignSystemPage() {
                         No results found for "{mainSearchQuery}"
                       </div>
                     )}
-                  </div>
+                  </OverlayScrollbarsComponent>
                 )}
               </div>
 
@@ -12184,7 +12207,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                           sidebar-scroll (6px)
                         </span>
-                        <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden sidebar-scroll bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                        <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
                           <div className="space-y-2 w-full">
                             {Array.from({ length: 15 }).map((_, i) => (
                               <div
@@ -12201,7 +12224,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                           shell-scroll (dark)
                         </span>
-                        <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden shell-scroll bg-[#1e293b] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                        <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden bg-[#1e293b] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
                           <div className="space-y-1 font-mono w-full">
                             {Array.from({ length: 15 }).map((_, i) => (
                               <div
@@ -12226,7 +12249,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                           Table horizontal scrollbar (height: 6px)
                         </span>
                         <div
-                          className="w-full max-w-[500px] table-scroll-container bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
+                          className="w-full max-w-[500px] overflow-x-auto bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
                           style={{ overflowX: 'auto' }}
                         >
                           <div className="flex gap-4 p-3" style={{ width: '800px' }}>
@@ -13379,7 +13402,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">
                           Scrollable List (max-h: 96px)
                         </span>
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1 max-h-[96px] overflow-y-auto sidebar-scroll">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1 max-h-[96px] overflow-y-auto">
                           <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
                             Security groups (6)
                           </span>

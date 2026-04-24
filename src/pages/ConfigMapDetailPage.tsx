@@ -19,13 +19,14 @@ import {
   Tooltip,
   PageShell,
   CopyButton,
+  ErrorState,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -163,17 +164,7 @@ export function ConfigMapDetailPage() {
   // Shell Panel state
   const shellPanel = useShellPanel();
 
-  // Load ConfigMap data
-  const [configMapData, setConfigMapData] = useState<ConfigMapData | null>(null);
-
-  useEffect(() => {
-    if (configMapId && mockConfigMapData[configMapId]) {
-      setConfigMapData(mockConfigMapData[configMapId]);
-    } else {
-      // Default to first configmap if not found
-      setConfigMapData(mockConfigMapData['1']);
-    }
-  }, [configMapId]);
+  const configMapData = configMapId ? mockConfigMapData[configMapId] : undefined;
 
   // Update tab label to match the ConfigMap name (most recent breadcrumb)
   useEffect(() => {
@@ -197,13 +188,78 @@ export function ConfigMapDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
+  if (!configMapData) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'ConfigMaps', href: '/container/configmaps' },
+                  { label: configMapId ?? 'ConfigMap' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="ConfigMap not found"
+          description={`The config map "${configMapId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/configmaps')}>
+              Back to Config Maps
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () =>
-        navigate(`/container/configmaps/${configMapData?.name ?? configMapId}/edit-yaml`),
+      onClick: () => navigate(`/container/configmaps/${configMapData.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -217,10 +273,6 @@ export function ConfigMapDetailPage() {
       onClick: () => console.log('Delete'),
     },
   ];
-
-  if (!configMapData) {
-    return <div>Loading...</div>;
-  }
 
   // Format labels
   const labelsCount = Object.keys(configMapData.labels).length;

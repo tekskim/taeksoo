@@ -11,6 +11,7 @@ import {
   IconTopologyRing3,
   IconForms,
   IconTemplate,
+  IconBrandStorybook,
 } from '@tabler/icons-react';
 import type { NavItem, NavGroup } from '../design/_shared/navigationData';
 
@@ -97,10 +98,25 @@ const archiveItems: NavItem[] = [
     path: '/lab/create-pages',
   },
   {
+    id: 'create-pages-2',
+    label: 'Create Pages 2',
+    icon: IconTemplate,
+    path: '/lab/create-pages-2',
+  },
+  {
     id: 'form-patterns',
     label: 'Form Patterns',
     icon: IconForms,
     path: '/lab/form-patterns',
+  },
+  {
+    id: 'storybook',
+    label: 'Storybook',
+    icon: IconBrandStorybook,
+    path: import.meta.env.DEV
+      ? 'http://localhost:6006'
+      : 'https://thakicloud.github.io/tds_ssot/storybook/',
+    external: true,
   },
 ];
 

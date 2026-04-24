@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type RefObject } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   Outlet,
   Link,
@@ -93,7 +94,15 @@ export function DesignSystemLayout() {
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
       {!isCaptureMode && (
-        <nav className="fixed left-0 top-0 w-[200px] max-w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-clip z-50 sidebar-scroll">
+        <OverlayScrollbarsComponent
+          element="nav"
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="fixed left-0 top-0 w-[200px] max-w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] z-50"
+        >
           <div className="max-w-[200px] box-border p-4 overflow-hidden">
             {/* Logo */}
             <Link to="/design" className="flex items-center mb-4">
@@ -142,7 +151,14 @@ export function DesignSystemLayout() {
 
               {/* Search Results Dropdown */}
               {searchQuery.trim() && isSearchFocused && (
-                <div className="absolute top-full left-0 w-[168px] max-w-[168px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
+                <OverlayScrollbarsComponent
+                  options={{
+                    overflow: { x: 'hidden', y: 'scroll' },
+                    scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                  }}
+                  defer={false}
+                  className="absolute top-full left-0 w-[168px] max-w-[168px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px]"
+                >
                   {filteredNavItems.length > 0 ? (
                     <div className="p-2 min-w-0">
                       {filteredNavItems.map(({ id, label, icon: Icon, path }) => (
@@ -177,7 +193,7 @@ export function DesignSystemLayout() {
                       No results found
                     </div>
                   )}
-                </div>
+                </OverlayScrollbarsComponent>
               )}
             </div>
 
@@ -277,13 +293,19 @@ export function DesignSystemLayout() {
               })}
             </VStack>
           </div>
-        </nav>
+        </OverlayScrollbarsComponent>
       )}
 
       {/* Main Content */}
-      <main
-        ref={mainRef}
-        className={`absolute top-0 bottom-0 right-0 overflow-y-auto sidebar-scroll bg-[var(--color-surface-default)] ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
+      <OverlayScrollbarsComponent
+        element="main"
+        ref={mainRef as any}
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className={`absolute top-0 bottom-0 right-0 bg-[var(--color-surface-default)] ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
       >
         <div className="py-12 px-12 overflow-x-auto">
           <Outlet context={{ mainRef }} />
@@ -298,7 +320,7 @@ export function DesignSystemLayout() {
             <IconArrowUp size={20} stroke={2} />
           </button>
         )}
-      </main>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }

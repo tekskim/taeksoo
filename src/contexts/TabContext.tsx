@@ -71,7 +71,7 @@ function getStorageKeys(app: string) {
 // Get default home tab for an app
 function getDefaultHomeTab(app: string): TabItem {
   const appHomeMap: Record<string, { path: string; label: string }> = {
-    '/cloudbuilder': { path: '/cloudbuilder', label: 'Dashboard' },
+    '/cloudbuilder': { path: '/cloudbuilder', label: 'Servers' },
     '/compute-admin': { path: '/compute-admin', label: 'Dashboard' },
     '/compute': { path: '/compute', label: 'Dashboard' },
     '/storage': { path: '/storage', label: 'Dashboard' },
@@ -237,9 +237,11 @@ export function TabProvider({
     return getDefaultHomeTab(app).id;
   });
 
-  // Use ref to access latest tabs without re-creating callbacks
+  // Use refs to access latest values without re-creating callbacks
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
+  const activeTabIdRef = useRef(activeTabId);
+  activeTabIdRef.current = activeTabId;
 
   // Refs for controlling location sync behavior
   const initializedRef = useRef(false);
@@ -448,7 +450,7 @@ export function TabProvider({
 
     // 애플리케이션별 홈 페이지 매핑 (라벨은 모두 Dashboard로 통일)
     const appHomeMap: Record<string, { path: string; label: string }> = {
-      '/cloudbuilder': { path: '/cloudbuilder', label: 'Dashboard' },
+      '/cloudbuilder': { path: '/cloudbuilder', label: 'Servers' },
       '/compute-admin': { path: '/compute-admin', label: 'Dashboard' },
       '/compute': { path: '/compute', label: 'Dashboard' },
       '/storage': { path: '/storage', label: 'Dashboard' },
@@ -483,14 +485,11 @@ export function TabProvider({
   }, [addTab, navigate, location.pathname]);
 
   // Update the label of the active tab
-  const updateActiveTabLabel = useCallback(
-    (label: string) => {
-      setTabs((prevTabs) =>
-        prevTabs.map((tab) => (tab.id === activeTabId ? { ...tab, label } : tab))
-      );
-    },
-    [activeTabId]
-  );
+  const updateActiveTabLabel = useCallback((label: string) => {
+    setTabs((prevTabs) =>
+      prevTabs.map((tab) => (tab.id === activeTabIdRef.current ? { ...tab, label } : tab))
+    );
+  }, []);
 
   // Move tab from one position to another (for drag and drop reordering)
   const moveTab = useCallback((fromIndex: number, toIndex: number) => {

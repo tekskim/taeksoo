@@ -13,6 +13,7 @@ import {
   DetailHeader,
   SectionCard,
   PageShell,
+  ErrorState,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -169,19 +170,6 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
   },
 };
 
-const defaultFloatingIPDetail: FloatingIPDetail = {
-  id: 'unknown',
-  floatingIp: 'Unknown',
-  status: 'active',
-  createdAt: '-',
-  description: '-',
-  resourceType: null,
-  resource: null,
-  fixedIp: '-',
-  router: { name: '-', id: '' },
-  fqdn: '-',
-};
-
 /* ----------------------------------------
    Status Mapping
    ---------------------------------------- */
@@ -210,21 +198,14 @@ export default function FloatingIPDetailPage() {
   const [copiedFqdn, setCopiedFqdn] = useState(false);
 
   // Get floating IP data based on URL ID
-  const floatingIP = id
-    ? mockFloatingIPsMap[id] || defaultFloatingIPDetail
-    : defaultFloatingIPDetail;
+  const floatingIP = id ? mockFloatingIPsMap[id] : undefined;
 
   // Update tab label to floating IP address
   useEffect(() => {
-    if (floatingIP.floatingIp) {
+    if (floatingIP?.floatingIp) {
       updateActiveTabLabel(floatingIP.floatingIp);
     }
-  }, [floatingIP.floatingIp, updateActiveTabLabel]);
-
-  const breadcrumbItems = [
-    { label: 'Floating IPs', href: '/compute/floating-ips' },
-    { label: floatingIP.floatingIp },
-  ];
+  }, [floatingIP, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -232,6 +213,60 @@ export default function FloatingIPDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!floatingIP) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Floating IPs', href: '/compute/floating-ips' },
+                  { label: id ?? '—' },
+                ]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Floating IP not found"
+          description={`The floating IP "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/floating-ips')}>
+              Back to Floating IPs
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
+  const breadcrumbItems = [
+    { label: 'Floating IPs', href: '/compute/floating-ips' },
+    { label: floatingIP.floatingIp },
+  ];
 
   const handleCopyFqdn = () => {
     if (floatingIP.fqdn) {
