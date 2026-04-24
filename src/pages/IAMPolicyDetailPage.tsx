@@ -742,9 +742,9 @@ export default function IAMPolicyDetailPage() {
                             className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
                           >
                             {expandedPermissions.has(perm.id) ? (
-                              <IconChevronDown size={16} stroke={1.5} />
+                              <IconChevronDown size={12} strokeWidth={2} />
                             ) : (
-                              <IconChevronRight size={16} stroke={1.5} />
+                              <IconChevronRight size={12} strokeWidth={2} />
                             )}
                           </button>
                           {perm.app}
@@ -860,9 +860,9 @@ export default function IAMPolicyDetailPage() {
                             className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
                           >
                             {expandedVersions.has(version.id) ? (
-                              <IconChevronDown size={16} stroke={1.5} />
+                              <IconChevronDown size={12} strokeWidth={2} />
                             ) : (
-                              <IconChevronRight size={16} stroke={1.5} />
+                              <IconChevronRight size={12} strokeWidth={2} />
                             )}
                           </button>
                           <span className="font-medium">Version {version.version}</span>

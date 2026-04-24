@@ -348,8 +348,8 @@ export function ComputeAdminHostAggregatesPage() {
                         className="flex items-center gap-2 w-full"
                       >
                         <IconChevronDown
-                          size={16}
-                          stroke={1.5}
+                          size={12}
+                          strokeWidth={2}
                           className={`shrink-0 text-[var(--color-text-default)] transition-transform ${isExpanded ? '' : '-rotate-90'}`}
                         />
                         <span>{row.name}</span>

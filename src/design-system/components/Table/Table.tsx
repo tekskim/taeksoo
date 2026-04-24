@@ -787,7 +787,7 @@ export function Table<T extends Record<string, any>>({
                       )}
                     </div>
                     {expanded && (
-                      <div className="border-t border-[var(--color-border-subtle)] min-h-[var(--table-expanded-row-height)] flex items-center">
+                      <div className="border-t border-[var(--color-border-subtle)] min-h-[var(--table-expanded-row-height)] w-full">
                         {expanded}
                       </div>
                     )}

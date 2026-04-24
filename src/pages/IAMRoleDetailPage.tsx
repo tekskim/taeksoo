@@ -383,7 +383,7 @@ export default function IAMRoleDetailPage() {
   const [grantsSearchQuery, setGrantsSearchQuery] = useState('');
   const [policiesCurrentPage, setPoliciesCurrentPage] = useState(1);
   const [grantsCurrentPage, setGrantsCurrentPage] = useState(1);
-  const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set(['p-002']));
+  const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set());
   const [selectedGrants, setSelectedGrants] = useState<string[]>([]);
   const [isGrantDrawerOpen, setIsGrantDrawerOpen] = useState(false);
   const [isManageLinkedPoliciesOpen, setIsManageLinkedPoliciesOpen] = useState(false);
@@ -500,9 +500,9 @@ export default function IAMRoleDetailPage() {
             className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
           >
             {expandedPolicies.has(row.id) ? (
-              <IconChevronDown size={16} stroke={1.5} />
+              <IconChevronDown size={12} strokeWidth={2} />
             ) : (
-              <IconChevronRight size={16} stroke={1.5} />
+              <IconChevronRight size={12} strokeWidth={2} />
             )}
           </button>
           <Link
@@ -919,9 +919,9 @@ export default function IAMRoleDetailPage() {
                               className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
                             >
                               {expandedPolicies.has(policy.id) ? (
-                                <IconChevronDown size={16} stroke={1.5} />
+                                <IconChevronDown size={12} strokeWidth={2} />
                               ) : (
-                                <IconChevronRight size={16} stroke={1.5} />
+                                <IconChevronRight size={12} strokeWidth={2} />
                               )}
                             </button>
                             <Link
