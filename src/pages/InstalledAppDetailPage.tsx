@@ -227,7 +227,7 @@ primary:
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Installed Apps', href: '/container/installed-apps' },
+                { label: 'Installed apps', href: '/container/installed-apps' },
                 { label: app.name },
               ]}
             />
@@ -236,7 +236,7 @@ primary:
         />
       }
     >
-      <VStack gap={4}>
+      <VStack gap={6}>
         <DetailHeader>
           <DetailHeader.Title>{app.name}</DetailHeader.Title>
 

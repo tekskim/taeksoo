@@ -429,7 +429,7 @@ function PieChartCard({
 
   return (
     <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4">
-      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
+      <h6 className="text-heading-h6 text-[var(--color-text-default)]">{title}</h6>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
@@ -540,7 +540,7 @@ function SingleValueDoughnutCard({
     <div
       className={`bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 ${className || 'flex-1'}`}
     >
-      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
+      <h6 className="text-heading-h6 text-[var(--color-text-default)]">{title}</h6>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
@@ -1182,7 +1182,11 @@ export function OverallPerformancePage() {
 
                 {/* Pool Overview Table */}
                 <SectionCard>
-                  <SectionCard.Header title="Pool overview" />
+                  <SectionCard.Header
+                    title="Pool overview"
+                    showDivider={false}
+                    titleClassName="text-heading-h6"
+                  />
                   <SectionCard.Content gap={0}>
                     <Table<PoolOverviewRow>
                       columns={poolOverviewColumns}
@@ -1242,7 +1246,11 @@ export function OverallPerformancePage() {
 
                 {/* Host Overview Table */}
                 <SectionCard>
-                  <SectionCard.Header title="Host overview" />
+                  <SectionCard.Header
+                    title="Host overview"
+                    showDivider={false}
+                    titleClassName="text-heading-h6"
+                  />
                   <SectionCard.Content gap={0}>
                     <Table<HostOverviewRow>
                       columns={hostOverviewColumns}
@@ -1272,7 +1280,11 @@ export function OverallPerformancePage() {
                   {/* Highest READ Latencies Table */}
                   <div className="flex-1 h-[334px]">
                     <SectionCard className="h-full">
-                      <SectionCard.Header title="Highest READ latencies" />
+                      <SectionCard.Header
+                        title="Highest READ latencies"
+                        showDivider={false}
+                        titleClassName="text-heading-h6"
+                      />
                       <SectionCard.Content gap={0} className="overflow-auto flex-1">
                         <Table<OsdLatencyRow>
                           columns={osdLatencyColumns}
@@ -1302,7 +1314,11 @@ export function OverallPerformancePage() {
                   {/* Highest WRITE Latencies Table */}
                   <div className="flex-1 h-[334px]">
                     <SectionCard className="h-full">
-                      <SectionCard.Header title="Highest WRITE latencies" />
+                      <SectionCard.Header
+                        title="Highest WRITE latencies"
+                        showDivider={false}
+                        titleClassName="text-heading-h6"
+                      />
                       <SectionCard.Content gap={0} className="overflow-auto flex-1">
                         <Table<OsdLatencyRow>
                           columns={osdLatencyColumns}
@@ -1368,7 +1384,11 @@ export function OverallPerformancePage() {
 
                 {/* Top Slow OSD Ops Table */}
                 <SectionCard>
-                  <SectionCard.Header title="Top slow OSD ops" />
+                  <SectionCard.Header
+                    title="Top slow OSD ops"
+                    showDivider={false}
+                    titleClassName="text-heading-h6"
+                  />
                   <SectionCard.Content gap={0}>
                     <Table<SlowOsdOpsRow>
                       columns={slowOsdOpsColumns}
@@ -1409,7 +1429,11 @@ export function OverallPerformancePage() {
                 <div className="flex gap-6">
                   <div className="flex-1 h-[334px]">
                     <SectionCard className="h-full">
-                      <SectionCard.Header title="Highest throughput" />
+                      <SectionCard.Header
+                        title="Highest throughput"
+                        showDivider={false}
+                        titleClassName="text-heading-h6"
+                      />
                       <SectionCard.Content gap={0} className="overflow-auto flex-1">
                         <Table<{ id: string; imageName: string; throughput: string }>
                           columns={[
@@ -1454,7 +1478,11 @@ export function OverallPerformancePage() {
                   </div>
                   <div className="flex-1 h-[334px]">
                     <SectionCard className="h-full">
-                      <SectionCard.Header title="Highest latencies" />
+                      <SectionCard.Header
+                        title="Highest latencies"
+                        showDivider={false}
+                        titleClassName="text-heading-h6"
+                      />
                       <SectionCard.Content gap={0} className="overflow-auto flex-1">
                         <Table<{ id: string; imageName: string; latency: string }>
                           columns={[
@@ -1609,7 +1637,11 @@ export function OverallPerformancePage() {
 
                 {/* Images Overview Table */}
                 <SectionCard>
-                  <SectionCard.Header title="Images overview" />
+                  <SectionCard.Header
+                    title="Images overview"
+                    showDivider={false}
+                    titleClassName="text-heading-h6"
+                  />
                   <SectionCard.Content gap={0}>
                     <Table<{
                       id: string;

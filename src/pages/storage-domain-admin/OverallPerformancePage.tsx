@@ -429,7 +429,7 @@ function PieChartCard({
 
   return (
     <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4">
-      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
+      <h6 className="text-heading-h6 text-[var(--color-text-default)]">{title}</h6>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
@@ -540,7 +540,7 @@ function SingleValueDoughnutCard({
     <div
       className={`bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 ${className || 'flex-1'}`}
     >
-      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
+      <h6 className="text-heading-h6 text-[var(--color-text-default)]">{title}</h6>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
@@ -1179,7 +1179,11 @@ export function OverallPerformancePage() {
 
                 {/* Pool Overview Table */}
                 <SectionCard>
-                  <SectionCard.Header title="Pool overview" />
+                  <SectionCard.Header
+                    title="Pool overview"
+                    showDivider={false}
+                    titleClassName="text-heading-h6"
+                  />
                   <SectionCard.Content gap={0}>
                     <Table<PoolOverviewRow>
                       columns={poolOverviewColumns}
@@ -1208,7 +1212,11 @@ export function OverallPerformancePage() {
                 <div className="flex gap-6">
                   <div className="flex-1 h-[334px]">
                     <SectionCard className="h-full">
-                      <SectionCard.Header title="Highest throughput" />
+                      <SectionCard.Header
+                        title="Highest throughput"
+                        showDivider={false}
+                        titleClassName="text-heading-h6"
+                      />
                       <SectionCard.Content gap={0} className="overflow-auto flex-1">
                         <Table<{ id: string; imageName: string; throughput: string }>
                           columns={[
@@ -1253,7 +1261,11 @@ export function OverallPerformancePage() {
                   </div>
                   <div className="flex-1 h-[334px]">
                     <SectionCard className="h-full">
-                      <SectionCard.Header title="Highest latencies" />
+                      <SectionCard.Header
+                        title="Highest latencies"
+                        showDivider={false}
+                        titleClassName="text-heading-h6"
+                      />
                       <SectionCard.Content gap={0} className="overflow-auto flex-1">
                         <Table<{ id: string; imageName: string; latency: string }>
                           columns={[
@@ -1408,7 +1420,11 @@ export function OverallPerformancePage() {
 
                 {/* Images Overview Table */}
                 <SectionCard>
-                  <SectionCard.Header title="Images overview" />
+                  <SectionCard.Header
+                    title="Images overview"
+                    showDivider={false}
+                    titleClassName="text-heading-h6"
+                  />
                   <SectionCard.Content gap={0}>
                     <Table<{
                       id: string;

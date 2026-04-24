@@ -99,6 +99,7 @@ import {
   CopyButton,
   fixedColumns,
   columnMinWidths,
+  CatalogCard,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import type { NotificationItem } from '@/design-system/components/NotificationCenter';
@@ -367,6 +368,7 @@ const layoutItems = [
   { id: 'common-patterns', label: 'Common patterns', icon: IconTemplate },
   { id: 'detail-header', label: 'Detail header', icon: IconLayoutNavbar },
   { id: 'section-card', label: 'Section card', icon: IconLayoutGrid },
+  { id: 'catalog-card', label: 'Catalog card', icon: IconLayoutGrid },
   { id: 'wizard', label: 'Wizard (Create Flow)', icon: IconListNumbers },
   { id: 'monitoring-toolbar', label: 'Monitoring toolbar', icon: IconRefresh },
   { id: 'csv-download', label: 'CSV file download', icon: IconDownload },
@@ -12582,6 +12584,108 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
+                  </VStack>
+                </VStack>
+              </Section>
+
+              {/* CatalogCard Component */}
+              <Section
+                id="catalog-card"
+                title="Catalog card"
+                description="Card component for displaying application or operator catalog items with icon, description, badges, and action buttons"
+              >
+                <VStack gap={6}>
+                  <VStack gap={3}>
+                    <Label>Basic usage</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-[900px]">
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/postgresql"
+                        iconAlt="PostgreSQL"
+                        name="CNPG"
+                        version="v1.29.0"
+                        description="PostgreSQL cluster instance managed by CloudNativePG Operator. Supports HA, PgBouncer pooling, and automated backups."
+                        badges={[
+                          { label: 'Operator-managed', variant: 'info' },
+                          { label: 'Database', theme: 'white' },
+                        ]}
+                        actions={
+                          <Button variant="primary" size="sm">
+                            Install
+                          </Button>
+                        }
+                      />
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/apachekafka"
+                        iconAlt="Kafka"
+                        name="Strimzi Kafka"
+                        version="v0.44.0"
+                        description="Apache Kafka on Kubernetes powered by Strimzi operator. Provides distributed streaming platform for building real-time data pipelines."
+                        badges={[
+                          { label: 'Operator-managed', variant: 'info' },
+                          { label: 'Data processing', theme: 'white' },
+                        ]}
+                        actions={
+                          <Button variant="primary" size="sm">
+                            Install
+                          </Button>
+                        }
+                      />
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/nginx"
+                        iconAlt="NGINX"
+                        name="NGINX"
+                        version="v1.27.0"
+                        description="High-performance web server and reverse proxy. Deploy as ingress controller or standalone web server."
+                        badges={[
+                          { label: 'Helm', variant: 'info' },
+                          { label: 'Networking', theme: 'white' },
+                        ]}
+                        actions={
+                          <Button variant="outline" size="sm" disabled>
+                            Installed
+                          </Button>
+                        }
+                      />
+                    </div>
+                  </VStack>
+
+                  <VStack gap={3}>
+                    <Label>Without version</Label>
+                    <div className="max-w-[280px]">
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/milvus"
+                        iconAlt="Milvus"
+                        name="Milvus"
+                        description="Open-source vector database for scalable similarity search and AI applications."
+                        badges={[
+                          { label: 'Helm', variant: 'info' },
+                          { label: 'Vector DB', theme: 'white' },
+                        ]}
+                        actions={
+                          <Button variant="primary" size="sm">
+                            Install
+                          </Button>
+                        }
+                      />
+                    </div>
+                  </VStack>
+
+                  <VStack gap={3}>
+                    <Label>Without badges</Label>
+                    <div className="max-w-[280px]">
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/gitea"
+                        iconAlt="Gitea"
+                        name="Gitea"
+                        version="v1.23.0"
+                        description="Lightweight self-hosted Git service. Easy to install and maintain."
+                        actions={
+                          <Button variant="primary" size="sm">
+                            Install
+                          </Button>
+                        }
+                      />
+                    </div>
                   </VStack>
                 </VStack>
               </Section>

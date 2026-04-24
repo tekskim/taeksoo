@@ -16,12 +16,13 @@ import {
   WizardSummary,
   WritingSection,
   PreSection,
+  Password,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconEye, IconEyeOff } from '@tabler/icons-react';
+import { IconEdit } from '@tabler/icons-react';
 
 function IconButton({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
@@ -266,7 +267,6 @@ export default function InstalledAppEditPage() {
   const [databaseName, setDatabaseName] = useState(installedApp?.databaseName || '');
   const [storageClass, setStorageClass] = useState(installedApp?.storageClass || '');
   const [storageSize, setStorageSize] = useState<number | undefined>(installedApp?.storageSize);
-  const [showPassword, setShowPassword] = useState(false);
 
   // Validation errors
   const [namespaceError, setNamespaceError] = useState<string | null>(null);
@@ -276,22 +276,15 @@ export default function InstalledAppEditPage() {
   const [storageClassError, setStorageClassError] = useState<string | null>(null);
   const [storageSizeError, setStorageSizeError] = useState<string | null>(null);
 
-  // Wizard state
+  // Wizard state — edit page starts with config section open
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
-    target: 'active',
-    version: 'pre',
-    configuration: 'pre',
+    target: 'done',
+    version: 'done',
+    configuration: 'active',
   });
 
   const validateTarget = () => {
-    let hasError = false;
-    if (!namespace) {
-      setNamespaceError('Please select a namespace.');
-      hasError = true;
-    } else {
-      setNamespaceError(null);
-    }
-    return !hasError;
+    return true;
   };
 
   const validateVersion = () => {
@@ -465,7 +458,7 @@ export default function InstalledAppEditPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Installed Apps', href: '/container/installed-apps' },
+                { label: 'Installed apps', href: '/container/installed-apps' },
                 { label: 'Edit App' },
               ]}
             />
@@ -540,21 +533,11 @@ export default function InstalledAppEditPage() {
                       </div>
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                       <div className="py-6">
-                        <FormField required error={!!namespaceError}>
+                        <FormField>
                           <FormField.Label>Namespace</FormField.Label>
                           <FormField.Control>
-                            <Select
-                              value={namespace}
-                              onChange={(value) => {
-                                setNamespace(value);
-                                setNamespaceError(null);
-                              }}
-                              placeholder="Select namespace"
-                              options={namespaceOptions}
-                              fullWidth
-                            />
+                            <Input value={namespace} disabled fullWidth />
                           </FormField.Control>
-                          <FormField.ErrorMessage>{namespaceError}</FormField.ErrorMessage>
                         </FormField>
                       </div>
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -617,21 +600,11 @@ export default function InstalledAppEditPage() {
                     <VStack gap={0}>
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                       <div className="py-6">
-                        <FormField required error={!!versionError}>
+                        <FormField>
                           <FormField.Label>Chart version</FormField.Label>
                           <FormField.Control>
-                            <Select
-                              value={selectedVersion}
-                              onChange={(value) => {
-                                setSelectedVersion(value);
-                                setVersionError(null);
-                              }}
-                              placeholder="Select version"
-                              options={currentVersions}
-                              fullWidth
-                            />
+                            <Input value={selectedVersion} disabled fullWidth />
                           </FormField.Control>
-                          <FormField.ErrorMessage>{versionError}</FormField.ErrorMessage>
                         </FormField>
                       </div>
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -705,33 +678,15 @@ export default function InstalledAppEditPage() {
                         <FormField required error={!!adminPasswordError}>
                           <FormField.Label>Admin Password</FormField.Label>
                           <FormField.Control>
-                            <div className="relative w-full">
-                              <Input
-                                type={showPassword ? 'text' : 'password'}
-                                value={adminPassword}
-                                onChange={(e) => {
-                                  setAdminPassword(e.target.value);
-                                  setAdminPasswordError(null);
-                                }}
-                                placeholder="Enter admin password"
-                                fullWidth
-                              />
-                              <button
-                                type="button"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
-                                onClick={() => setShowPassword(!showPassword)}
-                                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                              >
-                                {showPassword ? (
-                                  <IconEyeOff
-                                    size={14}
-                                    className="text-[var(--color-text-subtle)]"
-                                  />
-                                ) : (
-                                  <IconEye size={14} className="text-[var(--color-text-subtle)]" />
-                                )}
-                              </button>
-                            </div>
+                            <Password
+                              value={adminPassword}
+                              onChange={(e) => {
+                                setAdminPassword(e.target.value);
+                                setAdminPasswordError(null);
+                              }}
+                              placeholder="Enter admin password"
+                              fullWidth
+                            />
                           </FormField.Control>
                           <FormField.ErrorMessage>{adminPasswordError}</FormField.ErrorMessage>
                         </FormField>

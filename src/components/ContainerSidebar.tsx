@@ -462,9 +462,15 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                     />
                     <MenuItem
                       icon={<IconPackage size={16} stroke={1.5} />}
-                      label="Installed Apps"
+                      label="Installed apps"
                       href="/container/installed-apps"
                       active={isActive('/container/installed-apps')}
+                    />
+                    <MenuItem
+                      icon={<IconShieldLock size={16} stroke={1.5} />}
+                      label="Installed operators"
+                      href="/container/installed-operators"
+                      active={isActive('/container/installed-operators')}
                     />
                   </MenuSection>
 

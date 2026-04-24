@@ -50,6 +50,8 @@ export interface SectionCardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   statusIcon?: ReactNode;
   /** Optional description text below title, above divider */
   description?: string;
+  /** Override title typography class (default: text-heading-h5) */
+  titleClassName?: string;
 }
 
 function SectionCardHeader({
@@ -59,6 +61,7 @@ function SectionCardHeader({
   statusIcon,
   description,
   className,
+  titleClassName,
   ...props
 }: SectionCardHeaderProps) {
   return (
@@ -76,7 +79,14 @@ function SectionCardHeader({
       >
         <div className="flex items-center gap-2">
           {statusIcon}
-          <h5 className="text-heading-h5 text-[var(--color-text-default)] h-7">{title}</h5>
+          <h5
+            className={twMerge(
+              'text-heading-h5 text-[var(--color-text-default)] h-7',
+              titleClassName
+            )}
+          >
+            {title}
+          </h5>
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
