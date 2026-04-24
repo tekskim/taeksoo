@@ -304,6 +304,8 @@ import InstalledAppsPage from '@/pages/InstalledAppsPage';
 import InstalledAppDetailPage from '@/pages/InstalledAppDetailPage';
 import CatalogInstallPage from '@/pages/CatalogInstallPage';
 import InstalledAppEditPage from '@/pages/InstalledAppEditPage';
+import InstalledOperatorsPage from '@/pages/InstalledOperatorsPage';
+import InstalledOperatorDetailPage from '@/pages/InstalledOperatorDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -381,6 +383,7 @@ import { RadioPage } from '@/pages/design/components/RadioPage';
 import { TablePage } from '@/pages/design/components/TablePage';
 import { BadgePage } from '@/pages/design/components/BadgePage';
 import { CardPage } from '@/pages/design/components/CardPage';
+import { CatalogCardPage } from '@/pages/design/components/CatalogCardPage';
 import { ChipPage } from '@/pages/design/components/ChipPage';
 import { StatusIndicatorPage } from '@/pages/design/components/StatusIndicatorPage';
 import { ComputeStatusPage } from '@/pages/design/status/ComputeStatusPage';
@@ -1018,6 +1021,11 @@ function AppRoutes() {
       <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
       <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
       <Route path="/container/installed-apps/:appId/edit" element={<InstalledAppEditPage />} />
+      <Route path="/container/installed-operators" element={<InstalledOperatorsPage />} />
+      <Route
+        path="/container/installed-operators/:operatorId"
+        element={<InstalledOperatorDetailPage />}
+      />
       <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
       <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
@@ -1124,6 +1132,7 @@ function AppRoutes() {
         <Route path="components/table" element={<TablePage />} />
         <Route path="components/badge" element={<BadgePage />} />
         <Route path="components/card" element={<CardPage />} />
+        <Route path="components/catalog-card" element={<CatalogCardPage />} />
         <Route path="components/chip" element={<ChipPage />} />
         <Route path="components/status-indicator" element={<StatusIndicatorPage />} />
         <Route path="status/compute" element={<ComputeStatusPage />} />

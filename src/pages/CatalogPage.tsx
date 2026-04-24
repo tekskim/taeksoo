@@ -8,12 +8,12 @@ import {
   PageHeader,
   SearchInput,
   Button,
-  Badge,
   Tabs,
   TabList,
   Tab,
   EmptyState,
   TabPanel,
+  CatalogCard,
 } from '@/design-system';
 import { IconSearch } from '@tabler/icons-react';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -262,44 +262,19 @@ export default function CatalogPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredApps.map((app) => (
-                    <div
+                    <CatalogCard
                       key={app.id}
-                      className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-[var(--radius-lg)] shrink-0 border border-[var(--color-border-default)] flex items-center justify-center">
-                          <img
-                            src={app.iconSrc}
-                            alt={app.name}
-                            className="w-6 h-6 object-contain"
-                          />
-                        </div>
-                        <div className="flex flex-col gap-0.5 min-w-0">
-                          <span className="text-heading-h6 text-[var(--color-text-default)]">
-                            {app.name}
-                          </span>
-                          {app.version && (
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              {app.version}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <p className="text-body-md text-[var(--color-text-muted)] m-0 line-clamp-3 flex-1">
-                        {app.description}
-                      </p>
-
-                      <div className="flex items-center justify-between mt-auto">
-                        <div className="flex items-center gap-1">
-                          <Badge theme="white" size="sm">
-                            {app.category}
-                          </Badge>
-                          <Badge variant="info" size="sm">
-                            {app.deployType}
-                          </Badge>
-                        </div>
-                        {app.installed ? (
+                      iconSrc={app.iconSrc}
+                      iconAlt={app.name}
+                      name={app.name}
+                      version={app.version}
+                      description={app.description}
+                      badges={[
+                        { label: app.deployType, variant: 'info' },
+                        { label: app.category, theme: 'white' },
+                      ]}
+                      actions={
+                        app.installed ? (
                           <Button variant="outline" size="sm" disabled>
                             Installed
                           </Button>
@@ -311,9 +286,9 @@ export default function CatalogPage() {
                           >
                             Install
                           </Button>
-                        )}
-                      </div>
-                    </div>
+                        )
+                      }
+                    />
                   ))}
                 </div>
               )}
@@ -356,44 +331,19 @@ export default function CatalogPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredOperators.map((app) => (
-                    <div
+                    <CatalogCard
                       key={app.id}
-                      className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-[var(--radius-lg)] shrink-0 border border-[var(--color-border-default)] flex items-center justify-center">
-                          <img
-                            src={app.iconSrc}
-                            alt={app.name}
-                            className="w-6 h-6 object-contain"
-                          />
-                        </div>
-                        <div className="flex flex-col gap-0.5 min-w-0">
-                          <span className="text-heading-h6 text-[var(--color-text-default)]">
-                            {app.name}
-                          </span>
-                          {app.version && (
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              {app.version}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <p className="text-body-md text-[var(--color-text-muted)] m-0 line-clamp-3 flex-1">
-                        {app.description}
-                      </p>
-
-                      <div className="flex items-center justify-between mt-auto">
-                        <div className="flex items-center gap-1">
-                          <Badge theme="white" size="sm">
-                            {app.category}
-                          </Badge>
-                          <Badge variant="info" size="sm">
-                            {app.deployType}
-                          </Badge>
-                        </div>
-                        {app.installed ? (
+                      iconSrc={app.iconSrc}
+                      iconAlt={app.name}
+                      name={app.name}
+                      version={app.version}
+                      description={app.description}
+                      badges={[
+                        { label: app.deployType, variant: 'info' },
+                        { label: app.category, theme: 'white' },
+                      ]}
+                      actions={
+                        app.installed ? (
                           <Button variant="outline" size="sm" disabled>
                             Installed
                           </Button>
@@ -405,9 +355,9 @@ export default function CatalogPage() {
                           >
                             Install
                           </Button>
-                        )}
-                      </div>
-                    </div>
+                        )
+                      }
+                    />
                   ))}
                 </div>
               )}

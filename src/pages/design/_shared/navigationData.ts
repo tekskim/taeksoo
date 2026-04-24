@@ -401,6 +401,12 @@ const patternItems: NavItem[] = [
     path: '/design/patterns/section-card',
   },
   {
+    id: 'catalog-card',
+    label: 'Catalog Card',
+    icon: IconLayoutGrid,
+    path: '/design/components/catalog-card',
+  },
+  {
     id: 'form-field-spacing',
     label: 'Form Field Spacing',
     icon: IconLayoutGrid,
@@ -610,6 +616,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/common': '2026-03-01 10:30:00',
   '/design/patterns/detail-header': '2026-03-09',
   '/design/patterns/section-card': '2026-03-09',
+  '/design/components/catalog-card': '2026-04-23',
   '/design/patterns/wizard': '2026-03-18 11:00:00',
   '/design/patterns/open-form': '2026-03-01 10:30:00',
   '/design/patterns/monitoring-toolbar': '2026-03-09',

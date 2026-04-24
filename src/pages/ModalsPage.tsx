@@ -1411,13 +1411,29 @@ export function ModalsPage() {
                     'CNPG Operator is not installed. Install the operator before creating instances.',
                   category: 'Catalog',
                 },
+                {
+                  title: 'Delete app',
+                  description: 'Remove the Helm release and all associated Kubernetes resources.',
+                  category: 'Catalog',
+                },
+                {
+                  title: 'Delete operator',
+                  description:
+                    'Permanently remove the operator and all Kubernetes resources it manages.',
+                  category: 'Operator',
+                },
+                {
+                  title: 'Delete operator (blocked)',
+                  description: 'Cannot delete operator while active CR instances still exist.',
+                  category: 'Operator',
+                },
               ]}
             >
               <Disclosure open={isSearching || isContainerOpen} onChange={setIsContainerOpen}>
                 <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                   <SectionHeader
                     label="Container"
-                    count={13}
+                    count={16}
                     isOpen={isContainerOpen}
                     isSearching={isSearching}
                   />
@@ -1585,6 +1601,12 @@ export function ModalsPage() {
                             'CNPG Operator is not installed. Install the operator before creating instances.',
                           category: 'Catalog',
                         },
+                        {
+                          title: 'Delete app',
+                          description:
+                            'Remove the Helm release and all associated Kubernetes resources.',
+                          category: 'Catalog',
+                        },
                       ]}
                     >
                       <ModalListItem
@@ -1592,6 +1614,42 @@ export function ModalsPage() {
                         description="CNPG Operator is not installed. Install the operator before creating instances."
                         category="Catalog"
                         onOpen={() => openModalFn('operator-required')}
+                      />
+                      <ModalListItem
+                        title="Delete app"
+                        description="Remove the Helm release and all associated Kubernetes resources."
+                        category="Catalog"
+                        onOpen={() => openModalFn('delete-app')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Operator actions"
+                      items={[
+                        {
+                          title: 'Delete operator',
+                          description:
+                            'Permanently remove the operator and all Kubernetes resources it manages.',
+                          category: 'Operator',
+                        },
+                        {
+                          title: 'Delete operator (blocked)',
+                          description:
+                            'Cannot delete operator while active CR instances still exist.',
+                          category: 'Operator',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete operator"
+                        description="Permanently remove the operator and all Kubernetes resources it manages."
+                        category="Operator"
+                        onOpen={() => openModalFn('delete-operator')}
+                      />
+                      <ModalListItem
+                        title="Delete operator (blocked)"
+                        description="Cannot delete operator while active CR instances still exist."
+                        category="Operator"
+                        onOpen={() => openModalFn('delete-operator-blocked')}
                       />
                     </FilteredGroup>
                   </VStack>
@@ -3836,6 +3894,55 @@ export function ModalsPage() {
           <TdsInfoBox label="Required operator" value="CNPG Operator" />
         </div>
         <ModalButtons onClose={closeModal} confirmText="Install" confirmVariant="primary" />
+      </Modal>
+      <Modal isOpen={openModal === 'delete-app'} onClose={closeModal} title="Delete app" size="sm">
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="App / Namespace" value="postgresql-1 / default" />
+          <InlineMessage variant="error">
+            This will remove the Helm release and all associated Kubernetes resources. This action
+            cannot be undone.
+          </InlineMessage>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-operator'}
+        onClose={closeModal}
+        title="Delete operator"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <InlineMessage variant="error">
+            This will permanently remove the Operator and all Kubernetes resources it manages. The
+            Operator cannot be deleted while active CR Instances still exist.
+          </InlineMessage>
+          <TdsInfoBox label="Operator" value="CNPG Operator" />
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-operator-blocked'}
+        onClose={closeModal}
+        title="Delete operator"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <InlineMessage variant="error">
+            This will permanently remove the Operator and all Kubernetes resources it manages. The
+            Operator cannot be deleted while active CR Instances still exist.
+          </InlineMessage>
+          <TdsInfoBox label="Operator" value="CNPG Operator" />
+          <TdsInfoBox label="CR instances">
+            <ul className="list-disc ml-4 text-body-md text-[var(--color-text-default)]">
+              <li>cnpg-cluster-default</li>
+              <li>cnpg-cluster-ai</li>
+            </ul>
+          </TdsInfoBox>
+          <InlineMessage variant="error">
+            2 CR Instance(s) are currently running. Delete all CR Instances first, then retry.
+          </InlineMessage>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
       </Modal>
 
       {/* ================================================================

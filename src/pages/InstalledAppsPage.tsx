@@ -237,14 +237,14 @@ export default function InstalledAppsPage() {
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
-          breadcrumb={<Breadcrumb items={[{ label: 'Installed Apps' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Installed apps' }]} />}
           actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
-        <PageHeader title="Installed Apps" />
+        <PageHeader title="Installed apps" />
 
         <ListToolbar
           primaryActions={

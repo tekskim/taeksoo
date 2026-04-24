@@ -122,6 +122,8 @@ const InstalledAppsPage = lazy(() => import('@/pages/InstalledAppsPage'));
 const InstalledAppDetailPage = lazy(() => import('@/pages/InstalledAppDetailPage'));
 const CatalogInstallPage = lazy(() => import('@/pages/CatalogInstallPage'));
 const InstalledAppEditPage = lazy(() => import('@/pages/InstalledAppEditPage'));
+const InstalledOperatorsPage = lazy(() => import('@/pages/InstalledOperatorsPage'));
+const InstalledOperatorDetailPage = lazy(() => import('@/pages/InstalledOperatorDetailPage'));
 
 export const containerRoutes = (
   <>
@@ -329,6 +331,11 @@ export const containerRoutes = (
     <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
     <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
     <Route path="/container/installed-apps/:appId/edit" element={<InstalledAppEditPage />} />
+    <Route path="/container/installed-operators" element={<InstalledOperatorsPage />} />
+    <Route
+      path="/container/installed-operators/:operatorId"
+      element={<InstalledOperatorDetailPage />}
+    />
     <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
     <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
