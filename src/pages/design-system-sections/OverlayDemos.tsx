@@ -169,7 +169,7 @@ export function ModalUseCaseDemo({
         <div className="flex flex-col gap-2">
           {/* Info Box */}
           <div
-            className={`bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 ${'infoList' in c ? 'max-h-[96px] overflow-y-auto sidebar-scroll' : ''}`}
+            className={`bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 ${'infoList' in c ? 'max-h-[96px] overflow-y-auto' : ''}`}
           >
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
               {c.infoLabel}

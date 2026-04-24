@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   VStack,
@@ -433,7 +434,14 @@ function PieChartCard({
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px]"
+      >
         {legendData.map((item, i) => (
           <div key={i} className="flex items-center gap-1.5">
             <div
@@ -443,7 +451,7 @@ function PieChartCard({
             <span className="text-body-sm text-[var(--color-text-muted)]">{item.label}</span>
           </div>
         ))}
-      </div>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }

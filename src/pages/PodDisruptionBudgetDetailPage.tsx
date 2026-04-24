@@ -13,6 +13,7 @@ import {
   Button,
   ContextMenu,
   PageShell,
+  ErrorState,
   DetailHeader,
   Badge,
   Tooltip,
@@ -32,6 +33,7 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
+  IconAlertTriangle,
   IconChevronDown,
   IconDownload,
   IconTrash,
@@ -192,12 +194,14 @@ export function PodDisruptionBudgetDetailPage() {
   const [eventsSearchQuery, setEventsSearchQuery] = useState('');
 
   // Get PDB data first (moved up for tab label)
-  const pdbData = mockPdbData[pdbId || '1'] || mockPdbData['1'];
+  const pdbData = pdbId ? mockPdbData[pdbId] : undefined;
 
   // Update tab label to match the PDB name (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel(pdbData.name);
-  }, [updateActiveTabLabel, pdbData.name]);
+    if (pdbData) {
+      updateActiveTabLabel(pdbData.name);
+    }
+  }, [updateActiveTabLabel, pdbData]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -216,6 +220,86 @@ export function PodDisruptionBudgetDetailPage() {
 
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
+
+  if (!pdbData) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Pod Disruption Budgets', href: '/container/pdb' },
+                  { label: pdbId ?? 'Pod disruption budget' },
+                ]}
+              />
+            }
+            actions={
+              <ContainerTopBarActions
+                onTerminalClick={() => {
+                  if (shellPanel.isExpanded) {
+                    shellPanel.setIsExpanded(false);
+                  } else {
+                    shellPanel.openConsole('kubectl-pdb', 'Kubectl: ClusterName');
+                  }
+                }}
+                isTerminalActive={shellPanel.isExpanded}
+              />
+            }
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            minHeight={300}
+            sidebarOpen={sidebarOpen}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Pod disruption budget not found"
+          description={`The pod disruption budget "${pdbId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/pdb')}>
+              Back to Pod Disruption Budgets
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Labels and annotations counts
   const labelsCount = Object.keys(pdbData.labels).length;

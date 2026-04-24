@@ -331,9 +331,7 @@ export function IAMServiceAccountsPage() {
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Service accounts' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Service accounts' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"

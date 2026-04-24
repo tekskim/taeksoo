@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -114,21 +114,21 @@ const namespacesData: NamespaceRow[] = [
   },
   {
     id: '10',
-    status: 'CreateContainerConfigError',
+    status: 'Active',
     name: 'kube-system-cluster-components-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2026 18:09:45',
   },
   {
     id: '11',
-    status: 'InvalidImageName',
+    status: 'Active',
     name: 'local-development-single-node-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2026 19:22:18',
   },
   {
     id: '12',
-    status: 'ImagePullBackOff',
+    status: 'Terminating',
     name: 'kube-node-lease-heartbeat-lease-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2026 20:35:52',
@@ -144,9 +144,8 @@ export function ContainerNamespacesPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -171,9 +170,15 @@ export function ContainerNamespacesPage() {
   };
 
   // Pagination
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return namespacesData;
+    const term = searchTerm.toLowerCase();
+    return namespacesData.filter((n) => n.name.toLowerCase().includes(term));
+  }, [namespacesData, searchTerm]);
+
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(namespacesData.length / rowsPerPage);
-  const paginatedData = namespacesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -389,6 +394,11 @@ export function ContainerNamespacesPage() {
                 placeholder="Search namespaces by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
               />
               <Button
                 variant="secondary"
@@ -435,7 +445,7 @@ export function ContainerNamespacesPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={namespacesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

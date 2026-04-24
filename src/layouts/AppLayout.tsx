@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { TabBar, TopBar, Breadcrumb } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -95,9 +96,16 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex-1 min-w-[var(--layout-content-min-width)] overscroll-contain"
+        >
           {children || <Outlet />}
-        </div>
+        </OverlayScrollbarsComponent>
       </main>
     </div>
   );

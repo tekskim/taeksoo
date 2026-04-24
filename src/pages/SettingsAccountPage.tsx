@@ -165,7 +165,11 @@ export default function SettingsAccountPage() {
                       setIsEditingAccount(false);
                       success('Profile updated successfully.');
                     }}
-                    disabled={!draftName.trim() || !draftEmail.trim()}
+                    disabled={
+                      !draftName.trim() ||
+                      !draftEmail.trim() ||
+                      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(draftEmail)
+                    }
                   >
                     Done
                   </Button>
@@ -394,7 +398,7 @@ export default function SettingsAccountPage() {
             variant="primary"
             onClick={() => {
               setShowLogoutModal(false);
-              window.location.href = '/login';
+              window.location.href = '/';
             }}
           >
             Logout{' '}

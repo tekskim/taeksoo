@@ -20,6 +20,7 @@ import {
   ContextMenu,
   InfoBox,
   PageShell,
+  ErrorState,
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
@@ -80,15 +81,90 @@ interface ObjectItem {
 
 /* ----------------------------------------
    Mock Data
+   (IDs aligned with storage-domain-admin BucketsPage)
    ---------------------------------------- */
 
-const mockBucketDetail: BucketDetail = {
-  id: 'bucket-1',
-  name: 'cloud_tech/cloud-tech-cold',
-  owner: 'ai_platform$ai.platform',
-  usedCapacity: 'ai_platform$ai.platform',
-  objects: 13,
-  creationDate: 'Sep 19, 2026 14:30:00',
+const mockBucketDetails: Record<string, BucketDetail> = {
+  'bucket-1': {
+    id: 'bucket-1',
+    name: 'cloud_tech/harbor',
+    owner: 'ai_platform$ai.platform',
+    usedCapacity: '10 MiB',
+    objects: 1,
+    creationDate: 'Sep 19, 2026 14:30:00',
+  },
+  'bucket-2': {
+    id: 'bucket-2',
+    name: 'ai_platform/ai-platform-hot',
+    owner: 'cloud_tech$harbor',
+    usedCapacity: '11.1 GiB',
+    objects: 2700,
+    creationDate: 'Sep 19, 2026 14:30:00',
+  },
+  'bucket-3': {
+    id: 'bucket-3',
+    name: 'ai_platform/model-storage',
+    owner: 'cloud_tech$harbor',
+    usedCapacity: '24.5 GiB',
+    objects: 5200,
+    creationDate: 'Sep 18, 2026 14:30:00',
+  },
+  'bucket-4': {
+    id: 'bucket-4',
+    name: 'data_lake/raw-data',
+    owner: 'data_engineering$admin',
+    usedCapacity: '156.8 GiB',
+    objects: 12400,
+    creationDate: 'Sep 17, 2026 14:30:00',
+  },
+  'bucket-5': {
+    id: 'bucket-5',
+    name: 'data_lake/processed-data',
+    owner: 'data_engineering$admin',
+    usedCapacity: '89.2 GiB',
+    objects: 8900,
+    creationDate: 'Sep 17, 2026 14:30:00',
+  },
+  'bucket-6': {
+    id: 'bucket-6',
+    name: 'backup/daily-snapshots',
+    owner: 'system$backup',
+    usedCapacity: '512.3 GiB',
+    objects: 45600,
+    creationDate: 'Sep 15, 2026 14:30:00',
+  },
+  'bucket-7': {
+    id: 'bucket-7',
+    name: 'logs/application-logs',
+    owner: 'devops$monitoring',
+    usedCapacity: '78.4 GiB',
+    objects: 234500,
+    creationDate: 'Sep 14, 2026 14:30:00',
+  },
+  'bucket-8': {
+    id: 'bucket-8',
+    name: 'media/user-uploads',
+    owner: 'app_service$media',
+    usedCapacity: '2.3 TiB',
+    objects: 1200000,
+    creationDate: 'Sep 10, 2026 14:30:00',
+  },
+  'bucket-9': {
+    id: 'bucket-9',
+    name: 'archive/2026-data',
+    owner: 'system$archive',
+    usedCapacity: '4.8 TiB',
+    objects: 2100000,
+    creationDate: 'Jan 1, 2026 14:30:00',
+  },
+  'bucket-10': {
+    id: 'bucket-10',
+    name: 'temp/scratch-space',
+    owner: 'dev_team$shared',
+    usedCapacity: '45.6 GiB',
+    objects: 3400,
+    creationDate: 'Sep 20, 2026 14:30:00',
+  },
 };
 
 const mockObjectTree: ObjectItem[] = [
@@ -597,8 +673,7 @@ export function BucketDetailPage() {
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
-  // Use mock data (in real app, fetch based on id)
-  const bucketData = mockBucketDetail;
+  const bucketData = id && mockBucketDetails[id] ? mockBucketDetails[id] : undefined;
 
   // Update tab label to match the bucket name (most recent breadcrumb)
   useEffect(() => {
@@ -690,6 +765,61 @@ export function BucketDetailPage() {
   ];
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
+
+  if (!bucketData) {
+    return (
+      <PageShell
+        sidebar={
+          <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Buckets', href: '/storage-domain-admin/buckets' },
+                  { label: id ?? '—' },
+                ]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        <ErrorState
+          title="Bucket not found"
+          description={`The bucket "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/storage-domain-admin/buckets')}
+            >
+              Back to Buckets
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell

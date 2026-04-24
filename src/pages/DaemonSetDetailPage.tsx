@@ -18,6 +18,7 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -30,6 +31,7 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
+  IconAlertTriangle,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
@@ -881,7 +883,7 @@ export function DaemonSetDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get daemonset data
-  const daemonset = mockDaemonSetData[daemonsetId || '1'] || mockDaemonSetData['1'];
+  const daemonset = daemonsetId ? mockDaemonSetData[daemonsetId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -889,8 +891,10 @@ export function DaemonSetDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`DaemonSet: ${daemonset.name}`);
-  }, [updateActiveTabLabel, daemonset.name]);
+    if (daemonset) {
+      updateActiveTabLabel(`DaemonSet: ${daemonset.name}`);
+    }
+  }, [updateActiveTabLabel, daemonset]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -918,6 +922,73 @@ export function DaemonSetDetailPage() {
   const handleExecuteShell = (podName: string) => {
     shellPanel.openConsole(podName, `Shell: ${podName}`);
   };
+
+  if (!daemonset) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'DaemonSets', href: '/container/daemonsets' },
+                  { label: daemonsetId ?? 'DaemonSet' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="DaemonSet not found"
+          description={`The daemon set "${daemonsetId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/daemonsets')}>
+              Back to DaemonSets
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Container submenu for Execute Shell
   const containerSubmenu: ContextMenuItem[] = [

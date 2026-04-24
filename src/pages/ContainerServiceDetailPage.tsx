@@ -23,12 +23,13 @@ import {
   Tooltip,
   BadgeList,
   SearchInput,
+  ErrorState,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconDotsCircleHorizontal, IconChevronDown } from '@tabler/icons-react';
+import { IconAlertTriangle, IconDotsCircleHorizontal, IconChevronDown } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -838,7 +839,7 @@ export function ContainerServiceDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get service data
-  const service = mockServiceData[serviceId || ''] || mockServiceData['1'];
+  const service = serviceId ? mockServiceData[serviceId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -846,8 +847,10 @@ export function ContainerServiceDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Service: ${service.name}`);
-  }, [updateActiveTabLabel, service.name]);
+    if (service) {
+      updateActiveTabLabel(`Service: ${service.name}`);
+    }
+  }, [updateActiveTabLabel, service]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -875,6 +878,73 @@ export function ContainerServiceDetailPage() {
   const handleExecuteShell = (podName: string) => {
     shellPanel.openConsole(podName, `Shell: ${podName}`);
   };
+
+  if (!service) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Services', href: '/container/services' },
+                  { label: serviceId ?? 'Service' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Service not found"
+          description={`The service "${serviceId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/services')}>
+              Back to Services
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [

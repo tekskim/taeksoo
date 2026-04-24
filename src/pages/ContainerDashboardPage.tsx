@@ -193,7 +193,7 @@ function Card({
 }: CardProps) {
   return (
     <div
-      className={`p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
+      className={`p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
       <div className="flex items-center justify-between mb-4">
         <h6 className="text-heading-h6">{title}</h6>

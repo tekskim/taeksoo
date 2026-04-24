@@ -1237,6 +1237,7 @@ function AppRoutes() {
         <Route path="sidebar-icons" element={<SidebarIconsPage />} />
         <Route path="topology-popovers" element={<TopologyPopoversPage />} />
         <Route path="create-pages" element={<CreatePagesDirectoryPage />} />
+        <Route path="create-pages-2" element={<DetailPagesDirectoryPage />} />
         <Route path="form-patterns" element={<FormPatternsPage />} />
       </Route>
       <Route path="/lab/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
@@ -1246,7 +1247,7 @@ function AppRoutes() {
 
       {/* Developer Resources */}
       <Route path="/table-style-guide" element={<TableStyleGuidePage />} />
-      <Route path="/detail-pages" element={<DetailPagesDirectoryPage />} />
+
       <Route path="/system-errors" element={<SystemErrorPagesPage />} />
       <Route path="/system-errors/:variant" element={<SystemErrorPagesPage />} />
 

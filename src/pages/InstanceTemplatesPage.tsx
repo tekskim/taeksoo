@@ -305,13 +305,6 @@ export function InstanceTemplatesPage() {
       case 'personal':
         filtered = filtered.filter((t) => t.access === 'Personal');
         break;
-      case 'project':
-        filtered = filtered.filter((t) => t.access === 'Project');
-        break;
-      case 'public':
-        filtered = filtered.filter((t) => t.access === 'Public');
-        break;
-      // 'all' shows everything
     }
 
     // Filter by applied filters
@@ -366,9 +359,6 @@ export function InstanceTemplatesPage() {
     () => ({
       favorites: templates.filter((t) => t.favorite).length,
       personal: templates.filter((t) => t.access === 'Personal').length,
-      project: templates.filter((t) => t.access === 'Project').length,
-      public: templates.filter((t) => t.access === 'Public').length,
-      all: templates.length,
     }),
     [templates]
   );

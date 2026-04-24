@@ -316,6 +316,7 @@ interface QuotaSidebarProps {
   onNumberOfInstancesChange: (value: number) => void;
   quota: QuotaItem[];
   onCancel: () => void;
+  onCreate: () => void;
   sectionStatus: SectionStatus;
   editingSection: SectionStep | null;
 }
@@ -325,6 +326,7 @@ function QuotaSidebar({
   onNumberOfInstancesChange,
   quota,
   onCancel,
+  onCreate,
   sectionStatus,
   editingSection,
 }: QuotaSidebarProps) {
@@ -381,7 +383,12 @@ function QuotaSidebar({
           <Button variant="secondary" size="md" onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="primary" disabled={!isAllCompleted} className="flex-1">
+          <Button
+            variant="primary"
+            disabled={!isAllCompleted}
+            onClick={onCreate}
+            className="flex-1"
+          >
             Create
           </Button>
         </HStack>
@@ -5186,6 +5193,7 @@ export function CreateInstancePage() {
             onNumberOfInstancesChange={setNumberOfInstances}
             quota={mockQuota}
             onCancel={handleCancel}
+            onCreate={handleCreate}
             sectionStatus={sectionStatus}
             editingSection={editingSection}
           />

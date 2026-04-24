@@ -1,6 +1,7 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconCube,
   IconTemplate,
   IconCamera,
@@ -121,8 +122,14 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
       )}
 
       {/* Navigation */}
-      <nav
-        className="flex-1 px-3 py-2 pb-6 overflow-y-auto overflow-x-hidden sidebar-scroll"
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2 pb-6"
         aria-label="Compute navigation"
       >
         <VStack gap={4} className="w-[175px] min-w-0">
@@ -185,7 +192,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
             <>
               {/* Compute Admin Sidebar Menu */}
               <MenuItem
-                icon={<IconHome size={16} stroke={1.5} />}
+                icon={<IconLayoutDashboard size={16} stroke={1.5} />}
                 label="Dashboard"
                 href="/compute-admin"
                 active={isActive('/compute-admin')}
@@ -342,7 +349,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
             <>
               {/* Home */}
               <MenuItem
-                icon={<IconHome size={16} stroke={1.5} />}
+                icon={<IconLayoutDashboard size={16} stroke={1.5} />}
                 label="Dashboard"
                 href={basePath}
                 active={isActive(basePath)}
@@ -476,7 +483,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
             </>
           )}
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

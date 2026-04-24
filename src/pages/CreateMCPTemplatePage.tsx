@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   PageShell,
   TabBar,
@@ -254,7 +255,14 @@ export function CreateMCPTemplatePage() {
       }
     >
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-auto min-h-0 overscroll-contain sidebar-scroll">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 min-h-0 overscroll-contain"
+      >
         <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
           <div className="flex flex-col gap-3 items-start min-w-[1176px] relative shrink-0 w-full">
             <div className="flex items-center justify-between h-8 w-full">
@@ -1095,7 +1103,7 @@ export function CreateMCPTemplatePage() {
             </div>
           </div>
         </div>
-      </div>
+      </OverlayScrollbarsComponent>
     </PageShell>
   );
 }

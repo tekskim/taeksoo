@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   TabBar,
   TopBar,
@@ -185,7 +186,7 @@ function Card({
 }: CardProps) {
   return (
     <div
-      className={`p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
+      className={`p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
       <h6 className="text-heading-h6 mb-4">{title}</h6>
       {children}
@@ -199,8 +200,13 @@ function Card({
 export function ComputeHomePage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    updateActiveTabLabel('Dashboard');
+  }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -343,7 +349,7 @@ export function ComputeHomePage() {
           bgColor="bg-[var(--color-surface-subtle)]"
           className="flex flex-col"
         >
-          <h3 className="text-heading-h2 text-[var(--color-text-default)]">proj-1</h3>
+          <h3 className="text-heading-h2 text-[var(--color-text-default)]">Project-01</h3>
           <div className="space-y-4 mt-auto">
             <div>
               <div className="text-body-xs text-[var(--color-text-muted)] mb-1">ID</div>
@@ -436,7 +442,7 @@ export function ComputeHomePage() {
       {/* Bottom Row - Recent Activities + Infrastructure Quota */}
       <div className="grid grid-cols-2 gap-6">
         {/* Recent Activities */}
-        <div className="p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+        <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
           <SectionHeader title="Recent Activities" />
           <Table<RecentActivity>
             columns={recentActivityColumns}
@@ -447,7 +453,7 @@ export function ComputeHomePage() {
         </div>
 
         {/* Infrastructure Quota */}
-        <div className="p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col">
+        <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col">
           <SectionHeader title="Infrastructure Quota" />
           <div className="grid grid-cols-2 gap-2 flex-1" style={{ gridAutoRows: '1fr' }}>
             <InfraQuotaRow label="Volumes" used={18} total={50} href="/compute/volumes" />

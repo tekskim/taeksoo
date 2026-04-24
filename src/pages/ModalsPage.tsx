@@ -1,5 +1,6 @@
 import { useState, useCallback, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -121,14 +122,21 @@ function InfoBoxCopyable({ label, value }: { label: string; value: string }) {
 
 function ScrollableList({ label, items }: { label: string; items: string[] }) {
   return (
-    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+    <OverlayScrollbarsComponent
+      options={{
+        overflow: { x: 'hidden', y: 'scroll' },
+        scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+      }}
+      defer={false}
+      className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] os-compact"
+    >
       <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
       <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

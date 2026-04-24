@@ -1146,7 +1146,7 @@ export function CreateDaemonSetPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const handleCancel = useCallback(() => {
-    navigate('/container/deployments');
+    navigate('/container/daemonsets');
   }, [navigate]);
 
   const handleCreate = useCallback(() => {

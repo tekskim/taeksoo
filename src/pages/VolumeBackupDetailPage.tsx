@@ -13,6 +13,7 @@ import {
   DetailHeader,
   SectionCard,
   PageShell,
+  ErrorState,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -178,21 +179,6 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
   },
 };
 
-// Default backup for unknown IDs
-const defaultBackup: VolumeBackupDetail = {
-  id: 'unknown',
-  name: 'Unknown Backup',
-  status: 'available',
-  size: '0 GiB',
-  createdAt: '-',
-  description: '-',
-  sourceVolume: '-',
-  sourceVolumeId: '-',
-  backupMode: '-',
-  container: '-',
-  availabilityZone: '-',
-};
-
 /* ----------------------------------------
    Status Mapping
    ---------------------------------------- */
@@ -227,7 +213,7 @@ export function VolumeBackupDetailPage() {
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get backup data based on the ID
-  const backup = id && mockBackupDetails[id] ? mockBackupDetails[id] : defaultBackup;
+  const backup = id && mockBackupDetails[id] ? mockBackupDetails[id] : undefined;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -235,10 +221,10 @@ export function VolumeBackupDetailPage() {
 
   // Update tab label to backup name
   useEffect(() => {
-    if (backup.name) {
+    if (backup?.name) {
       updateActiveTabLabel(backup.name);
     }
-  }, [backup.name, updateActiveTabLabel]);
+  }, [backup?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -246,6 +232,59 @@ export function VolumeBackupDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!backup) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Volume Backups', href: '/compute/volume-backups' },
+                  { label: id ?? '—' },
+                ]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Volume backup not found"
+          description={`The volume backup "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/compute/volume-backups')}
+            >
+              Back to Volume Backups
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Breadcrumb items
   const breadcrumbItems = [

@@ -26,6 +26,7 @@ import {
   Pagination,
   SearchInput,
   PageShell,
+  ErrorState,
   type ContextMenuItem,
   Popover,
   SectionCard,
@@ -35,7 +36,7 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconChevronDown, IconDownload, IconTrash } from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown, IconDownload, IconTrash } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -370,17 +371,7 @@ export function PersistentVolumeClaimDetailPage() {
   // Shell Panel state
   const shellPanel = useShellPanel();
 
-  // Load PVC data
-  const [pvcData, setPvcData] = useState<PersistentVolumeClaimData | null>(null);
-
-  useEffect(() => {
-    if (pvcId && mockPersistentVolumeClaimData[pvcId]) {
-      setPvcData(mockPersistentVolumeClaimData[pvcId]);
-    } else {
-      // Default to first PVC if not found
-      setPvcData(mockPersistentVolumeClaimData['1']);
-    }
-  }, [pvcId]);
+  const pvcData = pvcId ? mockPersistentVolumeClaimData[pvcId] : undefined;
 
   const filteredEvents = useMemo(() => {
     const events = pvcData?.events ?? [];
@@ -438,7 +429,72 @@ export function PersistentVolumeClaimDetailPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
   if (!pvcData) {
-    return <div>Loading...</div>;
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Persistent Volume Claims', href: '/container/pvc' },
+                  { label: pvcId ?? 'Persistent volume claim' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            minHeight={300}
+            sidebarOpen={sidebarOpen}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Persistent volume claim not found"
+          description={`The persistent volume claim "${pvcId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/pvc')}>
+              Back to Persistent Volume Claims
+            </Button>
+          }
+        />
+      </PageShell>
+    );
   }
 
   // More actions menu

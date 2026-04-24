@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { IconX, IconExternalLink, IconTerminal2 } from '@tabler/icons-react';
 import { Select, Button } from '@/design-system';
 
@@ -273,9 +274,14 @@ export function ShellPanel({
       </div>
 
       {/* Content - Dark background for logs */}
-      <div
-        ref={contentRef}
-        className="flex-1 overflow-auto p-4 font-mono text-body-md leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
+      <OverlayScrollbarsComponent
+        ref={contentRef as any}
+        options={{
+          overflow: { x: 'scroll', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 p-4 font-mono text-body-md leading-5 bg-[#0d1117] text-slate-300 os-shell"
       >
         {activeTab ? (
           activeTab.content ? (
@@ -288,7 +294,7 @@ export function ShellPanel({
             No console selected
           </div>
         )}
-      </div>
+      </OverlayScrollbarsComponent>
 
       {/* Bottom Status Bar - White tone */}
       <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">

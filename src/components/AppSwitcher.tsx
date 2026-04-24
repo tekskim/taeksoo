@@ -98,12 +98,12 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer flex-shrink-0"
+          className="group p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer flex-shrink-0"
           aria-label="Toggle sidebar"
         >
           <IconLayoutSidebar
             size={14}
-            className="text-[var(--color-text-muted)] pointer-events-none"
+            className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors pointer-events-none"
             stroke={1.5}
           />
         </button>

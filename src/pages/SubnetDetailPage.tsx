@@ -17,6 +17,7 @@ import {
   Pagination,
   StatusIndicator,
   PageShell,
+  ErrorState,
   Tooltip,
   Popover,
   Badge,
@@ -128,8 +129,8 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
     id: '29ttgj234',
   },
   securityGroups: ['default-sg', 'web-sg', 'db-sg', 'app-sg', 'monitor-sg'].slice(0, (i % 5) + 1),
-  fixedIp: `10760.${91 + (i % 10)}`,
-  floatingIp: `10765.${39 + (i % 10)}`,
+  fixedIp: `10.0.${Math.floor(i / 10)}.${91 + (i % 10)}`,
+  floatingIp: `203.0.113.${39 + (i % 10)}`,
   macAddress: `fa:16:3e:34:85:${String(32 + (i % 50)).padStart(2, '0')}`,
 }));
 
@@ -170,19 +171,14 @@ export default function SubnetDetailPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // In a real app, fetch based on id
-  const subnet = id && mockSubnets[id] ? mockSubnets[id] : mockSubnetDetail;
+  const subnet = id ? mockSubnets[id] : undefined;
 
   // Update tab label to match the subnet name (most recent breadcrumb)
   useEffect(() => {
     if (subnet?.name) {
       updateActiveTabLabel(subnet.name);
     }
-  }, [subnet?.name, updateActiveTabLabel]);
-
-  const breadcrumbItems = [
-    { label: 'Networks', href: '/compute/networks' },
-    { label: subnet.name },
-  ];
+  }, [subnet, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -190,6 +186,56 @@ export default function SubnetDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!subnet) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Subnets', href: '/compute/subnets' }, { label: id ?? '—' }]}
+              />
+            }
+            onSidebarToggle={openSidebar}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Subnet not found"
+          description={`The subnet "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/subnets')}>
+              Back to Subnets
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
+  const breadcrumbItems = [
+    { label: 'Networks', href: '/compute/networks' },
+    { label: subnet.name },
+  ];
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(subnet.id);

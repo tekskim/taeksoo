@@ -18,6 +18,7 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -30,6 +31,7 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
+  IconAlertTriangle,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
@@ -840,7 +842,7 @@ export function StatefulSetDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get statefulset data
-  const statefulset = mockStatefulSetData[statefulsetId || '1'] || mockStatefulSetData['1'];
+  const statefulset = statefulsetId ? mockStatefulSetData[statefulsetId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -848,8 +850,10 @@ export function StatefulSetDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`StatefulSet: ${statefulset.name}`);
-  }, [updateActiveTabLabel, statefulset.name]);
+    if (statefulset) {
+      updateActiveTabLabel(`StatefulSet: ${statefulset.name}`);
+    }
+  }, [updateActiveTabLabel, statefulset]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -877,6 +881,77 @@ export function StatefulSetDetailPage() {
   const handleExecuteShell = (podName: string) => {
     shellPanel.openConsole(podName, `Shell: ${podName}`);
   };
+
+  if (!statefulset) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'StatefulSets', href: '/container/statefulsets' },
+                  { label: statefulsetId ?? 'StatefulSet' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="StatefulSet not found"
+          description={`The StatefulSet "${statefulsetId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/container/statefulsets')}
+            >
+              Back to StatefulSets
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Container submenu for Execute Shell
   const containerSubmenu: ContextMenuItem[] = [

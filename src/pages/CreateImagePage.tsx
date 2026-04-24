@@ -166,7 +166,10 @@ export function CreateImagePage() {
   };
 
   const handleCreate = () => {
-    // TODO: API call to create image with form data
+    const isBasicValid = validateBasicInfo();
+    const isSourceValid = validateSource();
+    const isSpecValid = validateSpecification();
+    if (!isBasicValid || !isSourceValid || !isSpecValid) return;
     navigate('/compute/images');
   };
 

@@ -56,7 +56,7 @@ const appCards: AppCard[] = [
   { id: 'settings', title: 'Settings', iconSrc: SettingsIcon, path: '/settings' },
   { id: 'cloud-builder', title: 'Cloud Builder', iconSrc: CloudBuilderIcon, path: '/cloudbuilder' },
   { id: 'ai-platform', title: 'AI Platform', iconSrc: AIPlatformIcon, path: '/ai-platform' },
-  { id: 'ai-agent', title: 'AI Agent', iconSrc: AIAgentIcon, path: '/agent' },
+  { id: 'agent-ops', title: 'Agent Ops', iconSrc: AIAgentIcon, path: '/agent' },
 ];
 
 export function EntryPage() {
@@ -91,21 +91,6 @@ export function EntryPage() {
               className="hover:text-[var(--color-text-default)] transition-colors cursor-pointer bg-transparent border-none p-0"
             >
               Lab
-            </button>
-            <span className="select-none">,&nbsp;</span>
-            <button
-              type="button"
-              onClick={() =>
-                window.open(
-                  import.meta.env.DEV
-                    ? 'http://localhost:6006'
-                    : 'https://thakicloud.github.io/tds_ssot/storybook/',
-                  '_blank'
-                )
-              }
-              className="hover:text-[var(--color-text-default)] transition-colors cursor-pointer bg-transparent border-none p-0"
-            >
-              Storybook
             </button>
           </nav>
 
@@ -167,9 +152,6 @@ export function EntryPage() {
             </Button>
             <Button variant="ghost" size="sm" onClick={() => navigate('/table-style-guide')}>
               Table Style Guide
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/detail-pages')}>
-              Create Pages 2
             </Button>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)] text-center mt-10">

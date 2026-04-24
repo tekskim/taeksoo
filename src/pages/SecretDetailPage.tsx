@@ -19,13 +19,14 @@ import {
   Tooltip,
   PageShell,
   CopyButton,
+  ErrorState,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconChevronDown, IconEye, IconEyeOff } from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown, IconEye, IconEyeOff } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -154,17 +155,7 @@ export function SecretDetailPage() {
   // Shell Panel state
   const shellPanel = useShellPanel();
 
-  // Load Secret data
-  const [secretData, setSecretData] = useState<SecretData | null>(null);
-
-  useEffect(() => {
-    if (secretId && mockSecretData[secretId]) {
-      setSecretData(mockSecretData[secretId]);
-    } else {
-      // Default to first secret if not found
-      setSecretData(mockSecretData['1']);
-    }
-  }, [secretId]);
+  const secretData = secretId ? mockSecretData[secretId] : undefined;
 
   // Update tab label to match the Secret name (most recent breadcrumb)
   useEffect(() => {
@@ -188,12 +179,78 @@ export function SecretDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
+  if (!secretData) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Secrets', href: '/container/secrets' },
+                  { label: secretId ?? 'Secret' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Secret not found"
+          description={`The secret "${secretId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/secrets')}>
+              Back to Secrets
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/secrets/${secretData?.name ?? secretId}/edit-yaml`),
+      onClick: () => navigate(`/container/secrets/${secretData.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -207,10 +264,6 @@ export function SecretDetailPage() {
       onClick: () => console.log('Delete'),
     },
   ];
-
-  if (!secretData) {
-    return <div>Loading...</div>;
-  }
 
   // Format labels
   const labelsCount = Object.keys(secretData.labels).length;

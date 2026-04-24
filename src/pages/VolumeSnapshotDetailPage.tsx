@@ -13,6 +13,7 @@ import {
   DetailHeader,
   SectionCard,
   PageShell,
+  ErrorState,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -73,18 +74,6 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
   },
 };
 
-// Default snapshot for unknown IDs
-const defaultSnapshot: VolumeSnapshotDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'vol-snap-1',
-  status: 'available',
-  size: '1500 GiB',
-  createdAt: 'Jul 25, 2026 10:32:16',
-  description: '-',
-  sourceVolume: 'web-server-10',
-  sourceVolumeId: 'vol-001',
-};
-
 /* ----------------------------------------
    Status Mapping
    ---------------------------------------- */
@@ -117,7 +106,7 @@ export function VolumeSnapshotDetailPage() {
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get snapshot data based on the ID
-  const snapshot = id && mockSnapshotDetails[id] ? mockSnapshotDetails[id] : defaultSnapshot;
+  const snapshot = id && mockSnapshotDetails[id] ? mockSnapshotDetails[id] : undefined;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -125,10 +114,10 @@ export function VolumeSnapshotDetailPage() {
 
   // Update tab label when snapshot name changes
   useEffect(() => {
-    if (snapshot.name) {
+    if (snapshot?.name) {
       updateActiveTabLabel(snapshot.name);
     }
-  }, [snapshot.name, updateActiveTabLabel]);
+  }, [snapshot?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -136,6 +125,59 @@ export function VolumeSnapshotDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!snapshot) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Volume Snapshots', href: '/compute/volume-snapshots' },
+                  { label: id ?? '—' },
+                ]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Volume snapshot not found"
+          description={`The volume snapshot "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/compute/volume-snapshots')}
+            >
+              Back to Volume Snapshots
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -247,7 +289,8 @@ export function VolumeSnapshotDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Metadata" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="{metadata}" value="{value}" />
+                    <SectionCard.DataRow label="os_type" value="linux" />
+                    <SectionCard.DataRow label="hw_disk_bus" value="virtio" />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

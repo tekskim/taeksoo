@@ -1,7 +1,8 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconCompass,
   IconPackages,
   IconBrain,
@@ -74,13 +75,21 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 pb-6 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2 pb-6"
+      >
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
 
           {/* Dashboard */}
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
             label="Dashboard"
             href="/ai-platform"
             active={isActive('/ai-platform')}
@@ -232,7 +241,7 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

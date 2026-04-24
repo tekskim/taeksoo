@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { IconTerminal2, IconCircleFilled } from '@tabler/icons-react';
 import { Select, Button, TabBar, TopBar, Breadcrumb, PageShell } from '@/design-system';
@@ -183,10 +184,15 @@ export function ContainerConsolePage() {
       {/* Console Content - Full height */}
       <div className="flex flex-col flex-1">
         {/* Console Area - Dark background with monospace font */}
-        <div
-          ref={contentRef}
+        <OverlayScrollbarsComponent
+          ref={contentRef as any}
           onClick={handleConsoleClick}
-          className="flex-1 overflow-auto p-4 font-mono text-body-md leading-[18px] bg-[var(--color-surface-contrast)] text-white cursor-text shell-scroll"
+          options={{
+            overflow: { x: 'scroll', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex-1 p-4 font-mono text-body-md leading-[18px] bg-[var(--color-surface-contrast)] text-white cursor-text os-shell"
         >
           {/* Command History */}
           {commandHistory.map((line, index) => (
@@ -209,7 +215,7 @@ export function ContainerConsolePage() {
               spellCheck={false}
             />
           </div>
-        </div>
+        </OverlayScrollbarsComponent>
 
         {/* Bottom Status Bar */}
         <div className="flex items-center gap-2.5 px-2 py-1 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">

@@ -191,9 +191,7 @@ export function ContainerEventsPage() {
   } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 

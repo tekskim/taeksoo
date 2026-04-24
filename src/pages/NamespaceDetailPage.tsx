@@ -18,6 +18,7 @@ import {
   Button,
   ContextMenu,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -27,7 +28,7 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconChevronDown, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -799,14 +800,7 @@ export function NamespaceDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get namespace data
-  const namespace = mockNamespaceData[namespaceName || ''] || {
-    name: namespaceName || 'unknown',
-    status: 'Active' as const,
-    createdAt: 'Nov 6, 2026 21:25:53',
-    labels: { 'kubernetes.io/metadata.name': namespaceName || '' },
-    annotations: {},
-    resources: { active: 0, processing: 0, error: 0, total: 0 },
-  };
+  const namespace = namespaceName ? mockNamespaceData[namespaceName] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -814,8 +808,10 @@ export function NamespaceDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Namespace: ${namespace.name}`);
-  }, [updateActiveTabLabel, namespace.name]);
+    if (namespace) {
+      updateActiveTabLabel(`Namespace: ${namespace.name}`);
+    }
+  }, [updateActiveTabLabel, namespace]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -825,6 +821,57 @@ export function NamespaceDetailPage() {
 
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
+
+  if (!namespace) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Namespaces', href: '/container/namespaces' },
+                  { label: namespaceName ?? 'Namespace' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-6"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Namespace not found"
+          description={`The namespace "${namespaceName ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/namespaces')}>
+              Back to Namespaces
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Context menu items for more actions
   const moreActionsItems: ContextMenuItem[] = [
