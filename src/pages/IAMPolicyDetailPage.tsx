@@ -399,7 +399,7 @@ export default function IAMPolicyDetailPage() {
   const [rolesCurrentPage, setRolesCurrentPage] = useState(1);
 
   // Version history tab state
-  const [expandedVersions, setExpandedVersions] = useState<Set<string>>(new Set(['v-004']));
+  const [expandedVersions, setExpandedVersions] = useState<Set<string>>(new Set());
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const itemsPerPage = 10;
@@ -675,7 +675,6 @@ export default function IAMPolicyDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard label="Description" value={policy.description} />
             <DetailHeader.InfoCard label="Type" value={policy.type} />
-            <DetailHeader.InfoCard label="Condition" value={policy.condition} />
             <DetailHeader.InfoCard label="Edited at" value={policy.editedAt} />
             <DetailHeader.InfoCard label="Created at" value={policy.createdAt} />
           </DetailHeader.InfoGrid>
@@ -742,9 +741,9 @@ export default function IAMPolicyDetailPage() {
                             className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
                           >
                             {expandedPermissions.has(perm.id) ? (
-                              <IconChevronDown size={16} stroke={1.5} />
+                              <IconChevronDown size={12} strokeWidth={2} />
                             ) : (
-                              <IconChevronRight size={16} stroke={1.5} />
+                              <IconChevronRight size={12} strokeWidth={2} />
                             )}
                           </button>
                           {perm.app}
@@ -860,9 +859,9 @@ export default function IAMPolicyDetailPage() {
                             className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
                           >
                             {expandedVersions.has(version.id) ? (
-                              <IconChevronDown size={16} stroke={1.5} />
+                              <IconChevronDown size={12} strokeWidth={2} />
                             ) : (
-                              <IconChevronRight size={16} stroke={1.5} />
+                              <IconChevronRight size={12} strokeWidth={2} />
                             )}
                           </button>
                           <span className="font-medium">Version {version.version}</span>

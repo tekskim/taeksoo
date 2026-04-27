@@ -34,26 +34,28 @@ export function DesignSystemLayout() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isCaptureMode = searchParams.get('capture') === 'true';
-  const mainRef = useRef<HTMLDivElement>(null);
+  const mainOsRef = useRef<React.ComponentRef<typeof OverlayScrollbarsComponent>>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  const getViewport = () => mainOsRef.current?.osInstance()?.elements().viewport;
+
   useEffect(() => {
-    mainRef.current?.scrollTo(0, 0);
+    getViewport()?.scrollTo(0, 0);
   }, [location.pathname]);
 
   useEffect(() => {
-    const mainElement = mainRef.current;
-    if (!mainElement) return;
-    const handleScroll = () => setShowScrollTop(mainElement.scrollTop > 300);
-    mainElement.addEventListener('scroll', handleScroll);
-    return () => mainElement.removeEventListener('scroll', handleScroll);
+    const viewport = getViewport();
+    if (!viewport) return;
+    const handleScroll = () => setShowScrollTop(viewport.scrollTop > 300);
+    viewport.addEventListener('scroll', handleScroll);
+    return () => viewport.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    getViewport()?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const filteredNavItems = searchQuery.trim()
@@ -299,7 +301,7 @@ export function DesignSystemLayout() {
       {/* Main Content */}
       <OverlayScrollbarsComponent
         element="main"
-        ref={mainRef as any}
+        ref={mainOsRef}
         options={{
           overflow: { x: 'hidden', y: 'scroll' },
           scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
@@ -308,7 +310,7 @@ export function DesignSystemLayout() {
         className={`absolute top-0 bottom-0 right-0 bg-[var(--color-surface-default)] ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
       >
         <div className="py-12 px-12 overflow-x-auto">
-          <Outlet context={{ mainRef }} />
+          <Outlet context={{ mainRef: { current: getViewport() ?? null } }} />
         </div>
 
         {/* Scroll to Top Button */}

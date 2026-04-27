@@ -18,7 +18,8 @@ import { ProjectSelector } from '@/components/ProjectSelector';
 export function AgentSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
+  const { projects, selectedProjectId, setSelectedProjectId, primaryProjectId, setPrimaryProject } =
+    useProject();
 
   // Helper to check if path is active
   const isActive = (paths: string[]) => {
@@ -49,6 +50,8 @@ export function AgentSidebar() {
               projects={projects}
               selectedProjectId={selectedProjectId}
               onProjectSelect={setSelectedProjectId}
+              primaryProjectId={primaryProjectId}
+              onSetPrimary={setPrimaryProject}
               variant="sidebar-icon"
             />
           </div>

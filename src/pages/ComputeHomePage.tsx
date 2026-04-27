@@ -110,8 +110,10 @@ function SummaryStatBox({ value, label, onClick }: SummaryStatBoxProps) {
           : undefined
       }
     >
-      <div className={`text-heading-h3 ${textColor} pb-1`}>{value}</div>
-      <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
+      <div className="flex items-center justify-between">
+        <div className={`text-heading-h4 ${textColor}`}>{value}</div>
+        <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
+      </div>
     </div>
   );
 }
@@ -336,6 +338,7 @@ export function ComputeHomePage() {
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
+          canGoBack={false}
           breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
         />
       }
@@ -343,14 +346,22 @@ export function ComputeHomePage() {
     >
       {/* Top Row - 4 Cards */}
       <div className="grid grid-cols-4 gap-6 mb-6">
-        {/* Project Info */}
+        {/* Tenant Info */}
         <Card
-          title="Project Info"
+          title="Tenant Info"
           bgColor="bg-[var(--color-surface-subtle)]"
           className="flex flex-col"
         >
-          <h3 className="text-heading-h2 text-[var(--color-text-default)]">Project-01</h3>
+          <h3 className="text-heading-h5 text-[var(--color-text-default)] break-all line-clamp-3">
+            my-very-long-project-name-for-the-development-environment-of-backend-microservices-and-infrastructure-testing-purpose-2026-v1
+          </h3>
           <div className="space-y-4 mt-auto">
+            <div>
+              <div className="text-body-xs text-[var(--color-text-muted)] mb-1">Description</div>
+              <p className="text-body-md text-[var(--color-text-default)]">
+                Development environment for the 'service' backend services.
+              </p>
+            </div>
             <div>
               <div className="text-body-xs text-[var(--color-text-muted)] mb-1">ID</div>
               <div className="flex items-center gap-1">
@@ -358,23 +369,16 @@ export function ComputeHomePage() {
                 <CopyButton value={projectId} size="sm" iconOnly tooltip="Copy ID" />
               </div>
             </div>
-            <div>
-              <div className="text-body-xs text-[var(--color-text-muted)] mb-1">Description</div>
-              <p className="text-body-md text-[var(--color-text-default)]">
-                Development environment for the 'service' backend services.
-              </p>
-            </div>
           </div>
         </Card>
 
         {/* Compute Quota */}
-        <Card title="Compute quota">
-          <div className="space-y-[22px]">
+        <Card title="Compute quota" className="flex flex-col">
+          <div className="space-y-6 mt-auto">
             <ComputeQuotaBar label="vCPU" used={38} total={64} unit="vCPU" />
             <ComputeQuotaBar label="RAM" used={86} total={128} unit="GiB" />
-            <ComputeQuotaBar label="Disk" used={420} total={1000} unit="GiB" />
-            <ComputeQuotaBar label="GPU" used={6} total={8} unit="GPU" />
-            <ComputeQuotaBar label="NPU" used={2} total={4} unit="NPU" />
+            <ComputeQuotaBar label="GPU (A100)" used={6} total={8} unit="GPU" />
+            <ComputeQuotaBar label="NPU (Gaudi 2)" used={2} total={4} unit="NPU" />
           </div>
         </Card>
 
@@ -400,7 +404,7 @@ export function ComputeHomePage() {
             <div className="flex gap-2">
               <SummaryStatBox
                 value={3}
-                label="Shutoff"
+                label="Stopped"
                 onClick={() => navigate('/compute/instances?tab=vm')}
               />
               <SummaryStatBox value={1} label="Others" />
@@ -430,7 +434,7 @@ export function ComputeHomePage() {
             <div className="flex gap-2">
               <SummaryStatBox
                 value={0}
-                label="Shutoff"
+                label="Stopped"
                 onClick={() => navigate('/compute/instances?tab=bare-metal')}
               />
               <SummaryStatBox value={0} label="Others" />

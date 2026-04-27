@@ -44,7 +44,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps) {
-  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
+  const { projects, selectedProjectId, setSelectedProjectId, primaryProjectId, setPrimaryProject } =
+    useProject();
   const location = useLocation();
   const isCloudBuilder =
     location.pathname.startsWith('/cloudbuilder') || location.pathname.startsWith('/cloud-builder');
@@ -116,6 +117,8 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
             projects={projects}
             selectedProjectId={selectedProjectId}
             onProjectSelect={setSelectedProjectId}
+            primaryProjectId={primaryProjectId}
+            onSetPrimary={setPrimaryProject}
             variant="default"
           />
         </div>

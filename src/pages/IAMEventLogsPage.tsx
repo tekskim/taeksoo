@@ -537,11 +537,10 @@ export default function IAMEventLogsPage() {
       label: 'Time',
       flex: 1,
       sortable: false,
-      align: 'right',
       headerRender: () => (
         <button
           type="button"
-          className="flex items-center gap-1 w-full min-w-0 cursor-pointer select-none justify-end text-right hover:text-[var(--color-action-primary)] transition-colors"
+          className="flex items-center gap-1 w-full min-w-0 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
           onClick={() => handleSort('timestamp')}
         >
           <span className="whitespace-nowrap truncate" title="Time">
@@ -570,7 +569,6 @@ export default function IAMEventLogsPage() {
       key: 'result',
       label: 'Result',
       flex: 0.9,
-      align: 'center',
       sortable: false,
       render: (_value, log) => (
         <Badge variant={log.result === 'success' ? 'success' : 'error'} size="sm">
