@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, VStack, HStack, Input, NumberInput } from '@/design-system';
 import { IconArrowLeft, IconCopy, IconCheck, IconCode, IconEye } from '@tabler/icons-react';
@@ -864,11 +865,15 @@ export function MailTemplatePreviewPage() {
                 {renderPreview()}
               </div>
             ) : (
-              <div className="bg-slate-800 rounded-[var(--radius-lg)] p-4 min-h-[600px] overflow-auto">
+              <OverlayScrollbarsComponent
+                options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                defer={false}
+                className="bg-slate-800 rounded-[var(--radius-lg)] p-4 min-h-[600px]"
+              >
                 <pre className="text-body-md text-slate-200 font-mono whitespace-pre-wrap break-all">
                   {getHtmlCode()}
                 </pre>
-              </div>
+              </OverlayScrollbarsComponent>
             )}
           </div>
         </div>

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useLayoutEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { IconChevronUp, IconChevronDown, IconSelector } from '@tabler/icons-react';
 import { Checkbox } from '../Checkbox';
 import { Radio } from '../Radio';
@@ -510,8 +511,13 @@ export function Table<T extends Record<string, any>>({
       >
         <div className="flex">
           {/* Scrollable area */}
-          <div
-            className={cn('flex-1 min-w-0 overflow-x-auto', maxHeight && 'overflow-y-auto')}
+          <OverlayScrollbarsComponent
+            options={{
+              overflow: { x: 'scroll', y: maxHeight ? 'scroll' : 'hidden' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            defer={false}
+            className="flex-1 min-w-0"
             style={maxHeight ? { maxHeight } : undefined}
           >
             <div className="min-w-fit w-full">
@@ -629,7 +635,7 @@ export function Table<T extends Record<string, any>>({
                 )}
               </div>
             </div>
-          </div>
+          </OverlayScrollbarsComponent>
 
           {/* Fixed right column(s) */}
           <div
@@ -705,8 +711,12 @@ export function Table<T extends Record<string, any>>({
       className={cn('flex flex-col gap-[var(--table-row-gap)]', className)}
       style={rowHeight ? ({ '--table-row-height': rowHeight } as React.CSSProperties) : undefined}
     >
-      <div
-        className={cn('overflow-x-auto', maxHeight && 'overflow-y-auto')}
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'scroll', y: maxHeight ? 'scroll' : 'hidden' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
         style={maxHeight ? { maxHeight } : undefined}
       >
         <div className="min-w-fit w-full">
@@ -817,7 +827,7 @@ export function Table<T extends Record<string, any>>({
             )}
           </div>
         </div>
-      </div>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }

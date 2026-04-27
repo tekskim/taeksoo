@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -240,7 +241,14 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
 
             {/* Contents Tab */}
             <TabPanel value="contents" className="pt-6">
-              <div className="bg-[var(--primitive-color-blue-gray800)] rounded-[var(--radius-lg)] p-6 font-mono text-label-lg overflow-x-auto">
+              <OverlayScrollbarsComponent
+                options={{
+                  overflow: { x: 'scroll', y: 'hidden' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+                className="bg-[var(--primitive-color-blue-gray800)] rounded-[var(--radius-lg)] p-6 font-mono text-label-lg"
+              >
                 <pre className="text-[var(--primitive-color-blue-gray200)]">
                   <span className="text-[var(--color-text-muted)]">{'{'}</span>
                   {'\n'}
@@ -351,7 +359,7 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
                   {'\n'}
                   <span className="text-[var(--color-text-muted)]">{'}'}</span>
                 </pre>
-              </div>
+              </OverlayScrollbarsComponent>
             </TabPanel>
           </Tabs>
         </div>

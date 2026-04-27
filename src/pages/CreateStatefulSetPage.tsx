@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -398,7 +399,14 @@ function SummarySidebar({
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         {/* Scrollable content area */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 max-h-[calc(100vh-200px)]"
+        >
           <VStack gap={4}>
             <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
               Summary
@@ -469,7 +477,7 @@ function SummarySidebar({
               </VStack>
             ))}
           </VStack>
-        </div>
+        </OverlayScrollbarsComponent>
 
         {/* Button Container */}
         <HStack gap={2}>

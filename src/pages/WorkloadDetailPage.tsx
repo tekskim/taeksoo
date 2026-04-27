@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -573,7 +574,11 @@ export function WorkloadDetailPage() {
             {/* Logs Tab Panel */}
             <TabPanel value="logs" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px] overflow-auto">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px]"
+                >
                   <pre className="whitespace-pre-wrap">
                     {`[2026-01-08 14:30:00] Starting container...
 [2026-01-08 14:30:02] Pulling image presidio-pii-deid:latest
@@ -585,14 +590,18 @@ export function WorkloadDetailPage() {
 [2026-01-08 14:30:30] Service ready on port 8080
 [2026-01-08 14:30:30] Workload is now running`}
                   </pre>
-                </div>
+                </OverlayScrollbarsComponent>
               </div>
             </TabPanel>
 
             {/* Terminal Tab Panel */}
             <TabPanel value="terminal" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[var(--color-text-default)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-subtle)] h-[400px] overflow-auto">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-text-default)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-subtle)] h-[400px]"
+                >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-[var(--color-state-success)]">root</span>
                     <span className="text-[var(--color-text-subtle)]">@</span>
@@ -603,7 +612,7 @@ export function WorkloadDetailPage() {
                   <p className="text-[var(--color-text-muted)] text-center mt-20">
                     Terminal not connected
                   </p>
-                </div>
+                </OverlayScrollbarsComponent>
               </div>
             </TabPanel>
           </Tabs>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate } from 'react-router-dom';
 import { Button, SectionCard, PageShell, TopBar, HStack } from '@/design-system';
 import { IconDownload, IconArrowLeft, IconCopy, IconCheck } from '@tabler/icons-react';
@@ -34,9 +35,17 @@ function CodeBlock({ code, language = 'typescript' }: CodeBlockProps) {
           )}
         </button>
       </div>
-      <pre className="bg-[var(--color-surface-subtle)] p-4 rounded-lg overflow-x-auto text-body-md leading-relaxed">
-        <code className={`language-${language}`}>{code}</code>
-      </pre>
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'scroll', y: 'hidden' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+      >
+        <pre className="bg-[var(--color-surface-subtle)] p-4 rounded-lg text-body-md leading-relaxed">
+          <code className={`language-${language}`}>{code}</code>
+        </pre>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }
@@ -51,7 +60,13 @@ interface GuideTableProps {
 
 function GuideTable({ headers, rows }: GuideTableProps) {
   return (
-    <div className="overflow-x-auto">
+    <OverlayScrollbarsComponent
+      options={{
+        overflow: { x: 'scroll', y: 'hidden' },
+        scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+      }}
+      defer={false}
+    >
       <table className="w-full text-body-md">
         <thead>
           <tr className="border-b border-[var(--color-border-default)]">
@@ -83,7 +98,7 @@ function GuideTable({ headers, rows }: GuideTableProps) {
           ))}
         </tbody>
       </table>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

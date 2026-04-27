@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { Button, HStack } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -119,7 +120,11 @@ export function SystemErrorPagesPage() {
   const activeVariant: ErrorVariant = isValidVariant(urlVariant) ? urlVariant : '404';
 
   return (
-    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)] flex flex-col">
+    <OverlayScrollbarsComponent
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+      defer={false}
+      className="fixed inset-0 bg-[var(--color-surface-subtle)] flex flex-col"
+    >
       {/* Header */}
       <header className="sticky top-0 left-0 right-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
         <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
@@ -163,7 +168,7 @@ export function SystemErrorPagesPage() {
       <div className="flex-1">
         <FullPageError variant={activeVariant} />
       </div>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

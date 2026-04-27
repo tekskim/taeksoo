@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -64,7 +65,11 @@ export function EntryPage() {
   const { isDark, toggleDarkMode } = useDarkMode();
 
   return (
-    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-default)] flex flex-col min-h-screen">
+    <OverlayScrollbarsComponent
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+      defer={false}
+      className="fixed inset-0 bg-[var(--color-surface-default)] flex flex-col min-h-screen"
+    >
       {/* Header — Cargo-style flat bar */}
       <header className="w-full bg-[var(--color-surface-default)]">
         <div className="w-full px-10 h-[60px] flex items-center justify-between relative">
@@ -159,7 +164,7 @@ export function EntryPage() {
           </p>
         </div>
       </footer>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

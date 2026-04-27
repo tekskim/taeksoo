@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -2541,7 +2542,11 @@ export function InstanceDetailPage() {
                 </div>
 
                 {/* Console Area */}
-                <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-6 text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]"
+                >
                   <pre className="font-mono text-label-lg leading-relaxed text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
                     {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2026
 [    0.500123] cloud-init[101]: Starting network configuration...
@@ -2556,7 +2561,7 @@ export function InstanceDetailPage() {
 [    9.123456] cloud-init[500]: VM boot completed in 9.12 seconds.
 [   10.000000] *** NOTICE: Unauthorized access to this system is prohibited. ***`}
                   </pre>
-                </div>
+                </OverlayScrollbarsComponent>
               </VStack>
             </TabPanel>
 

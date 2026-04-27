@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   VStack,
   TabBar,
@@ -309,7 +310,11 @@ primary:
                 </Button>
               </div>
               <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden p-2">
-                <div className="overflow-auto bg-[var(--color-surface-default)]">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-surface-default)]"
+                >
                   <table className="w-full border-collapse">
                     <tbody>
                       {valuesYaml.split('\n').map((line, i) => (
@@ -324,7 +329,7 @@ primary:
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </OverlayScrollbarsComponent>
               </div>
             </VStack>
           </TabPanel>

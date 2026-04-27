@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate } from 'react-router-dom';
 import { VStack, HStack, PageHeader, Button, Input, Select, Badge } from '@/design-system';
 import { IconCirclePlus, IconX, IconArrowLeft, IconFile } from '@tabler/icons-react';
@@ -95,7 +96,11 @@ export function FormPatternsPage() {
   ];
 
   return (
-    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-default)]">
+    <OverlayScrollbarsComponent
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+      defer={false}
+      className="fixed inset-0 bg-[var(--color-surface-default)]"
+    >
       <div className="max-w-7xl mx-auto px-8 py-8">
         <VStack gap={6}>
           <VStack gap={4}>
@@ -901,7 +906,7 @@ export function FormPatternsPage() {
           </div>
         </VStack>
       </div>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

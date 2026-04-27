@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   Button,
   FilterSearchInput,
@@ -572,7 +573,14 @@ export function ComputeAdminInstanceTemplatesPage() {
         title="Delete Instance Templates"
         size="sm"
       >
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px] overflow-y-auto">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px]"
+        >
           <p className="text-label-sm text-[var(--color-text-subtle)]">Instance Templates</p>
           <ul className="list-disc pl-[18px] mt-1.5">
             {bulkDeleteTemplateRows.map((t) => (
@@ -581,7 +589,7 @@ export function ComputeAdminInstanceTemplatesPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </OverlayScrollbarsComponent>
         <InlineMessage variant="error">
           Deleting the selected instance templates is permanent and cannot be undone.
         </InlineMessage>

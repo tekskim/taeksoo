@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -708,11 +709,15 @@ export function ComputeAdminFlavorDetailPage() {
             {/* Parameters Tab Panel */}
             <TabPanel value="parameters" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px]"
+                >
                   <pre className="font-mono text-body-md leading-[18px] text-[var(--color-text-default)] whitespace-pre">
                     {JSON.stringify(mockFlavorParameters, null, 5)}
                   </pre>
-                </div>
+                </OverlayScrollbarsComponent>
               </div>
             </TabPanel>
           </Tabs>

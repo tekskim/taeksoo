@@ -1,5 +1,6 @@
 import { type HTMLAttributes, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { twMerge } from '../../utils/cn';
 import {
   IconX,
@@ -217,8 +218,13 @@ export function FloatingCard({
       <div className="flex flex-col h-fit min-h-0 gap-0">
         {/* Summary Section - Scrollable, separated from Quota */}
         {/* Title is required, sections are optional */}
-        <div
-          className="overflow-y-auto flex flex-col gap-4 shrink-0 m-4 rounded-md"
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex flex-col gap-4 shrink-0 m-4 rounded-md"
           style={{
             maxHeight: '340px',
             minHeight: '160px',
@@ -320,7 +326,7 @@ export function FloatingCard({
               })}
             </div>
           )}
-        </div>
+        </OverlayScrollbarsComponent>
 
         {/* Quota Section - Fixed with white background, separated area */}
         {quota.length > 0 && (

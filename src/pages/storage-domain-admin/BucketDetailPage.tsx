@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -990,7 +991,11 @@ export function BucketDetailPage() {
                           />
                         </button>
                       </div>
-                      <div className="p-2 max-h-[600px] overflow-auto">
+                      <OverlayScrollbarsComponent
+                        options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                        defer={false}
+                        className="p-2 max-h-[600px]"
+                      >
                         {objectTree.map((item) => (
                           <TreeItem
                             key={item.id}
@@ -1001,7 +1006,7 @@ export function BucketDetailPage() {
                             onToggle={toggleTreeItem}
                           />
                         ))}
-                      </div>
+                      </OverlayScrollbarsComponent>
                     </div>
                   )}
 

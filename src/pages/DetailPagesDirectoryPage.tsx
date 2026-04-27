@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { VStack, PageHeader } from '@/design-system';
 import {
   IconServer,
@@ -217,7 +218,11 @@ export function DetailPagesDirectoryPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-default)]">
+    <OverlayScrollbarsComponent
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+      defer={false}
+      className="fixed inset-0 bg-[var(--color-surface-default)]"
+    >
       <div className="max-w-6xl mx-auto px-8 py-8">
         <VStack gap={6}>
           {/* Back button + Header */}
@@ -283,7 +288,7 @@ export function DetailPagesDirectoryPage() {
           </div>
         </VStack>
       </div>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

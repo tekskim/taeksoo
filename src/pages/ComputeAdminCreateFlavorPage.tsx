@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -920,7 +921,14 @@ export function ComputeAdminCreateFlavorPage() {
                           </div>
 
                           {/* Metadata List */}
-                          <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
+                          <OverlayScrollbarsComponent
+                            options={{
+                              overflow: { x: 'hidden', y: 'scroll' },
+                              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                            }}
+                            defer={false}
+                            className="flex flex-col gap-1 flex-1 min-h-0"
+                          >
                             {availableMetadataOptions
                               .filter(
                                 (item) =>
@@ -1044,7 +1052,7 @@ export function ComputeAdminCreateFlavorPage() {
                                   )}
                                 </div>
                               ))}
-                          </div>
+                          </OverlayScrollbarsComponent>
                         </div>
 
                         {/* Right Column - Existing Metadata */}
@@ -1062,7 +1070,14 @@ export function ComputeAdminCreateFlavorPage() {
                           />
 
                           {/* Selected Metadata List */}
-                          <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
+                          <OverlayScrollbarsComponent
+                            options={{
+                              overflow: { x: 'hidden', y: 'scroll' },
+                              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                            }}
+                            defer={false}
+                            className="flex flex-col gap-1 flex-1 min-h-0"
+                          >
                             {selectedMetadata
                               .filter(
                                 (item) =>
@@ -1122,7 +1137,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 </span>
                               </div>
                             )}
-                          </div>
+                          </OverlayScrollbarsComponent>
                         </div>
                       </div>
                     </VStack>

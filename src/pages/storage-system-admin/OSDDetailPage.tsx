@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import type { ECharts } from 'echarts';
@@ -1164,11 +1165,18 @@ export function OSDDetailPage() {
                         <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
                           Smartctl Output
                         </p>
-                        <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
+                        <OverlayScrollbarsComponent
+                          options={{
+                            overflow: { x: 'scroll', y: 'hidden' },
+                            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                          }}
+                          defer={false}
+                          className="bg-[var(--color-surface-contrast)] rounded-md p-4"
+                        >
                           <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-[var(--color-text-on-primary)] whitespace-pre-wrap">
                             {selectedHealthDevice.smartctlOutput}
                           </pre>
-                        </div>
+                        </OverlayScrollbarsComponent>
                       </div>
                     </SectionCardContent>
                   </SectionCard>

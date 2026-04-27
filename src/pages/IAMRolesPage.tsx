@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   IconDownload,
@@ -910,7 +911,14 @@ export default function IAMRolesPage() {
         title="Revoke access"
         size="sm"
       >
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 w-full flex flex-col gap-1.5 max-h-24 overflow-y-auto">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 w-full flex flex-col gap-1.5 max-h-24"
+        >
           <span className="text-label-sm text-[var(--color-text-subtle)]">Grants</span>
           <ul className="list-disc pl-[18px] text-body-md text-[var(--color-text-default)]">
             {mockActiveGrants
@@ -921,7 +929,7 @@ export default function IAMRolesPage() {
                 </li>
               ))}
           </ul>
-        </div>
+        </OverlayScrollbarsComponent>
 
         <InlineMessage variant="error">
           Temporary access is revoked immediately, regardless of the scheduled end time.

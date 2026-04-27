@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -297,12 +298,17 @@ const ContextMenuItemComponent: React.FC<{
       {showSubmenu &&
         item.submenu &&
         createPortal(
-          <div
-            ref={submenuRef}
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
+          <OverlayScrollbarsComponent
+            ref={submenuRef as React.RefObject<HTMLDivElement>}
+            onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
             onMouseEnter={handleSubmenuMouseEnter}
             onMouseLeave={handleSubmenuMouseLeave}
+            options={{
+              overflow: { x: 'hidden', y: 'scroll' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            defer={false}
             className="
             fixed
             flex flex-col
@@ -313,7 +319,6 @@ const ContextMenuItemComponent: React.FC<{
             overflow-hidden
             z-[calc(var(--z-context-menu)+1)]
             max-h-[calc(100vh-16px)]
-            overflow-y-auto
           "
             style={{
               left: submenuPosition.x,
@@ -329,7 +334,7 @@ const ContextMenuItemComponent: React.FC<{
                 itemId={subItem.id}
               />
             ))}
-          </div>,
+          </OverlayScrollbarsComponent>,
           document.body
         )}
     </>

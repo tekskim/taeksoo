@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import {
@@ -422,9 +423,15 @@ export function IAMHomePage() {
           {/* Recent Events */}
           <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4 min-w-0">
             <h6 className="text-heading-h6">Recent Events</h6>
-            <div className="overflow-x-auto">
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'scroll', y: 'hidden' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+            >
               <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
-            </div>
+            </OverlayScrollbarsComponent>
           </div>
         </div>
       </VStack>

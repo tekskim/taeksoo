@@ -1293,13 +1293,19 @@ export function OverallPerformancePage() {
                         showDivider={false}
                         titleClassName="text-heading-h6"
                       />
-                      <SectionCard.Content gap={0} className="overflow-auto flex-1">
-                        <Table<OsdLatencyRow>
-                          columns={osdLatencyColumns}
-                          data={osdReadLatencyData}
-                          rowKey="id"
-                          rowHeight="40px"
-                        />
+                      <SectionCard.Content gap={0} className="flex-1 min-h-0">
+                        <OverlayScrollbarsComponent
+                          options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                          defer={false}
+                          className="h-full min-h-0"
+                        >
+                          <Table<OsdLatencyRow>
+                            columns={osdLatencyColumns}
+                            data={osdReadLatencyData}
+                            rowKey="id"
+                            rowHeight="40px"
+                          />
+                        </OverlayScrollbarsComponent>
                       </SectionCard.Content>
                     </SectionCard>
                   </div>
@@ -1327,13 +1333,19 @@ export function OverallPerformancePage() {
                         showDivider={false}
                         titleClassName="text-heading-h6"
                       />
-                      <SectionCard.Content gap={0} className="overflow-auto flex-1">
-                        <Table<OsdLatencyRow>
-                          columns={osdLatencyColumns}
-                          data={osdWriteLatencyData}
-                          rowKey="id"
-                          rowHeight="40px"
-                        />
+                      <SectionCard.Content gap={0} className="flex-1 min-h-0">
+                        <OverlayScrollbarsComponent
+                          options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                          defer={false}
+                          className="h-full min-h-0"
+                        >
+                          <Table<OsdLatencyRow>
+                            columns={osdLatencyColumns}
+                            data={osdWriteLatencyData}
+                            rowKey="id"
+                            rowHeight="40px"
+                          />
+                        </OverlayScrollbarsComponent>
                       </SectionCard.Content>
                     </SectionCard>
                   </div>
@@ -1442,45 +1454,51 @@ export function OverallPerformancePage() {
                         showDivider={false}
                         titleClassName="text-heading-h6"
                       />
-                      <SectionCard.Content gap={0} className="overflow-auto flex-1">
-                        <Table<{ id: string; imageName: string; throughput: string }>
-                          columns={[
-                            {
-                              key: 'imageName',
-                              label: 'Image name',
-                              flex: 1,
-                              minWidth: columnMinWidths.name,
-                              sortable: true,
-                            },
-                            {
-                              key: 'throughput',
-                              label: 'Throughput',
-                              flex: 1,
-                              minWidth: columnMinWidths.size,
-                              sortable: true,
-                            },
-                          ]}
-                          data={[
-                            {
-                              id: '1',
-                              imageName: 'ubuntu-22.04-base',
-                              throughput: '125 MB/s',
-                            },
-                            { id: '2', imageName: 'centos-8-minimal', throughput: '98 MB/s' },
-                            { id: '3', imageName: 'debian-11-server', throughput: '87 MB/s' },
-                            { id: '4', imageName: 'rocky-linux-9', throughput: '82 MB/s' },
-                            {
-                              id: '5',
-                              imageName: 'fedora-38-workstation',
-                              throughput: '76 MB/s',
-                            },
-                            { id: '6', imageName: 'alpine-3.18', throughput: '71 MB/s' },
-                            { id: '7', imageName: 'arch-linux-2024', throughput: '68 MB/s' },
-                            { id: '8', imageName: 'opensuse-leap-15', throughput: '65 MB/s' },
-                          ]}
-                          rowKey="id"
-                          rowHeight="40px"
-                        />
+                      <SectionCard.Content gap={0} className="flex-1 min-h-0">
+                        <OverlayScrollbarsComponent
+                          options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                          defer={false}
+                          className="h-full min-h-0"
+                        >
+                          <Table<{ id: string; imageName: string; throughput: string }>
+                            columns={[
+                              {
+                                key: 'imageName',
+                                label: 'Image name',
+                                flex: 1,
+                                minWidth: columnMinWidths.name,
+                                sortable: true,
+                              },
+                              {
+                                key: 'throughput',
+                                label: 'Throughput',
+                                flex: 1,
+                                minWidth: columnMinWidths.size,
+                                sortable: true,
+                              },
+                            ]}
+                            data={[
+                              {
+                                id: '1',
+                                imageName: 'ubuntu-22.04-base',
+                                throughput: '125 MB/s',
+                              },
+                              { id: '2', imageName: 'centos-8-minimal', throughput: '98 MB/s' },
+                              { id: '3', imageName: 'debian-11-server', throughput: '87 MB/s' },
+                              { id: '4', imageName: 'rocky-linux-9', throughput: '82 MB/s' },
+                              {
+                                id: '5',
+                                imageName: 'fedora-38-workstation',
+                                throughput: '76 MB/s',
+                              },
+                              { id: '6', imageName: 'alpine-3.18', throughput: '71 MB/s' },
+                              { id: '7', imageName: 'arch-linux-2024', throughput: '68 MB/s' },
+                              { id: '8', imageName: 'opensuse-leap-15', throughput: '65 MB/s' },
+                            ]}
+                            rowKey="id"
+                            rowHeight="40px"
+                          />
+                        </OverlayScrollbarsComponent>
                       </SectionCard.Content>
                     </SectionCard>
                   </div>
@@ -1491,37 +1509,43 @@ export function OverallPerformancePage() {
                         showDivider={false}
                         titleClassName="text-heading-h6"
                       />
-                      <SectionCard.Content gap={0} className="overflow-auto flex-1">
-                        <Table<{ id: string; imageName: string; latency: string }>
-                          columns={[
-                            {
-                              key: 'imageName',
-                              label: 'Image name',
-                              flex: 1,
-                              minWidth: columnMinWidths.name,
-                              sortable: true,
-                            },
-                            {
-                              key: 'latency',
-                              label: 'Latency',
-                              flex: 1,
-                              minWidth: columnMinWidths.size,
-                              sortable: true,
-                            },
-                          ]}
-                          data={[
-                            { id: '1', imageName: 'windows-server-2019', latency: '45 ms' },
-                            { id: '2', imageName: 'rhel-8-enterprise', latency: '32 ms' },
-                            { id: '3', imageName: 'ubuntu-20.04-lts', latency: '28 ms' },
-                            { id: '4', imageName: 'oracle-linux-8', latency: '24 ms' },
-                            { id: '5', imageName: 'sles-15-sp4', latency: '21 ms' },
-                            { id: '6', imageName: 'amazon-linux-2023', latency: '18 ms' },
-                            { id: '7', imageName: 'kali-linux-2024', latency: '15 ms' },
-                            { id: '8', imageName: 'nixos-23.11', latency: '12 ms' },
-                          ]}
-                          rowKey="id"
-                          rowHeight="40px"
-                        />
+                      <SectionCard.Content gap={0} className="flex-1 min-h-0">
+                        <OverlayScrollbarsComponent
+                          options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                          defer={false}
+                          className="h-full min-h-0"
+                        >
+                          <Table<{ id: string; imageName: string; latency: string }>
+                            columns={[
+                              {
+                                key: 'imageName',
+                                label: 'Image name',
+                                flex: 1,
+                                minWidth: columnMinWidths.name,
+                                sortable: true,
+                              },
+                              {
+                                key: 'latency',
+                                label: 'Latency',
+                                flex: 1,
+                                minWidth: columnMinWidths.size,
+                                sortable: true,
+                              },
+                            ]}
+                            data={[
+                              { id: '1', imageName: 'windows-server-2019', latency: '45 ms' },
+                              { id: '2', imageName: 'rhel-8-enterprise', latency: '32 ms' },
+                              { id: '3', imageName: 'ubuntu-20.04-lts', latency: '28 ms' },
+                              { id: '4', imageName: 'oracle-linux-8', latency: '24 ms' },
+                              { id: '5', imageName: 'sles-15-sp4', latency: '21 ms' },
+                              { id: '6', imageName: 'amazon-linux-2023', latency: '18 ms' },
+                              { id: '7', imageName: 'kali-linux-2024', latency: '15 ms' },
+                              { id: '8', imageName: 'nixos-23.11', latency: '12 ms' },
+                            ]}
+                            rowKey="id"
+                            rowHeight="40px"
+                          />
+                        </OverlayScrollbarsComponent>
                       </SectionCard.Content>
                     </SectionCard>
                   </div>

@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -302,9 +303,16 @@ function SummarySidebar({
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
-        <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="max-h-[calc(100vh-200px)]"
+        >
           <WizardSummary items={summaryItems} />
-        </div>
+        </OverlayScrollbarsComponent>
 
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel}>

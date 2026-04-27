@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   VStack,
   HStack,
@@ -900,7 +901,11 @@ export function ProductionComparisonPage() {
   };
 
   return (
-    <div className="h-screen w-full overflow-auto bg-[var(--color-surface-default)]">
+    <OverlayScrollbarsComponent
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+      defer={false}
+      className="h-screen w-full bg-[var(--color-surface-default)]"
+    >
       <div className="p-6">
         <VStack gap={6} className="max-w-7xl mx-auto pb-20">
           {/* Header */}
@@ -1267,7 +1272,7 @@ export function ProductionComparisonPage() {
           </Tabs>
         </VStack>
       </div>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

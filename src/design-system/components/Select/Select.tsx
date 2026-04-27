@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useId, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { twMerge } from '../../utils/cn';
 import { IconChevronDown, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -304,7 +305,7 @@ export function Select({
     'border border-[var(--select-menu-border)]',
     'rounded-[var(--select-menu-radius)]',
     'shadow-[var(--select-menu-shadow)]',
-    'overflow-y-auto max-h-[240px]',
+    'max-h-[240px]',
     'focus:outline-none'
   );
 
@@ -394,8 +395,13 @@ export function Select({
             }
             className={containerRef.current?.closest('[data-theme="dark"]') ? 'dark' : ''}
           >
-            <div
-              ref={listboxRef}
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'hidden', y: 'scroll' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              ref={listboxRef as React.RefObject<HTMLDivElement>}
               id={listboxId}
               role="listbox"
               aria-labelledby={triggerId}
@@ -475,7 +481,7 @@ export function Select({
                   </div>
                 );
               })}
-            </div>
+            </OverlayScrollbarsComponent>
           </div>,
           document.body
         )}

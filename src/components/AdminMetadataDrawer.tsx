@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { Drawer, Button, Input, SearchInput, FormField, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import {
@@ -220,9 +221,13 @@ export function AdminMetadataDrawer({ isOpen, onClose, image, onSave }: AdminMet
               </FormField>
 
               {/* Metadata List */}
-              <div
-                className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 p-px"
-                style={{ scrollbarGutter: 'stable' }}
+              <OverlayScrollbarsComponent
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+                className="flex flex-col gap-1 flex-1 min-h-0 p-px"
               >
                 {availableMetadataOptions
                   .filter(
@@ -339,7 +344,7 @@ export function AdminMetadataDrawer({ isOpen, onClose, image, onSave }: AdminMet
                       )}
                     </div>
                   ))}
-              </div>
+              </OverlayScrollbarsComponent>
             </div>
 
             {/* Right Column - Existing Metadata */}
@@ -357,9 +362,13 @@ export function AdminMetadataDrawer({ isOpen, onClose, image, onSave }: AdminMet
               />
 
               {/* Selected Metadata List */}
-              <div
-                className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 p-px"
-                style={{ scrollbarGutter: 'stable' }}
+              <OverlayScrollbarsComponent
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+                className="flex flex-col gap-1 flex-1 min-h-0 p-px"
               >
                 {selectedMetadata
                   .filter(
@@ -424,7 +433,7 @@ export function AdminMetadataDrawer({ isOpen, onClose, image, onSave }: AdminMet
                     </span>
                   </div>
                 )}
-              </div>
+              </OverlayScrollbarsComponent>
             </div>
           </div>
         </VStack>

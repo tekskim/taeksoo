@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { TopBar, TopBarAction, StatusIndicator, PageShell, TabBar } from '@/design-system';
 import { AgentSidebar } from '@/components/AgentSidebar';
@@ -13,7 +14,14 @@ function ChatSidebar() {
 
   return (
     <div className="bg-[var(--color-surface-subtle)] border-r border-[var(--color-border-default)] flex flex-col h-full w-[200px] shrink-0">
-      <div className="flex flex-col w-full flex-1 overflow-y-auto min-h-0">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex flex-col w-full flex-1 min-h-0"
+      >
         {/* Header */}
         <div className="flex flex-col gap-1 items-center justify-between px-2 pt-3 pb-2 w-full sticky top-0 bg-[var(--color-surface-subtle)] z-10">
           <div className="flex h-6 items-center justify-between overflow-clip pl-1.5 pr-0 py-0 relative rounded-md shrink-0 w-full">
@@ -53,7 +61,7 @@ function ChatSidebar() {
             <p className="text-label-md text-[var(--color-text-default)]">label 5</p>
           </div>
         </div>
-      </div>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }

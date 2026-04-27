@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Badge,
@@ -774,9 +775,15 @@ export function CloudBuilderDetailPage() {
                   data-figma-name="[TDS] DetailCard.Content-Config"
                   aria-label="Configuration content"
                 >
-                  <pre className="max-h-[420px] overflow-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-body-md text-[var(--color-text-default)]">
-                    {networkAgentMeta?.configurationText ?? ''}
-                  </pre>
+                  <OverlayScrollbarsComponent
+                    options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                    defer={false}
+                    className="max-h-[420px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-body-md text-[var(--color-text-default)]"
+                  >
+                    <pre className="text-body-md text-[var(--color-text-default)]">
+                      {networkAgentMeta?.configurationText ?? ''}
+                    </pre>
+                  </OverlayScrollbarsComponent>
                 </SectionCard.Content>
               </SectionCard>
             </TabPanel>

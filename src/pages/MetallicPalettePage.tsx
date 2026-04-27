@@ -20,6 +20,7 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 /* ----------------------------------------
    Metallic & Satin Color Palette
@@ -2440,8 +2441,16 @@ function CSSCodeSection() {
   return (
     <div className="mt-8 p-6 bg-neutral-900 rounded-lg border border-neutral-800">
       <h2 className="text-xl font-semibold text-white mb-4">CSS Metallic Gradients</h2>
-      <pre className="text-sm text-neutral-300 font-mono overflow-x-auto">
-        {`/* Metallic Gradient Mixins */
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'scroll', y: 'hidden' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="w-full"
+      >
+        <pre className="text-sm text-neutral-300 font-mono">
+          {`/* Metallic Gradient Mixins */
 
 /* NVIDIA Green Metallic */
 .metallic-nvidia {
@@ -2512,7 +2521,8 @@ function CSSCodeSection() {
     inset 4px 4px 10px rgba(255,255,255,0.2),
     4px 8px 20px rgba(0,0,0,0.3);
 }`}
-      </pre>
+        </pre>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }
@@ -2531,32 +2541,38 @@ export default function MetallicPalettePage() {
         </Link>
       </div>
 
-      <VStack className="flex-1 overflow-auto p-6 gap-6">
-        {/* Title */}
-        <div className="mb-4">
-          <h1 className="text-3xl font-bold text-white mb-2">Metallic & Satin Color Palette</h1>
-          <p className="text-neutral-400">
-            프리미엄 테크 제품 및 산업 디자인에 사용되는 메탈릭/새틴 마감 컬러 팔레트
-          </p>
-        </div>
+      <OverlayScrollbarsComponent
+        options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+        defer={false}
+        className="flex-1 min-h-0 w-full"
+      >
+        <VStack className="p-6 gap-6">
+          {/* Title */}
+          <div className="mb-4">
+            <h1 className="text-3xl font-bold text-white mb-2">Metallic & Satin Color Palette</h1>
+            <p className="text-neutral-400">
+              프리미엄 테크 제품 및 산업 디자인에 사용되는 메탈릭/새틴 마감 컬러 팔레트
+            </p>
+          </div>
 
-        {/* Thaki Cloud Color Example */}
-        <ThakiCloudColorExample />
+          {/* Thaki Cloud Color Example */}
+          <ThakiCloudColorExample />
 
-        {/* 3D Preview */}
-        <MetallicPreview />
+          {/* 3D Preview */}
+          <MetallicPreview />
 
-        {/* Gradient Bars */}
-        <GradientBars />
+          {/* Gradient Bars */}
+          <GradientBars />
 
-        {/* Color Palette Groups */}
-        {metallicPalette.map((group) => (
-          <MetallicGroup key={group.title} group={group} />
-        ))}
+          {/* Color Palette Groups */}
+          {metallicPalette.map((group) => (
+            <MetallicGroup key={group.title} group={group} />
+          ))}
 
-        {/* CSS Code */}
-        <CSSCodeSection />
-      </VStack>
+          {/* CSS Code */}
+          <CSSCodeSection />
+        </VStack>
+      </OverlayScrollbarsComponent>
     </VStack>
   );
 }

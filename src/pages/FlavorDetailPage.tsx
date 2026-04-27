@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -742,11 +743,15 @@ export function FlavorDetailPage() {
             {/* Parameters Tab Panel */}
             <TabPanel value="parameters" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px]"
+                >
                   <pre className="font-mono text-body-md leading-[18px] text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre">
                     {JSON.stringify(mockFlavorParameters, null, 5)}
                   </pre>
-                </div>
+                </OverlayScrollbarsComponent>
               </div>
             </TabPanel>
           </Tabs>

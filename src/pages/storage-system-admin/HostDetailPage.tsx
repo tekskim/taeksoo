@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import type { ECharts } from 'echarts';
@@ -1758,11 +1759,18 @@ export default function HostDetailPage() {
                             <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                               Smartctl Output
                             </span>
-                            <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
+                            <OverlayScrollbarsComponent
+                              options={{
+                                overflow: { x: 'scroll', y: 'hidden' },
+                                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                              }}
+                              defer={false}
+                              className="bg-[var(--color-surface-contrast)] rounded-md p-4"
+                            >
                               <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-[var(--color-text-on-primary)] whitespace-pre-wrap">
                                 {selectedDeviceData.smartctlOutput}
                               </pre>
-                            </div>
+                            </OverlayScrollbarsComponent>
                           </div>
                         </div>
                       )}

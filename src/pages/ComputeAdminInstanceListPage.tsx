@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useLayoutEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   Button,
   FilterSearchInput,
@@ -2224,7 +2225,14 @@ export function ComputeAdminInstanceListPage() {
           title={BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].title}
           size="sm"
         >
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px] overflow-y-auto">
+          <OverlayScrollbarsComponent
+            options={{
+              overflow: { x: 'hidden', y: 'scroll' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            defer={false}
+            className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px]"
+          >
             <p className="text-label-sm text-[var(--color-text-subtle)]">
               {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].canLabel}
             </p>
@@ -2235,9 +2243,16 @@ export function ComputeAdminInstanceListPage() {
                 </li>
               ))}
             </ul>
-          </div>
+          </OverlayScrollbarsComponent>
           {bulkCannotRows.length > 0 && (
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px] overflow-y-auto">
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'hidden', y: 'scroll' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px]"
+            >
               <p className="text-label-sm text-[var(--color-text-subtle)]">
                 {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].cannotLabel}
               </p>
@@ -2248,7 +2263,7 @@ export function ComputeAdminInstanceListPage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </OverlayScrollbarsComponent>
           )}
           <InlineMessage variant="error">
             {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].warning}
