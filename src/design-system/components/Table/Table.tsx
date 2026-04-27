@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback, useRef, useLayoutEffect } from 'react';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import React, { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
+import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { IconChevronUp, IconChevronDown, IconSelector } from '@tabler/icons-react';
 import { Checkbox } from '../Checkbox';
 import { Radio } from '../Radio';
@@ -444,8 +444,7 @@ export function Table<T extends Record<string, any>>({
             'border border-[var(--color-border-default)]',
             'bg-[var(--color-surface-default)]',
             side === 'left' && 'rounded-l-[var(--table-row-radius)] border-r-0',
-            side === 'right' &&
-              'rounded-r-[var(--table-row-radius)] border-l-0 shadow-[-8px_0_16px_-4px_color-mix(in_srgb,var(--color-text-default)_4%,transparent)]',
+            side === 'right' && 'rounded-r-[var(--table-row-radius)] border-l-0',
             !side && 'rounded-[var(--table-row-radius)]'
           )}
         >
@@ -465,6 +464,22 @@ export function Table<T extends Record<string, any>>({
 
   const leftBodyRef = useRef<HTMLDivElement>(null);
   const rightBodyRef = useRef<HTMLDivElement>(null);
+  const scrollOsRef = useRef<OverlayScrollbarsComponentRef>(null);
+  const [hasHorizontalOverflow, setHasHorizontalOverflow] = useState(false);
+  const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!hasStickyColumns) return;
+    const instance = scrollOsRef.current?.osInstance();
+    if (!instance) return;
+
+    const checkOverflow = () => {
+      setHasHorizontalOverflow(instance.state().hasOverflow.x);
+    };
+    checkOverflow();
+    instance.on('updated', checkOverflow);
+    return () => instance.on('updated', checkOverflow, true);
+  }, [hasStickyColumns, loading]);
 
   useLayoutEffect(() => {
     if (!hasStickyColumns) return;
@@ -512,6 +527,7 @@ export function Table<T extends Record<string, any>>({
         <div className="flex">
           {/* Scrollable area */}
           <OverlayScrollbarsComponent
+            ref={scrollOsRef}
             options={{
               overflow: { x: 'scroll', y: maxHeight ? 'scroll' : 'hidden' },
               scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
@@ -582,11 +598,13 @@ export function Table<T extends Record<string, any>>({
                             ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
                             : 'bg-[var(--color-surface-default)]'
                         )}
+                        onMouseEnter={() => setHoveredRowIndex(rowIndex)}
+                        onMouseLeave={() => setHoveredRowIndex(null)}
                       >
                         <div
                           className={cn(
                             'flex items-stretch min-h-[var(--table-row-height)] w-full',
-                            'transition-all hover:bg-[var(--table-row-hover-bg)]',
+                            hoveredRowIndex === rowIndex && 'bg-[var(--table-row-hover-bg)]',
                             onRowClick && !disabledSet.has(key) && 'cursor-pointer'
                           )}
                           onClick={
@@ -639,7 +657,11 @@ export function Table<T extends Record<string, any>>({
 
           {/* Fixed right column(s) */}
           <div
-            className="shrink-0 flex flex-col gap-[var(--table-row-gap)]"
+            className={cn(
+              'shrink-0 flex flex-col gap-[var(--table-row-gap)] relative z-[1] transition-shadow duration-200',
+              hasHorizontalOverflow &&
+                'shadow-[-8px_0_16px_-4px_color-mix(in_srgb,var(--color-text-default)_4%,transparent)]'
+            )}
             style={{ width: stickyRightWidth }}
           >
             {/* Header */}
@@ -647,8 +669,7 @@ export function Table<T extends Record<string, any>>({
               className={cn(
                 'flex items-stretch min-h-[var(--table-row-height)]',
                 'bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-r-[var(--table-row-radius)]',
-                'border-l-0',
-                'shadow-[-8px_0_16px_-4px_color-mix(in_srgb,var(--color-text-default)_4%,transparent)]'
+                hasHorizontalOverflow && 'border-l-0'
               )}
             >
               {stickyRightColumns.map((col, i) => renderHeaderCell(col, i, false))}
@@ -676,13 +697,14 @@ export function Table<T extends Record<string, any>>({
                       className={cn(
                         'flex items-stretch min-h-[var(--table-row-height)]',
                         'rounded-r-[var(--table-row-radius)] border border-[var(--color-border-default)] border-l-0',
-                        'transition-all hover:bg-[var(--table-row-hover-bg)]',
-                        'shadow-[-8px_0_16px_-4px_color-mix(in_srgb,var(--color-text-default)_4%,transparent)]',
                         isSelected
                           ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
                           : 'bg-[var(--color-surface-default)]',
+                        hoveredRowIndex === rowIndex && 'bg-[var(--table-row-hover-bg)]',
                         onRowClick && !disabledSet.has(key) && 'cursor-pointer'
                       )}
+                      onMouseEnter={() => setHoveredRowIndex(rowIndex)}
+                      onMouseLeave={() => setHoveredRowIndex(null)}
                       onClick={
                         onRowClick && !disabledSet.has(key)
                           ? () => onRowClick(row, rowIndex)
