@@ -309,6 +309,7 @@ export function TabProvider({
 
   // Sync tab with current route when location changes
   // 각 탭은 독립적 - 다른 탭에 같은 경로가 있어도 현재 탭만 업데이트
+  // activeTabId를 의존성에서 제거하고 ref로 읽어 탭 전환 시 타이밍 이슈 방지
   useEffect(() => {
     if (!initializedRef.current) return;
 
@@ -320,16 +321,17 @@ export function TabProvider({
 
     const currentPath = location.pathname;
     const currentLabel = getLabelFromPath(currentPath);
+    const currentActiveTabId = activeTabIdRef.current;
 
     setTabs((prevTabs) => {
       // 현재 활성 탭 찾기
-      const activeTab = prevTabs.find((t) => t.id === activeTabId);
+      const activeTab = prevTabs.find((t) => t.id === currentActiveTabId);
 
       if (activeTab) {
         // 경로가 다르면 현재 탭 업데이트 (다른 탭에 같은 경로가 있어도 무시)
         if (activeTab.path !== currentPath) {
           return prevTabs.map((tab) =>
-            tab.id === activeTabId ? { ...tab, path: currentPath, label: currentLabel } : tab
+            tab.id === currentActiveTabId ? { ...tab, path: currentPath, label: currentLabel } : tab
           );
         }
         return prevTabs;
@@ -345,7 +347,7 @@ export function TabProvider({
         return [...prevTabs, newTab];
       }
     });
-  }, [location.pathname, activeTabId]);
+  }, [location.pathname]);
 
   // Add a new tab
   const addTab = useCallback((tab: TabItem) => {

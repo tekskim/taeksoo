@@ -429,15 +429,23 @@ export function Table<T extends Record<string, any>>({
     );
   };
 
-  const renderSkeletonRows = (cols: TableColumn<T>[], showCheckbox: boolean) => (
+  const renderSkeletonRows = (
+    cols: TableColumn<T>[],
+    showCheckbox: boolean,
+    side?: 'left' | 'right'
+  ) => (
     <div className="flex flex-col gap-[var(--table-row-gap)]">
       {Array.from({ length: loadingRows }).map((_, rowIndex) => (
         <div
           key={`skeleton-${rowIndex}`}
           className={cn(
-            'rounded-[var(--table-row-radius)] overflow-hidden',
+            'overflow-hidden',
             'border border-[var(--color-border-default)]',
-            'bg-[var(--color-surface-default)]'
+            'bg-[var(--color-surface-default)]',
+            side === 'left' && 'rounded-l-[var(--table-row-radius)] border-r-0',
+            side === 'right' &&
+              'rounded-r-[var(--table-row-radius)] border-l-0 shadow-[-8px_0_16px_-4px_color-mix(in_srgb,var(--color-text-default)_4%,transparent)]',
+            !side && 'rounded-[var(--table-row-radius)]'
           )}
         >
           <div className="flex items-stretch min-h-[var(--table-row-height)] w-full">
@@ -541,7 +549,7 @@ export function Table<T extends Record<string, any>>({
                 className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full"
               >
                 {loading ? (
-                  renderSkeletonRows(scrollColumns, selectable)
+                  renderSkeletonRows(scrollColumns, selectable, 'left')
                 ) : sortedData.length === 0 ? (
                   <div
                     className={cn(
@@ -637,13 +645,13 @@ export function Table<T extends Record<string, any>>({
                 'shadow-[-8px_0_16px_-4px_color-mix(in_srgb,var(--color-text-default)_4%,transparent)]'
               )}
             >
-              {stickyRightColumns.map((col, i) => renderHeaderCell(col, i, true))}
+              {stickyRightColumns.map((col, i) => renderHeaderCell(col, i, false))}
             </div>
 
             {/* Body */}
             <div ref={rightBodyRef} className="flex flex-col gap-[var(--table-row-gap)]">
               {loading ? (
-                renderSkeletonRows(stickyRightColumns, false)
+                renderSkeletonRows(stickyRightColumns, false, 'right')
               ) : sortedData.length === 0 ? (
                 <div
                   className={cn(
