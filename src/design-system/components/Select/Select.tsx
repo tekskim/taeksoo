@@ -87,6 +87,7 @@ export function Select({
   // Refs
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listboxRef = useRef<HTMLDivElement>(null);
+  const osRef = useRef<React.ComponentRef<typeof OverlayScrollbarsComponent>>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Controlled vs Uncontrolled
@@ -242,10 +243,16 @@ export function Select({
     };
   }, [isOpen, updatePosition]);
 
-  // Focus listbox when opened
+  // Sync listboxRef from OverlayScrollbarsComponent's underlying DOM element
   useEffect(() => {
-    if (isOpen && listboxRef.current) {
-      listboxRef.current.focus();
+    if (isOpen && osRef.current) {
+      const el = osRef.current.getElement();
+      if (el) {
+        (listboxRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+        el.focus();
+      }
+    } else if (!isOpen) {
+      (listboxRef as React.MutableRefObject<HTMLDivElement | null>).current = null;
     }
   }, [isOpen]);
 
@@ -401,7 +408,7 @@ export function Select({
                 scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
               }}
               defer={false}
-              ref={listboxRef as React.RefObject<HTMLDivElement>}
+              ref={osRef}
               id={listboxId}
               role="listbox"
               aria-labelledby={triggerId}

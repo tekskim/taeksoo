@@ -13,7 +13,7 @@ import {
 } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
-  IconLayoutDashboard,
+  IconHome,
   IconAffiliate,
   IconShieldLock,
   IconPlus,
@@ -298,10 +298,10 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
         {/* Icon Navigation */}
         <div className="flex-1 flex flex-col items-center py-3 gap-1">
           <IconSidebarItem
-            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+            icon={<IconHome size={16} stroke={1.5} />}
             active={activeIconSection === 'home'}
             onClick={() => navigate('/container')}
-            tooltip="Dashboard"
+            tooltip="Home"
           />
           <IconSidebarItem
             icon={<FolderCog size={16} strokeWidth={1.5} />}
@@ -377,27 +377,14 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                       active={isActive('/container/cluster-management')}
                     />
                   </MenuSection>
-
-                  {/* Cluster Section */}
-                  <MenuSection title="Cluster" defaultOpen={true}>
-                    {clusters.map((cluster) => (
-                      <MenuItem
-                        key={cluster.id}
-                        icon={<IconAffiliate size={16} stroke={1.5} />}
-                        label={cluster.name}
-                        href={`/container/cluster-management/${cluster.id}`}
-                        active={isActive(`/container/cluster-management/${cluster.id}`)}
-                      />
-                    ))}
-                  </MenuSection>
                 </>
               ) : (
                 <>
                   {/* Cluster Section */}
                   <MenuSection title="Cluster" defaultOpen={true}>
                     <MenuItem
-                      icon={<IconLayoutDashboard size={16} stroke={1.5} />}
-                      label="Dashboard"
+                      icon={<IconHome size={16} stroke={1.5} />}
+                      label="Home"
                       href="/container/dashboard"
                       active={isActive('/container/dashboard')}
                     />
