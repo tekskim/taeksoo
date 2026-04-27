@@ -2,6 +2,18 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
+  ReactFlow,
+  Background,
+  Handle,
+  useReactFlow,
+  ReactFlowProvider,
+  Panel,
+  type Node,
+  type Edge,
+  Position,
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import {
   Button,
   VStack,
   TabBar,
@@ -28,6 +40,7 @@ import {
   MonitoringToolbar,
   type TimeRangeValue,
   CopyButton,
+  Tooltip,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
@@ -54,6 +67,9 @@ import {
   IconLock,
   IconLockOpen,
   IconSettings,
+  IconPlus,
+  IconMinus,
+  IconFocusCentered,
 } from '@tabler/icons-react';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
@@ -148,6 +164,614 @@ interface InstanceDetail {
   keyPair: string;
   serverGroup: string;
   userData: string;
+}
+
+/* ----------------------------------------
+   Resource Map Component
+   ---------------------------------------- */
+
+interface ResourceMapTopology {
+  instance: string;
+  interfaces: { name: string; subnets: string[] }[];
+  subnets: { name: string; network: string }[];
+  internalNetworks: { name: string; router: string | null }[];
+  routers: { name: string; externalNetwork: string | null }[];
+  externalNetworks: string[];
+}
+
+const mockResourceMapData: Record<string, ResourceMapTopology> = {
+  '7284d9174e81431e93060a9bbcf2cdfd': {
+    instance: 'tk-prod-worker-node-01',
+    interfaces: [
+      { name: 'fa:16:3e:a1:2b:c3', subnets: ['prod-application-subnet-az1'] },
+      { name: 'fa:16:3e:d4:5e:f6', subnets: ['prod-database-private-subnet'] },
+      { name: 'fa:16:3e:78:9a:bc', subnets: ['mgmt-monitoring-subnet'] },
+      { name: 'fa:16:3e:de:f0:12', subnets: ['prod-application-subnet-az1'] },
+    ],
+    subnets: [
+      { name: 'prod-application-subnet-az1', network: 'prod-internal-network' },
+      { name: 'prod-database-private-subnet', network: 'prod-internal-network' },
+      { name: 'mgmt-monitoring-subnet', network: 'management-network-shared' },
+    ],
+    internalNetworks: [
+      { name: 'prod-internal-network', router: 'prod-gateway-router-01' },
+      { name: 'management-network-shared', router: 'prod-gateway-router-01' },
+    ],
+    routers: [{ name: 'prod-gateway-router-01', externalNetwork: 'external-public-net' }],
+    externalNetworks: ['external-public-net'],
+  },
+  a3f1e8b204c647d8b5921ac3def08712: {
+    instance: 'worker-node-02',
+    interfaces: [
+      { name: 'fa:16:3e:34:56:78', subnets: ['prod-app-subnet'] },
+      { name: 'fa:16:3e:9a:bc:de', subnets: ['prod-app-subnet'] },
+    ],
+    subnets: [{ name: 'prod-app-subnet', network: 'prod-internal' }],
+    internalNetworks: [{ name: 'prod-internal', router: 'prod-router' }],
+    routers: [{ name: 'prod-router', externalNetwork: 'public-net' }],
+    externalNetworks: ['public-net'],
+  },
+  d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9: {
+    instance: 'analytics-01',
+    interfaces: [{ name: 'fa:16:3e:f0:12:34', subnets: ['analytics-subnet'] }],
+    subnets: [{ name: 'analytics-subnet', network: 'analytics-isolated' }],
+    internalNetworks: [{ name: 'analytics-isolated', router: null }],
+    routers: [],
+    externalNetworks: [],
+  },
+  c9d2f5a63b7e4019a8e4b1d07c6e3f9a: {
+    instance: 'master-node-01',
+    interfaces: [
+      { name: 'fa:16:3e:56:78:9a', subnets: ['prod-app-subnet'] },
+      { name: 'fa:16:3e:bc:de:f0', subnets: ['cluster-subnet'] },
+    ],
+    subnets: [
+      { name: 'prod-app-subnet', network: 'prod-internal' },
+      { name: 'cluster-subnet', network: 'k8s-cluster-net' },
+    ],
+    internalNetworks: [
+      { name: 'prod-internal', router: 'prod-router' },
+      { name: 'k8s-cluster-net', router: 'prod-router' },
+    ],
+    routers: [{ name: 'prod-router', externalNetwork: 'public-net' }],
+    externalNetworks: ['public-net'],
+  },
+  e5b8c0d31f2a49e7b6d4a3c2f1e09876: {
+    instance: 'db-server-01',
+    interfaces: [{ name: 'fa:16:3e:12:34:56', subnets: ['prod-db-subnet'] }],
+    subnets: [{ name: 'prod-db-subnet', network: 'prod-internal' }],
+    internalNetworks: [{ name: 'prod-internal', router: 'prod-router' }],
+    routers: [{ name: 'prod-router', externalNetwork: 'public-net' }],
+    externalNetworks: ['public-net'],
+  },
+};
+
+const COLUMN_CONFIGS = [
+  { key: 'instance', label: 'Instance', color: '#1e3a5f' },
+  { key: 'interface', label: 'Interface', color: '#1e3a5f' },
+  { key: 'subnet', label: 'Subnet', color: '#c2710c' },
+  { key: 'internalNetwork', label: 'Internal Network', color: '#c2710c' },
+  { key: 'router', label: 'Router', color: '#c2710c' },
+  { key: 'externalNetwork', label: 'External Network', color: '#c2710c' },
+] as const;
+
+const NODE_WIDTH = 160;
+const NODE_HEIGHT = 58;
+const COL_GAP = NODE_WIDTH + 50;
+const ROW_GAP = NODE_HEIGHT + 16;
+const HEADER_HEIGHT = 40;
+const HEADER_Y = 0;
+const ITEMS_START_Y = HEADER_HEIGHT + 30;
+
+function CategoryHeaderNode({ data }: { data: { label: string; color: string } }) {
+  return (
+    <div
+      className="text-label-md"
+      style={{
+        padding: '8px 16px',
+        borderRadius: '8px',
+        background: 'var(--color-surface-subtle)',
+        color: 'var(--color-text-default)',
+        border: '1px solid var(--color-border-default)',
+        width: NODE_WIDTH,
+        textAlign: 'center',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {data.label}
+    </div>
+  );
+}
+
+function ResourceItemNode({ data }: { data: { label: string } }) {
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (el) setIsTruncated(el.scrollHeight > el.clientHeight);
+  }, [data.label]);
+
+  const handleStyle: React.CSSProperties = {
+    width: 4,
+    height: 4,
+    minWidth: 4,
+    minHeight: 4,
+    background: 'var(--color-border-default)',
+    border: 'none',
+    transition: 'background 150ms',
+  };
+
+  const content = (
+    <div
+      className="resource-item-box"
+      style={{
+        width: NODE_WIDTH,
+        height: NODE_HEIGHT,
+        padding: '12px 16px',
+        borderRadius: '8px',
+        fontSize: '12px',
+        border: '1px solid var(--color-border-default)',
+        background: 'var(--color-surface-default)',
+        color: 'var(--color-text-default)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        transition: 'opacity 150ms, border-color 150ms',
+      }}
+    >
+      <span
+        ref={textRef}
+        style={{
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          overflowWrap: 'break-word',
+          lineHeight: '16px',
+        }}
+      >
+        {data.label}
+      </span>
+      <Handle type="target" position={Position.Left} style={handleStyle} />
+      <Handle type="source" position={Position.Right} style={handleStyle} />
+    </div>
+  );
+
+  if (isTruncated) {
+    return <Tooltip content={data.label}>{content}</Tooltip>;
+  }
+  return content;
+}
+
+const resourceMapNodeTypes = {
+  categoryHeader: CategoryHeaderNode,
+  resourceItem: ResourceItemNode,
+};
+
+function buildResourceMapGraph(topo: ResourceMapTopology): { nodes: Node[]; edges: Edge[] } {
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
+
+  COLUMN_CONFIGS.forEach((col, colIdx) => {
+    nodes.push({
+      id: `header-${col.key}`,
+      type: 'categoryHeader',
+      position: { x: colIdx * COL_GAP, y: HEADER_Y },
+      data: { label: col.label, color: col.color },
+      draggable: false,
+      selectable: false,
+      connectable: false,
+    });
+  });
+
+  nodes.push({
+    id: `inst-${topo.instance}`,
+    type: 'resourceItem',
+    position: { x: 0 * COL_GAP, y: ITEMS_START_Y },
+    data: { label: topo.instance },
+  });
+
+  topo.interfaces.forEach((iface, i) => {
+    const nodeId = `iface-${iface.name}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 1 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: iface.name },
+    });
+    edges.push({
+      id: `e-inst-${iface.name}`,
+      source: `inst-${topo.instance}`,
+      target: nodeId,
+      type: 'smoothstep',
+    });
+  });
+
+  const addedSubnets = new Set<string>();
+  topo.subnets.forEach((subnet, i) => {
+    if (addedSubnets.has(subnet.name)) return;
+    addedSubnets.add(subnet.name);
+    const nodeId = `subnet-${subnet.name}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 2 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: subnet.name },
+    });
+  });
+
+  topo.interfaces.forEach((iface) => {
+    iface.subnets.forEach((subnetName) => {
+      edges.push({
+        id: `e-${iface.name}-${subnetName}`,
+        source: `iface-${iface.name}`,
+        target: `subnet-${subnetName}`,
+        type: 'smoothstep',
+      });
+    });
+  });
+
+  topo.internalNetworks.forEach((net, i) => {
+    const nodeId = `net-${net.name}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 3 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: net.name },
+    });
+  });
+
+  topo.subnets.forEach((subnet) => {
+    edges.push({
+      id: `e-${subnet.name}-${subnet.network}`,
+      source: `subnet-${subnet.name}`,
+      target: `net-${subnet.network}`,
+      type: 'smoothstep',
+    });
+  });
+
+  topo.routers.forEach((router, i) => {
+    const nodeId = `router-${router.name}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 4 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: router.name },
+    });
+  });
+
+  topo.internalNetworks.forEach((net) => {
+    if (!net.router) return;
+    edges.push({
+      id: `e-${net.name}-${net.router}`,
+      source: `net-${net.name}`,
+      target: `router-${net.router}`,
+      type: 'smoothstep',
+    });
+  });
+
+  topo.externalNetworks.forEach((extName, i) => {
+    const nodeId = `ext-${extName}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 5 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: extName },
+    });
+  });
+
+  topo.routers.forEach((router) => {
+    if (!router.externalNetwork) return;
+    edges.push({
+      id: `e-${router.name}-${router.externalNetwork}`,
+      source: `router-${router.name}`,
+      target: `ext-${router.externalNetwork}`,
+      type: 'smoothstep',
+    });
+  });
+
+  return { nodes, edges };
+}
+
+function getConnectedIds(topo: ResourceMapTopology, nodeId: string): Set<string> {
+  const ids = new Set<string>();
+  ids.add(nodeId);
+
+  const instId = `inst-${topo.instance}`;
+
+  if (nodeId === instId) {
+    ids.add(instId);
+    topo.interfaces.forEach((iface) => {
+      ids.add(`iface-${iface.name}`);
+      iface.subnets.forEach((s) => ids.add(`subnet-${s}`));
+    });
+    topo.subnets.forEach((s) => ids.add(`net-${s.network}`));
+    topo.internalNetworks.forEach((n) => {
+      if (n.router) ids.add(`router-${n.router}`);
+    });
+    topo.routers.forEach((r) => {
+      if (r.externalNetwork) ids.add(`ext-${r.externalNetwork}`);
+    });
+    return ids;
+  }
+
+  if (nodeId.startsWith('iface-')) {
+    const ifaceName = nodeId.replace('iface-', '');
+    const iface = topo.interfaces.find((i) => i.name === ifaceName);
+    if (iface) {
+      ids.add(instId);
+      iface.subnets.forEach((sn) => {
+        ids.add(`subnet-${sn}`);
+        const subnet = topo.subnets.find((s) => s.name === sn);
+        if (subnet) {
+          ids.add(`net-${subnet.network}`);
+          const net = topo.internalNetworks.find((n) => n.name === subnet.network);
+          if (net?.router) {
+            ids.add(`router-${net.router}`);
+            const router = topo.routers.find((r) => r.name === net.router);
+            if (router?.externalNetwork) ids.add(`ext-${router.externalNetwork}`);
+          }
+        }
+      });
+    }
+    return ids;
+  }
+
+  if (nodeId.startsWith('subnet-')) {
+    const subnetName = nodeId.replace('subnet-', '');
+    ids.add(instId);
+    topo.interfaces.forEach((iface) => {
+      if (iface.subnets.includes(subnetName)) ids.add(`iface-${iface.name}`);
+    });
+    const subnet = topo.subnets.find((s) => s.name === subnetName);
+    if (subnet) {
+      ids.add(`net-${subnet.network}`);
+      const net = topo.internalNetworks.find((n) => n.name === subnet.network);
+      if (net?.router) {
+        ids.add(`router-${net.router}`);
+        const router = topo.routers.find((r) => r.name === net.router);
+        if (router?.externalNetwork) ids.add(`ext-${router.externalNetwork}`);
+      }
+    }
+    return ids;
+  }
+
+  if (nodeId.startsWith('net-')) {
+    const netName = nodeId.replace('net-', '');
+    ids.add(instId);
+    topo.subnets
+      .filter((s) => s.network === netName)
+      .forEach((s) => {
+        ids.add(`subnet-${s.name}`);
+        topo.interfaces.forEach((iface) => {
+          if (iface.subnets.includes(s.name)) ids.add(`iface-${iface.name}`);
+        });
+      });
+    const net = topo.internalNetworks.find((n) => n.name === netName);
+    if (net?.router) {
+      ids.add(`router-${net.router}`);
+      const router = topo.routers.find((r) => r.name === net.router);
+      if (router?.externalNetwork) ids.add(`ext-${router.externalNetwork}`);
+    }
+    return ids;
+  }
+
+  if (nodeId.startsWith('router-')) {
+    const routerName = nodeId.replace('router-', '');
+    ids.add(instId);
+    const router = topo.routers.find((r) => r.name === routerName);
+    if (router?.externalNetwork) ids.add(`ext-${router.externalNetwork}`);
+    topo.internalNetworks
+      .filter((n) => n.router === routerName)
+      .forEach((n) => {
+        ids.add(`net-${n.name}`);
+        topo.subnets
+          .filter((s) => s.network === n.name)
+          .forEach((s) => {
+            ids.add(`subnet-${s.name}`);
+            topo.interfaces.forEach((iface) => {
+              if (iface.subnets.includes(s.name)) ids.add(`iface-${iface.name}`);
+            });
+          });
+      });
+    return ids;
+  }
+
+  if (nodeId.startsWith('ext-')) {
+    const extName = nodeId.replace('ext-', '');
+    ids.add(instId);
+    topo.routers
+      .filter((r) => r.externalNetwork === extName)
+      .forEach((r) => {
+        ids.add(`router-${r.name}`);
+        topo.internalNetworks
+          .filter((n) => n.router === r.name)
+          .forEach((n) => {
+            ids.add(`net-${n.name}`);
+            topo.subnets
+              .filter((s) => s.network === n.name)
+              .forEach((s) => {
+                ids.add(`subnet-${s.name}`);
+                topo.interfaces.forEach((iface) => {
+                  if (iface.subnets.includes(s.name)) ids.add(`iface-${iface.name}`);
+                });
+              });
+          });
+      });
+    return ids;
+  }
+
+  return ids;
+}
+
+function ResourceMapControls() {
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const btnClass =
+    'p-1 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] transition-colors cursor-pointer';
+  return (
+    <Panel position="top-right">
+      <div className="flex items-center gap-1">
+        <button className={btnClass} onClick={() => zoomIn()} title="Zoom In">
+          <IconPlus size={14} stroke={1.5} />
+        </button>
+        <button className={btnClass} onClick={() => zoomOut()} title="Zoom Out">
+          <IconMinus size={14} stroke={1.5} />
+        </button>
+        <button
+          className={btnClass}
+          onClick={() => fitView({ padding: 0.15, maxZoom: 1 })}
+          title="Fit View"
+        >
+          <IconFocusCentered size={14} stroke={1.5} />
+        </button>
+      </div>
+    </Panel>
+  );
+}
+
+function ResourceMapInner({
+  topo,
+  nodes,
+  edges,
+}: {
+  topo: ResourceMapTopology;
+  nodes: Node[];
+  edges: Edge[];
+}) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const applyHighlight = useCallback(
+    (nodeId: string | null) => {
+      const container = wrapperRef.current;
+      if (!container) return;
+
+      const allNodeEls = container.querySelectorAll<HTMLElement>('.react-flow__node');
+      const allEdgeEls = container.querySelectorAll<HTMLElement>('.react-flow__edge');
+
+      if (!nodeId) {
+        allNodeEls.forEach((el) => {
+          el.style.opacity = '';
+          const box = el.querySelector<HTMLElement>('.resource-item-box');
+          if (box) box.style.borderColor = '';
+          el.querySelectorAll<HTMLElement>('.react-flow__handle').forEach((handle) => {
+            handle.style.background = '';
+          });
+        });
+        allEdgeEls.forEach((el) => {
+          el.style.opacity = '';
+          el.querySelectorAll<SVGPathElement>('path').forEach((p) => {
+            p.style.stroke = '';
+          });
+        });
+        return;
+      }
+
+      const highlighted = getConnectedIds(topo, nodeId);
+
+      allNodeEls.forEach((el) => {
+        const id = el.dataset.id ?? '';
+        if (id.startsWith('header-')) return;
+        const isHighlighted = highlighted.has(id);
+        el.style.opacity = isHighlighted ? '1' : '0.25';
+        const box = el.querySelector<HTMLElement>('.resource-item-box');
+        if (box) box.style.borderColor = isHighlighted ? 'var(--color-action-primary)' : '';
+        el.querySelectorAll<HTMLElement>('.react-flow__handle').forEach((handle) => {
+          handle.style.background = isHighlighted ? 'var(--color-action-primary)' : '';
+        });
+      });
+
+      allEdgeEls.forEach((el) => {
+        const ariaLabel = el.getAttribute('aria-label') ?? '';
+        const match = ariaLabel.match(/^Edge from (.+) to (.+)$/);
+        const sourceId = match?.[1] ?? '';
+        const targetId = match?.[2] ?? '';
+        const isActive = highlighted.has(sourceId) && highlighted.has(targetId);
+        el.style.opacity = isActive ? '1' : '0.15';
+        el.querySelectorAll<SVGPathElement>('path').forEach((path) => {
+          path.style.stroke = isActive ? 'var(--color-action-primary)' : '';
+        });
+      });
+    },
+    [topo]
+  );
+
+  const onNodeMouseEnter = useCallback(
+    (_: React.MouseEvent, node: Node) => {
+      if (node.type === 'categoryHeader') return;
+      applyHighlight(node.id);
+    },
+    [applyHighlight]
+  );
+
+  const onNodeMouseLeave = useCallback(() => {
+    applyHighlight(null);
+  }, [applyHighlight]);
+
+  const { fitView } = useReactFlow();
+  const fittedRef = useRef(false);
+
+  useEffect(() => {
+    if (fittedRef.current || nodes.length === 0) return;
+    const container = wrapperRef.current;
+    if (!container) return;
+
+    const check = () => {
+      const rendered = container.querySelectorAll('.react-flow__node .resource-item-box');
+      if (rendered.length > 0) {
+        fittedRef.current = true;
+        fitView({ padding: 0.15, maxZoom: 1 });
+      }
+    };
+
+    const observer = new MutationObserver(check);
+    observer.observe(container, { childList: true, subtree: true });
+    check();
+    return () => observer.disconnect();
+  }, [nodes, fitView]);
+
+  return (
+    <div ref={wrapperRef} style={{ width: '100%', height: '100%' }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={resourceMapNodeTypes}
+        proOptions={{ hideAttribution: true }}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable={false}
+        panOnDrag={true}
+        zoomOnScroll={true}
+        minZoom={0.3}
+        maxZoom={2}
+        onNodeMouseEnter={onNodeMouseEnter}
+        onNodeMouseLeave={onNodeMouseLeave}
+      >
+        <Background gap={16} size={1} color="var(--color-border-subtle)" />
+        <ResourceMapControls />
+      </ReactFlow>
+    </div>
+  );
+}
+
+function InstanceResourceMap({ instance }: { instance: InstanceDetail }) {
+  const topo = mockResourceMapData[instance.id] ?? {
+    instance: instance.name,
+    interfaces: [],
+    subnets: [],
+    internalNetworks: [],
+    routers: [],
+    externalNetworks: [],
+  };
+
+  const { nodes, edges } = useMemo(() => buildResourceMapGraph(topo), [topo]);
+
+  return (
+    <ReactFlowProvider>
+      <ResourceMapInner topo={topo} nodes={nodes} edges={edges} />
+    </ReactFlowProvider>
+  );
 }
 
 /* ----------------------------------------
@@ -2479,10 +3103,8 @@ export function InstanceDetailPage() {
 
             {/* Resource Map Tab Panel */}
             <TabPanel value="resource-map" className="pt-0">
-              <div className="pt-6">
-                <p className="text-[var(--color-text-subtle)]">
-                  Resource Map content will be displayed here.
-                </p>
+              <div className="h-[600px] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden mt-6">
+                {instance && <InstanceResourceMap instance={instance} />}
               </div>
             </TabPanel>
 

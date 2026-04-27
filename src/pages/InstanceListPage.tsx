@@ -1534,7 +1534,14 @@ export function InstanceListPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => {
               e.stopPropagation();
-              shellPanel.openConsole(row.id, row.name);
+              const consolePath = `/compute/console/${row.id}?name=${encodeURIComponent(row.name)}`;
+              addTab({
+                id: `console-${row.id}`,
+                label: row.name,
+                path: consolePath,
+                closable: true,
+              });
+              navigate(consolePath);
             }}
             title="Open console"
             aria-label="Open console"

@@ -111,8 +111,8 @@ function SummaryStatBox({ value, label, onClick }: SummaryStatBoxProps) {
       }
     >
       <div className="flex items-center justify-between">
-        <div className={`text-heading-h4 ${textColor}`}>{value}</div>
         <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
+        <div className={`text-heading-h4 ${textColor}`}>{value}</div>
       </div>
     </div>
   );

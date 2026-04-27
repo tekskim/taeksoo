@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useId, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { twMerge } from '../../utils/cn';
 import { IconChevronDown, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -86,8 +86,8 @@ export function Select({
 
   // Refs
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const listboxRef = useRef<HTMLDivElement>(null);
-  const osRef = useRef<React.ComponentRef<typeof OverlayScrollbarsComponent>>(null);
+  const listboxOsRef = useRef<OverlayScrollbarsComponentRef>(null);
+  const getListboxEl = useCallback(() => listboxOsRef.current?.getElement() ?? null, []);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Controlled vs Uncontrolled
@@ -220,7 +220,7 @@ export function Select({
     const handleClickOutside = (e: MouseEvent) => {
       if (
         triggerRef.current?.contains(e.target as Node) ||
-        listboxRef.current?.contains(e.target as Node)
+        getListboxEl()?.contains(e.target as Node)
       ) {
         return;
       }
@@ -245,16 +245,10 @@ export function Select({
 
   // Sync listboxRef from OverlayScrollbarsComponent's underlying DOM element
   useEffect(() => {
-    if (isOpen && osRef.current) {
-      const el = osRef.current.getElement();
-      if (el) {
-        (listboxRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
-        el.focus();
-      }
-    } else if (!isOpen) {
-      (listboxRef as React.MutableRefObject<HTMLDivElement | null>).current = null;
+    if (isOpen) {
+      getListboxEl()?.focus();
     }
-  }, [isOpen]);
+  }, [isOpen, getListboxEl]);
 
   // Width-based styles: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%)
   const widthStyles = {
@@ -408,7 +402,7 @@ export function Select({
                 scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
               }}
               defer={false}
-              ref={osRef}
+              ref={listboxOsRef}
               id={listboxId}
               role="listbox"
               aria-labelledby={triggerId}

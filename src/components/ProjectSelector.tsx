@@ -303,7 +303,9 @@ export function ProjectSelector({
           isOpen={!!primaryModalTarget}
           onClose={() => setPrimaryModalTarget(null)}
           title="Set primary tenant"
-          description={`Set ${primaryModalTarget.name} as your primary tenant? This tenant will be selected by default when you open the Compute app.`}
+          infoLabel="Tenant"
+          infoValue={primaryModalTarget.name}
+          description="This tenant will be selected by default when you open the Compute app."
           confirmText="Save"
           cancelText="Cancel"
           confirmVariant="primary"

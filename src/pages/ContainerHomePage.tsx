@@ -21,6 +21,7 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
+import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { IconDotsCircleHorizontal, IconSettings } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
@@ -143,6 +144,8 @@ export function ContainerHomePage() {
   useEffect(() => {
     updateActiveTabLabel('Home');
   }, [updateActiveTabLabel]);
+
+  const shellPanel = useShellPanel();
 
   // Home page only shows icon sidebar (40px), menu sidebar is hidden
   const sidebarWidth = 48;
@@ -303,9 +306,37 @@ export function ContainerHomePage() {
         <TopBar
           showSidebarToggle={false}
           breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
-          actions={<ContainerTopBarActions />}
+          actions={
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-home', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
+          }
         />
       }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={true}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
       contentClassName="pt-6 px-8 pb-20"
     >
       <VStack gap={6} className="min-w-[1176px]">

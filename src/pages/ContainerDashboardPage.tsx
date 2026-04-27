@@ -24,6 +24,7 @@ import {
   EmptyState,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { getContainerStatusTheme } from './containerStatusUtils';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { IconInfoCircle, IconKey } from '@tabler/icons-react';
@@ -519,7 +520,7 @@ export function ContainerDashboardPage() {
                   className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 relative min-w-0"
                 >
                   <div className="absolute top-1/2 right-3 -translate-y-1/2">
-                    <Badge theme="white" size="sm">
+                    <Badge theme={getContainerStatusTheme('Active')} type="subtle" size="sm">
                       Active
                     </Badge>
                   </div>

@@ -243,7 +243,7 @@ export function ShellPanel({
 
   return (
     <div
-      className="fixed bottom-0 right-0 z-40 bg-[var(--color-surface-default)] border-t border-l border-[var(--color-border-default)] shadow-lg flex flex-col"
+      className="fixed bottom-0 right-0 z-40 bg-[var(--color-surface-default)] border-t border-[var(--color-border-default)] shadow-lg flex flex-col"
       style={{
         height: `${height}px`,
         left: sidebarWidth !== undefined ? `${sidebarWidth}px` : sidebarOpen ? '200px' : '0px',
