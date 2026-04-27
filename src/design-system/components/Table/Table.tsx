@@ -556,52 +556,64 @@ export function Table<T extends Record<string, any>>({
                   sortedData.map((row, rowIndex) => {
                     const key = getRowKey(row);
                     const isSelected = selectedKeys.includes(key);
+                    const expanded = expandedContent?.(row, rowIndex);
                     return (
                       <div
                         key={key}
                         data-row-index={rowIndex}
                         className={cn(
-                          'flex items-stretch min-h-[var(--table-row-height)] w-full',
-                          'rounded-l-[var(--table-row-radius)] border border-[var(--color-border-default)] border-r-0',
-                          'transition-all hover:bg-[var(--table-row-hover-bg)]',
+                          'rounded-l-[var(--table-row-radius)] overflow-hidden',
+                          'border border-[var(--color-border-default)] border-r-0',
                           isSelected
                             ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
-                            : 'bg-[var(--color-surface-default)]',
-                          onRowClick && !disabledSet.has(key) && 'cursor-pointer'
+                            : 'bg-[var(--color-surface-default)]'
                         )}
-                        onClick={
-                          onRowClick && !disabledSet.has(key)
-                            ? () => onRowClick(row, rowIndex)
-                            : undefined
-                        }
                       >
-                        {selectable && (
-                          <div
-                            className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {selectionType === 'radio' ? (
-                              <Radio
-                                checked={isSelected}
-                                disabled={disabledSet.has(key)}
-                                onChange={() => handleSelectRow(key)}
-                                aria-label={`Select row ${rowIndex + 1}`}
-                              />
-                            ) : (
-                              <Checkbox
-                                checked={isSelected}
-                                disabled={disabledSet.has(key)}
-                                onChange={() => handleSelectRow(key)}
-                                aria-label={`Select row ${rowIndex + 1}`}
-                              />
-                            )}
+                        <div
+                          className={cn(
+                            'flex items-stretch min-h-[var(--table-row-height)] w-full',
+                            'transition-all hover:bg-[var(--table-row-hover-bg)]',
+                            onRowClick && !disabledSet.has(key) && 'cursor-pointer'
+                          )}
+                          onClick={
+                            onRowClick && !disabledSet.has(key)
+                              ? () => onRowClick(row, rowIndex)
+                              : undefined
+                          }
+                        >
+                          {selectable && (
+                            <div
+                              className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {selectionType === 'radio' ? (
+                                <Radio
+                                  checked={isSelected}
+                                  disabled={disabledSet.has(key)}
+                                  onChange={() => handleSelectRow(key)}
+                                  aria-label={`Select row ${rowIndex + 1}`}
+                                />
+                              ) : (
+                                <Checkbox
+                                  checked={isSelected}
+                                  disabled={disabledSet.has(key)}
+                                  onChange={() => handleSelectRow(key)}
+                                  aria-label={`Select row ${rowIndex + 1}`}
+                                />
+                              )}
+                            </div>
+                          )}
+                          {scrollColumns.map((col, i) =>
+                            renderBodyCell(col, row, rowIndex, i, isSelected, selectable)
+                          )}
+                          {hasResizedColumns && (
+                            <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
+                          )}
+                        </div>
+                        {expanded && (
+                          <div className="border-t border-[var(--color-border-subtle)] w-full">
+                            {expanded}
                           </div>
-                        )}
-                        {scrollColumns.map((col, i) =>
-                          renderBodyCell(col, row, rowIndex, i, isSelected, selectable)
-                        )}
-                        {hasResizedColumns && (
-                          <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
                         )}
                       </div>
                     );

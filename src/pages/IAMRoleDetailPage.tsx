@@ -977,7 +977,7 @@ export default function IAMRoleDetailPage() {
 
               {/* Active Grants Tab */}
               <TabPanel value="entities" className="pt-0">
-                <VStack gap={3} className="w-full pt-3">
+                <VStack gap={4} className="w-full pt-4">
                   <HStack justify="between" align="center" className="w-full">
                     <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                       Active grants

@@ -50,6 +50,7 @@ export function ProjectSelector({
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
+      if (primaryModalTarget) return;
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node) &&
@@ -67,7 +68,7 @@ export function ProjectSelector({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, primaryModalTarget]);
 
   useEffect(() => {
     function handleEscape(event: KeyboardEvent) {
@@ -308,6 +309,7 @@ export function ProjectSelector({
           confirmVariant="primary"
           onConfirm={() => {
             onSetPrimary?.(primaryModalTarget.id);
+            onProjectSelect(primaryModalTarget.id);
             setPrimaryModalTarget(null);
           }}
           size="sm"

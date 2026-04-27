@@ -959,7 +959,7 @@ export function IAMUserDetailPage() {
                 },
               ]}
               trigger="click"
-              align="right"
+              align="left"
             >
               <Button
                 variant="secondary"

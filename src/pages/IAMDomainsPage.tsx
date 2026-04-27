@@ -250,7 +250,7 @@ export default function IAMDomainsPage() {
             onClick={() => console.log('Open console')}
           >
             <ArrowRightLeft
-              size={16}
+              size={14}
               strokeWidth={1.5}
               className="text-[var(--color-text-default)]"
             />
