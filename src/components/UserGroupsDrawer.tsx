@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import {
   Drawer,
   Button,
+  Badge,
+  BadgeList,
   SearchInput,
   Pagination,
   Table,
@@ -11,6 +13,7 @@ import {
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconExternalLink } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -20,9 +23,9 @@ export interface UserGroupItem {
   id: string;
   name: string;
   type: 'Built-in' | 'Custom';
-  roles: string;
-  userCount: number;
-  createdAt: string;
+  roles: string[];
+  userCount: string;
+  members: number;
 }
 
 export interface UserGroupsDrawerProps {
@@ -38,13 +41,21 @@ export interface UserGroupsDrawerProps {
    Mock Data
    ---------------------------------------- */
 
+const descriptions = [
+  'Development team group',
+  'Operations management',
+  'Security audit access',
+  'Read-only viewer group',
+  'Network administration',
+];
+
 const defaultUserGroups: UserGroupItem[] = Array.from({ length: 25 }, (_, i) => ({
   id: `group-${i + 1}`,
   name: 'MemberGroup',
-  type: 'Built-in',
-  roles: 'ReadCompute (+3)',
-  userCount: 130,
-  createdAt: 'Sep 12, 2025 15:43:35',
+  type: 'Built-in' as const,
+  roles: ['Compute:tenantA', 'Network:tenantB', 'Storage:tenantA', 'IAM:global'],
+  userCount: descriptions[i % descriptions.length],
+  members: 130,
 }));
 
 const ITEMS_PER_PAGE = 5;
@@ -56,26 +67,55 @@ const ITEMS_PER_PAGE = 5;
 const userGroupColumns: TableColumn<UserGroupItem>[] = [
   {
     key: 'name',
-    label: 'Name',
+    label: 'User group name',
     flex: 1,
     sortable: true,
     render: (_, row) => (
-      <span className="flex items-center gap-1.5">
-        <span className="text-label-md text-[var(--color-action-primary)] truncate">
-          {row.name}
+      <div className="flex flex-col gap-0.5">
+        <span className="flex items-center gap-1.5">
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
+            {row.name}
+          </span>
+          <IconExternalLink
+            size={12}
+            stroke={1.5}
+            className="shrink-0 text-[var(--color-action-primary)]"
+          />
         </span>
-        <IconExternalLink
-          size={12}
-          stroke={1.5}
-          className="shrink-0 text-[var(--color-action-primary)]"
-        />
-      </span>
+        <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)]">
+          <span className="truncate">ID: {row.id}</span>
+          <InlineCopyId value={row.id} />
+        </span>
+      </div>
     ),
   },
-  { key: 'type', label: 'Type', flex: 1 },
-  { key: 'roles', label: 'Roles', flex: 1 },
-  { key: 'userCount', label: 'User count', flex: 1, sortable: true },
-  { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
+  {
+    key: 'type',
+    label: 'Type',
+    flex: 1,
+    render: (value: string) => (
+      <Badge theme="white" size="sm">
+        {value}
+      </Badge>
+    ),
+  },
+  {
+    key: 'roles',
+    label: 'Policies',
+    flex: 1,
+    render: (value: string[]) => (
+      <BadgeList
+        items={value}
+        maxVisible={1}
+        maxBadgeWidth="140px"
+        popoverTitle={`All Policies (${value.length})`}
+        overflowAlign="right"
+        popoverMaxWidth="160px"
+      />
+    ),
+  },
+  { key: 'userCount', label: 'Description', flex: 1, sortable: true },
+  { key: 'members', label: 'Members', flex: 0.5, sortable: true },
 ];
 
 /* ----------------------------------------

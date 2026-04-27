@@ -325,7 +325,10 @@ export function IAMServiceAccountDetailPage() {
       width: 64,
       align: 'center',
       render: (_value, row) => (
-        <StatusIndicator layout="icon-only" status={row.status === 'active' ? 'active' : 'muted'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status === 'active' ? 'active' : 'deactivated'}
+        />
       ),
     },
     {

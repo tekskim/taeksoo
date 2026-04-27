@@ -388,6 +388,7 @@ import { ChipPage } from '@/pages/design/components/ChipPage';
 import { StatusIndicatorPage } from '@/pages/design/components/StatusIndicatorPage';
 import { ComputeStatusPage } from '@/pages/design/status/ComputeStatusPage';
 import { ContainerStatusPage } from '@/pages/design/status/ContainerStatusPage';
+import { IAMStatusPage } from '@/pages/design/status/IAMStatusPage';
 import { PaginationPage } from '@/pages/design/components/PaginationPage';
 import { FileListCardPage } from '@/pages/design/components/FileListCardPage';
 import { ExpandableChecklistPage } from '@/pages/design/components/ExpandableChecklistPage';
@@ -1137,6 +1138,7 @@ function AppRoutes() {
         <Route path="components/status-indicator" element={<StatusIndicatorPage />} />
         <Route path="status/compute" element={<ComputeStatusPage />} />
         <Route path="status/container" element={<ContainerStatusPage />} />
+        <Route path="status/iam" element={<IAMStatusPage />} />
         <Route path="components/pagination" element={<PaginationPage />} />
         <Route path="components/file-list-card" element={<FileListCardPage />} />
         <Route path="components/expandable-checklist" element={<ExpandableChecklistPage />} />

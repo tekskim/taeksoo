@@ -176,6 +176,9 @@ import { GroupMembersDrawer } from '@/components/GroupMembersDrawer';
 import { GroupRolesDrawer } from '@/components/GroupRolesDrawer';
 import { ResetPasswordDrawer } from '@/components/ResetPasswordDrawer';
 import { UserEditDrawer } from '@/components/UserEditDrawer';
+import { AttachPoliciesDrawer } from '@/components/AttachPoliciesDrawer';
+import { CreateAccessKeyDrawer } from '@/components/CreateAccessKeyDrawer';
+import { EditAccessKeyDrawer } from '@/components/EditAccessKeyDrawer';
 import { EditUserGroupDrawer } from '@/components/EditUserGroupDrawer';
 import { RolePoliciesDrawer } from '@/components/RolePoliciesDrawer';
 import { EditRoleDrawer } from '@/components/EditRoleDrawer';
@@ -1300,6 +1303,21 @@ const IAM_USER_MANAGEMENT_ITEMS: DrawerSearchItem[] = [
   {
     title: 'Edit user',
     description: "Edit the user's basic information like email and display name.",
+    category: 'User',
+  },
+  {
+    title: 'Attach policies',
+    description: 'Attach policies to a specific user.',
+    category: 'User',
+  },
+  {
+    title: 'Create access key',
+    description: 'Create a new access key for programmatic access.',
+    category: 'User',
+  },
+  {
+    title: 'Edit access key',
+    description: "Edit an existing access key's description and status.",
     category: 'User',
   },
 ];
@@ -2445,6 +2463,30 @@ export function DrawersPage() {
                         description="Edit the user's basic information like email and display name."
                         category="User"
                         onOpen={() => openDrawerFn('edit-user')}
+                        linked
+                        linkedTo="IAM users"
+                      />
+                      <DrawerCard
+                        title="Attach policies"
+                        description="Attach policies to a specific user."
+                        category="User"
+                        onOpen={() => openDrawerFn('attach-policies')}
+                        linked
+                        linkedTo="IAM users"
+                      />
+                      <DrawerCard
+                        title="Create access key"
+                        description="Create a new access key for programmatic access."
+                        category="User"
+                        onOpen={() => openDrawerFn('create-access-key')}
+                        linked
+                        linkedTo="IAM users"
+                      />
+                      <DrawerCard
+                        title="Edit access key"
+                        description="Edit an existing access key's description and status."
+                        category="User"
+                        onOpen={() => openDrawerFn('edit-access-key')}
                         linked
                         linkedTo="IAM users"
                       />
@@ -3638,6 +3680,35 @@ export function DrawersPage() {
         }}
         onSubmit={(data) => {
           console.log('Edit user:', data);
+        }}
+      />
+
+      {/* Attach Policies Drawer */}
+      <AttachPoliciesDrawer
+        isOpen={openDrawer === 'attach-policies'}
+        onClose={closeDrawer}
+        userName="thaki.kim"
+        onSubmit={(data) => {
+          console.log('Attach policies:', data);
+        }}
+      />
+
+      {/* Create Access Key Drawer */}
+      <CreateAccessKeyDrawer
+        isOpen={openDrawer === 'create-access-key'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create access key:', data);
+        }}
+      />
+
+      {/* Edit Access Key Drawer */}
+      <EditAccessKeyDrawer
+        isOpen={openDrawer === 'edit-access-key'}
+        onClose={closeDrawer}
+        keyId="AKIA112AK3IALQI2"
+        onSubmit={(data) => {
+          console.log('Edit access key:', data);
         }}
       />
 

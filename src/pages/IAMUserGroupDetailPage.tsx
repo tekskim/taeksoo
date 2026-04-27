@@ -49,7 +49,7 @@ interface UserGroupDetail {
 interface GroupUser {
   id: string;
   username: string;
-  status: 'active' | 'error' | 'shutoff';
+  status: 'active' | 'deactivated';
   userGroups: string;
   lastSignIn: string;
   createdAt: string;
@@ -178,7 +178,7 @@ const mockGroupUsers: GroupUser[] = [
   {
     id: 'u-004',
     username: 'john.smith',
-    status: 'shutoff',
+    status: 'deactivated',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Sep 5, 2026',
     createdAt: 'Jul 1, 2026 10:20:28',
@@ -202,7 +202,7 @@ const mockGroupUsers: GroupUser[] = [
   {
     id: 'u-007',
     username: 'jessica.wilson',
-    status: 'error',
+    status: 'deactivated',
     userGroups: 'dev-admin-group (+1)',
     lastSignIn: 'Aug 30, 2026',
     createdAt: 'Jul 15, 2026 12:22:26',
@@ -234,7 +234,7 @@ const mockGroupUsers: GroupUser[] = [
   {
     id: 'u-011',
     username: 'laura.martinez',
-    status: 'shutoff',
+    status: 'deactivated',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Aug 28, 2026',
     createdAt: 'Jun 30, 2026 21:37:41',
@@ -424,7 +424,7 @@ export default function IAMUserGroupDetailPage() {
       width: fixedColumns.status,
       align: 'center',
       render: (value) => (
-        <StatusIndicator layout="icon-only" status={value as 'active' | 'error' | 'shutoff'} />
+        <StatusIndicator layout="icon-only" status={value as 'active' | 'deactivated'} />
       ),
     },
     {

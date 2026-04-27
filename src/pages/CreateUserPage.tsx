@@ -14,6 +14,8 @@ import {
   Table,
   Pagination,
   Tooltip,
+  Badge,
+  BadgeList,
   SelectionIndicator,
   FormField,
   SearchInput,
@@ -32,6 +34,7 @@ import {
   IconCircleCheck,
   IconExternalLink,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -49,7 +52,8 @@ interface UserGroup {
   id: string;
   name: string;
   type: string;
-  roles: string;
+  roles: string[];
+  description: string;
   userCount: number;
   createdAt: string;
 }
@@ -72,7 +76,8 @@ const mockUserGroups: UserGroup[] = [
     id: 'group-1',
     name: 'Users',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'Default user group',
     userCount: 130,
     createdAt: 'Sep 12, 2026 08:15:22',
   },
@@ -80,7 +85,8 @@ const mockUserGroups: UserGroup[] = [
     id: 'group-2',
     name: 'Admins',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'Administrator group',
     userCount: 130,
     createdAt: 'Sep 12, 2026 09:32:44',
   },
@@ -88,7 +94,8 @@ const mockUserGroups: UserGroup[] = [
     id: 'group-3',
     name: 'Members',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'General members',
     userCount: 130,
     createdAt: 'Sep 12, 2026 10:48:17',
   },
@@ -96,7 +103,8 @@ const mockUserGroups: UserGroup[] = [
     id: 'group-4',
     name: 'test',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'Test group',
     userCount: 130,
     createdAt: 'Sep 12, 2026 11:55:33',
   },
@@ -104,7 +112,8 @@ const mockUserGroups: UserGroup[] = [
     id: 'group-5',
     name: 'MemberGroup',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'Member group',
     userCount: 130,
     createdAt: 'Sep 12, 2026 13:22:08',
   },
@@ -112,7 +121,8 @@ const mockUserGroups: UserGroup[] = [
     id: 'group-6',
     name: 'Developers',
     type: 'Custom',
-    roles: 'FullAccess (+2)',
+    roles: ['FullAccess', 'Container:clusterB', 'IAM:Admin'],
+    description: 'Development team',
     userCount: 45,
     createdAt: 'Aug 15, 2026 14:40:51',
   },
@@ -120,7 +130,8 @@ const mockUserGroups: UserGroup[] = [
     id: 'group-7',
     name: 'Viewers',
     type: 'Custom',
-    roles: 'ReadOnly',
+    roles: ['ReadOnly'],
+    description: 'Read-only viewers',
     userCount: 200,
     createdAt: 'Jul 22, 2026 16:18:26',
   },
@@ -663,6 +674,7 @@ function BasicInformationSection({
                     onUsernameChange(e.target.value);
                     onUsernameErrorChange(null);
                   }}
+                  error={!!usernameError}
                   fullWidth
                 />
               </FormField.Control>
@@ -710,6 +722,7 @@ function BasicInformationSection({
                     onEmailChange(e.target.value);
                     onEmailErrorChange(null);
                   }}
+                  error={!!emailError}
                   fullWidth
                 />
               </FormField.Control>
@@ -752,7 +765,7 @@ function BasicInformationSection({
                 <HStack gap={2} align="center">
                   <Toggle checked={status} onChange={onStatusChange} />
                   <span className="text-body-md text-[var(--color-text-default)]">
-                    {status ? 'Enabled' : 'Disabled'}
+                    {status ? 'Active' : 'Disabled'}
                   </span>
                 </HStack>
               </FormField.Control>
@@ -811,7 +824,7 @@ function UserGroupSection({
     (group) =>
       group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       group.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      group.roles.toLowerCase().includes(searchQuery.toLowerCase())
+      group.roles.some((r) => r.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredGroups.length / itemsPerPage);
@@ -826,37 +839,50 @@ function UserGroupSection({
       label: 'User group name',
       sortable: true,
       render: (_, row) => (
-        <HStack gap={1.5} align="center">
-          <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
-          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-        </HStack>
+        <div className="flex flex-col gap-0.5">
+          <HStack gap={1.5} align="center">
+            <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)]">
+            <span className="truncate">ID: {row.id}</span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </div>
       ),
     },
     {
       key: 'type',
       label: 'Type',
       render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
+        <Badge theme="white" size="sm">
+          {value}
+        </Badge>
       ),
     },
     {
       key: 'roles',
-      label: 'Roles',
-      render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
+      label: 'Policies',
+      minWidth: 180,
+      render: (value: string[]) => (
+        <BadgeList
+          items={value}
+          maxVisible={1}
+          maxBadgeWidth="140px"
+          popoverTitle={`All Roles (${value.length})`}
+          overflowAlign="right"
+          popoverMaxWidth="160px"
+        />
       ),
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
     },
     {
       key: 'userCount',
-      label: 'User count',
-      sortable: true,
-      render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      ),
-    },
-    {
-      key: 'createdAt',
-      label: 'Created at',
+      label: 'Members',
       sortable: true,
       render: (value) => (
         <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
