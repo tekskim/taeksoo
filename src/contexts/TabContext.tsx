@@ -80,7 +80,7 @@ function getDefaultHomeTab(app: string): TabItem {
     '/agent': { path: '/agent', label: 'Dashboard' }, // Agent service home
     '/desktop': { path: '/desktop', label: 'Dashboard' },
     '/design': { path: '/design', label: 'Dashboard' },
-    '/container': { path: '/container', label: 'Dashboard' },
+    '/container': { path: '/container', label: 'Home' },
     '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
     '/iam': { path: '/iam', label: 'Dashboard' },
     '/': { path: '/', label: 'Dashboard' },
@@ -163,7 +163,7 @@ function getLabelFromPath(path: string): string {
     '/design/drawers': 'Drawers',
     '/design/modals': 'Modals',
     '/design-system': 'Design system',
-    '/container': 'Dashboard',
+    '/container': 'Home',
     '/ai-platform': 'Dashboard',
     '/ai-platform/workloads': 'Workloads',
     '/iam': 'Dashboard',
@@ -460,7 +460,7 @@ export function TabProvider({
       '/storage-member': { path: '/storage-member', label: 'Dashboard' },
       '/desktop': { path: '/desktop', label: 'Dashboard' },
       '/design': { path: '/design', label: 'Dashboard' },
-      '/container': { path: '/container', label: 'Dashboard' },
+      '/container': { path: '/container', label: 'Home' },
       '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
       '/iam': { path: '/iam', label: 'Dashboard' },
     };
