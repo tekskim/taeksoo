@@ -325,6 +325,7 @@ import IAMPolicyDetailPage from '@/pages/IAMPolicyDetailPage';
 import CreatePolicyPage from '@/pages/CreatePolicyPage';
 import IAMActiveSessionsPage from '@/pages/IAMActiveSessionsPage';
 import IAMDomainsPage from '@/pages/IAMDomainsPage';
+import CreateDomainPage from '@/pages/CreateDomainPage';
 import IAMSystemAdministratorsPage from '@/pages/IAMSystemAdministratorsPage';
 import IAMSystemAdminDetailPage from '@/pages/IAMSystemAdminDetailPage';
 import CreateSystemAdministratorPage from '@/pages/CreateSystemAdministratorPage';
@@ -1058,6 +1059,8 @@ function AppRoutes() {
       <Route path="/iam/policies/:policyId" element={<IAMPolicyDetailPage />} />
       <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
       <Route path="/iam/domains" element={<IAMDomainsPage />} />
+      <Route path="/iam/domains/create" element={<CreateDomainPage />} />
+      <Route path="/iam/domains/create-v2" element={<CreateDomainPage />} />
       <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
       <Route path="/iam/system-administrators/create" element={<CreateSystemAdministratorPage />} />
       <Route

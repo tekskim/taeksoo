@@ -16,6 +16,7 @@ const IAMPolicyDetailPage = lazy(() => import('@/pages/IAMPolicyDetailPage'));
 const CreatePolicyPage = lazy(() => import('@/pages/CreatePolicyPage'));
 const IAMActiveSessionsPage = lazy(() => import('@/pages/IAMActiveSessionsPage'));
 const IAMDomainsPage = lazy(() => import('@/pages/IAMDomainsPage'));
+const CreateDomainPage = lazy(() => import('@/pages/CreateDomainPage'));
 const IAMSystemAdministratorsPage = lazy(() => import('@/pages/IAMSystemAdministratorsPage'));
 const IAMSystemAdminDetailPage = lazy(() => import('@/pages/IAMSystemAdminDetailPage'));
 const CreateSystemAdministratorPage = lazy(() => import('@/pages/CreateSystemAdministratorPage'));
@@ -46,6 +47,8 @@ export const iamRoutes = (
     <Route path="/iam/policies/:policyId" element={<IAMPolicyDetailPage />} />
     <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
     <Route path="/iam/domains" element={<IAMDomainsPage />} />
+    <Route path="/iam/domains/create" element={<CreateDomainPage />} />
+    <Route path="/iam/domains/create-v2" element={<CreateDomainPage />} />
     <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
     <Route path="/iam/system-administrators/create" element={<CreateSystemAdministratorPage />} />
     <Route

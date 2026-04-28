@@ -194,12 +194,11 @@ export function TabList({ children, className = '', ...rest }: TabListProps) {
     boxed: [
       'inline-flex',
       'items-center',
-      'gap-1',
+      'gap-2',
       'p-1',
-      'h-10',
       'bg-[var(--color-surface-subtle)]',
-      'shadow-[inset_0_0_0_1px_var(--color-border-subtle)]',
-      'rounded-lg',
+      'shadow-[inset_0_0_0_1px_var(--color-border-default)]',
+      'rounded-[8px]',
       'w-fit',
     ].join(' '),
   };
@@ -305,13 +304,13 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
       onClick={() => !disabled && setActiveTab(value)}
       className={twMerge(
         'flex items-center justify-center',
-        'min-w-[80px] px-3 h-8',
+        'min-w-[80px] px-4 py-1',
         'font-medium text-center whitespace-nowrap',
-        'rounded-md',
+        'rounded-[6px]',
+        'text-[length:var(--font-size-11)] leading-[var(--line-height-16)]',
         'cursor-pointer transition-colors duration-[var(--duration-fast)]',
-        sizeStyles[size],
         isActive
-          ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_color-mix(in_srgb,var(--color-text-default)_5%,transparent)] text-[var(--color-action-primary)]'
+          ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
           : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]',
         disabled && 'cursor-not-allowed opacity-50',
         className

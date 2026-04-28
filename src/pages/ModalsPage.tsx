@@ -21,6 +21,7 @@ import {
   IconChevronDown,
   IconChevronRight,
   IconArrowLeft,
+  IconCircleCheck,
   IconCopy,
   IconCheck,
 } from '@tabler/icons-react';
@@ -634,13 +635,20 @@ export function ModalsPage() {
                   category: 'User',
                 },
                 {
+                  title: 'Password reset',
+                  description:
+                    'The new password is shown only once. Copy and store it securely before closing.',
+                  category: 'User',
+                },
+                {
                   title: 'Unsaved changes',
                   description: 'Any unsaved changes will be lost. Do you want to leave?',
                   category: 'General',
                 },
                 {
                   title: 'Detach user group',
-                  description: 'This action detaches the user from the group.',
+                  description:
+                    'Detaching revokes permissions granted through this group’s roles for this user.',
                   category: 'Group',
                 },
                 {
@@ -694,7 +702,8 @@ export function ModalsPage() {
                 },
                 {
                   title: 'Detach policy',
-                  description: 'This action detaches the policy from the role.',
+                  description:
+                    'Detaches the policy from this user only; inherited policies are unchanged.',
                   category: 'Policy',
                 },
                 {
@@ -749,7 +758,14 @@ export function ModalsPage() {
                 },
                 {
                   title: 'Delete domain',
-                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  description:
+                    'Removes IAM data for the domain; requires prerequisites and confirms destructive cleanup.',
+                  category: 'Domain',
+                },
+                {
+                  title: 'Delete domain (prerequisites not met)',
+                  description:
+                    'This domain cannot be deleted until failed prerequisites are cleared.',
                   category: 'Domain',
                 },
                 {
@@ -776,6 +792,30 @@ export function ModalsPage() {
                   title: 'Update token policy',
                   description: 'This action applies the changes.',
                   category: 'Policy',
+                },
+                {
+                  title: 'Password reset',
+                  description:
+                    'The new password is shown only once. Copy and store it securely before closing.',
+                  category: 'User',
+                },
+                {
+                  title: 'New access key',
+                  description:
+                    'These credentials are shown only once. Copy and store them securely before closing.',
+                  category: 'Access Key',
+                },
+                {
+                  title: 'Delete access key',
+                  description:
+                    'This key stops working immediately and is permanently removed from the account.',
+                  category: 'Access Key',
+                },
+                {
+                  title: 'Delete domain (prerequisites not met)',
+                  description:
+                    'This domain cannot be deleted until failed prerequisites are cleared.',
+                  category: 'Domain',
                 },
                 {
                   title: 'Regenerate client secret',
@@ -818,13 +858,60 @@ export function ModalsPage() {
                   description: 'Credentials are shown only once. Uses Close button variant.',
                   category: 'Service Account',
                 },
+                {
+                  title: 'New access key (SA)',
+                  description:
+                    'Shows access key ID and secret access key. Credentials shown only once.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Remove OTP MFA (SA)',
+                  description: 'After removal, user will not be asked for OTP at sign-in.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Delete system administrator (single)',
+                  description: 'Deleting this user removes and invalidates access keys.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Terminate session (SA)',
+                  description: 'Terminating this session will sign the user out from this device.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Reset API key (SA)',
+                  description:
+                    'The current key stops working immediately. New key shown only once.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Terminate all sessions (SA)',
+                  description: 'Immediately sign the user out from all devices.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Delete access key (SA)',
+                  description: 'This key stops working immediately and is permanently removed.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Delete system administrators (multi)',
+                  description: 'Deleting selected users removes and invalidates their access keys.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'New API key (SA)',
+                  description: 'Shows key ID and new API key. Credentials shown only once.',
+                  category: 'System Admin',
+                },
               ]}
             >
               <Disclosure open={isSearching || isIAMOpen} onChange={setIsIAMOpen}>
                 <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                   <SectionHeader
                     label="IAM"
-                    count={39}
+                    count={52}
                     isOpen={isIAMOpen}
                     isSearching={isSearching}
                   />
@@ -853,13 +940,20 @@ export function ModalsPage() {
                           category: 'User',
                         },
                         {
+                          title: 'Password reset',
+                          description:
+                            'The new password is shown only once. Copy and store it securely before closing.',
+                          category: 'User',
+                        },
+                        {
                           title: 'Unsaved changes',
                           description: 'Any unsaved changes will be lost. Do you want to leave?',
                           category: 'General',
                         },
                         {
                           title: 'Detach user group',
-                          description: 'This action detaches the user from the group.',
+                          description:
+                            'Detaching revokes permissions granted through this group’s roles for this user.',
                           category: 'Group',
                         },
                         {
@@ -908,6 +1002,12 @@ export function ModalsPage() {
                         onOpen={() => openModalFn('confirm-password')}
                       />
                       <ModalListItem
+                        title="Password reset"
+                        description="The new password is shown only once. Copy and store it securely before closing."
+                        category="User"
+                        onOpen={() => openModalFn('password-reset')}
+                      />
+                      <ModalListItem
                         title="Unsaved changes"
                         description="Any unsaved changes will be lost. Do you want to leave?"
                         category="General"
@@ -915,7 +1015,7 @@ export function ModalsPage() {
                       />
                       <ModalListItem
                         title="Detach user group"
-                        description="This action detaches the user from the group."
+                        description="Detaching revokes permissions granted through this group’s roles for this user."
                         category="Group"
                         onOpen={() => openModalFn('detach-user-group')}
                       />
@@ -979,7 +1079,8 @@ export function ModalsPage() {
                         },
                         {
                           title: 'Detach policy',
-                          description: 'This action detaches the policy from the role.',
+                          description:
+                            'Detaches the policy from this user only; inherited policies are unchanged.',
                           category: 'Policy',
                         },
                         {
@@ -1033,7 +1134,7 @@ export function ModalsPage() {
                       />
                       <ModalListItem
                         title="Detach policy"
-                        description="This action detaches the policy from the role."
+                        description="Detaches the policy from this user only; inherited policies are unchanged."
                         category="Policy"
                         onOpen={() => openModalFn('detach-policy')}
                       />
@@ -1140,7 +1241,13 @@ export function ModalsPage() {
                         {
                           title: 'Delete domain',
                           description:
-                            'Removing the selected instances is permanent and cannot be undone.',
+                            'Removes IAM data for the domain; requires prerequisites and confirms destructive cleanup.',
+                          category: 'Domain',
+                        },
+                        {
+                          title: 'Delete domain (prerequisites not met)',
+                          description:
+                            'This domain cannot be deleted until failed prerequisites are cleared.',
                           category: 'Domain',
                         },
                         {
@@ -1174,9 +1281,15 @@ export function ModalsPage() {
                     >
                       <ModalListItem
                         title="Delete domain"
-                        description="Removing the selected instances is permanent and cannot be undone."
+                        description="Removes IAM data for the domain; requires prerequisites and confirms destructive cleanup."
                         category="Domain"
                         onOpen={() => openModalFn('delete-domain')}
+                      />
+                      <ModalListItem
+                        title="Delete domain (prerequisites not met)"
+                        description="This domain cannot be deleted until failed prerequisites are cleared."
+                        category="Domain"
+                        onOpen={() => openModalFn('delete-domain-prereqs-fail')}
                       />
                       <ModalListItem
                         title="Switch to domain"
@@ -1210,6 +1323,116 @@ export function ModalsPage() {
                       />
                     </FilteredGroup>
                     <FilteredGroup
+                      heading="System Administrator"
+                      items={[
+                        {
+                          title: 'New access key (SA)',
+                          description:
+                            'Shows access key ID and secret access key. Credentials shown only once.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Remove OTP MFA (SA)',
+                          description: 'After removal, user will not be asked for OTP at sign-in.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Delete system administrator (single)',
+                          description: 'Deleting this user removes and invalidates access keys.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Terminate session (SA)',
+                          description:
+                            'Terminating this session will sign the user out from this device.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Reset API key (SA)',
+                          description:
+                            'The current key stops working immediately. New key shown only once.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Terminate all sessions (SA)',
+                          description: 'Immediately sign the user out from all devices.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Delete access key (SA)',
+                          description:
+                            'This key stops working immediately and is permanently removed.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Delete system administrators (multi)',
+                          description:
+                            'Deleting selected users removes and invalidates their access keys.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'New API key (SA)',
+                          description: 'Shows key ID and new API key. Credentials shown only once.',
+                          category: 'System Admin',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="New access key (SA)"
+                        description="Shows access key ID and secret access key. Credentials shown only once."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-new-access-key')}
+                      />
+                      <ModalListItem
+                        title="Remove OTP MFA (SA)"
+                        description="After removal, user will not be asked for OTP at sign-in."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-remove-otp')}
+                      />
+                      <ModalListItem
+                        title="Delete system administrator (single)"
+                        description="Deleting this user removes and invalidates access keys."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-delete-admin')}
+                      />
+                      <ModalListItem
+                        title="Terminate session (SA)"
+                        description="Terminating this session will sign the user out from this device."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-terminate-session')}
+                      />
+                      <ModalListItem
+                        title="Reset API key (SA)"
+                        description="The current key stops working immediately. New key shown only once."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-reset-api-key')}
+                      />
+                      <ModalListItem
+                        title="Terminate all sessions (SA)"
+                        description="Immediately sign the user out from all devices."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-terminate-all')}
+                      />
+                      <ModalListItem
+                        title="Delete access key (SA)"
+                        description="This key stops working immediately and is permanently removed."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-delete-access-key')}
+                      />
+                      <ModalListItem
+                        title="Delete system administrators (multi)"
+                        description="Deleting selected users removes and invalidates their access keys."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-delete-admins')}
+                      />
+                      <ModalListItem
+                        title="New API key (SA)"
+                        description="Shows key ID and new API key. Credentials shown only once."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-new-api-key')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
                       heading="Service Account"
                       items={[
                         {
@@ -1230,6 +1453,12 @@ export function ModalsPage() {
                           category: 'Service Account',
                         },
                         {
+                          title: 'New access key',
+                          description:
+                            'These credentials are shown only once. Copy and store them securely before closing.',
+                          category: 'Access Key',
+                        },
+                        {
                           title: 'Reset API key',
                           description: 'The current key stops working immediately.',
                           category: 'Service Account',
@@ -1238,6 +1467,12 @@ export function ModalsPage() {
                           title: 'Delete API key',
                           description: 'This key stops working immediately and cannot be restored.',
                           category: 'Service Account',
+                        },
+                        {
+                          title: 'Delete access key',
+                          description:
+                            'This key stops working immediately and is permanently removed from the account.',
+                          category: 'Access Key',
                         },
                         {
                           title: 'Delete service account',
@@ -1277,6 +1512,12 @@ export function ModalsPage() {
                         onOpen={() => openModalFn('new-api-key')}
                       />
                       <ModalListItem
+                        title="New access key"
+                        description="These credentials are shown only once. Copy and store them securely before closing."
+                        category="Access Key"
+                        onOpen={() => openModalFn('new-access-key')}
+                      />
+                      <ModalListItem
                         title="Reset API key"
                         description="The current key stops working immediately."
                         category="Service Account"
@@ -1287,6 +1528,12 @@ export function ModalsPage() {
                         description="This key stops working immediately and cannot be restored."
                         category="Service Account"
                         onOpen={() => openModalFn('delete-api-key')}
+                      />
+                      <ModalListItem
+                        title="Delete access key"
+                        description="This key stops working immediately and is permanently removed from the account."
+                        category="Access Key"
+                        onOpen={() => openModalFn('delete-access-key')}
                       />
                       <ModalListItem
                         title="Delete service account"
@@ -3219,39 +3466,42 @@ export function ModalsPage() {
       {/* ================================================================
          MODAL INSTANCES — IAM
          ================================================================ */}
-      <ConfirmModal
-        isOpen={openModal === 'delete-user'}
-        onClose={closeModal}
-        onConfirm={closeModal}
-        title="Delete user"
-        description="Removing the selected instances is permanent and cannot be undone."
-        infoLabel="User"
-        infoValue="john.doe@example.com"
-        confirmText="Delete"
-        confirmVariant="danger"
-      />
+      <Modal isOpen={openModal === 'delete-user'} onClose={closeModal} title="Delete user">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Username" value="john.doe@example.com" />
+          <DangerWarning>
+            Deleting this user removes invalidates access keys, and ends active sessions.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
       <Modal
         isOpen={openModal === 'delete-users'}
         onClose={closeModal}
         title="Delete users"
         description="Removing the selected instances is permanent and cannot be undone."
       >
-        <ScrollableList
-          label="Users"
-          items={[
-            'john.doe@example.com',
-            'jane.smith@example.com',
-            'admin@example.com',
-            'dev@example.com',
-          ]}
-        />
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Users"
+            items={[
+              'john.doe@example.com',
+              'jane.smith@example.com',
+              'admin@example.com',
+              'dev@example.com',
+            ]}
+          />
+          <DangerWarning>
+            Deleting the selected users removes invalidates their access keys, and ends their active
+            sessions.
+          </DangerWarning>
+        </div>
         <ModalButtons onClose={closeModal} />
       </Modal>
       <Modal
         isOpen={openModal === 'confirm-password'}
         onClose={closeModal}
         title="Confirm user password"
-        description="Review the username and password. The password can only be viewed at this step."
       >
         <div className="flex flex-col gap-3">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex items-center justify-between">
@@ -3296,34 +3546,45 @@ export function ModalsPage() {
               }}
             />
           </div>
+          <InlineMessage variant="info">
+            The password can only be viewed at this step.
+          </InlineMessage>
         </div>
         <div className="flex gap-2 w-full">
           <Button variant="primary" onClick={closeModal} className="flex-1">
-            Done
+            Close
           </Button>
         </div>
       </Modal>
-      <ConfirmModal
-        isOpen={openModal === 'unsaved-changes'}
-        onClose={closeModal}
-        onConfirm={closeModal}
-        title="Unsaved changes"
-        description="Any unsaved changes will be lost. Do you want to leave?"
-        confirmText="Stay"
-        confirmVariant="primary"
-        cancelText="Leave"
-      />
+      <Modal isOpen={openModal === 'unsaved-changes'} onClose={closeModal} title="Unsaved changes">
+        <div className="flex flex-col gap-4">
+          <InlineMessage variant="info">
+            Any unsaved changes will be lost. Do you want to leave?
+          </InlineMessage>
+          <div className="flex gap-2 w-full">
+            <Button variant="outline" onClick={closeModal} className="flex-1">
+              Leave
+            </Button>
+            <Button variant="primary" onClick={closeModal} className="flex-1">
+              Stay
+            </Button>
+          </div>
+        </div>
+      </Modal>
       <Modal
         isOpen={openModal === 'detach-user-group'}
         onClose={closeModal}
         title="Detach user group"
-        description="This action detaches the user from the group."
       >
-        <ScrollableList
-          label="User groups"
-          items={['developers', 'qa-team', 'ops-team', 'security-team']}
-        />
-        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="danger" />
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Username" value="john.doe@example.com" />
+          <InfoBox label="User group" value="developers" />
+          <DangerWarning>
+            Detaching this user from the group revokes permissions granted through this group&apos;s
+            roles for this user.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
       </Modal>
       <Modal
         isOpen={openModal === 'detach-role'}
@@ -3334,39 +3595,44 @@ export function ModalsPage() {
         <ScrollableList label="Roles" items={['admin', 'developer', 'viewer', 'operator']} />
         <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="danger" />
       </Modal>
-      <ConfirmModal
-        isOpen={openModal === 'remove-otp-mfa'}
-        onClose={closeModal}
-        onConfirm={closeModal}
-        title="Remove OTP MFA"
-        description="This action removes OTP MFA for the user."
-        infoLabel="User"
-        infoValue="admin@thaki.cloud"
-        confirmText="Remove"
-        confirmVariant="danger"
-      />
-      <ConfirmModal
+      <Modal isOpen={openModal === 'remove-otp-mfa'} onClose={closeModal} title="Remove OTP MFA">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Username" value="admin@thaki.cloud" />
+          <DangerWarning>
+            After removal, this user will not be asked for an OTP code at sign-in until they enroll
+            OTP MFA again.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Remove" confirmVariant="primary" />
+      </Modal>
+      <Modal
         isOpen={openModal === 'terminate-all-sessions'}
         onClose={closeModal}
-        onConfirm={closeModal}
         title="Terminate all sessions"
-        description="This action terminates all sessions for the user."
-        infoLabel="User"
-        infoValue="admin@thaki.cloud"
-        confirmText="Terminate"
-        confirmVariant="danger"
-      />
-      <ConfirmModal
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="User" value="John Doe" />
+          <DangerWarning>
+            Terminating all sessions will immediately sign the user out from all devices and require
+            re-authentication.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Terminate" confirmVariant="primary" />
+      </Modal>
+      <Modal
         isOpen={openModal === 'terminate-session'}
         onClose={closeModal}
-        onConfirm={closeModal}
         title="Terminate session"
-        description="This action terminates the session."
-        infoLabel="Session"
-        infoValue="sess-abc123"
-        confirmText="Terminate"
-        confirmVariant="danger"
-      />
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Session" value="John Doe (Chrome on macOS)" />
+          <DangerWarning>
+            Terminating this session will sign the user out from this device and require
+            re-authentication.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Terminate" confirmVariant="primary" />
+      </Modal>
       <Modal
         isOpen={openModal === 'remove-user'}
         onClose={closeModal}
@@ -3432,17 +3698,16 @@ export function ModalsPage() {
         </div>
         <ModalButtons onClose={closeModal} confirmText="Revoke" confirmVariant="danger" />
       </Modal>
-      <Modal
-        isOpen={openModal === 'detach-policy'}
-        onClose={closeModal}
-        title="Detach policy"
-        description="This action detaches the policy from the role."
-      >
-        <ScrollableList
-          label="Policies"
-          items={['read-only-policy', 'admin-policy', 'network-policy']}
-        />
-        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="danger" />
+      <Modal isOpen={openModal === 'detach-policy'} onClose={closeModal} title="Detach policy">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Username" value="john.doe@example.com" />
+          <InfoBox label="Policy" value="read-only-policy" />
+          <DangerWarning>
+            This detaches the policy from this user only. The policy resource is not deleted.
+            Policies inherited through roles or user groups are not changed.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
       </Modal>
       <ConfirmModal
         isOpen={openModal === 'delete-policy'}
@@ -3553,17 +3818,42 @@ export function ModalsPage() {
         confirmText="Apply"
         confirmVariant="primary"
       />
-      <ConfirmModal
-        isOpen={openModal === 'delete-domain'}
-        onClose={closeModal}
-        onConfirm={closeModal}
-        title="Delete domain"
-        description="Removing the selected instances is permanent and cannot be undone."
-        infoLabel="Domain"
-        infoValue="example.com"
-        confirmText="Delete"
-        confirmVariant="danger"
-      />
+      <Modal isOpen={openModal === 'delete-domain'} onClose={closeModal} title="Delete domain">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="domain" value="example.com" />
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              Deletion prerequisites
+            </span>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No bare metal instances
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No user-created tenants
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No storage buckets
+                </span>
+              </div>
+            </div>
+          </div>
+          <DangerWarning>
+            This removes IAM data for the domain (accounts, groups, policies, default tenant, and
+            settings). Thaki Storage domains also drop Ceph pools via the Storage API before IAM
+            cleanup.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
       <ConfirmModal
         isOpen={openModal === 'switch-domain'}
         onClose={closeModal}
@@ -3615,6 +3905,280 @@ export function ModalsPage() {
         confirmText="Apply"
         confirmVariant="primary"
       />
+
+      <Modal isOpen={openModal === 'password-reset'} onClose={closeModal} title="Password reset">
+        <div className="flex flex-col gap-2">
+          <InfoBoxCopyable label="Username" value="john.doe@example.com" />
+          <InfoBoxCopyable label="Password" value="Temp1234!@#" />
+          <DangerWarning>
+            The new password is shown only once. Copy and store it securely before closing this
+            dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </div>
+      </Modal>
+      <Modal isOpen={openModal === 'new-access-key'} onClose={closeModal} title="New access key">
+        <div className="flex flex-col gap-2">
+          <InfoBoxCopyable label="Access key ID" value="AKIAIOSFODNN7EXAMPLE" />
+          <InfoBoxCopyable
+            label="Secret access key"
+            value="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+          />
+          <DangerWarning>
+            These credentials are shown only once. Copy and store them securely before you close
+            this dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-domain-prereqs-fail'}
+        onClose={closeModal}
+        title="Delete domain"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="domain" value="example.com" />
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              Deletion prerequisites
+            </span>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No bare metal instances
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No user-created tenants
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No storage buckets
+                </span>
+              </div>
+            </div>
+          </div>
+          <DangerWarning>
+            This domain cannot be deleted because the deletion prerequisites are not met. Clear the
+            failed items, then try again.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Close
+          </Button>
+        </div>
+      </Modal>
+
+      {/* — System Administrator — */}
+
+      {/* New access key (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-new-access-key'}
+        onClose={closeModal}
+        title="New access key"
+        size="sm"
+      >
+        <InfoBoxCopyable label="Access key ID" value="AKIA112AK3IALQI2" />
+        <InfoBoxCopyable label="Secret access key" value="wJalrXUtnFEMI/K7MDENG/bPxRfiCY..." />
+        <DangerWarning>
+          These credentials are shown only once. Copy and store them securely before you close this
+          dialog.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Remove OTP MFA (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-remove-otp'}
+        onClose={closeModal}
+        title="Remove OTP MFA"
+        size="sm"
+      >
+        <InfoBox label="Username" value="thaki.kim" />
+        <DangerWarning>
+          After removal, this user will not be asked for an OTP code at sign-in until they enroll
+          OTP MFA again.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Remove
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Delete system administrator (single) */}
+      <Modal
+        isOpen={openModal === 'sa-delete-admin'}
+        onClose={closeModal}
+        title="Delete system administrator"
+        size="sm"
+      >
+        <InfoBox label="User" value="thaki.kim" />
+        <DangerWarning>
+          Deleting this user removes invalidates access keys, and ends active sessions.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={closeModal} className="flex-1">
+            Delete
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Terminate session (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-terminate-session'}
+        onClose={closeModal}
+        title="Terminate session"
+        size="sm"
+      >
+        <InfoBox label="Session" value="thaki.kim (Chrome / Windows)" />
+        <DangerWarning>
+          Terminating this session will sign the user out from this device and require
+          re-authentication.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Terminate
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Reset API key (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-reset-api-key'}
+        onClose={closeModal}
+        title="Reset API key"
+        size="sm"
+      >
+        <InfoBox label="Key ID" value="AKIA112AK3IALQI2" />
+        <DangerWarning>
+          The current key stops working immediately. The new key is shown only once on the next
+          screen.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Reset
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Terminate all sessions (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-terminate-all'}
+        onClose={closeModal}
+        title="Terminate all sessions"
+        size="sm"
+      >
+        <InfoBox label="User" value="thaki.kim" />
+        <DangerWarning>
+          Terminating all sessions will immediately sign the user out from all devices and require
+          re-authentication.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Terminate
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Delete access key (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-delete-access-key'}
+        onClose={closeModal}
+        title="Delete access key"
+        size="sm"
+      >
+        <InfoBox label="Key ID" value="AKIA112AK3IALQI2" />
+        <DangerWarning>
+          This key stops working immediately and is permanently removed from the account.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={closeModal} className="flex-1">
+            Delete
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Delete system administrators (multi) */}
+      <Modal
+        isOpen={openModal === 'sa-delete-admins'}
+        onClose={closeModal}
+        title="Delete system administrator"
+        size="sm"
+      >
+        <ScrollableList
+          label="Users"
+          items={['thaki.kim', 'alex.jones', 'sarah.lee', 'john.doe', 'jane.smith']}
+        />
+        <DangerWarning>
+          Deleting the selected users removes invalidates their access keys, and ends their active
+          sessions.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={closeModal} className="flex-1">
+            Delete
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* New API key (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-new-api-key'}
+        onClose={closeModal}
+        title="New API key"
+        size="sm"
+      >
+        <InfoBoxCopyable label="Key ID" value="AKIA112AK3IALQI2" />
+        <InfoBoxCopyable label="New API key" value="wJalrXUtnFEMI/K7MDENG/bPxRfiCY..." />
+        <DangerWarning>
+          These credentials are shown only once. Copy and store them securely before you close this
+          dialog.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </ModalButtons>
+      </Modal>
 
       {/* — Service Account — */}
       <Modal
@@ -3683,6 +4247,19 @@ export function ModalsPage() {
           <DangerWarning>
             This key stops working immediately. Requests that use it will fail, and the key cannot
             be restored.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-access-key'}
+        onClose={closeModal}
+        title="Delete access key"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Key ID" value="ak-key-abc123" />
+          <DangerWarning>
+            This key stops working immediately and is permanently removed from the account.
           </DangerWarning>
         </div>
         <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
