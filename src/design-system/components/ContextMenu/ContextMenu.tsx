@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -82,13 +82,14 @@ const ContextMenuItemComponent: React.FC<{
   const [submenuPosition, setSubmenuPosition] = useState({ x: 0, y: 0 });
   const [submenuDirection, setSubmenuDirection] = useState<'left' | 'right'>('right');
   const itemRef = useRef<HTMLDivElement>(null);
-  const submenuRef = useRef<HTMLDivElement>(null);
+  const submenuOsRef = useRef<OverlayScrollbarsComponentRef>(null);
   const closeTimeoutRef = useRef<number | null>(null);
 
   // Adjust submenu position after it renders
   useEffect(() => {
-    if (showSubmenu && submenuRef.current && itemRef.current) {
-      const submenuRect = submenuRef.current.getBoundingClientRect();
+    const submenuEl = submenuOsRef.current?.getElement();
+    if (showSubmenu && submenuEl && itemRef.current) {
+      const submenuRect = submenuEl.getBoundingClientRect();
       const itemRect = itemRef.current.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
@@ -299,7 +300,7 @@ const ContextMenuItemComponent: React.FC<{
         item.submenu &&
         createPortal(
           <OverlayScrollbarsComponent
-            ref={submenuRef as React.RefObject<HTMLDivElement>}
+            ref={submenuOsRef}
             onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
             onMouseEnter={handleSubmenuMouseEnter}

@@ -613,7 +613,7 @@ function GlassDomainSelect({ value, onChange, options }: GlassDomainSelectProps)
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-1.5 min-w-[160px] py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-2xl z-[1100] overflow-hidden">
+        <div className="absolute top-full left-0 min-w-[160px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-2xl z-[1100] overflow-hidden">
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -1252,6 +1252,8 @@ interface PageWindowProps {
 const TOP_BAR_HEIGHT = 52;
 const MIN_WINDOW_WIDTH = 400;
 const MIN_WINDOW_HEIGHT = 300;
+const SNAP_EDGE_THRESHOLD = 8;
+type SnapZone = 'left' | 'right' | null;
 
 function PageWindow({
   windowId,
@@ -1280,6 +1282,15 @@ function PageWindow({
     w: number;
     h: number;
   } | null>(null);
+  const [snapZone, setSnapZone] = useState<SnapZone>(null);
+  const [preSnapState, setPreSnapState] = useState<{
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  } | null>(null);
+  const [snapPreview, setSnapPreview] = useState<SnapZone>(null);
+  const snapPreviewRef = useRef<SnapZone>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const isResizing = useRef<string | null>(null);
@@ -1313,11 +1324,23 @@ function PageWindow({
       if (isMaximized) return;
       e.preventDefault();
       isDragging.current = true;
+
+      const startPosX = snapZone && preSnapState ? preSnapState.x : position.x;
+      const startPosY = snapZone && preSnapState ? preSnapState.y : position.y;
+
+      if (snapZone) {
+        if (preSnapState) {
+          setSize({ width: preSnapState.w, height: preSnapState.h });
+        }
+        setSnapZone(null);
+        setPreSnapState(null);
+      }
+
       dragStart.current = {
         x: e.clientX,
         y: e.clientY,
-        posX: position.x,
-        posY: position.y,
+        posX: startPosX,
+        posY: startPosY,
         w: 0,
         h: 0,
       };
@@ -1330,16 +1353,46 @@ function PageWindow({
           x: dragStart.current.posX + dx,
           y: Math.max(TOP_BAR_HEIGHT, dragStart.current.posY + dy),
         });
+
+        let preview: SnapZone = null;
+        if (ev.clientX <= SNAP_EDGE_THRESHOLD) {
+          preview = 'left';
+        } else if (ev.clientX >= window.innerWidth - SNAP_EDGE_THRESHOLD) {
+          preview = 'right';
+        }
+        snapPreviewRef.current = preview;
+        setSnapPreview(preview);
       };
       const handleMouseUp = () => {
         isDragging.current = false;
+
+        const currentPreview = snapPreviewRef.current;
+        if (currentPreview) {
+          const halfWidth = window.innerWidth / 2;
+          const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
+          setPreSnapState({
+            x: dragStart.current.posX,
+            y: dragStart.current.posY,
+            w: size.width,
+            h: size.height,
+          });
+          setPosition({
+            x: currentPreview === 'left' ? 0 : halfWidth,
+            y: TOP_BAR_HEIGHT,
+          });
+          setSize({ width: halfWidth, height: snapHeight });
+          setSnapZone(currentPreview);
+        }
+
+        snapPreviewRef.current = null;
+        setSnapPreview(null);
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
       };
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     },
-    [isMaximized, position]
+    [isMaximized, position, size, snapZone, preSnapState]
   );
 
   // Resize handler
@@ -1348,6 +1401,19 @@ function PageWindow({
       if (isMaximized) return;
       e.preventDefault();
       e.stopPropagation();
+
+      if (snapZone) {
+        const halfWidth = window.innerWidth / 2;
+        const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
+        setPosition({
+          x: snapZone === 'left' ? 0 : halfWidth,
+          y: TOP_BAR_HEIGHT,
+        });
+        setSize({ width: halfWidth, height: snapHeight });
+        setSnapZone(null);
+        setPreSnapState(null);
+      }
+
       isResizing.current = direction;
       dragStart.current = {
         x: e.clientX,
@@ -1397,7 +1463,7 @@ function PageWindow({
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     },
-    [isMaximized, position, size]
+    [isMaximized, position, size, snapZone]
   );
 
   const handleMinimize = useCallback(() => {
@@ -1448,14 +1514,24 @@ function PageWindow({
         borderRadius: 0,
         transition: windowTransition,
       }
-    : {
-        width: `${size.width}px`,
-        height: `${size.height}px`,
-        top: `${position.y}px`,
-        left: `${position.x}px`,
-        zIndex: zIndex,
-        transition: windowTransition,
-      };
+    : snapZone
+      ? {
+          width: `${window.innerWidth / 2}px`,
+          height: `${window.innerHeight - TOP_BAR_HEIGHT}px`,
+          top: `${TOP_BAR_HEIGHT}px`,
+          left: snapZone === 'left' ? '0px' : `${window.innerWidth / 2}px`,
+          zIndex: zIndex,
+          borderRadius: 0,
+          transition: windowTransition,
+        }
+      : {
+          width: `${size.width}px`,
+          height: `${size.height}px`,
+          top: `${position.y}px`,
+          left: `${position.x}px`,
+          zIndex: zIndex,
+          transition: windowTransition,
+        };
 
   const resizeHandleBase = 'absolute pointer-events-auto z-10';
   const edgeThickness = '4px';
@@ -1471,6 +1547,24 @@ function PageWindow({
         ...(isMinimized ? { pointerEvents: 'none' as const } : {}),
       }}
     >
+      {/* Snap preview overlay */}
+      {snapPreview && (
+        <div
+          className="fixed pointer-events-none"
+          style={{
+            top: TOP_BAR_HEIGHT + 4,
+            left: snapPreview === 'left' ? 4 : '50%',
+            width: 'calc(50% - 6px)',
+            height: `calc(100vh - ${TOP_BAR_HEIGHT + 8}px)`,
+            zIndex: 9999,
+            background: 'color-mix(in srgb, var(--color-primary-default) 12%, transparent)',
+            borderRadius: 12,
+            border: '2px solid color-mix(in srgb, var(--color-primary-default) 40%, transparent)',
+            transition: 'all 150ms ease-out',
+          }}
+        />
+      )}
+
       <motion.div
         ref={windowRef}
         initial={{ scale: 0.95, opacity: 0 }}
