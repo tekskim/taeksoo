@@ -153,6 +153,7 @@ import AgentDetailPage from '@/pages/AgentDetailPage';
 import { CreateAgentPage } from '@/pages/CreateAgentPage';
 import { ChatPage } from '@/pages/ChatPage';
 import { ChatConversationPage } from '@/pages/ChatConversationPage';
+import { ChatSearchPage } from '@/pages/ChatSearchPage';
 import { StoragePage } from '@/pages/StoragePage';
 import { MCPToolsPage } from '@/pages/MCPToolsPage';
 import { MCPToolDetailPage } from '@/pages/MCPToolDetailPage';
@@ -491,6 +492,7 @@ function AppRoutes() {
       <Route path="/agent/create" element={<CreateAgentPage />} />
       <Route path="/agent/create-v2" element={<CreateAgentPage />} />
       <Route path="/chat" element={<ChatPage />} />
+      <Route path="/chat/search" element={<ChatSearchPage />} />
       <Route path="/chat/:id" element={<ChatConversationPage />} />
       <Route path="/agent/storage" element={<StoragePage />} />
       <Route path="/mcp-tools" element={<MCPToolsPage />} />

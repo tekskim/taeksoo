@@ -14,17 +14,10 @@ import {
   PageShell,
   TabBar,
 } from '@/design-system';
-import { AgentSidebar } from '@/components/AgentSidebar';
+import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { ChatSidebar } from '@/components/ChatSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconPlus,
-  IconDots,
-  IconSettings,
-  IconStar,
-  IconStarFilled,
-  IconSearch,
-} from '@tabler/icons-react';
+import { IconBell, IconSettings, IconStar, IconStarFilled } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Agent Card Component
@@ -92,59 +85,6 @@ function AgentCard({
         <span className="bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] text-label-sm px-2 py-1 rounded">
           {modelName}
         </span>
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   Chat Sidebar Component
-   ---------------------------------------- */
-function ChatSidebar() {
-  const navigate = useNavigate();
-
-  return (
-    <div className="bg-[var(--color-surface-subtle)] border-r border-[var(--color-border-default)] flex flex-col h-full w-[200px] shrink-0">
-      <div className="flex flex-col w-full flex-1 overflow-y-auto min-h-0">
-        {/* Header */}
-        <div className="flex flex-col gap-1 items-center justify-between px-2 pt-3 pb-2 w-full sticky top-0 bg-[var(--color-surface-subtle)] z-10">
-          <div className="flex h-6 items-center justify-between overflow-clip pl-1.5 pr-0 py-0 relative rounded-md shrink-0 w-full">
-            <p className="text-label-sm text-[var(--color-text-subtle)]">Chats</p>
-            <div className="flex gap-1 items-center justify-end relative shrink-0">
-              <button className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center">
-                <IconSearch size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-              </button>
-              <button
-                onClick={() => navigate('/chat')}
-                className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center"
-              >
-                <IconPlus size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Chat List */}
-        <div className="flex flex-col gap-1 items-start px-2 w-full">
-          <div className="flex h-6 items-center justify-between overflow-clip pl-1.5 pr-0 py-0 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="text-label-md text-[var(--color-text-default)]">label 1</p>
-            <button className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center">
-              <IconDots size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-            </button>
-          </div>
-          <div className="flex h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="text-label-md text-[var(--color-text-default)]">label 2</p>
-          </div>
-          <div className="flex gap-0 h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="text-label-md text-[var(--color-text-default)]">label 3</p>
-          </div>
-          <div className="flex gap-0 h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="text-label-md text-[var(--color-text-default)]">label 4</p>
-          </div>
-          <div className="flex gap-0 h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
-            <p className="text-label-md text-[var(--color-text-default)]">label 5</p>
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -390,6 +330,8 @@ function NewChatDrawer({
 export function ChatPage() {
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
   const [agents, setAgents] = useState(mockAgents);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -438,8 +380,10 @@ export function ChatPage() {
 
   return (
     <PageShell
-      sidebar={<AgentSidebar />}
-      sidebarWidth={60}
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
@@ -455,7 +399,8 @@ export function ChatPage() {
       }
       topBar={
         <TopBar
-          showSidebarToggle={false}
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           canGoBack={false}
           canGoForward={false}
