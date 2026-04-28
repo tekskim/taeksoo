@@ -188,6 +188,7 @@ import { DomainEditDrawer } from '@/components/DomainEditDrawer';
 import { SetDefaultDomainDrawer } from '@/components/SetDefaultDomainDrawer';
 import { AdminLockInstanceDrawer } from '@/components/AdminLockInstanceDrawer';
 import { EditSystemAdminDrawer } from '@/components/EditSystemAdminDrawer';
+import { CreateUserDrawer } from '@/components/CreateUserDrawer';
 import {
   AdminInstanceMigrateDrawer,
   type MigrateInstanceInfo,
@@ -1285,6 +1286,11 @@ const COMPUTE_ADMIN_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [
 ];
 
 const IAM_USER_MANAGEMENT_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create user',
+    description: 'Create a new user with username, password, email, and status settings.',
+    category: 'User',
+  },
   {
     title: 'Manage user groups',
     description: 'Add or remove user groups for a specific user.',
@@ -2424,7 +2430,7 @@ export function DrawersPage() {
                         Drawers{' '}
                       </span>
                       <span className="text-body-md text-[var(--color-text-subtle)]">
-                        (13 drawers)
+                        (14 drawers)
                       </span>
                     </div>
                   </div>
@@ -2436,6 +2442,14 @@ export function DrawersPage() {
                       heading="User management actions"
                       items={IAM_USER_MANAGEMENT_ITEMS}
                     >
+                      <DrawerCard
+                        title="Create user"
+                        description="Create a new user with username, password, email, and status settings."
+                        category="User"
+                        onOpen={() => openDrawerFn('create-user')}
+                        linked
+                        linkedTo="IAM system administrators"
+                      />
                       <DrawerCard
                         title="Manage user groups"
                         description="Add or remove user groups for a specific user."
@@ -3625,6 +3639,15 @@ export function DrawersPage() {
         onClose={closeDrawer}
         onSubmit={(duration) => {
           console.log('Identify device with duration:', duration);
+        }}
+      />
+
+      {/* Create User Drawer */}
+      <CreateUserDrawer
+        isOpen={openDrawer === 'create-user'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create user:', data);
         }}
       />
 

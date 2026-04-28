@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
-import { ArrowRightLeft } from 'lucide-react';
 import {
   Button,
   Pagination,
@@ -9,7 +8,6 @@ import {
   TopBar,
   Breadcrumb,
   VStack,
-  HStack,
   ContextMenu,
   TabBar,
   Badge,
@@ -24,7 +22,6 @@ import {
   type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
-import { DomainCreateDrawer } from '@/components/DomainCreateDrawer';
 import { InlineCopyId } from '@/components/InlineCopyId';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
@@ -130,7 +127,6 @@ export default function IAMDomainsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -236,130 +232,107 @@ export default function IAMDomainsPage() {
     {
       key: 'id',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       sticky: 'right',
       render: (_value, row) => (
-        <HStack gap={1} align="center" justify="center">
+        <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
           <button
+            aria-label="Row actions"
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
-            title="Open console"
-            aria-label="Open console"
-            onClick={() => console.log('Open console')}
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
-            <ArrowRightLeft
-              size={14}
-              strokeWidth={1.5}
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
               className="text-[var(--color-text-default)]"
             />
           </button>
-          <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button
-              aria-label="Row actions"
-              type="button"
-              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
-            >
-              <IconDotsCircleHorizontal
-                size={16}
-                stroke={1.5}
-                className="text-[var(--color-text-default)]"
-              />
-            </button>
-          </ContextMenu>
-        </HStack>
+        </ContextMenu>
       ),
     },
   ];
 
   return (
-    <>
-      <PageShell
-        sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
-        sidebarWidth={sidebarWidth}
-        tabBar={
-          <TabBar
-            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-          />
-        }
-        topBar={
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-            showNavigation
-            onBack={() => navigate(-1)}
-            onForward={() => navigate(1)}
-            breadcrumb={<Breadcrumb items={[{ label: 'Domains' }]} />}
-          />
-        }
-        contentClassName="pt-4 px-8 pb-6"
-      >
-        <VStack gap={3}>
-          <PageHeader
-            title="Domains"
-            actions={
-              <Button variant="primary" size="md" onClick={() => setIsCreateDrawerOpen(true)}>
-                Create domain
-              </Button>
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Domains' }]} />}
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3}>
+        <PageHeader
+          title="Domains"
+          actions={
+            <Button variant="primary" size="md" onClick={() => navigate('/iam/domains/create')}>
+              Create domain
+            </Button>
+          }
+        />
+
+        {/* Table Content */}
+        <VStack gap={3} className="w-full">
+          <ListToolbar
+            primaryActions={
+              <ListToolbar.Actions>
+                <FilterSearchInput
+                  filters={filterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
+                  placeholder="Search domains by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<IconDownload size={12} />}
+                  aria-label="Download"
+                  onClick={() => console.log('Download')}
+                />
+              </ListToolbar.Actions>
             }
           />
 
-          {/* Table Content */}
-          <VStack gap={3} className="w-full">
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search domains by attributes"
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                    hideAppliedFilters
-                  />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconDownload size={12} />}
-                    aria-label="Download"
-                    onClick={() => console.log('Download')}
-                  />
-                </ListToolbar.Actions>
-              }
-            />
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            totalItems={filteredDomains.length}
+          />
 
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              showSettings
-              totalItems={filteredDomains.length}
-            />
-
-            {/* Table */}
-            <Table<Domain>
-              columns={columns}
-              data={paginatedDomains}
-              rowKey="id"
-              emptyMessage="No domains found"
-              loading={loading}
-            />
-          </VStack>
+          {/* Table */}
+          <Table<Domain>
+            columns={columns}
+            data={paginatedDomains}
+            rowKey="id"
+            emptyMessage="No domains found"
+            loading={loading}
+          />
         </VStack>
-      </PageShell>
-
-      {/* Create Domain Drawer */}
-      <DomainCreateDrawer
-        isOpen={isCreateDrawerOpen}
-        onClose={() => setIsCreateDrawerOpen(false)}
-      />
-    </>
+      </VStack>
+    </PageShell>
   );
 }

@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { IconDownload, IconLock, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconDownload, IconDotsCircleHorizontal, IconTrash } from '@tabler/icons-react';
 import {
+  Badge,
   Button,
   Pagination,
   Table,
@@ -23,6 +24,8 @@ import {
   type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { InlineCopyId } from '@/components/InlineCopyId';
+import { CreateUserDrawer } from '@/components/CreateUserDrawer';
 import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
@@ -166,6 +169,8 @@ export default function IAMSystemAdministratorsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
   const itemsPerPage = 10;
@@ -214,19 +219,17 @@ export default function IAMSystemAdministratorsPage() {
 
   // Context menu items
   const getContextMenuItems = (row: SystemAdmin): ContextMenuItem[] => [
-    { id: 'view', label: 'View details', onClick: () => console.log('view', row.id) },
-    { id: 'edit', label: 'Edit account', onClick: () => console.log('edit', row.id) },
     {
       id: 'reset-password',
       label: 'Reset password',
       onClick: () => console.log('reset-password', row.id),
     },
-    { id: 'lock', label: 'Lock account', onClick: () => console.log('lock', row.id) },
-    { id: 'unlock', label: 'Unlock account', onClick: () => console.log('unlock', row.id) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('edit', row.id) },
     {
       id: 'delete',
-      label: 'Delete account',
+      label: 'Delete',
       status: 'danger',
+      divider: true,
       onClick: () => console.log('delete', row.id),
     },
   ];
@@ -251,26 +254,21 @@ export default function IAMSystemAdministratorsPage() {
       flex: 1,
       minWidth: columnMinWidths.username,
       sortable: true,
-      render: (value) => (
-        <Link
-          to={`/iam/system-administrators/${value}`}
-          className="text-[var(--color-action-primary)] font-medium hover:underline"
-        >
-          {value}
-        </Link>
-      ),
-    },
-    {
-      key: 'locked',
-      label: 'Locked',
-      width: fixedColumns.locked,
-      align: 'center',
-      render: (value) => (
-        <div className="flex items-center justify-center w-full">
-          {value ? (
-            <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-          ) : null}
-        </div>
+      render: (value, row) => (
+        <VStack gap={0.5} align="start">
+          <Link
+            to={`/iam/system-administrators/${value}`}
+            className="text-[var(--color-action-primary)] font-medium hover:underline"
+          >
+            {value}
+          </Link>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </VStack>
       ),
     },
     {
@@ -285,6 +283,19 @@ export default function IAMSystemAdministratorsPage() {
       label: 'MFA',
       flex: 1,
       minWidth: columnMinWidths.mfa,
+      render: (value: string) => {
+        if (!value || value === '-') return <span>-</span>;
+        const methods = value.split(' / ');
+        return (
+          <div className="flex items-center gap-1">
+            {methods.map((method) => (
+              <Badge key={method} theme="white" size="sm">
+                {method}
+              </Badge>
+            ))}
+          </div>
+        );
+      },
     },
     {
       key: 'createdAt',
@@ -348,11 +359,7 @@ export default function IAMSystemAdministratorsPage() {
         <PageHeader
           title="System administrators"
           actions={
-            <Button
-              variant="primary"
-              size="md"
-              onClick={() => navigate('/iam/system-administrators/create')}
-            >
+            <Button variant="primary" size="md" onClick={() => setIsCreateDrawerOpen(true)}>
               Create account
             </Button>
           }
@@ -362,24 +369,36 @@ export default function IAMSystemAdministratorsPage() {
         <VStack gap={3} className="w-full">
           <ListToolbar
             primaryActions={
-              <ListToolbar.Actions>
-                <FilterSearchInput
-                  filters={systemAdminFilterFields}
-                  appliedFilters={appliedFilters}
-                  onFiltersChange={setAppliedFilters}
-                  placeholder="Search system administrators by attributes"
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                  hideAppliedFilters
-                />
+              <>
+                <ListToolbar.Actions>
+                  <FilterSearchInput
+                    filters={systemAdminFilterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search system administrators by attributes"
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                    hideAppliedFilters
+                  />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconDownload size={12} />}
+                    aria-label="Download"
+                    onClick={() => console.log('Download')}
+                  />
+                </ListToolbar.Actions>
+                <div className="w-px h-4 bg-[var(--color-border-default)] self-center" />
                 <Button
-                  variant="secondary"
+                  variant="muted"
                   size="sm"
-                  icon={<IconDownload size={12} />}
-                  aria-label="Download"
-                  onClick={() => console.log('Download')}
-                />
-              </ListToolbar.Actions>
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selectedItems.length === 0}
+                  onClick={() => console.log('Delete')}
+                >
+                  Delete
+                </Button>
+              </>
             }
           />
 
@@ -397,11 +416,23 @@ export default function IAMSystemAdministratorsPage() {
             columns={columns}
             data={paginatedAdmins}
             rowKey="id"
+            selectable
+            selectedKeys={selectedItems}
+            onSelectionChange={setSelectedItems}
             emptyMessage="No system administrators found"
             loading={loading}
           />
         </VStack>
       </VStack>
+
+      {/* Create User Drawer */}
+      <CreateUserDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        onSubmit={(data) => {
+          console.log('Create user:', data);
+        }}
+      />
     </PageShell>
   );
 }
