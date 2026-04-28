@@ -12,6 +12,7 @@ import {
   HStack,
   ContextMenu,
   TabBar,
+  Badge,
   PageShell,
   PageHeader,
   ListToolbar,
@@ -35,6 +36,7 @@ interface Domain {
   id: string;
   name: string;
   description: string;
+  storageType: string;
   createdAt: string;
 }
 
@@ -44,62 +46,72 @@ interface Domain {
 const mockDomains: Domain[] = [
   {
     id: 'domain-001',
-    name: 'domain',
+    name: 'domain_name',
     description: '-',
+    storageType: 'Thaki storage',
     createdAt: 'Sep 12, 2026 08:22:15',
   },
   {
     id: 'domain-002',
-    name: 'production',
+    name: 'production_domain',
     description: 'Production environment',
+    storageType: 'Thaki storage',
     createdAt: 'Aug 15, 2026 10:45:33',
   },
   {
     id: 'domain-003',
-    name: 'staging',
+    name: 'staging_domain',
     description: 'Staging environment',
+    storageType: 'Thaki storage',
     createdAt: 'Jul 20, 2026 14:18:42',
   },
   {
     id: 'domain-004',
-    name: 'development',
+    name: 'development_domain',
     description: 'Development environment',
+    storageType: 'Thaki storage',
     createdAt: 'Jun 10, 2026 09:32:28',
   },
   {
     id: 'domain-005',
-    name: 'testing',
+    name: 'testing_domain',
     description: 'Testing domain',
+    storageType: 'Thaki storage',
     createdAt: 'Sep 1, 2026 16:52:07',
   },
   {
     id: 'domain-006',
-    name: 'qa-domain',
+    name: 'qa_domain',
     description: 'QA testing',
+    storageType: 'Thaki storage',
     createdAt: 'Aug 25, 2026 11:15:44',
   },
   {
     id: 'domain-007',
-    name: 'sandbox',
+    name: 'sandbox_domain',
     description: 'Sandbox environment',
+    storageType: 'Thaki storage',
     createdAt: 'Sep 10, 2026 13:38:21',
   },
   {
     id: 'domain-008',
-    name: 'demo',
+    name: 'demo_domain',
     description: 'Demo environment',
+    storageType: 'Thaki storage',
     createdAt: 'Jul 5, 2026 10:22:55',
   },
   {
     id: 'domain-009',
-    name: 'internal',
+    name: 'internal_domain',
     description: 'Internal domain',
+    storageType: 'Thaki storage',
     createdAt: 'Jun 1, 2026 15:48:12',
   },
   {
     id: 'domain-010',
-    name: 'external',
+    name: 'external_domain',
     description: 'External access domain',
+    storageType: 'Thaki storage',
     createdAt: 'May 15, 2026 08:35:39',
   },
 ];
@@ -200,6 +212,18 @@ export default function IAMDomainsPage() {
       flex: 1,
       minWidth: columnMinWidths.description,
       sortable: true,
+    },
+    {
+      key: 'storageType',
+      label: 'Storage type',
+      flex: 1,
+      minWidth: 140,
+      sortable: true,
+      render: (value: string) => (
+        <Badge theme="white" size="sm">
+          {value}
+        </Badge>
+      ),
     },
     {
       key: 'createdAt',
