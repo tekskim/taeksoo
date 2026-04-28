@@ -281,6 +281,12 @@ const navigationItems: NavItem[] = [
     icon: IconSwitchHorizontal,
     path: '/design/components/context-selector',
   },
+  {
+    id: 'project-selector',
+    label: 'Project Selector',
+    icon: IconFolder,
+    path: '/design/components/project-selector',
+  },
 ];
 
 const overlayItems: NavItem[] = [
@@ -467,12 +473,6 @@ const graphItems: NavItem[] = [
 ];
 
 const etcItems: NavItem[] = [
-  {
-    id: 'project-selector',
-    label: 'Project Selector',
-    icon: IconFolder,
-    path: '/design/components/project-selector',
-  },
   {
     id: 'transitions',
     label: 'Transitions',
