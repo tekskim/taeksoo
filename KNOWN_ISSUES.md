@@ -50,3 +50,33 @@
 - **Prevention**: 페이지 구현 전 해당 섹션의 전체 프레임 목록을 먼저 확인하고 케이스 목록 작성
 
 - **Date**: 2026-04-28
+
+## 커스텀 아이콘 SVG 속성 임의 변환으로 인한 3회 반복 수정
+
+### 증상
+
+- Figma 원본과 아이콘 굵기(stroke)와 모양(path)이 다르다는 피드백이 3회 반복
+
+### 근본 원인 (Type 2 — Direction Error, 3단계 실패)
+
+| 회차 | 실수                                                                             | 원인                                                                                                |
+| ---- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| 1차  | Tabler 아이콘을 "이름이 비슷하니까" 사용                                         | Figma SVG를 다운로드하지 않고 눈대중으로 "비슷하다" 판단                                            |
+| 2차  | viewBox를 `0 0 16 16`으로 재계산, `strokeWidth={1.5}` 주입                       | Figma SVG에 stroke-width 미명시 = 기본값 1인데 1.5로 임의 설정. viewBox 스케일 재계산으로 비율 왜곡 |
+| 2차  | `IconFile`(Tabler)이 Figma `Icon/File`과 "같다"고 판단                           | path d 좌표를 실제 비교하지 않음                                                                    |
+| 3차  | Figma 원본 viewBox 유지, stroke-width 기본값 1 적용, `IconFileFigma` 커스텀 추가 | 드디어 올바름                                                                                       |
+
+### 수정 패턴
+
+1. Figma SVG를 `curl`로 다운로드하여 viewBox, path d, stroke-width를 **있는 그대로** 추출
+2. viewBox는 Figma 원본에 ±0.5 padding만 추가 (stroke 잘림 방지)
+3. stroke-width가 SVG에 없으면 **prop으로도 넣지 않음** (기본값 1)
+4. Tabler 아이콘은 path d가 좌표 수준에서 동일할 때만 사용, 그 외는 커스텀 SVG 생성
+
+### 스킬 적용
+
+- `tds-design-extract/SKILL.md` §3-7-A: Figma SVG 원본 다운로드 필수 절차 추가
+- `tds-design-apply/SKILL.md` Pitfall 1.5: viewBox/stroke-width 임의 변환 금지 + 코드 템플릿
+- `tds-design-evaluate/SKILL.md` Step 1C: 아이콘 SVG 속성 검증 절차 추가
+
+- **Date**: 2026-04-28

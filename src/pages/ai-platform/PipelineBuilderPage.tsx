@@ -10,7 +10,7 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconRoute, IconPlus } from '@tabler/icons-react';
 
@@ -45,11 +45,7 @@ export function PipelineBuilderPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'AI Platform' }, { label: 'MLOps' }, { label: 'Pipeline builder' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'MLOps' }, { label: 'Pipeline builder' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">

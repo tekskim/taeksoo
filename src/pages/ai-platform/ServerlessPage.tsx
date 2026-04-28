@@ -10,7 +10,7 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconBolt, IconPlus } from '@tabler/icons-react';
 
@@ -45,15 +45,7 @@ export function ServerlessPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'AI Platform' },
-                { label: 'Infrastructure' },
-                { label: 'Serverless' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Infrastructure' }, { label: 'Serverless' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">

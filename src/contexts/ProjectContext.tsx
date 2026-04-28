@@ -9,6 +9,7 @@ export interface Project {
   name: string;
   description: string;
   createdAt: string;
+  group?: string;
   disabled?: boolean;
 }
 
@@ -17,25 +18,29 @@ export const mockProjects: Project[] = [
     id: '04ebfa43',
     name: 'Project-01',
     description: "Development environment for the 'service' backend services.",
-    createdAt: 'Oct 22, 2025 10:15:33',
+    createdAt: '2025-10-22',
+    group: 'Group A',
   },
   {
     id: '14ebfa44',
     name: 'Project-02',
     description: "Development environment for the 'service' backend services.",
-    createdAt: 'Oct 22, 2025 13:53:25',
+    createdAt: '2025-10-22',
+    group: 'Group B',
   },
   {
     id: '24ebfa45',
     name: 'Project-03',
     description: "Development environment for the 'service' backend services.",
-    createdAt: 'Oct 22, 2025 13:53:25',
+    createdAt: '2025-10-22',
+    group: 'Group A',
   },
   {
     id: '34ebfa46',
     name: 'Project-04',
     description: "Development environment for the 'service' backend services.",
-    createdAt: 'Oct 22, 2025 13:53:25',
+    createdAt: '2025-10-22',
+    group: 'Group C',
     disabled: true,
   },
 ];

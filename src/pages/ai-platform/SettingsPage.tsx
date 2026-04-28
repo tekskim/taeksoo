@@ -9,7 +9,7 @@ import {
   EmptyState,
   PageShell,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconSettings } from '@tabler/icons-react';
 
@@ -44,7 +44,7 @@ export function SettingsPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'Settings' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">

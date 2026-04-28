@@ -15,7 +15,7 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -299,11 +299,7 @@ export function DatasetsPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'AI Platform' }, { label: 'Hub' }, { label: 'Datasets' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Datasets' }]} />}
           actions={
             <HStack gap={2}>
               <button className="p-2 hover:bg-[var(--color-surface-subtle)] rounded-md transition-colors">

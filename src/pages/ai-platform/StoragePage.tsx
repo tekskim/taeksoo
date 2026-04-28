@@ -10,7 +10,7 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconBox, IconPlus } from '@tabler/icons-react';
 
@@ -45,11 +45,7 @@ export function StoragePage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'AI Platform' }, { label: 'Infrastructure' }, { label: 'Storage' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Infrastructure' }, { label: 'Storage' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">

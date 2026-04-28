@@ -10,7 +10,7 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconTemplate, IconPlus } from '@tabler/icons-react';
 
@@ -46,13 +46,7 @@ export function MyTemplatesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'AI Platform' },
-                { label: 'Infrastructure' },
-                { label: 'My templates' },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'Infrastructure' }, { label: 'My templates' }]} />
           }
           actions={
             <>

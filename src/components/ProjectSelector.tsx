@@ -222,13 +222,13 @@ export function ProjectSelector({
                         </span>
                         {isSelected && !isDisabled && (
                           <IconCheck
-                            size={20}
+                            size={16}
                             className="text-[var(--color-action-primary)]"
-                            stroke={1}
+                            stroke={1.5}
                           />
                         )}
                         {isDisabled && (
-                          <span className="text-body-sm text-[var(--color-status-error)]">
+                          <span className="text-body-sm text-[var(--color-state-danger)]">
                             Disabled
                           </span>
                         )}
@@ -246,15 +246,22 @@ export function ProjectSelector({
                       </p>
 
                       {/* Footer */}
-                      <div
-                        className={`flex items-center justify-between text-body-xs ${
-                          isDisabled
-                            ? 'text-[var(--color-text-muted)]'
-                            : 'text-[var(--color-text-subtle)]'
-                        }`}
-                      >
-                        <span>ID: {project.id}</span>
-                        <span>{project.createdAt}</span>
+                      <div className="flex items-center justify-between">
+                        {project.group && (
+                          <span className="inline-flex items-center rounded-[6px] bg-[#f3f4f6] px-1.5 py-0.5 text-label-sm text-[var(--color-text-muted)]">
+                            {project.group}
+                          </span>
+                        )}
+                        {!project.group && <span />}
+                        <span
+                          className={`text-body-xs ${
+                            isDisabled
+                              ? 'text-[var(--color-text-muted)]'
+                              : 'text-[var(--color-text-subtle)]'
+                          }`}
+                        >
+                          {project.createdAt}
+                        </span>
                       </div>
                     </div>
                   </button>

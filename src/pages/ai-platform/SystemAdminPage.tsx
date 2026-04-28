@@ -9,7 +9,7 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconUserCog } from '@tabler/icons-react';
 
@@ -45,13 +45,7 @@ export function SystemAdminPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'AI Platform' },
-                { label: 'Operations' },
-                { label: 'System administration' },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'Operations' }, { label: 'System administration' }]} />
           }
           actions={
             <>

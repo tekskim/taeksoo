@@ -1000,6 +1000,8 @@ function AppRoutes() {
       <Route path="/ai-platform/explore" element={<ExplorePage />} />
       <Route path="/ai-platform/packages" element={<PackagesPage />} />
       <Route path="/ai-platform/models" element={<ModelsPage />} />
+      <Route path="/ai-platform/models/registry" element={<AIPlatformPage />} />
+      <Route path="/ai-platform/models/compare" element={<AIPlatformPage />} />
       <Route path="/ai-platform/datasets" element={<DatasetsPage />} />
       <Route path="/ai-platform/workloads" element={<WorkloadsPage />} />
       <Route path="/ai-platform/my-templates" element={<MyTemplatesPage />} />

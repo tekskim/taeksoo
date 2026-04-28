@@ -11,7 +11,7 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconFileDescription } from '@tabler/icons-react';
 
@@ -61,15 +61,7 @@ export function TextGenerationPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'AI Platform' },
-                { label: 'ML Studio' },
-                { label: 'Text generation' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'ML Studio' }, { label: 'Text generation' }]} />}
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
