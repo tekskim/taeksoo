@@ -1493,7 +1493,7 @@ export default function HostDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{host.hostname}</DetailHeader.Title>

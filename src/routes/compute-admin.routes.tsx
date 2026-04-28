@@ -110,6 +110,20 @@ const ComputeAdminCreateFirewallRulePage = lazy(
   () => import('@/pages/ComputeAdminCreateFirewallRulePage')
 );
 
+// Tenants, Metadata, Monitor, Physical Nodes
+const ComputeAdminTenantsPage = lazy(() => import('@/pages/ComputeAdminTenantsPage'));
+const ComputeAdminTenantDetailPage = lazy(() => import('@/pages/ComputeAdminTenantDetailPage'));
+const ComputeAdminMetadataDefinitionsPage = lazy(
+  () => import('@/pages/ComputeAdminMetadataDefinitionsPage')
+);
+const ComputeAdminMetadataDefinitionDetailPage = lazy(
+  () => import('@/pages/ComputeAdminMetadataDefinitionDetailPage')
+);
+const ComputeAdminMonitorOverviewPage = lazy(
+  () => import('@/pages/ComputeAdminMonitorOverviewPage')
+);
+const ComputeAdminPhysicalNodesPage = lazy(() => import('@/pages/ComputeAdminPhysicalNodesPage'));
+
 // Other
 const ComputeAdminTopologyD3Page = lazy(() => import('@/pages/ComputeAdminTopologyD3Page'));
 const ComputeAdminConsolePage = lazy(() => import('@/pages/ComputeAdminConsolePage'));
@@ -237,8 +251,25 @@ export const computeAdminRoutes = (
       element={<ComputeAdminFirewallRuleDetailPage />}
     />
 
+    {/* Tenants & Management */}
+    <Route path="/compute-admin/tenants" element={<ComputeAdminTenantsPage />} />
+    <Route path="/compute-admin/tenants/:id" element={<ComputeAdminTenantDetailPage />} />
+    <Route
+      path="/compute-admin/metadata-definition"
+      element={<ComputeAdminMetadataDefinitionsPage />}
+    />
+    <Route
+      path="/compute-admin/metadata-definition/:id"
+      element={<ComputeAdminMetadataDefinitionDetailPage />}
+    />
+
+    {/* Monitor & Physical Nodes */}
+    <Route path="/compute-admin/monitor-overview" element={<ComputeAdminMonitorOverviewPage />} />
+    <Route path="/compute-admin/physical-nodes" element={<ComputeAdminPhysicalNodesPage />} />
+
     {/* Other */}
     <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
     <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
+    <Route path="/compute-admin/*" element={<ComputeAdminHomePage />} />
   </>
 );

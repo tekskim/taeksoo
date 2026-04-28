@@ -44,7 +44,7 @@ export function PageShell({
   return (
     <div
       data-figma-name="[TDS] AppLayout"
-      className={`fixed inset-0 bg-[var(--color-surface-subtle)] ${className}`.trim()}
+      className={`fixed inset-0 min-w-[var(--layout-min-width)] bg-[var(--color-surface-subtle)] ${className}`.trim()}
     >
       {/* Sidebar */}
       {sidebar}
@@ -67,7 +67,7 @@ export function PageShell({
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
-          className="flex-1 min-w-[var(--layout-content-min-width)] overscroll-contain"
+          className="flex-1 min-w-0 overscroll-contain"
           style={{
             paddingBottom: bottomPanelPadding || '0',
           }}

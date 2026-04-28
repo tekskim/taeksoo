@@ -224,7 +224,7 @@ function QuotaSection({
       <SectionCard.Header title={title} />
       <SectionCard.Content>
         <VStack gap={6}>
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             {quotas.map((quota, index) => (
               <QuotaCard
                 key={`${quota.label}-${index}`}
@@ -243,7 +243,7 @@ function QuotaSection({
                 >
                   {group.name}
                 </span>
-                <div className="grid grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                   {group.quotas.map((quota, index) => (
                     <QuotaCard
                       key={`${quota.label}-${index}`}
@@ -339,7 +339,7 @@ export default function ComputeAdminTenantDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{tenant.name}</DetailHeader.Title>

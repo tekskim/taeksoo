@@ -469,7 +469,7 @@ export function CloudBuilderDetailPage() {
   }
 
   const pageContent = (
-    <VStack gap={6} className="min-w-[1176px]">
+    <VStack gap={6}>
       {isNetworkAgent ? (
         <DetailHeader
           id="tds-DetailHeader"

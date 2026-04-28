@@ -325,7 +325,7 @@ export default function FloatingIPDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Floating IP Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{floatingIP.floatingIp}</DetailHeader.Title>

@@ -727,7 +727,7 @@ export function FileSystemDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         <DetailHeader>
           <DetailHeader.Title>{fsData.name}</DetailHeader.Title>
           <DetailHeader.Actions>

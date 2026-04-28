@@ -351,6 +351,7 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 import { ProductionComparisonPage } from '@/pages/ProductionComparisonPage';
 import { DesignSystemLayout } from '@/pages/design/DesignSystemLayout';
 import { LabLayout } from '@/pages/lab/LabLayout';
+import { LabHomePage } from '@/pages/lab/LabHomePage';
 import { DesignOverviewPage } from '@/pages/design/DesignOverviewPage';
 import { AllComponentsPage } from '@/pages/design/AllComponentsPage';
 import { TokenArchitecturePage } from '@/pages/design/foundation/TokenArchitecturePage';
@@ -1242,6 +1243,7 @@ function AppRoutes() {
 
       {/* Lab Routes */}
       <Route path="/lab" element={<LabLayout />}>
+        <Route index element={<LabHomePage />} />
         <Route path="figma/guide" element={<FigmaGuidePage />} />
         <Route path="figma/foundation" element={<FigmaFoundationPage />} />
         <Route path="figma/components" element={<FigmaComponentsPage />} />

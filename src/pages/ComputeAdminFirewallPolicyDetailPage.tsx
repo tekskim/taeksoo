@@ -291,7 +291,7 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{policy.name}</DetailHeader.Title>

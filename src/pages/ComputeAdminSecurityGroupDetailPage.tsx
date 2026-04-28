@@ -435,7 +435,7 @@ export default function SecurityGroupDetailPage() {
         }
         contentClassName="pt-4 px-8 pb-20"
       >
-        <VStack gap={6} className="min-w-[1176px]">
+        <VStack gap={6}>
           {/* Header Card */}
           <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 pt-3 pb-4">
             {/* Title */}

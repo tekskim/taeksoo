@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { IconPlus, IconX, IconMinus, IconSquare, IconSquares } from '@tabler/icons-react';
+import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
 import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 import { WindowControl } from '../WindowControl';
 
@@ -78,7 +78,6 @@ export const TabBar: React.FC<TabBarProps> = ({
   const isDesktopWindow = useIsDesktopWindow();
   const desktopControls = useDesktopWindowControls();
   const effectiveShowWindowControls = showWindowControls && !isDesktopWindow;
-  const showDesktopWindowControls = isDesktopWindow && !!desktopControls;
 
   const handleWindowClose = useCallback(() => {
     if (isDesktopWindow && desktopControls) {
@@ -141,6 +140,42 @@ export const TabBar: React.FC<TabBarProps> = ({
       if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     };
+  }, []);
+
+  // Auto-scroll active tab into view; if it's the last tab, scroll to show add button too
+  useEffect(() => {
+    if (!activeTab || !tabsContainerRef.current) return;
+    const container = tabsContainerRef.current;
+    const scroll = () => {
+      if (!container) return;
+      const isLastTab = tabs.length > 0 && tabs[tabs.length - 1].id === activeTab;
+      if (isLastTab) {
+        container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+      } else {
+        const el = container.querySelector<HTMLElement>(`[data-tab-id="${activeTab}"]`);
+        if (el) {
+          el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+        }
+      }
+    };
+    // Wait for enter animation (200ms) + computed width re-render to settle
+    const timer = setTimeout(scroll, 250);
+    return () => clearTimeout(timer);
+  }, [activeTab, tabs]);
+
+  // Horizontal scroll on mouse wheel over tabs strip
+  useEffect(() => {
+    const container = tabsContainerRef.current;
+    if (!container) return;
+    const handler = (e: WheelEvent) => {
+      if (container.scrollWidth > container.clientWidth) {
+        e.preventDefault();
+        const delta = e.deltaY || e.deltaX;
+        container.scrollLeft += delta * 3;
+      }
+    };
+    container.addEventListener('wheel', handler, { passive: false });
+    return () => container.removeEventListener('wheel', handler);
   }, []);
 
   // Detect newly added tabs → start enter animation
@@ -309,8 +344,9 @@ export const TabBar: React.FC<TabBarProps> = ({
           }
         }}
         className="
+          flex-1
           flex items-end
-          overflow-hidden
+          overflow-x-auto overflow-y-hidden scrollbar-none
           h-full
           min-w-0
         "
@@ -375,8 +411,7 @@ export const TabBar: React.FC<TabBarProps> = ({
                 relative
                 flex items-center
                 h-full
-                ${isClosingMode && !isAnimating ? 'shrink-0' : 'w-[160px] shrink'}
-                min-w-0
+                ${isClosingMode && !isAnimating ? 'shrink-0 min-w-0' : isAnimating ? 'w-[var(--tabbar-tab-max-width)] shrink min-w-0' : 'w-[var(--tabbar-tab-max-width)] shrink min-w-[var(--tabbar-tab-min-width)]'}
                 pl-[var(--tabbar-tab-padding-x)] pr-[var(--tabbar-tab-padding-r)]
                 gap-[var(--tabbar-tab-gap)]
                 ${isClosing ? 'pointer-events-none' : 'cursor-pointer'}
@@ -449,38 +484,37 @@ export const TabBar: React.FC<TabBarProps> = ({
             </div>
           );
         })}
+        {/* Add Button — inside scrollable strip so it's reachable by scrolling */}
+        {showAddButton && onTabAdd && (
+          <button
+            type="button"
+            onClick={onTabAdd}
+            className="
+              shrink-0 self-center
+              flex items-center justify-center
+              size-[var(--tabbar-add-size)]
+              mx-[var(--tabbar-add-margin)]
+              rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--tabbar-hover-bg)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Add new tab"
+          >
+            <IconPlus size={14} stroke={1} />
+          </button>
+        )}
+
+        {/* Inner drag area — fills remaining space, draggable in desktop window mode */}
+        <div
+          className="flex-1 h-full shrink"
+          onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+          onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+        />
       </div>
 
-      {/* Add Button */}
-      {showAddButton && onTabAdd && (
-        <button
-          type="button"
-          onClick={onTabAdd}
-          className="
-            shrink-0
-            flex items-center justify-center
-            size-[var(--tabbar-add-size)]
-            mx-[var(--tabbar-add-margin)]
-            rounded-[var(--radius-sm)]
-            text-[var(--color-text-muted)]
-            transition-colors duration-[var(--duration-fast)]
-            hover:bg-[var(--tabbar-hover-bg)]
-            hover:text-[var(--color-text-default)]
-          "
-          aria-label="Add new tab"
-        >
-          <IconPlus size={14} stroke={1} />
-        </button>
-      )}
-
-      {/* Spacer — draggable in desktop window mode */}
-      <div
-        className="flex-1 h-full"
-        onMouseDown={showDesktopWindowControls ? desktopControls!.onDragStart : undefined}
-        onDoubleClick={showDesktopWindowControls ? desktopControls!.onDoubleClick : undefined}
-      />
-
-      {/* Window Controls — normal mode */}
+      {/* Window Controls — normal mode (non-desktop) */}
       {effectiveShowWindowControls && (
         <div className="flex items-center gap-1 px-2">
           <button
@@ -499,6 +533,12 @@ export const TabBar: React.FC<TabBarProps> = ({
           >
             <IconMinus size={12} stroke={1} />
           </button>
+          <WindowControl
+            type="split"
+            onSnapLeft={() => {}}
+            onSnapRight={() => {}}
+            className="text-[var(--color-text-muted)]"
+          />
           <button
             type="button"
             onClick={onMaximize}
@@ -534,68 +574,15 @@ export const TabBar: React.FC<TabBarProps> = ({
         </div>
       )}
 
-      {/* Window Controls — desktop window mode (from context) */}
-      {showDesktopWindowControls && (
-        <div className="flex items-center gap-1 px-2">
-          <button
-            type="button"
-            onClick={desktopControls!.onMinimize}
-            className="
-              flex items-center justify-center
-              size-[24px]
-              rounded-[var(--radius-sm)]
-              text-[var(--color-text-muted)]
-              transition-colors duration-[var(--duration-fast)]
-              hover:bg-[var(--color-surface-subtle)]
-              hover:text-[var(--color-text-default)]
-            "
-            aria-label="Minimize"
-          >
-            <IconMinus size={12} stroke={1} />
-          </button>
-          <WindowControl
-            type="split"
-            onSnapLeft={desktopControls!.onSnapLeft}
-            onSnapRight={desktopControls!.onSnapRight}
-            className="text-[var(--color-text-muted)]"
-          />
-          <button
-            type="button"
-            onClick={desktopControls!.onMaximize}
-            className="
-              flex items-center justify-center
-              size-[24px]
-              rounded-[var(--radius-sm)]
-              text-[var(--color-text-muted)]
-              transition-colors duration-[var(--duration-fast)]
-              hover:bg-[var(--color-surface-subtle)]
-              hover:text-[var(--color-text-default)]
-            "
-            aria-label={desktopControls!.isMaximized ? 'Restore' : 'Maximize'}
-          >
-            {desktopControls!.isMaximized ? (
-              <IconSquares size={12} stroke={1} />
-            ) : (
-              <IconSquare size={12} stroke={1} />
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={desktopControls!.onClose}
-            className="
-              flex items-center justify-center
-              size-[24px]
-              rounded-[var(--radius-sm)]
-              text-[var(--color-text-muted)]
-              transition-colors duration-[var(--duration-fast)]
-              hover:bg-[var(--color-surface-subtle)]
-              hover:text-[var(--color-text-default)]
-            "
-            aria-label="Close window"
-          >
-            <IconX size={12} stroke={1} />
-          </button>
-        </div>
+      {/* Desktop mode: controls are rendered at window frame level (DesktopPage.tsx),
+          so we only reserve space here to avoid content hiding under the overlay.
+          Overlay: 4 buttons (24px) + 3 gaps (4px) + px-2 (16px) = 124px + 24px gradient = 148px */}
+      {isDesktopWindow && (
+        <div
+          className="shrink-0 w-[148px] h-full"
+          onMouseDown={desktopControls?.onDragStart}
+          onDoubleClick={desktopControls?.onDoubleClick}
+        />
       )}
       {/* Truncation tooltip (portal) — mirrors DS Tooltip visuals */}
       {tooltipTab &&

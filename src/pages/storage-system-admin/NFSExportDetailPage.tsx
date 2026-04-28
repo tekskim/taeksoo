@@ -248,7 +248,7 @@ export function NFSExportDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         <DetailHeader>
           <DetailHeader.Title>{exportData.pseudo}</DetailHeader.Title>
           <DetailHeader.Actions>

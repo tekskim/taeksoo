@@ -900,7 +900,7 @@ export function MCPToolsPage() {
 
         {activeTab === 'catalog' && (
           /* Catalog Grid */
-          <div className="grid grid-cols-3 gap-4 relative shrink-0 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 relative shrink-0 w-full">
             {catalogTools.map((tool) => (
               <div
                 key={tool.id}

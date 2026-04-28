@@ -15,6 +15,16 @@ const BucketDetailPage = lazy(() => import('@/pages/storage-system-admin/BucketD
 const CreateBucketPage = lazy(() => import('@/pages/storage-system-admin/CreateBucketPage'));
 const ImagesPage = lazy(() => import('@/pages/storage-system-admin/ImagesPage'));
 const ImageDetailPage = lazy(() => import('@/pages/storage-system-admin/ImageDetailPage'));
+const PhysicalDisksPage = lazy(() => import('@/pages/storage-system-admin/PhysicalDisksPage'));
+const OverallPerformancePage = lazy(
+  () => import('@/pages/storage-system-admin/OverallPerformancePage')
+);
+const FileSystemsPage = lazy(() => import('@/pages/storage-system-admin/FileSystemsPage'));
+const FileSystemDetailPage = lazy(
+  () => import('@/pages/storage-system-admin/FileSystemDetailPage')
+);
+const NFSPage = lazy(() => import('@/pages/storage-system-admin/NFSPage'));
+const NFSExportDetailPage = lazy(() => import('@/pages/storage-system-admin/NFSExportDetailPage'));
 
 export const storageRoutes = (
   <>
@@ -30,5 +40,11 @@ export const storageRoutes = (
     <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
     <Route path="/storage/images" element={<ImagesPage />} />
     <Route path="/storage/images/:id" element={<ImageDetailPage />} />
+    <Route path="/storage/physical-disks" element={<PhysicalDisksPage />} />
+    <Route path="/storage/performance" element={<OverallPerformancePage />} />
+    <Route path="/storage/file-systems" element={<FileSystemsPage />} />
+    <Route path="/storage/file-systems/:id" element={<FileSystemDetailPage />} />
+    <Route path="/storage/nfs" element={<NFSPage />} />
+    <Route path="/storage/nfs/:id" element={<NFSExportDetailPage />} />
   </>
 );

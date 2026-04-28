@@ -22,6 +22,7 @@ export const agentRoutes = (
     <Route path="/agent/create" element={<CreateAgentPage />} />
     <Route path="/chat" element={<ChatPage />} />
     <Route path="/chat/:id" element={<ChatConversationPage />} />
+    <Route path="/agent/storage" element={<StoragePage />} />
     <Route path="/storage" element={<StoragePage />} />
     <Route path="/mcp-tools" element={<MCPToolsPage />} />
     <Route path="/mcp-tools/create" element={<CreateMCPTemplatePage />} />

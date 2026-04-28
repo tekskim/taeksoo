@@ -26,6 +26,7 @@ import { RefreshCw, CircleGauge, BrainCircuit } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
+import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 /* ----------------------------------------
    AI Platform Sidebar Component
@@ -39,6 +40,8 @@ interface AIPlatformSidebarProps {
 export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebarProps) {
   const { isDark } = useDarkMode();
   const location = useLocation();
+  const isDesktopWindow = useIsDesktopWindow();
+  const desktopControls = useDesktopWindowControls();
 
   // Check if current path matches href
   const isActive = (href: string) => {
@@ -58,11 +61,16 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* Logo */}
-      <div className="h-8 px-3 flex items-center justify-between">
+      <div
+        className="h-8 px-3 flex items-center justify-between select-none"
+        onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+        onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+      >
         <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
         <button
           type="button"
           onClick={onToggle}
+          onMouseDown={(e) => e.stopPropagation()}
           className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
           aria-label="Toggle sidebar"
         >

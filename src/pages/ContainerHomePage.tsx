@@ -339,7 +339,7 @@ export function ContainerHomePage() {
       bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
       contentClassName="pt-6 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Welcome Header */}
         <SectionCard className="bg-[var(--color-surface-subtle)]">
           <SectionCard.Content>

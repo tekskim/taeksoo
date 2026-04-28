@@ -572,7 +572,7 @@ export default function ComputeAdminMonitorOverviewPage() {
         />
 
         {/* Row 1: Gauge Charts + Pie Chart */}
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-6">
           <GaugeCard title="Physical CPU usage" value={70} used={7} total={10} unit="vCPU" />
           <GaugeCard title="Total RAM usage" value={70} used={8} total={10} unit="GiB" />
           <GaugeCard title="Physical storage usage" value={70} used={8} total={10} unit="TiB" />

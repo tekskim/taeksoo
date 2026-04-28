@@ -490,7 +490,7 @@ export function InstanceTemplateDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={3} className="min-w-[1176px]">
+      <VStack gap={3}>
         {/* Page Title with ID */}
         <div className="flex items-center h-8">
           <HStack gap={1} align="center">

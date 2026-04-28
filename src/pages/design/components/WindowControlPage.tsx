@@ -78,7 +78,7 @@ function WindowControlGuidelines() {
               <Td>
                 <strong>② Split Button</strong>
               </Td>
-              <Td>호버/클릭 시 드롭다운 메뉴 표시 → Left Half (⌥⌘◀) / Right Half (⌥⌘▶)</Td>
+              <Td>호버/클릭 시 드롭다운 메뉴 표시 → Left Half (⌥⇧←) / Right Half (⌥⇧→)</Td>
             </tr>
             <tr>
               <Td>
@@ -279,6 +279,52 @@ function WindowControlGuidelines() {
               </li>
             </ul>
           </Prose>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>4) 반응형 위치 정책</SubSectionTitle>
+          <Prose>
+            <p>
+              <strong>역할</strong>: 윈도우 크기와 관계없이 컨트롤을 항상 접근 가능하게 한다.
+            </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                데스크탑 모드에서 윈도우 컨트롤은{' '}
+                <strong>콘텐츠 영역이 아닌 윈도우 프레임 레벨</strong>에 고정된다.
+              </li>
+              <li>
+                콘텐츠가{' '}
+                <code className="text-body-sm bg-[var(--color-surface-muted)] px-1.5 py-0.5 rounded">
+                  min-width: 960px
+                </code>
+                로 고정되어 가로 스크롤이 발생하더라도, 컨트롤은 항상 윈도우 우상단에 표시된다.
+              </li>
+              <li>이는 실제 OS 윈도우의 동작과 동일한 패턴이다.</li>
+              <li>
+                컨트롤 영역 좌측에는 그라데이션 페이드가 적용되어 콘텐츠와 자연스럽게 전환된다.
+              </li>
+            </ul>
+          </Prose>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[200px]">조건</Th>
+                <Th>동작</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>윈도우 &gt;= 960px</Td>
+                <Td>컨트롤이 TabBar 우측에 자연스럽게 위치 (기존과 동일)</Td>
+              </tr>
+              <tr>
+                <Td>윈도우 &lt; 960px</Td>
+                <Td>
+                  콘텐츠는 960px 고정 + 가로 스크롤, 컨트롤은 윈도우 프레임 우상단에 오버레이로 표시
+                </Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
         </VStack>
       </VStack>
 

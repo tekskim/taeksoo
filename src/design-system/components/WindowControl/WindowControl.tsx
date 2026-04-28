@@ -120,7 +120,7 @@ const SplitDropdown: React.FC<SplitDropdownProps> = ({
         }}
       >
         <span>Left Half</span>
-        <span className={kbdClass}>⌥⌘◀</span>
+        <span className={kbdClass}>⌥⇧←</span>
       </button>
       <button
         type="button"
@@ -131,7 +131,7 @@ const SplitDropdown: React.FC<SplitDropdownProps> = ({
         }}
       >
         <span>Right Half</span>
-        <span className={kbdClass}>⌥⌘▶</span>
+        <span className={kbdClass}>⌥⇧→</span>
       </button>
     </div>,
     document.body

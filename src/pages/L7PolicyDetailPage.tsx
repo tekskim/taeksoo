@@ -329,7 +329,7 @@ export default function L7PolicyDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} align="stretch" className="min-w-[1176px]">
+      <VStack gap={6} align="stretch">
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{l7Policy.name}</DetailHeader.Title>

@@ -625,7 +625,7 @@ export function FlavorDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Flavor Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{flavor.name}</DetailHeader.Title>

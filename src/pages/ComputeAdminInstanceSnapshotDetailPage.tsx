@@ -237,7 +237,7 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Snapshot Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>

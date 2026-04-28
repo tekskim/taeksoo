@@ -164,7 +164,7 @@ function TenantRow({ name, enabled, resources }: TenantRowProps) {
           <span className="truncate">{name}</span>
         </div>
       </div>
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <TenantUsageCard
           icon={<Cpu size={14} strokeWidth={1.5} />}
           label="vCPU"
@@ -277,7 +277,7 @@ export function ComputeAdminHomePage() {
     >
       <VStack gap={6}>
         {/* Top Row - 3 Cards */}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* CAPACITY SUMMARY */}
           <Card title="Capacity Summary">
             <div className="space-y-6">

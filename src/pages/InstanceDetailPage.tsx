@@ -1889,7 +1889,7 @@ export function InstanceDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={4} className="min-w-[1176px]">
+      <VStack gap={4}>
         {/* Instance Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{instance.name}</DetailHeader.Title>

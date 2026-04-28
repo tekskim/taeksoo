@@ -345,7 +345,7 @@ export function ComputeHomePage() {
       contentClassName="px-8 py-6"
     >
       {/* Top Row - 4 Cards */}
-      <div className="grid grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
         {/* Tenant Info */}
         <Card
           title="Tenant Info"

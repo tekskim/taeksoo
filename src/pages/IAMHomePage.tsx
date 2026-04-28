@@ -314,7 +314,7 @@ export function IAMHomePage() {
     >
       <VStack gap={6}>
         {/* Row 1: Domain Info + Authentication Summary */}
-        <div className="grid grid-cols-[320px_1fr] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
           {/* Domain Info Card */}
           <div className="bg-[var(--color-surface-subtle)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-6">
             <h6 className="text-heading-h6">Domain Info</h6>
@@ -398,7 +398,7 @@ export function IAMHomePage() {
         {/* Row 2: User Status */}
         <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
           <h6 className="text-heading-h6">User Status</h6>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
             <StatCard label="Total" value="150" variant="default" />
             <StatCard label="Online" value="50" variant="success" />
             <StatCard label="Disabled" value="27" variant="danger" />
@@ -407,7 +407,7 @@ export function IAMHomePage() {
         </div>
 
         {/* Row 3: IAM Resources + Recent Events */}
-        <div className="grid grid-cols-[320px_1fr] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
           {/* IAM Resources */}
           <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
             <h6 className="text-heading-h6">IAM Resources</h6>

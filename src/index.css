@@ -14,8 +14,10 @@ html {
 
 html,
 body {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   height: 100%;
+  min-width: var(--layout-min-width);
 }
 
 /* ========================================
@@ -363,10 +365,10 @@ html.theme-transition *::after {
      Layout Structure
      ---------------------------------------- */
   --layout-max-width: 1920px;
-  --layout-min-width: 1440px;
+  --layout-min-width: 960px;
   --layout-sidebar-width: 200px;
   --layout-sidebar-width-collapsed: 40px;
-  --layout-content-min-width: calc(var(--layout-min-width) - var(--layout-sidebar-width));
+  --layout-content-min-width: 0px;
 
   /* Common widths */
   --search-input-width: 280px;

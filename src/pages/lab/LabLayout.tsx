@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { VStack, Disclosure } from '@/design-system';
 import { IconSearch, IconX, IconHome, IconChevronRight, IconArrowUp } from '@tabler/icons-react';
@@ -8,26 +8,28 @@ import { labNavGroups, allLabNavItems, isLabRecentlyUpdated } from './labNavigat
 export function LabLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const mainRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<OverlayScrollbarsComponentRef>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  const getViewport = () => mainRef.current?.osInstance()?.elements().viewport;
+
   useEffect(() => {
-    mainRef.current?.scrollTo(0, 0);
+    getViewport()?.scrollTo(0, 0);
   }, [location.pathname]);
 
   useEffect(() => {
-    const mainElement = mainRef.current;
-    if (!mainElement) return;
-    const handleScroll = () => setShowScrollTop(mainElement.scrollTop > 300);
-    mainElement.addEventListener('scroll', handleScroll);
-    return () => mainElement.removeEventListener('scroll', handleScroll);
+    const viewport = getViewport();
+    if (!viewport) return;
+    const handleScroll = () => setShowScrollTop(viewport.scrollTop > 300);
+    viewport.addEventListener('scroll', handleScroll);
+    return () => viewport.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    getViewport()?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const filteredNavItems = searchQuery.trim()
@@ -236,7 +238,7 @@ export function LabLayout() {
       {/* Main Content */}
       <OverlayScrollbarsComponent
         element="main"
-        ref={mainRef as any}
+        ref={mainRef}
         options={{
           overflow: { x: 'hidden', y: 'scroll' },
           scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },

@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { IconLayoutSidebar } from '@tabler/icons-react';
+import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 // App icons
 import ComputeIcon from '@/assets/appIcon/compute.png';
@@ -67,6 +68,8 @@ interface AppSwitcherProps {
 
 export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps) {
   const location = useLocation();
+  const isDesktopWindow = useIsDesktopWindow();
+  const desktopControls = useDesktopWindowControls();
 
   // Determine current app from path if not provided
   const getCurrentApp = () => {
@@ -81,7 +84,11 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
   const currentApp = getCurrentApp();
 
   return (
-    <div className="h-10 px-3 flex items-center gap-2">
+    <div
+      className="h-10 px-3 flex items-center gap-2"
+      onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+      onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+    >
       {currentApp && (
         <>
           <img
@@ -89,7 +96,7 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
             alt={currentApp.title}
             className="w-[24px] h-[24px] flex-shrink-0"
           />
-          <span className="flex-1 text-label-lg leading-[20px] text-[var(--color-text-default)] truncate">
+          <span className="flex-1 text-label-lg leading-[20px] text-[var(--color-text-default)] truncate select-none">
             {currentApp.title}
           </span>
         </>
@@ -98,6 +105,7 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
         <button
           type="button"
           onClick={onToggleSidebar}
+          onMouseDown={(e) => e.stopPropagation()}
           className="group p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer flex-shrink-0"
           aria-label="Toggle sidebar"
         >

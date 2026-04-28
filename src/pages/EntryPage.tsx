@@ -13,7 +13,6 @@ import CloudBuilderIcon from '@/assets/appIcon/cloudbuilder.png';
 import AIPlatformIcon from '@/assets/appIcon/aiplatform.png';
 import AIAgentIcon from '@/assets/appIcon/agentops.png';
 import StorageIcon from '@/assets/appIcon/storage.png';
-import StorageAdminIcon from '@/assets/appIcon/storageadmin.png';
 import IAMIcon from '@/assets/appIcon/iam.png';
 import DesktopIcon from '@/assets/appIcon/desktop.png';
 import SettingsIcon from '@/assets/appIcon/settings.png';
@@ -26,6 +25,7 @@ interface AppCard {
 }
 
 const appCards: AppCard[] = [
+  { id: 'desktop', title: 'Desktop', iconSrc: DesktopIcon, path: '/desktop' },
   { id: 'compute', title: 'Compute', iconSrc: ComputeIcon, path: '/compute' },
   {
     id: 'compute-admin',
@@ -36,24 +36,11 @@ const appCards: AppCard[] = [
   { id: 'container', title: 'Container', iconSrc: ContainerIcon, path: '/container' },
   { id: 'iam', title: 'IAM', iconSrc: IAMIcon, path: '/iam' },
   {
-    id: 'storage-system-admin',
-    title: 'Storage - System admin',
-    iconSrc: StorageAdminIcon,
-    path: '/storage',
-  },
-  {
-    id: 'storage-domain-admin',
-    title: 'Storage - Domain admin',
-    iconSrc: StorageAdminIcon,
-    path: '/storage-domain-admin',
-  },
-  {
     id: 'storage-member',
     title: 'Storage - Member',
     iconSrc: StorageIcon,
     path: '/storage-member',
   },
-  { id: 'desktop', title: 'Desktop', iconSrc: DesktopIcon, path: '/desktop' },
   { id: 'settings', title: 'Settings', iconSrc: SettingsIcon, path: '/settings' },
   { id: 'cloud-builder', title: 'Cloud Builder', iconSrc: CloudBuilderIcon, path: '/cloudbuilder' },
   { id: 'ai-platform', title: 'AI Platform', iconSrc: AIPlatformIcon, path: '/ai-platform' },

@@ -40,6 +40,7 @@ import {
 import { FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import containerIcon from '@/assets/appIcon/container.png';
+import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 /* ----------------------------------------
    Container Sidebar Component
@@ -196,6 +197,8 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
   const { isDark } = useDarkMode();
   const location = useLocation();
   const navigate = useNavigate();
+  const isDesktopWindow = useIsDesktopWindow();
+  const desktopControls = useDesktopWindowControls();
   const osRef = useRef<React.ComponentRef<typeof OverlayScrollbarsComponent>>(null);
 
   // Cluster state
@@ -291,7 +294,11 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       {/* Icon Sidebar (48px) - Always visible */}
       <aside className="w-[48px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] flex flex-col">
         {/* App Icon */}
-        <div className="h-[36px] flex items-center justify-center border-b border-[var(--color-border-subtle)]">
+        <div
+          className="h-[36px] flex items-center justify-center border-b border-[var(--color-border-subtle)] select-none"
+          onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+          onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+        >
           <img src={containerIcon} alt="Container" className="w-[24px] h-[24px]" />
         </div>
 
@@ -332,11 +339,16 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       {isOpen && activeIconSection !== 'home' && (
         <aside className="w-[200px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
           {/* Logo / Title */}
-          <div className="h-[33px] px-3 flex items-center justify-between">
+          <div
+            className="h-[33px] px-3 flex items-center justify-between select-none"
+            onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+            onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+          >
             <span className="text-label-lg text-[var(--color-text-default)]">Container</span>
             <button
               type="button"
               onClick={onToggle}
+              onMouseDown={(e) => e.stopPropagation()}
               className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
               aria-label="Toggle sidebar"
             >

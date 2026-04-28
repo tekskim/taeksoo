@@ -3,6 +3,8 @@ import React, {
   useContext,
   useState,
   useCallback,
+  useEffect,
+  useRef,
   useId,
   type ReactNode,
 } from 'react';
@@ -145,7 +147,8 @@ export function Tabs({
    ---------------------------------------- */
 
 export function TabList({ children, className = '', ...rest }: TabListProps) {
-  const { variant, setActiveTab } = useTabsContext();
+  const { variant, setActiveTab, activeTab } = useTabsContext();
+  const listRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -190,7 +193,7 @@ export function TabList({ children, className = '', ...rest }: TabListProps) {
 
   const variantStyles = {
     underline:
-      'flex gap-[var(--tabs-gap)] relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10',
+      'flex gap-[var(--tabs-gap)] overflow-x-auto scrollbar-none shadow-[inset_0_-1px_0_0_var(--color-border-default)]',
     boxed: [
       'inline-flex',
       'items-center',
@@ -203,10 +206,19 @@ export function TabList({ children, className = '', ...rest }: TabListProps) {
     ].join(' '),
   };
 
+  useEffect(() => {
+    if (!listRef.current || !activeTab) return;
+    const el = listRef.current.querySelector<HTMLElement>(`[data-tab-value="${activeTab}"]`);
+    if (el) {
+      el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    }
+  }, [activeTab]);
+
   return (
     <div
       data-figma-name="[TDS] Tabs.List"
       {...rest}
+      ref={listRef}
       role="tablist"
       className={twMerge(variantStyles[variant], className)}
       onKeyDown={handleKeyDown}
@@ -254,7 +266,7 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
         onClick={() => !disabled && setActiveTab(value)}
         className={twMerge(
           'flex flex-col items-center gap-[var(--tabs-indicator-gap)]',
-          'min-w-[var(--tabs-min-width)]',
+          'min-w-[var(--tabs-min-width)] shrink-0',
           'cursor-pointer transition-colors duration-[var(--duration-fast)]',
           disabled && 'cursor-not-allowed opacity-50',
           className

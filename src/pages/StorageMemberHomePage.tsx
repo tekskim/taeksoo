@@ -576,7 +576,7 @@ export function StorageMemberHomePage() {
       {/* EntryPage Content */}
       <div className="py-2">
         {/* Top Row - 2 Cards: Inventory and Capacity */}
-        <div className="grid grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {/* INVENTORY */}
           <Card title="Inventory" className="flex flex-col">
             {/* Total */}

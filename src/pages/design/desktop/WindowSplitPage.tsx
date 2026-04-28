@@ -234,8 +234,8 @@ function WindowSplitGuidelines() {
                 <strong>단축키</strong>
               </Td>
               <Td>
-                키보드 단축키로 빠르게 스냅할 수 있다. 좌측 스냅: <kbd>⌃ + ←</kbd>, 우측 스냅:{' '}
-                <kbd>⌃ + →</kbd>
+                키보드 단축키로 빠르게 스냅할 수 있다. 좌측 스냅: <kbd>⌥ + ⇧ + ←</kbd>, 우측 스냅:{' '}
+                <kbd>⌥ + ⇧ + →</kbd>
               </Td>
             </tr>
           </tbody>

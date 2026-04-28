@@ -354,6 +354,57 @@ function AppWindowAnimationGuidelines() {
         </TableWrapper>
       </VStack>
 
+      {/* 경계 바운스백 */}
+      <VStack gap={4}>
+        <SectionTitle>경계 바운스백 (Boundary Bounce-Back)</SectionTitle>
+        <Prose>
+          <p>
+            macOS와 동일하게, 드래그 중에는 자유롭게 이동할 수 있지만 마우스를 놓았을 때 창이 화면
+            경계를 벗어난 경우 부드럽게 튕겨서 보이는 영역으로 복귀합니다.
+          </p>
+        </Prose>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">속성</Th>
+              <Th>값</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>드래그 중</Td>
+              <Td>
+                자유 이동. Y축만 <code>TOP_BAR_HEIGHT(52px)</code> 이상으로 제한
+              </Td>
+            </tr>
+            <tr>
+              <Td>X축 경계</Td>
+              <Td>
+                창의 최소 100px이 화면 안에 보이도록 clamp
+                <br />
+                <code>min: -windowWidth + 100</code>, <code>max: viewport.width - 100</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>Y축 경계</Td>
+              <Td>
+                상단: <code>TOP_BAR_HEIGHT(52px)</code>, 하단: <code>viewport.height - 50</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>바운스 transition</Td>
+              <Td>
+                <code>top, left</code> — 250ms, <code>cubic-bezier(0.25, 0.46, 0.45, 0.94)</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>트리거</Td>
+              <Td>mouseup 시 최종 위치가 경계를 벗어난 경우에만 활성화</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+      </VStack>
+
       {/* Dock 아이콘 */}
       <VStack gap={4}>
         <SectionTitle>Dock 아이콘 등장 / 퇴장</SectionTitle>
@@ -477,6 +528,12 @@ function AppWindowAnimationGuidelines() {
               <Td>drag shadow</Td>
               <Td>
                 <code>drop-shadow(0 12px 24px rgba(0,0,0,0.15))</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>boundary bounce-back</Td>
+              <Td>
+                top, left — <strong>250ms</strong> cubic-bezier(0.25, 0.46, 0.45, 0.94)
               </Td>
             </tr>
           </tbody>

@@ -3,7 +3,6 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
 import {
   IconCheck,
-  IconSelector,
   IconCircleCheck,
   IconAlertTriangle,
   IconInfoCircle,
@@ -11,6 +10,10 @@ import {
   IconChevronUp,
   IconChevronDown,
   IconGridDots,
+  IconMinus,
+  IconSquare,
+  IconSquares,
+  IconX,
 } from '@tabler/icons-react';
 import {
   Icons,
@@ -24,6 +27,7 @@ import {
   TabList,
   Tab,
   Select,
+  WindowControl,
 } from '@/design-system';
 import AppIconCompute from '@/assets/appIcon/compute.png';
 import AppIconIAM from '@/assets/appIcon/iam.png';
@@ -123,15 +127,13 @@ function pixelToGrid(px: number, py: number, maxCols: number, maxRows: number) {
 function getInitialIconLayout(): DesktopIconItem[] {
   const icons = [
     { id: 'iam', icon: imgIam, label: 'IAM' },
-    { id: 'compute', icon: imgCompute, label: 'Compute' },
-    { id: 'storage', icon: imgStorageAdmin, label: 'Storage - System admin' },
-    { id: 'storage-domain-admin', icon: imgStorageAdmin, label: 'Storage - Domain admin' },
-    { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
-    { id: 'container', icon: imgContainer, label: 'Container' },
     { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
+    { id: 'compute', icon: imgCompute, label: 'Compute' },
     { id: 'agent', icon: imgAgent, label: 'Agent Ops' },
-    { id: 'settings', icon: imgSettings, label: 'Settings' },
+    { id: 'container', icon: imgContainer, label: 'Container' },
     { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
+    { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
+    { id: 'settings', icon: imgSettings, label: 'Settings' },
   ];
   const dockHeight = 64;
   const availableH = window.innerHeight - GRID.PAD_TOP - dockHeight;
@@ -569,78 +571,20 @@ interface TopBarProps {
 }
 
 /* ----------------------------------------
-   Glass Domain Select (Desktop Top Bar)
+   Glass Domain Label (Desktop Top Bar) — read-only
    ---------------------------------------- */
 
-interface GlassDomainSelectProps {
-  value: string;
-  onChange: (value: string) => void;
-  options: { value: string; label: string }[];
+interface GlassDomainLabelProps {
+  label: string;
 }
 
-function GlassDomainSelect({ value, onChange, options }: GlassDomainSelectProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false);
-    };
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
-    };
-    document.addEventListener('mousedown', handleClick);
-    document.addEventListener('keydown', handleEsc);
-    return () => {
-      document.removeEventListener('mousedown', handleClick);
-      document.removeEventListener('keydown', handleEsc);
-    };
-  }, [isOpen]);
-
+function GlassDomainLabel({ label }: GlassDomainLabelProps) {
   return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 h-7 px-2.5 rounded-[var(--primitive-radius-md)] bg-[var(--desktop-glass-bg)] border border-[var(--desktop-glass-border)] text-[var(--desktop-text)] text-body-md hover:bg-[var(--desktop-glass-bg-strong)] transition-colors cursor-pointer select-none"
-      >
-        <span className="truncate max-w-[120px]">{selectedLabel}</span>
-        <IconSelector
-          size={14}
-          stroke={1.5}
-          className="text-[var(--desktop-text-muted)] shrink-0"
-        />
-      </button>
-
-      {isOpen && (
-        <div className="absolute top-full left-0 min-w-[160px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-2xl z-[1100] overflow-hidden">
-          {options.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => {
-                onChange(opt.value);
-                setIsOpen(false);
-              }}
-              className={`w-full flex items-center gap-2 px-3 py-1.5 text-body-md transition-colors cursor-pointer ${
-                opt.value === value
-                  ? 'text-[var(--desktop-text)] bg-[var(--desktop-active-bg)]'
-                  : 'text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] hover:bg-[var(--desktop-hover-bg)]'
-              }`}
-            >
-              <span className="w-4 shrink-0 flex items-center justify-center">
-                {opt.value === value && (
-                  <IconCheck size={12} stroke={2} className="text-[var(--desktop-text)]" />
-                )}
-              </span>
-              <span>{opt.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+    <input
+      readOnly
+      value={label}
+      className="h-7 px-2.5 rounded-[var(--primitive-radius-md)] bg-[var(--desktop-glass-bg)] border border-[var(--desktop-glass-border)] text-[var(--desktop-text)] text-label-md select-none cursor-default w-[120px] focus:outline-none"
+    />
   );
 }
 
@@ -653,7 +597,6 @@ function DesktopTopBar({
   dockIcons,
   autoHide = false,
 }: TopBarProps) {
-  const [selectedDomain, setSelectedDomain] = useState('domain-a');
   const { theme, isDark, setTheme } = useDarkMode();
   const [topBarVisible, setTopBarVisible] = useState(false);
   const [animateTransition, setAnimateTransition] = useState(false);
@@ -685,16 +628,6 @@ function DesktopTopBar({
       window.removeEventListener('language-changed', handleStorageChange);
     };
   }, [language]);
-
-  const domainOptions = [
-    { value: 'domain-a', label: 'Domain A' },
-    { value: 'domain-b', label: 'Domain B' },
-    { value: 'domain-c', label: 'Domain C' },
-    { value: 'domain-d', label: 'Domain D' },
-    { value: 'domain-e', label: 'Domain E' },
-    { value: 'domain-f', label: 'Domain F' },
-    { value: 'domain-g', label: 'Domain G' },
-  ];
 
   const handleLanguageChange = (lang: string) => {
     // Skip confirmation if selecting the same value
@@ -877,12 +810,8 @@ function DesktopTopBar({
 
       {/* Right Section */}
       <div className="flex items-center gap-4">
-        {/* Domain Selector */}
-        <GlassDomainSelect
-          value={selectedDomain}
-          onChange={setSelectedDomain}
-          options={domainOptions}
-        />
+        {/* Domain Label (read-only) */}
+        <GlassDomainLabel label="Domain A" />
 
         {/* Right Icons */}
         <div className="flex items-center gap-3">
@@ -1034,6 +963,22 @@ function AdminCenterPanel({ isOpen, onClose, onOpenApp }: AdminPanelProps) {
                 <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
                 <span className="text-label-md text-[var(--desktop-text)] text-center">
                   Storage Admin
+                </span>
+              </button>
+              <button
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('storage-domain-admin');
+                  onClose();
+                }}
+              >
+                <img
+                  src={imgStorageAdmin}
+                  alt="Storage Domain Admin"
+                  className="w-16 h-16 object-cover"
+                />
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  Storage Domain
                 </span>
               </button>
               <button
@@ -1328,7 +1273,7 @@ interface PageWindowProps {
 }
 
 const TOP_BAR_HEIGHT = 52;
-const MIN_WINDOW_WIDTH = 400;
+const MIN_WINDOW_WIDTH = 520;
 const MIN_WINDOW_HEIGHT = 300;
 const SNAP_EDGE_THRESHOLD = 8;
 type SnapZone = 'left' | 'right' | null;
@@ -1353,7 +1298,10 @@ function PageWindow({
     x: initialX,
     y: initialY,
   }));
-  const [size, setSize] = useState({ width: 1440, height: 800 });
+  const [size, setSize] = useState(() => ({
+    width: Math.min(1440, Math.max(960, Math.round(window.innerWidth * 0.85))),
+    height: Math.min(800, window.innerHeight - 100),
+  }));
   const [preMaxState, setPreMaxState] = useState<{
     x: number;
     y: number;
@@ -1372,6 +1320,7 @@ function PageWindow({
   const windowRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const [isDraggingState, setIsDraggingState] = useState(false);
+  const [bouncing, setBouncing] = useState(false);
   const isResizing = useRef<string | null>(null);
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0, w: 0, h: 0 });
   const hasMounted = useRef(false);
@@ -1454,7 +1403,7 @@ function PageWindow({
         snapPreviewRef.current = preview;
         setSnapPreview(preview);
       };
-      const handleMouseUp = () => {
+      const handleMouseUp = (ev: MouseEvent) => {
         if (didMove) {
           isDragging.current = false;
           setIsDraggingState(false);
@@ -1477,6 +1426,25 @@ function PageWindow({
             });
             setSize({ width: halfWidth, height: snapHeight });
             setSnapZone(currentPreview);
+          } else {
+            const curW = snapReleased ? dragStart.current.w : size.width;
+            const dx = ev.clientX - startX;
+            const dy = ev.clientY - startY;
+            const finalX = dragStart.current.posX + dx;
+            const finalY = Math.max(TOP_BAR_HEIGHT, dragStart.current.posY + dy);
+
+            const minVisibleX = -curW + 100;
+            const maxVisibleX = window.innerWidth - 100;
+            const maxVisibleY = window.innerHeight - 50;
+
+            const clampedX = Math.max(minVisibleX, Math.min(maxVisibleX, finalX));
+            const clampedY = Math.max(TOP_BAR_HEIGHT, Math.min(maxVisibleY, finalY));
+
+            if (clampedX !== finalX || clampedY !== finalY) {
+              setBouncing(true);
+              setPosition({ x: clampedX, y: clampedY });
+              setTimeout(() => setBouncing(false), 250);
+            }
           }
 
           snapPreviewRef.current = null;
@@ -1607,6 +1575,21 @@ function PageWindow({
     }
   }, [isMaximized, position, size, preMaxState, onMaximizeChange, windowId]);
 
+  useEffect(() => {
+    if (!isActive) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey && e.shiftKey && e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handleSnapLeft();
+      } else if (e.altKey && e.shiftKey && e.key === 'ArrowRight') {
+        e.preventDefault();
+        handleSnapRight();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isActive, handleSnapLeft, handleSnapRight]);
+
   const windowControls = useMemo(
     () => ({
       onMinimize: handleMinimize,
@@ -1632,8 +1615,9 @@ function PageWindow({
   if (!isOpen) return null;
 
   const isMoving = isDragging.current || !!isResizing.current;
-  const windowTransition =
-    hasMounted.current && !isMoving && !isMinimized
+  const windowTransition = bouncing
+    ? 'top 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), left 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 150ms ease-out, filter 150ms ease-out'
+    : hasMounted.current && !isMoving && !isMinimized
       ? 'width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, border-radius 250ms ease-out, opacity 200ms ease-out, filter 200ms ease-out'
       : 'opacity 150ms ease-out, filter 150ms ease-out';
 
@@ -1717,7 +1701,70 @@ function PageWindow({
           if (!(e.target as HTMLElement).closest('button')) onFocus();
         }}
       >
-        {/* Window Content — window controls are integrated into TabBar via context */}
+        {/* Window controls overlay — pinned to window frame, always visible */}
+        <div className="absolute top-0 right-0 z-50 flex items-center gap-1 px-2 h-[var(--tabbar-height)] bg-[var(--color-surface-default)]">
+          <div className="absolute top-0 bottom-0 -left-6 w-6 bg-gradient-to-r from-transparent to-[var(--color-surface-default)] pointer-events-none" />
+          <div className="absolute bottom-0 -left-6 right-0 h-px pointer-events-none z-20 bg-gradient-to-r from-transparent via-[var(--color-border-default)] via-[24px] to-[var(--color-border-default)]" />
+          <button
+            type="button"
+            onClick={windowControls.onMinimize}
+            className="
+              relative z-10 flex items-center justify-center
+              size-[24px] rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Minimize"
+          >
+            <IconMinus size={12} stroke={1} />
+          </button>
+          <div className="relative z-10">
+            <WindowControl
+              type="split"
+              onSnapLeft={windowControls.onSnapLeft}
+              onSnapRight={windowControls.onSnapRight}
+              className="text-[var(--color-text-muted)]"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={windowControls.onMaximize}
+            className="
+              relative z-10 flex items-center justify-center
+              size-[24px] rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label={isMaximized ? 'Restore' : 'Maximize'}
+          >
+            {isMaximized ? (
+              <IconSquares size={12} stroke={1} />
+            ) : (
+              <IconSquare size={12} stroke={1} />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={windowControls.onClose}
+            className="
+              relative z-10 flex items-center justify-center
+              size-[24px] rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Close window"
+          >
+            <IconX size={12} stroke={1} />
+          </button>
+        </div>
+
+        {/* Window Content */}
         <DesktopWindowProvider value={{ isDesktopWindow: true, controls: windowControls }}>
           <div className="flex-1 overflow-hidden relative" style={{ transform: 'scale(1)' }}>
             {children}
