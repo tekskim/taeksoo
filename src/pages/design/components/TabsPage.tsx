@@ -59,11 +59,11 @@ function CapsuleTabDemo() {
       <button
         onClick={() => setSelected('left')}
         className={`
-          min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
+          min-w-[80px] px-4 py-1 rounded-[6px] text-[length:var(--font-size-11)] font-medium leading-[var(--line-height-16)] text-center transition-all
           ${
             selected === 'left'
               ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
-              : 'bg-transparent text-[var(--color-text-default)]'
+              : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
           }
         `}
       >
@@ -72,11 +72,11 @@ function CapsuleTabDemo() {
       <button
         onClick={() => setSelected('right')}
         className={`
-          min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
+          min-w-[80px] px-4 py-1 rounded-[6px] text-[length:var(--font-size-11)] font-medium leading-[var(--line-height-16)] text-center transition-all
           ${
             selected === 'right'
               ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
-              : 'bg-transparent text-[var(--color-text-default)]'
+              : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
           }
         `}
       >
