@@ -33,6 +33,7 @@ browser MCP로 양쪽 페이지에 접근하여 `getComputedStyle`을 JavaScript
 - `background-color`, `color` (rgb → hex 변환)
 - `box-shadow`, `border`
 - `gap`
+- SVG 아이콘: `viewBox`, `stroke-width` (커스텀 아이콘인 경우 DOM에서 직접 읽기)
 
 **비교 방법:**
 
@@ -78,6 +79,31 @@ browser MCP의 `canvas` 도구를 사용하여 HTML 페이지를 생성합니다
 
 사용자가 Canvas를 열면 양쪽을 나란히 보면서 시각적 일치를 직접 확인할 수 있습니다.
 Computed Style이 PASS여도 사용자가 Canvas에서 문제를 발견하면 FAIL 처리 가능합니다.
+
+### Step 1C: 아이콘 SVG 속성 검증 (커스텀 아이콘이 있는 경우)
+
+스펙에 "아이콘 불일치 (커스텀 SVG 필요)" 섹션이 있으면, 생성된 커스텀 아이콘이 Figma 원본과 **속성 수준에서 일치**하는지 검증합니다.
+
+**검증 항목**:
+
+| #   | 검증 대상    | 확인 방법                                                              | FAIL 조건                                                              |
+| --- | ------------ | ---------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| 1   | viewBox      | `CustomIcons.tsx`의 viewBox vs Figma SVG의 viewBox (±0.5 padding 허용) | viewBox가 `0 0 16 16`으로 임의 변환됨                                  |
+| 2   | stroke-width | `<path>` 태그에 `strokeWidth` 속성 여부 확인                           | Figma SVG에 stroke-width가 없는데 코드에 `strokeWidth={1.5}` 등이 있음 |
+| 3   | path d       | `<path d="...">` vs Figma SVG의 path d                                 | path 좌표가 변경됨 (스케일 재계산 등)                                  |
+| 4   | 사용부 props | `<IconCustomFigma size={16} />` 만 사용하는지                          | `stroke={1.5}` 등 불필요한 prop 전달                                   |
+
+**검증 절차**:
+
+1. Figma 원본 SVG를 다시 다운로드: `curl -s -o /tmp/verify-{name}.svg "{asset_url}"`
+2. `CustomIcons.tsx`에서 해당 아이콘의 viewBox, path d, strokeWidth를 추출
+3. 항목별 대조:
+   - viewBox: Figma 원본 viewBox에 ±0.5 padding이 추가된 형태인가?
+   - path d: Figma 원본 path d와 **문자열 동일**인가?
+   - strokeWidth: Figma SVG에 stroke-width 명시가 없으면 코드에도 strokeWidth prop이 없어야 함
+4. 사용부(`AIPlatformPage.tsx` 등)에서 `stroke` prop을 전달하지 않는지 확인
+
+> ⚠️ 이 검증을 건너뛰면 "굵기가 다르다" 피드백이 반복됩니다.
 
 ### Step 2: 금지 변경 검증 (git diff 분석)
 

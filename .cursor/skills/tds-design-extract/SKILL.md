@@ -153,21 +153,66 @@ thaki-shared 컴포넌트가 CVA를 사용하는 경우, **base 스타일이 모
 
 > 이 분석이 없으면 Apply에서 "추가만 하고 리셋을 안 하는" 문제가 발생합니다.
 
-#### 3-7. 아이콘 구현 비교
+#### 3-7. 아이콘 구현 비교 (Critical — SVG 원본 다운로드 필수)
 
 TDS와 thaki-shared의 아이콘 구현 방식이 다를 수 있으므로 반드시 비교합니다:
 
 - **TDS 아이콘**: Tabler Icons (`@tabler/icons-react`) 사용 — `size`, `stroke` props
+- **TDS 커스텀 아이콘**: `src/design-system/components/Icons/CustomIcons.tsx` — Figma SVG 원본 재현
 - **thaki-shared 아이콘**: 인라인 SVG 또는 자체 Icon 컴포넌트 사용
+- **Figma 원본**: `get_design_context`로 asset URL 획득 → 직접 다운로드
 
 **비교 항목**:
 | 항목 | 확인 내용 |
 |---|---|
-| viewBox | 좌표계 (12x12 vs 24x24) |
+| viewBox | 좌표계 (12x12 vs 24x24 등) |
 | width/height | 렌더링 크기 |
-| path d | 아이콘 형태 (Tabler path와 일치 여부) |
-| strokeWidth | 선 굵기 (TDS stroke prop과 일치 여부) |
+| path d | 아이콘 형태 (path 좌표 일치 여부) |
+| strokeWidth | 선 굵기 (SVG 내 명시값 vs 기본값 1) |
 | stroke/fill | 색상 (currentColor 사용 여부) |
+
+##### 3-7-A. Figma 아이콘 SVG 원본 다운로드 절차 (필수)
+
+"비슷해 보인다"는 주관적 판단을 금지합니다. 반드시 아래 절차를 따릅니다:
+
+1. **Figma에서 asset URL 획득**: `get_design_context`로 해당 아이콘의 asset URL을 얻는다
+2. **SVG 다운로드**: `curl -s -o /tmp/figma-{icon-name}.svg "{asset_url}"` 로 원본 SVG를 저장
+3. **SVG 속성 파싱**: 다운로드한 SVG에서 아래 값을 정확히 추출
+   - `viewBox` 좌표계 (예: `0 0 12.6667 10.3333`)
+   - `stroke-width` 값 — **명시되어 있지 않으면 SVG 기본값 1이다** (절대로 1.5로 추정하지 않는다)
+   - `path d` 속성 전체
+   - `stroke-linecap`, `stroke-linejoin` 값
+4. **Tabler 대조**: 해당 Tabler 아이콘의 SVG를 `node -e` 명령으로 추출하여 path d를 비교
+   ```bash
+   node -e "const {IconName} = require('@tabler/icons-react'); console.log(IconName);"
+   ```
+5. **일치 판정**: path d가 **좌표 수준에서 동일**해야 "일치"로 판정
+   - 모양이 "비슷하다" → 불일치로 판정 (커스텀 SVG 필요)
+   - viewBox가 다르면 → 불일치로 판정
+
+##### 3-7-B. 아이콘 불일치 시 스펙 출력
+
+불일치 아이콘은 스펙에 아래 형식으로 기록합니다:
+
+```markdown
+## 아이콘 불일치 (커스텀 SVG 필요)
+
+| 용도         | Figma 아이콘명  | Figma viewBox       | Figma stroke-width | Tabler 후보      | 판정      | 사유             |
+| ------------ | --------------- | ------------------- | ------------------ | ---------------- | --------- | ---------------- |
+| Datasets     | Icon/Hard_drive | 0 0 12.6667 10.3333 | 1 (기본값)         | IconDeviceFloppy | ❌ 불일치 | path 형태 상이   |
+| My templates | Icon/File       | 0 0 11 13           | 1 (기본값)         | IconFile         | ❌ 불일치 | path d 좌표 다름 |
+
+### SVG 원본 (커스텀 아이콘 생성용)
+
+#### Icon/Hard_drive
+
+\`\`\`xml
+<path d="M11.8099 5.16667H0.833374M2.83333 7.5H2.83917..." stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+\`\`\`
+viewBox: `0 0 12.6667 10.3333` | stroke-width: 1 (기본값)
+```
+
+> **"비슷하니까 OK" 금지**: Tabler 아이콘과 Figma 아이콘이 이름이나 외형이 유사해도, path d 좌표가 다르면 **반드시 커스텀 SVG로 생성**합니다. 이 규칙을 어기면 반복 수정이 발생합니다.
 
 ### Step 4: thaki-shared 대응 정보
 
@@ -333,3 +378,5 @@ grep -r 'type="solid"' src/features/ src/pages/
 - 컴포넌트가 compound 구조인 경우 (예: SectionCard.Header, SectionCard.Content) 하위 컴포넌트도 각각 추출
 - **`.tsx`에서 조건부 className 패턴을 반드시 추출**: `조건 && 'class'` 또는 `조건 ? 'classA' : 'classB'` 형태로 적용되는 상태별 스타일
 - **인라인 SVG 아이콘의 디자인 속성을 반드시 비교**: viewBox, path, strokeWidth가 TDS Tabler Icons와 시각적으로 동일한지
+- **아이콘 SVG는 반드시 원본 다운로드 후 비교**: "비슷해 보인다"는 눈대중 판단 금지. Figma SVG를 curl로 다운로드하여 path d 좌표를 직접 대조해야 한다 (§3-7-A)
+- **stroke-width 기본값 주의**: SVG에 `stroke-width` 속성이 없으면 기본값은 **1**이다. 1.5나 2로 추정하지 않는다
