@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { IconPlus, IconX, IconMinus, IconSquare, IconSquares } from '@tabler/icons-react';
 import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
+import { WindowControl } from '../WindowControl';
 
 /* ----------------------------------------
    Types
@@ -552,6 +553,12 @@ export const TabBar: React.FC<TabBarProps> = ({
           >
             <IconMinus size={12} stroke={1} />
           </button>
+          <WindowControl
+            type="split"
+            onSnapLeft={desktopControls!.onSnapLeft}
+            onSnapRight={desktopControls!.onSnapRight}
+            className="text-[var(--color-text-muted)]"
+          />
           <button
             type="button"
             onClick={desktopControls!.onMaximize}

@@ -2,6 +2,8 @@ import { createContext, useContext } from 'react';
 
 export interface DesktopWindowControls {
   onMinimize: () => void;
+  onSnapLeft: () => void;
+  onSnapRight: () => void;
   onMaximize: () => void;
   onClose: () => void;
   onDragStart: (e: React.MouseEvent) => void;

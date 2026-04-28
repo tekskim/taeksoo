@@ -1488,6 +1488,32 @@ function PageWindow({
     onMinimize();
   }, [onMinimize]);
 
+  const handleSnapLeft = useCallback(() => {
+    if (isMaximized) {
+      setIsMaximized(false);
+      onMaximizeChange?.(windowId, false);
+    }
+    setPreSnapState({ x: position.x, y: position.y, w: size.width, h: size.height });
+    const halfWidth = window.innerWidth / 2;
+    const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
+    setPosition({ x: 0, y: TOP_BAR_HEIGHT });
+    setSize({ width: halfWidth, height: snapHeight });
+    setSnapZone('left');
+  }, [isMaximized, position, size, onMaximizeChange, windowId]);
+
+  const handleSnapRight = useCallback(() => {
+    if (isMaximized) {
+      setIsMaximized(false);
+      onMaximizeChange?.(windowId, false);
+    }
+    setPreSnapState({ x: position.x, y: position.y, w: size.width, h: size.height });
+    const halfWidth = window.innerWidth / 2;
+    const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
+    setPosition({ x: halfWidth, y: TOP_BAR_HEIGHT });
+    setSize({ width: halfWidth, height: snapHeight });
+    setSnapZone('right');
+  }, [isMaximized, position, size, onMaximizeChange, windowId]);
+
   const handleMaximize = useCallback(() => {
     if (!isMaximized) {
       setPreMaxState({ x: position.x, y: position.y, w: size.width, h: size.height });
@@ -1506,13 +1532,23 @@ function PageWindow({
   const windowControls = useMemo(
     () => ({
       onMinimize: handleMinimize,
+      onSnapLeft: handleSnapLeft,
+      onSnapRight: handleSnapRight,
       onMaximize: handleMaximize,
       onClose,
       onDragStart: handleDragStart,
       onDoubleClick: handleMaximize,
       isMaximized,
     }),
-    [handleMinimize, handleMaximize, onClose, handleDragStart, isMaximized]
+    [
+      handleMinimize,
+      handleSnapLeft,
+      handleSnapRight,
+      handleMaximize,
+      onClose,
+      handleDragStart,
+      isMaximized,
+    ]
   );
 
   if (!isOpen) return null;

@@ -76,13 +76,19 @@ function WindowControlGuidelines() {
             </tr>
             <tr>
               <Td>
-                <strong>② Maximize/Restore Button</strong>
+                <strong>② Split Button</strong>
+              </Td>
+              <Td>호버/클릭 시 드롭다운 메뉴 표시 → Left Half (⌥⌘◀) / Right Half (⌥⌘▶)</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>③ Maximize/Restore Button</strong>
               </Td>
               <Td>창을 최대화/일반(이전 크기) 상태로 전환 → 토글</Td>
             </tr>
             <tr>
               <Td>
-                <strong>③ Close Button</strong>
+                <strong>④ Close Button</strong>
               </Td>
               <Td>현재 창을 닫음</Td>
             </tr>
@@ -113,6 +119,10 @@ function WindowControlGuidelines() {
             <tr>
               <Td>Maximize icon</Td>
               <Td>IconSquare (Normal) / IconSquares (Maximized → Restore)</Td>
+            </tr>
+            <tr>
+              <Td>Split icon</Td>
+              <Td>IconColumns</Td>
             </tr>
             <tr>
               <Td>Close icon</Td>
@@ -321,6 +331,14 @@ export function WindowControlPage() {
                 <WindowControl type="minimize" />
               </VStack>
               <VStack gap={1} align="center">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Split</span>
+                <WindowControl
+                  type="split"
+                  onSnapLeft={() => alert('Snap Left')}
+                  onSnapRight={() => alert('Snap Right')}
+                />
+              </VStack>
+              <VStack gap={1} align="center">
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Maximize</span>
                 <WindowControl type="maximize" />
               </VStack>
@@ -376,6 +394,27 @@ export function WindowControlPage() {
                 Application Title
               </span>
               <WindowControls isMaximized />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-md text-[var(--color-text-default)]">
+                Title Bar — Split 포함
+              </span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                Split 버튼이 포함된 컨트롤 그룹. 호버 시 Left Half / Right Half 드롭다운이 나타난다.
+              </span>
+            </VStack>
+            <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
+              <span className="text-body-md font-medium text-[var(--color-text-default)]">
+                Application Title
+              </span>
+              <WindowControls
+                showSplit
+                onSnapLeft={() => alert('Snap Left')}
+                onSnapRight={() => alert('Snap Right')}
+              />
             </div>
           </VStack>
         </VStack>
