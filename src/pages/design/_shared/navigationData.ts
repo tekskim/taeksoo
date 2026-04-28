@@ -47,6 +47,7 @@ import {
   IconRobot,
   IconSwitchHorizontal,
   IconShieldCheck,
+  IconGridDots,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -242,12 +243,6 @@ const feedbackItems: NavItem[] = [
 ];
 
 const navigationItems: NavItem[] = [
-  {
-    id: 'desktop-top-gnb',
-    label: 'Desktop Top GNB',
-    icon: IconDeviceDesktop,
-    path: '/design/components/desktop-top-gnb',
-  },
   {
     id: 'topbar',
     label: 'Top Navigation Bar',
@@ -504,6 +499,33 @@ const etcItems: NavItem[] = [
   },
 ];
 
+const desktopItems: NavItem[] = [
+  {
+    id: 'desktop-top-gnb',
+    label: 'Desktop Top GNB',
+    icon: IconDeviceDesktop,
+    path: '/design/desktop/top-gnb',
+  },
+  {
+    id: 'app-launcher',
+    label: 'App Launcher',
+    icon: IconGridDots,
+    path: '/design/desktop/app-launcher',
+  },
+  {
+    id: 'window-split',
+    label: 'Window Split',
+    icon: IconAppWindow,
+    path: '/design/desktop/window-split',
+  },
+  {
+    id: 'app-window-animation',
+    label: 'App Window Animation',
+    icon: IconActivity,
+    path: '/design/desktop/app-window-animation',
+  },
+];
+
 const changelogItems: NavItem[] = [
   {
     id: 'changelog',
@@ -523,6 +545,7 @@ export const navGroups: NavGroup[] = [
   { title: 'Overlay', items: overlayItems },
   { title: 'Patterns', items: patternItems },
   { title: 'Graphs', items: graphItems },
+  { title: 'Desktop', items: desktopItems },
   { title: 'Etc', items: etcItems },
 ];
 
@@ -596,7 +619,6 @@ export const pageLastUpdated: Record<string, string> = {
 
   '/design/components/global-notification-panel': '2026-04-17',
   // Navigation
-  '/design/components/desktop-top-gnb': '2026-04-20',
   '/design/components/topbar': '2026-03-09',
   '/design/components/tabbar': '2026-03-09',
   '/design/components/tabs': '2026-03-09',
@@ -644,4 +666,9 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/tca': '2026-04-17',
   '/design/components/context-selector': '2026-04-17',
   '/design/components/error-boundary': '2026-04-17',
+  // Desktop
+  '/design/desktop/top-gnb': '2026-04-28',
+  '/design/desktop/app-launcher': '2026-04-28',
+  '/design/desktop/window-split': '2026-04-28',
+  '/design/desktop/app-window-animation': '2026-04-28',
 };

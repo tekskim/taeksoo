@@ -895,7 +895,7 @@ export function TransitionsPage() {
       relatedLinks={[
         {
           label: 'Desktop Top GNB',
-          path: '/design/components/desktop-top-gnb',
+          path: '/design/desktop/top-gnb',
           description: 'Auto-hide animation spec & edge cases',
         },
         {

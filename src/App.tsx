@@ -431,6 +431,9 @@ import { WizardPage } from '@/pages/design/patterns/WizardPage';
 import { OpenFormPage } from '@/pages/design/patterns/OpenFormPage';
 import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
 import { DesktopGridPage } from '@/pages/design/patterns/DesktopGridPage';
+import { AppLauncherPage } from '@/pages/design/desktop/AppLauncherPage';
+import { WindowSplitPage } from '@/pages/design/desktop/WindowSplitPage';
+import { AppWindowAnimationPage } from '@/pages/design/desktop/AppWindowAnimationPage';
 import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
 import { ListPagePatternPage } from '@/pages/design/patterns/ListPagePatternPage';
 import { DetailPagePatternPage } from '@/pages/design/patterns/DetailPagePatternPage';
@@ -1150,7 +1153,10 @@ function AppRoutes() {
         <Route path="components/progress-bar" element={<ProgressBarComponentPage />} />
         <Route path="components/skeleton" element={<SkeletonPage />} />
         <Route path="components/spinner" element={<SpinnerPage />} />
-        <Route path="components/desktop-top-gnb" element={<DesktopTopGNBPage />} />
+        <Route
+          path="components/desktop-top-gnb"
+          element={<Navigate to="/design/desktop/top-gnb" replace />}
+        />
         <Route path="components/topbar" element={<TopBarPage />} />
         <Route path="components/tabbar" element={<TabBarPage />} />
         <Route path="components/tabs" element={<TabsPage />} />
@@ -1196,6 +1202,10 @@ function AppRoutes() {
         <Route path="patterns/empty-states" element={<EmptyStatesPage />} />
         <Route path="changelog" element={<ChangelogPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
+        <Route path="desktop/top-gnb" element={<DesktopTopGNBPage />} />
+        <Route path="desktop/app-launcher" element={<AppLauncherPage />} />
+        <Route path="desktop/window-split" element={<WindowSplitPage />} />
+        <Route path="desktop/app-window-animation" element={<AppWindowAnimationPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
         <Route path="charts/usage-chart" element={<UsageChartPage />} />
