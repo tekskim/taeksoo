@@ -16,10 +16,12 @@ import {
   Pagination,
   Tooltip,
   EmptyState,
+  Drawer,
+  InfoBox,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconSearch, IconCube, IconEye } from '@tabler/icons-react';
+import { IconBell, IconSearch, IconCube, IconInfoCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -36,6 +38,10 @@ interface ModelItem {
   category: ModelCategory;
   hasDelete?: boolean;
   hasDeploy?: boolean;
+  provider?: string;
+  usedModel?: string;
+  usedDataset?: string;
+  features?: string[];
 }
 
 /* ----------------------------------------
@@ -48,10 +54,16 @@ const MOCK_MODELS: ModelItem[] = [
   {
     id: 'm1',
     title: 'Qwen3-0.6B',
-    description: 'Qwen3 0.6B parameter model for general language tasks',
+    description: 'Qwen3 0.6B parameter model',
     type: 'base',
     category: 'llm',
     hasDeploy: true,
+    provider: 'Alibaba Cloud',
+    features: [
+      'Customize via fine-tuning',
+      'Deploy serverless inference endpoint',
+      'High-performance inference on GPU clusters',
+    ],
   },
   {
     id: 'm2',
@@ -60,6 +72,12 @@ const MOCK_MODELS: ModelItem[] = [
     type: 'base',
     category: 'llm',
     hasDeploy: true,
+    provider: 'Alibaba Cloud',
+    features: [
+      'Customize via fine-tuning',
+      'Deploy serverless inference endpoint',
+      'High-performance inference on GPU clusters',
+    ],
   },
   {
     id: 'm3',
@@ -69,6 +87,8 @@ const MOCK_MODELS: ModelItem[] = [
     category: 'llm',
     hasDelete: true,
     hasDeploy: true,
+    usedModel: 'Llama3-8B',
+    usedDataset: 'Text Classification Dataset',
   },
   {
     id: 'm4',
@@ -78,6 +98,8 @@ const MOCK_MODELS: ModelItem[] = [
     category: 'llm',
     hasDelete: true,
     hasDeploy: true,
+    usedModel: 'Llama3-70B',
+    usedDataset: 'Production Training Dataset',
   },
   {
     id: 'm5',
@@ -85,6 +107,8 @@ const MOCK_MODELS: ModelItem[] = [
     description: 'Tabular classification model',
     type: 'base',
     category: 'tabular',
+    provider: 'Open Source',
+    features: ['Train on tabular data', 'Deploy as REST API endpoint'],
   },
   {
     id: 'm6',
@@ -92,6 +116,8 @@ const MOCK_MODELS: ModelItem[] = [
     description: 'Tabular regression model',
     type: 'base',
     category: 'tabular',
+    provider: 'Open Source',
+    features: ['Train on tabular data', 'Deploy as REST API endpoint'],
   },
   {
     id: 'm7',
@@ -100,6 +126,8 @@ const MOCK_MODELS: ModelItem[] = [
     type: 'fine-tuning',
     category: 'tabular',
     hasDelete: true,
+    usedModel: 'TabNet',
+    usedDataset: 'Manufacturing Predictive Maintenance',
   },
   {
     id: 'm8',
@@ -108,6 +136,8 @@ const MOCK_MODELS: ModelItem[] = [
     type: 'fine-tuning',
     category: 'tabular',
     hasDelete: true,
+    usedModel: 'CatBoost',
+    usedDataset: 'Customer Churn Dataset',
   },
   {
     id: 'm9',
@@ -116,6 +146,12 @@ const MOCK_MODELS: ModelItem[] = [
     type: 'base',
     category: 'llm',
     hasDeploy: true,
+    provider: 'Alibaba Cloud',
+    features: [
+      'Customize via fine-tuning',
+      'Deploy serverless inference endpoint',
+      'High-performance inference on GPU clusters',
+    ],
   },
   {
     id: 'm10',
@@ -124,6 +160,12 @@ const MOCK_MODELS: ModelItem[] = [
     type: 'base',
     category: 'llm',
     hasDeploy: true,
+    provider: 'Mistral AI',
+    features: [
+      'Customize via fine-tuning',
+      'Deploy serverless inference endpoint',
+      'High-performance inference on GPU clusters',
+    ],
   },
 ];
 
@@ -156,16 +198,20 @@ function ModelBadge({ label, variant }: { label: string; variant: 'gray' | 'blue
    Actions row: justify-end, icon btn + text btns
    ---------------------------------------- */
 
-function ModelCard({ model }: { model: ModelItem }) {
+function ModelCard({
+  model,
+  onDetailClick,
+}: {
+  model: ModelItem;
+  onDetailClick: (model: ModelItem) => void;
+}) {
   return (
     <div className="bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)] p-4 flex flex-col gap-3">
-      {/* Title + Description */}
       <VStack gap={1}>
         <span className="text-heading-h5 text-[var(--color-text-default)]">{model.title}</span>
         <span className="text-body-md text-[var(--color-text-subtle)]">{model.description}</span>
       </VStack>
 
-      {/* Badges */}
       <HStack gap={1}>
         <ModelBadge label={model.type === 'base' ? 'Base' : 'Fine-tuning'} variant="gray" />
         <ModelBadge
@@ -174,10 +220,15 @@ function ModelCard({ model }: { model: ModelItem }) {
         />
       </HStack>
 
-      {/* Actions — right aligned */}
       <HStack justify="end" gap={1} align="center">
         <Tooltip content="Details">
-          <Button variant="secondary" size="sm" icon={<IconEye size={12} />} aria-label="Details" />
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<IconInfoCircle size={12} />}
+            aria-label="Details"
+            onClick={() => onDetailClick(model)}
+          />
         </Tooltip>
         {model.hasDelete && (
           <Button variant="secondary" size="sm">
@@ -239,6 +290,78 @@ function CapsuleTab({
    Models Page
    ---------------------------------------- */
 
+/* ----------------------------------------
+   Model Detail Drawer
+   Base model: Model name, Provider, Description, Available Features
+   Fine-tuning: Model name, Used Model, Used Dataset, Description
+   ---------------------------------------- */
+
+function ModelDetailDrawer({
+  model,
+  isOpen,
+  onClose,
+}: {
+  model: ModelItem | null;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  if (!model) return null;
+
+  const isBase = model.type === 'base';
+  const drawerTitle = isBase ? 'Base model detail' : 'Fine-tuning detail';
+  const drawerDescription =
+    'Locking an instance prevents it from being deleted or modified. You can unlock it anytime to allow changes again.';
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title={drawerTitle}
+      description={drawerDescription}
+      width={376}
+      footer={
+        <Button variant="secondary" onClick={onClose} className="w-full">
+          Close
+        </Button>
+      }
+    >
+      <VStack gap={6}>
+        <InfoBox label="Model name" value={model.title} />
+
+        {isBase && model.provider && <InfoBox label="Provider" value={model.provider} />}
+
+        {!isBase && model.usedModel && <InfoBox label="Used Model" value={model.usedModel} />}
+
+        {!isBase && model.usedDataset && <InfoBox label="Used Dataset" value={model.usedDataset} />}
+
+        <VStack gap={2}>
+          <span className="text-heading-h6 text-[var(--color-text-default)]">Description</span>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] border border-[var(--color-border-default)] px-4 py-3">
+            <span className="text-body-md text-[var(--color-text-muted)]">{model.description}</span>
+          </div>
+        </VStack>
+
+        {isBase && model.features && model.features.length > 0 && (
+          <VStack gap={2}>
+            <span className="text-heading-h6 text-[var(--color-text-default)]">
+              Available Features
+            </span>
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] border border-[var(--color-border-default)] px-4 py-3">
+              <ul className="list-disc list-inside space-y-1">
+                {model.features.map((feature, idx) => (
+                  <li key={idx} className="text-body-md text-[var(--color-text-default)]">
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </VStack>
+        )}
+      </VStack>
+    </Drawer>
+  );
+}
+
 const ITEMS_PER_PAGE = 20;
 
 export function ModelsPage() {
@@ -249,6 +372,7 @@ export function ModelsPage() {
   const activeTab = searchParams.get('tab') || 'all';
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [detailModel, setDetailModel] = useState<ModelItem | null>(null);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -383,7 +507,7 @@ export function ModelsPage() {
         {paginatedModels.length > 0 ? (
           <div className="grid grid-cols-4 gap-4">
             {paginatedModels.map((model) => (
-              <ModelCard key={model.id} model={model} />
+              <ModelCard key={model.id} model={model} onDetailClick={setDetailModel} />
             ))}
           </div>
         ) : (
@@ -394,6 +518,12 @@ export function ModelsPage() {
           />
         )}
       </VStack>
+
+      <ModelDetailDrawer
+        model={detailModel}
+        isOpen={!!detailModel}
+        onClose={() => setDetailModel(null)}
+      />
     </PageShell>
   );
 }
