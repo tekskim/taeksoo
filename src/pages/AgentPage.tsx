@@ -22,7 +22,8 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { AgentSidebar } from '@/components/AgentSidebar';
+import { PageShell } from '@/design-system';
+import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 
 const FIXED_WIDTHS = {
@@ -102,6 +103,8 @@ interface AgentRow {
 export function AgentPage() {
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
@@ -176,16 +179,12 @@ export function AgentPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <AgentSidebar />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: '60px' }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, title: tab.label }))}
           activeTab={activeTabId}
@@ -195,8 +194,8 @@ export function AgentPage() {
           onTabReorder={moveTab}
           showWindowControls={true}
         />
-
-        {/* Top Bar → thaki-shared ToolBar */}
+      }
+      topBar={
         <ToolBar
           breadcrumbItems={[{ label: 'Home', path: '/agent' }, { label: 'Agent' }]}
           navigation={{
@@ -205,8 +204,8 @@ export function AgentPage() {
             onGoBack: () => window.history.back(),
             onGoForward: () => window.history.forward(),
           }}
-          isSidebarOpen={true}
-          onToggleSidebar={() => {}}
+          isSidebarOpen={sidebarOpen}
+          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           langButton={null}
           rightActions={
             <>
@@ -231,211 +230,190 @@ export function AgentPage() {
             </>
           }
         />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <Layout.VStack className="gap-3">
+        {/* Page Header → Layout.HStack composition */}
+        <Layout.HStack align="center" justify="between" className="w-full min-h-8">
+          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Agent</h1>
+          <Button variant="primary" size="md" onClick={() => navigate('/agent/create')}>
+            Create agent
+          </Button>
+        </Layout.HStack>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="bg-[var(--color-surface-default)] pt-4 px-8 pb-20">
-            <Layout.VStack className="gap-3">
-              {/* Page Header → Layout.HStack composition */}
-              <Layout.HStack align="center" justify="between" className="w-full min-h-8">
-                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  Agent
-                </h1>
-                <Button variant="primary" size="md" onClick={() => navigate('/agent/create')}>
-                  Create agent
-                </Button>
-              </Layout.HStack>
+        {/* Status Cards */}
+        <Layout.HStack gap="sm" align="center" className="w-full">
+          <StatusCard label="Active" count={5} status="active" />
+          <StatusCard label="Inactive" count={5} status="inactive" />
+          <StatusCard label="Draft" count={5} status="draft" />
+        </Layout.HStack>
 
-              {/* Status Cards */}
-              <Layout.HStack gap="sm" align="center" className="w-full">
-                <StatusCard label="Active" count={5} status="active" />
-                <StatusCard label="Inactive" count={5} status="inactive" />
-                <StatusCard label="Draft" count={5} status="draft" />
-              </Layout.HStack>
-
-              {/* List: Toolbar + Pagination + Table */}
-              <Layout.VStack className="gap-3 w-full">
-                {/* Toolbar → Layout.HStack composition */}
-                <Layout.HStack align="center" gap="sm">
-                  {/* Search Input → thaki-shared Input tokens composition */}
-                  <div className="w-[var(--search-input-width)]">
-                    <div className="relative block w-full">
-                      <input
-                        type="search"
-                        className="w-full border rounded-md font-sans font-normal text-12 bg-[var(--component-input-color-bg)] border-[var(--component-input-color-border)] [color:var(--component-input-color-text)] placeholder:text-[var(--component-input-color-placeholder)] placeholder:opacity-100 outline-none transition-[border-color,background-color,box-shadow] duration-normal ease-in-out hover:border-[var(--component-input-color-borderFocus)] hover:bg-[var(--component-input-color-bgHover)] focus:border-[var(--component-input-color-borderFocus)] focus:bg-[var(--component-input-color-bg)] h-7 py-1.5 pl-2 pr-8"
-                        placeholder="Search agent by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        aria-label="Search"
-                      />
-                      {searchQuery && (
-                        <button
-                          type="button"
-                          tabIndex={-1}
-                          className="absolute right-7 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
-                          onClick={() => setSearchQuery('')}
-                          aria-label="Clear search"
-                        >
-                          <IconX size={12} strokeWidth={2} />
-                        </button>
-                      )}
-                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none">
-                        <IconSearch size={12} strokeWidth={2} />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bulk actions */}
-                  <Button
-                    variant="secondary"
-                    appearance="ghost"
-                    size="sm"
-                    disabled={selectedAgents.length === 0}
-                  >
-                    <IconTrash size={12} />
-                    Delete
-                  </Button>
-                </Layout.HStack>
-
-                {/* Pagination */}
-                <Pagination
-                  currentAt={currentPage}
-                  totalCount={filteredAgents.length}
-                  size={rowsPerPage}
-                  onPageChange={(page) => setCurrentPage(page)}
-                  selectedCount={selectedAgents.length}
+        {/* List: Toolbar + Pagination + Table */}
+        <Layout.VStack className="gap-3 w-full">
+          {/* Toolbar → Layout.HStack composition */}
+          <Layout.HStack align="center" gap="sm">
+            {/* Search Input → thaki-shared Input tokens composition */}
+            <div className="w-[var(--search-input-width)]">
+              <div className="relative block w-full">
+                <input
+                  type="search"
+                  className="w-full border rounded-md font-sans font-normal text-12 bg-[var(--component-input-color-bg)] border-[var(--component-input-color-border)] [color:var(--component-input-color-text)] placeholder:text-[var(--component-input-color-placeholder)] placeholder:opacity-100 outline-none transition-[border-color,background-color,box-shadow] duration-normal ease-in-out hover:border-[var(--component-input-color-borderFocus)] hover:bg-[var(--component-input-color-bgHover)] focus:border-[var(--component-input-color-borderFocus)] focus:bg-[var(--component-input-color-bg)] h-7 py-1.5 pl-2 pr-8"
+                  placeholder="Search agent by attributes"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  aria-label="Search"
                 />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    className="absolute right-7 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                    onClick={() => setSearchQuery('')}
+                    aria-label="Clear search"
+                  >
+                    <IconX size={12} strokeWidth={2} />
+                  </button>
+                )}
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none">
+                  <IconSearch size={12} strokeWidth={2} />
+                </div>
+              </div>
+            </div>
 
-                {/* Table */}
-                <SelectableTable
-                  columns={sharedColumns}
-                  rows={paginatedAgents as unknown as Record<string, unknown>[]}
-                  selectionType="checkbox"
-                  selectedRows={selectedAgents}
-                  onRowSelectionChange={(ids) => setSelectedAgents(ids as string[])}
-                  getRowId={(row) => (row as unknown as AgentRow).id}
-                  selectOnRowClick={false}
-                  onClickRow={(row) => navigate(`/agent/list/${(row as unknown as AgentRow).id}`)}
-                  emptyUI={
-                    <span className="text-body-md text-[var(--color-text-subtle)]">
-                      No agents found
-                    </span>
-                  }
+            {/* Bulk actions */}
+            <Button
+              variant="secondary"
+              appearance="ghost"
+              size="sm"
+              disabled={selectedAgents.length === 0}
+            >
+              <IconTrash size={12} />
+              Delete
+            </Button>
+          </Layout.HStack>
+
+          {/* Pagination */}
+          <Pagination
+            currentAt={currentPage}
+            totalCount={filteredAgents.length}
+            size={rowsPerPage}
+            onPageChange={(page) => setCurrentPage(page)}
+            selectedCount={selectedAgents.length}
+          />
+
+          {/* Table */}
+          <SelectableTable
+            columns={sharedColumns}
+            rows={paginatedAgents as unknown as Record<string, unknown>[]}
+            selectionType="checkbox"
+            selectedRows={selectedAgents}
+            onRowSelectionChange={(ids) => setSelectedAgents(ids as string[])}
+            getRowId={(row) => (row as unknown as AgentRow).id}
+            selectOnRowClick={false}
+            onClickRow={(row) => navigate(`/agent/list/${(row as unknown as AgentRow).id}`)}
+            emptyUI={
+              <span className="text-body-md text-[var(--color-text-subtle)]">No agents found</span>
+            }
+          >
+            {paginatedAgents.map((row) => (
+              <Table.Tr key={row.id} rowData={row as unknown as Record<string, unknown>}>
+                <Table.Td
+                  rowData={row as unknown as Record<string, unknown>}
+                  column={sharedColumns[0]}
                 >
-                  {paginatedAgents.map((row) => (
-                    <Table.Tr key={row.id} rowData={row as unknown as Record<string, unknown>}>
-                      <Table.Td
-                        rowData={row as unknown as Record<string, unknown>}
-                        column={sharedColumns[0]}
-                      >
-                        {row.favorite ? (
-                          <IconStarFilled
-                            size={16}
-                            className="text-[var(--primitive-color-yellow400)]"
-                          />
-                        ) : (
-                          <IconStar
+                  {row.favorite ? (
+                    <IconStarFilled size={16} className="text-[var(--primitive-color-yellow400)]" />
+                  ) : (
+                    <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                  )}
+                </Table.Td>
+                <Table.Td
+                  rowData={row as unknown as Record<string, unknown>}
+                  column={sharedColumns[1]}
+                >
+                  <StatusIndicator layout="iconOnly" variant={statusVariantMap[row.status]} />
+                </Table.Td>
+                <Table.Td
+                  rowData={row as unknown as Record<string, unknown>}
+                  column={sharedColumns[2]}
+                >
+                  <span
+                    className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
+                    title={row.name}
+                  >
+                    {row.name}
+                  </span>
+                </Table.Td>
+                <Table.Td
+                  rowData={row as unknown as Record<string, unknown>}
+                  column={sharedColumns[3]}
+                >
+                  {row.model}
+                </Table.Td>
+                <Table.Td
+                  rowData={row as unknown as Record<string, unknown>}
+                  column={sharedColumns[4]}
+                >
+                  {row.modelProvider}
+                </Table.Td>
+                <Table.Td
+                  rowData={row as unknown as Record<string, unknown>}
+                  column={sharedColumns[5]}
+                >
+                  {row.chats}
+                </Table.Td>
+                <Table.Td
+                  rowData={row as unknown as Record<string, unknown>}
+                  column={sharedColumns[6]}
+                >
+                  <span className="whitespace-nowrap">{row.updatedAt}</span>
+                </Table.Td>
+                <Table.Td
+                  rowData={row as unknown as Record<string, unknown>}
+                  column={sharedColumns[7]}
+                >
+                  <span className="whitespace-nowrap">{row.createdAt}</span>
+                </Table.Td>
+                <Table.Td
+                  rowData={row as unknown as Record<string, unknown>}
+                  column={sharedColumns[8]}
+                  preventClickPropagation
+                >
+                  <div className="flex gap-1 items-center justify-center">
+                    <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                      <IconCode size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                    </button>
+                    <ContextMenu.Root
+                      trigger={({ toggle }) => (
+                        <button
+                          className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+                          onClick={toggle}
+                        >
+                          <IconDotsVertical
                             size={16}
                             stroke={1.5}
                             className="text-[var(--color-text-muted)]"
                           />
-                        )}
-                      </Table.Td>
-                      <Table.Td
-                        rowData={row as unknown as Record<string, unknown>}
-                        column={sharedColumns[1]}
-                      >
-                        <StatusIndicator layout="iconOnly" variant={statusVariantMap[row.status]} />
-                      </Table.Td>
-                      <Table.Td
-                        rowData={row as unknown as Record<string, unknown>}
-                        column={sharedColumns[2]}
-                      >
-                        <span
-                          className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
-                          title={row.name}
-                        >
-                          {row.name}
-                        </span>
-                      </Table.Td>
-                      <Table.Td
-                        rowData={row as unknown as Record<string, unknown>}
-                        column={sharedColumns[3]}
-                      >
-                        {row.model}
-                      </Table.Td>
-                      <Table.Td
-                        rowData={row as unknown as Record<string, unknown>}
-                        column={sharedColumns[4]}
-                      >
-                        {row.modelProvider}
-                      </Table.Td>
-                      <Table.Td
-                        rowData={row as unknown as Record<string, unknown>}
-                        column={sharedColumns[5]}
-                      >
-                        {row.chats}
-                      </Table.Td>
-                      <Table.Td
-                        rowData={row as unknown as Record<string, unknown>}
-                        column={sharedColumns[6]}
-                      >
-                        <span className="whitespace-nowrap">{row.updatedAt}</span>
-                      </Table.Td>
-                      <Table.Td
-                        rowData={row as unknown as Record<string, unknown>}
-                        column={sharedColumns[7]}
-                      >
-                        <span className="whitespace-nowrap">{row.createdAt}</span>
-                      </Table.Td>
-                      <Table.Td
-                        rowData={row as unknown as Record<string, unknown>}
-                        column={sharedColumns[8]}
-                        preventClickPropagation
-                      >
-                        <div className="flex gap-1 items-center justify-center">
-                          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                            <IconCode
-                              size={16}
-                              stroke={1.5}
-                              className="text-[var(--color-text-muted)]"
-                            />
-                          </button>
-                          <ContextMenu.Root
-                            trigger={({ toggle }) => (
-                              <button
-                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
-                                onClick={toggle}
-                              >
-                                <IconDotsVertical
-                                  size={16}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-muted)]"
-                                />
-                              </button>
-                            )}
-                          >
-                            <ContextMenu.Item action={() => console.log('View code:', row.id)}>
-                              View code
-                            </ContextMenu.Item>
-                            <ContextMenu.Item danger action={() => console.log('Delete:', row.id)}>
-                              Delete
-                            </ContextMenu.Item>
-                          </ContextMenu.Root>
-                        </div>
-                      </Table.Td>
-                    </Table.Tr>
-                  ))}
-                </SelectableTable>
-              </Layout.VStack>
-            </Layout.VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+                        </button>
+                      )}
+                    >
+                      <ContextMenu.Item action={() => console.log('View code:', row.id)}>
+                        View code
+                      </ContextMenu.Item>
+                      <ContextMenu.Item danger action={() => console.log('Delete:', row.id)}>
+                        Delete
+                      </ContextMenu.Item>
+                    </ContextMenu.Root>
+                  </div>
+                </Table.Td>
+              </Table.Tr>
+            ))}
+          </SelectableTable>
+        </Layout.VStack>
+      </Layout.VStack>
+    </PageShell>
   );
 }
 
 export default AgentPage;
-
-export { AgentSidebar } from '@/components/AgentSidebar';

@@ -1,8 +1,8 @@
-import { ReactNode, useMemo, useCallback } from 'react';
+import { ReactNode, useMemo, useCallback, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { TabBar } from '@/design-system';
 import { useTabs } from '@/contexts/TabContext';
-import { AgentSidebar } from '@/pages/AgentPage';
+import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 
 /* ----------------------------------------
    AgentAppLayout - Shared Layout for Agent Service
@@ -23,6 +23,8 @@ export interface AgentAppLayoutProps {
 export function AgentAppLayout({ children }: AgentAppLayoutProps) {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Memoize tab bar tabs to prevent unnecessary re-renders
   const tabBarTabs = useMemo(
@@ -42,9 +44,12 @@ export function AgentAppLayout({ children }: AgentAppLayoutProps) {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-[var(--color-surface-subtle)] flex">
-      <AgentSidebar />
+      <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-      <main className="flex flex-1 flex-col h-full bg-[var(--color-surface-default)] ml-[60px] overflow-hidden">
+      <main
+        className="flex flex-1 flex-col h-full bg-[var(--color-surface-default)] overflow-hidden transition-[margin-left] duration-200"
+        style={{ marginLeft: `${sidebarWidth}px` }}
+      >
         <div className="w-full flex flex-col h-full min-h-0">
           {/* Shared TabBar */}
           <TabBar

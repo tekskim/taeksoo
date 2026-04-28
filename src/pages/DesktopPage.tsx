@@ -96,7 +96,7 @@ function getInitialIconLayout(): DesktopIconItem[] {
     { id: 'storage', icon: imgStorage, label: 'Storage' },
     { id: 'container', icon: imgContainer, label: 'Container' },
     { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
-    { id: 'agent', icon: imgAgent, label: 'Agent Ops' },
+    { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
     { id: 'settings', icon: imgSettings, label: 'Settings' },
     { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
   ];
@@ -1250,12 +1250,12 @@ export function DesktopPage() {
     compute: { name: 'Compute', icon: imgCompute, initialPath: '/compute' },
     storage: { name: 'Storage', icon: imgStorage, initialPath: '/storage' },
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
-    agent: { name: 'Agent Ops', icon: imgAgent, initialPath: '/agent' },
+    agent: { name: 'Agent Studio', icon: imgAgent, initialPath: '/agent' },
     'ai-platform': { name: 'AI Platform', icon: imgAi, initialPath: '/ai-platform' },
     iam: { name: 'IAM', icon: imgIam, initialPath: '/iam' },
     settings: { name: 'Settings', icon: imgSettings, initialPath: '/settings' },
   };
-  // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Ops, Settings는 Pin만 되어있음
+  // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Studio, Settings는 Pin만 되어있음
   const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(
     new Set(['ai-platform', 'agent', 'settings'])
   );
