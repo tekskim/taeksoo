@@ -1293,6 +1293,7 @@ function PageWindow({
   const snapPreviewRef = useRef<SnapZone>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
+  const [isDraggingState, setIsDraggingState] = useState(false);
   const isResizing = useRef<string | null>(null);
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0, w: 0, h: 0 });
   const hasMounted = useRef(false);
@@ -1319,36 +1320,48 @@ function PageWindow({
   }, [isMinimized, isMaximized, onMaximizeChange, windowId]);
 
   // Drag handler
+  const DRAG_THRESHOLD = 4;
   const handleDragStart = useCallback(
     (e: React.MouseEvent) => {
       if (isMaximized) return;
       e.preventDefault();
-      isDragging.current = true;
 
-      const startPosX = snapZone && preSnapState ? preSnapState.x : position.x;
-      const startPosY = snapZone && preSnapState ? preSnapState.y : position.y;
-
-      if (snapZone) {
-        if (preSnapState) {
-          setSize({ width: preSnapState.w, height: preSnapState.h });
-        }
-        setSnapZone(null);
-        setPreSnapState(null);
-      }
+      const startX = e.clientX;
+      const startY = e.clientY;
+      let didMove = false;
+      let snapReleased = false;
 
       dragStart.current = {
-        x: e.clientX,
-        y: e.clientY,
-        posX: startPosX,
-        posY: startPosY,
-        w: 0,
-        h: 0,
+        x: startX,
+        y: startY,
+        posX: position.x,
+        posY: position.y,
+        w: size.width,
+        h: size.height,
       };
 
       const handleMouseMove = (ev: MouseEvent) => {
-        if (!isDragging.current) return;
-        const dx = ev.clientX - dragStart.current.x;
-        const dy = ev.clientY - dragStart.current.y;
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
+
+        if (!didMove) {
+          if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+          didMove = true;
+          isDragging.current = true;
+          setIsDraggingState(true);
+
+          if (snapZone && preSnapState) {
+            dragStart.current.posX = preSnapState.x;
+            dragStart.current.posY = preSnapState.y;
+            dragStart.current.w = preSnapState.w;
+            dragStart.current.h = preSnapState.h;
+            setSize({ width: preSnapState.w, height: preSnapState.h });
+            setSnapZone(null);
+            setPreSnapState(null);
+            snapReleased = true;
+          }
+        }
+
         setPosition({
           x: dragStart.current.posX + dx,
           y: Math.max(TOP_BAR_HEIGHT, dragStart.current.posY + dy),
@@ -1364,28 +1377,33 @@ function PageWindow({
         setSnapPreview(preview);
       };
       const handleMouseUp = () => {
-        isDragging.current = false;
+        if (didMove) {
+          isDragging.current = false;
+          setIsDraggingState(false);
 
-        const currentPreview = snapPreviewRef.current;
-        if (currentPreview) {
-          const halfWidth = window.innerWidth / 2;
-          const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
-          setPreSnapState({
-            x: dragStart.current.posX,
-            y: dragStart.current.posY,
-            w: size.width,
-            h: size.height,
-          });
-          setPosition({
-            x: currentPreview === 'left' ? 0 : halfWidth,
-            y: TOP_BAR_HEIGHT,
-          });
-          setSize({ width: halfWidth, height: snapHeight });
-          setSnapZone(currentPreview);
+          const currentPreview = snapPreviewRef.current;
+          if (currentPreview) {
+            const halfWidth = window.innerWidth / 2;
+            const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
+            const origW = snapReleased ? dragStart.current.w : size.width;
+            const origH = snapReleased ? dragStart.current.h : size.height;
+            setPreSnapState({
+              x: dragStart.current.posX,
+              y: dragStart.current.posY,
+              w: origW,
+              h: origH,
+            });
+            setPosition({
+              x: currentPreview === 'left' ? 0 : halfWidth,
+              y: TOP_BAR_HEIGHT,
+            });
+            setSize({ width: halfWidth, height: snapHeight });
+            setSnapZone(currentPreview);
+          }
+
+          snapPreviewRef.current = null;
+          setSnapPreview(null);
         }
-
-        snapPreviewRef.current = null;
-        setSnapPreview(null);
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
       };
@@ -1499,10 +1517,11 @@ function PageWindow({
 
   if (!isOpen) return null;
 
+  const isMoving = isDragging.current || !!isResizing.current;
   const windowTransition =
-    hasMounted.current && !isDragging.current && !isResizing.current && !isMinimized
-      ? 'width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, border-radius 250ms ease-out'
-      : 'none';
+    hasMounted.current && !isMoving && !isMinimized
+      ? 'width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, border-radius 250ms ease-out, opacity 200ms ease-out, filter 200ms ease-out'
+      : 'opacity 150ms ease-out, filter 150ms ease-out';
 
   const windowStyle: React.CSSProperties = isMaximized
     ? {
@@ -1514,30 +1533,24 @@ function PageWindow({
         borderRadius: 0,
         transition: windowTransition,
       }
-    : snapZone
-      ? {
-          width: `${window.innerWidth / 2}px`,
-          height: `${window.innerHeight - TOP_BAR_HEIGHT}px`,
-          top: `${TOP_BAR_HEIGHT}px`,
-          left: snapZone === 'left' ? '0px' : `${window.innerWidth / 2}px`,
-          zIndex: zIndex,
-          borderRadius: 0,
-          transition: windowTransition,
-        }
-      : {
-          width: `${size.width}px`,
-          height: `${size.height}px`,
-          top: `${position.y}px`,
-          left: `${position.x}px`,
-          zIndex: zIndex,
-          transition: windowTransition,
-        };
+    : {
+        width: `${size.width}px`,
+        height: `${size.height}px`,
+        top: `${position.y}px`,
+        left: `${position.x}px`,
+        zIndex: zIndex,
+        transition: windowTransition,
+        ...(snapZone ? { borderRadius: 0 } : {}),
+      };
 
   const resizeHandleBase = 'absolute pointer-events-auto z-10';
   const edgeThickness = '4px';
   const cornerSize = '12px';
 
-  const minimizeAnimation = isMinimized ? { scale: 0.3, opacity: 0 } : { scale: 1, opacity: 1 };
+  const dragOpacity = isDraggingState ? 0.8 : 1;
+  const minimizeAnimation = isMinimized
+    ? { scale: 0.3, opacity: 0 }
+    : { scale: 1, opacity: dragOpacity };
 
   return (
     <div
@@ -1547,20 +1560,21 @@ function PageWindow({
         ...(isMinimized ? { pointerEvents: 'none' as const } : {}),
       }}
     >
-      {/* Snap preview overlay */}
+      {/* Snap preview frame */}
       {snapPreview && (
         <div
           className="fixed pointer-events-none"
           style={{
-            top: TOP_BAR_HEIGHT + 4,
-            left: snapPreview === 'left' ? 4 : '50%',
-            width: 'calc(50% - 6px)',
-            height: `calc(100vh - ${TOP_BAR_HEIGHT + 8}px)`,
+            top: TOP_BAR_HEIGHT + 6,
+            left: snapPreview === 'left' ? 6 : 'calc(50% + 2px)',
+            width: 'calc(50% - 10px)',
+            height: `calc(100vh - ${TOP_BAR_HEIGHT + 12}px)`,
             zIndex: 9999,
-            background: 'color-mix(in srgb, var(--color-primary-default) 12%, transparent)',
-            borderRadius: 12,
-            border: '2px solid color-mix(in srgb, var(--color-primary-default) 40%, transparent)',
-            transition: 'all 150ms ease-out',
+            borderRadius: 10,
+            boxShadow: 'inset 0 0 0 2.5px rgba(255,255,255,0.7), 0 0 20px rgba(0,0,0,0.08)',
+            background: 'rgba(255,255,255,0.15)',
+            backdropFilter: 'blur(20px)',
+            transition: 'all 200ms ease-out',
           }}
         />
       )}
@@ -1571,13 +1585,16 @@ function PageWindow({
         animate={minimizeAnimation}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={
-          isMinimized ? { duration: 0.25, ease: 'easeIn' } : { duration: 0.2, ease: 'easeOut' }
+          isMinimized
+            ? { duration: 0.25, ease: 'easeIn' }
+            : { duration: 0.2, ease: 'easeOut', opacity: { duration: 0.15 } }
         }
         className="absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
         style={{
           ...windowStyle,
           transformOrigin: isMinimized ? 'top center' : 'center',
           ...(isMinimized ? { pointerEvents: 'none' as const } : {}),
+          filter: isDraggingState ? 'drop-shadow(0 12px 24px rgba(0,0,0,0.25))' : 'none',
         }}
         onClick={(e) => {
           if (!(e.target as HTMLElement).closest('button')) onFocus();
