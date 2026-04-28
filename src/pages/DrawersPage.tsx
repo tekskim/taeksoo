@@ -3783,7 +3783,6 @@ export function DrawersPage() {
         initialData={{
           name: 'domain',
           description: '',
-          enabled: true,
         }}
         onSubmit={(data) => {
           console.log('Edit domain:', data);

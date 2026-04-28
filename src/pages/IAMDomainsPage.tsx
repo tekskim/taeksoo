@@ -12,7 +12,6 @@ import {
   HStack,
   ContextMenu,
   TabBar,
-  StatusIndicator,
   PageShell,
   PageHeader,
   ListToolbar,
@@ -25,6 +24,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { DomainCreateDrawer } from '@/components/DomainCreateDrawer';
+import { InlineCopyId } from '@/components/InlineCopyId';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,7 +35,6 @@ interface Domain {
   id: string;
   name: string;
   description: string;
-  status: 'active' | 'deactivated';
   createdAt: string;
 }
 
@@ -47,70 +46,60 @@ const mockDomains: Domain[] = [
     id: 'domain-001',
     name: 'domain',
     description: '-',
-    status: 'active',
     createdAt: 'Sep 12, 2026 08:22:15',
   },
   {
     id: 'domain-002',
     name: 'production',
     description: 'Production environment',
-    status: 'active',
     createdAt: 'Aug 15, 2026 10:45:33',
   },
   {
     id: 'domain-003',
     name: 'staging',
     description: 'Staging environment',
-    status: 'active',
     createdAt: 'Jul 20, 2026 14:18:42',
   },
   {
     id: 'domain-004',
     name: 'development',
     description: 'Development environment',
-    status: 'active',
     createdAt: 'Jun 10, 2026 09:32:28',
   },
   {
     id: 'domain-005',
     name: 'testing',
     description: 'Testing domain',
-    status: 'deactivated',
     createdAt: 'Sep 1, 2026 16:52:07',
   },
   {
     id: 'domain-006',
     name: 'qa-domain',
     description: 'QA testing',
-    status: 'active',
     createdAt: 'Aug 25, 2026 11:15:44',
   },
   {
     id: 'domain-007',
     name: 'sandbox',
     description: 'Sandbox environment',
-    status: 'deactivated',
     createdAt: 'Sep 10, 2026 13:38:21',
   },
   {
     id: 'domain-008',
     name: 'demo',
     description: 'Demo environment',
-    status: 'active',
     createdAt: 'Jul 5, 2026 10:22:55',
   },
   {
     id: 'domain-009',
     name: 'internal',
     description: 'Internal domain',
-    status: 'active',
     createdAt: 'Jun 1, 2026 15:48:12',
   },
   {
     id: 'domain-010',
     name: 'external',
     description: 'External access domain',
-    status: 'active',
     createdAt: 'May 15, 2026 08:35:39',
   },
 ];
@@ -118,15 +107,6 @@ const mockDomains: Domain[] = [
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
   { id: 'description', label: 'Description', type: 'text' },
-  {
-    id: 'status',
-    label: 'Status',
-    type: 'select',
-    options: [
-      { value: 'active', label: 'Active' },
-      { value: 'deactivated', label: 'Deactivated' },
-    ],
-  },
   { id: 'createdAt', label: 'Created at', type: 'text' },
 ];
 
@@ -197,25 +177,21 @@ export default function IAMDomainsPage() {
   // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Domain>[] = [
     {
-      key: 'status',
-      label: 'Status',
-      width: fixedColumns.status,
-      align: 'center',
-      render: (value) => (
-        <StatusIndicator
-          layout="icon-only"
-          status={value === 'active' ? 'active' : 'deactivated'}
-        />
-      ),
-    },
-    {
       key: 'name',
       label: 'Name',
       flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
-      render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
+      render: (_, row) => (
+        <VStack gap={0.5} align="start">
+          <span className="text-body-md text-[var(--color-text-default)]">{row.name}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </VStack>
       ),
     },
     {

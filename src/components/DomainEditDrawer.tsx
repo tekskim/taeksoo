@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Textarea, Toggle, FormField } from '@/design-system';
+import { Drawer, Button, Input, Textarea, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -9,7 +9,6 @@ import { HStack, VStack } from '@/design-system/layouts';
 export interface DomainData {
   name: string;
   description: string;
-  enabled: boolean;
 }
 
 export interface DomainEditDrawerProps {
@@ -29,13 +28,11 @@ export function DomainEditDrawer({
   initialData = {
     name: 'domain',
     description: '',
-    enabled: true,
   },
   onSubmit,
 }: DomainEditDrawerProps) {
   const [name, setName] = useState(initialData.name);
   const [description, setDescription] = useState(initialData.description);
-  const [enabled, setEnabled] = useState(initialData.enabled);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
@@ -46,7 +43,6 @@ export function DomainEditDrawer({
     if (isOpen) {
       setName(initialData.name);
       setDescription(initialData.description);
-      setEnabled(initialData.enabled);
       setHasAttemptedSubmit(false);
       setNameError(null);
       setDescriptionError(null);
@@ -81,7 +77,6 @@ export function DomainEditDrawer({
       await onSubmit?.({
         name: name.trim(),
         description: description.trim(),
-        enabled,
       });
       onClose();
     } finally {
@@ -92,7 +87,6 @@ export function DomainEditDrawer({
   const handleClose = () => {
     setName(initialData.name);
     setDescription(initialData.description);
-    setEnabled(initialData.enabled);
     setHasAttemptedSubmit(false);
     setNameError(null);
     setDescriptionError(null);
@@ -166,20 +160,6 @@ export function DomainEditDrawer({
             You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
             characters.
           </FormField.HelperText>
-        </FormField>
-
-        {/* Status field */}
-        <FormField
-          label="Status"
-          description="Select the domain's status. If 'disabled', users in this domain will not be able to sign in."
-          spacing="loose"
-        >
-          <HStack gap={2} align="center">
-            <Toggle checked={enabled} onChange={setEnabled} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {enabled ? 'Enabled' : 'Disabled'}
-            </span>
-          </HStack>
         </FormField>
       </VStack>
     </Drawer>

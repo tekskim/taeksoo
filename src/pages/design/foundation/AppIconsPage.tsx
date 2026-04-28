@@ -16,6 +16,10 @@ import AppIconSettings from '@/assets/appIcon/settings.png';
 import AppIconStorage from '@/assets/appIcon/storage.png';
 import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.png';
 import AppIconChat from '@/assets/appIcon/chat.png';
+import AppIconKMS from '@/assets/appIcon/kms.png';
+import AppIconSecurity from '@/assets/appIcon/security.png';
+import AppIconLogs from '@/assets/appIcon/logs.png';
+import AppIconAudit from '@/assets/appIcon/audit.png';
 
 const APP_ICONS: { src?: string; name: string; composite?: boolean }[] = [
   { src: AppIconCompute, name: 'Compute' },
@@ -31,6 +35,10 @@ const APP_ICONS: { src?: string; name: string; composite?: boolean }[] = [
   { src: AppIconSettings, name: 'Settings' },
   { name: 'Admin center', composite: true },
   { src: AppIconChat, name: 'Chat' },
+  { src: AppIconKMS, name: 'KMS' },
+  { src: AppIconSecurity, name: 'Security' },
+  { src: AppIconLogs, name: 'Logs' },
+  { src: AppIconAudit, name: 'Audit' },
 ];
 
 export function AppIconsPage() {
@@ -142,7 +150,7 @@ export function AppIconsPage() {
               <li>
                 THAKI Cloud의 각 서비스(Compute, Compute Admin, Container, Storage, Storage Admin,
                 Cloud Builder, AI Platform, AI Platform Admin, Agent ops, IAM, Settings, Admin
-                center, Chat)를 대표하는 아이콘입니다.
+                center, Chat, KMS, Security, Logs, Audit)를 대표하는 아이콘입니다.
               </li>
               <li>
                 <strong className="text-[var(--color-text-default)]">크기</strong>: 기본 64×64px.
