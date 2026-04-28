@@ -66,7 +66,7 @@ export function PageShell({
             paddingBottom: bottomPanelPadding || '0',
           }}
         >
-          <div className={`bg-[var(--color-surface-default)] ${contentClassName}`.trim()}>
+          <div className={`bg-[var(--color-surface-default)] h-full ${contentClassName}`.trim()}>
             {children}
           </div>
         </div>
