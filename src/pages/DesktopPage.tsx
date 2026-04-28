@@ -10,6 +10,7 @@ import {
   IconCheckbox,
   IconChevronUp,
   IconChevronDown,
+  IconGridDots,
 } from '@tabler/icons-react';
 import {
   Icons,
@@ -559,6 +560,7 @@ function DockIcons({
 
 interface TopBarProps {
   onChatbotToggle: () => void;
+  onLaunchpadToggle?: () => void;
   onOpenSettings?: () => void;
   onNotificationToggle?: () => void;
   notificationButtonRef?: React.RefObject<HTMLButtonElement>;
@@ -644,6 +646,7 @@ function GlassDomainSelect({ value, onChange, options }: GlassDomainSelectProps)
 
 function DesktopTopBar({
   onChatbotToggle,
+  onLaunchpadToggle,
   onOpenSettings,
   onNotificationToggle,
   notificationButtonRef,
@@ -858,9 +861,15 @@ function DesktopTopBar({
       }}
     >
       {/* Left Section - Logo + Dock Icons */}
-      <div className="flex items-center gap-8 h-full">
-        {/* THAKI Cloud Logo */}
-        <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
+      <div className="flex items-center gap-1.5 h-full">
+        <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-5 mr-3" />
+        <button
+          onClick={onLaunchpadToggle}
+          className="flex items-center justify-center w-7 h-7 rounded-md text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] transition-colors"
+          title="Launchpad"
+        >
+          <IconGridDots size={18} stroke={1.5} />
+        </button>
 
         {/* Dock Icons */}
         {dockIcons}
@@ -1067,6 +1076,75 @@ function AdminCenterPanel({ isOpen, onClose, onOpenApp }: AdminPanelProps) {
                   Cloud Builder
                 </span>
               </button>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ----------------------------------------
+   Launchpad Panel (All Apps Launcher)
+   ---------------------------------------- */
+
+interface LaunchpadPanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+  appConfigs: Record<string, { name: string; icon: string; initialPath: string }>;
+  onOpenApp: (appId: AppId) => void;
+}
+
+function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPanelProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  const apps = Object.entries(appConfigs) as [
+    AppId,
+    { name: string; icon: string; initialPath: string },
+  ][];
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            className="fixed inset-0 z-[6000] bg-black/50 backdrop-blur-xl"
+            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          />
+          <div className="fixed inset-0 z-[6001] flex items-center justify-center pointer-events-none">
+            <motion.div
+              className="pointer-events-auto grid grid-cols-5 gap-6 p-10"
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
+              {apps.map(([appId, config]) => (
+                <button
+                  key={appId}
+                  className="flex flex-col items-center gap-2.5 w-32 cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
+                  onClick={() => {
+                    onOpenApp(appId);
+                    onClose();
+                  }}
+                >
+                  <img src={config.icon} alt={config.name} className="w-16 h-16 object-cover" />
+                  <span className="text-label-md text-white text-center leading-tight whitespace-pre-line">
+                    {config.name.replace(' - ', '\n')}
+                  </span>
+                </button>
+              ))}
             </motion.div>
           </div>
         </>
@@ -1847,6 +1925,7 @@ function GlobalNotificationCard({
 export function DesktopPage() {
   const [showChatbot, setShowChatbot] = useState(false);
   const [showAdminCenter, setShowAdminCenter] = useState(false);
+  const [showLaunchpad, setShowLaunchpad] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
@@ -2185,6 +2264,7 @@ export function DesktopPage() {
       {/* Top Bar */}
       <DesktopTopBar
         onChatbotToggle={() => setShowChatbot(!showChatbot)}
+        onLaunchpadToggle={() => setShowLaunchpad(!showLaunchpad)}
         onOpenSettings={() => {
           focusApp('settings');
         }}
@@ -2290,6 +2370,14 @@ export function DesktopPage() {
         isOpen={showAdminCenter}
         onClose={() => setShowAdminCenter(false)}
         anchorRef={adminCenterIconRef}
+        onOpenApp={focusApp}
+      />
+
+      {/* Launchpad Panel */}
+      <LaunchpadPanel
+        isOpen={showLaunchpad}
+        onClose={() => setShowLaunchpad(false)}
+        appConfigs={appConfigs}
         onOpenApp={focusApp}
       />
 
