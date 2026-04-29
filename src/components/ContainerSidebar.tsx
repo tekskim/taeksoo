@@ -13,7 +13,7 @@ import {
 } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconAffiliate,
   IconShieldLock,
   IconPlus,
@@ -305,10 +305,10 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
         {/* Icon Navigation */}
         <div className="flex-1 flex flex-col items-center py-3 gap-1">
           <IconSidebarItem
-            icon={<IconHome size={16} stroke={1.5} />}
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
             active={activeIconSection === 'home'}
             onClick={() => navigate('/container')}
-            tooltip="Home"
+            tooltip="Dashboard"
           />
           <IconSidebarItem
             icon={<FolderCog size={16} strokeWidth={1.5} />}
@@ -395,8 +395,8 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   {/* Cluster Section */}
                   <MenuSection title="Cluster" defaultOpen={true}>
                     <MenuItem
-                      icon={<IconHome size={16} stroke={1.5} />}
-                      label="Home"
+                      icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+                      label="Dashboard"
                       href="/container/dashboard"
                       active={isActive('/container/dashboard')}
                     />
