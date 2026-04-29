@@ -209,7 +209,7 @@ export function TabList({ children, className = '', ...rest }: TabListProps) {
   useEffect(() => {
     if (!listRef.current || !activeTab) return;
     const el = listRef.current.querySelector<HTMLElement>(`[data-tab-value="${activeTab}"]`);
-    if (el) {
+    if (el?.scrollIntoView) {
       el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
     }
   }, [activeTab]);
