@@ -960,6 +960,149 @@ const repeatableFieldGroupCode = `<div className="bg-[var(--color-surface-subtle
   </VStack>
 </div>`;
 
+/* ──────────────────────────────────────────────
+   Validation Error Demos
+   ────────────────────────────────────────────── */
+
+function ListValidationErrorDemo() {
+  return (
+    <VStack gap={2}>
+      <span className="text-label-lg text-[var(--color-text-default)]">
+        Labels <span className="text-[var(--color-state-danger)]">*</span>
+      </span>
+
+      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+        <VStack gap={1.5}>
+          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+            <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+            <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
+            <div className="w-5" />
+          </div>
+          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+            <Input value="app" fullWidth />
+            <Input value="nginx" fullWidth />
+            <div className="size-5 flex items-center justify-center">
+              <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </div>
+          </div>
+          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-start">
+            <VStack gap={1}>
+              <Input value="" placeholder="label key" error fullWidth />
+              <span className="text-body-sm text-[var(--color-state-danger)]">
+                Key is required.
+              </span>
+            </VStack>
+            <VStack gap={1}>
+              <Input value="" placeholder="label value" error fullWidth />
+              <span className="text-body-sm text-[var(--color-state-danger)]">
+                Value is required.
+              </span>
+            </VStack>
+            <div className="size-5 flex items-center justify-center mt-[6px]">
+              <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </div>
+          </div>
+          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-start">
+            <VStack gap={1}>
+              <Input value="app" error fullWidth />
+              <span className="text-body-sm text-[var(--color-state-danger)]">
+                Duplicate key &quot;app&quot;.
+              </span>
+            </VStack>
+            <Input value="backend" fullWidth />
+            <div className="size-5 flex items-center justify-center">
+              <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </div>
+          </div>
+          <div className="w-fit">
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+            >
+              Add Label
+            </Button>
+          </div>
+        </VStack>
+      </div>
+    </VStack>
+  );
+}
+
+function CardValidationErrorDemo() {
+  return (
+    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+      <VStack gap={1.5} className="w-full">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+          <VStack gap={1.5}>
+            <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+              <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
+              <span className="block text-label-sm text-[var(--color-text-default)]">
+                Value Type
+              </span>
+              <span className="block text-label-sm text-[var(--color-text-default)]">
+                Value/Source
+              </span>
+              <div className="size-5 flex items-center justify-center">
+                <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </div>
+            </div>
+            <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+              <Input value="API_KEY" fullWidth />
+              <Select options={ENV_TYPE_OPTIONS} value="value" onChange={() => {}} fullWidth />
+              <Input value="sk-1234567890" fullWidth />
+              <div />
+            </div>
+          </VStack>
+        </div>
+
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+          <VStack gap={1.5}>
+            <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+              <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
+              <span className="block text-label-sm text-[var(--color-text-default)]">
+                Value Type
+              </span>
+              <span className="block text-label-sm text-[var(--color-text-default)]">
+                Value/Source
+              </span>
+              <div className="size-5 flex items-center justify-center">
+                <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </div>
+            </div>
+            <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-start">
+              <VStack gap={1}>
+                <Input value="" placeholder="input variable name" error fullWidth />
+                <span className="text-body-sm text-[var(--color-state-danger)]">
+                  Name is required.
+                </span>
+              </VStack>
+              <Select options={ENV_TYPE_OPTIONS} value="value" onChange={() => {}} fullWidth />
+              <VStack gap={1}>
+                <Input value="" placeholder="input value" error fullWidth />
+                <span className="text-body-sm text-[var(--color-state-danger)]">
+                  Value is required.
+                </span>
+              </VStack>
+              <div />
+            </div>
+          </VStack>
+        </div>
+
+        <div className="w-fit">
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+          >
+            Add Variable
+          </Button>
+        </div>
+      </VStack>
+    </div>
+  );
+}
+
 const DYNAMIC_FORM_FIELDS_GUIDELINES = `## Overview
 
 Dynamic form fields는 **여러 입력 필드로 구성된 속성(Property)을 동적으로 추가·제거하거나, 관련 필드를 시각적으로 그룹화하여 표시하는 Form 패턴**이다. Form이 길어지는 문제를 해결하고, 관련 필드를 하나의 논리적 단위로 구성하여 **가독성과 구조를 개선**한다.
@@ -1193,6 +1336,47 @@ export function DynamicFormFieldsPage() {
             <ComponentPreview code={disclosureNestedGridCode}>
               <DisclosureNestedGridDemo />
             </ComponentPreview>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <HStack gap={2} align="center">
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                  Validation Error
+                </h4>
+                <Badge variant="info" size="sm">
+                  List
+                </Badge>
+              </HStack>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                Per-field validation errors appear below the input with error styling. Empty
+                required fields and duplicate key conflicts are shown inline. The error message uses
+                text-body-sm in danger color.
+              </p>
+            </VStack>
+            <ListValidationErrorDemo />
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <HStack gap={2} align="center">
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                  Validation Error
+                </h4>
+                <Badge variant="info" size="sm">
+                  Card
+                </Badge>
+              </HStack>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                Card-level validation highlights the entire card border in danger color. Individual
+                field errors are shown within the card. Valid cards retain the default border.
+              </p>
+            </VStack>
+            <CardValidationErrorDemo />
           </VStack>
         </VStack>
       }

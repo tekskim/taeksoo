@@ -768,6 +768,84 @@ function PanelCardStates() {
 }
 
 /* ----------------------------------------
+   PanelEmptyStates
+   ---------------------------------------- */
+
+function EmptyPanelShell({
+  activeTab,
+  children,
+}: {
+  activeTab: 'all' | 'unread';
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+      <div className="relative pt-3 pb-0">
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)]">
+          <IconCheckbox size={16} stroke={1.5} />
+        </div>
+        <Tabs
+          value={activeTab}
+          onChange={() => {}}
+          variant="underline"
+          size="sm"
+          className="w-full"
+        >
+          <TabList className="w-full px-4">
+            <Tab value="all">All</Tab>
+            <Tab value="unread">Unread</Tab>
+          </TabList>
+        </Tabs>
+      </div>
+      <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
+        <Select
+          options={[{ value: 'all', label: 'All apps' }]}
+          value="all"
+          onChange={() => {}}
+          size="md"
+          fullWidth
+        />
+      </div>
+      <div className="flex flex-col items-center justify-center h-[160px] px-6 text-center">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function PanelEmptyStates() {
+  return (
+    <VStack gap={3}>
+      <span className="text-label-md text-[var(--color-text-default)]">Empty states</span>
+      <p className="text-body-sm text-[var(--color-text-subtle)]">
+        목록이 비어 있을 때 표시되는 문구는 탭별로 고정된다.
+      </p>
+      <div className="flex gap-6 flex-wrap">
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">All tab</span>
+          <EmptyPanelShell activeTab="all">
+            <span className="text-body-md text-[var(--color-text-muted)]">
+              No notifications.
+              <br />
+              They are deleted automatically after 72 hours.
+            </span>
+          </EmptyPanelShell>
+        </VStack>
+
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Unread tab</span>
+          <EmptyPanelShell activeTab="unread">
+            <span className="text-body-md text-[var(--color-text-muted)]">
+              No unread notifications.
+            </span>
+          </EmptyPanelShell>
+        </VStack>
+      </div>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
    Guidelines
    ---------------------------------------- */
 
@@ -894,7 +972,21 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 ### 6) 알림 보관 정책
 
 - 알림은 사용자가 삭제할 수 없다.
-- 알림은 30일 보관 이후 자동으로 삭제된다.
+- 알림은 72시간 보관 이후 자동으로 삭제된다.
+
+### 7) Empty state
+
+목록이 비어 있을 때 표시하는 문구는 **탭별**로 고정한다.
+
+**All 탭**
+
+- EN (UI): \`No notifications. They are deleted automatically after 72 hours.\`
+- KO (참고): 알림이 없습니다. 알림은 72시간 후 자동으로 삭제됩니다.
+
+**Unread 탭**
+
+- EN (UI): \`No unread notifications.\`
+- KO (참고): 읽지 않은 알림이 없습니다.
 
 ---
 
@@ -934,6 +1026,7 @@ export function GlobalNotificationPanelPage() {
         <VStack gap={8}>
           <GlobalPanelDemo />
           <PanelCardStates />
+          <PanelEmptyStates />
         </VStack>
       }
       guidelines={
