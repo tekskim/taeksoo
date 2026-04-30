@@ -1,22 +1,20 @@
-version: "1"
+# Desktop UI — 캡처 매니페스트
+# wireframe-create 스킬이 읽어서 자동 캡처 + 와이어프레임 생성에 사용한다.
+#
+# figma_node_id는 기존 프레임 ID (null이면 신규 생성, 생성 후 역갱신 권장).
+# captureId는 런타임에 generate_figma_design이 발급하므로 여기에 정의하지 않는다.
+# 이 파일은 "무엇을, 어떤 액션으로, 어디에 배치할지"를 선언한다.
 
-# ─── Figma 설정 ─────────────────────────────────────────────────────────────
-figma:
-  fileKey: "sDY0PfHButRV1ClAu7hxzM"
-  targetPage: "(1.0v)Desktop"
-  templateFrameId: "4:1449"           # v0.7 HOME 프레임 (clone 기준)
-  templatePage: "v0.7"                # 템플릿 프레임이 있는 페이지
-  sectionName: "DESKTOP (v1.0 화면기획서)"
+meta:
+  package: desktop-ui
+  base_url: "http://localhost:5173"
+  figma_file_key: "sDY0PfHButRV1ClAu7hxzM"
+  figma_page_name: "(1.0v)Desktop"
+  capture_output_mode: existingFile
+  template_frame_id: "4:1449"   # v0.7 HOME 프레임 (clone 기준)
+  template_page: "v0.7"
 
-# ─── 캡처 설정 ──────────────────────────────────────────────────────────────
-capture:
-  baseUrl: "http://localhost:5173"
-  viewport:
-    width: 1440
-    height: 900
-    deviceScaleFactor: 2
-
-# ─── Figma 이미지 좌표계 ─────────────────────────────────────────────────────
+# ─── 이미지 좌표계 (Desktop UI 전용) ─────────────────────────────────────────
 # 템플릿 프레임 내 이미지 영역: x=42, y=120, w=2048, h=1054
 # DOM viewport: 1440×900
 # 변환: figma_x = 42 + dom_x * (2048/1440)
@@ -29,18 +27,57 @@ image_area:
   dom_w: 1440
   dom_h: 900
 
-# ─── 화면 목록 ──────────────────────────────────────────────────────────────
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 화면 정의
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 screens:
 
-  # ── HOME01: 홈 화면 (도메인 사용자) ─────────────────────────────────────
+  # ─── HOME01: 홈 화면 (도메인 사용자) ──────────────────────────────────────
   - id: HOME01
     name: "홈 화면 (도메인 사용자)"
     path: "로그인 → 홈 화면 (도메인 사용자)"
-    url: "/desktop-v1"
-    use_generate_figma_design: true
-    setup:
-      - type: wait
-        ms: 2000
+    figma_node_id: "499:396"   # 기존 프레임 ID (null이면 신규 생성)
+    capture:
+      method: generate_figma_design
+      selector: "body"
+      preconditions:
+        - { action: wait, timeout: 2000 }
+      viewport: { width: 1440, height: 900 }
+    states:
+      - id: HOME01-S01
+        name: "App Launcher"
+        type: overlay
+        figma_node_id: null
+        capture:
+          method: playwright
+          actions:
+            - { action: click, selector: "[aria-label='Open app launcher']" }
+            - { action: wait, timeout: 800 }
+          viewport: { width: 1440, height: 900 }
+
+      - id: HOME01-S02
+        name: "TCA Panel"
+        type: overlay
+        figma_node_id: null
+        capture:
+          method: playwright
+          actions:
+            - { action: click, selector: "button[title='TCA — AI Assistant']" }
+            - { action: wait, timeout: 800 }
+          viewport: { width: 1440, height: 900 }
+
+      - id: HOME01-S03
+        name: "Dock Context Menu"
+        type: overlay
+        figma_node_id: null
+        capture:
+          method: playwright
+          actions:
+            - { action: right_click, selector: ".cursor-grab:first-child" }
+            - { action: wait, timeout: 600 }
+          viewport: { width: 1440, height: 900 }
+
     annotations:
       - label: "A"
         selector: ".fixed.top-0.left-0.right-0"
@@ -49,15 +86,14 @@ screens:
       - label: "B"
         position: { x: 0, y: 178 }
         side: left
-        description: "메인 데스크탑 영역"
+        description: "메인 데스크탑 영역 (앱 아이콘 그리드)"
       - label: "1"
         selector: "[aria-label='Open app launcher']"
-        description: "App Launcher 버튼 (→ LAUNCHER01)"
+        description: "App Launcher 버튼 (→ HOME01-S01)"
       - label: "2"
         selector: ".rounded-xl.px-1\\.5"
-        description: "Dock Menu (→ DOCK_MENU01)"
+        description: "Dock Menu (→ HOME01-S03)"
       - label: "3"
-        # 도메인 라벨: GNB 우측 첫 번째 glass container
         position: { x: 1221, y: 26 }
         description: "도메인 표시기 (read-only Text Label)"
       - label: "4"
@@ -71,70 +107,39 @@ screens:
         description: "Notification (알림 센터)"
       - label: "7"
         selector: "button[title='TCA — AI Assistant']"
-        description: "TCA (AI 어시스턴트, → TCA01)"
+        description: "TCA (AI 어시스턴트, → HOME01-S02)"
       - label: "8"
         selector: "[aria-label='IAM']"
         description: "앱 아이콘 그리드"
-    description:
-      "00": |
-        Desktop Home (v1.0 - 도메인 사용자)
-        로그인 후 도메인 사용자 기준 홈 화면입니다.
-        A: 상단바(Top GNB) 영역
-        B: 메인 데스크탑 영역 (앱 아이콘 그리드)
-      "01": |
-        App Launcher 버튼
-        GNB 로고 오른쪽의 그리드 아이콘 버튼.
-        클릭 시 전체 앱 목록 오버레이 노출 (→ LAUNCHER01).
-      "02": |
-        Dock Menu (실행 중 앱 메뉴)
-        실행 중인 앱 + Pin된 앱 아이콘.
-        • 마우스 오버 → 앱 이름 툴팁
-        • 왼쪽 클릭 → 실행/포커스/복원
-        • 오른쪽 클릭 → 컨텍스트 메뉴 (→ DOCK_MENU01)
-        • 드래그 → 아이콘 순서 변경
-      "03": |
-        도메인 표시기 (v1.0 변경)
-        읽기 전용 Text Label. 클릭 불가.
-        현재 소속 도메인명만 표시.
-        (v0.7 Select Box 제거)
-      "04": |
-        시스템 설정 (Preferences)
-        클릭 > Context Menu 열림
-        • Language: English / 한국어
-        • Theme: System / Light / Dark
-          (System = OS prefers-color-scheme 자동 연동)
-      "05": |
-        Account (계정)
-        로그인된 계정 확인.
-        클릭 시 [Settings 앱 - Account 메뉴] 열림.
-        로그아웃 클릭 시 로그인 화면으로 이동.
-      "06": |
-        Notification (알림 센터)
-        클릭 시 알림 전체 목록 패널 노출.
-        알림별 시간 / 앱 / 심각도 확인 가능.
-      "07": |
-        TCA (AI 어시스턴트)
-        클릭 > TCA 패널 슬라이드-인 (→ TCA01)
-        검색·위젯·터미널을 대체하는 자연어 AI.
-      "08": |
-        앱 아이콘 그리드 (데스크탑)
-        도메인 사용자 전용 앱 목록 그리드 표시.
-        드래그로 위치 이동 가능.
-        아이콘끼리 겹치기(폴더 생성) 불가.
 
-  # ── HOME02: 홈 화면 (시스템 관리자) ────────────────────────────────────
+  # ─── HOME02: 홈 화면 (시스템 관리자) ──────────────────────────────────────
   - id: HOME02
     name: "홈 화면 (시스템 관리자)"
     path: "로그인(시스템 관리자 계정) → 홈 화면"
-    url: "/desktop-v1"
-    use_generate_figma_design: true
-    setup:
-      - type: wait
-        ms: 2000
-      - type: click_text
-        text: "System admin"     # 하단 역할 토글
-      - type: wait
-        ms: 1000
+    figma_node_id: "502:396"
+    capture:
+      method: generate_figma_design
+      selector: "body"
+      preconditions:
+        - { action: wait, timeout: 2000 }
+        - { action: click_text, text: "System admin" }
+        - { action: wait, timeout: 1000 }
+      viewport: { width: 1440, height: 900 }
+    states:
+      - id: HOME02-S01
+        name: "App Launcher (System Admin)"
+        type: overlay
+        figma_node_id: null
+        capture:
+          method: playwright
+          preconditions:
+            - { action: click_text, text: "System admin" }
+            - { action: wait, timeout: 800 }
+          actions:
+            - { action: click, selector: "[aria-label='Open app launcher']" }
+            - { action: wait, timeout: 800 }
+          viewport: { width: 1440, height: 900 }
+
     annotations:
       - label: "A"
         selector: ".fixed.top-0.left-0.right-0"
@@ -146,7 +151,7 @@ screens:
         description: "메인 데스크탑 영역"
       - label: "1"
         selector: "[aria-label='Open app launcher']"
-        description: "App Launcher 버튼 (시스템 관리자 전용 7개 앱 표시)"
+        description: "App Launcher 버튼 (시스템 관리자 전용 7개 앱)"
       - label: "2"
         selector: ".rounded-xl.px-1\\.5"
         description: "Dock Menu"
@@ -155,7 +160,7 @@ screens:
         description: "시스템 설정 (Preferences)"
       - label: "4"
         position: { x: 1334, y: 26 }
-        description: "Account (계정)"
+        description: "Account"
       - label: "5"
         position: { x: 1366, y: 26 }
         description: "Notification"
@@ -164,198 +169,22 @@ screens:
         description: "TCA"
       - label: "7"
         selector: "[aria-label='IAM']"
-        description: "앱 아이콘 그리드 (시스템 관리자 전용 7개)"
-    description:
-      "00": |
-        Desktop Home (v1.0 - 시스템 관리자)
-        시스템 관리자 계정 로그인 시 홈 화면.
-        A: 상단바(Top GNB) 영역
-        B: 메인 데스크탑 영역 (시스템 관리자 전용 앱 7개만 표시)
-      "01": |
-        App Launcher 버튼
-        도메인 사용자와 동일. 시스템 관리자 전용 앱 7개로 필터링됨.
-        (IAM, Storage, Cloud Builder, Log, Audit, KMS, Settings)
-      "02": |
-        Dock Menu
-        도메인 사용자와 동일한 인터랙션.
-        노출되는 앱은 시스템 관리자 전용 앱으로 필터링.
-      "03": |
-        시스템 설정 (Preferences)
-        도메인 사용자와 동일. Language / Theme 선택.
-      "04": |
-        Account (계정)
-        로그인 계정 확인 및 로그아웃.
-        시스템 관리자 전용 Settings 앱으로 이동.
-      "05": |
-        Notification (알림 센터)
-        도메인 사용자와 동일.
-      "06": |
-        TCA (AI 어시스턴트)
-        도메인 사용자와 동일.
-      "07": |
-        앱 아이콘 그리드 (시스템 관리자)
-        시스템 관리자 전용 앱 7개:
-        IAM, Storage, Cloud Builder, Log, Audit, KMS, Settings
+        description: "앱 아이콘 그리드 (7개: IAM, Storage, Cloud Builder, Log, Audit, KMS, Settings)"
 
-  # ── LAUNCHER01: App Launcher ────────────────────────────────────────────
-  - id: LAUNCHER01
-    name: "App Launcher"
-    path: "홈 화면 > GNB App Launcher 버튼 클릭"
-    url: "/desktop-v1"
-    use_generate_figma_design: true
-    setup:
-      - type: wait
-        ms: 2000
-      - type: click
-        selector: "[aria-label='Open app launcher']"
-      - type: wait
-        ms: 800
-    annotations:
-      - label: "1"
-        position: { x: 720, y: 50 }
-        description: "배경 (Backdrop) - black/65% + backdrop-blur"
-      - label: "2"
-        selector: "input[placeholder='Search apps...']"
-        description: "검색창 - 앱 이름으로 실시간 필터링"
-      - label: "3"
-        selector: ".grid button:first-child"
-        description: "앱 그리드 - 역할별 필터링된 목록"
-      - label: "4"
-        selector: ".grid button:nth-child(2)"
-        description: "앱 아이콘 - 호버 시 scale-105 애니메이션"
-    description:
-      "00": |
-        App Launcher (v1.0 신규)
-        데스크탑에서 Dock에 없는 앱에도 접근하는 전체 앱 카탈로그.
-        macOS Launchpad 비슷한 오버레이 방식.
-        열기: GNB 그리드 아이콘 클릭
-        닫기: ESC키, 바깥 클릭
-      "01": |
-        배경 (Backdrop)
-        데스크탑 전체에 black/65% + backdrop-blur-lg 오버레이.
-        바깥 클릭 시 닫힘.
-      "02": |
-        검색창
-        런처 상단 중앙 배치. placeholder: "Search apps..."
-        앱 이름으로 실시간 필터링.
-      "03": |
-        앱 그리드
-        현재 로그인한 역할에 따라 노출 목록 필터링:
-        • 도메인 사용자: 18개 앱
-        • 시스템 관리자: 7개 앱
-        클릭 시 해당 앱 실행 (실행 중이면 포커스 전환).
-      "04": |
-        앱 아이콘 (개별)
-        아이콘 + 이름 표시.
-        호버 시 white/10% 배경 + scale-105 애니메이션.
-
-  # ── DOCK_MENU01: Dock 컨텍스트 메뉴 ────────────────────────────────────
-  - id: DOCK_MENU01
-    name: "Dock Menu 컨텍스트 메뉴"
-    path: "홈 화면 > Dock 아이콘 오른쪽 클릭"
-    url: "/desktop-v1"
-    use_generate_figma_design: false   # 이 화면은 이미지 직접 업로드 방식
-    setup:
-      - type: wait
-        ms: 2000
-      - type: right_click
-        selector: ".cursor-grab:first-child"
-      - type: wait
-        ms: 600
-    annotations:
-      - label: "1"
-        selector: ".cursor-grab:first-child img"
-        description: "Dock 아이콘"
-      - label: "2"
-        position: { x: 280, y: 80 }
-        description: "컨텍스트 메뉴"
-    description:
-      "00": |
-        Dock Menu 컨텍스트 메뉴
-        Dock의 앱 아이콘을 오른쪽 클릭할 때 노출되는 컨텍스트 메뉴 상세 기획서.
-      "01": |
-        Dock 아이콘
-        실행 중인 앱: 아이콘 외곽 테두리 + 하단 진행 표시점.
-        고정된 앱(실행 안 함): 테두리 없이 표시.
-      "02": |
-        컨텍스트 메뉴 내용
-        1) 열려있는 윈도우 목록 (활성화된 탭 이름 + 상태 아이콘)
-           Normal + Focus in: Check + Window_active 아이콘
-           Normal + Focus out: Window_active 아이콘
-           Minimized: Window_minimized 아이콘
-        2) New window: 앱의 새 윈도우 열기
-        3) Pin / Unpin: 아이콘 Dock 고정/해제
-        4) Quit: 해당 앱의 모든 윈도우 종료
-
-  # ── TCA01: TCA 패널 ─────────────────────────────────────────────────────
-  - id: TCA01
-    name: "TCA (AI 어시스턴트) 패널"
-    path: "홈 화면 > TCA 버튼 클릭"
-    url: "/desktop-v1"
-    use_generate_figma_design: false
-    setup:
-      - type: wait
-        ms: 2000
-      - type: click
-        selector: "button[title='TCA — AI Assistant']"
-      - type: wait
-        ms: 800
-    annotations:
-      - label: "1"
-        position: { x: 1417, y: 26 }
-        description: "TCA 버튼 (GNB 우측)"
-      - label: "2"
-        position: { x: 1305, y: 50 }
-        description: "패널 헤더 (타이틀 + Collapse 버튼)"
-      - label: "3"
-        position: { x: 1305, y: 450 }
-        description: "대화 영역"
-      - label: "4"
-        position: { x: 1305, y: 820 }
-        description: "입력창"
-      - label: "5"
-        position: { x: 1380, y: 870 }
-        description: "설정 버튼 (Model / MCP)"
-    description:
-      "00": |
-        TCA (AI 어시스턴트) 패널 (v1.0)
-        상단바 우측 TCA 버튼 클릭 시 오른쪽에서 슬라이드-인.
-        검색·위젯·터미널을 대체하는 자연어 AI.
-        닫기: Collapse 버튼 클릭.
-      "01": |
-        패널 헤더
-        타이틀: 'AI Chatbot'
-        Collapse 버튼: TCA 패널 숨김
-      "02": |
-        대화 영역
-        환영 문구: "Hello! How can I assist you today?"
-      "03": |
-        입력창
-        placeholder: "Ask me anything"
-        Shift+Enter로 줄바꿈
-        Enter 또는 전송 버튼으로 전송.
-      "04": |
-        설정 버튼
-        Model: 클릭 시 AI 모델 목록 노출
-        MCP: 클릭 시 MCP 서버 페이지 이동 (서버 Status 확인)
-
-  # ── TOP_GNB01: Top GNB Auto-hide ────────────────────────────────────────
+  # ─── TOP_GNB01: Top GNB Auto-hide ──────────────────────────────────────────
   - id: TOP_GNB01
     name: "Top GNB Auto-hide (풀스크린 자동숨김)"
     path: "홈 화면 > 앱 윈도우 풀스크린 진입 시 자동 적용"
-    url: "/desktop-v1"
-    use_generate_figma_design: false
-    setup:
-      - type: wait
-        ms: 2000
-      - type: click
-        selector: ".cursor-grab:first-child"
-      - type: wait
-        ms: 1500
-      - type: dblclick_selector
-        selector: ".bg-\\[var\\(--color-surface-subtle\\)\\].border-b"
-      - type: wait
-        ms: 1000
+    figma_node_id: "502:604"
+    capture:
+      method: playwright
+      preconditions:
+        - { action: wait, timeout: 2000 }
+        - { action: click, selector: ".cursor-grab:first-child" }
+        - { action: wait, timeout: 1500 }
+        - { action: dblclick, selector: ".bg-\\[var\\(--color-surface-subtle\\)\\].border-b" }
+        - { action: wait, timeout: 1000 }
+      viewport: { width: 1440, height: 900 }
     annotations:
       - label: "1"
         position: { x: 720, y: 2 }
@@ -366,40 +195,19 @@ screens:
       - label: "3"
         position: { x: 400, y: 450 }
         description: "최대화된 앱 윈도우 (뷰포트 전체 사용)"
-    description:
-      "00": |
-        Top GNB Auto-hide (v1.0 신규 정책)
-        풀스크린 상태에서 GNB는 기본 숨김.
-        레이아웃을 밀지 않는 z-order 오버레이로만 동작.
-        (padding/inset 추가, 레이아웃 리플로우 없음)
-      "01": |
-        히트 영역 (Hit Area)
-        뷰포트 최상단으로부터 최소 4px 이상의 투명 히트 영역.
-        보이지 않지만 포인터 상호작용에 반응.
-      "02": |
-        노출 조건 (Dwell Time)
-        포인터가 히트 영역에 200~500ms 체류 시 GNB 노출.
-        즉시 노출 아님 → 의도치 않은 트리거 방지.
-        노출/숨김 전환: 200~300ms 슬라이드 또는 페이드.
-      "03": |
-        최대화된 앱 윈도우
-        GNB 숨김 상태에서 앱은 뷰포트 전체를 사용.
-        GNB가 나타나도 앱 윈도우 위치/크기 불변.
-        키보드 접근성: 전역 단축키로 GNB 노출 가능 (WCAG 2.1.1).
 
-  # ── SETTINGS01: Settings 윈도우 ─────────────────────────────────────────
+  # ─── SETTINGS01: Settings 윈도우 ───────────────────────────────────────────
   - id: SETTINGS01
     name: "Settings 윈도우"
     path: "홈 화면 > Settings 아이콘 클릭"
-    url: "/desktop-v1"
-    use_generate_figma_design: false
-    setup:
-      - type: wait
-        ms: 2000
-      - type: click_aria_label
-        label: "Settings"
-      - type: wait
-        ms: 1200
+    figma_node_id: "502:656"
+    capture:
+      method: playwright
+      preconditions:
+        - { action: wait, timeout: 2000 }
+        - { action: click_aria_label, label: "Settings" }
+        - { action: wait, timeout: 1200 }
+      viewport: { width: 1440, height: 900 }
     annotations:
       - label: "1"
         position: { x: 720, y: 200 }
@@ -413,25 +221,3 @@ screens:
       - label: "4"
         position: { x: 720, y: 1360 }
         description: "Logout 버튼"
-    description:
-      "00": |
-        Settings 윈도우
-        0.7 버전과 동일하게 Account 설정만 제공.
-        시스템/도메인에 따라 노출 탭·권한이 달라질 수 있음.
-      "01": |
-        Account Information
-        ID: 수정 불가
-        Email: 수정 불가
-        Name: 수정 가능 (onChange 로컬 업데이트, onBlur 실제 저장)
-      "02": |
-        Authentication
-        Password: 최근 업데이트 일시 표시 + Change Password 버튼.
-        MFA Setting: 인증 앱 설정 (Set up / Edit / Remove).
-      "03": |
-        Activity
-        로그인한 계정의 로그인 이력 데이터를 표로 표시.
-        컬럼: IP Address / Device / Timestamp
-        데이터 기간: 최근 30일.
-      "04": |
-        Logout
-        계정에서 로그아웃하고 로그인 페이지로 이동.
