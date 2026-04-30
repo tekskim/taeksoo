@@ -426,6 +426,7 @@ import { ChartTooltipPage } from '@/pages/design/charts/ChartTooltipPage';
 
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
+import { DesktopPageV1 } from '@/pages/DesktopPageV1';
 
 // Pages - Developer Resources
 import { SidebarIconsPage } from '@/pages/SidebarIconsPage';
@@ -1217,6 +1218,7 @@ function AppRoutes() {
 
       {/* Desktop Routes */}
       <Route path="/desktop" element={<DesktopPage />} />
+      <Route path="/desktop-v1" element={<DesktopPageV1 />} />
 
       {/* Developer Resources */}
       <Route path="/table-style-guide" element={<TableStyleGuidePage />} />
