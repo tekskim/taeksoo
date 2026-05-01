@@ -7,7 +7,7 @@
 
 meta:
   package: desktop-ui
-  base_url: "http://localhost:5173"
+  base_url: "http://localhost:5174"
   figma_file_key: "sDY0PfHButRV1ClAu7hxzM"
   figma_page_name: "(1.0v)Desktop"
   capture_output_mode: existingFile
@@ -37,7 +37,7 @@ screens:
   - id: HOME01
     name: "홈 화면 (도메인 사용자)"
     path: "로그인 → 홈 화면 (도메인 사용자)"
-    figma_node_id: "499:396"   # 기존 프레임 ID (null이면 신규 생성)
+    figma_node_id: "532:396"   # HOME01 Screen
     capture:
       method: generate_figma_design
       selector: "body"
@@ -48,7 +48,7 @@ screens:
       - id: HOME01-S01
         name: "App Launcher"
         type: overlay
-        figma_node_id: null
+        figma_node_id: "532:451"   # HOME01-S01 Screen
         capture:
           method: playwright
           actions:
@@ -59,7 +59,7 @@ screens:
       - id: HOME01-S02
         name: "TCA Panel"
         type: overlay
-        figma_node_id: null
+        figma_node_id: "532:506"   # HOME01-S02 Screen
         capture:
           method: playwright
           actions:
@@ -70,7 +70,7 @@ screens:
       - id: HOME01-S03
         name: "Dock Context Menu"
         type: overlay
-        figma_node_id: null
+        figma_node_id: "532:561"   # HOME01-S03 Screen
         capture:
           method: playwright
           actions:
@@ -116,7 +116,7 @@ screens:
   - id: HOME02
     name: "홈 화면 (시스템 관리자)"
     path: "로그인(시스템 관리자 계정) → 홈 화면"
-    figma_node_id: "502:396"
+    figma_node_id: "532:616"   # HOME02 Screen (needs recapture with System admin)
     capture:
       method: generate_figma_design
       selector: "body"
@@ -129,7 +129,7 @@ screens:
       - id: HOME02-S01
         name: "App Launcher (System Admin)"
         type: overlay
-        figma_node_id: null
+        figma_node_id: null   # TODO: capture pending
         capture:
           method: playwright
           preconditions:
@@ -175,7 +175,7 @@ screens:
   - id: TOP_GNB01
     name: "Top GNB Auto-hide (풀스크린 자동숨김)"
     path: "홈 화면 > 앱 윈도우 풀스크린 진입 시 자동 적용"
-    figma_node_id: "502:604"
+    figma_node_id: "532:671"   # TOP_GNB01 Screen
     capture:
       method: playwright
       preconditions:
@@ -200,7 +200,7 @@ screens:
   - id: SETTINGS01
     name: "Settings 윈도우"
     path: "홈 화면 > Settings 아이콘 클릭"
-    figma_node_id: "502:656"
+    figma_node_id: "532:726"   # SETTINGS01 Screen
     capture:
       method: playwright
       preconditions:
