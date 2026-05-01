@@ -101,7 +101,7 @@ export default defineConfig({
     isDev && new RefreshPlugin(),
   ].filter(Boolean),
   devServer: {
-    port: 5173,
+    port: 5174,
     hot: true,
     historyApiFallback: true,
     static: {

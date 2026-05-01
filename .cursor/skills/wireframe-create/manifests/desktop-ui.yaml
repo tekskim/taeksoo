@@ -1,0 +1,223 @@
+# Desktop UI — 캡처 매니페스트
+# wireframe-create 스킬이 읽어서 자동 캡처 + 와이어프레임 생성에 사용한다.
+#
+# figma_node_id는 기존 프레임 ID (null이면 신규 생성, 생성 후 역갱신 권장).
+# captureId는 런타임에 generate_figma_design이 발급하므로 여기에 정의하지 않는다.
+# 이 파일은 "무엇을, 어떤 액션으로, 어디에 배치할지"를 선언한다.
+
+meta:
+  package: desktop-ui
+  base_url: "http://localhost:5174"
+  figma_file_key: "sDY0PfHButRV1ClAu7hxzM"
+  figma_page_name: "(1.0v)Desktop"
+  capture_output_mode: existingFile
+  template_frame_id: "4:1449"   # v0.7 HOME 프레임 (clone 기준)
+  template_page: "v0.7"
+
+# ─── 이미지 좌표계 (Desktop UI 전용) ─────────────────────────────────────────
+# 템플릿 프레임 내 이미지 영역: x=42, y=120, w=2048, h=1054
+# DOM viewport: 1440×900
+# 변환: figma_x = 42 + dom_x * (2048/1440)
+#        figma_y = 120 + dom_y * (1054/900)
+image_area:
+  x: 42
+  y: 120
+  w: 2048
+  h: 1054
+  dom_w: 1440
+  dom_h: 900
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 화면 정의
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+screens:
+
+  # ─── HOME01: 홈 화면 (도메인 사용자) ──────────────────────────────────────
+  - id: HOME01
+    name: "홈 화면 (도메인 사용자)"
+    path: "로그인 → 홈 화면 (도메인 사용자)"
+    figma_node_id: "532:396"   # HOME01 Screen
+    capture:
+      method: generate_figma_design
+      selector: "body"
+      preconditions:
+        - { action: wait, timeout: 2000 }
+      viewport: { width: 1440, height: 900 }
+    states:
+      - id: HOME01-S01
+        name: "App Launcher"
+        type: overlay
+        figma_node_id: "532:451"   # HOME01-S01 Screen
+        capture:
+          method: playwright
+          actions:
+            - { action: click, selector: "[aria-label='Open app launcher']" }
+            - { action: wait, timeout: 800 }
+          viewport: { width: 1440, height: 900 }
+
+      - id: HOME01-S02
+        name: "TCA Panel"
+        type: overlay
+        figma_node_id: "532:506"   # HOME01-S02 Screen
+        capture:
+          method: playwright
+          actions:
+            - { action: click, selector: "button[title='TCA — AI Assistant']" }
+            - { action: wait, timeout: 800 }
+          viewport: { width: 1440, height: 900 }
+
+      - id: HOME01-S03
+        name: "Dock Context Menu"
+        type: overlay
+        figma_node_id: "532:561"   # HOME01-S03 Screen
+        capture:
+          method: playwright
+          actions:
+            - { action: right_click, selector: ".cursor-grab:first-child" }
+            - { action: wait, timeout: 600 }
+          viewport: { width: 1440, height: 900 }
+
+    annotations:
+      - label: "A"
+        selector: ".fixed.top-0.left-0.right-0"
+        side: left
+        description: "상단바(Top GNB) 영역"
+      - label: "B"
+        position: { x: 0, y: 178 }
+        side: left
+        description: "메인 데스크탑 영역 (앱 아이콘 그리드)"
+      - label: "1"
+        selector: "[aria-label='Open app launcher']"
+        description: "App Launcher 버튼 (→ HOME01-S01)"
+      - label: "2"
+        selector: ".rounded-xl.px-1\\.5"
+        description: "Dock Menu (→ HOME01-S03)"
+      - label: "3"
+        position: { x: 1221, y: 26 }
+        description: "도메인 표시기 (read-only Text Label)"
+      - label: "4"
+        position: { x: 1302, y: 26 }
+        description: "시스템 설정 (Preferences)"
+      - label: "5"
+        position: { x: 1334, y: 26 }
+        description: "Account (계정)"
+      - label: "6"
+        position: { x: 1366, y: 26 }
+        description: "Notification (알림 센터)"
+      - label: "7"
+        selector: "button[title='TCA — AI Assistant']"
+        description: "TCA (AI 어시스턴트, → HOME01-S02)"
+      - label: "8"
+        selector: "[aria-label='IAM']"
+        description: "앱 아이콘 그리드"
+
+  # ─── HOME02: 홈 화면 (시스템 관리자) ──────────────────────────────────────
+  - id: HOME02
+    name: "홈 화면 (시스템 관리자)"
+    path: "로그인(시스템 관리자 계정) → 홈 화면"
+    figma_node_id: "532:616"   # HOME02 Screen (needs recapture with System admin)
+    capture:
+      method: generate_figma_design
+      selector: "body"
+      preconditions:
+        - { action: wait, timeout: 2000 }
+        - { action: click_text, text: "System admin" }
+        - { action: wait, timeout: 1000 }
+      viewport: { width: 1440, height: 900 }
+    states:
+      - id: HOME02-S01
+        name: "App Launcher (System Admin)"
+        type: overlay
+        figma_node_id: null   # TODO: capture pending
+        capture:
+          method: playwright
+          preconditions:
+            - { action: click_text, text: "System admin" }
+            - { action: wait, timeout: 800 }
+          actions:
+            - { action: click, selector: "[aria-label='Open app launcher']" }
+            - { action: wait, timeout: 800 }
+          viewport: { width: 1440, height: 900 }
+
+    annotations:
+      - label: "A"
+        selector: ".fixed.top-0.left-0.right-0"
+        side: left
+        description: "상단바(Top GNB) 영역"
+      - label: "B"
+        position: { x: 0, y: 178 }
+        side: left
+        description: "메인 데스크탑 영역"
+      - label: "1"
+        selector: "[aria-label='Open app launcher']"
+        description: "App Launcher 버튼 (시스템 관리자 전용 7개 앱)"
+      - label: "2"
+        selector: ".rounded-xl.px-1\\.5"
+        description: "Dock Menu"
+      - label: "3"
+        position: { x: 1302, y: 26 }
+        description: "시스템 설정 (Preferences)"
+      - label: "4"
+        position: { x: 1334, y: 26 }
+        description: "Account"
+      - label: "5"
+        position: { x: 1366, y: 26 }
+        description: "Notification"
+      - label: "6"
+        selector: "button[title='TCA — AI Assistant']"
+        description: "TCA"
+      - label: "7"
+        selector: "[aria-label='IAM']"
+        description: "앱 아이콘 그리드 (7개: IAM, Storage, Cloud Builder, Log, Audit, KMS, Settings)"
+
+  # ─── TOP_GNB01: Top GNB Auto-hide ──────────────────────────────────────────
+  - id: TOP_GNB01
+    name: "Top GNB Auto-hide (풀스크린 자동숨김)"
+    path: "홈 화면 > 앱 윈도우 풀스크린 진입 시 자동 적용"
+    figma_node_id: "532:671"   # TOP_GNB01 Screen
+    capture:
+      method: playwright
+      preconditions:
+        - { action: wait, timeout: 2000 }
+        - { action: click, selector: ".cursor-grab:first-child" }
+        - { action: wait, timeout: 1500 }
+        - { action: dblclick, selector: ".bg-\\[var\\(--color-surface-subtle\\)\\].border-b" }
+        - { action: wait, timeout: 1000 }
+      viewport: { width: 1440, height: 900 }
+    annotations:
+      - label: "1"
+        position: { x: 720, y: 2 }
+        description: "히트 영역 (4px+ 투명, 포인터 감지)"
+      - label: "2"
+        position: { x: 720, y: 26 }
+        description: "GNB (노출 상태)"
+      - label: "3"
+        position: { x: 400, y: 450 }
+        description: "최대화된 앱 윈도우 (뷰포트 전체 사용)"
+
+  # ─── SETTINGS01: Settings 윈도우 ───────────────────────────────────────────
+  - id: SETTINGS01
+    name: "Settings 윈도우"
+    path: "홈 화면 > Settings 아이콘 클릭"
+    figma_node_id: "532:726"   # SETTINGS01 Screen
+    capture:
+      method: playwright
+      preconditions:
+        - { action: wait, timeout: 2000 }
+        - { action: click_aria_label, label: "Settings" }
+        - { action: wait, timeout: 1200 }
+      viewport: { width: 1440, height: 900 }
+    annotations:
+      - label: "1"
+        position: { x: 720, y: 200 }
+        description: "Account Information 섹션"
+      - label: "2"
+        position: { x: 720, y: 500 }
+        description: "Authentication 섹션"
+      - label: "3"
+        position: { x: 720, y: 900 }
+        description: "Activity 테이블"
+      - label: "4"
+        position: { x: 720, y: 1360 }
+        description: "Logout 버튼"
