@@ -172,6 +172,34 @@ function WithoutBadgesPreview() {
   );
 }
 
+function WithoutHeaderBadgePreview() {
+  const [items, setItems] = useState<ChecklistItem[]>([
+    {
+      id: '1',
+      label: 'node-worker-01',
+      badge: { text: 'Running', theme: 'green', type: 'subtle' },
+    },
+    { id: '2', label: 'node-worker-02' },
+    {
+      id: '3',
+      label: 'node-worker-03',
+      badge: { text: 'Pending', theme: 'yellow', type: 'subtle' },
+    },
+  ]);
+
+  return (
+    <div className="w-[280px]">
+      <ExpandableChecklist
+        label="Worker Nodes"
+        description="Select nodes to restart"
+        items={items}
+        onChange={setItems}
+        defaultExpanded
+      />
+    </div>
+  );
+}
+
 function PartiallyCheckedPreview() {
   const [items, setItems] = useState<ChecklistItem[]>([
     {
@@ -278,6 +306,21 @@ export function ExpandableChecklistPage() {
 />`}
             >
               <WithoutBadgesPreview />
+            </ComponentPreview>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Without Header Badge (Item Badges Only)</Label>
+            <ComponentPreview
+              code={`<ExpandableChecklist
+  label="Worker Nodes"
+  description="Select nodes to restart"
+  items={items} // items have individual badges
+  onChange={setItems}
+  defaultExpanded
+/>`}
+            >
+              <WithoutHeaderBadgePreview />
             </ComponentPreview>
           </VStack>
 
