@@ -998,7 +998,7 @@ function ListValidationErrorDemo() {
                 Value is required.
               </span>
             </VStack>
-            <div className="size-5 flex items-center justify-center mt-[6px]">
+            <div className="h-[var(--input-height-md)] flex items-center justify-center">
               <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
             </div>
           </div>
@@ -1010,7 +1010,7 @@ function ListValidationErrorDemo() {
               </span>
             </VStack>
             <Input value="backend" fullWidth />
-            <div className="size-5 flex items-center justify-center">
+            <div className="h-[var(--input-height-md)] flex items-center justify-center">
               <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
             </div>
           </div>
@@ -1084,7 +1084,9 @@ function CardValidationErrorDemo() {
                   Value is required.
                 </span>
               </VStack>
-              <div />
+              <div className="h-[var(--input-height-md)] flex items-center justify-center">
+                <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </div>
             </div>
           </VStack>
         </div>

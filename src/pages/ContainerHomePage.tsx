@@ -217,7 +217,7 @@ export function ContainerHomePage() {
           variant="outline"
           size="sm"
           leftIcon={<IconSettings size={12} />}
-          onClick={() => navigate(`/container/cluster-management/${row.id}`)}
+          onClick={() => navigate('/container/dashboard')}
         >
           Manage
         </Button>
@@ -236,7 +236,7 @@ export function ContainerHomePage() {
             {
               id: 'manage',
               label: 'Manage',
-              onClick: () => navigate(`/container/cluster-management/${row.id}`),
+              onClick: () => navigate('/container/dashboard'),
             },
             {
               id: 'kubectl-shell',
