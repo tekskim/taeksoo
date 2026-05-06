@@ -169,7 +169,7 @@ const dataDisplayItems: NavItem[] = [
   { id: 'chip', label: 'Chip', icon: IconTag, path: '/design/components/chip' },
   {
     id: 'file-list-card',
-    label: 'File List Card',
+    label: 'File Upload',
     icon: IconList,
     path: '/design/components/file-list-card',
   },

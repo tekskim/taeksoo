@@ -334,6 +334,8 @@ import IAMMFAPoliciesPage from '@/pages/IAMMFAPoliciesPage';
 import IAMSessionPoliciesPage from '@/pages/IAMSessionPoliciesPage';
 import IAMTokenPoliciesPage from '@/pages/IAMTokenPoliciesPage';
 import IAMLoginPoliciesPage from '@/pages/IAMLoginPoliciesPage';
+import IAMActionCatalogPage from '@/pages/IAMActionCatalogPage';
+import IAMPolicySimulatorPage from '@/pages/IAMPolicySimulatorPage';
 
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
@@ -1074,6 +1076,8 @@ function AppRoutes() {
       <Route path="/iam/session-policies" element={<IAMSessionPoliciesPage />} />
       <Route path="/iam/token-policies" element={<IAMTokenPoliciesPage />} />
       <Route path="/iam/login-policies" element={<IAMLoginPoliciesPage />} />
+      <Route path="/iam/action-catalog" element={<IAMActionCatalogPage />} />
+      <Route path="/iam/policy-simulator" element={<IAMPolicySimulatorPage />} />
       <Route path="/iam/*" element={<NotFoundPage />} />
 
       {/* AI Platform Routes */}

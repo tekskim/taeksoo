@@ -231,8 +231,8 @@ export default function IAMMFAPoliciesPage() {
                   size="sm"
                 >
                   <TabList>
-                    <Tab value="otp">OTP</Tab>
-                    <Tab value="email">Email</Tab>
+                    <Tab value="otp">OTP policy</Tab>
+                    <Tab value="email">Email policy</Tab>
                   </TabList>
                 </Tabs>
 

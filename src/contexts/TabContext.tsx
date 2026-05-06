@@ -176,6 +176,8 @@ function getLabelFromPath(path: string): string {
     '/iam/roles/create': 'Create role',
     '/iam/policies': 'Policies',
     '/iam/policies/create': 'Create policy',
+    '/iam/action-catalog': 'Action catalog',
+    '/iam/policy-simulator': 'Policy simulator',
   };
 
   // Check for exact match first

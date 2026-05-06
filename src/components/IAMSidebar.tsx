@@ -13,6 +13,8 @@ import {
   IconLock,
   IconClock,
   IconHistory,
+  IconListDetails,
+  IconTestPipe,
 } from '@tabler/icons-react';
 import { useLocation } from 'react-router-dom';
 import { AppSwitcher } from './AppSwitcher';
@@ -102,6 +104,18 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
               label="Policies"
               href="/iam/policies"
               active={isActive('/iam/policies')}
+            />
+            <MenuItem
+              icon={<IconListDetails size={16} stroke={1.5} />}
+              label="Action catalog"
+              href="/iam/action-catalog"
+              active={isActive('/iam/action-catalog')}
+            />
+            <MenuItem
+              icon={<IconTestPipe size={16} stroke={1.5} />}
+              label="Policy simulator"
+              href="/iam/policy-simulator"
+              active={isActive('/iam/policy-simulator')}
             />
           </MenuSection>
 

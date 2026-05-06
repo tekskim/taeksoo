@@ -701,29 +701,49 @@ export function ModalsPage() {
                   category: 'Role',
                 },
                 {
-                  title: 'Detach policy',
+                  title: 'Detach policy (user)',
+                  description: 'This user will lose all permissions granted by this policy.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Detach policy (user group)',
                   description:
-                    'Detaches the policy from this user only; inherited policies are unchanged.',
+                    'All members of this group will lose the permissions granted by this policy.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Detach policy (role)',
+                  description:
+                    'All users and groups assigned to this role will lose the permissions granted by this policy.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Detach policy (service account)',
+                  description:
+                    'This service account will lose all permissions granted by this policy.',
                   category: 'Policy',
                 },
                 {
                   title: 'Delete policy',
-                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  description:
+                    'Permanently removes the policy; attached users or roles lose permissions immediately.',
                   category: 'Policy',
                 },
                 {
                   title: 'Delete policies',
-                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  description:
+                    'Permanently removes deletable policies; attached users or roles lose permissions immediately.',
                   category: 'Policy',
                 },
                 {
                   title: 'Revert policy version',
-                  description: 'This action reverts the policy to the selected version.',
+                  description:
+                    'Reverting changes the permissions applied to all attached entities.',
                   category: 'Policy',
                 },
                 {
                   title: 'Delete policy version',
-                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  description: 'Permanently removes the selected policy version.',
                   category: 'Policy',
                 },
                 {
@@ -911,7 +931,7 @@ export function ModalsPage() {
                 <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                   <SectionHeader
                     label="IAM"
-                    count={52}
+                    count={55}
                     isOpen={isIAMOpen}
                     isSearching={isSearching}
                   />
@@ -1078,32 +1098,50 @@ export function ModalsPage() {
                           category: 'Role',
                         },
                         {
-                          title: 'Detach policy',
+                          title: 'Detach policy (user)',
                           description:
-                            'Detaches the policy from this user only; inherited policies are unchanged.',
+                            'This user will lose all permissions granted by this policy.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Detach policy (user group)',
+                          description:
+                            'All members of this group will lose the permissions granted by this policy.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Detach policy (role)',
+                          description:
+                            'All users and groups assigned to this role will lose the permissions granted by this policy.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Detach policy (service account)',
+                          description:
+                            'This service account will lose all permissions granted by this policy.',
                           category: 'Policy',
                         },
                         {
                           title: 'Delete policy',
                           description:
-                            'Removing the selected instances is permanent and cannot be undone.',
+                            'Permanently removes the policy; attached users or roles lose permissions immediately.',
                           category: 'Policy',
                         },
                         {
                           title: 'Delete policies',
                           description:
-                            'Removing the selected instances is permanent and cannot be undone.',
+                            'Permanently removes deletable policies; attached users or roles lose permissions immediately.',
                           category: 'Policy',
                         },
                         {
                           title: 'Revert policy version',
-                          description: 'This action reverts the policy to the selected version.',
+                          description:
+                            'Reverting changes the permissions applied to all attached entities.',
                           category: 'Policy',
                         },
                         {
                           title: 'Delete policy version',
-                          description:
-                            'Removing the selected instances is permanent and cannot be undone.',
+                          description: 'Permanently removes the selected policy version.',
                           category: 'Policy',
                         },
                       ]}
@@ -1133,10 +1171,28 @@ export function ModalsPage() {
                         onOpen={() => openModalFn('revoke-access-bulk')}
                       />
                       <ModalListItem
-                        title="Detach policy"
-                        description="Detaches the policy from this user only; inherited policies are unchanged."
+                        title="Detach policy (user)"
+                        description="This user will lose all permissions granted by this policy."
                         category="Policy"
                         onOpen={() => openModalFn('detach-policy')}
+                      />
+                      <ModalListItem
+                        title="Detach policy (user group)"
+                        description="All members of this group will lose the permissions granted by this policy."
+                        category="Policy"
+                        onOpen={() => openModalFn('detach-policy-group')}
+                      />
+                      <ModalListItem
+                        title="Detach policy (role)"
+                        description="All users and groups assigned to this role will lose the permissions granted by this policy."
+                        category="Policy"
+                        onOpen={() => openModalFn('detach-policy-role')}
+                      />
+                      <ModalListItem
+                        title="Detach policy (service account)"
+                        description="This service account will lose all permissions granted by this policy."
+                        category="Policy"
+                        onOpen={() => openModalFn('detach-policy-service-account')}
                       />
                       <ModalListItem
                         title="Delete policy"
@@ -3556,19 +3612,20 @@ export function ModalsPage() {
           </Button>
         </div>
       </Modal>
-      <Modal isOpen={openModal === 'unsaved-changes'} onClose={closeModal} title="Unsaved changes">
-        <div className="flex flex-col gap-4">
-          <InlineMessage variant="info">
-            Any unsaved changes will be lost. Do you want to leave?
-          </InlineMessage>
-          <div className="flex gap-2 w-full">
-            <Button variant="outline" onClick={closeModal} className="flex-1">
-              Leave
-            </Button>
-            <Button variant="primary" onClick={closeModal} className="flex-1">
-              Stay
-            </Button>
-          </div>
+      <Modal
+        isOpen={openModal === 'unsaved-changes'}
+        onClose={closeModal}
+        title="Unsaved changes"
+        description="Any unsaved changes will be lost. Do you want to leave?"
+        size="sm"
+      >
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Leave
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Stay
+          </Button>
         </div>
       </Modal>
       <Modal
@@ -3698,61 +3755,179 @@ export function ModalsPage() {
         </div>
         <ModalButtons onClose={closeModal} confirmText="Revoke" confirmVariant="danger" />
       </Modal>
-      <Modal isOpen={openModal === 'detach-policy'} onClose={closeModal} title="Detach policy">
+      <Modal
+        isOpen={openModal === 'detach-policy'}
+        onClose={closeModal}
+        title="Detach policy"
+        size="sm"
+      >
         <div className="flex flex-col gap-2">
-          <InfoBox label="Username" value="john.doe@example.com" />
-          <InfoBox label="Policy" value="read-only-policy" />
-          <DangerWarning>
-            This detaches the policy from this user only. The policy resource is not deleted.
-            Policies inherited through roles or user groups are not changed.
-          </DangerWarning>
+          <TdsInfoBox label="Username" value="{username}" />
+          <TdsInfoBox label="Policy" value="[policy_name]" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              This user will lose all permissions granted by this policy.
+            </span>
+          </div>
         </div>
         <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
       </Modal>
-      <ConfirmModal
+      <Modal
+        isOpen={openModal === 'detach-policy-group'}
+        onClose={closeModal}
+        title="Detach policy"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="User group" value="{name}" />
+          <TdsInfoBox label="Policy" value="[policy_name]" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              All members of this group will lose the permissions granted by this policy.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'detach-policy-role'}
+        onClose={closeModal}
+        title="Detach policy"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Role" value="{name}" />
+          <TdsInfoBox label="Policy" value="[policy_name]" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              All users and groups assigned to this role will lose the permissions granted by this
+              policy.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'detach-policy-service-account'}
+        onClose={closeModal}
+        title="Detach policy"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Service account" value="{username}" />
+          <TdsInfoBox label="Policy" value="[policy_name]" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              This service account will lose all permissions granted by this policy.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
+      </Modal>
+      <Modal
         isOpen={openModal === 'delete-policy'}
         onClose={closeModal}
-        onConfirm={closeModal}
         title="Delete policy"
-        description="Removing the selected instances is permanent and cannot be undone."
-        infoLabel="Policy"
-        infoValue="read-only-policy"
-        confirmText="Delete"
-        confirmVariant="danger"
-      />
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Policy" value="POLICYNAME" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              This policy will be permanently removed. Users or roles attached to this policy will
+              immediately lose access permissions.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="primary" />
+      </Modal>
       <Modal
         isOpen={openModal === 'delete-policies'}
         onClose={closeModal}
         title="Delete policies"
-        description="Removing the selected instances is permanent and cannot be undone."
+        size="sm"
       >
-        <ScrollableList
-          label="Policies"
-          items={['read-only-policy', 'admin-policy', 'network-policy', 'storage-policy']}
-        />
-        <ModalButtons onClose={closeModal} />
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Policies that can be delete">
+            <div className="max-h-[64px] overflow-y-auto">
+              <ul className="list-disc pl-4 text-body-md text-[var(--color-text-default)]">
+                <li>policy</li>
+                <li>policy</li>
+                <li>policy</li>
+              </ul>
+            </div>
+          </TdsInfoBox>
+          <TdsInfoBox label="Policies that cannot be delete">
+            <div className="max-h-[64px] overflow-y-auto">
+              <ul className="list-disc pl-4 text-body-md text-[var(--color-text-default)]">
+                <li>policy (Built-in policies cannot be deleted.)</li>
+              </ul>
+            </div>
+          </TdsInfoBox>
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              These policies will be permanently removed. Users or roles attached to these policies
+              will immediately lose access permissions.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="primary" />
       </Modal>
-      <ConfirmModal
+      <Modal
         isOpen={openModal === 'revert-policy-version'}
         onClose={closeModal}
-        onConfirm={closeModal}
         title="Revert policy version"
-        description="This action reverts the policy to the selected version."
-        infoLabel="Version"
-        infoValue="v2 → v1"
-        confirmText="Revert"
-        confirmVariant="primary"
-      />
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Current version" value="VERSION" />
+          <TdsInfoBox label="Target version" value="VERSION" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              Reverting to this version changes the permissions applied to all attached entities.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Revert" confirmVariant="primary" />
+      </Modal>
       <ConfirmModal
         isOpen={openModal === 'delete-policy-version'}
         onClose={closeModal}
         onConfirm={closeModal}
         title="Delete policy version"
-        description="Removing the selected instances is permanent and cannot be undone."
-        infoLabel="Policy version"
-        infoValue="v3"
+        infoLabel="Version"
+        infoValue="VERSION"
         confirmText="Delete"
         confirmVariant="danger"
+        size="sm"
       />
       <ConfirmModal
         isOpen={openModal === 'update-mfa-policy'}
