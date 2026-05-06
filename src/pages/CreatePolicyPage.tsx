@@ -15,6 +15,7 @@ import {
   Select,
   FormField,
   PageShell,
+  ProgressBar,
   WizardSummary,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -146,18 +147,7 @@ function SummarySidebar({
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Quota</span>
           <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] p-4">
-            <VStack gap={2}>
-              <div className="flex items-center justify-between w-full">
-                <span className="text-label-lg text-[var(--color-text-default)]">Permissions</span>
-                <span className="text-body-md text-[var(--color-text-default)]">20/50</span>
-              </div>
-              <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-[var(--radius-lg)] overflow-hidden">
-                <div
-                  className="h-full bg-[var(--color-state-success)] rounded-[var(--radius-lg)]"
-                  style={{ width: '40%' }}
-                />
-              </div>
-            </VStack>
+            <ProgressBar variant="quota" label="Permissions" value={20} max={50} />
           </div>
         </VStack>
 
@@ -262,6 +252,7 @@ function BasicInformationSection({
                     onPolicyNameChange(e.target.value);
                     onPolicyNameErrorChange(null);
                   }}
+                  error={!!policyNameError}
                   fullWidth
                 />
               </FormField.Control>

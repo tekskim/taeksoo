@@ -27,6 +27,8 @@ const IAMTokenPoliciesPage = lazy(() => import('@/pages/IAMTokenPoliciesPage'));
 const IAMLoginPoliciesPage = lazy(() => import('@/pages/IAMLoginPoliciesPage'));
 const IAMServiceAccountsPage = lazy(() => import('@/pages/IAMServiceAccountsPage'));
 const IAMServiceAccountDetailPage = lazy(() => import('@/pages/IAMServiceAccountDetailPage'));
+const IAMActionCatalogPage = lazy(() => import('@/pages/IAMActionCatalogPage'));
+const IAMPolicySimulatorPage = lazy(() => import('@/pages/IAMPolicySimulatorPage'));
 
 export const iamRoutes = (
   <>
@@ -65,6 +67,8 @@ export const iamRoutes = (
     <Route path="/iam/login-policies" element={<IAMLoginPoliciesPage />} />
     <Route path="/iam/service-accounts" element={<IAMServiceAccountsPage />} />
     <Route path="/iam/service-accounts/:name" element={<IAMServiceAccountDetailPage />} />
+    <Route path="/iam/action-catalog" element={<IAMActionCatalogPage />} />
+    <Route path="/iam/policy-simulator" element={<IAMPolicySimulatorPage />} />
     <Route path="/iam/*" element={<IAMHomePage />} />
   </>
 );

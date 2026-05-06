@@ -369,7 +369,7 @@ export default function IAMLoginPoliciesPage() {
                                   align="center"
                                   className="gap-[var(--primitive-spacing-1-5)]"
                                 >
-                                  By recent history
+                                  By resent history
                                   <Tooltip content="Prevents reusing the last 'N' passwords.">
                                     <IconInfoCircle
                                       size={14}

@@ -49,6 +49,7 @@ interface Policy {
   apps: string;
   roles: string;
   description: string;
+  assigned: boolean;
   editedAt: string;
   permissions?: PolicyPermission[];
 }
@@ -65,6 +66,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute (+3)',
     roles: 'member (+2)',
     description: '-',
+    assigned: true,
     editedAt: 'Sep 12, 2026',
     permissions: [
       {
@@ -88,6 +90,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute (+3)',
     roles: 'member (+2)',
     description: '-',
+    assigned: true,
     editedAt: 'Sep 12, 2026',
     permissions: [
       {
@@ -118,6 +121,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute',
     roles: 'admin',
     description: 'Full access to compute resources',
+    assigned: true,
     editedAt: 'Aug 15, 2026',
     permissions: [
       {
@@ -147,6 +151,7 @@ const mockPolicies: Policy[] = [
     apps: 'storage',
     roles: 'viewer',
     description: 'Read-only access to storage',
+    assigned: false,
     editedAt: 'Aug 10, 2026',
     permissions: [
       { application: 'Storage', partition: '*all', resource: 'Bucket', actions: ['Read', 'List'] },
@@ -160,6 +165,7 @@ const mockPolicies: Policy[] = [
     apps: 'network',
     roles: 'network-admin',
     description: 'Network administration policy',
+    assigned: true,
     editedAt: 'Jul 20, 2026',
     permissions: [
       {
@@ -189,6 +195,7 @@ const mockPolicies: Policy[] = [
     apps: 'container (+2)',
     roles: 'developer (+1)',
     description: 'Container deployment permissions',
+    assigned: false,
     editedAt: 'Jul 15, 2026',
     permissions: [
       {
@@ -218,6 +225,7 @@ const mockPolicies: Policy[] = [
     apps: 'iam',
     roles: 'viewer',
     description: 'View-only IAM permissions',
+    assigned: true,
     editedAt: 'Jun 30, 2026',
     permissions: [
       { application: 'IAM', partition: '-', resource: 'User', actions: ['Read', 'List'] },
@@ -232,6 +240,7 @@ const mockPolicies: Policy[] = [
     apps: 'security (+3)',
     roles: 'auditor',
     description: 'Security audit permissions',
+    assigned: false,
     editedAt: 'Jun 25, 2026',
     permissions: [
       {
@@ -256,6 +265,7 @@ const mockPolicies: Policy[] = [
     apps: 'database',
     roles: 'db-admin',
     description: 'Database administration policy',
+    assigned: true,
     editedAt: 'Jun 20, 2026',
     permissions: [
       {
@@ -279,6 +289,7 @@ const mockPolicies: Policy[] = [
     apps: 'logging',
     roles: 'support',
     description: 'Access to logging services',
+    assigned: false,
     editedAt: 'Jun 15, 2026',
     permissions: [
       { application: 'Logging', partition: '*all', resource: 'Log', actions: ['Read', 'List'] },
@@ -441,48 +452,23 @@ export default function IAMPoliciesPage() {
     });
   };
 
-  // Context menu items factory
-  const getContextMenuItems = (rowId: string, isBuiltIn: boolean): ContextMenuItem[] => {
-    if (isBuiltIn) {
-      // Built-in policies: Edit and Delete disabled
-      return [
-        {
-          id: 'manage-roles',
-          label: 'Manage roles',
-          onClick: () => console.log('Manage roles', rowId),
-        },
-        { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
-        { id: 'edit', label: 'Edit', disabled: true, onClick: () => console.log('Edit', rowId) },
-        {
-          id: 'delete',
-          label: 'Delete',
-          disabled: true,
-          onClick: () => console.log('Delete', rowId),
-        },
-      ];
-    }
-    // Custom policies: all items enabled
-    return [
-      {
-        id: 'manage-roles',
-        label: 'Manage roles',
-        onClick: () => console.log('Manage roles', rowId),
-      },
-      { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
-      { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
-      {
-        id: 'delete',
-        label: 'Delete',
-        status: 'danger',
-        onClick: () => console.log('Delete', rowId),
-      },
-    ];
-  };
+  const getContextMenuItems = (rowId: string): ContextMenuItem[] => [
+    { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      divider: true,
+      onClick: () => console.log('Delete', rowId),
+    },
+  ];
 
   const columns: TableColumn<Policy>[] = [
     {
       key: 'name',
       label: 'Name',
+      sortable: true,
       render: (_value: string, row: Policy) => (
         <div className="flex items-center gap-2 min-w-0">
           <button
@@ -512,11 +498,26 @@ export default function IAMPoliciesPage() {
         </div>
       ),
     },
-    { key: 'type', label: 'Type' },
-    { key: 'apps', label: 'Apps' },
-    { key: 'roles', label: 'Roles' },
-    { key: 'description', label: 'Description' },
-    { key: 'editedAt', label: 'Edited at' },
+    {
+      key: 'type',
+      label: 'Type',
+      render: (value: string) => (
+        <Badge theme="white" size="sm">
+          {value}
+        </Badge>
+      ),
+    },
+    { key: 'description', label: 'Description', sortable: true },
+    {
+      key: 'assigned',
+      label: 'Assigned',
+      render: (value: boolean) => (
+        <Badge theme={value ? 'green' : 'gray'} size="sm">
+          {value ? 'Assigned' : 'Unassigned'}
+        </Badge>
+      ),
+    },
+    { key: 'editedAt', label: 'Edited at', sortable: true },
     {
       key: 'actions',
       label: 'Action',
@@ -524,11 +525,7 @@ export default function IAMPoliciesPage() {
       align: 'center',
       render: (_value: unknown, row: Policy) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu
-            items={getContextMenuItems(row.id, row.type === 'Built-in')}
-            trigger="click"
-            align="right"
-          >
+          <ContextMenu items={getContextMenuItems(row.id)} trigger="click" align="right">
             <button
               aria-label="Row actions"
               type="button"
