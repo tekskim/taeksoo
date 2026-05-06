@@ -43,7 +43,7 @@ export function FileListCard({
       {files.map((file) => (
         <div
           key={file.id}
-          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2 flex items-center justify-between"
+          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2 flex items-start justify-between"
         >
           <VStack gap={1}>
             <span className="text-body-md text-[var(--color-text-default)]">{file.name}</span>
@@ -67,7 +67,7 @@ export function FileListCard({
             <button
               type="button"
               onClick={() => onRemove(file.id)}
-              className="shrink-0 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+              className="shrink-0 mt-px text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
             >
               <IconX size={16} stroke={1.5} />
             </button>
