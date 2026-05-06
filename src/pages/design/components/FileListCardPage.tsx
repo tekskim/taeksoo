@@ -6,7 +6,7 @@ import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { FileListCard, FileListSection, ProgressBar, VStack } from '@/design-system';
 import type { FileItem } from '@/design-system';
-import { IconChevronDown, IconChevronUp, IconUpload, IconX } from '@tabler/icons-react';
+import { IconUpload, IconX } from '@tabler/icons-react';
 
 const FILE_UPLOAD_GUIDELINES = `## Overview
 
@@ -152,73 +152,7 @@ function TagDivider() {
   return <div className="w-px h-[10px] bg-[var(--color-border-default)] shrink-0" />;
 }
 
-function FileCardWithTags({
-  file,
-  onRemove,
-  maxVisible = 5,
-}: {
-  file: { id: string; name: string; tags: string[] };
-  onRemove: (id: string) => void;
-  maxVisible?: number;
-}) {
-  const [expanded, setExpanded] = useState(false);
-  const hasOverflow = file.tags.length > maxVisible;
-  const displayTags = hasOverflow && !expanded ? file.tags.slice(0, maxVisible) : file.tags;
-
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2 flex items-center justify-between gap-2">
-      <VStack gap={1} className="min-w-0 flex-1">
-        <span className="text-body-md text-[var(--color-text-default)]">{file.name}</span>
-        <div className="flex items-start gap-2">
-          {hasOverflow && (
-            <button
-              type="button"
-              onClick={() => setExpanded(!expanded)}
-              className="shrink-0 mt-0.5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors cursor-pointer"
-            >
-              {expanded ? (
-                <IconChevronUp size={12} stroke={2} />
-              ) : (
-                <IconChevronDown size={12} stroke={2} />
-              )}
-            </button>
-          )}
-          <div className={`flex items-center gap-2 min-w-0 flex-1 ${expanded ? 'flex-wrap' : ''}`}>
-            {displayTags.flatMap((tag, i) =>
-              i > 0
-                ? [
-                    <TagDivider key={`d-${i}`} />,
-                    <span
-                      key={tag}
-                      className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap"
-                    >
-                      {tag}
-                    </span>,
-                  ]
-                : [
-                    <span
-                      key={tag}
-                      className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap"
-                    >
-                      {tag}
-                    </span>,
-                  ]
-            )}
-          </div>
-        </div>
-      </VStack>
-      <button
-        type="button"
-        onClick={() => onRemove(file.id)}
-        className="shrink-0 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
-      >
-        <IconX size={16} stroke={1.5} />
-      </button>
-    </div>
-  );
-}
-
-function DisclosureExample() {
+function WrappingTagsExample() {
   const [files, setFiles] = useState([
     {
       id: '1',
@@ -237,7 +171,43 @@ function DisclosureExample() {
     <div className="w-full max-w-[400px]">
       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-[var(--primitive-spacing-3)] flex flex-col gap-[var(--primitive-spacing-2)]">
         {files.map((file) => (
-          <FileCardWithTags key={file.id} file={file} onRemove={handleRemove} />
+          <div
+            key={file.id}
+            className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2 flex items-start justify-between gap-2"
+          >
+            <VStack gap={1} className="min-w-0 flex-1">
+              <span className="text-body-md text-[var(--color-text-default)]">{file.name}</span>
+              <div className="flex items-center gap-2 flex-wrap">
+                {file.tags.flatMap((tag, i) =>
+                  i > 0
+                    ? [
+                        <TagDivider key={`d-${i}`} />,
+                        <span
+                          key={tag}
+                          className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap"
+                        >
+                          {tag}
+                        </span>,
+                      ]
+                    : [
+                        <span
+                          key={tag}
+                          className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap"
+                        >
+                          {tag}
+                        </span>,
+                      ]
+                )}
+              </div>
+            </VStack>
+            <button
+              type="button"
+              onClick={() => handleRemove(file.id)}
+              className="shrink-0 mt-0.5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+            >
+              <IconX size={16} stroke={1.5} />
+            </button>
+          </div>
         ))}
       </div>
     </div>
@@ -378,8 +348,8 @@ const files = [
             <FileListSectionExample />
           </VStack>
           <VStack gap={3}>
-            <Label>Disclosure</Label>
-            <DisclosureExample />
+            <Label>Wrapping Tags</Label>
+            <WrappingTagsExample />
           </VStack>
           <VStack gap={3}>
             <Label>Read-only (No Remove Button)</Label>
