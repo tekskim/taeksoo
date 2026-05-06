@@ -14,7 +14,9 @@ html {
 
 html,
 body {
-  overflow: hidden;
+  min-width: var(--layout-min-width);
+  overflow-x: auto;
+  overflow-y: hidden;
   height: 100%;
 }
 
