@@ -21,7 +21,7 @@ import {
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconSearch, IconCube, IconInfoCircle } from '@tabler/icons-react';
+import { IconBell, IconCube, IconInfoCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -433,14 +433,9 @@ export function ModelsPage() {
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'Models' }]} />}
           actions={
-            <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </button>
           }
         />
       }

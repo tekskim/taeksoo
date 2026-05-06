@@ -1,40 +1,62 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   VStack,
   Button,
-  Badge,
   Tabs,
   TabList,
   Tab,
   SearchInput,
   Pagination,
+  PageShell,
+  PageHeader,
+  TabBar,
+  TopBar,
+  Breadcrumb,
 } from '@/design-system';
-import { AIPlatformPageLayout } from '@/pages/AIPlatformPage';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { useTabs } from '@/contexts/TabContext';
+import { useNavigate } from 'react-router-dom';
+import { IconBell } from '@tabler/icons-react';
+import aiPlatformLogoSrc from '@/assets/icons/ai-platform-logo.png';
+import { IconPackage } from '@tabler/icons-react';
+
+interface PackageBadge {
+  label: string;
+  icon?: 'thaki' | 'common';
+}
 
 interface PackageCardProps {
   title: string;
-  badges: { label: string; icon?: 'thaki' | 'common' }[];
+  badges: PackageBadge[];
   onDeploy?: () => void;
+}
+
+function ThakiBadgeIcon() {
+  return <img src={aiPlatformLogoSrc} alt="" width={12} height={12} className="shrink-0" />;
+}
+
+function PackageBadgeItem({ label, icon }: PackageBadge) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-[var(--radius-md)] bg-[#f3f4f6] px-1.5 py-0.5">
+      {icon === 'thaki' && <ThakiBadgeIcon />}
+      {icon === 'common' && (
+        <IconPackage size={12} stroke={1.5} className="shrink-0 text-[var(--color-text-muted)]" />
+      )}
+      <span className="text-label-sm text-[var(--color-text-muted)]">{label}</span>
+    </span>
+  );
 }
 
 function PackageCard({ title, badges, onDeploy }: PackageCardProps) {
   return (
-    <div className="flex flex-col gap-3 rounded-[6px] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
+    <div className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <p className="text-heading-h5 text-[var(--color-text-default)]">{title}</p>
-        </div>
+        <p className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+          {title}
+        </p>
         <div className="flex flex-wrap items-center gap-1">
-          {badges.map((b) => (
-            <Badge key={b.label} variant="info" size="sm" theme="white">
-              {b.icon === 'thaki' && (
-                <span className="mr-0.5 inline-block size-3 rounded-full bg-[var(--color-action-primary)]" />
-              )}
-              {b.icon === 'common' && (
-                <span className="mr-0.5 inline-block size-3 rounded-full bg-[var(--color-text-muted)]" />
-              )}
-              {b.label}
-            </Badge>
+          {badges.map((b, idx) => (
+            <PackageBadgeItem key={`${b.label}-${idx}`} {...b} />
           ))}
         </div>
       </div>
@@ -52,43 +74,81 @@ const THAKI_PACKAGES: PackageCardProps[] = [
     title: 'Title',
     badges: [{ label: 'Thaki image', icon: 'thaki' }, { label: 'Label' }],
   },
+];
+
+const COMMON_PACKAGES: PackageCardProps[] = [
   {
     title: 'Title',
     badges: [{ label: 'Common image', icon: 'common' }, { label: 'Label' }],
   },
 ];
 
-const COMMON_PACKAGES: PackageCardProps[] = [
-  {
-    title: 'nginx:latest',
-    badges: [{ label: 'Common image', icon: 'common' }],
-  },
-  {
-    title: 'alpine:latest',
-    badges: [{ label: 'Common image', icon: 'common' }],
-  },
-];
-
 export function PackagesPage() {
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Packages');
+  }, [updateActiveTabLabel]);
+
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const packages =
-    activeTab === 'thaki'
-      ? THAKI_PACKAGES
-      : activeTab === 'common'
-        ? COMMON_PACKAGES
-        : [...THAKI_PACKAGES, ...COMMON_PACKAGES];
+  const packages = useMemo(() => {
+    if (activeTab === 'thaki') return THAKI_PACKAGES;
+    if (activeTab === 'common') return COMMON_PACKAGES;
+    return [...THAKI_PACKAGES, ...COMMON_PACKAGES];
+  }, [activeTab]);
 
-  const filtered = searchQuery
-    ? packages.filter((p) => p.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    : packages;
+  const filtered = useMemo(() => {
+    if (!searchQuery) return packages;
+    return packages.filter((p) => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  }, [packages, searchQuery]);
+
+  const handleTabChange = useCallback((tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(1);
+  }, []);
 
   return (
-    <AIPlatformPageLayout title="Packages" breadcrumbItems={[{ label: 'Packages' }]}>
+    <PageShell
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Packages' }]} />}
+          actions={
+            <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </button>
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
       <VStack gap={3}>
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+        <PageHeader title="Packages" />
+
+        <Tabs value={activeTab} onChange={handleTabChange} variant="underline" size="sm">
           <TabList>
             <Tab value="all">All</Tab>
             <Tab value="thaki">Thaki images</Tab>
@@ -111,7 +171,7 @@ export function PackagesPage() {
           totalItems={filtered.length}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] items-start gap-4">
           {filtered.map((pkg, i) => (
             <PackageCard
               key={`${pkg.title}-${i}`}
@@ -121,7 +181,7 @@ export function PackagesPage() {
           ))}
         </div>
       </VStack>
-    </AIPlatformPageLayout>
+    </PageShell>
   );
 }
 

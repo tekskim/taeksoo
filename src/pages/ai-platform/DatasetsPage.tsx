@@ -31,7 +31,6 @@ import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
-  IconSearch,
   IconInfoCircle,
   IconDownload,
   IconDatabase,
@@ -786,38 +785,24 @@ export function DatasetsPage() {
             />
           }
           actions={
-            <HStack gap={2}>
-              <button
-                type="button"
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                aria-label="Search"
-              >
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                type="button"
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                aria-label="Notifications"
-              >
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </HStack>
+            <button
+              type="button"
+              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              aria-label="Notifications"
+            >
+              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </button>
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-4 px-8 pb-20"
     >
       {view === 'list' && (
         <VStack gap={3}>
           <PageHeader
             title="Datasets"
             actions={
-              <Button
-                variant="primary"
-                size="md"
-                leftIcon={<IconUpload size={12} />}
-                onClick={() => setUploadOpen(true)}
-              >
+              <Button variant="primary" size="md" onClick={() => setUploadOpen(true)}>
                 Upload dataset
               </Button>
             }
