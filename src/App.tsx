@@ -442,9 +442,6 @@ import { FigmaGuidePage } from '@/pages/figma/FigmaGuidePage';
 import { FigmaCloudBuilderPage } from '@/pages/figma/FigmaCloudBuilderPage';
 
 // Pages - AI Platform
-import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
-
-// Pages - AI Platform
 import { AIPlatformPage } from '@/pages/AIPlatformPage';
 import { TextGenerationPage } from '@/pages/ai-platform/TextGenerationPage';
 import { ExplorePage } from '@/pages/ai-platform/ExplorePage';
@@ -452,6 +449,9 @@ import { PackagesPage } from '@/pages/ai-platform/PackagesPage';
 import { ModelsPage } from '@/pages/ai-platform/ModelsPage';
 import { DatasetsPage } from '@/pages/ai-platform/DatasetsPage';
 import { WorkloadsPage } from '@/pages/ai-platform/WorkloadsPage';
+import { DeployNewPodPage } from '@/pages/ai-platform/DeployNewPodPage';
+import { EditPodPage } from '@/pages/ai-platform/EditPodPage';
+import { WorkloadDetailPage } from '@/pages/ai-platform/WorkloadDetailPage';
 import { MyTemplatesPage } from '@/pages/ai-platform/MyTemplatesPage';
 import { StoragePage as AIPlatformStoragePage } from '@/pages/ai-platform/StoragePage';
 import { ServerlessPage } from '@/pages/ai-platform/ServerlessPage';
@@ -1004,6 +1004,9 @@ function AppRoutes() {
       <Route path="/ai-platform/models/compare" element={<AIPlatformPage />} />
       <Route path="/ai-platform/datasets" element={<DatasetsPage />} />
       <Route path="/ai-platform/workloads" element={<WorkloadsPage />} />
+      <Route path="/ai-platform/workloads/deploy" element={<DeployNewPodPage />} />
+      <Route path="/ai-platform/workloads/:id/edit" element={<EditPodPage />} />
+      <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
       <Route path="/ai-platform/my-templates" element={<MyTemplatesPage />} />
       <Route path="/ai-platform/storage" element={<AIPlatformStoragePage />} />
       <Route path="/ai-platform/serverless" element={<ServerlessPage />} />
@@ -1177,11 +1180,6 @@ function AppRoutes() {
         <Route path="components" element={<FigmaComponentsPage />} />
         <Route path="cloudbuilder" element={<FigmaCloudBuilderPage />} />
       </Route>
-
-      {/* AI Platform Routes */}
-      <Route path="/ai-platform" element={<AIPlatformPage />} />
-      <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
-      <Route path="/ai-platform/*" element={<AIPlatformPage />} />
     </Routes>
   );
 }
