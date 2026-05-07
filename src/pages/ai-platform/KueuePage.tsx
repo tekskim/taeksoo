@@ -9,10 +9,9 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
-import { AITopBarActions } from '@/components/AITopBarActions';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
-import { IconRefresh, IconList } from '@tabler/icons-react';
+import { IconBell, IconSearch, IconRefresh, IconList } from '@tabler/icons-react';
 
 export function KueuePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -45,12 +44,17 @@ export function KueuePage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'AI Platform' }, { label: 'Operations' }, { label: 'Kueue' }]}
-            />
+          breadcrumb={<Breadcrumb items={[{ label: 'Operations' }, { label: 'Kueue' }]} />}
+          actions={
+            <>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+            </>
           }
-          actions={<AITopBarActions />}
         />
       }
       contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"

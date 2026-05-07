@@ -43,7 +43,6 @@ import {
 import { useTabs } from '@/contexts/TabContext';
 import { useProject } from '@/contexts/ProjectContext';
 import { ProjectSelector } from '@/components/ProjectSelector';
-import { AITopBarActions } from '@/components/AITopBarActions';
 import {
   IconLayoutDashboard,
   IconBrain,
@@ -57,6 +56,7 @@ import {
   IconActivity,
   IconSettings,
   IconLayoutSidebar,
+  IconBell,
   IconHome,
   IconRefresh,
   IconPlayerPause,
@@ -195,7 +195,8 @@ function ClusterSelector({
 
 export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => void }) {
   const location = useLocation();
-  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
+  const { projects, selectedProjectId, setSelectedProjectId, primaryProjectId, setPrimaryProject } =
+    useProject();
   const [selectedClusterId, setSelectedClusterId] = useState(MOCK_CLUSTERS[0].id);
 
   const isActive = (href: string) => {
@@ -470,7 +471,11 @@ export function AIPlatformPageLayout({
           onClick={() => navigate('/')}
           aria-label="Home"
         />
-        <AITopBarActions />
+        <TopBarAction
+          icon={<IconBell size={16} stroke={1.5} />}
+          aria-label="Notifications"
+          badge={true}
+        />
       </>
     ),
     [navigate]
