@@ -13,6 +13,7 @@ import CloudBuilderIcon from '@/assets/appIcon/cloudbuilder.png';
 import AIPlatformIcon from '@/assets/appIcon/aiplatform.png';
 import AIAgentIcon from '@/assets/appIcon/agentops.png';
 import StorageIcon from '@/assets/appIcon/storage.png';
+import StorageAdminIcon from '@/assets/appIcon/storageadmin.png';
 import IAMIcon from '@/assets/appIcon/iam.png';
 import DesktopIcon from '@/assets/appIcon/desktop.png';
 import SettingsIcon from '@/assets/appIcon/settings.png';
@@ -35,6 +36,18 @@ const appCards: AppCard[] = [
   },
   { id: 'container', title: 'Container', iconSrc: ContainerIcon, path: '/container' },
   { id: 'iam', title: 'IAM', iconSrc: IAMIcon, path: '/iam' },
+  {
+    id: 'storage-system-admin',
+    title: 'Storage - System Admin',
+    iconSrc: StorageAdminIcon,
+    path: '/storage',
+  },
+  {
+    id: 'storage-domain-admin',
+    title: 'Storage - Domain Admin',
+    iconSrc: StorageAdminIcon,
+    path: '/storage-domain-admin',
+  },
   {
     id: 'storage-member',
     title: 'Storage - Member',

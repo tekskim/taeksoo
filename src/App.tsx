@@ -396,6 +396,7 @@ import { ComputeStatusPage } from '@/pages/design/status/ComputeStatusPage';
 import { ContainerStatusPage } from '@/pages/design/status/ContainerStatusPage';
 import { IAMStatusPage } from '@/pages/design/status/IAMStatusPage';
 import { PaginationPage } from '@/pages/design/components/PaginationPage';
+import { ChainedSelectPage } from '@/pages/design/components/ChainedSelectPage';
 import { FileListCardPage } from '@/pages/design/components/FileListCardPage';
 import { ExpandableChecklistPage } from '@/pages/design/components/ExpandableChecklistPage';
 import { InlineMessagePage } from '@/pages/design/components/InlineMessagePage';
@@ -1168,6 +1169,7 @@ function AppRoutes() {
         <Route path="status/container" element={<ContainerStatusPage />} />
         <Route path="status/iam" element={<IAMStatusPage />} />
         <Route path="components/pagination" element={<PaginationPage />} />
+        <Route path="components/chained-select" element={<ChainedSelectPage />} />
         <Route path="components/file-list-card" element={<FileListCardPage />} />
         <Route path="components/expandable-checklist" element={<ExpandableChecklistPage />} />
         <Route path="components/info-box" element={<InfoBoxPage />} />

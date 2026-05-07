@@ -11,9 +11,10 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AITopBarActions } from '@/components/AITopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconSearch, IconRefresh, IconFileDescription } from '@tabler/icons-react';
+import { IconRefresh, IconFileDescription } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Text generation Page
@@ -61,17 +62,16 @@ export function TextGenerationPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={<Breadcrumb items={[{ label: 'ML Studio' }, { label: 'Text generation' }]} />}
-          actions={
-            <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'AI Platform' },
+                { label: 'ML Studio' },
+                { label: 'Text generation' },
+              ]}
+            />
           }
+          actions={<AITopBarActions />}
         />
       }
       contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"

@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate } from 'react-router-dom';
 import {
+  Badge,
   Button,
   Breadcrumb,
   HStack,
@@ -12,8 +12,11 @@ import {
   SectionCard,
   SearchInput,
   Checkbox,
-  Select,
+  Radio,
+  ChainedSelect,
+  type ChainedSelectSegment,
   FormField,
+  InlineMessage,
   PageShell,
   ProgressBar,
   WizardSummary,
@@ -309,6 +312,7 @@ function BasicInformationSection({
 
 interface Permission {
   id: string;
+  effect: 'allow' | 'deny';
   application: string;
   partition: string;
   resource: string;
@@ -341,18 +345,17 @@ const COMPUTE_ACTIONS = {
     'ReadSecuritygroup',
     'ReadTopology',
     'ReadDashboard',
+    'ReadFlavor',
+    'ReadQuota',
   ],
   list: [
     'ListInstance',
     'ListImage',
     'ListVolume',
-    'ListInstancesnapshot',
     'ListKeypair',
-    'ListServergroup',
     'ListNetwork',
     'ListSecuritygroup',
     'ListTopology',
-    'ListDashboard',
   ],
   write: [
     'WriteInstance',
@@ -363,8 +366,6 @@ const COMPUTE_ACTIONS = {
     'WriteServergroup',
     'WriteNetwork',
     'WriteSecuritygroup',
-    'WriteTopology',
-    'WriteDashboard',
   ],
   delete: [
     'DeleteInstance',
@@ -372,23 +373,18 @@ const COMPUTE_ACTIONS = {
     'DeleteVolume',
     'DeleteInstancesnapshot',
     'DeleteKeypair',
-    'DeleteServergroup',
     'DeleteNetwork',
-    'DeleteSecuritygroup',
-    'DeleteTopology',
-    'DeleteDashboard',
   ],
   admin: [
     'AdminInstance',
     'AdminImage',
     'AdminVolume',
-    'AdminInstancesnapshot',
     'AdminKeypair',
-    'AdminServergroup',
     'AdminNetwork',
     'AdminSecuritygroup',
     'AdminTopology',
     'AdminDashboard',
+    'AdminQuota',
   ],
 };
 
@@ -409,8 +405,36 @@ interface PolicyEditorSectionProps {
   onEditDone: () => void;
 }
 
+const targetSegments: ChainedSelectSegment[] = [
+  {
+    key: 'application',
+    label: 'Application',
+    options: [
+      { value: '*all', label: '*all' },
+      { value: 'compute', label: 'compute' },
+      { value: 'container', label: 'container' },
+    ],
+  },
+  {
+    key: 'partition',
+    label: 'Partition',
+    options: [{ value: '*all', label: '*all' }],
+  },
+  {
+    key: 'resource',
+    label: 'Resource',
+    options: [{ value: '*all', label: '*all' }],
+  },
+  {
+    key: 'resourceId',
+    label: 'Resource ID',
+    options: [{ value: '*all', label: '*all' }],
+  },
+];
+
 const createEmptyPermission = (): Permission => ({
   id: `permission-${Date.now()}`,
+  effect: 'allow',
   application: '',
   partition: '',
   resource: '',
@@ -441,6 +465,13 @@ function PolicyEditorSection({
 }: PolicyEditorSectionProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [conditionsExpanded, setConditionsExpanded] = useState(isV2 ?? false);
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
+    read: true,
+    list: false,
+    write: false,
+    delete: false,
+    admin: false,
+  });
   const [targetErrors, setTargetErrors] = useState<Record<string, boolean>>({});
   const [invalidTargetErrors, setInvalidTargetErrors] = useState<Record<string, boolean>>({});
   const [actionErrors, setActionErrors] = useState<Record<string, boolean>>({});
@@ -695,336 +726,266 @@ function PolicyEditorSection({
           ) : undefined
         }
       />
+      <span className="-mt-3 text-body-md text-[var(--color-text-subtle)]">
+        Each permission defines a set of permissions. Choose an effect, specify the target resource,
+        then select the allowed or denied actions. At least one permission is required.
+      </span>
       <SectionCard.Content showDividers={false}>
         {/* Divider */}
         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
         <VStack gap={4} className="py-6">
-          {/* Permissions Label */}
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-[3px]">
-              <span className="text-label-lg text-[var(--color-text-default)]">Permissions</span>
-              <span className="text-[var(--color-state-danger)]">*</span>
-            </div>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              A permission consists of a Target resource and allowed Actions. You can create a
-              single policy for various targets by adding multiple permissions.
-            </span>
-          </div>
-
-          {/* Permission Cards */}
-          {permissions.map((permission, index) => (
-            <div
-              key={permission.id}
-              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full relative"
-            >
-              {/* Delete button - only show for cards after the first one */}
-              {index > 0 && (
-                <button
-                  type="button"
-                  onClick={() => deletePermission(permission.id)}
-                  className="absolute top-3 right-3 p-1 rounded hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
-                  aria-label="Remove permission"
+          {/* Permission Cards - Card Container */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <VStack gap={2}>
+              {permissions.map((permission, index) => (
+                <div
+                  key={permission.id}
+                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                 >
-                  <IconX size={16} stroke={1.5} />
-                </button>
-              )}
-              <VStack gap={6}>
-                {/* Target */}
-                <div className="flex flex-col gap-2 w-full">
-                  <span className="text-label-lg text-[var(--color-text-default)]">Target</span>
-                  <div
-                    className={`flex items-center gap-1 ${
-                      targetErrors[permission.id]
-                        ? '[&_button]:border-[var(--color-state-danger)]'
-                        : hasPartialFill(permission)
-                          ? '[&_button]:border-[var(--color-state-danger)]'
-                          : isInvalidTargetCombination(permission)
-                            ? '[&_button]:border-[var(--color-state-danger)]'
-                            : ''
-                    }`}
-                  >
-                    <Select
-                      placeholder="Application"
-                      value={permission.application}
-                      onChange={(value) => {
-                        updatePermission(permission.id, { application: value });
-                        if (targetErrors[permission.id]) {
-                          setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
-                        }
-                      }}
-                      options={[
-                        { value: '*all', label: '*all' },
-                        { value: 'compute', label: 'compute' },
-                        { value: 'container', label: 'container' },
-                      ]}
-                      size="md"
-                      fullWidth
-                    />
-                    <span className="text-body-md text-[var(--color-text-default)]">:</span>
-                    <Select
-                      placeholder="Partition"
-                      value={permission.partition}
-                      onChange={(value) => {
-                        updatePermission(permission.id, { partition: value });
-                        if (targetErrors[permission.id]) {
-                          setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
-                        }
-                      }}
-                      options={[{ value: '*all', label: '*all' }]}
-                      size="md"
-                      fullWidth
-                    />
-                    <span className="text-body-md text-[var(--color-text-default)]">:</span>
-                    <Select
-                      placeholder="Resource"
-                      value={permission.resource}
-                      onChange={(value) => {
-                        updatePermission(permission.id, { resource: value });
-                        if (targetErrors[permission.id]) {
-                          setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
-                        }
-                      }}
-                      options={[{ value: '*all', label: '*all' }]}
-                      size="md"
-                      fullWidth
-                    />
-                    <span className="text-body-md text-[var(--color-text-default)]">:</span>
-                    <Select
-                      placeholder="Resource ID"
-                      value={permission.resourceId}
-                      onChange={(value) => {
-                        updatePermission(permission.id, { resourceId: value });
-                        if (targetErrors[permission.id]) {
-                          setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
-                        }
-                      }}
-                      options={[{ value: '*all', label: '*all' }]}
-                      size="md"
-                      fullWidth
-                    />
-                  </div>
-                  {targetErrors[permission.id] && (
-                    <span className="text-body-sm text-[var(--color-state-danger)]">
-                      All Target fields must contain a valid value or a wildcard (∗).
-                    </span>
-                  )}
-                  {!targetErrors[permission.id] && hasPartialFill(permission) && (
-                    <span className="text-body-sm text-[var(--color-state-danger)]">
-                      All Target fields must contain a valid value or a wildcard (∗).
-                    </span>
-                  )}
-                  {!targetErrors[permission.id] &&
-                    !hasPartialFill(permission) &&
-                    isInvalidTargetCombination(permission) && (
-                      <span className="text-body-sm text-[var(--color-state-danger)]">
-                        The entered Target combination is invalid for the Thaki Cloud system
-                        structure. Please verify fields.
+                  <VStack gap={4}>
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-label-lg text-[var(--color-text-default)]">
+                        Permission {index + 1}
                       </span>
-                    )}
-                </div>
-
-                {/* Actions */}
-                <div className="flex flex-col gap-2 w-full">
-                  <span className="text-label-lg text-[var(--color-text-default)]">Actions</span>
-
-                  {/* Search and All Actions */}
-                  <div className="flex items-center gap-2">
-                    <SearchInput
-                      placeholder="Search actions by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                    <label className="flex items-start gap-1.5 cursor-pointer">
-                      <Checkbox
-                        checked={permission.allActions}
-                        onChange={() => toggleAllActions(permission.id)}
-                      />
-                      <span className="text-body-md text-[var(--color-text-default)]">
-                        All actions
-                      </span>
-                    </label>
-                  </div>
-
-                  {/* Action Cards - Simple view for non-compute applications */}
-                  {!isV2 && !shouldShowDetailedActions(permission) && (
-                    <div
-                      className={`flex gap-3 w-full h-[44px] ${actionErrors[permission.id] ? 'p-px' : ''}`}
-                    >
-                      {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
-                        <div
-                          key={action}
-                          className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 cursor-pointer h-[44px] flex items-center ${
-                            actionErrors[permission.id]
-                              ? 'ring-1 ring-[var(--color-state-danger)]'
-                              : ''
-                          }`}
-                          onClick={() => toggleAction(permission.id, action)}
+                      {index > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => deletePermission(permission.id)}
+                          className="flex items-center justify-center w-5 h-5 rounded hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                          aria-label="Remove permission"
                         >
-                          <label className="flex items-start gap-2.5 cursor-pointer">
-                            <Checkbox
-                              checked={permission.actions[action]}
-                              onChange={() => toggleAction(permission.id, action)}
-                            />
-                            <span className="text-body-md font-normal text-[var(--color-text-default)] capitalize">
-                              {action}
-                            </span>
-                          </label>
-                        </div>
-                      ))}
+                          <IconX size={14} />
+                        </button>
+                      )}
                     </div>
-                  )}
 
-                  {/* Detailed Action Tabs - For compute application with all fields filled */}
-                  {(isV2 || shouldShowDetailedActions(permission)) && (
-                    <div
-                      className={`flex gap-3 w-full h-[320px] ${actionErrors[permission.id] ? 'p-px' : ''}`}
-                    >
-                      {(['read', 'list', 'write', 'delete', 'admin'] as const).map((category) => {
-                        const categoryActions = COMPUTE_ACTIONS[category];
-                        const filteredActions = searchQuery
-                          ? categoryActions.filter((a) =>
-                              a.toLowerCase().includes(searchQuery.toLowerCase())
-                            )
-                          : categoryActions;
-                        const selectedCount = categoryActions.filter(
-                          (a) => permission.detailedActions[a]
-                        ).length;
-                        const allCategorySelected = categoryActions.every(
-                          (a) => permission.detailedActions[a]
-                        );
+                    {/* Target */}
+                    <div className="flex flex-col gap-2 w-full">
+                      <span className="text-label-sm text-[var(--color-text-default)]">Target</span>
+                      <ChainedSelect
+                        segments={targetSegments}
+                        values={{
+                          application: permission.application,
+                          partition: permission.partition,
+                          resource: permission.resource,
+                          resourceId: permission.resourceId,
+                        }}
+                        onChange={(vals) => {
+                          updatePermission(permission.id, {
+                            application: vals.application ?? '',
+                            partition: vals.partition ?? '',
+                            resource: vals.resource ?? '',
+                            resourceId: vals.resourceId ?? '',
+                          });
+                          if (targetErrors[permission.id]) {
+                            setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
+                          }
+                        }}
+                        className={
+                          targetErrors[permission.id] ||
+                          hasPartialFill(permission) ||
+                          isInvalidTargetCombination(permission)
+                            ? '[&>div]:border-[var(--color-state-danger)]'
+                            : ''
+                        }
+                      />
+                      {targetErrors[permission.id] && (
+                        <span className="text-body-sm text-[var(--color-state-danger)]">
+                          All Target fields must contain a valid value or a wildcard (∗).
+                        </span>
+                      )}
+                      {!targetErrors[permission.id] && hasPartialFill(permission) && (
+                        <span className="text-body-sm text-[var(--color-state-danger)]">
+                          All Target fields must contain a valid value or a wildcard (∗).
+                        </span>
+                      )}
+                      {!targetErrors[permission.id] &&
+                        !hasPartialFill(permission) &&
+                        isInvalidTargetCombination(permission) && (
+                          <span className="text-body-sm text-[var(--color-state-danger)]">
+                            The entered Target combination is invalid for the Thaki Cloud system
+                            structure. Please verify fields.
+                          </span>
+                        )}
+                    </div>
 
-                        return (
-                          <div
-                            key={category}
-                            className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col min-w-0 overflow-hidden ${
-                              actionErrors[permission.id]
-                                ? 'ring-1 ring-[var(--color-state-danger)]'
-                                : ''
-                            }`}
-                          >
-                            {/* Category Header */}
-                            <label className="flex items-start gap-2.5 shrink-0 cursor-pointer">
+                    {/* Effect */}
+                    <div className="flex flex-col gap-2 w-full">
+                      <span className="text-label-sm text-[var(--color-text-default)]">Effect</span>
+                      <HStack gap={4}>
+                        <Radio
+                          value="allow"
+                          label="Allow"
+                          checked={permission.effect === 'allow'}
+                          onChange={() => updatePermission(permission.id, { effect: 'allow' })}
+                        />
+                        <Radio
+                          value="deny"
+                          label="Deny"
+                          checked={permission.effect === 'deny'}
+                          onChange={() => updatePermission(permission.id, { effect: 'deny' })}
+                        />
+                      </HStack>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-col gap-2 w-full">
+                      <div className="flex gap-[3px]">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Actions
+                        </span>
+                        <span className="text-[var(--color-state-danger)]">*</span>
+                      </div>
+
+                      {index === 0 ||
+                      hasAllFieldsFilled(permission) ||
+                      (index > 0 &&
+                        hasAllFieldsFilled(permissions[index - 1]) &&
+                        hasAnyActionSelected(permissions[index - 1])) ? (
+                        <>
+                          {/* Search and All Actions */}
+                          <div className="flex items-center gap-2">
+                            <SearchInput
+                              placeholder="Search actions"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              onClear={() => setSearchQuery('')}
+                              size="sm"
+                              className="w-[280px]"
+                            />
+                            <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                            <label className="flex items-center gap-1.5 cursor-pointer">
                               <Checkbox
-                                checked={allCategorySelected}
-                                onChange={() => toggleCategoryActions(permission.id, category)}
+                                checked={permission.allActions}
+                                onChange={() => toggleAllActions(permission.id)}
                               />
-                              <span className="text-body-md text-[var(--color-text-default)] capitalize">
-                                {category}
-                              </span>
-                              <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                {selectedCount > 0
-                                  ? `${selectedCount}/${categoryActions.length}`
-                                  : `${categoryActions.length} items`}
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                All actions
                               </span>
                             </label>
-
-                            {/* Actions List */}
-                            <OverlayScrollbarsComponent
-                              options={{
-                                overflow: { x: 'hidden', y: 'scroll' },
-                                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
-                              }}
-                              defer={false}
-                              className="flex flex-col gap-2 mt-6 flex-1 min-h-0"
-                            >
-                              {filteredActions.map((actionName) => {
-                                const isSelected = permission.detailedActions[actionName];
-                                return (
-                                  <label
-                                    key={actionName}
-                                    className={`bg-[var(--color-surface-default)] border rounded-[var(--radius-md)] p-2 flex items-center gap-1.5 cursor-pointer shrink-0 min-w-0 ${
-                                      isSelected
-                                        ? 'border-[var(--color-action-primary)]'
-                                        : 'border-[var(--color-border-strong)]'
-                                    }`}
-                                  >
-                                    <Checkbox
-                                      checked={isSelected}
-                                      onChange={() =>
-                                        toggleDetailedAction(permission.id, actionName)
-                                      }
-                                    />
-                                    <span
-                                      className="text-body-md text-[var(--color-text-default)] truncate min-w-0"
-                                      title={actionName}
-                                    >
-                                      {actionName}
-                                    </span>
-                                  </label>
-                                );
-                              })}
-                            </OverlayScrollbarsComponent>
                           </div>
-                        );
-                      })}
+
+                          {/* Action Error Message */}
+                          {actionErrors[permission.id] && (
+                            <span className="text-body-sm text-[var(--color-state-danger)]">
+                              At least one action must be selected.
+                            </span>
+                          )}
+
+                          {/* Action Category Disclosures */}
+                          <VStack gap={3}>
+                            {(['read', 'list', 'write', 'delete', 'admin'] as const).map(
+                              (category) => {
+                                const categoryActions = COMPUTE_ACTIONS[category];
+                                const filteredActions = searchQuery
+                                  ? categoryActions.filter((a) =>
+                                      a.toLowerCase().includes(searchQuery.toLowerCase())
+                                    )
+                                  : categoryActions;
+                                const selectedCount = categoryActions.filter(
+                                  (a) => permission.detailedActions[a]
+                                ).length;
+                                const allCategorySelected = categoryActions.every(
+                                  (a) => permission.detailedActions[a]
+                                );
+                                const isExpanded = expandedCategories[category];
+
+                                return (
+                                  <div key={category} className="flex flex-col gap-2 w-full">
+                                    {/* Category Header */}
+                                    <div className="flex items-center gap-1.5">
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setExpandedCategories((prev) => ({
+                                            ...prev,
+                                            [category]: !prev[category],
+                                          }))
+                                        }
+                                        className="flex items-center justify-center w-3 h-3"
+                                      >
+                                        {isExpanded ? (
+                                          <IconChevronDown
+                                            size={12}
+                                            className="text-[var(--color-text-default)]"
+                                          />
+                                        ) : (
+                                          <IconChevronRight
+                                            size={12}
+                                            className="text-[var(--color-text-default)]"
+                                          />
+                                        )}
+                                      </button>
+                                      <Checkbox
+                                        checked={allCategorySelected}
+                                        onChange={() =>
+                                          toggleCategoryActions(permission.id, category)
+                                        }
+                                      />
+                                      <span className="text-label-md text-[var(--color-text-default)] capitalize">
+                                        {category} ({selectedCount}/{categoryActions.length})
+                                      </span>
+                                    </div>
+
+                                    {/* Expanded Actions Grid */}
+                                    {isExpanded && (
+                                      <div className="grid grid-cols-3 gap-2 w-full">
+                                        {filteredActions.map((actionName) => {
+                                          const isSelected = permission.detailedActions[actionName];
+                                          return (
+                                            <label
+                                              key={actionName}
+                                              className={`bg-[var(--color-surface-default)] border rounded-[var(--radius-md)] p-2 flex items-center gap-1.5 cursor-pointer min-w-[80px] ${
+                                                isSelected
+                                                  ? 'border-[var(--color-action-primary)]'
+                                                  : 'border-[var(--color-border-strong)]'
+                                              }`}
+                                            >
+                                              <Checkbox
+                                                checked={isSelected}
+                                                onChange={() =>
+                                                  toggleDetailedAction(permission.id, actionName)
+                                                }
+                                              />
+                                              <span
+                                                className="text-label-md text-[var(--color-text-default)] truncate min-w-0"
+                                                title={actionName}
+                                              >
+                                                {actionName}
+                                              </span>
+                                            </label>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              }
+                            )}
+                          </VStack>
+                        </>
+                      ) : (
+                        <InlineMessage variant="info">
+                          Fill in the Target fields to view available actions.
+                        </InlineMessage>
+                      )}
                     </div>
-                  )}
-
-                  {/* Action Error Message */}
-                  {actionErrors[permission.id] && (
-                    <span className="text-body-sm text-[var(--color-state-danger)]">
-                      Please select at least one action.
-                    </span>
-                  )}
+                  </VStack>
                 </div>
-              </VStack>
-            </div>
-          ))}
+              ))}
 
-          {/* Add Permission Button */}
-          <div className="w-fit">
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} />}
-              onClick={addPermission}
-            >
-              Add Permission
-            </Button>
-          </div>
-
-          {/* Conditions */}
-          <div className="flex flex-col gap-3 w-full">
-            <div className="flex flex-col gap-2">
-              <button
-                type="button"
-                className="flex items-center gap-1.5 text-left"
-                onClick={() => setConditionsExpanded(!conditionsExpanded)}
-              >
-                {conditionsExpanded ? (
-                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                ) : (
-                  <IconChevronRight size={16} className="text-[var(--color-text-default)]" />
-                )}
-                <span className="text-label-lg text-[var(--color-text-default)]">Conditions</span>
-              </button>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select additional conditions required for this policy. All enabled conditions are
-                evaluated using AND logic.
-              </span>
-            </div>
-
-            {(isV2 || conditionsExpanded) && (
-              <label className="flex items-start gap-1.5 cursor-pointer">
-                <Checkbox
-                  checked={permissions[0]?.mfaRequired || false}
-                  onChange={() => {
-                    // Apply MFA requirement to all permissions
-                    permissions.forEach((p) => {
-                      updatePermission(p.id, { mfaRequired: !permissions[0]?.mfaRequired });
-                    });
-                  }}
-                />
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  Only applies if the user has completed MFA.
-                </span>
-              </label>
-            )}
+              {/* Add Permission Button */}
+              <div className="w-fit">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={addPermission}
+                >
+                  Add Permission
+                </Button>
+              </div>
+            </VStack>
           </div>
 
           {/* Error Message */}
@@ -1352,11 +1313,47 @@ export default function CreatePolicyPage() {
                 title={SECTION_LABELS['policy-document']}
                 onEdit={() => handleEdit('policy-document')}
               >
-                <SectionCard.DataRow
-                  label="Permissions"
-                  value={getPermissionsDisplay()}
-                  showDivider={false}
-                />
+                <VStack gap={3}>
+                  {permissions.map((permission, idx) => {
+                    const target = [
+                      permission.application || '*',
+                      permission.partition || '*',
+                      permission.resource || '*',
+                      permission.resourceId || '*',
+                    ].join(':');
+                    const selectedCategories = (
+                      ['read', 'list', 'write', 'delete', 'admin'] as const
+                    ).filter((cat) => {
+                      const actions = COMPUTE_ACTIONS[cat];
+                      return actions.some((a) => permission.detailedActions[a]);
+                    });
+
+                    return (
+                      <VStack key={permission.id} gap={1.5}>
+                        <span className="text-label-sm text-[var(--color-text-subtle)]">
+                          Statement {idx + 1}
+                        </span>
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-body-md text-[var(--color-text-default)]">
+                            {target}
+                          </span>
+                          {selectedCategories.length > 0 && (
+                            <>
+                              <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                              <div className="flex gap-1.5">
+                                {selectedCategories.map((cat) => (
+                                  <Badge key={cat} theme="white" size="sm">
+                                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </VStack>
+                    );
+                  })}
+                </VStack>
               </DoneSection>
             )}
           </VStack>
