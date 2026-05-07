@@ -11,6 +11,7 @@ export * from './components/Icons';
 
 // Components
 export * from './components/Button';
+export * from './components/ChainedSelect';
 export * from './components/CopyButton';
 export * from './components/Input';
 export * from './components/Password';
