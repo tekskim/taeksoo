@@ -13,10 +13,9 @@ import {
   PageHeader,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AITopBarActions } from '@/components/AITopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
-  IconSearch,
   IconStar,
   IconDownload,
   IconClock,
@@ -267,16 +266,7 @@ export function ExplorePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'Explore' }]} />}
-          actions={
-            <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<AITopBarActions />}
         />
       }
       contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
