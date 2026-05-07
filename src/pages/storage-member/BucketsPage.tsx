@@ -377,26 +377,23 @@ export function BucketsPage() {
                 icon={<IconDownload size={12} stroke={1.5} />}
                 aria-label="Download"
               />
-            </ListToolbar.Actions>
-          }
-          bulkActions={
-            <ListToolbar.Actions>
               <Button
-                variant="muted"
+                variant="secondary"
                 size="sm"
-                leftIcon={<IconRefresh size={12} stroke={1.5} />}
-                disabled={!hasSelection}
-              >
-                Refresh
-              </Button>
-              <Button
-                variant="muted"
-                size="sm"
-                leftIcon={<IconTrash size={12} stroke={1.5} />}
-                disabled={!hasSelection}
-              >
-                Delete
-              </Button>
+                icon={<IconRefresh size={12} stroke={1.5} />}
+                aria-label="Refresh"
+              />
+              <div className="flex items-center gap-2 ml-1">
+                <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} stroke={1.5} />}
+                  disabled={!hasSelection}
+                >
+                  Delete
+                </Button>
+              </div>
             </ListToolbar.Actions>
           }
         />
