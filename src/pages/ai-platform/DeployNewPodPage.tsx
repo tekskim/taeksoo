@@ -59,7 +59,7 @@ export function DeployNewPodPage() {
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={4} className="w-full max-w-[1680px]">
+      <VStack gap={4} className="w-full">
         <h1 className="text-heading-h4 text-[var(--color-text-default)]">Deploy new pod</h1>
         <WorkloadPodForm
           mode="deploy"

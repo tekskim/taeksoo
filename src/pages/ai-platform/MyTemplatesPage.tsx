@@ -13,7 +13,6 @@ import {
   Pagination,
   Badge,
   EmptyState,
-  Tooltip,
   ConfirmModal,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
@@ -141,9 +140,7 @@ function SpecCell({ label, value }: { label: string; value: string }) {
 }
 
 function MetadataDivider() {
-  return (
-    <span className="w-1 h-1 shrink-0 rounded-full bg-[var(--color-state-warning)]" aria-hidden />
-  );
+  return <span className="w-px h-[10px] shrink-0 bg-[var(--color-border-strong)]" aria-hidden />;
 }
 
 function TemplateCard({
@@ -213,15 +210,16 @@ function TemplateCard({
       </HStack>
 
       <HStack gap={1} justify="end" className="mt-auto flex-wrap">
-        <Tooltip content={template.description} position="top">
-          <Button
-            variant="secondary"
-            size="sm"
-            icon={<IconInfoCircle size={12} />}
-            aria-label={`Details for ${template.name}`}
-            onClick={(e: React.MouseEvent) => e.stopPropagation()}
-          />
-        </Tooltip>
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={<IconInfoCircle size={12} />}
+          aria-label={`Details for ${template.name}`}
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            onNavigateDetail(template.id);
+          }}
+        />
         <Button
           variant="secondary"
           size="sm"
@@ -364,16 +362,15 @@ export function MyTemplatesPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName="pt-3 px-8 pb-20"
     >
-      <VStack gap={3}>
+      <VStack gap={3} className="pb-20">
         <PageHeader
           title="My templates"
           actions={
             <Button
               variant="primary"
               size="md"
-              leftIcon={<IconPlus size={12} />}
               onClick={() => navigate('/ai-platform/my-templates/create')}
             >
               Create template
@@ -383,7 +380,7 @@ export function MyTemplatesPage() {
 
         <SearchInput
           size="sm"
-          placeholder="Search templates by name"
+          placeholder="Find templates with filters"
           value={searchQuery}
           onChange={handleSearchChange}
           onClear={handleSearchClear}

@@ -295,7 +295,7 @@ export function MyTemplateForm({
 
   return (
     <HStack align="start" gap={6} className="w-full items-start">
-      <div className="w-full max-w-[1320px] min-w-0 flex flex-col gap-4">
+      <div className="w-full min-w-0 flex flex-col gap-4">
         <SectionCard>
           <SectionCard.Header title="Basic information" />
           <SectionCard.Content>
@@ -628,23 +628,49 @@ export function MyTemplateForm({
                 label="Environment variables"
                 description="Configure key-value environment variables required for application runtime, such as API keys and service endpoints."
               >
-                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 items-center">
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">Key</span>
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
-                    <div />
-                    {values.envVars.map((row) => (
-                      <EnvVarGridRow
-                        key={row.id}
-                        row={row}
-                        onKeyChange={(v) => updateEnvRow(row.id, 'key', v)}
-                        onValueChange={(v) => updateEnvRow(row.id, 'value', v)}
-                        onRemove={() => removeEnvRow(row.id)}
-                        canRemove={values.envVars.length > 1}
-                      />
-                    ))}
-                  </div>
-                </div>
+                <VStack gap={2} className="w-full">
+                  {values.envVars.map((row) => (
+                    <div
+                      key={row.id}
+                      className="flex items-center gap-6 rounded-[6px] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-2 w-full"
+                    >
+                      <HStack gap={3} align="center" className="flex-1 min-w-0">
+                        <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
+                          Key
+                        </span>
+                        <Input
+                          value={row.key}
+                          onChange={(e) => updateEnvRow(row.id, 'key', e.target.value)}
+                          placeholder="e.g. team"
+                          fullWidth
+                        />
+                      </HStack>
+                      <HStack gap={3} align="center" className="flex-1 min-w-0">
+                        <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
+                          Value
+                        </span>
+                        <Input
+                          value={row.value}
+                          onChange={(e) => updateEnvRow(row.id, 'value', e.target.value)}
+                          placeholder="e.g. team"
+                          fullWidth
+                        />
+                      </HStack>
+                      {values.envVars.length > 1 ? (
+                        <button
+                          type="button"
+                          onClick={() => removeEnvRow(row.id)}
+                          className="shrink-0 flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
+                          aria-label="Remove variable"
+                        >
+                          <IconX size={16} />
+                        </button>
+                      ) : (
+                        <div className="w-4 shrink-0" />
+                      )}
+                    </div>
+                  ))}
+                </VStack>
                 <Button
                   variant="secondary"
                   size="sm"
@@ -672,39 +698,6 @@ export function MyTemplateForm({
         width="312px"
       />
     </HStack>
-  );
-}
-
-function EnvVarGridRow({
-  row,
-  onKeyChange,
-  onValueChange,
-  onRemove,
-  canRemove,
-}: {
-  row: { id: string; key: string; value: string };
-  onKeyChange: (v: string) => void;
-  onValueChange: (v: string) => void;
-  onRemove: () => void;
-  canRemove: boolean;
-}) {
-  return (
-    <>
-      <Input value={row.key} onChange={(e) => onKeyChange(e.target.value)} fullWidth />
-      <Input value={row.value} onChange={(e) => onValueChange(e.target.value)} fullWidth />
-      {canRemove ? (
-        <button
-          type="button"
-          onClick={onRemove}
-          className="flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-default)]"
-          aria-label="Remove variable"
-        >
-          <IconX size={14} />
-        </button>
-      ) : (
-        <div />
-      )}
-    </>
   );
 }
 

@@ -1,7 +1,18 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from '../../utils/cn';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
+
+/* ----------------------------------------
+   Constants
+   ---------------------------------------- */
+
+const OPEN_MS = 300;
+const CLOSE_MS = 240;
+const EASE_OPEN = 'cubic-bezier(0.32, 0.72, 0, 1)';
+const EASE_CLOSE = 'cubic-bezier(0.4, 0, 0.2, 1)';
+
+let openDrawerCount = 0;
 
 /* ----------------------------------------
    Types
@@ -14,6 +25,8 @@ export interface DrawerProps {
   onClose: () => void;
   /** Drawer title */
   title?: string;
+  /** Actions rendered beside the title (right-aligned) */
+  titleActions?: React.ReactNode;
   /** Description text below the title */
   description?: string;
   /** Side from which the drawer appears */
@@ -42,6 +55,7 @@ export function Drawer({
   isOpen,
   onClose,
   title,
+  titleActions,
   description,
   side = 'right',
   width = 320,
@@ -54,29 +68,34 @@ export function Drawer({
 }: DrawerProps) {
   const [shouldRender, setShouldRender] = useState(isOpen);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isFirstDrawer, setIsFirstDrawer] = useState(false);
   const focusTrapRef = useFocusTrap<HTMLElement>(isOpen);
+  const unmountTimer = useRef<ReturnType<typeof setTimeout>>();
 
-  // Handle mount/unmount with animation
   useEffect(() => {
     if (isOpen) {
+      clearTimeout(unmountTimer.current);
+      const first = openDrawerCount === 0;
+      openDrawerCount++;
+      setIsFirstDrawer(first);
       setShouldRender(true);
-      // Small delay to ensure DOM is ready for animation
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setIsAnimating(true);
         });
       });
+      return () => {
+        openDrawerCount = Math.max(0, openDrawerCount - 1);
+      };
     } else {
       setIsAnimating(false);
-      // Wait for animation to complete before unmounting
-      const timer = setTimeout(() => {
+      unmountTimer.current = setTimeout(() => {
         setShouldRender(false);
-      }, 300); // Match transition duration
-      return () => clearTimeout(timer);
+      }, CLOSE_MS);
     }
+    return () => clearTimeout(unmountTimer.current);
   }, [isOpen]);
 
-  // Handle escape key
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (closeOnEscape && e.key === 'Escape') {
@@ -86,7 +105,6 @@ export function Drawer({
     [closeOnEscape, onClose]
   );
 
-  // Add/remove event listeners
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
@@ -103,39 +121,52 @@ export function Drawer({
 
   const widthValue = typeof width === 'number' ? `${width}px` : width;
 
-  const backdropClasses = twMerge(
-    'fixed inset-0 z-[var(--z-modal)]',
-    'bg-black/60',
-    'transition-opacity duration-300 ease-out',
-    isAnimating ? 'opacity-100' : 'opacity-0'
-  );
+  const durationMs = isAnimating ? OPEN_MS : CLOSE_MS;
+  const easing = isAnimating ? EASE_OPEN : EASE_CLOSE;
 
-  const drawerClasses = twMerge(
-    'fixed top-0 bottom-0 z-[var(--z-modal)]',
-    'bg-[var(--color-surface-default)]',
-    'flex flex-col',
-    'shadow-2xl',
-    'transition-transform duration-300 ease-out',
-    side === 'right' ? 'right-0' : 'left-0',
-    isAnimating ? 'translate-x-0' : side === 'right' ? 'translate-x-full' : '-translate-x-full',
-    className
-  );
+  const transitionStyle: React.CSSProperties = {
+    transitionDuration: `${durationMs}ms`,
+    transitionTimingFunction: easing,
+  };
 
   return createPortal(
     <>
-      {/* Backdrop */}
-      <div
-        className={backdropClasses}
-        onClick={closeOnBackdropClick ? onClose : undefined}
-        aria-hidden="true"
-      />
+      {/* Backdrop — only the first open drawer renders the dim overlay */}
+      {isFirstDrawer ? (
+        <div
+          className={twMerge(
+            'fixed inset-0 z-[var(--z-modal)]',
+            'bg-black/40',
+            'transition-opacity',
+            isAnimating ? 'opacity-100' : 'opacity-0'
+          )}
+          style={transitionStyle}
+          onClick={closeOnBackdropClick ? onClose : undefined}
+          aria-hidden="true"
+        />
+      ) : closeOnBackdropClick ? (
+        <div className="fixed inset-0 z-[var(--z-modal)]" onClick={onClose} aria-hidden="true" />
+      ) : null}
 
       {/* Drawer Panel */}
       <aside
         data-figma-name="[TDS] Overlay.Drawer"
         ref={focusTrapRef}
-        className={drawerClasses}
-        style={{ width: widthValue }}
+        className={twMerge(
+          'fixed top-0 bottom-0 z-[var(--z-modal)]',
+          'bg-[var(--color-surface-default)]',
+          'flex flex-col',
+          'shadow-2xl',
+          'transition-transform will-change-transform',
+          side === 'right' ? 'right-0' : 'left-0',
+          isAnimating
+            ? 'translate-x-0'
+            : side === 'right'
+              ? 'translate-x-full'
+              : '-translate-x-full',
+          className
+        )}
+        style={{ width: widthValue, ...transitionStyle }}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? 'drawer-title' : undefined}
@@ -144,9 +175,12 @@ export function Drawer({
         <div className="flex-1 px-6 pt-4 pb-8 drawer-scroll">
           {title && (
             <>
-              <h2 id="drawer-title" className="text-heading-h5 text-[var(--color-text-default)]">
-                {title}
-              </h2>
+              <div className="flex items-center justify-between">
+                <h2 id="drawer-title" className="text-heading-h5 text-[var(--color-text-default)]">
+                  {title}
+                </h2>
+                {titleActions}
+              </div>
               {description && (
                 <p className="text-body-md text-[var(--color-text-subtle)] mt-1 mb-4">
                   {description}

@@ -488,7 +488,7 @@ export function WorkloadPodForm({
 
   return (
     <HStack align="start" gap={6} className="w-full items-start">
-      <div className="w-full max-w-[1320px] min-w-0 flex flex-col gap-4">
+      <div className="w-full min-w-0 flex flex-col gap-4">
         <SectionCard>
           <SectionCard.Header title="Basic information" />
           <SectionCard.Content>

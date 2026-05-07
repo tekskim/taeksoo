@@ -286,8 +286,8 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
             <MenuItem
               icon={<IconDatabase size={16} stroke={1.5} />}
               label="Volumes"
-              href="/ai-platform/storage"
-              active={isActive('/ai-platform/storage')}
+              href="/ai-platform/volumes"
+              active={isActive('/ai-platform/volumes')}
             />
             <MenuItem
               icon={<IconBolt size={16} stroke={1.5} />}
@@ -587,9 +587,9 @@ const routeConfigs: Record<string, RouteConfig> = {
     breadcrumbs: [{ label: 'Infrastructure' }, { label: 'My Templates' }],
     section: 'Infrastructure',
   },
-  '/ai-platform/storage': {
-    title: 'Storage',
-    breadcrumbs: [{ label: 'Infrastructure' }, { label: 'Storage' }],
+  '/ai-platform/volumes': {
+    title: 'Volumes',
+    breadcrumbs: [{ label: 'Infrastructure' }, { label: 'Volumes' }],
     section: 'Infrastructure',
   },
   '/ai-platform/serverless': {
@@ -983,7 +983,7 @@ function DashboardContent() {
             icon={<IconBox size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />}
             title="Volumes"
             valueDisplay="8"
-            href="/ai-platform/storage"
+            href="/ai-platform/volumes"
           />
           <DashboardServiceTile
             icon={<IconBolt size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />}

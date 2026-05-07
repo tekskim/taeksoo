@@ -94,9 +94,9 @@ export function EditTemplatePage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName="pt-3 px-8 pb-20"
     >
-      <VStack gap={4} className="w-full max-w-[1680px]">
+      <VStack gap={4} className="w-full pb-20">
         <h1 className="text-heading-h5 text-[var(--color-text-default)]">Edit template</h1>
         <MyTemplateForm
           mode="edit"

@@ -127,9 +127,9 @@ export function MyTemplateDetailPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName="pt-3 px-8 pb-20"
     >
-      <VStack gap={6}>
+      <VStack gap={6} className="pb-20">
         <DetailHeader>
           <DetailHeader.Title className="mb-1">{detail.name}</DetailHeader.Title>
           <p className="text-body-md text-[var(--color-text-subtle)] mb-3">{detail.description}</p>
