@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -30,8 +29,9 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { RegisterCertificateDrawer } from '@/components/RegisterCertificateDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -65,8 +65,8 @@ const mockCertificates: Certificate[] = [
     listener: 'listener-1',
     listenerId: '294u92s2',
     listenerCount: 10,
-    expiresAt: 'Oct 5, 2025',
-    createdAt: 'Oct 3, 2025 00:46:02',
+    expiresAt: 'Oct 5, 2026',
+    createdAt: 'Oct 3, 2026 00:46:02',
     type: 'server',
     status: 'active',
   },
@@ -78,7 +78,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '38fj29dk',
     listenerCount: 2,
     expiresAt: 'Jan 15, 2026',
-    createdAt: 'Sep 28, 2025 07:11:07',
+    createdAt: 'Sep 28, 2026 07:11:07',
     type: 'server',
     status: 'active',
   },
@@ -89,8 +89,8 @@ const mockCertificates: Certificate[] = [
     listener: 'listener-web',
     listenerId: '9dk38fj2',
     listenerCount: 0,
-    expiresAt: 'Dec 1, 2025',
-    createdAt: 'Sep 20, 2025 23:27:51',
+    expiresAt: 'Dec 1, 2026',
+    createdAt: 'Sep 20, 2026 23:27:51',
     type: 'server',
     status: 'active',
   },
@@ -101,8 +101,8 @@ const mockCertificates: Certificate[] = [
     listener: 'listener-staging',
     listenerId: 'k29dk38f',
     listenerCount: 0,
-    expiresAt: 'Nov 15, 2025',
-    createdAt: 'Sep 15, 2025 12:22:26',
+    expiresAt: 'Nov 15, 2026',
+    createdAt: 'Sep 15, 2026 12:22:26',
     type: 'server',
     status: 'pending',
   },
@@ -114,7 +114,7 @@ const mockCertificates: Certificate[] = [
     listenerId: 'fj29dk38',
     listenerCount: 5,
     expiresAt: 'Mar 20, 2026',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     type: 'server',
     status: 'active',
   },
@@ -126,7 +126,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '',
     listenerCount: 0,
     expiresAt: 'Jan 1, 2030',
-    createdAt: 'Jan 1, 2025 10:20:28',
+    createdAt: 'Jan 1, 2026 10:20:28',
     type: 'ca',
     status: 'active',
   },
@@ -138,7 +138,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '',
     listenerCount: 0,
     expiresAt: 'Jun 15, 2028',
-    createdAt: 'Jun 15, 2025 12:22:26',
+    createdAt: 'Jun 15, 2026 12:22:26',
     type: 'ca',
     status: 'active',
   },
@@ -149,8 +149,8 @@ const mockCertificates: Certificate[] = [
     listener: '-',
     listenerId: '',
     listenerCount: 0,
-    expiresAt: 'Aug 1, 2025',
-    createdAt: 'Aug 1, 2024 10:20:28',
+    expiresAt: 'Aug 1, 2026',
+    createdAt: 'Aug 1, 2026 10:20:28',
     type: 'server',
     status: 'error',
   },
@@ -162,7 +162,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '',
     listenerCount: 0,
     expiresAt: 'Dec 31, 2027',
-    createdAt: 'Jan 15, 2025 12:22:26',
+    createdAt: 'Jan 15, 2026 12:22:26',
     type: 'ca',
     status: 'active',
   },
@@ -174,7 +174,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '29dk38fj',
     listenerCount: 0,
     expiresAt: 'Jun 1, 2026',
-    createdAt: 'Jun 1, 2025 10:20:28',
+    createdAt: 'Jun 1, 2026 10:20:28',
     type: 'server',
     status: 'active',
   },
@@ -211,19 +211,20 @@ const filterFields: FilterField[] = [
 ];
 
 export function CertificatesPage() {
+  const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [certificates] = useState(mockCertificates);
+  const [certificates, setCertificates] = useState(mockCertificates);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'server';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [certToDelete, setCertToDelete] = useState<Certificate | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Register certificate drawer state
   const [isRegisterDrawerOpen, setIsRegisterDrawerOpen] = useState(false);
@@ -247,8 +248,24 @@ export function CertificatesPage() {
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Certificates');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -325,7 +342,12 @@ export function CertificatesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -349,8 +371,11 @@ export function CertificatesPage() {
                 </span>
               )}
             </div>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.listenerId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.listenerId}>
+                ID : {row.listenerId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.listenerId} />
             </span>
           </div>
         ),
@@ -379,10 +404,14 @@ export function CertificatesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -407,8 +436,18 @@ export function CertificatesPage() {
   }, [columns, columnConfig]);
 
   const handleDeleteConfirm = () => {
+    if (certToDelete) {
+      setCertificates((prev) => prev.filter((c) => c.id !== certToDelete.id));
+      setSelectedCerts((prev) => prev.filter((id) => id !== certToDelete.id));
+    }
     setDeleteModalOpen(false);
     setCertToDelete(null);
+  };
+
+  const handleBulkDelete = () => {
+    setCertificates((prev) => prev.filter((c) => !selectedCerts.includes(c.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedCerts([]);
   };
 
   return (
@@ -432,22 +471,12 @@ export function CertificatesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Certificates' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Certificates' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -493,6 +522,7 @@ export function CertificatesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedCerts.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -512,9 +542,11 @@ export function CertificatesPage() {
           columns={visibleColumns}
           data={paginatedCerts}
           rowKey="id"
+          emptyMessage="No certificates found"
           selectable
           selectedKeys={selectedCerts}
           onSelectionChange={setSelectedCerts}
+          loading={loading}
         />
       </VStack>
 
@@ -526,7 +558,7 @@ export function CertificatesPage() {
           setCertToDelete(null);
         }}
         title="Delete certificate"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected certificates is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
@@ -546,6 +578,36 @@ export function CertificatesPage() {
       <RegisterCertificateDrawer
         isOpen={isRegisterDrawerOpen}
         onClose={() => setIsRegisterDrawerOpen(false)}
+        onSubmit={async (
+          type,
+          name,
+          description,
+          certificateBody,
+          privateKey,
+          intermediateCert
+        ) => {
+          console.log('Certificate registered:', {
+            type,
+            name,
+            description,
+            certificateBody,
+            privateKey,
+            intermediateCert,
+          });
+        }}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected certificates"
+        description="Removing the selected certificates is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedCerts.length} certificate(s)`}
       />
     </PageShell>
   );

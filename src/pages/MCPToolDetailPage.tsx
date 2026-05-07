@@ -35,7 +35,6 @@ import {
   IconRefresh,
   IconCode,
   IconDownload,
-  IconBell,
   IconPalette,
 } from '@tabler/icons-react';
 
@@ -81,15 +80,18 @@ function MCPToolHeader({
   onDelete,
 }: MCPToolHeaderProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4 w-full">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 pt-3 pb-4 w-full">
       <div className="flex flex-col gap-4">
         {/* Title Row */}
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">{name}</h1>
             <button
+              type="button"
               onClick={onFavoriteToggle}
               className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              aria-pressed={isFavorite}
             >
               {isFavorite ? (
                 <IconStarFilled size={22} className="text-[var(--primitive-color-yellow400)]" />
@@ -118,7 +120,7 @@ function MCPToolHeader({
             variant="secondary"
             size="sm"
             leftIcon={
-              status === 'active' ? <IconPlayerPause size={16} /> : <IconPlayerPlay size={16} />
+              status === 'active' ? <IconPlayerPause size={12} /> : <IconPlayerPlay size={12} />
             }
             onClick={onDeactivate}
           >
@@ -203,7 +205,7 @@ function DetailsTabContent() {
       <SectionCard>
         <SectionCard.Header title="MCP server information" />
         <SectionCard.Content>
-          <SectionCard.DataRow label="Server name" value="Slack" isLink />
+          <SectionCard.DataRow label="Server name" value="Slack" />
           <SectionCard.DataRow label="Server URL" value="https://api.slack.com/mcp" />
           <SectionCard.DataRow label="Version" value="1.2.0" />
           <SectionCard.DataRow label="Protocol" value="MCP v1" />
@@ -232,16 +234,21 @@ function ExecutionLogsTabContent() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowsPerPage = 10;
 
-  // Mock data
-  const executionLogs: ExecutionLogRow[] = Array.from({ length: 50 }, (_, i) => ({
-    id: `log-${i + 1}`,
-    timestamp: `Jan ${30 - (i % 30)}, 2026, ${9 + (i % 12)}:${String(i % 60).padStart(2, '0')} ${i % 2 === 0 ? 'AM' : 'PM'}`,
-    status: i % 5 === 0 ? 'failed' : i % 7 === 0 ? 'running' : 'success',
-    duration: `${(Math.random() * 5).toFixed(2)}s`,
-    input: `{"channel": "general", "message": "Hello ${i + 1}"}`,
-    output: i % 5 === 0 ? 'Error: Rate limit exceeded' : `{"ok": true, "ts": "1706..."}`,
-    agent: i % 3 === 0 ? 'Customer Support Agent' : i % 2 === 0 ? 'Sales Agent' : 'Marketing Agent',
-  }));
+  // Mock data (stable durations — no Math.random() to avoid table flicker on re-render)
+  const executionLogs: ExecutionLogRow[] = useMemo(
+    () =>
+      Array.from({ length: 50 }, (_, i) => ({
+        id: `log-${i + 1}`,
+        timestamp: `Jan ${30 - (i % 30)}, 2026, ${9 + (i % 12)}:${String(i % 60).padStart(2, '0')} ${i % 2 === 0 ? 'AM' : 'PM'}`,
+        status: i % 5 === 0 ? 'failed' : i % 7 === 0 ? 'running' : 'success',
+        duration: `${(((i * 7 + 3) % 50) / 10).toFixed(2)}s`,
+        input: `{"channel": "general", "message": "Hello ${i + 1}"}`,
+        output: i % 5 === 0 ? 'Error: Rate limit exceeded' : `{"ok": true, "ts": "1706..."}`,
+        agent:
+          i % 3 === 0 ? 'Customer Support Agent' : i % 2 === 0 ? 'Sales Agent' : 'Marketing Agent',
+      })),
+    []
+  );
 
   const filteredLogs = useMemo(() => {
     if (!searchQuery) return executionLogs;
@@ -290,7 +297,7 @@ function ExecutionLogsTabContent() {
       render: (value: string) => (
         <div className="min-w-0">
           <span
-            className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
+            className="text-[var(--color-text-default)] font-medium truncate block"
             title={value}
           >
             {value}
@@ -505,7 +512,7 @@ export function MCPToolDetailPage() {
     mcpServer: 'Slack',
     category: 'Communication',
     executions: 1234,
-    createdAt: 'Nov 11, 2025, 2:51 PM',
+    createdAt: 'Nov 11, 2026, 2:51 PM',
   };
 
   return (
@@ -532,8 +539,8 @@ export function MCPToolDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'MCP Tools', href: '/mcp-tools' }, { label: toolData.name }]}
@@ -545,11 +552,6 @@ export function MCPToolDetailPage() {
                 icon={<IconPalette size={16} stroke={1} />}
                 onClick={() => navigate('/design-system')}
                 aria-label="Design System"
-              />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
-                aria-label="Notifications"
-                badge={true}
               />
             </>
           }

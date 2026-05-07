@@ -9,7 +9,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   SectionCard,
   WizardSummary,
@@ -29,7 +28,8 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconBell, IconEdit, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconEdit, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -89,11 +89,11 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         {/* Quota Section */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-lg p-4 flex flex-col gap-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
           <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Quota</h5>
 
           {/* Firewall Rules Quota */}
@@ -106,14 +106,14 @@ function SummarySidebar({
             </div>
             <div className="flex h-1 w-full items-start isolate pr-1">
               <div
-                className="bg-[var(--color-state-success)] h-1 rounded-lg shrink-0 -mr-1 z-[3]"
+                className="bg-[var(--color-state-success)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[3]"
                 style={{ width: '20%' }}
               />
               <div
-                className="bg-[#bbf7d0] h-1 rounded-lg shrink-0 -mr-1 z-[2]"
+                className="bg-[var(--color-state-success-bg)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[2]"
                 style={{ width: '10%' }}
               />
-              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-lg -mr-1 z-[1]" />
+              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-[var(--radius-lg)] -mr-1 z-[1]" />
             </div>
           </div>
         </div>
@@ -238,8 +238,11 @@ export default function ComputeAdminCreateFirewallRulePage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -334,20 +337,10 @@ export default function ComputeAdminCreateFirewallRulePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Firewall', href: '/compute-admin/firewall' },
-                { label: 'Create rule' },
+                { label: 'NACL', href: '/compute-admin/firewall' },
+                { label: 'Create Firewall Rule' },
               ]}
             />
-          }
-          actions={
-            <>
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-              />
-            </>
           }
         />
       }
@@ -469,7 +462,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                                   key={page}
                                   className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
                                     page === tenantPage
-                                      ? 'bg-[var(--color-action-primary)] text-white'
+                                      ? 'bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)]'
                                       : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
                                   }`}
                                   onClick={() => setTenantPage(page)}

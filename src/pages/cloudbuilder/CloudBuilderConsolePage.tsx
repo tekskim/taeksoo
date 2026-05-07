@@ -23,19 +23,18 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   type ContextMenuItem,
   type TableColumn,
   fixedColumns,
   StatusIndicator,
   Tooltip,
+  Textarea,
 } from '@/design-system';
 import {
   IconDotsCircleHorizontal,
   IconDownload,
   IconTrash,
-  IconBell,
   IconBinaryTree,
 } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
@@ -49,7 +48,6 @@ import {
   type CloudBuilderSlug,
   type ListColumn,
 } from './consoleListConfig';
-import { Textarea } from '@/design-system';
 
 function isCloudBuilderSlug(v: string | undefined): v is CloudBuilderSlug {
   return !!v && (CLOUD_BUILDER_SLUGS as readonly string[]).includes(v);
@@ -209,10 +207,10 @@ export function CloudBuilderConsolePage() {
   );
 
   // /cloudbuilder 또는 /cloudbuilder/:slug
-  const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'severs0.7';
+  const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'servers';
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
 
-  const breadcrumbItems = [{ label: 'Proj-1', href: '/project' }, { label: config.title }];
+  const breadcrumbItems = [{ label: config.title }];
 
   const hasTabs = !!config.tabs && config.tabs.length > 0;
   const [searchParams, setSearchParams] = useSearchParams();
@@ -480,7 +478,7 @@ export function CloudBuilderConsolePage() {
       <div
         id="tds-PageHeader"
         data-figma-name="[TDS] Title"
-        aria-label="[TDS] Title"
+        aria-label="Page header"
         className="flex items-center justify-between h-8"
       >
         <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
@@ -488,7 +486,7 @@ export function CloudBuilderConsolePage() {
           <Button
             id="tds-CreateButton"
             data-figma-name="[TDS] Button-Create"
-            aria-label="[TDS] Button-Create"
+            aria-label={config.createLabel}
             onClick={handleCreate}
           >
             {config.createLabel}
@@ -500,19 +498,19 @@ export function CloudBuilderConsolePage() {
         <Tabs
           id="tds-Tabs"
           data-figma-name="[TDS] Tabs"
-          aria-label="[TDS] Tabs"
+          aria-label="Content sections"
           value={activeTabId}
           onChange={(v) => setActiveTabId(v)}
           variant="underline"
           size="sm"
         >
-          <TabList data-figma-name="[TDS] Tabs.List" aria-label="[TDS] Tabs.List">
+          <TabList data-figma-name="[TDS] Tabs.List" aria-label="Section tabs">
             {config.tabs.map((t) => (
               <Tab
                 key={t.id}
                 value={t.id}
                 data-figma-name={`[TDS] Tabs.Tab-${t.id}`}
-                aria-label={`[TDS] Tabs.Tab-${t.label}`}
+                aria-label={t.label}
               >
                 {t.label}
               </Tab>
@@ -528,7 +526,7 @@ export function CloudBuilderConsolePage() {
             <div
               className="w-[var(--search-input-width)]"
               data-figma-name="[TDS] FilterSearchInput"
-              aria-label="[TDS] FilterSearchInput"
+              aria-label="Search and filter resources"
             >
               <SearchInput
                 placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
@@ -573,7 +571,7 @@ export function CloudBuilderConsolePage() {
                 disabled={selected.length === 0}
                 onClick={handleDeleteSelected}
                 data-figma-name="[TDS] Button-Delete"
-                aria-label="[TDS] Button-Delete"
+                aria-label="Delete selected resources"
               >
                 Delete
               </Button>
@@ -585,7 +583,7 @@ export function CloudBuilderConsolePage() {
       <Pagination
         id="tds-Pagination"
         data-figma-name="[TDS] Pagination"
-        aria-label="[TDS] Pagination"
+        aria-label="Pagination"
         currentPage={safePage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
@@ -598,7 +596,7 @@ export function CloudBuilderConsolePage() {
       <Table<Record<string, string> & { id: string }>
         id="tds-Table"
         data-figma-name="[TDS] Table"
-        aria-label="[TDS] Table"
+        aria-label={`${pageTitle} list`}
         columns={columns}
         data={paged}
         rowKey="id"
@@ -712,7 +710,7 @@ export function CloudBuilderConsolePage() {
         infoLabel="Server"
         infoValue={rowToRemove?.id}
         data-figma-name="[TDS] ActionModal"
-        aria-label="[TDS] ActionModal"
+        aria-label="Delete confirmation"
       />
 
       <Modal
@@ -729,7 +727,7 @@ export function CloudBuilderConsolePage() {
             : `Change this ${config.title.replace(/s$/, '').toLowerCase()} status to Enabled?`
         }
         data-figma-name="[TDS] ResourceActionModal"
-        aria-label="[TDS] ResourceActionModal"
+        aria-label="Change resource status"
       >
         {statusModal ? (
           <>
@@ -791,16 +789,9 @@ export function CloudBuilderConsolePage() {
       showSidebarToggle={!sidebarOpen}
       onSidebarToggle={openSidebar}
       showNavigation={true}
-      onBack={() => window.history.back()}
-      onForward={() => window.history.forward()}
+      onBack={() => navigate(-1)}
+      onForward={() => navigate(1)}
       breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-      actions={
-        <TopBarAction
-          icon={<IconBell size={16} stroke={1.5} />}
-          aria-label="Notifications"
-          badge={true}
-        />
-      }
     />
   );
 

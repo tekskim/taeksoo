@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/mona-sans';
+import 'overlayscrollbars/overlayscrollbars.css';
 import './index.css';
 import '@thaki/shared/styles/tokens-only.css';
 import '@thaki/shared/styles/shared-utilities.css';

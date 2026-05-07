@@ -7,7 +7,7 @@ import { Slider, RangeSlider, NumberInput, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -18,7 +18,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -27,7 +27,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -71,7 +73,7 @@ function SliderWithNumberInputDemo() {
           단일 값 선택 + 정밀 입력. 넓은 범위에서 사용.
         </span>
       </VStack>
-      <div className="flex items-center gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+      <div className="flex items-center gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
         <Slider value={value} onChange={setValue} min={0} max={100} step={1} />
         <NumberInput value={value} onChange={setValue} min={0} max={100} step={1} width="xs" />
       </div>
@@ -90,7 +92,7 @@ function SliderWithCustomRangeDemo() {
           넓은 범위 + 단위 표시. Slider step은 크게, NumberInput step은 1로 설정.
         </span>
       </VStack>
-      <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+      <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
         <VStack gap={1}>
           <div className="flex items-center gap-3">
             <Slider value={value} onChange={setValue} min={0} max={1000} step={10} />
@@ -123,7 +125,7 @@ function RangeSliderDemo() {
           min-max 범위를 사용자가 직접 정의. 두 핸들 간 min &lt; max 관계 유지.
         </span>
       </VStack>
-      <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+      <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
         <VStack gap={2}>
           <div className="flex items-center gap-3">
             <NumberInput
@@ -202,8 +204,6 @@ function SliderGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Composition */}
       <VStack gap={4}>
@@ -309,8 +309,6 @@ function SliderGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* States */}
       <VStack gap={4}>
         <SectionTitle>States</SectionTitle>
@@ -367,8 +365,6 @@ function SliderGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={4}>
@@ -446,8 +442,6 @@ function SliderGuidelines() {
         </VStack>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Usage Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
@@ -510,7 +504,7 @@ export function SliderPage() {
             </VStack>
             <VStack
               gap={4}
-              className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]"
+              className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]"
             >
               <VStack gap={1}>
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Default</span>
@@ -528,7 +522,7 @@ export function SliderPage() {
       }
       guidelines={<SliderGuidelines />}
       tokens={
-        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           track: 6px height · thumb: 16px, 3px border · fill: primary · --slider-track-width: 220px
         </div>
       }

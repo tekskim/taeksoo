@@ -15,7 +15,7 @@ const themeAliasMap: Record<BadgeThemeAlias, BadgeTheme> = {
   gre: 'green',
   ylw: 'yellow',
 };
-export type BadgeType = 'solid' | 'subtle';
+export type BadgeType = 'subtle';
 export type BadgeSize = 'sm' | 'md';
 // thaki-ui compatibility
 export type BadgeLayout = 'text-only' | 'left-icon' | 'right-icon';
@@ -59,27 +59,15 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
    Badge Styles (using design tokens)
    ---------------------------------------- */
 
-const themeStyles = {
-  // Solid variants (colored bg + light text)
-  solid: {
-    blue: 'bg-[var(--color-state-info)] text-white',
-    red: 'bg-[var(--color-state-danger)] text-white',
-    green: 'bg-[var(--color-state-success)] text-white',
-    yellow: 'bg-[var(--color-state-warning)] text-white',
-    gray: 'bg-[var(--color-text-subtle)] text-white',
-    white:
-      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--badge-white-border)]',
-  },
-  subtle: {
-    blue: 'bg-[var(--badge-subtle-blue-bg)] text-[var(--badge-subtle-blue-text)]',
-    red: 'bg-[var(--badge-subtle-red-bg)] text-[var(--badge-subtle-red-text)]',
-    green: 'bg-[var(--badge-subtle-green-bg)] text-[var(--badge-subtle-green-text)]',
-    yellow: 'bg-[var(--badge-subtle-yellow-bg)] text-[var(--badge-subtle-yellow-text)]',
-    gray: 'bg-[var(--badge-subtle-gray-bg)] text-[var(--badge-subtle-gray-text)]',
-    white:
-      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--badge-white-border)]',
-  },
-} as const;
+const themeStyles: Record<BadgeTheme, string> = {
+  blue: 'bg-[var(--badge-subtle-blue-bg)] text-[var(--badge-subtle-blue-text)]',
+  red: 'bg-[var(--badge-subtle-red-bg)] text-[var(--badge-subtle-red-text)]',
+  green: 'bg-[var(--badge-subtle-green-bg)] text-[var(--badge-subtle-green-text)]',
+  yellow: 'bg-[var(--badge-subtle-yellow-bg)] text-[var(--badge-subtle-yellow-text)]',
+  gray: 'bg-[var(--badge-subtle-gray-bg)] text-[var(--badge-subtle-gray-text)]',
+  white:
+    'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--badge-white-border)]',
+};
 
 const sizes = {
   sm: [
@@ -102,7 +90,7 @@ const sizes = {
 
 export const Badge = memo(function Badge({
   theme,
-  type = 'solid',
+  type: _type,
   size = 'md',
   leftIcon: rawLeftIcon,
   rightIcon: rawRightIcon,
@@ -123,8 +111,6 @@ export const Badge = memo(function Badge({
       ? themeAliasMap[theme as BadgeThemeAlias]
       : (theme as BadgeTheme | undefined);
   const resolvedTheme = normalizedTheme ?? (variant ? variantToTheme[variant] : 'white');
-  // Legacy variants use subtle type by default
-  const resolvedType = variant && !theme ? 'subtle' : type;
 
   const baseStyles = [
     'inline-flex items-center justify-center',
@@ -134,34 +120,14 @@ export const Badge = memo(function Badge({
     'rounded-[var(--badge-radius)]',
   ].join(' ');
 
-  const classes = twMerge(
-    baseStyles,
-    themeStyles[resolvedType][resolvedTheme],
-    sizes[size].join(' '),
-    className
-  );
+  const classes = twMerge(baseStyles, themeStyles[resolvedTheme], sizes[size].join(' '), className);
 
   const dotColors: Record<BadgeTheme, string> = {
-    blue:
-      resolvedType === 'solid'
-        ? 'bg-[var(--color-surface-default)]/50'
-        : 'bg-[var(--color-state-info)]',
-    red:
-      resolvedType === 'solid'
-        ? 'bg-[var(--color-surface-default)]/50'
-        : 'bg-[var(--color-state-danger)]',
-    green:
-      resolvedType === 'solid'
-        ? 'bg-[var(--color-surface-default)]/50'
-        : 'bg-[var(--color-state-success)]',
-    yellow:
-      resolvedType === 'solid'
-        ? 'bg-[var(--color-surface-default)]/50'
-        : 'bg-[var(--color-state-warning)]',
-    gray:
-      resolvedType === 'solid'
-        ? 'bg-[var(--color-surface-default)]/50'
-        : 'bg-[var(--color-text-subtle)]',
+    blue: 'bg-[var(--color-state-info)]',
+    red: 'bg-[var(--color-state-danger)]',
+    green: 'bg-[var(--color-state-success)]',
+    yellow: 'bg-[var(--color-state-warning)]',
+    gray: 'bg-[var(--color-text-subtle)]',
     white: 'bg-[var(--color-text-default)]',
   };
 

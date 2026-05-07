@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   VStack,
@@ -21,19 +21,13 @@ import {
   SearchInput,
   type TableColumn,
   columnMinWidths,
+  EmptyState,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { getContainerStatusTheme } from './containerStatusUtils';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconTerminal2,
-  IconExternalLink,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconBell,
-  IconHelpCircle,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconInfoCircle, IconKey } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Capacity Progress bar Component
@@ -71,20 +65,20 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
     { bg: string; darkBg: string; fill: string; text: string }
   > = {
     success: {
-      bg: 'var(--color-green-100)',
-      darkBg: 'rgba(34, 197, 94, 0.15)', // green-500 with 15% opacity for dark mode
+      bg: 'var(--color-state-success-bg)',
+      darkBg: 'color-mix(in srgb, var(--color-state-success) 15%, transparent)',
       fill: 'var(--color-state-success)',
-      text: 'var(--color-green-600)',
+      text: 'var(--color-state-success-text)',
     },
     warning: {
-      bg: 'var(--color-orange-100)',
-      darkBg: 'rgba(249, 115, 22, 0.15)', // orange-500 with 15% opacity for dark mode
+      bg: 'var(--color-state-warning-bg)',
+      darkBg: 'color-mix(in srgb, var(--color-state-warning) 15%, transparent)',
       fill: 'var(--color-state-warning)',
       text: 'var(--color-orange-600)',
     },
     danger: {
-      bg: 'var(--color-red-100)',
-      darkBg: 'rgba(239, 68, 68, 0.15)', // red-500 with 15% opacity for dark mode
+      bg: 'var(--color-state-danger-bg)',
+      darkBg: 'color-mix(in srgb, var(--color-state-danger) 15%, transparent)',
       fill: 'var(--color-state-danger)',
       text: 'var(--color-red-600)',
     },
@@ -154,12 +148,12 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
         {/* Tooltip - follows cursor */}
         {showTooltip && (
           <div
-            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-sm px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
             style={{ left: mousePos.x + 12, top: mousePos.y - 40 }}
           >
             <div className="flex items-center gap-1.5">
               <div
-                className="w-[5px] h-[5px] rounded-[1px]"
+                className="w-[5px] h-[5px] rounded-[var(--radius-sm)]"
                 style={{ backgroundColor: colors.fill }}
               />
               <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
@@ -167,7 +161,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
+              <div className="w-[5px] h-[5px] rounded-[var(--radius-sm)] bg-[var(--color-border-subtle)]" />
               <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 Total: {total} {unit}
               </span>
@@ -200,7 +194,7 @@ function Card({
 }: CardProps) {
   return (
     <div
-      className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
+      className={`p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
       <div className="flex items-center justify-between mb-4">
         <h6 className="text-heading-h6">{title}</h6>
@@ -231,7 +225,7 @@ const eventsData: EventRow[] = [
     id: '1',
     reason: 'Pulling',
     object: 'Pod object',
-    message: 'Pulling image "nginx:lastest"',
+    message: 'Pulling image "nginx:latest"',
     name: 'testpod.1872cb50f1f3985b',
     firstSeen: '2d8h',
     lastSeen: '5m2s',
@@ -242,7 +236,7 @@ const eventsData: EventRow[] = [
     reason: 'Failed',
     object: 'Pod object',
     message:
-      'Failed to pull image "nginx:lastest": rpc error: code = NotFound desc = failed to pull and unpack image...',
+      'Failed to pull image "nginx:latest": rpc error: code = NotFound desc = failed to pull and unpack image...',
     name: 'testpod.1872cb51519dc95b',
     firstSeen: '2d8h',
     lastSeen: '5m2s',
@@ -252,7 +246,7 @@ const eventsData: EventRow[] = [
     id: '3',
     reason: 'FailedGetScale',
     object: 'HorizontalPodAutoscaler object',
-    message: 'Back-off pulling image "nginx:lastest"',
+    message: 'Back-off pulling image "nginx:latest"',
     name: 'test.1870aa1e813aa422',
     firstSeen: '9d',
     lastSeen: '54s',
@@ -270,15 +264,17 @@ const eventsData: EventRow[] = [
   },
   {
     id: '5',
-    reason: 'Failed',
+    reason: 'Unhealthy',
     object: 'Pod object',
-    message: 'Error: ImagePullBackOff',
-    name: 'testpod.1872cb5180493d50',
-    firstSeen: '2d8h',
-    lastSeen: '4s',
-    count: 14495,
+    message: 'Readiness probe failed: connection refused',
+    name: 'api-server.1872cb5180493d50',
+    firstSeen: '1d2h',
+    lastSeen: '12m',
+    count: 892,
   },
 ];
+
+const EVENTS_PAGE_SIZE = 10;
 
 const eventsColumns: TableColumn<EventRow>[] = [
   { key: 'reason', label: 'Reason', flex: 1, minWidth: columnMinWidths.reason, sortable: true },
@@ -291,7 +287,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
     render: (value: string) => (
       <div className="min-w-0">
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          className="text-body-md text-[var(--color-text-default)] truncate block"
           title={value}
         >
           {value}
@@ -322,7 +318,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
     render: (value: string) => (
       <div className="min-w-0">
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          className="text-body-md text-[var(--color-text-default)] truncate block"
           title={value}
         >
           {value}
@@ -352,6 +348,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
    ---------------------------------------- */
 
 export function ContainerDashboardPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'events';
@@ -361,10 +358,41 @@ export function ContainerDashboardPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
+  const filteredEvents = useMemo(() => {
+    const q = eventSearchQuery.trim().toLowerCase();
+    if (!q) return eventsData;
+    return eventsData.filter((row) => {
+      const haystack = [
+        row.reason,
+        row.object,
+        row.message,
+        row.name,
+        row.firstSeen,
+        row.lastSeen,
+        String(row.count),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [eventSearchQuery]);
+
+  const totalEventPages = Math.max(1, Math.ceil(filteredEvents.length / EVENTS_PAGE_SIZE));
+  const effectiveEventPage = Math.min(currentPage, totalEventPages);
+
+  const paginatedEvents = useMemo(() => {
+    const start = (effectiveEventPage - 1) * EVENTS_PAGE_SIZE;
+    return filteredEvents.slice(start, start + EVENTS_PAGE_SIZE);
+  }, [filteredEvents, effectiveEventPage]);
+
   // Update tab label to "Dashboard" on mount
   useEffect(() => {
     updateActiveTabLabel('Dashboard');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [eventSearchQuery]);
 
   // Calculate sidebar width (40px icon sidebar always visible + 200px menu sidebar when open)
   const sidebarWidth = sidebarOpen ? 248 : 48;
@@ -389,37 +417,8 @@ export function ContainerDashboardPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'default-cluster', href: '/container' }, { label: 'Dashboard' }]}
-            />
-          }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="px-8 py-6"
@@ -453,20 +452,14 @@ export function ContainerDashboardPage() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
-                <span className="text-body-md text-[var(--color-text-default)]">Nov 9, 2025</span>
+                <span className="text-body-md text-[var(--color-text-default)]">Nov 9, 2026</span>
               </div>
               <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
-                  Deployments
-                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                </span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Deployments</span>
                 <span className="text-body-md text-[var(--color-text-default)]">15</span>
               </div>
               <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
-                  Nodes
-                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                </span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Nodes</span>
                 <span className="text-body-md text-[var(--color-text-default)]">1</span>
               </div>
             </div>
@@ -487,7 +480,7 @@ export function ContainerDashboardPage() {
               label="CPU (Reserved)"
               used={3.6}
               total={16.0}
-              unit="GiB"
+              unit="cores"
               percentage={50.2}
             />
             <CapacityProgressBar
@@ -524,10 +517,10 @@ export function ContainerDashboardPage() {
               return (
                 <div
                   key={name}
-                  className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 relative min-w-0"
+                  className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 relative min-w-0"
                 >
                   <div className="absolute top-1/2 right-3 -translate-y-1/2">
-                    <Badge theme="white" size="sm">
+                    <Badge theme={getContainerStatusTheme('Active')} type="subtle" size="sm">
                       Active
                     </Badge>
                   </div>
@@ -535,10 +528,7 @@ export function ContainerDashboardPage() {
                     <span className="text-label-sm leading-4 text-[var(--color-text-subtle)] whitespace-nowrap flex items-center gap-1">
                       {name}
                       <Tooltip content={tooltips[name]} position="top">
-                        <IconHelpCircle
-                          size={12}
-                          className="text-[var(--color-text-subtle)] cursor-help"
-                        />
+                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
                       </Tooltip>
                     </span>
                     <span className="text-body-md leading-4 font-normal truncate text-[var(--color-text-default)]">
@@ -565,31 +555,34 @@ export function ContainerDashboardPage() {
               <HStack gap={2} align="center">
                 <SearchInput
                   value={eventSearchQuery}
-                  onChange={setEventSearchQuery}
+                  onChange={(e) => setEventSearchQuery(e.target.value)}
+                  onClear={() => setEventSearchQuery('')}
                   placeholder="Search events by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
                 />
                 <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                <Button variant="secondary" size="sm">
+                <Button variant="secondary" size="sm" onClick={() => navigate('/container/events')}>
                   Full events list
                 </Button>
               </HStack>
               <div className="flex justify-start">
                 <Pagination
-                  currentPage={currentPage}
-                  totalPages={1}
+                  currentPage={effectiveEventPage}
+                  totalPages={totalEventPages}
                   onPageChange={setCurrentPage}
-                  showSettings
-                  onSettingsClick={() => {}}
                 />
               </div>
-              <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
+              <Table<EventRow> columns={eventsColumns} data={paginatedEvents} rowKey="id" />
             </VStack>
           </TabPanel>
 
           <TabPanel value="secrets" className="pt-0">
-            <div className="text-center py-8 text-[var(--color-text-muted)]">No secrets found</div>
+            <EmptyState
+              variant="inline"
+              icon={<IconKey size={48} stroke={1} />}
+              title="No secrets found"
+            />
           </TabPanel>
         </Tabs>
       </Card>

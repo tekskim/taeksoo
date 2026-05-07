@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 /* ----------------------------------------
    PageShell Types
@@ -60,8 +61,13 @@ export function PageShell({
         {topBar}
 
         {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex-1 min-w-0 overscroll-contain"
           style={{
             paddingBottom: bottomPanelPadding || '0',
           }}
@@ -69,7 +75,7 @@ export function PageShell({
           <div className={`bg-[var(--color-surface-default)] h-full ${contentClassName}`.trim()}>
             {children}
           </div>
-        </div>
+        </OverlayScrollbarsComponent>
       </main>
 
       {/* Bottom Panel */}

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -21,6 +20,7 @@ import {
   type AppliedFilter,
   Popover,
   Badge,
+  Tooltip,
   fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -28,8 +28,10 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPToLBDrawer';
 import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
-import { IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
+import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
    Types
@@ -52,6 +54,7 @@ interface LoadBalancer {
   listenerCount: number;
   createdAt: string;
   status: LoadBalancerStatus;
+  origin?: 'container';
 }
 
 /* ----------------------------------------
@@ -72,8 +75,9 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-http-80',
     listenerId: '29tgj234',
     listenerCount: 2,
-    createdAt: 'Oct 3, 2025 00:46:02',
+    createdAt: 'Oct 3, 2026 00:46:02',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'lb-002',
@@ -88,7 +92,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-https-443',
     listenerId: '38fk29dk',
     listenerCount: 0,
-    createdAt: 'Oct 2, 2025 17:33:45',
+    createdAt: 'Oct 2, 2026 17:33:45',
     status: 'active',
   },
   {
@@ -104,7 +108,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-tcp-8080',
     listenerId: '9dk38fj2',
     listenerCount: 1,
-    createdAt: 'Oct 1, 2025 10:20:28',
+    createdAt: 'Oct 1, 2026 10:20:28',
     status: 'building',
   },
   {
@@ -120,8 +124,9 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-mysql-3306',
     listenerId: 'k29dk38f',
     listenerCount: 0,
-    createdAt: 'Sep 28, 2025 07:11:07',
+    createdAt: 'Sep 28, 2026 07:11:07',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'lb-005',
@@ -136,7 +141,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-redis-6379',
     listenerId: 'fj29dk38',
     listenerCount: 0,
-    createdAt: 'Sep 25, 2025 10:32:16',
+    createdAt: 'Sep 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -152,7 +157,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-grpc-9090',
     listenerId: '8fj29dk3',
     listenerCount: 3,
-    createdAt: 'Sep 20, 2025 23:27:51',
+    createdAt: 'Sep 20, 2026 23:27:51',
     status: 'error',
   },
   {
@@ -168,8 +173,9 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-rtmp-1935',
     listenerId: 'dk38fj29',
     listenerCount: 0,
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'lb-008',
@@ -184,7 +190,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-smtp-25',
     listenerId: '29dk38fj',
     listenerCount: 0,
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     status: 'pending',
   },
   {
@@ -200,7 +206,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-openvpn-1194',
     listenerId: '3fj29dk8',
     listenerCount: 0,
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     status: 'active',
   },
   {
@@ -216,7 +222,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-http-3000',
     listenerId: 'j29dk38f',
     listenerCount: 4,
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
     status: 'active',
   },
 ];
@@ -256,6 +262,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminLoadBalancersPage() {
+  const navigate = useNavigate();
   const [selectedLBs, setSelectedLBs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -276,6 +283,13 @@ export function ComputeAdminLoadBalancersPage() {
   const [associateFIPOpen, setAssociateFIPOpen] = useState(false);
   const [editLBOpen, setEditLBOpen] = useState(false);
   const [selectedLBForDrawer, setSelectedLBForDrawer] = useState<LoadBalancer | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleAssociateFloatingIP = (lb: LoadBalancer) => {
@@ -381,15 +395,32 @@ export function ComputeAdminLoadBalancersPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute-admin/load-balancers/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        <div className="flex items-center justify-between gap-1 w-full">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute-admin/load-balancers/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
+          </div>
+          {row.origin === 'container' && (
+            <Tooltip
+              content="This load balancer was created via the Container cluster."
+              position="top"
+            >
+              <div className="size-6 shrink-0 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
+                <img src={containerIcon} alt="Container" className="size-4 object-contain" />
+              </div>
+            </Tooltip>
+          )}
         </div>
       ),
     },
@@ -407,7 +438,12 @@ export function ComputeAdminLoadBalancersPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -430,8 +466,11 @@ export function ComputeAdminLoadBalancersPage() {
           >
             {row.ownedNetwork}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.ownedNetworkId.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetworkId.substring(0, 8)}>
+              ID : {row.ownedNetworkId.substring(0, 8).slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetworkId.substring(0, 8)} />
           </span>
         </div>
       ),
@@ -450,8 +489,11 @@ export function ComputeAdminLoadBalancersPage() {
             >
               {row.floatingIp}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.floatingIpId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.floatingIpId}>
+                ID : {row.floatingIpId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.floatingIpId} />
             </span>
           </div>
         ) : (
@@ -463,11 +505,14 @@ export function ComputeAdminLoadBalancersPage() {
       label: 'Listeners',
       flex: 1,
       render: (_, row) => (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center justify-between gap-1 w-full">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-body-md text-[var(--color-text-default)]">{row.listeners}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.listenerId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.listenerId}>
+                ID : {row.listenerId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.listenerId} />
             </span>
           </div>
           {row.listenerCount > 0 && (
@@ -477,11 +522,11 @@ export function ComputeAdminLoadBalancersPage() {
               delay={100}
               hideDelay={100}
               content={
-                <div className="p-3 min-w-[120px] max-w-[320px]">
+                <div className="p-3 min-w-[160px] max-w-[320px]">
                   <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                     All Listeners ({row.listenerCount + 1})
                   </div>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                     <Badge theme="white" size="sm">
                       {row.listeners}
                     </Badge>
@@ -514,6 +559,7 @@ export function ComputeAdminLoadBalancersPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
@@ -571,23 +617,9 @@ export function ComputeAdminLoadBalancersPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Load balancers' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Load Balancers' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -651,6 +683,8 @@ export function ComputeAdminLoadBalancersPage() {
           selectable
           selectedKeys={selectedLBs}
           onSelectionChange={setSelectedLBs}
+          emptyMessage="No load balancers found"
+          loading={loading}
         />
       </VStack>
 
@@ -662,7 +696,7 @@ export function ComputeAdminLoadBalancersPage() {
           setLbToDelete(null);
         }}
         title="Delete load balancer"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected load balancers is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

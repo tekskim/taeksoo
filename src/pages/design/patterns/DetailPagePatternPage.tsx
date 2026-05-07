@@ -157,7 +157,7 @@ function DetailPageGuidelines() {
         <SectionTitle>Composition</SectionTitle>
 
         <SubSectionTitle>전체 레이아웃 구조</SubSectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[DetailHeader]
   ├── 리소스명 (타이틀)
   ├── 액션 버튼 그룹

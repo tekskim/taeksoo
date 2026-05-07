@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { createPortal } from 'react-dom';
 import {
   VStack,
@@ -13,6 +14,7 @@ import {
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
+  IconLayoutDashboard,
   IconAffiliate,
   IconShieldLock,
   IconPlus,
@@ -38,9 +40,8 @@ import {
 } from '@tabler/icons-react';
 import { FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import containerIcon from '@/assets/appIcon/container.png';
+import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 /* ----------------------------------------
    Container Sidebar Component
@@ -74,7 +75,7 @@ function IconSidebarItem({ icon, iconText, active, onClick, tooltip }: IconSideb
   const renderContent = () => {
     if (iconText) {
       return (
-        <span className="text-[11px] font-semibold leading-none select-none uppercase">
+        <span className="text-body-sm font-semibold leading-none select-none uppercase">
           {iconText}
         </span>
       );
@@ -85,6 +86,7 @@ function IconSidebarItem({ icon, iconText, active, onClick, tooltip }: IconSideb
   return (
     <button
       type="button"
+      aria-label={tooltip}
       onClick={onClick}
       className={`
         w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)]
@@ -161,7 +163,7 @@ function ClusterAppearanceDrawer({
             <div className="mt-3 flex items-center">
               <div className="w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
                 {previewText ? (
-                  <span className="text-[11px] font-semibold leading-none select-none text-[var(--color-text-default)]">
+                  <span className="text-body-sm font-semibold leading-none select-none text-[var(--color-text-default)]">
                     {previewText}
                   </span>
                 ) : (
@@ -196,7 +198,9 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
   const { isDark } = useDarkMode();
   const location = useLocation();
   const navigate = useNavigate();
-  const navRef = useRef<HTMLElement>(null);
+  const isDesktopWindow = useIsDesktopWindow();
+  const desktopControls = useDesktopWindowControls();
+  const osRef = useRef<React.ComponentRef<typeof OverlayScrollbarsComponent>>(null);
 
   // Cluster state
   const [clusters, setClusters] = useState<ClusterItem[]>([
@@ -213,6 +217,9 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
   const handleSaveAppearance = (clusterId: string, iconText: string) => {
     setClusters((prev) => prev.map((c) => (c.id === clusterId ? { ...c, iconText } : c)));
+    window.dispatchEvent(
+      new CustomEvent('cluster-appearance-changed', { detail: { clusterId, iconText } })
+    );
   };
 
   // Listen for external "open appearance" events from other pages
@@ -230,32 +237,29 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
     return () => window.removeEventListener('open-cluster-appearance', handler);
   }, [clusters]);
 
-  // Restore scroll position after route change - use useLayoutEffect for synchronous update
+  const getViewport = () =>
+    osRef.current?.osInstance()?.elements().viewport as HTMLElement | undefined;
+
+  // Restore scroll position after route change
   useLayoutEffect(() => {
-    const nav = navRef.current;
-    if (nav && savedScrollPosition > 0) {
-      nav.scrollTop = savedScrollPosition;
+    const vp = getViewport();
+    if (vp && savedScrollPosition > 0) {
+      vp.scrollTop = savedScrollPosition;
     }
-  });
+  }, [location.pathname]);
 
   // Also restore on mount with a slight delay as backup
   useEffect(() => {
-    const nav = navRef.current;
-    if (nav && savedScrollPosition > 0) {
-      // Immediate restore
-      nav.scrollTop = savedScrollPosition;
-      // Backup restore after a short delay
+    const vp = getViewport();
+    if (vp && savedScrollPosition > 0) {
+      vp.scrollTop = savedScrollPosition;
       const timeoutId = setTimeout(() => {
-        if (nav) nav.scrollTop = savedScrollPosition;
+        const vp2 = getViewport();
+        if (vp2) vp2.scrollTop = savedScrollPosition;
       }, 50);
       return () => clearTimeout(timeoutId);
     }
   }, []);
-
-  // Save scroll position on scroll
-  const handleNavScroll = (e: React.UIEvent<HTMLElement>) => {
-    savedScrollPosition = e.currentTarget.scrollTop;
-  };
 
   // Check if current path matches href
   const isActive = (href: string) => {
@@ -291,7 +295,11 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       {/* Icon Sidebar (48px) - Always visible */}
       <aside className="w-[48px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] flex flex-col">
         {/* App Icon */}
-        <div className="h-[36px] flex items-center justify-center border-b border-[var(--color-border-subtle)]">
+        <div
+          className="h-[36px] flex items-center justify-center border-b border-[var(--color-border-subtle)] select-none"
+          onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+          onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+        >
           <img src={containerIcon} alt="Container" className="w-[24px] h-[24px]" />
         </div>
 
@@ -323,6 +331,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             icon={<IconPlus size={16} stroke={1.5} />}
             active={false}
             tooltip="Add new"
+            onClick={() => navigate('/container/cluster-management/create')}
           />
         </div>
       </aside>
@@ -331,19 +340,16 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       {isOpen && activeIconSection !== 'home' && (
         <aside className="w-[200px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
           {/* Logo / Title */}
-          <div className="h-[33px] px-3 flex items-center justify-between">
-            {activeIconSection === 'cluster-management' ? (
-              <img
-                src={isDark ? ThakiLogoDark : ThakiLogoLight}
-                alt="THAKI Cloud"
-                className="h-4"
-              />
-            ) : (
-              <span className="text-label-lg text-[var(--color-text-default)]">Container</span>
-            )}
+          <div
+            className="h-[33px] px-3 flex items-center justify-between select-none"
+            onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+            onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+          >
+            <span className="text-label-lg text-[var(--color-text-default)]">Container</span>
             <button
               type="button"
               onClick={onToggle}
+              onMouseDown={(e) => e.stopPropagation()}
               className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
               aria-label="Toggle sidebar"
             >
@@ -356,10 +362,21 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           </div>
 
           {/* Navigation */}
-          <nav
-            ref={navRef}
-            onScroll={handleNavScroll}
-            className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll [&>div]:!min-w-0"
+          <OverlayScrollbarsComponent
+            ref={osRef}
+            element="nav"
+            options={{
+              overflow: { x: 'hidden', y: 'scroll' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            events={{
+              scroll: () => {
+                const vp = getViewport();
+                if (vp) savedScrollPosition = vp.scrollTop;
+              },
+            }}
+            defer={false}
+            className="flex-1 px-3 py-3 [&>div]:!min-w-0"
           >
             <VStack gap={4} className="w-full min-w-0">
               {activeIconSection === 'cluster-management' ? (
@@ -373,26 +390,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                       active={isActive('/container/cluster-management')}
                     />
                   </MenuSection>
-
-                  {/* Cluster Section */}
-                  <MenuSection title="Cluster" defaultOpen={true}>
-                    {clusters.map((cluster) => (
-                      <MenuItem
-                        key={cluster.id}
-                        icon={<IconAffiliate size={16} stroke={1.5} />}
-                        label={cluster.name}
-                        href={`/container/cluster-management/${cluster.id}`}
-                        active={isActive(`/container/cluster-management/${cluster.id}`)}
-                      />
-                    ))}
-                  </MenuSection>
                 </>
               ) : (
                 <>
                   {/* Cluster Section */}
                   <MenuSection title="Cluster" defaultOpen={true}>
                     <MenuItem
-                      icon={<IconHome size={16} stroke={1.5} />}
+                      icon={<IconLayoutDashboard size={16} stroke={1.5} />}
                       label="Dashboard"
                       href="/container/dashboard"
                       active={isActive('/container/dashboard')}
@@ -467,9 +471,15 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                     />
                     <MenuItem
                       icon={<IconPackage size={16} stroke={1.5} />}
-                      label="Installed Apps"
+                      label="Installed apps"
                       href="/container/installed-apps"
                       active={isActive('/container/installed-apps')}
+                    />
+                    <MenuItem
+                      icon={<IconShieldLock size={16} stroke={1.5} />}
+                      label="Installed operators"
+                      href="/container/installed-operators"
+                      active={isActive('/container/installed-operators')}
                     />
                   </MenuSection>
 
@@ -559,7 +569,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 </>
               )}
             </VStack>
-          </nav>
+          </OverlayScrollbarsComponent>
         </aside>
       )}
       {createPortal(

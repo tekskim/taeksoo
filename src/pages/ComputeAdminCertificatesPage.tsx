@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -28,8 +27,9 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { RegisterCertificateDrawer } from '@/components/RegisterCertificateDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -63,8 +63,8 @@ const mockCertificates: Certificate[] = [
     listener: 'listener-1',
     listenerId: '294u92s2',
     listenerCount: 10,
-    expiresAt: 'Oct 5, 2025',
-    createdAt: 'Oct 3, 2025 00:46:02',
+    expiresAt: 'Oct 5, 2026',
+    createdAt: 'Oct 3, 2026 00:46:02',
     type: 'server',
     status: 'active',
   },
@@ -76,7 +76,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '38fj29dk',
     listenerCount: 2,
     expiresAt: 'Jan 15, 2026',
-    createdAt: 'Sep 28, 2025 07:11:07',
+    createdAt: 'Sep 28, 2026 07:11:07',
     type: 'server',
     status: 'active',
   },
@@ -87,8 +87,8 @@ const mockCertificates: Certificate[] = [
     listener: 'listener-web',
     listenerId: '9dk38fj2',
     listenerCount: 0,
-    expiresAt: 'Dec 1, 2025',
-    createdAt: 'Sep 20, 2025 23:27:51',
+    expiresAt: 'Dec 1, 2026',
+    createdAt: 'Sep 20, 2026 23:27:51',
     type: 'server',
     status: 'active',
   },
@@ -99,8 +99,8 @@ const mockCertificates: Certificate[] = [
     listener: 'listener-staging',
     listenerId: 'k29dk38f',
     listenerCount: 0,
-    expiresAt: 'Nov 15, 2025',
-    createdAt: 'Sep 15, 2025 12:22:26',
+    expiresAt: 'Nov 15, 2026',
+    createdAt: 'Sep 15, 2026 12:22:26',
     type: 'server',
     status: 'pending',
   },
@@ -112,7 +112,7 @@ const mockCertificates: Certificate[] = [
     listenerId: 'fj29dk38',
     listenerCount: 5,
     expiresAt: 'Mar 20, 2026',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     type: 'server',
     status: 'active',
   },
@@ -124,7 +124,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '',
     listenerCount: 0,
     expiresAt: 'Jan 1, 2030',
-    createdAt: 'Jan 1, 2025 10:20:28',
+    createdAt: 'Jan 1, 2026 10:20:28',
     type: 'ca',
     status: 'active',
   },
@@ -136,7 +136,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '',
     listenerCount: 0,
     expiresAt: 'Jun 15, 2028',
-    createdAt: 'Jun 15, 2025 12:22:26',
+    createdAt: 'Jun 15, 2026 12:22:26',
     type: 'ca',
     status: 'active',
   },
@@ -147,8 +147,8 @@ const mockCertificates: Certificate[] = [
     listener: '-',
     listenerId: '',
     listenerCount: 0,
-    expiresAt: 'Aug 1, 2025',
-    createdAt: 'Aug 1, 2024 10:20:28',
+    expiresAt: 'Aug 1, 2026',
+    createdAt: 'Aug 1, 2026 10:20:28',
     type: 'server',
     status: 'error',
   },
@@ -160,7 +160,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '',
     listenerCount: 0,
     expiresAt: 'Dec 31, 2027',
-    createdAt: 'Jan 15, 2025 12:22:26',
+    createdAt: 'Jan 15, 2026 12:22:26',
     type: 'ca',
     status: 'active',
   },
@@ -172,7 +172,7 @@ const mockCertificates: Certificate[] = [
     listenerId: '29dk38fj',
     listenerCount: 0,
     expiresAt: 'Jun 1, 2026',
-    createdAt: 'Jun 1, 2025 10:20:28',
+    createdAt: 'Jun 1, 2026 10:20:28',
     type: 'server',
     status: 'active',
   },
@@ -209,6 +209,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminCertificatesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -242,6 +243,13 @@ export function ComputeAdminCertificatesPage() {
   ];
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -320,7 +328,12 @@ export function ComputeAdminCertificatesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -343,8 +356,11 @@ export function ComputeAdminCertificatesPage() {
                 </span>
               )}
             </div>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.listenerId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.listenerId}>
+                ID : {row.listenerId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.listenerId} />
             </span>
           </div>
         ),
@@ -371,10 +387,14 @@ export function ComputeAdminCertificatesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -429,25 +449,12 @@ export function ComputeAdminCertificatesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Certificates' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Certificates' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -514,6 +521,7 @@ export function ComputeAdminCertificatesPage() {
           selectable
           selectedKeys={selectedCerts}
           onSelectionChange={setSelectedCerts}
+          loading={loading}
         />
       </VStack>
 
@@ -524,7 +532,7 @@ export function ComputeAdminCertificatesPage() {
           setCertToDelete(null);
         }}
         title="Delete certificate"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected certificates is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

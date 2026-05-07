@@ -1,90 +1,59 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { TabBar, TopBar, TopBarAction, Breadcrumb } from '@/design-system';
-import {
-  NotificationCenter,
-  type NotificationItem,
-} from '@/design-system/components/NotificationCenter';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { TabBar, TopBar, Breadcrumb } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell } from '@tabler/icons-react';
-
-/* ----------------------------------------
-   Mock Notifications Data
-   ---------------------------------------- */
-
-const mockNotifications: NotificationItem[] = [
-  {
-    id: '1',
-    type: 'success',
-    message: 'Instance "web-server-01" created successfully.',
-    time: '10:23',
-    project: 'Proj1',
-    isRead: false,
-  },
-  {
-    id: '2',
-    type: 'success',
-    message: 'Instance "web-server-01" created successfully.',
-    time: '10:15',
-    project: 'Proj1',
-    isRead: false,
-  },
-  {
-    id: '3',
-    type: 'success',
-    message: 'Instance "web-server-01" created successfully.',
-    time: '09:45',
-    project: 'Proj1',
-    isRead: true,
-  },
-  {
-    id: '4',
-    type: 'error',
-    message: 'Failed to create volume "data-vol-02".',
-    time: '09:30',
-    project: 'Proj1',
-    isRead: false,
-  },
-];
 
 /* ----------------------------------------
    Route to Label Mapping
    ---------------------------------------- */
 
 const routeLabels: Record<string, string> = {
-  '/compute-admin': 'Home',
+  '/compute-admin': 'Dashboard',
   '/compute-admin/instances': 'Instances',
-  '/compute-admin/instance-templates': 'Instance templates',
-  '/compute-admin/instance-snapshots': 'Instance snapshots',
+  '/compute-admin/instance-templates': 'Instance Templates',
+  '/compute-admin/instance-snapshots': 'Instance Snapshots',
   '/compute-admin/images': 'Images',
   '/compute-admin/flavors': 'Flavors',
-  '/compute-admin/host-aggregates': 'Host aggregates',
-  '/compute-admin/bare-metal-nodes': 'Bare metal nodes',
+  '/compute-admin/server-groups': 'Server Groups',
+  '/compute-admin/host-aggregates': 'Host Aggregates',
+  '/compute-admin/bare-metal-nodes': 'Bare Metal Nodes',
   '/compute-admin/volumes': 'Volumes',
   '/compute-admin/volume-snapshots': 'Volume Snapshots',
-  '/compute-admin/volume-backups': 'Volume backups',
-  '/compute-admin/volume-types': 'Volume types',
+  '/compute-admin/volume-backups': 'Volume Backups',
+  '/compute-admin/volume-types': 'Volume Types',
   '/compute-admin/networks': 'Networks',
+  '/compute-admin/subnets': 'Subnets',
   '/compute-admin/routers': 'Routers',
   '/compute-admin/ports': 'Ports',
   '/compute-admin/floating-ips': 'Floating IPs',
-  '/compute-admin/security-groups': 'Security groups',
-  '/compute-admin/load-balancers': 'Load balancers',
+  '/compute-admin/security-groups': 'Security Groups',
+  '/compute-admin/load-balancers': 'Load Balancers',
+  '/compute-admin/listeners': 'Listeners',
+  '/compute-admin/pools': 'Pools',
+  '/compute-admin/l7-policies': 'L7 Policies',
+  '/compute-admin/certificates': 'Certificates',
+  '/compute-admin/firewall': 'Firewall',
+  '/compute-admin/firewalls': 'Firewalls',
+  '/compute-admin/firewall-policies': 'Firewall Policies',
+  '/compute-admin/firewall-rules': 'Firewall Rules',
+  '/compute-admin/qos-specs': 'QoS Specs',
   '/compute-admin/tenants': 'Tenants',
-  '/compute-admin/metadata-definition': 'Metadata definition',
-  '/compute-admin/monitor-overview': 'Monitor overview',
-  '/compute-admin/physical-nodes': 'Physical nodes',
+  '/compute-admin/metadata-definition': 'Metadata Definitions',
+  '/compute-admin/monitor-overview': 'Monitor Overview',
+  '/compute-admin/physical-nodes': 'Physical Nodes',
+  '/compute-admin/topology': 'Topology',
+  '/compute-admin/console': 'Console',
 };
 
 function getBreadcrumbLabel(path: string): string {
-  // Check for exact match first
   if (routeLabels[path]) {
     return routeLabels[path];
   }
-  // Check for partial match (detail pages)
-  for (const [route, label] of Object.entries(routeLabels)) {
-    if (path.startsWith(route + '/')) {
+  const sortedRoutes = Object.entries(routeLabels).sort((a, b) => b[0].length - a[0].length);
+  for (const [route, label] of sortedRoutes) {
+    if (path.startsWith(`${route}/`)) {
       return label;
     }
   }
@@ -100,48 +69,6 @@ export function ComputeAdminLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-
-  // Notification state
-  const [notificationOpen, setNotificationOpen] = useState(false);
-  const [notifications, setNotifications] = useState<NotificationItem[]>(mockNotifications);
-  const [selectedNotificationId, setSelectedNotificationId] = useState<string | undefined>();
-  const notificationRef = useRef<HTMLDivElement>(null);
-
-  // Close notification panel when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        setNotificationOpen(false);
-      }
-    };
-
-    if (notificationOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [notificationOpen]);
-
-  // Handle mark notification as read
-  const handleMarkAsRead = (id: string) => {
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
-  };
-
-  // Handle mark all as read
-  const handleMarkAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-  };
-
-  // Handle notification click
-  const handleNotificationClick = (notification: NotificationItem) => {
-    setSelectedNotificationId(notification.id);
-    handleMarkAsRead(notification.id);
-  };
-
-  // Count unread notifications
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -192,43 +119,25 @@ export function ComputeAdminLayout() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
             breadcrumb={
               <Breadcrumb items={[{ label: 'Compute Admin' }, { label: currentLabel }]} />
-            }
-            actions={
-              <div className="relative" ref={notificationRef}>
-                <TopBarAction
-                  icon={<IconBell size={16} stroke={1.5} />}
-                  aria-label="Notifications"
-                  badge={unreadCount > 0}
-                  onClick={() => setNotificationOpen(!notificationOpen)}
-                />
-                {notificationOpen && (
-                  <div
-                    className="fixed right-0 z-50"
-                    style={{ top: 'calc(var(--tabbar-height) + var(--topbar-height))' }}
-                  >
-                    <NotificationCenter
-                      notifications={notifications}
-                      selectedId={selectedNotificationId}
-                      onMarkAsRead={handleMarkAsRead}
-                      onMarkAllAsRead={handleMarkAllAsRead}
-                      onNotificationClick={handleNotificationClick}
-                      onClose={() => setNotificationOpen(false)}
-                    />
-                  </div>
-                )}
-              </div>
             }
           />
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex-1 min-w-[var(--layout-content-min-width)] overscroll-contain"
+        >
           <Outlet />
-        </div>
+        </OverlayScrollbarsComponent>
       </main>
     </div>
   );

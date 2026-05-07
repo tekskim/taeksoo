@@ -9,7 +9,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   SectionCard,
   WizardSummary,
@@ -23,7 +22,7 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconBell, IconEdit } from '@tabler/icons-react';
+import { IconEdit } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -65,11 +64,11 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         {/* Quota Section */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-lg p-4 flex flex-col gap-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
           <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Quota</h5>
 
           {/* NACL Rules Quota */}
@@ -82,14 +81,14 @@ function SummarySidebar({
             </div>
             <div className="flex h-1 w-full items-start isolate pr-1">
               <div
-                className="bg-[var(--color-state-success)] h-1 rounded-lg shrink-0 -mr-1 z-[3]"
+                className="bg-[var(--color-state-success)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[3]"
                 style={{ width: '20%' }}
               />
               <div
-                className="bg-[#bbf7d0] h-1 rounded-lg shrink-0 -mr-1 z-[2]"
+                className="bg-[var(--color-state-success-bg)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[2]"
                 style={{ width: '10%' }}
               />
-              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-lg -mr-1 z-[1]" />
+              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-[var(--radius-lg)] -mr-1 z-[1]" />
             </div>
           </div>
         </div>
@@ -213,20 +212,10 @@ export default function CreateFirewallRulePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/compute' },
                 { label: 'NACL', href: '/compute/firewall' },
-                { label: 'Create NACL rule' },
+                { label: 'Create Firewall Rule' },
               ]}
             />
-          }
-          actions={
-            <>
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-              />
-            </>
           }
         />
       }
@@ -278,6 +267,7 @@ export default function CreateFirewallRulePage() {
                               setRuleNameError(null);
                             }}
                             fullWidth
+                            error={!!ruleNameError}
                           />
                         </FormField.Control>
                         <FormField.HelperText>

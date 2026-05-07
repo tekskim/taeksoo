@@ -1,77 +1,283 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, VStack, HStack, PageShell, TopBar } from '@/design-system';
+import { useState, useCallback, createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  Button,
+  Modal,
+  ConfirmModal,
+  VStack,
+  HStack,
+  PageShell,
+  TopBar,
+  SearchInput,
+  Badge,
+  Disclosure,
+  InlineMessage,
+  InfoBox as TdsInfoBox,
+} from '@/design-system';
 import {
   IconAlertCircle,
   IconChevronDown,
   IconChevronRight,
+  IconArrowLeft,
+  IconCircleCheck,
   IconCopy,
   IconCheck,
-  IconArrowLeft,
 } from '@tabler/icons-react';
 
-/* ----------------------------------------
-   ModalPreview — renders modal content inline as a card
-   ---------------------------------------- */
+const ModalSearchContext = createContext('');
 
-interface ModalPreviewProps {
+interface ModalListItemProps {
   title: string;
-  description?: string;
-  children?: React.ReactNode;
-  [key: string]: unknown;
+  description: string;
+  category?: string;
+  onOpen: () => void;
 }
 
-function ModalPreview({ title, description, children }: ModalPreviewProps) {
+function ModalListItem({ title, description, category, onOpen }: ModalListItemProps) {
+  const searchQuery = useContext(ModalSearchContext);
+  if (
+    searchQuery &&
+    !title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    !description.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    !(category && category.toLowerCase().includes(searchQuery.toLowerCase()))
+  ) {
+    return null;
+  }
+
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-xl)] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] p-4 flex flex-col gap-4 w-[344px]">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h2>
-        {description && (
-          <p className="text-body-md text-[var(--color-text-subtle)]">{description}</p>
+    <div
+      className="flex items-center justify-between px-4 py-3 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer group"
+      onClick={onOpen}
+    >
+      <HStack gap={4} className="flex-1 items-center min-w-0">
+        {category && (
+          <Badge variant="info" size="sm" className="shrink-0 w-[100px] justify-center">
+            {category}
+          </Badge>
         )}
-      </div>
-      {children}
+        <div className="min-w-0 flex-1">
+          <h3 className="text-label-lg text-[var(--color-text-default)] truncate">{title}</h3>
+          <p className="text-body-md text-[var(--color-text-subtle)] truncate mt-0.5">
+            {description}
+          </p>
+        </div>
+      </HStack>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpen();
+        }}
+        className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        Open
+      </Button>
     </div>
   );
 }
 
-function CategorySection({
-  title,
-  children,
-  defaultOpen = true,
-}: {
-  title: string;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-}) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-
+function DangerWarning({ children }: { children: React.ReactNode }) {
   return (
-    <VStack gap={4}>
-      <button
-        className="flex items-center gap-2 px-1 cursor-pointer bg-transparent border-none outline-none"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-      >
-        {isOpen ? (
-          <IconChevronDown size={14} className="text-[var(--color-text-muted)]" />
+    <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+      <IconAlertCircle size={14} className="text-[var(--color-state-danger)] shrink-0 mt-0.5" />
+      <p className="text-body-sm text-[var(--color-text-default)] leading-4">{children}</p>
+    </div>
+  );
+}
+
+function InfoBox({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
+      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
+      <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
+    </div>
+  );
+}
+
+function InfoBoxCopyable({ label, value }: { label: string; value: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
+      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
+      <div className="flex items-center gap-2">
+        <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
+        <button
+          type="button"
+          className={`shrink-0 transition-colors cursor-pointer bg-transparent border-0 p-0 ${copied ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-default)] hover:text-[var(--color-text-muted)]'}`}
+          onClick={() => {
+            navigator.clipboard.writeText(value);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          }}
+          aria-label={`Copy ${label}`}
+        >
+          {copied ? <IconCheck size={14} stroke={2} /> : <IconCopy size={14} stroke={1.5} />}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ScrollableList({ label, items }: { label: string; items: string[] }) {
+  return (
+    <OverlayScrollbarsComponent
+      options={{
+        overflow: { x: 'hidden', y: 'scroll' },
+        scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+      }}
+      defer={false}
+      className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] os-compact"
+    >
+      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
+      <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </OverlayScrollbarsComponent>
+  );
+}
+
+function ModalButtons({
+  onClose,
+  onConfirm,
+  confirmText = 'Delete',
+  confirmVariant = 'danger',
+}: {
+  onClose: () => void;
+  onConfirm?: () => void;
+  confirmText?: string;
+  confirmVariant?: 'danger' | 'primary' | 'warning';
+}) {
+  return (
+    <div className="flex gap-2 w-full">
+      <Button variant="outline" onClick={onClose} className="flex-1">
+        Cancel
+      </Button>
+      <Button variant={confirmVariant} onClick={onConfirm || onClose} className="flex-1">
+        {confirmText}
+      </Button>
+    </div>
+  );
+}
+
+interface SectionHeaderProps {
+  label: string;
+  badgeVariant?: 'info' | 'warning';
+  count: number;
+  isOpen: boolean;
+  isSearching: boolean;
+}
+
+function SectionHeader({
+  label,
+  badgeVariant = 'info',
+  count,
+  isOpen,
+  isSearching,
+}: SectionHeaderProps) {
+  return (
+    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+      <div className="flex items-center gap-3">
+        {isSearching || isOpen ? (
+          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
         ) : (
-          <IconChevronRight size={14} className="text-[var(--color-text-muted)]" />
+          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
         )}
-        <span className="text-heading-h6 text-[var(--color-text-default)]">{title}</span>
-      </button>
-      {isOpen && <div className="flex flex-wrap items-start gap-4">{children}</div>}
+        <Badge variant={badgeVariant} size="sm" className="w-[110px] justify-center">
+          {label}
+        </Badge>
+        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">Modals</span>
+        <span className="text-body-md text-[var(--color-text-subtle)]">({count} modals)</span>
+      </div>
+    </div>
+  );
+}
+
+function SubHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+      {children}
+    </h2>
+  );
+}
+
+function matchesModalSearch(query: string, title: string, description: string, category?: string) {
+  const q = query.toLowerCase();
+  return (
+    title.toLowerCase().includes(q) ||
+    description.toLowerCase().includes(q) ||
+    (category != null && category.toLowerCase().includes(q))
+  );
+}
+
+interface FilteredGroupProps {
+  heading: string;
+  items: { title: string; description: string; category?: string }[];
+  children: ReactNode;
+}
+
+function FilteredGroup({ heading, items, children }: FilteredGroupProps) {
+  const searchQuery = useContext(ModalSearchContext);
+  if (
+    searchQuery &&
+    !items.some((i) => matchesModalSearch(searchQuery, i.title, i.description, i.category))
+  ) {
+    return null;
+  }
+  return (
+    <VStack gap={2}>
+      <SubHeading>{heading}</SubHeading>
+      <div className="flex flex-col gap-2">{children}</div>
     </VStack>
   );
 }
 
-/* ----------------------------------------
-   ModalsPage Component ---------------------------------------- */
+interface FilteredDisclosureSectionProps {
+  allItems: { title: string; description: string; category?: string }[];
+  children: ReactNode;
+}
+
+function FilteredDisclosureSection({ allItems, children }: FilteredDisclosureSectionProps) {
+  const searchQuery = useContext(ModalSearchContext);
+  if (
+    searchQuery &&
+    !allItems.some((i) => matchesModalSearch(searchQuery, i.title, i.description, i.category))
+  ) {
+    return null;
+  }
+  return <>{children}</>;
+}
 
 export function ModalsPage() {
   const navigate = useNavigate();
 
-  // IAM Modal states
+  const [searchParams, setSearchParams] = useSearchParams();
+  const openModal = searchParams.get('modal');
+  const openModalFn = useCallback(
+    (id: string) => setSearchParams({ modal: id }, { replace: true }),
+    [setSearchParams]
+  );
+  const closeModal = useCallback(() => {
+    const params = new URLSearchParams(searchParams);
+    params.delete('modal');
+    setSearchParams(params, { replace: true });
+  }, [searchParams, setSearchParams]);
+
+  const [modalSearch, setModalSearch] = useState('');
+  const isSearching = modalSearch.trim().length > 0;
+
+  const [isComputeOpen, setIsComputeOpen] = useState(false);
+  const [isIAMOpen, setIsIAMOpen] = useState(false);
+  const [isStorageOpen, setIsStorageOpen] = useState(false);
+  const [isContainerOpen, setIsContainerOpen] = useState(false);
+  const [isComputeAdminOpen, setIsComputeAdminOpen] = useState(false);
+  const [isCloudBuilderOpen, setIsCloudBuilderOpen] = useState(false);
+  const [isAIAgentOpen, setIsAIAgentOpen] = useState(false);
+
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
 
@@ -86,6 +292,7 @@ export function ModalsPage() {
             <HStack gap={4} align="center">
               <Button
                 variant="ghost"
+                size="sm"
                 leftIcon={<IconArrowLeft size={14} />}
                 onClick={() => navigate('/')}
               >
@@ -98,4806 +305,5440 @@ export function ModalsPage() {
       }
       contentClassName="max-w-7xl mx-auto px-8 py-8"
     >
-      <VStack gap={10}>
-        {/* Page Description */}
-        <p className="text-body-lg text-[var(--color-text-subtle)]">
-          All modal components displayed inline for quick review.
-        </p>
-
-        {/* ============================================================
-           COMPUTE MODALS
-           ============================================================ */}
-        <CategorySection title="Compute">
-          {/* Delete Snapshot Modal */}
-          <ModalPreview
-            title="Delete snapshot"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Snapshot Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Snapshot name{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  2cdfafc1
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting a snapshot is a permanent action and cannot be undone. Any volumes or
-                  instances created from this snapshot will not be affected.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Security group Modal (Single) */}
-          <ModalPreview
-            title="Delete security group"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Security group Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Security group{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  sg-01
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action will permanently delete the security group and all its rules.
-                  <br />
-                  If this group is attached to any instances, their network traffic may be affected.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Security groups Modal (Multiple) */}
-          <ModalPreview
-            title="Delete security groups"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Security groups Info Box with Scrollable List */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Security groups(10)
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>sg-01</li>
-                  <li>sg-02</li>
-                  <li>sg-03</li>
-                  <li>sg-04</li>
-                  <li>sg-05</li>
-                  <li>sg-06</li>
-                  <li>sg-07</li>
-                  <li>sg-08</li>
-                  <li>sg-09</li>
-                  <li>sg-10</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action will permanently delete the security groups and all its rules.
-                  <br />
-                  If these groups are attached to any instances, their network traffic may be
-                  affected.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Rule Modal (Single) */}
-          <ModalPreview
-            title="Delete rule"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Rule Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Rule{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  Ingress TCP 80 from 0.0.0.0/0{' '}
-                </span>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Rules Modal (Multiple with Warning) */}
-          <ModalPreview
-            title="Delete rules"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Rules Info Box with Scrollable List */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Rules(10)
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>Ingress TCP 80 from 0.0.0.0/0</li>
-                  <li>Ingress TCP 443 from 0.0.0.0/0</li>
-                  <li>Ingress TCP 22 from 10.0.0.0/8</li>
-                  <li>Egress TCP 80 to 0.0.0.0/0</li>
-                  <li>Egress TCP 443 to 0.0.0.0/0</li>
-                  <li>Ingress UDP 53 from 0.0.0.0/0</li>
-                  <li>Egress UDP 53 to 0.0.0.0/0</li>
-                  <li>Ingress ICMP from 0.0.0.0/0</li>
-                  <li>Egress ICMP to 0.0.0.0/0</li>
-                  <li>Ingress TCP 3306 from 10.0.0.0/8</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action will permanently delete the selected rules.
-                  <br />
-                  If these rules are attached to any instances, their network traffic may be
-                  affected.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Detach volume Modal */}
-          <ModalPreview title="Detach volume" description="This action detaches the volume.">
-            <div className="flex flex-col gap-2">
-              {/* Volume Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume name{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  vol57
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Make sure the filesystem inside the instance is unmounted before detaching.
-                  Detaching a volume while the instance is running may cause data corruption.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Release{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Restore backup (Small) Modal */}
-          <ModalPreview title="Restore backup" description="This action restores the backup.">
-            <div className="flex flex-col gap-2">
-              {/* Volume Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume name{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  vol-01 (Available)
-                </span>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Restore{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Restore backup (Medium) Modal */}
-          <ModalPreview title="Restore backup" description="This action restores the backup.">
-            <div className="flex flex-col gap-2">
-              {/* Volume Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume name{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  vol-01 (Available)
-                </span>
-              </div>
-
-              {/* Instance Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance name{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>web-server-1 (Shutoff)</li>
-                  <li>dev-team (Shutoff)</li>
-                  <li>AI-training-02 (Shutoff)</li>
-                  <li>web-server-1 (Shutoff)</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Restore{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Restore backup (Large) Modal */}
-          <ModalPreview title="Restore backup" description="This action restores the backup.">
-            <div className="flex flex-col gap-2">
-              {/* Volume Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume name{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  vol-01 (Available)
-                </span>
-              </div>
-
-              {/* Instance Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance name{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>web-server-1 (Shutoff)</li>
-                  <li>dev-team (Shutoff)</li>
-                  <li>AI-training-02 (Shutoff)</li>
-                  <li>web-server-1 (Shutoff)</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Restore cannot proceed. Change the backup status to Available or shut down the
-                  attached instance.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" disabled className="flex-1">
-                Restore{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Disassociate floating IP Modal */}
-          <ModalPreview
-            title="Disassociate floating IP"
-            description="Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately. The IP will remain in your project and can be re-associated later."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Floating IP Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Floating IP{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  123.45.67.8{' '}
-                </span>
-              </div>
-
-              {/* Associated to Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Associated to{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>Type : Instance</li>
-                  <li>Name : server-01</li>
-                  <li>Fixed IP : 10.0.0.10</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Disassociate{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Disassociate floating IP (Load balancer) Modal */}
-          <ModalPreview
-            title="Disassociate floating IP"
-            description="Disassociating will detach the floating IP from this load balancer. External access to the load balancer will be interrupted."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Load balancer Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Load balancer{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-lb-01(10.0.0.10)
-                </span>
-              </div>
-
-              {/* Floating IP Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Floating IP{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  123.45.67.8{' '}
-                </span>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Disassociate{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Release floating IP (Small) Modal */}
-          <ModalPreview
-            title="Release floating IP"
-            description="This action releases the floating IP."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Floating IP Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Floating IP{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  123.45.67.8{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Releasing will detach this IP from its target and remove it from your project.
-                  External access via this IP will stop immediately.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Release{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Release floating IP (Medium) Modal */}
-          <ModalPreview
-            title="Release floating IP"
-            description="This action releases the floating IP."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Associated to Info Box with Scrollable List */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Associated to{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>123.45.67.8</li>
-                  <li>123.45.67.2</li>
-                  <li>123.45.67.4</li>
-                  <li>123.45.67.7</li>
-                  <li>123.45.67.1</li>
-                  <li>123.45.67.2</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Releasing will detach these IPs from their target and remove them from your
-                  project. External access via these IP will stop immediately.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Disassociate{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Load balancer Modal (Single) */}
-          <ModalPreview
-            title="Delete load balancer"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Load balancer Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Load balancer{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-lb-01{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  All listeners, pools, and members associated with it will be removed.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Release Load balancers Modal (Multiple) */}
-          <ModalPreview
-            title="Release load balancers"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Load balancers Info Box with Scrollable List */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Load balancers{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>web-lb-01</li>
-                  <li>web-lb-02</li>
-                  <li>web-lb-03</li>
-                  <li>web-lb-04</li>
-                  <li>web-lb-05</li>
-                  <li>web-lb-06</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  All listeners, pools, and members associated with them will be removed.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-        </CategorySection>
-
-        {/* ============================================================
-           IAM MODALS
-           ============================================================ */}
-        <CategorySection title="IAM">
-          {/* Delete User Modal */}
-          <ModalPreview
-            title="Delete user"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* User Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  User{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  DISPLAY NAME{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this user will permanently remove all associated access and sessions.
-                  This action cannot be undone.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Users (Multiple) Modal */}
-          <ModalPreview
-            title="Delete users"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Users that can be deleted Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Users that can be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>web-server-01</li>
-                  <li>web-server-02</li>
-                  <li>web-server-03</li>
-                  <li>web-server-05</li>
-                  <li>web-server-07</li>
-                </ul>
-              </div>
-
-              {/* Users that cannot be deleted Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Users that cannot be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>my-server-04 (Locked instances cannot be deleted.)</li>
-                  <li>my-server-03 (Instances in current state cannot be deleted.)</li>
-                  <li>my-server-02</li>
-                  <li>my-server-82</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these users will permanently remove all associated access and sessions.
-                  This action cannot be undone.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Confirm User Password Modal */}
-          <ModalPreview
-            title="Confirm user password"
-            description="Review the username and password. The password can only be viewed at this step."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Username Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Username{' '}
-                </span>
-                <div className="flex items-center gap-1.5 min-h-[26px]">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    john.doe{' '}
-                  </span>
-                  <button
-                    className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
-                    aria-label="Copy to clipboard"
-                    onClick={() => {
-                      navigator.clipboard.writeText('john.doe');
-                      setUsernameCopied(true);
-                      setTimeout(() => setUsernameCopied(false), 2000);
-                    }}
-                  >
-                    {usernameCopied ? (
-                      <IconCheck size={12} className="text-[var(--color-state-success)]" />
-                    ) : (
-                      <IconCopy size={12} className="text-[var(--color-text-default)]" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Password Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Password{' '}
-                </span>
-                <div className="flex items-center gap-1.5 min-h-[26px]">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    TempP@ss123!
-                  </span>
-                  <button
-                    className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
-                    aria-label="Copy to clipboard"
-                    onClick={() => {
-                      navigator.clipboard.writeText('TempP@ss123!');
-                      setPasswordCopied(true);
-                      setTimeout(() => setPasswordCopied(false), 2000);
-                    }}
-                  >
-                    {passwordCopied ? (
-                      <IconCheck size={12} className="text-[var(--color-state-success)]" />
-                    ) : (
-                      <IconCopy size={12} className="text-[var(--color-text-default)]" />
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex w-full">
-              <Button variant="primary" className="flex-1">
-                Close{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Unsaved Changes Modal */}
-          <ModalPreview
-            title="Unsaved changes"
-            description="Any unsaved changes will be lost. Do you want to leave?"
-          >
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Leave{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Stay{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Detach User Group Modal */}
-          <ModalPreview
-            title="Detach user group"
-            description="This action detaches the user from the group."
-          >
-            <div className="flex flex-col gap-2">
-              {/* User Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  User{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  DISPLAY NAME{' '}
-                </span>
-              </div>
-
-              {/* User Group Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  User group{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  USERGROUP NAME{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Detaching this user will immediately remove all permissions granted through this
-                  group.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Detach{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Detach Role Modal */}
-          <ModalPreview
-            title="Detach role"
-            description="This action detaches the role from the user."
-          >
-            <div className="flex flex-col gap-2">
-              {/* User Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  User{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  DISPLAY NAME{' '}
-                </span>
-              </div>
-
-              {/* Role Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Role{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  ROLENAME
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Detaching this role will immediately remove all permissions granted through this
-                  role.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Detach{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Remove OTP MFA Modal */}
-          <ModalPreview
-            title="Remove OTP MFA"
-            description="This action removes OTP MFA for the user."
-          >
-            <div className="flex flex-col gap-2">
-              {/* User Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  User{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  DISPLAY NAME{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Removing OTP MFA will require the user to register OTP authentication again.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Remove{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Terminate All Sessions Modal */}
-          <ModalPreview
-            title="Terminate all sessions"
-            description="This action terminates all sessions for the user."
-          >
-            <div className="flex flex-col gap-2">
-              {/* User Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  User{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  DISPLAYNAME{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Terminating all sessions will immediately sign the user out from all devices and
-                  require re-authentication.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Terminate{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Terminate Session Modal (Single Session) */}
-          <ModalPreview title="Terminate session" description="This action terminates the session.">
-            <div className="flex flex-col gap-2">
-              {/* Session Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Session{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  DISPLAYNAME (Browser/device)
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Terminating this session will sign the user out from this device and require
-                  re-authentication.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Terminate{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Remove User From Group Modal */}
-          <ModalPreview
-            title="Remove user"
-            description="This action removes the user from the group."
-          >
-            <div className="flex flex-col gap-2">
-              {/* User Group Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  User group{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  USERGROUP NAME{' '}
-                </span>
-              </div>
-
-              {/* User Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  User{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  DISPLAY NAME{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Removing this user will immediately remove all permissions granted through this
-                  group.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Remove{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Role Modal */}
-          <ModalPreview
-            title="Delete role"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Role Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Role{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  ROLENAME
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this role will immediately remove all permissions granted through this
-                  role.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Roles (Multiple) Modal */}
-          <ModalPreview
-            title="Delete roles"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Roles that can be deleted */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Roles that can be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>web-server-01</li>
-                  <li>web-server-02</li>
-                  <li>web-server-03</li>
-                  <li>web-server-05</li>
-                  <li>web-server-07</li>
-                </ul>
-              </div>
-
-              {/* Roles that cannot be deleted */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Roles that cannot be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>my-server-04 (Locked instances cannot be deleted.)</li>
-                  <li>my-server-03 (Instances in current state cannot be deleted.)</li>
-                  <li>my-server-02</li>
-                  <li>my-server-82</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these roles will immediately remove all permissions granted through these
-                  roles.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Detach Policy Modal */}
-          <ModalPreview
-            title="Detach policy"
-            description="This action detaches the policy from the role."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Role Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Role{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  ROLENAME
-                </span>
-              </div>
-
-              {/* Policy Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Policy{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  POLICYNAME{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Detaching this policy will immediately revoke permissions granted to this role
-                  through this policy.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Detach{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Policy Modal */}
-          <ModalPreview
-            title="Delete policy"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Policy Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Policy{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  POLICYNAME{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This policy will be permanently removed. Users or roles attached to this policy
-                  will immediately lose access permissions.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Policies (Multiple) Modal */}
-          <ModalPreview
-            title="Delete policies"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Policies that can be deleted */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Policies that can be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>web-server-01</li>
-                  <li>web-server-02</li>
-                  <li>web-server-03</li>
-                  <li>web-server-05</li>
-                  <li>web0server-07</li>
-                </ul>
-              </div>
-
-              {/* Policies that cannot be deleted */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Policies that cannot be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>my-server-04 (Locked instances cannot be deleted.)</li>
-                  <li>my-server-03 (Instances in current state cannot be deleted.)</li>
-                  <li>my-server-02</li>
-                  <li>my-server-82</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  These policies will be permanently removed. Users or roles attached to these
-                  policies will immediately lose access permissions.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Revert Policy Version Modal */}
-          <ModalPreview
-            title="Revert policy version"
-            description="This action reverts the policy to the selected version."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Current Version Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Current version{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  VERSION
-                </span>
-              </div>
-
-              {/* Target Version Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Target version{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  VERSION
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Reverting to this version will immediately replace the currently active policy and
-                  may change permissions for all roles using it.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Revert{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Policy Version Modal */}
-          <ModalPreview
-            title="Delete policy version"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this version will permanently remove its policy definitions. This action
-                  cannot be undone.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Update MFA Enforcement Policy Modal */}
-          <ModalPreview
-            title="Update MFA enforcement policy"
-            description="This action applies the changes."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Changes Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Changes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>MFA enforcement: Voluntary → Required for all users</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Updating MFA enforcement may immediately affect authentication requirements for
-                  all users.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Apply{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Update OTP Policy Modal */}
-          <ModalPreview title="Update OTP policy" description="This action applies the changes.">
-            <div className="flex flex-col gap-2">
-              {/* Changes Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Changes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>OTP policy: On → Off</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Turning off OTP authentication will remove OTP as an available MFA method for all
-                  users.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Apply{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Update OTP Policy Settings Modal */}
-          <ModalPreview title="Update OTP policy" description="This action applies the changes.">
-            <div className="flex flex-col gap-2">
-              {/* Changes Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Changes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>Look around Window: 1 → 0</li>
-                  <li>Reusable token: Off → On</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Apply{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Update Email Policy Modal */}
-          <ModalPreview title="Update email policy" description="This action applies the changes.">
-            <div className="flex flex-col gap-2">
-              {/* Changes Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Changes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>Email policy: On → Off</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Turning off email authentication will remove email as an available MFA method for
-                  all users.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Apply{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Update Email Policy Settings Modal */}
-          <ModalPreview title="Update email policy" description="This action applies the changes.">
-            <div className="flex flex-col gap-2">
-              {/* Changes Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Changes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>Code validity period: 300 → 600 seconds</li>
-                  <li>Resend cooldown: 60 → 1 seconds</li>
-                  <li>Verification attempts(Time window): 10 → 40 minutes</li>
-                  <li>Verification attempts(Max attempts): 5 → 10 times</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Apply{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Update General Session Policy Modal */}
-          <ModalPreview
-            title="Update general session policy"
-            description="This action applies the changes."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Changes Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Changes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>Session idle timeout: 30 → 10 minutes</li>
-                  <li>Session max lifespan: 8 → 10 hours</li>
-                  <li>Login timeout: 30 → 10 minutes</li>
-                  <li>Login action timeout: 5 → 3 minutes</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Apply{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Domain Modal */}
-          <ModalPreview
-            title="Delete domain"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Domain Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  domain{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  DOMAINNAME{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this domain will permanently remove all configurations, policies, and
-                  associations linked to it. This action cannot be undone.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Switch to Domain Modal */}
-          <ModalPreview
-            title="Switch to domain"
-            description="Any unsaved changes may be lost when switching to another domain. Do you want to switch?"
-          >
-            <div className="flex flex-col gap-2 items-center">
-              {/* Current Domain Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 w-full">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Current domain{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  Domain A
-                </span>
-              </div>
-
-              {/* Chevron Down Icon */}
-              <IconChevronDown
-                size={16}
-                className="text-[var(--color-text-default)]"
-                stroke={1.5}
-              />
-
-              {/* Target Domain Info Box */}
-              <div className="bg-[#eff6ff] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 w-full">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Target domain{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  Domain B
-                </span>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Switch{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete System Administrator Modal */}
-          <ModalPreview
-            title="Delete system administrator"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              {/* System Administrator Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  System administrator{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  DISPLAY NAME{' '}
-                </span>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this system administrator will permanently remove their global access and
-                  cannot be undone.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Update Password Policy Modal */}
-          <ModalPreview
-            title="Update password policy"
-            description="This action applies the changes."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Changes Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Changes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>Length: 8-64 → 1-100</li>
-                  <li>
-                    Requirements: Uppercase, Lowercase, number, Special character → Uppercase,
-                    Lowercase{' '}
-                  </li>
-                  <li>Exclusion rules: none → Username, Email</li>
-                  <li>Password expiration: 30 → 47 days</li>
-                  <li>Prevent password reuse: Off → On</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Apply{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Update Account Lockout Policy Modal */}
-          <ModalPreview
-            title="Update account lockout policy"
-            description="This action applies the changes."
-          >
-            <div className="flex flex-col gap-2">
-              {/* Changes Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Changes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>
-                    Lockout type: Lockout permanently after Temporary lockout → Lockout
-                    temporarily{' '}
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Apply{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Update Token Policy Modal */}
-          <ModalPreview title="Update token policy" description="This action applies the changes.">
-            <div className="flex flex-col gap-2">
-              {/* Changes Info Box */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Changes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
-                  <li>Access token lifespan: 10 → 15 minutes</li>
-                  <li>Refresh token lifespan: 7 → 3 days</li>
-                </ul>
-              </div>
-
-              {/* Warning Alert Box */}
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Updating token settings may immediately affect authentication behavior across the
-                  system.
-                </p>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Apply{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-        </CategorySection>
-
-        {/* ============================================================
-           STORAGE MODALS
-           ============================================================ */}
-        <CategorySection title="Storage">
-          {/* Delete Bucket Modal */}
-          <ModalPreview title="Delete bucket">
-            {/* Warning Alert Box */}
-            <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-              <IconAlertCircle
-                size={14}
-                className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                stroke={1.5}
-              />
-              <div className="text-body-sm text-[var(--color-text-default)] leading-4">
-                <p className="font-medium mb-1">Warning: Non-empty bucket</p>
-                <ul className="list-disc ml-4 space-y-0.5">
-                  <li>All objects in this bucket will be deleted.</li>
-                  <li>This action is irreversible.</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-        </CategorySection>
-
-        {/* ============================================================
-           CONTAINER MODALS
-           ============================================================ */}
-        <CategorySection title="Container">
-          <ModalPreview
-            title="Delete cluster"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+      <ModalSearchContext.Provider value={modalSearch}>
+        <VStack gap={8}>
+          <VStack gap={4}>
+            <p className="text-body-lg text-[var(--color-text-subtle)]">
+              Collection of modal components used across the application. Click to preview each
+              modal.
+            </p>
+            <SearchInput
+              placeholder="Search modals by name, description, or category..."
+              value={modalSearch}
+              onChange={(e) => setModalSearch(e.target.value)}
+              className="w-[400px]"
+            />
+          </VStack>
+
+          <VStack gap={4}>
+            {/* ============================================================
+               COMPUTE
+               ============================================================ */}
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete snapshot',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Snapshot',
+                },
+                {
+                  title: 'Delete security group',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete security groups',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete rule',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete rules',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Detach volume',
+                  description: 'This action detaches the volume.',
+                  category: 'Volume',
+                },
+                {
+                  title: 'Restore backup',
+                  description: 'This action restores the backup.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Restore backup (medium)',
+                  description: 'This action restores the backup.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Restore backup (large)',
+                  description: 'This action restores the backup.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Disassociate floating IP',
+                  description:
+                    'Disassociating will detach the floating IP from the selected resource.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Disassociate floating IP (LB)',
+                  description:
+                    'Disassociating will detach the floating IP from this load balancer.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Release floating IP',
+                  description: 'This action releases the floating IP.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Release floating IPs',
+                  description: 'This action releases the floating IP.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Delete load balancer',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'LB',
+                },
+                {
+                  title: 'Release load balancers',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'LB',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isComputeOpen} onChange={setIsComputeOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Compute"
+                    count={15}
+                    isOpen={isComputeOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup
+                      heading="Snapshot / Security group"
+                      items={[
+                        {
+                          title: 'Delete snapshot',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Snapshot',
+                        },
+                        {
+                          title: 'Delete security group',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete security groups',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete rule',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete rules',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete snapshot"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Snapshot"
+                        onOpen={() => openModalFn('delete-snapshot')}
+                      />
+                      <ModalListItem
+                        title="Delete security group"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Security"
+                        onOpen={() => openModalFn('delete-security-group')}
+                      />
+                      <ModalListItem
+                        title="Delete security groups"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Security"
+                        onOpen={() => openModalFn('delete-security-groups')}
+                      />
+                      <ModalListItem
+                        title="Delete rule"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Security"
+                        onOpen={() => openModalFn('delete-rule')}
+                      />
+                      <ModalListItem
+                        title="Delete rules"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Security"
+                        onOpen={() => openModalFn('delete-rules')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Volume / Backup"
+                      items={[
+                        {
+                          title: 'Detach volume',
+                          description: 'This action detaches the volume.',
+                          category: 'Volume',
+                        },
+                        {
+                          title: 'Restore backup',
+                          description: 'This action restores the backup.',
+                          category: 'Backup',
+                        },
+                        {
+                          title: 'Restore backup (medium)',
+                          description: 'This action restores the backup.',
+                          category: 'Backup',
+                        },
+                        {
+                          title: 'Restore backup (large)',
+                          description: 'This action restores the backup.',
+                          category: 'Backup',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Detach volume"
+                        description="This action detaches the volume."
+                        category="Volume"
+                        onOpen={() => openModalFn('detach-volume')}
+                      />
+                      <ModalListItem
+                        title="Restore backup"
+                        description="This action restores the backup."
+                        category="Backup"
+                        onOpen={() => openModalFn('restore-backup-sm')}
+                      />
+                      <ModalListItem
+                        title="Restore backup (medium)"
+                        description="This action restores the backup."
+                        category="Backup"
+                        onOpen={() => openModalFn('restore-backup-md')}
+                      />
+                      <ModalListItem
+                        title="Restore backup (large)"
+                        description="This action restores the backup."
+                        category="Backup"
+                        onOpen={() => openModalFn('restore-backup-lg')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Floating IP / Load balancer"
+                      items={[
+                        {
+                          title: 'Disassociate floating IP',
+                          description:
+                            'Disassociating will detach the floating IP from the selected resource.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Disassociate floating IP (LB)',
+                          description:
+                            'Disassociating will detach the floating IP from this load balancer.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Release floating IP',
+                          description: 'This action releases the floating IP.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Release floating IPs',
+                          description: 'This action releases the floating IP.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Delete load balancer',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'LB',
+                        },
+                        {
+                          title: 'Release load balancers',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'LB',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Disassociate floating IP"
+                        description="Disassociating will detach the floating IP from the selected resource."
+                        category="FIP"
+                        onOpen={() => openModalFn('disassociate-fip')}
+                      />
+                      <ModalListItem
+                        title="Disassociate floating IP (LB)"
+                        description="Disassociating will detach the floating IP from this load balancer."
+                        category="FIP"
+                        onOpen={() => openModalFn('disassociate-fip-lb')}
+                      />
+                      <ModalListItem
+                        title="Release floating IP"
+                        description="This action releases the floating IP."
+                        category="FIP"
+                        onOpen={() => openModalFn('release-fip')}
+                      />
+                      <ModalListItem
+                        title="Release floating IPs"
+                        description="This action releases the floating IP."
+                        category="FIP"
+                        onOpen={() => openModalFn('release-fips')}
+                      />
+                      <ModalListItem
+                        title="Delete load balancer"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="LB"
+                        onOpen={() => openModalFn('delete-lb')}
+                      />
+                      <ModalListItem
+                        title="Release load balancers"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="LB"
+                        onOpen={() => openModalFn('release-lbs')}
+                      />
+                    </FilteredGroup>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+
+            {/* ============================================================
+               IAM
+               ============================================================ */}
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete user',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'User',
+                },
+                {
+                  title: 'Delete users',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'User',
+                },
+                {
+                  title: 'Confirm user password',
+                  description:
+                    'Review the username and password. The password can only be viewed at this step.',
+                  category: 'User',
+                },
+                {
+                  title: 'Password reset',
+                  description:
+                    'The new password is shown only once. Copy and store it securely before closing.',
+                  category: 'User',
+                },
+                {
+                  title: 'Unsaved changes',
+                  description: 'Any unsaved changes will be lost. Do you want to leave?',
+                  category: 'General',
+                },
+                {
+                  title: 'Detach user group',
+                  description:
+                    'Detaching revokes permissions granted through this group’s roles for this user.',
+                  category: 'Group',
+                },
+                {
+                  title: 'Detach role',
+                  description: 'This action detaches the role from the user.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Remove OTP MFA',
+                  description: 'This action removes OTP MFA for the user.',
+                  category: 'MFA',
+                },
+                {
+                  title: 'Terminate all sessions',
+                  description: 'This action terminates all sessions for the user.',
+                  category: 'Session',
+                },
+                {
+                  title: 'Terminate session',
+                  description: 'This action terminates the session.',
+                  category: 'Session',
+                },
+                {
+                  title: 'Remove user',
+                  description: 'This action removes the user from the group.',
+                  category: 'Group',
+                },
+                {
+                  title: 'Delete role',
+                  description:
+                    'If this role has active temporary grants, deleting it removes all of those grants.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Delete roles',
+                  description:
+                    'If any selected roles have active temporary grants, deleting them removes all of those grants.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Revoke access',
+                  description:
+                    'Temporary access is revoked immediately, regardless of the scheduled end time.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Revoke access (bulk)',
+                  description:
+                    'Temporary access is revoked immediately, regardless of the scheduled end time.',
+                  category: 'Role',
+                },
+                {
+                  title: 'Detach policy (user)',
+                  description: 'This user will lose all permissions granted by this policy.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Detach policy (user group)',
+                  description:
+                    'All members of this group will lose the permissions granted by this policy.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Detach policy (role)',
+                  description:
+                    'All users and groups assigned to this role will lose the permissions granted by this policy.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Detach policy (service account)',
+                  description:
+                    'This service account will lose all permissions granted by this policy.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Delete policy',
+                  description:
+                    'Permanently removes the policy; attached users or roles lose permissions immediately.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Delete policies',
+                  description:
+                    'Permanently removes deletable policies; attached users or roles lose permissions immediately.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Revert policy version',
+                  description:
+                    'Reverting changes the permissions applied to all attached entities.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Delete policy version',
+                  description: 'Permanently removes the selected policy version.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update MFA enforcement policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update OTP policy (enable)',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update OTP policy (disable)',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update email policy (enable)',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update email policy (disable)',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update general session policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Delete domain',
+                  description:
+                    'Removes IAM data for the domain; requires prerequisites and confirms destructive cleanup.',
+                  category: 'Domain',
+                },
+                {
+                  title: 'Delete domain (prerequisites not met)',
+                  description:
+                    'This domain cannot be deleted until failed prerequisites are cleared.',
+                  category: 'Domain',
+                },
+                {
+                  title: 'Switch to domain',
+                  description: 'Any unsaved changes may be lost when switching to another domain.',
+                  category: 'Domain',
+                },
+                {
+                  title: 'Delete system administrator',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Admin',
+                },
+                {
+                  title: 'Update password policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update account lockout policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Update token policy',
+                  description: 'This action applies the changes.',
+                  category: 'Policy',
+                },
+                {
+                  title: 'Password reset',
+                  description:
+                    'The new password is shown only once. Copy and store it securely before closing.',
+                  category: 'User',
+                },
+                {
+                  title: 'New access key',
+                  description:
+                    'These credentials are shown only once. Copy and store them securely before closing.',
+                  category: 'Access Key',
+                },
+                {
+                  title: 'Delete access key',
+                  description:
+                    'This key stops working immediately and is permanently removed from the account.',
+                  category: 'Access Key',
+                },
+                {
+                  title: 'Delete domain (prerequisites not met)',
+                  description:
+                    'This domain cannot be deleted until failed prerequisites are cleared.',
+                  category: 'Domain',
+                },
+                {
+                  title: 'Regenerate client secret',
+                  description: 'The current secret stops working immediately.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'New client secret (result)',
+                  description: 'Credentials are shown only once. Copy and store them securely.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'New API key (result)',
+                  description: 'Credentials are shown only once. Copy and store them securely.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'Reset API key',
+                  description: 'The current key stops working immediately.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'Delete API key',
+                  description: 'This key stops working immediately and cannot be restored.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'Delete service account',
+                  description: 'All credentials and permission bindings will be removed.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'Delete service accounts',
+                  description:
+                    'All credentials and permission bindings for these accounts will be removed.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'New client secret (close)',
+                  description: 'Credentials are shown only once. Uses Close button variant.',
+                  category: 'Service Account',
+                },
+                {
+                  title: 'New access key (SA)',
+                  description:
+                    'Shows access key ID and secret access key. Credentials shown only once.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Remove OTP MFA (SA)',
+                  description: 'After removal, user will not be asked for OTP at sign-in.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Delete system administrator (single)',
+                  description: 'Deleting this user removes and invalidates access keys.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Terminate session (SA)',
+                  description: 'Terminating this session will sign the user out from this device.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Reset API key (SA)',
+                  description:
+                    'The current key stops working immediately. New key shown only once.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Terminate all sessions (SA)',
+                  description: 'Immediately sign the user out from all devices.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Delete access key (SA)',
+                  description: 'This key stops working immediately and is permanently removed.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'Delete system administrators (multi)',
+                  description: 'Deleting selected users removes and invalidates their access keys.',
+                  category: 'System Admin',
+                },
+                {
+                  title: 'New API key (SA)',
+                  description: 'Shows key ID and new API key. Credentials shown only once.',
+                  category: 'System Admin',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isIAMOpen} onChange={setIsIAMOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="IAM"
+                    count={55}
+                    isOpen={isIAMOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup
+                      heading="User management"
+                      items={[
+                        {
+                          title: 'Delete user',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'User',
+                        },
+                        {
+                          title: 'Delete users',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'User',
+                        },
+                        {
+                          title: 'Confirm user password',
+                          description:
+                            'Review the username and password. The password can only be viewed at this step.',
+                          category: 'User',
+                        },
+                        {
+                          title: 'Password reset',
+                          description:
+                            'The new password is shown only once. Copy and store it securely before closing.',
+                          category: 'User',
+                        },
+                        {
+                          title: 'Unsaved changes',
+                          description: 'Any unsaved changes will be lost. Do you want to leave?',
+                          category: 'General',
+                        },
+                        {
+                          title: 'Detach user group',
+                          description:
+                            'Detaching revokes permissions granted through this group’s roles for this user.',
+                          category: 'Group',
+                        },
+                        {
+                          title: 'Detach role',
+                          description: 'This action detaches the role from the user.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Remove OTP MFA',
+                          description: 'This action removes OTP MFA for the user.',
+                          category: 'MFA',
+                        },
+                        {
+                          title: 'Terminate all sessions',
+                          description: 'This action terminates all sessions for the user.',
+                          category: 'Session',
+                        },
+                        {
+                          title: 'Terminate session',
+                          description: 'This action terminates the session.',
+                          category: 'Session',
+                        },
+                        {
+                          title: 'Remove user',
+                          description: 'This action removes the user from the group.',
+                          category: 'Group',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete user"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="User"
+                        onOpen={() => openModalFn('delete-user')}
+                      />
+                      <ModalListItem
+                        title="Delete users"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="User"
+                        onOpen={() => openModalFn('delete-users')}
+                      />
+                      <ModalListItem
+                        title="Confirm user password"
+                        description="Review the username and password. The password can only be viewed at this step."
+                        category="User"
+                        onOpen={() => openModalFn('confirm-password')}
+                      />
+                      <ModalListItem
+                        title="Password reset"
+                        description="The new password is shown only once. Copy and store it securely before closing."
+                        category="User"
+                        onOpen={() => openModalFn('password-reset')}
+                      />
+                      <ModalListItem
+                        title="Unsaved changes"
+                        description="Any unsaved changes will be lost. Do you want to leave?"
+                        category="General"
+                        onOpen={() => openModalFn('unsaved-changes')}
+                      />
+                      <ModalListItem
+                        title="Detach user group"
+                        description="Detaching revokes permissions granted through this group’s roles for this user."
+                        category="Group"
+                        onOpen={() => openModalFn('detach-user-group')}
+                      />
+                      <ModalListItem
+                        title="Detach role"
+                        description="This action detaches the role from the user."
+                        category="Role"
+                        onOpen={() => openModalFn('detach-role')}
+                      />
+                      <ModalListItem
+                        title="Remove OTP MFA"
+                        description="This action removes OTP MFA for the user."
+                        category="MFA"
+                        onOpen={() => openModalFn('remove-otp-mfa')}
+                      />
+                      <ModalListItem
+                        title="Terminate all sessions"
+                        description="This action terminates all sessions for the user."
+                        category="Session"
+                        onOpen={() => openModalFn('terminate-all-sessions')}
+                      />
+                      <ModalListItem
+                        title="Terminate session"
+                        description="This action terminates the session."
+                        category="Session"
+                        onOpen={() => openModalFn('terminate-session')}
+                      />
+                      <ModalListItem
+                        title="Remove user"
+                        description="This action removes the user from the group."
+                        category="Group"
+                        onOpen={() => openModalFn('remove-user')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Role / Policy"
+                      items={[
+                        {
+                          title: 'Delete role',
+                          description:
+                            'If this role has active temporary grants, deleting it removes all of those grants.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Delete roles',
+                          description:
+                            'If any selected roles have active temporary grants, deleting them removes all of those grants.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Revoke access',
+                          description:
+                            'Temporary access is revoked immediately, regardless of the scheduled end time.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Revoke access (bulk)',
+                          description:
+                            'Temporary access is revoked immediately, regardless of the scheduled end time.',
+                          category: 'Role',
+                        },
+                        {
+                          title: 'Detach policy (user)',
+                          description:
+                            'This user will lose all permissions granted by this policy.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Detach policy (user group)',
+                          description:
+                            'All members of this group will lose the permissions granted by this policy.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Detach policy (role)',
+                          description:
+                            'All users and groups assigned to this role will lose the permissions granted by this policy.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Detach policy (service account)',
+                          description:
+                            'This service account will lose all permissions granted by this policy.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Delete policy',
+                          description:
+                            'Permanently removes the policy; attached users or roles lose permissions immediately.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Delete policies',
+                          description:
+                            'Permanently removes deletable policies; attached users or roles lose permissions immediately.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Revert policy version',
+                          description:
+                            'Reverting changes the permissions applied to all attached entities.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Delete policy version',
+                          description: 'Permanently removes the selected policy version.',
+                          category: 'Policy',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete role"
+                        description="If this role has active temporary grants, deleting it removes all of those grants."
+                        category="Role"
+                        onOpen={() => openModalFn('delete-role')}
+                      />
+                      <ModalListItem
+                        title="Delete roles"
+                        description="If any selected roles have active temporary grants, deleting them removes all of those grants."
+                        category="Role"
+                        onOpen={() => openModalFn('delete-roles')}
+                      />
+                      <ModalListItem
+                        title="Revoke access"
+                        description="Temporary access is revoked immediately, regardless of the scheduled end time."
+                        category="Role"
+                        onOpen={() => openModalFn('revoke-access-single')}
+                      />
+                      <ModalListItem
+                        title="Revoke access (bulk)"
+                        description="Temporary access is revoked immediately, regardless of the scheduled end time."
+                        category="Role"
+                        onOpen={() => openModalFn('revoke-access-bulk')}
+                      />
+                      <ModalListItem
+                        title="Detach policy (user)"
+                        description="This user will lose all permissions granted by this policy."
+                        category="Policy"
+                        onOpen={() => openModalFn('detach-policy')}
+                      />
+                      <ModalListItem
+                        title="Detach policy (user group)"
+                        description="All members of this group will lose the permissions granted by this policy."
+                        category="Policy"
+                        onOpen={() => openModalFn('detach-policy-group')}
+                      />
+                      <ModalListItem
+                        title="Detach policy (role)"
+                        description="All users and groups assigned to this role will lose the permissions granted by this policy."
+                        category="Policy"
+                        onOpen={() => openModalFn('detach-policy-role')}
+                      />
+                      <ModalListItem
+                        title="Detach policy (service account)"
+                        description="This service account will lose all permissions granted by this policy."
+                        category="Policy"
+                        onOpen={() => openModalFn('detach-policy-service-account')}
+                      />
+                      <ModalListItem
+                        title="Delete policy"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Policy"
+                        onOpen={() => openModalFn('delete-policy')}
+                      />
+                      <ModalListItem
+                        title="Delete policies"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Policy"
+                        onOpen={() => openModalFn('delete-policies')}
+                      />
+                      <ModalListItem
+                        title="Revert policy version"
+                        description="This action reverts the policy to the selected version."
+                        category="Policy"
+                        onOpen={() => openModalFn('revert-policy-version')}
+                      />
+                      <ModalListItem
+                        title="Delete policy version"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Policy"
+                        onOpen={() => openModalFn('delete-policy-version')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Policy settings"
+                      items={[
+                        {
+                          title: 'Update MFA enforcement policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update OTP policy (enable)',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update OTP policy (disable)',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update email policy (enable)',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update email policy (disable)',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update general session policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Update MFA enforcement policy"
+                        description="This action applies the changes."
+                        category="Policy"
+                        onOpen={() => openModalFn('update-mfa-policy')}
+                      />
+                      <ModalListItem
+                        title="Update OTP policy (enable)"
+                        description="This action applies the changes."
+                        category="Policy"
+                        onOpen={() => openModalFn('update-otp-enable')}
+                      />
+                      <ModalListItem
+                        title="Update OTP policy (disable)"
+                        description="This action applies the changes."
+                        category="Policy"
+                        onOpen={() => openModalFn('update-otp-disable')}
+                      />
+                      <ModalListItem
+                        title="Update email policy (enable)"
+                        description="This action applies the changes."
+                        category="Policy"
+                        onOpen={() => openModalFn('update-email-enable')}
+                      />
+                      <ModalListItem
+                        title="Update email policy (disable)"
+                        description="This action applies the changes."
+                        category="Policy"
+                        onOpen={() => openModalFn('update-email-disable')}
+                      />
+                      <ModalListItem
+                        title="Update general session policy"
+                        description="This action applies the changes."
+                        category="Policy"
+                        onOpen={() => openModalFn('update-session-policy')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Domain / Admin"
+                      items={[
+                        {
+                          title: 'Delete domain',
+                          description:
+                            'Removes IAM data for the domain; requires prerequisites and confirms destructive cleanup.',
+                          category: 'Domain',
+                        },
+                        {
+                          title: 'Delete domain (prerequisites not met)',
+                          description:
+                            'This domain cannot be deleted until failed prerequisites are cleared.',
+                          category: 'Domain',
+                        },
+                        {
+                          title: 'Switch to domain',
+                          description:
+                            'Any unsaved changes may be lost when switching to another domain.',
+                          category: 'Domain',
+                        },
+                        {
+                          title: 'Delete system administrator',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Admin',
+                        },
+                        {
+                          title: 'Update password policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update account lockout policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                        {
+                          title: 'Update token policy',
+                          description: 'This action applies the changes.',
+                          category: 'Policy',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete domain"
+                        description="Removes IAM data for the domain; requires prerequisites and confirms destructive cleanup."
+                        category="Domain"
+                        onOpen={() => openModalFn('delete-domain')}
+                      />
+                      <ModalListItem
+                        title="Delete domain (prerequisites not met)"
+                        description="This domain cannot be deleted until failed prerequisites are cleared."
+                        category="Domain"
+                        onOpen={() => openModalFn('delete-domain-prereqs-fail')}
+                      />
+                      <ModalListItem
+                        title="Switch to domain"
+                        description="Any unsaved changes may be lost when switching to another domain."
+                        category="Domain"
+                        onOpen={() => openModalFn('switch-domain')}
+                      />
+                      <ModalListItem
+                        title="Delete system administrator"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Admin"
+                        onOpen={() => openModalFn('delete-system-admin')}
+                      />
+                      <ModalListItem
+                        title="Update password policy"
+                        description="This action applies the changes."
+                        category="Policy"
+                        onOpen={() => openModalFn('update-password-policy')}
+                      />
+                      <ModalListItem
+                        title="Update account lockout policy"
+                        description="This action applies the changes."
+                        category="Policy"
+                        onOpen={() => openModalFn('update-lockout-policy')}
+                      />
+                      <ModalListItem
+                        title="Update token policy"
+                        description="This action applies the changes."
+                        category="Policy"
+                        onOpen={() => openModalFn('update-token-policy')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="System Administrator"
+                      items={[
+                        {
+                          title: 'New access key (SA)',
+                          description:
+                            'Shows access key ID and secret access key. Credentials shown only once.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Remove OTP MFA (SA)',
+                          description: 'After removal, user will not be asked for OTP at sign-in.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Delete system administrator (single)',
+                          description: 'Deleting this user removes and invalidates access keys.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Terminate session (SA)',
+                          description:
+                            'Terminating this session will sign the user out from this device.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Reset API key (SA)',
+                          description:
+                            'The current key stops working immediately. New key shown only once.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Terminate all sessions (SA)',
+                          description: 'Immediately sign the user out from all devices.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Delete access key (SA)',
+                          description:
+                            'This key stops working immediately and is permanently removed.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'Delete system administrators (multi)',
+                          description:
+                            'Deleting selected users removes and invalidates their access keys.',
+                          category: 'System Admin',
+                        },
+                        {
+                          title: 'New API key (SA)',
+                          description: 'Shows key ID and new API key. Credentials shown only once.',
+                          category: 'System Admin',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="New access key (SA)"
+                        description="Shows access key ID and secret access key. Credentials shown only once."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-new-access-key')}
+                      />
+                      <ModalListItem
+                        title="Remove OTP MFA (SA)"
+                        description="After removal, user will not be asked for OTP at sign-in."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-remove-otp')}
+                      />
+                      <ModalListItem
+                        title="Delete system administrator (single)"
+                        description="Deleting this user removes and invalidates access keys."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-delete-admin')}
+                      />
+                      <ModalListItem
+                        title="Terminate session (SA)"
+                        description="Terminating this session will sign the user out from this device."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-terminate-session')}
+                      />
+                      <ModalListItem
+                        title="Reset API key (SA)"
+                        description="The current key stops working immediately. New key shown only once."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-reset-api-key')}
+                      />
+                      <ModalListItem
+                        title="Terminate all sessions (SA)"
+                        description="Immediately sign the user out from all devices."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-terminate-all')}
+                      />
+                      <ModalListItem
+                        title="Delete access key (SA)"
+                        description="This key stops working immediately and is permanently removed."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-delete-access-key')}
+                      />
+                      <ModalListItem
+                        title="Delete system administrators (multi)"
+                        description="Deleting selected users removes and invalidates their access keys."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-delete-admins')}
+                      />
+                      <ModalListItem
+                        title="New API key (SA)"
+                        description="Shows key ID and new API key. Credentials shown only once."
+                        category="System Admin"
+                        onOpen={() => openModalFn('sa-new-api-key')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Service Account"
+                      items={[
+                        {
+                          title: 'Regenerate client secret',
+                          description: 'The current secret stops working immediately.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'New client secret (result)',
+                          description:
+                            'Credentials are shown only once. Copy and store them securely.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'New API key (result)',
+                          description:
+                            'Credentials are shown only once. Copy and store them securely.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'New access key',
+                          description:
+                            'These credentials are shown only once. Copy and store them securely before closing.',
+                          category: 'Access Key',
+                        },
+                        {
+                          title: 'Reset API key',
+                          description: 'The current key stops working immediately.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'Delete API key',
+                          description: 'This key stops working immediately and cannot be restored.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'Delete access key',
+                          description:
+                            'This key stops working immediately and is permanently removed from the account.',
+                          category: 'Access Key',
+                        },
+                        {
+                          title: 'Delete service account',
+                          description: 'All credentials and permission bindings will be removed.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'Delete service accounts',
+                          description:
+                            'All credentials and permission bindings for these accounts will be removed.',
+                          category: 'Service Account',
+                        },
+                        {
+                          title: 'New client secret (close)',
+                          description:
+                            'Credentials are shown only once. Uses Close button variant.',
+                          category: 'Service Account',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Regenerate client secret"
+                        description="The current secret stops working immediately."
+                        category="Service Account"
+                        onOpen={() => openModalFn('regenerate-client-secret')}
+                      />
+                      <ModalListItem
+                        title="New client secret (result)"
+                        description="Credentials are shown only once. Copy and store them securely."
+                        category="Service Account"
+                        onOpen={() => openModalFn('new-client-secret')}
+                      />
+                      <ModalListItem
+                        title="New API key (result)"
+                        description="Credentials are shown only once. Copy and store them securely."
+                        category="Service Account"
+                        onOpen={() => openModalFn('new-api-key')}
+                      />
+                      <ModalListItem
+                        title="New access key"
+                        description="These credentials are shown only once. Copy and store them securely before closing."
+                        category="Access Key"
+                        onOpen={() => openModalFn('new-access-key')}
+                      />
+                      <ModalListItem
+                        title="Reset API key"
+                        description="The current key stops working immediately."
+                        category="Service Account"
+                        onOpen={() => openModalFn('reset-api-key')}
+                      />
+                      <ModalListItem
+                        title="Delete API key"
+                        description="This key stops working immediately and cannot be restored."
+                        category="Service Account"
+                        onOpen={() => openModalFn('delete-api-key')}
+                      />
+                      <ModalListItem
+                        title="Delete access key"
+                        description="This key stops working immediately and is permanently removed from the account."
+                        category="Access Key"
+                        onOpen={() => openModalFn('delete-access-key')}
+                      />
+                      <ModalListItem
+                        title="Delete service account"
+                        description="All credentials and permission bindings will be removed."
+                        category="Service Account"
+                        onOpen={() => openModalFn('delete-service-account')}
+                      />
+                      <ModalListItem
+                        title="Delete service accounts"
+                        description="All credentials and permission bindings for these accounts will be removed."
+                        category="Service Account"
+                        onOpen={() => openModalFn('delete-service-accounts')}
+                      />
+                      <ModalListItem
+                        title="New client secret (close)"
+                        description="Credentials are shown only once. Uses Close button variant."
+                        category="Service Account"
+                        onOpen={() => openModalFn('new-client-secret-close')}
+                      />
+                    </FilteredGroup>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+
+            {/* ============================================================
+               STORAGE
+               ============================================================ */}
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete bucket',
+                  description: 'This action permanently deletes the bucket and all its contents.',
+                  category: 'Bucket',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isStorageOpen} onChange={setIsStorageOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Storage"
+                    count={1}
+                    isOpen={isStorageOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <div className="flex flex-col gap-2">
+                      <ModalListItem
+                        title="Delete bucket"
+                        description="This action permanently deletes the bucket and all its contents."
+                        category="Bucket"
+                        onOpen={() => openModalFn('delete-bucket')}
+                      />
+                    </div>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+
+            {/* ============================================================
+               CONTAINER
+               ============================================================ */}
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete cluster',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Cluster',
+                },
+                {
+                  title: 'Delete namespace',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Namespace',
+                },
+                {
+                  title: 'Delete pod',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Pod',
+                },
+                {
+                  title: 'Delete job',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Job',
+                },
+                {
+                  title: 'Delete CronJob',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'CronJob',
+                },
+                {
+                  title: 'Delete deployment',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Deployment',
+                },
+                {
+                  title: 'Delete StatefulSet',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'StatefulSet',
+                },
+                {
+                  title: 'Delete DaemonSet',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'DaemonSet',
+                },
+                {
+                  title: 'Redeploy deployment',
+                  description: 'Are you sure you want to redeploy this deployment?',
+                  category: 'Deployment',
+                },
+                {
+                  title: 'Redeploy StatefulSet',
+                  description: 'Are you sure you want to redeploy this StatefulSet?',
+                  category: 'StatefulSet',
+                },
+                {
+                  title: 'Redeploy DaemonSet',
+                  description: 'Are you sure you want to redeploy this DaemonSet?',
+                  category: 'DaemonSet',
+                },
+                {
+                  title: 'Roll back deployment',
+                  description: 'Select a revision to roll back to.',
+                  category: 'Deployment',
+                },
+                {
+                  title: 'Operator required',
+                  description:
+                    'CNPG Operator is not installed. Install the operator before creating instances.',
+                  category: 'Catalog',
+                },
+                {
+                  title: 'Delete app',
+                  description: 'Remove the Helm release and all associated Kubernetes resources.',
+                  category: 'Catalog',
+                },
+                {
+                  title: 'Delete operator',
+                  description:
+                    'Permanently remove the operator and all Kubernetes resources it manages.',
+                  category: 'Operator',
+                },
+                {
+                  title: 'Delete operator (blocked)',
+                  description: 'Cannot delete operator while active CR instances still exist.',
+                  category: 'Operator',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isContainerOpen} onChange={setIsContainerOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Container"
+                    count={16}
+                    isOpen={isContainerOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup
+                      heading="Delete resources"
+                      items={[
+                        {
+                          title: 'Delete cluster',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Cluster',
+                        },
+                        {
+                          title: 'Delete namespace',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Namespace',
+                        },
+                        {
+                          title: 'Delete pod',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Pod',
+                        },
+                        {
+                          title: 'Delete job',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Job',
+                        },
+                        {
+                          title: 'Delete CronJob',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'CronJob',
+                        },
+                        {
+                          title: 'Delete deployment',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Deployment',
+                        },
+                        {
+                          title: 'Delete StatefulSet',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'StatefulSet',
+                        },
+                        {
+                          title: 'Delete DaemonSet',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'DaemonSet',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete cluster"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Cluster"
+                        onOpen={() => openModalFn('delete-cluster')}
+                      />
+                      <ModalListItem
+                        title="Delete namespace"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Namespace"
+                        onOpen={() => openModalFn('delete-namespace')}
+                      />
+                      <ModalListItem
+                        title="Delete pod"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Pod"
+                        onOpen={() => openModalFn('delete-pod')}
+                      />
+                      <ModalListItem
+                        title="Delete job"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Job"
+                        onOpen={() => openModalFn('delete-job')}
+                      />
+                      <ModalListItem
+                        title="Delete CronJob"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="CronJob"
+                        onOpen={() => openModalFn('delete-cronjob')}
+                      />
+                      <ModalListItem
+                        title="Delete deployment"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Deployment"
+                        onOpen={() => openModalFn('delete-deployment')}
+                      />
+                      <ModalListItem
+                        title="Delete StatefulSet"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="StatefulSet"
+                        onOpen={() => openModalFn('delete-statefulset')}
+                      />
+                      <ModalListItem
+                        title="Delete DaemonSet"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="DaemonSet"
+                        onOpen={() => openModalFn('delete-daemonset')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Workload actions"
+                      items={[
+                        {
+                          title: 'Redeploy deployment',
+                          description: 'Are you sure you want to redeploy this deployment?',
+                          category: 'Deployment',
+                        },
+                        {
+                          title: 'Redeploy StatefulSet',
+                          description: 'Are you sure you want to redeploy this StatefulSet?',
+                          category: 'StatefulSet',
+                        },
+                        {
+                          title: 'Redeploy DaemonSet',
+                          description: 'Are you sure you want to redeploy this DaemonSet?',
+                          category: 'DaemonSet',
+                        },
+                        {
+                          title: 'Roll back deployment',
+                          description: 'Select a revision to roll back to.',
+                          category: 'Deployment',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Redeploy deployment"
+                        description="Are you sure you want to redeploy this deployment?"
+                        category="Deployment"
+                        onOpen={() => openModalFn('redeploy-deployment')}
+                      />
+                      <ModalListItem
+                        title="Redeploy StatefulSet"
+                        description="Are you sure you want to redeploy this StatefulSet?"
+                        category="StatefulSet"
+                        onOpen={() => openModalFn('redeploy-statefulset')}
+                      />
+                      <ModalListItem
+                        title="Redeploy DaemonSet"
+                        description="Are you sure you want to redeploy this DaemonSet?"
+                        category="DaemonSet"
+                        onOpen={() => openModalFn('redeploy-daemonset')}
+                      />
+                      <ModalListItem
+                        title="Roll back deployment"
+                        description="Select a revision to roll back to."
+                        category="Deployment"
+                        onOpen={() => openModalFn('rollback-deployment')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Catalog actions"
+                      items={[
+                        {
+                          title: 'Operator required',
+                          description:
+                            'CNPG Operator is not installed. Install the operator before creating instances.',
+                          category: 'Catalog',
+                        },
+                        {
+                          title: 'Delete app',
+                          description:
+                            'Remove the Helm release and all associated Kubernetes resources.',
+                          category: 'Catalog',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Operator required"
+                        description="CNPG Operator is not installed. Install the operator before creating instances."
+                        category="Catalog"
+                        onOpen={() => openModalFn('operator-required')}
+                      />
+                      <ModalListItem
+                        title="Delete app"
+                        description="Remove the Helm release and all associated Kubernetes resources."
+                        category="Catalog"
+                        onOpen={() => openModalFn('delete-app')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Operator actions"
+                      items={[
+                        {
+                          title: 'Delete operator',
+                          description:
+                            'Permanently remove the operator and all Kubernetes resources it manages.',
+                          category: 'Operator',
+                        },
+                        {
+                          title: 'Delete operator (blocked)',
+                          description:
+                            'Cannot delete operator while active CR instances still exist.',
+                          category: 'Operator',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete operator"
+                        description="Permanently remove the operator and all Kubernetes resources it manages."
+                        category="Operator"
+                        onOpen={() => openModalFn('delete-operator')}
+                      />
+                      <ModalListItem
+                        title="Delete operator (blocked)"
+                        description="Cannot delete operator while active CR instances still exist."
+                        category="Operator"
+                        onOpen={() => openModalFn('delete-operator-blocked')}
+                      />
+                    </FilteredGroup>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+
+            {/* ============================================================
+               COMPUTE ADMIN
+               ============================================================ */}
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Stop instance',
+                  description: 'This action stops the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Reboot instance',
+                  description: 'This action reboots the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Soft reboot instance',
+                  description: 'This action performs a soft reboot of the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Confirm resize',
+                  description: 'This action confirms the resized state of the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Revert resize',
+                  description:
+                    'This action reverts the instance to its previous state before the resize.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Delete instance',
+                  description: 'Removing the instance is permanent and cannot be undone.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Shelve instance',
+                  description: 'This action shelves the instance.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Start instances',
+                  description: 'This action starts the selected instances.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Stop instances',
+                  description: 'This action stops the selected instances.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Reboot instances',
+                  description: 'This action reboots the selected instances.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Delete instances',
+                  description: 'Removing the selected instances is permanent and cannot be undone.',
+                  category: 'Instance',
+                },
+                {
+                  title: 'Delete instance template',
+                  description: 'Deleting the instance template is permanent and cannot be undone.',
+                  category: 'Template',
+                },
+                {
+                  title: 'Delete instance templates',
+                  description:
+                    'Deleting the selected instance templates is permanent and cannot be undone.',
+                  category: 'Template',
+                },
+                {
+                  title: 'Delete image',
+                  description: 'Deleting the image is permanent and cannot be undone.',
+                  category: 'Image',
+                },
+                {
+                  title: 'Delete images',
+                  description: 'Deleting the selected images is permanent and cannot be undone.',
+                  category: 'Image',
+                },
+                {
+                  title: 'Delete snapshot',
+                  description: 'Deleting the snapshot is permanent and cannot be undone.',
+                  category: 'Snapshot',
+                },
+                {
+                  title: 'Delete snapshots',
+                  description: 'Deleting the selected snapshots is permanent and cannot be undone.',
+                  category: 'Snapshot',
+                },
+                {
+                  title: 'Delete volume',
+                  description: 'Deleting the volume is permanent and cannot be undone.',
+                  category: 'Volume',
+                },
+                {
+                  title: 'Delete volumes',
+                  description: 'Deleting the selected volumes is permanent and cannot be undone.',
+                  category: 'Volume',
+                },
+                {
+                  title: 'Delete volume type',
+                  description: 'Deleting the volume type is permanent and cannot be undone.',
+                  category: 'VolumeType',
+                },
+                {
+                  title: 'Delete volume types',
+                  description:
+                    'Deleting the selected volume types is permanent and cannot be undone.',
+                  category: 'VolumeType',
+                },
+                {
+                  title: 'Delete backup',
+                  description: 'Deleting the backup is permanent and cannot be undone.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Delete backups',
+                  description: 'Deleting the selected backups is permanent and cannot be undone.',
+                  category: 'Backup',
+                },
+                {
+                  title: 'Delete encryption',
+                  description:
+                    'This action removes the encryption configuration from the volume type.',
+                  category: 'Encryption',
+                },
+                {
+                  title: 'Delete extra spec',
+                  description: 'This action removes the extra specification from the volume type.',
+                  category: 'ExtraSpec',
+                },
+                {
+                  title: 'Delete extra specs',
+                  description:
+                    'Deleting the selected extra specifications is permanent and cannot be undone.',
+                  category: 'ExtraSpec',
+                },
+                {
+                  title: 'Delete QoS spec',
+                  description: 'This action removes the QoS specification.',
+                  category: 'QoS',
+                },
+                {
+                  title: 'Delete QoS specs',
+                  description: 'This action removes the selected QoS specifications.',
+                  category: 'QoS',
+                },
+                {
+                  title: 'Delete extra spec (QoS)',
+                  description: 'This action removes the extra specification from the volume type.',
+                  category: 'QoS',
+                },
+                {
+                  title: 'Delete extra specs (QoS)',
+                  description:
+                    'Deleting the selected extra specifications is permanent and cannot be undone.',
+                  category: 'QoS',
+                },
+                {
+                  title: 'Delete network',
+                  description: 'Deleting the network is permanent and cannot be undone.',
+                  category: 'Network',
+                },
+                {
+                  title: 'Delete networks',
+                  description: 'Removing the selected networks is permanent and cannot be undone.',
+                  category: 'Network',
+                },
+                {
+                  title: 'Delete subnet',
+                  description: 'Deleting the subnet is permanent and cannot be undone.',
+                  category: 'Subnet',
+                },
+                {
+                  title: 'Delete subnets',
+                  description: 'Deleting the selected subnets is permanent and cannot be undone.',
+                  category: 'Subnet',
+                },
+                {
+                  title: 'Delete port',
+                  description: 'Deleting the port is permanent and cannot be undone.',
+                  category: 'Port',
+                },
+                {
+                  title: 'Delete ports',
+                  description: 'Deleting the selected ports is permanent and cannot be undone.',
+                  category: 'Port',
+                },
+                {
+                  title: 'Delete router',
+                  description: 'Deleting the router is permanent and cannot be undone.',
+                  category: 'Router',
+                },
+                {
+                  title: 'Delete routers',
+                  description: 'Removing the selected routers is permanent and cannot be undone.',
+                  category: 'Router',
+                },
+                {
+                  title: 'Delete static routes',
+                  description:
+                    'Deleting the selected static routes is permanent and cannot be undone.',
+                  category: 'Router',
+                },
+                {
+                  title: 'Remove DHCP agents',
+                  description: 'This action removes the selected DHCP agents from the network.',
+                  category: 'Network',
+                },
+                {
+                  title: 'Release fixed IP',
+                  description: 'This action releases the fixed IP from the port.',
+                  category: 'Port',
+                },
+                {
+                  title: 'Delete allowed address pair',
+                  description: 'This action removes the allowed address pair from the port.',
+                  category: 'Port',
+                },
+                {
+                  title: 'Delete security group',
+                  description: 'Deleting the security group is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete security groups',
+                  description:
+                    'Deleting the selected security groups is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete firewall',
+                  description: 'Deleting the firewall is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewalls',
+                  description: 'Deleting the selected firewalls is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewall policy',
+                  description: 'Deleting the firewall policy is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewall policies',
+                  description:
+                    'Removing the selected firewall policies is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewall rule',
+                  description: 'Deleting the firewall rule is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete firewall rules',
+                  description:
+                    'Removing the selected firewall rules is permanent and cannot be undone.',
+                  category: 'Firewall',
+                },
+                {
+                  title: 'Delete rule',
+                  description: 'Removing the rule group is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Delete rules',
+                  description: 'Removing the rules is permanent and cannot be undone.',
+                  category: 'Security',
+                },
+                {
+                  title: 'Unsaved changes',
+                  description: 'Any unsaved changes will be lost. Do you want to leave?',
+                  category: 'General',
+                },
+                {
+                  title: 'Release floating IP',
+                  description: 'Releasing the floating IP is permanent and cannot be undone.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Release floating IPs',
+                  description: 'Releasing the floating IPs is permanent and cannot be undone.',
+                  category: 'FIP',
+                },
+                {
+                  title: 'Delete load balancer',
+                  description: 'Removing the load balancer is permanent and cannot be undone.',
+                  category: 'LB',
+                },
+                {
+                  title: 'Delete load balancers',
+                  description: 'Removing the load balancers is permanent and cannot be undone.',
+                  category: 'LB',
+                },
+                {
+                  title: 'Delete listener',
+                  description: 'Removing the listener is permanent and cannot be undone.',
+                  category: 'Listener',
+                },
+                {
+                  title: 'Delete listeners',
+                  description: 'Removing the listeners is permanent and cannot be undone.',
+                  category: 'Listener',
+                },
+                {
+                  title: 'Delete pool',
+                  description: 'Removing the pool is permanent and cannot be undone.',
+                  category: 'Pool',
+                },
+                {
+                  title: 'Delete pools',
+                  description: 'Removing the pools is permanent and cannot be undone.',
+                  category: 'Pool',
+                },
+                {
+                  title: 'Delete member',
+                  description: 'Removing the member is permanent and cannot be undone.',
+                  category: 'Member',
+                },
+                {
+                  title: 'Delete members',
+                  description: 'Removing the members is permanent and cannot be undone.',
+                  category: 'Member',
+                },
+                {
+                  title: 'Delete L7 policy',
+                  description: 'Removing the L7 policy is permanent and cannot be undone.',
+                  category: 'L7',
+                },
+                {
+                  title: 'Delete L7 policies',
+                  description: 'Removing the L7 policies is permanent and cannot be undone.',
+                  category: 'L7',
+                },
+                {
+                  title: 'Delete health monitor',
+                  description: 'Removing the health monitor is permanent and cannot be undone.',
+                  category: 'Health',
+                },
+                {
+                  title: 'Delete tenant',
+                  description: 'Deleting the tenant is permanent and cannot be undone.',
+                  category: 'Tenant',
+                },
+                {
+                  title: 'Delete tenants',
+                  description: 'Removing the selected tenants is permanent and cannot be undone.',
+                  category: 'Tenant',
+                },
+                {
+                  title: 'Delete metadata',
+                  description: 'This action removes the metadata.',
+                  category: 'Metadata',
+                },
+                {
+                  title: 'Delete metadata (bulk)',
+                  description: 'This action removes the selected metadata.',
+                  category: 'Metadata',
+                },
+                {
+                  title: 'Manage member',
+                  description: 'Redirect to IAM to manage users and user groups.',
+                  category: 'Tenant',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Compute Admin"
+                    badgeVariant="warning"
+                    count={71}
+                    isOpen={isComputeAdminOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup
+                      heading="Instance actions (single)"
+                      items={[
+                        {
+                          title: 'Stop instance',
+                          description: 'This action stops the instance.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Reboot instance',
+                          description: 'This action reboots the instance.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Soft reboot instance',
+                          description: 'This action performs a soft reboot of the instance.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Confirm resize',
+                          description: 'This action confirms the resized state of the instance.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Revert resize',
+                          description:
+                            'This action reverts the instance to its previous state before the resize.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Delete instance',
+                          description: 'Removing the instance is permanent and cannot be undone.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Shelve instance',
+                          description: 'This action shelves the instance.',
+                          category: 'Instance',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Stop instance"
+                        description="This action stops the instance."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-stop-instance')}
+                      />
+                      <ModalListItem
+                        title="Reboot instance"
+                        description="This action reboots the instance."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-reboot-instance')}
+                      />
+                      <ModalListItem
+                        title="Soft reboot instance"
+                        description="This action performs a soft reboot of the instance."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-soft-reboot')}
+                      />
+                      <ModalListItem
+                        title="Confirm resize"
+                        description="This action confirms the resized state of the instance."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-confirm-resize')}
+                      />
+                      <ModalListItem
+                        title="Revert resize"
+                        description="This action reverts the instance to its previous state before the resize."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-revert-resize')}
+                      />
+                      <ModalListItem
+                        title="Delete instance"
+                        description="Removing the instance is permanent and cannot be undone."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-delete-instance')}
+                      />
+                      <ModalListItem
+                        title="Shelve instance"
+                        description="This action shelves the instance."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-shelve-instance')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Instance actions (bulk)"
+                      items={[
+                        {
+                          title: 'Start instances',
+                          description: 'This action starts the selected instances.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Stop instances',
+                          description: 'This action stops the selected instances.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Reboot instances',
+                          description: 'This action reboots the selected instances.',
+                          category: 'Instance',
+                        },
+                        {
+                          title: 'Delete instances',
+                          description:
+                            'Removing the selected instances is permanent and cannot be undone.',
+                          category: 'Instance',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Start instances"
+                        description="This action starts the selected instances."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-start-instances')}
+                      />
+                      <ModalListItem
+                        title="Stop instances"
+                        description="This action stops the selected instances."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-stop-instances')}
+                      />
+                      <ModalListItem
+                        title="Reboot instances"
+                        description="This action reboots the selected instances."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-reboot-instances')}
+                      />
+                      <ModalListItem
+                        title="Delete instances"
+                        description="Removing the selected instances is permanent and cannot be undone."
+                        category="Instance"
+                        onOpen={() => openModalFn('admin-delete-instances')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Templates / Images / Snapshots"
+                      items={[
+                        {
+                          title: 'Delete instance template',
+                          description:
+                            'Deleting the instance template is permanent and cannot be undone.',
+                          category: 'Template',
+                        },
+                        {
+                          title: 'Delete instance templates',
+                          description:
+                            'Deleting the selected instance templates is permanent and cannot be undone.',
+                          category: 'Template',
+                        },
+                        {
+                          title: 'Delete image',
+                          description: 'Deleting the image is permanent and cannot be undone.',
+                          category: 'Image',
+                        },
+                        {
+                          title: 'Delete images',
+                          description:
+                            'Deleting the selected images is permanent and cannot be undone.',
+                          category: 'Image',
+                        },
+                        {
+                          title: 'Delete snapshot',
+                          description: 'Deleting the snapshot is permanent and cannot be undone.',
+                          category: 'Snapshot',
+                        },
+                        {
+                          title: 'Delete snapshots',
+                          description:
+                            'Deleting the selected snapshots is permanent and cannot be undone.',
+                          category: 'Snapshot',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete instance template"
+                        description="Deleting the instance template is permanent and cannot be undone."
+                        category="Template"
+                        onOpen={() => openModalFn('admin-delete-template')}
+                      />
+                      <ModalListItem
+                        title="Delete instance templates"
+                        description="Deleting the selected instance templates is permanent and cannot be undone."
+                        category="Template"
+                        onOpen={() => openModalFn('admin-delete-templates')}
+                      />
+                      <ModalListItem
+                        title="Delete image"
+                        description="Deleting the image is permanent and cannot be undone."
+                        category="Image"
+                        onOpen={() => openModalFn('admin-delete-image')}
+                      />
+                      <ModalListItem
+                        title="Delete images"
+                        description="Deleting the selected images is permanent and cannot be undone."
+                        category="Image"
+                        onOpen={() => openModalFn('admin-delete-images')}
+                      />
+                      <ModalListItem
+                        title="Delete snapshot"
+                        description="Deleting the snapshot is permanent and cannot be undone."
+                        category="Snapshot"
+                        onOpen={() => openModalFn('admin-delete-snapshot')}
+                      />
+                      <ModalListItem
+                        title="Delete snapshots"
+                        description="Deleting the selected snapshots is permanent and cannot be undone."
+                        category="Snapshot"
+                        onOpen={() => openModalFn('admin-delete-snapshots')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Volumes / Types / Backups"
+                      items={[
+                        {
+                          title: 'Delete volume',
+                          description: 'Deleting the volume is permanent and cannot be undone.',
+                          category: 'Volume',
+                        },
+                        {
+                          title: 'Delete volumes',
+                          description:
+                            'Deleting the selected volumes is permanent and cannot be undone.',
+                          category: 'Volume',
+                        },
+                        {
+                          title: 'Delete volume type',
+                          description:
+                            'Deleting the volume type is permanent and cannot be undone.',
+                          category: 'VolumeType',
+                        },
+                        {
+                          title: 'Delete volume types',
+                          description:
+                            'Deleting the selected volume types is permanent and cannot be undone.',
+                          category: 'VolumeType',
+                        },
+                        {
+                          title: 'Delete backup',
+                          description: 'Deleting the backup is permanent and cannot be undone.',
+                          category: 'Backup',
+                        },
+                        {
+                          title: 'Delete backups',
+                          description:
+                            'Deleting the selected backups is permanent and cannot be undone.',
+                          category: 'Backup',
+                        },
+                        {
+                          title: 'Delete encryption',
+                          description:
+                            'This action removes the encryption configuration from the volume type.',
+                          category: 'Encryption',
+                        },
+                        {
+                          title: 'Delete extra spec',
+                          description:
+                            'This action removes the extra specification from the volume type.',
+                          category: 'ExtraSpec',
+                        },
+                        {
+                          title: 'Delete extra specs',
+                          description:
+                            'Deleting the selected extra specifications is permanent and cannot be undone.',
+                          category: 'ExtraSpec',
+                        },
+                        {
+                          title: 'Delete QoS spec',
+                          description: 'This action removes the QoS specification.',
+                          category: 'QoS',
+                        },
+                        {
+                          title: 'Delete QoS specs',
+                          description: 'This action removes the selected QoS specifications.',
+                          category: 'QoS',
+                        },
+                        {
+                          title: 'Delete extra spec (QoS)',
+                          description:
+                            'This action removes the extra specification from the volume type.',
+                          category: 'QoS',
+                        },
+                        {
+                          title: 'Delete extra specs (QoS)',
+                          description:
+                            'Deleting the selected extra specifications is permanent and cannot be undone.',
+                          category: 'QoS',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete volume"
+                        description="Deleting the volume is permanent and cannot be undone."
+                        category="Volume"
+                        onOpen={() => openModalFn('admin-delete-volume')}
+                      />
+                      <ModalListItem
+                        title="Delete volumes"
+                        description="Deleting the selected volumes is permanent and cannot be undone."
+                        category="Volume"
+                        onOpen={() => openModalFn('admin-delete-volumes')}
+                      />
+                      <ModalListItem
+                        title="Delete volume type"
+                        description="Deleting the volume type is permanent and cannot be undone."
+                        category="VolumeType"
+                        onOpen={() => openModalFn('admin-delete-volume-type')}
+                      />
+                      <ModalListItem
+                        title="Delete volume types"
+                        description="Deleting the selected volume types is permanent and cannot be undone."
+                        category="VolumeType"
+                        onOpen={() => openModalFn('admin-delete-volume-types')}
+                      />
+                      <ModalListItem
+                        title="Delete backup"
+                        description="Deleting the backup is permanent and cannot be undone."
+                        category="Backup"
+                        onOpen={() => openModalFn('admin-delete-backup')}
+                      />
+                      <ModalListItem
+                        title="Delete backups"
+                        description="Deleting the selected backups is permanent and cannot be undone."
+                        category="Backup"
+                        onOpen={() => openModalFn('admin-delete-backups')}
+                      />
+                      <ModalListItem
+                        title="Delete encryption"
+                        description="This action removes the encryption configuration from the volume type."
+                        category="Encryption"
+                        onOpen={() => openModalFn('admin-delete-encryption')}
+                      />
+                      <ModalListItem
+                        title="Delete extra spec"
+                        description="This action removes the extra specification from the volume type."
+                        category="ExtraSpec"
+                        onOpen={() => openModalFn('admin-delete-extra-spec')}
+                      />
+                      <ModalListItem
+                        title="Delete extra specs"
+                        description="Deleting the selected extra specifications is permanent and cannot be undone."
+                        category="ExtraSpec"
+                        onOpen={() => openModalFn('admin-delete-extra-specs')}
+                      />
+                      <ModalListItem
+                        title="Delete QoS spec"
+                        description="This action removes the QoS specification."
+                        category="QoS"
+                        onOpen={() => openModalFn('admin-delete-qos-spec')}
+                      />
+                      <ModalListItem
+                        title="Delete QoS specs"
+                        description="This action removes the selected QoS specifications."
+                        category="QoS"
+                        onOpen={() => openModalFn('admin-delete-qos-specs')}
+                      />
+                      <ModalListItem
+                        title="Delete extra spec (QoS)"
+                        description="This action removes the extra specification from the volume type."
+                        category="QoS"
+                        onOpen={() => openModalFn('admin-delete-extra-spec-qos')}
+                      />
+                      <ModalListItem
+                        title="Delete extra specs (QoS)"
+                        description="Deleting the selected extra specifications is permanent and cannot be undone."
+                        category="QoS"
+                        onOpen={() => openModalFn('admin-delete-extra-specs-qos')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Networks / Subnets / Ports / Routers"
+                      items={[
+                        {
+                          title: 'Delete network',
+                          description: 'Deleting the network is permanent and cannot be undone.',
+                          category: 'Network',
+                        },
+                        {
+                          title: 'Delete networks',
+                          description:
+                            'Removing the selected networks is permanent and cannot be undone.',
+                          category: 'Network',
+                        },
+                        {
+                          title: 'Delete subnet',
+                          description: 'Deleting the subnet is permanent and cannot be undone.',
+                          category: 'Subnet',
+                        },
+                        {
+                          title: 'Delete subnets',
+                          description:
+                            'Deleting the selected subnets is permanent and cannot be undone.',
+                          category: 'Subnet',
+                        },
+                        {
+                          title: 'Delete port',
+                          description: 'Deleting the port is permanent and cannot be undone.',
+                          category: 'Port',
+                        },
+                        {
+                          title: 'Delete ports',
+                          description:
+                            'Deleting the selected ports is permanent and cannot be undone.',
+                          category: 'Port',
+                        },
+                        {
+                          title: 'Delete router',
+                          description: 'Deleting the router is permanent and cannot be undone.',
+                          category: 'Router',
+                        },
+                        {
+                          title: 'Delete routers',
+                          description:
+                            'Removing the selected routers is permanent and cannot be undone.',
+                          category: 'Router',
+                        },
+                        {
+                          title: 'Delete static routes',
+                          description:
+                            'Deleting the selected static routes is permanent and cannot be undone.',
+                          category: 'Router',
+                        },
+                        {
+                          title: 'Remove DHCP agents',
+                          description:
+                            'This action removes the selected DHCP agents from the network.',
+                          category: 'Network',
+                        },
+                        {
+                          title: 'Release fixed IP',
+                          description: 'This action releases the fixed IP from the port.',
+                          category: 'Port',
+                        },
+                        {
+                          title: 'Delete allowed address pair',
+                          description:
+                            'This action removes the allowed address pair from the port.',
+                          category: 'Port',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete network"
+                        description="Deleting the network is permanent and cannot be undone."
+                        category="Network"
+                        onOpen={() => openModalFn('admin-delete-network')}
+                      />
+                      <ModalListItem
+                        title="Delete networks"
+                        description="Removing the selected networks is permanent and cannot be undone."
+                        category="Network"
+                        onOpen={() => openModalFn('admin-delete-networks')}
+                      />
+                      <ModalListItem
+                        title="Delete subnet"
+                        description="Deleting the subnet is permanent and cannot be undone."
+                        category="Subnet"
+                        onOpen={() => openModalFn('admin-delete-subnet')}
+                      />
+                      <ModalListItem
+                        title="Delete subnets"
+                        description="Deleting the selected subnets is permanent and cannot be undone."
+                        category="Subnet"
+                        onOpen={() => openModalFn('admin-delete-subnets')}
+                      />
+                      <ModalListItem
+                        title="Delete port"
+                        description="Deleting the port is permanent and cannot be undone."
+                        category="Port"
+                        onOpen={() => openModalFn('admin-delete-port')}
+                      />
+                      <ModalListItem
+                        title="Delete ports"
+                        description="Deleting the selected ports is permanent and cannot be undone."
+                        category="Port"
+                        onOpen={() => openModalFn('admin-delete-ports')}
+                      />
+                      <ModalListItem
+                        title="Delete router"
+                        description="Deleting the router is permanent and cannot be undone."
+                        category="Router"
+                        onOpen={() => openModalFn('admin-delete-router')}
+                      />
+                      <ModalListItem
+                        title="Delete routers"
+                        description="Removing the selected routers is permanent and cannot be undone."
+                        category="Router"
+                        onOpen={() => openModalFn('admin-delete-routers')}
+                      />
+                      <ModalListItem
+                        title="Delete static routes"
+                        description="Deleting the selected static routes is permanent and cannot be undone."
+                        category="Router"
+                        onOpen={() => openModalFn('admin-delete-static-routes')}
+                      />
+                      <ModalListItem
+                        title="Remove DHCP agents"
+                        description="This action removes the selected DHCP agents from the network."
+                        category="Network"
+                        onOpen={() => openModalFn('admin-remove-dhcp-agents')}
+                      />
+                      <ModalListItem
+                        title="Release fixed IP"
+                        description="This action releases the fixed IP from the port."
+                        category="Port"
+                        onOpen={() => openModalFn('admin-release-fixed-ip')}
+                      />
+                      <ModalListItem
+                        title="Delete allowed address pair"
+                        description="This action removes the allowed address pair from the port."
+                        category="Port"
+                        onOpen={() => openModalFn('admin-delete-address-pair')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Security groups / Firewalls"
+                      items={[
+                        {
+                          title: 'Delete security group',
+                          description:
+                            'Deleting the security group is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete security groups',
+                          description:
+                            'Deleting the selected security groups is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete firewall',
+                          description: 'Deleting the firewall is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewalls',
+                          description:
+                            'Deleting the selected firewalls is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewall policy',
+                          description:
+                            'Deleting the firewall policy is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewall policies',
+                          description:
+                            'Removing the selected firewall policies is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewall rule',
+                          description:
+                            'Deleting the firewall rule is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete firewall rules',
+                          description:
+                            'Removing the selected firewall rules is permanent and cannot be undone.',
+                          category: 'Firewall',
+                        },
+                        {
+                          title: 'Delete rule',
+                          description: 'Removing the rule group is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                        {
+                          title: 'Delete rules',
+                          description: 'Removing the rules is permanent and cannot be undone.',
+                          category: 'Security',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete security group"
+                        description="Deleting the security group is permanent and cannot be undone."
+                        category="Security"
+                        onOpen={() => openModalFn('admin-delete-sg')}
+                      />
+                      <ModalListItem
+                        title="Delete security groups"
+                        description="Deleting the selected security groups is permanent and cannot be undone."
+                        category="Security"
+                        onOpen={() => openModalFn('admin-delete-sgs')}
+                      />
+                      <ModalListItem
+                        title="Delete firewall"
+                        description="Deleting the firewall is permanent and cannot be undone."
+                        category="Firewall"
+                        onOpen={() => openModalFn('admin-delete-firewall')}
+                      />
+                      <ModalListItem
+                        title="Delete firewalls"
+                        description="Deleting the selected firewalls is permanent and cannot be undone."
+                        category="Firewall"
+                        onOpen={() => openModalFn('admin-delete-firewalls')}
+                      />
+                      <ModalListItem
+                        title="Delete firewall policy"
+                        description="Deleting the firewall policy is permanent and cannot be undone."
+                        category="Firewall"
+                        onOpen={() => openModalFn('admin-delete-fw-policy')}
+                      />
+                      <ModalListItem
+                        title="Delete firewall policies"
+                        description="Removing the selected firewall policies is permanent and cannot be undone."
+                        category="Firewall"
+                        onOpen={() => openModalFn('admin-delete-fw-policies')}
+                      />
+                      <ModalListItem
+                        title="Delete firewall rule"
+                        description="Deleting the firewall rule is permanent and cannot be undone."
+                        category="Firewall"
+                        onOpen={() => openModalFn('admin-delete-fw-rule')}
+                      />
+                      <ModalListItem
+                        title="Delete firewall rules"
+                        description="Removing the selected firewall rules is permanent and cannot be undone."
+                        category="Firewall"
+                        onOpen={() => openModalFn('admin-delete-fw-rules')}
+                      />
+                      <ModalListItem
+                        title="Delete rule"
+                        description="Removing the rule group is permanent and cannot be undone."
+                        category="Security"
+                        onOpen={() => openModalFn('admin-delete-sg-rule')}
+                      />
+                      <ModalListItem
+                        title="Delete rules"
+                        description="Removing the rules is permanent and cannot be undone."
+                        category="Security"
+                        onOpen={() => openModalFn('admin-delete-sg-rules')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Floating IPs / Load balancers"
+                      items={[
+                        {
+                          title: 'Unsaved changes',
+                          description: 'Any unsaved changes will be lost. Do you want to leave?',
+                          category: 'General',
+                        },
+                        {
+                          title: 'Release floating IP',
+                          description:
+                            'Releasing the floating IP is permanent and cannot be undone.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Release floating IPs',
+                          description:
+                            'Releasing the floating IPs is permanent and cannot be undone.',
+                          category: 'FIP',
+                        },
+                        {
+                          title: 'Delete load balancer',
+                          description:
+                            'Removing the load balancer is permanent and cannot be undone.',
+                          category: 'LB',
+                        },
+                        {
+                          title: 'Delete load balancers',
+                          description:
+                            'Removing the load balancers is permanent and cannot be undone.',
+                          category: 'LB',
+                        },
+                        {
+                          title: 'Delete listener',
+                          description: 'Removing the listener is permanent and cannot be undone.',
+                          category: 'Listener',
+                        },
+                        {
+                          title: 'Delete listeners',
+                          description: 'Removing the listeners is permanent and cannot be undone.',
+                          category: 'Listener',
+                        },
+                        {
+                          title: 'Delete pool',
+                          description: 'Removing the pool is permanent and cannot be undone.',
+                          category: 'Pool',
+                        },
+                        {
+                          title: 'Delete pools',
+                          description: 'Removing the pools is permanent and cannot be undone.',
+                          category: 'Pool',
+                        },
+                        {
+                          title: 'Delete member',
+                          description: 'Removing the member is permanent and cannot be undone.',
+                          category: 'Member',
+                        },
+                        {
+                          title: 'Delete members',
+                          description: 'Removing the members is permanent and cannot be undone.',
+                          category: 'Member',
+                        },
+                        {
+                          title: 'Delete L7 policy',
+                          description: 'Removing the L7 policy is permanent and cannot be undone.',
+                          category: 'L7',
+                        },
+                        {
+                          title: 'Delete L7 policies',
+                          description:
+                            'Removing the L7 policies is permanent and cannot be undone.',
+                          category: 'L7',
+                        },
+                        {
+                          title: 'Delete health monitor',
+                          description:
+                            'Removing the health monitor is permanent and cannot be undone.',
+                          category: 'Health',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Unsaved changes"
+                        description="Any unsaved changes will be lost. Do you want to leave?"
+                        category="General"
+                        onOpen={() => openModalFn('admin-unsaved-changes')}
+                      />
+                      <ModalListItem
+                        title="Release floating IP"
+                        description="Releasing the floating IP is permanent and cannot be undone."
+                        category="FIP"
+                        onOpen={() => openModalFn('admin-release-fip')}
+                      />
+                      <ModalListItem
+                        title="Release floating IPs"
+                        description="Releasing the floating IPs is permanent and cannot be undone."
+                        category="FIP"
+                        onOpen={() => openModalFn('admin-release-fips')}
+                      />
+                      <ModalListItem
+                        title="Delete load balancer"
+                        description="Removing the load balancer is permanent and cannot be undone."
+                        category="LB"
+                        onOpen={() => openModalFn('admin-delete-lb')}
+                      />
+                      <ModalListItem
+                        title="Delete load balancers"
+                        description="Removing the load balancers is permanent and cannot be undone."
+                        category="LB"
+                        onOpen={() => openModalFn('admin-delete-lbs')}
+                      />
+                      <ModalListItem
+                        title="Delete listener"
+                        description="Removing the listener is permanent and cannot be undone."
+                        category="Listener"
+                        onOpen={() => openModalFn('admin-delete-listener')}
+                      />
+                      <ModalListItem
+                        title="Delete listeners"
+                        description="Removing the listeners is permanent and cannot be undone."
+                        category="Listener"
+                        onOpen={() => openModalFn('admin-delete-listeners')}
+                      />
+                      <ModalListItem
+                        title="Delete pool"
+                        description="Removing the pool is permanent and cannot be undone."
+                        category="Pool"
+                        onOpen={() => openModalFn('admin-delete-pool')}
+                      />
+                      <ModalListItem
+                        title="Delete pools"
+                        description="Removing the pools is permanent and cannot be undone."
+                        category="Pool"
+                        onOpen={() => openModalFn('admin-delete-pools')}
+                      />
+                      <ModalListItem
+                        title="Delete member"
+                        description="Removing the member is permanent and cannot be undone."
+                        category="Member"
+                        onOpen={() => openModalFn('admin-delete-member')}
+                      />
+                      <ModalListItem
+                        title="Delete members"
+                        description="Removing the members is permanent and cannot be undone."
+                        category="Member"
+                        onOpen={() => openModalFn('admin-delete-members')}
+                      />
+                      <ModalListItem
+                        title="Delete L7 policy"
+                        description="Removing the L7 policy is permanent and cannot be undone."
+                        category="L7"
+                        onOpen={() => openModalFn('admin-delete-l7-policy')}
+                      />
+                      <ModalListItem
+                        title="Delete L7 policies"
+                        description="Removing the L7 policies is permanent and cannot be undone."
+                        category="L7"
+                        onOpen={() => openModalFn('admin-delete-l7-policies')}
+                      />
+                      <ModalListItem
+                        title="Delete health monitor"
+                        description="Removing the health monitor is permanent and cannot be undone."
+                        category="Health"
+                        onOpen={() => openModalFn('admin-delete-health-monitor')}
+                      />
+                    </FilteredGroup>
+                    <FilteredGroup
+                      heading="Tenants / Metadata"
+                      items={[
+                        {
+                          title: 'Delete tenant',
+                          description: 'Deleting the tenant is permanent and cannot be undone.',
+                          category: 'Tenant',
+                        },
+                        {
+                          title: 'Delete tenants',
+                          description:
+                            'Removing the selected tenants is permanent and cannot be undone.',
+                          category: 'Tenant',
+                        },
+                        {
+                          title: 'Delete metadata',
+                          description: 'This action removes the metadata.',
+                          category: 'Metadata',
+                        },
+                        {
+                          title: 'Delete metadata (bulk)',
+                          description: 'This action removes the selected metadata.',
+                          category: 'Metadata',
+                        },
+                        {
+                          title: 'Manage member',
+                          description: 'Redirect to IAM to manage users and user groups.',
+                          category: 'Tenant',
+                        },
+                      ]}
+                    >
+                      <ModalListItem
+                        title="Delete tenant"
+                        description="Deleting the tenant is permanent and cannot be undone."
+                        category="Tenant"
+                        onOpen={() => openModalFn('admin-delete-tenant')}
+                      />
+                      <ModalListItem
+                        title="Delete tenants"
+                        description="Removing the selected tenants is permanent and cannot be undone."
+                        category="Tenant"
+                        onOpen={() => openModalFn('admin-delete-tenants')}
+                      />
+                      <ModalListItem
+                        title="Delete metadata"
+                        description="This action removes the metadata."
+                        category="Metadata"
+                        onOpen={() => openModalFn('admin-delete-metadata')}
+                      />
+                      <ModalListItem
+                        title="Delete metadata (bulk)"
+                        description="This action removes the selected metadata."
+                        category="Metadata"
+                        onOpen={() => openModalFn('admin-delete-metadatas')}
+                      />
+                      <ModalListItem
+                        title="Manage member"
+                        description="Redirect to IAM to manage users and user groups."
+                        category="Tenant"
+                        onOpen={() => openModalFn('admin-manage-member')}
+                      />
+                    </FilteredGroup>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+
+            {/* ============================================================
+               CLOUD BUILDER
+               ============================================================ */}
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Enable compute service',
+                  description: 'Change this service status to Enabled?',
+                  category: 'Service',
+                },
+                {
+                  title: 'Disable compute service',
+                  description: 'Change this service status to Disabled?',
+                  category: 'Service',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isCloudBuilderOpen} onChange={setIsCloudBuilderOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="Cloud Builder"
+                    count={2}
+                    isOpen={isCloudBuilderOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <div className="flex flex-col gap-2">
+                      <ModalListItem
+                        title="Enable compute service"
+                        description="Change this service status to Enabled?"
+                        category="Service"
+                        onOpen={() => openModalFn('enable-compute-service')}
+                      />
+                      <ModalListItem
+                        title="Disable compute service"
+                        description="Change this service status to Disabled?"
+                        category="Service"
+                        onOpen={() => openModalFn('disable-compute-service')}
+                      />
+                    </div>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+
+            {/* ============================================================
+               AI AGENT
+               ============================================================ */}
+            <FilteredDisclosureSection
+              allItems={[
+                {
+                  title: 'Delete agent source',
+                  description:
+                    'Are you sure you want to delete this agent source? This action cannot be undone.',
+                  category: 'Agent',
+                },
+              ]}
+            >
+              <Disclosure open={isSearching || isAIAgentOpen} onChange={setIsAIAgentOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <SectionHeader
+                    label="AI Agent"
+                    count={1}
+                    isOpen={isAIAgentOpen}
+                    isSearching={isSearching}
+                  />
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <div className="flex flex-col gap-2">
+                      <ModalListItem
+                        title="Delete agent source"
+                        description="Are you sure you want to delete this agent source? This action cannot be undone."
+                        category="Agent"
+                        onOpen={() => openModalFn('delete-agent-source')}
+                      />
+                    </div>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+          </VStack>
+        </VStack>
+      </ModalSearchContext.Provider>
+
+      {/* ================================================================
+         MODAL INSTANCES — Compute
+         ================================================================ */}
+      <ConfirmModal
+        isOpen={openModal === 'delete-snapshot'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete snapshot"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Snapshot name"
+        infoValue="2cdfafc1"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'delete-security-group'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete security group"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Security group"
+        infoValue="sg-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'delete-security-groups'}
+        onClose={closeModal}
+        title="Delete security groups"
+        description="Removing the selected instances is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Security groups(10)"
+            items={[
+              'sg-01',
+              'sg-02',
+              'sg-03',
+              'sg-04',
+              'sg-05',
+              'sg-06',
+              'sg-07',
+              'sg-08',
+              'sg-09',
+              'sg-10',
+            ]}
+          />
+          <DangerWarning>
+            This action will permanently delete the security groups and all its rules. If these
+            groups are attached to any instances, their network traffic may be affected.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'delete-rule'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete rule"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Rule"
+        infoValue="Ingress/TCP/22"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'delete-rules'}
+        onClose={closeModal}
+        title="Delete rules"
+        description="Removing the selected instances is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Rules"
+            items={['Ingress/TCP/22', 'Ingress/TCP/80', 'Ingress/TCP/443', 'Egress/All']}
+          />
+          <DangerWarning>This action will permanently delete the selected rules.</DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'detach-volume'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Detach volume"
+        description="This action detaches the volume."
+        infoLabel="Volume"
+        infoValue="data-vol-01"
+        confirmText="Detach"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'restore-backup-sm'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Restore backup"
+        description="This action restores the backup."
+        infoLabel="Backup"
+        infoValue="backup-2024-01"
+        confirmText="Restore"
+        confirmVariant="primary"
+      />
+      <Modal
+        isOpen={openModal === 'restore-backup-md'}
+        onClose={closeModal}
+        title="Restore backup"
+        description="This action restores the backup."
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Volume" value="data-vol-01" />
+          <DangerWarning>
+            The current volume data will be overwritten with the backup data.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Restore" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'restore-backup-lg'}
+        onClose={closeModal}
+        title="Restore backup"
+        description="This action restores the backup."
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Volume" value="data-vol-01" />
+          <InfoBox label="New volume name" value="data-vol-01-restored" />
+          <DangerWarning>
+            The current volume data will be overwritten with the backup data.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Restore" confirmVariant="primary" />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'disassociate-fip'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Disassociate floating IP"
+        description="Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately."
+        infoLabel="Floating IP"
+        infoValue="203.0.113.50"
+        confirmText="Disassociate"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'disassociate-fip-lb'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Disassociate floating IP"
+        description="Disassociating will detach the floating IP from this load balancer."
+        infoLabel="Floating IP"
+        infoValue="198.51.100.20"
+        confirmText="Disassociate"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'release-fip'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Release floating IP"
+        description="This action releases the floating IP."
+        infoLabel="Floating IP"
+        infoValue="203.0.113.50"
+        confirmText="Release"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'release-fips'}
+        onClose={closeModal}
+        title="Release floating IPs"
+        description="This action releases the floating IP."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Floating IPs"
+            items={['203.0.113.50', '203.0.113.51', '203.0.113.52', '203.0.113.53']}
+          />
+          <DangerWarning>
+            Releasing these floating IPs will remove external access for associated resources.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Release" />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'delete-lb'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete load balancer"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Load balancer"
+        infoValue="web-lb-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'release-lbs'}
+        onClose={closeModal}
+        title="Release load balancers"
+        description="Removing the selected instances is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Load balancers"
+            items={['web-lb-01', 'api-lb-01', 'staging-lb', 'dev-lb']}
+          />
+          <DangerWarning>
+            Deleting these load balancers may affect listeners and pools that depend on them.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+
+      {/* ================================================================
+         MODAL INSTANCES — IAM
+         ================================================================ */}
+      <Modal isOpen={openModal === 'delete-user'} onClose={closeModal} title="Delete user">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Username" value="john.doe@example.com" />
+          <DangerWarning>
+            Deleting this user removes invalidates access keys, and ends active sessions.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-users'}
+        onClose={closeModal}
+        title="Delete users"
+        description="Removing the selected instances is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Users"
+            items={[
+              'john.doe@example.com',
+              'jane.smith@example.com',
+              'admin@example.com',
+              'dev@example.com',
+            ]}
+          />
+          <DangerWarning>
+            Deleting the selected users removes invalidates their access keys, and ends their active
+            sessions.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'confirm-password'}
+        onClose={closeModal}
+        title="Confirm user password"
+      >
+        <div className="flex flex-col gap-3">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex items-center justify-between">
+            <div className="flex flex-col gap-1">
               <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Cluster name
+                Username
               </span>
               <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                production-cluster
+                newuser01
               </span>
             </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Delete namespace"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={usernameCopied ? <IconCheck size={14} /> : <IconCopy size={14} />}
+              aria-label="Copy username"
+              onClick={() => {
+                navigator.clipboard.writeText('newuser01');
+                setUsernameCopied(true);
+                setTimeout(() => setUsernameCopied(false), 2000);
+              }}
+            />
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex items-center justify-between">
+            <div className="flex flex-col gap-1">
               <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Namespace name
+                Password
               </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                default
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Delete pod"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Pod name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                nginx-deployment-7fb96c846b-abc12
+              <span className="text-body-md text-[var(--color-text-default)] leading-4 font-mono">
+                Temp1234!@#
               </span>
             </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Delete job"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Job name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                backup-job-20240115
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Delete CronJob"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                CronJob name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                daily-backup
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Delete deployment"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Deployment name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                nginx-deployment
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Delete StatefulSet"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                StatefulSet name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                mysql-statefulset
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Delete DaemonSet"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                DaemonSet name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                fluentd-daemonset
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Redeploy deployment"
-            description="Are you sure you want to redeploy this deployment?"
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Deployment name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                nginx-deployment
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Redeploy
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Redeploy StatefulSet"
-            description="Are you sure you want to redeploy this StatefulSet?"
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                StatefulSet name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                mysql-statefulset
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Redeploy
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Redeploy DaemonSet"
-            description="Are you sure you want to redeploy this DaemonSet?"
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                DaemonSet name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                fluentd-daemonset
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Redeploy
-              </Button>
-            </div>
-          </ModalPreview>
-
-          <ModalPreview
-            title="Roll back deployment"
-            description="Select a revision to roll back to."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Deployment name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                nginx-deployment
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Roll Back
-              </Button>
-            </div>
-          </ModalPreview>
-        </CategorySection>
-
-        {/* ============================================================
-           COMPUTE ADMIN MODALS
-           ============================================================ */}
-        <CategorySection title="Compute Admin">
-          {/* Stop Instance Modal */}
-          <ModalPreview title="Stop instance" description="This action stops the instance.">
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-server-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action may interrupt the services running on the instance.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Stop{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Reboot Instance Modal */}
-          <ModalPreview title="Reboot instance" description="This action reboots the instance.">
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-server-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action may interrupt the services running on the instance.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Reboot{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Soft Reboot Instance Modal */}
-          <ModalPreview
-            title="Soft reboot instance"
-            description="This action performs a soft reboot of the instance."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-server-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action may interrupt the services running on the instance.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Soft Reboot{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Confirm Resize Modal */}
-          <ModalPreview
-            title="Confirm resize"
-            description="This action confirms the resized state of the instance."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-server-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Confirming the resize may affect the services running on the instance.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Confirm{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Revert Resize Modal */}
-          <ModalPreview
-            title="Revert resize"
-            description="This action reverts the instance to its previous state before the resize."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-server-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Reverting the resize may affect the services running on the instance.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Revert{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Instance Modal */}
-          <ModalPreview
-            title="Delete instance"
-            description="Removing the instance is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-server-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this instance may interrupt the services running on it.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Shelve Instance Modal */}
-          <ModalPreview title="Shelve instance" description="This action shelves the instance.">
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-server-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action may interrupt the services running on the instance.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Shelve{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Start Instances Modal */}
-          <ModalPreview
-            title="Start instances"
-            description="This action starts the selected instances."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instances that can be started{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-server-01</li>
-                  <li>web-server-02</li>
-                  <li>api-server-01</li>
-                  <li>db-server-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instances that cannot be started{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-server-03</li>
-                  <li>web-server-04</li>
-                  <li>api-server-02</li>
-                  <li>db-server-02</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Starting these instances may affect the services running on them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Start{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Stop Instances Modal */}
-          <ModalPreview
-            title="Stop instances"
-            description="This action stops the selected instances."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instances that can be stopped{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-server-01</li>
-                  <li>web-server-02</li>
-                  <li>api-server-01</li>
-                  <li>db-server-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instances that cannot be stopped{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-server-03</li>
-                  <li>web-server-04</li>
-                  <li>api-server-02</li>
-                  <li>db-server-02</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Stopping these instances may interrupt the services running on them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Stop{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Reboot Instances Modal */}
-          <ModalPreview
-            title="Reboot instances"
-            description="This action reboots the selected instances."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instances that can be rebooted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-server-01</li>
-                  <li>web-server-02</li>
-                  <li>api-server-01</li>
-                  <li>db-server-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instances that cannot be rebooted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-server-03</li>
-                  <li>web-server-04</li>
-                  <li>api-server-02</li>
-                  <li>db-server-02</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Rebooting these instances may interrupt the services running on them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Reboot{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Instances Modal */}
-          <ModalPreview
-            title="Delete instances"
-            description="Removing the selected instances is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instances that can be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-server-01</li>
-                  <li>web-server-02</li>
-                  <li>api-server-01</li>
-                  <li>db-server-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instances that cannot be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-server-03</li>
-                  <li>web-server-04</li>
-                  <li>api-server-02</li>
-                  <li>db-server-02</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these instances may interrupt the services running on them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Instance Template Modal */}
-          <ModalPreview
-            title="Delete instance template"
-            description="Deleting the instance template is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance Template{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-server-template-01{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Instance Templates Modal */}
-          <ModalPreview
-            title="Delete instance templates"
-            description="Deleting the selected instance templates is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Instance Templates{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-server-template-01</li>
-                  <li>api-server-template-01</li>
-                  <li>db-server-template-01</li>
-                  <li>cache-server-template-01</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Image Modal */}
-          <ModalPreview
-            title="Delete image"
-            description="Deleting the image is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Image{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  ubuntu-22.04-server{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Images Modal */}
-          <ModalPreview
-            title="Delete images"
-            description="Deleting the selected images is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Images that can be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>ubuntu-22.04-server</li>
-                  <li>centos-8-stream</li>
-                  <li>debian-11-bullseye</li>
-                  <li>fedora-38-cloud</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Images that cannot be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>windows-2022-server (in use)</li>
-                  <li>rhel-9-base (protected)</li>
-                  <li>alpine-3.18 (in use)</li>
-                  <li>rocky-linux-9 (protected)</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Snapshot Modal */}
-          <ModalPreview
-            title="Delete snapshot"
-            description="Deleting the snapshot is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Snapshot{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  snapshot-2024-01-15{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Snapshots Modal */}
-          <ModalPreview
-            title="Delete snapshots"
-            description="Deleting the selected snapshots is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Snapshots that can be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>snapshot-2024-01-15</li>
-                  <li>snapshot-2024-01-10</li>
-                  <li>snapshot-2024-01-05</li>
-                  <li>snapshot-2024-01-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Snapshots that cannot be deleted{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>snapshot-2023-12-25 (in use)</li>
-                  <li>snapshot-2023-12-20 (protected)</li>
-                  <li>snapshot-2023-12-15 (in use)</li>
-                  <li>snapshot-2023-12-10 (protected)</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Volume Modal */}
-          <ModalPreview
-            title="Delete volume"
-            description="Deleting the volume is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  volume-data-01{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Volumes Modal */}
-          <ModalPreview
-            title="Delete volumes"
-            description="Deleting the selected volumes is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volumes that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>volume-data-01</li>
-                  <li>volume-data-02</li>
-                  <li>volume-data-03</li>
-                  <li>volume-data-04</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volumes that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>volume-data-05</li>
-                  <li>volume-data-06</li>
-                  <li>volume-data-07</li>
-                  <li>volume-data-08</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Volume Type Modal */}
-          <ModalPreview
-            title="Delete volume type"
-            description="Deleting the volume type is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume type{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  ssd-performance{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Volume Types Modal */}
-          <ModalPreview
-            title="Delete volume types"
-            description="Deleting the selected volume types is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume types{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>ssd-performance</li>
-                  <li>hdd-standard</li>
-                  <li>nvme-ultra</li>
-                  <li>ssd-economy</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Backup Modal */}
-          <ModalPreview
-            title="Delete backup"
-            description="Deleting the backup is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Backup{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  backup-2024-01-15{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Backups Modal */}
-          <ModalPreview
-            title="Delete backups"
-            description="Deleting the selected backups is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Backups that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>backup-2024-01-15</li>
-                  <li>backup-2024-01-10</li>
-                  <li>backup-2024-01-05</li>
-                  <li>backup-2024-01-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Backups that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>backup-2023-12-25 (in progress)</li>
-                  <li>backup-2023-12-20 (restoring)</li>
-                  <li>backup-2023-12-15 (in progress)</li>
-                  <li>backup-2023-12-10 (restoring)</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Encryption Modal */}
-          <ModalPreview
-            title="Delete encryption"
-            description="This action removes the encryption configuration from the volume type."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume type{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  ssd-encrypted{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Extra Spec Modal */}
-          <ModalPreview
-            title="Delete extra spec"
-            description="This action removes the extra specification from the volume type."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume type{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  ssd-performance{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Extra spec{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  volume_backend_name=lvm{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Extra Specs Modal */}
-          <ModalPreview
-            title="Delete extra specs"
-            description="Deleting the selected extra specifications is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume type{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  ssd-performance{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Extra specs{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>volume_backend_name=lvm</li>
-                  <li>max_iops=10000</li>
-                  <li>disk_type=ssd</li>
-                  <li>encryption=aes-256</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete QoS Spec Modal */}
-          <ModalPreview
-            title="Delete QoS spec"
-            description="This action removes the QoS specification."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  QoS Spec{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  high-performance{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete QoS Specs Modal */}
-          <ModalPreview
-            title="Delete QoS specs"
-            description="This action removes the selected QoS specifications."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  QoS Specs{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>high-performance</li>
-                  <li>standard-iops</li>
-                  <li>economy-storage</li>
-                  <li>burst-optimized</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete QoS Extra Spec Modal */}
-          <ModalPreview
-            title="Delete extra spec"
-            description="This action removes the extra specification from the volume type."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume type{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  high-performance{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Extra spec{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  minIOPS=1000{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete QoS Extra Specs Modal */}
-          <ModalPreview
-            title="Delete extra specs"
-            description="Deleting the selected extra specifications is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Volume type{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  high-performance{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Extra specs{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>minIOPS=1000</li>
-                  <li>maxIOPS=10000</li>
-                  <li>burstIOPS=15000</li>
-                  <li>latency=low</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Network Modal */}
-          <ModalPreview
-            title="Delete network"
-            description="Deleting the network is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Network{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  internal-network-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this network may affect subnets, routers, or resources connected to it.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Networks Modal */}
-          <ModalPreview
-            title="Delete networks"
-            description="Removing the selected networks is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Networks that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>internal-network-01</li>
-                  <li>internal-network-02</li>
-                  <li>test-network-01</li>
-                  <li>dev-network-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Networks that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>production-network (in use)</li>
-                  <li>shared-network (external)</li>
-                  <li>management-network (system)</li>
-                  <li>public-network (external)</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these networks may affect subnets, routers, or resources connected to
-                  them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Subnet Modal */}
-          <ModalPreview
-            title="Delete subnet"
-            description="Deleting the subnet is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Subnet{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  subnet-192-168-1-0{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this subnet may affect routers, ports, or services connected to it.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Subnets Modal */}
-          <ModalPreview
-            title="Delete subnets"
-            description="Deleting the selected subnets is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Extra specs{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>subnet-192-168-1-0</li>
-                  <li>subnet-10-0-0-0</li>
-                  <li>subnet-172-16-0-0</li>
-                  <li>subnet-192-168-2-0</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these subnets may affect routers, ports, or services connected to them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Port Modal */}
-          <ModalPreview
-            title="Delete port"
-            description="Deleting the port is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Port{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  port-abc12345{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this port may affect instances, routers, or services connected to it.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Ports Modal */}
-          <ModalPreview
-            title="Delete ports"
-            description="Deleting the selected ports is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Ports{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>port-abc12345</li>
-                  <li>port-def67890</li>
-                  <li>port-ghi11121</li>
-                  <li>port-jkl31415</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these ports may affect instances, routers, or services connected to them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Router Modal */}
-          <ModalPreview
-            title="Delete router"
-            description="Deleting the router is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Router{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  main-router-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this router may affect networks, subnets, or resources connected to it.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Routers Modal */}
-          <ModalPreview
-            title="Delete routers"
-            description="Removing the selected routers is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Routers that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>main-router-01</li>
-                  <li>backup-router-01</li>
-                  <li>test-router-01</li>
-                  <li>dev-router-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Routers that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>production-router (in use)</li>
-                  <li>gateway-router (external)</li>
-                  <li>management-router (system)</li>
-                  <li>ha-router (high availability)</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these routers may affect networks, subnets, or resources connected to
-                  them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Static Routes Modal */}
-          <ModalPreview
-            title="Delete static routes"
-            description="Deleting the selected static routers is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Static Routes{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>10.0.0.0/24 via 192.168.1.1</li>
-                  <li>172.16.0.0/16 via 192.168.1.1</li>
-                  <li>192.168.2.0/24 via 10.0.0.1</li>
-                  <li>0.0.0.0/0 via 192.168.1.254</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Removing these static routes may affect network traffic that depends on them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Remove DHCP Agents Modal */}
-          <ModalPreview
-            title="Remove DHCP agents"
-            description="This action removes the selected DHCP agents from the network."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Network{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  internal-network-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  DHCP Agents{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>dhcp-agent-001</li>
-                  <li>dhcp-agent-002</li>
-                  <li>dhcp-agent-003</li>
-                  <li>dhcp-agent-004</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Removing these DHCP agents may affect IP address assignment for instances in the
-                  network.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Release Fixed IP Modal */}
-          <ModalPreview
-            title="Release fixed IP"
-            description="This action releases the fixed IP from the port."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Port{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  port-abc12345{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Fixed IP{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  192.168.1.100{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Releasing this fixed IP may affect network connectivity for the port.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Release{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Allowed Address Pair Modal */}
-          <ModalPreview
-            title="Delete allowed address pair"
-            description="This action removes the allowed address pair from the port."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Port{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  port-abc12345{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  IP address{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  10.0.0.50{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these allowed address pairs may affect network access for the port.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Security Group Admin Modal */}
-          <ModalPreview
-            title="Delete security group"
-            description="Deleting the security group is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Security group{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-servers-sg{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action will permanently delete the security group and all its rules. If this
-                  group is attached to any instances, their network traffic may be affected.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Security Groups Admin Modal */}
-          <ModalPreview
-            title="Delete security groups"
-            description="Deleting the selected security groups is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Security groups that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-servers-sg</li>
-                  <li>database-sg</li>
-                  <li>api-servers-sg</li>
-                  <li>monitoring-sg</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Security groups that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>default (system)</li>
-                  <li>production-sg (in use)</li>
-                  <li>management-sg (system)</li>
-                  <li>bastion-sg (in use)</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action will permanently delete the security groups and all their rules.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Firewall Modal */}
-          <ModalPreview
-            title="Delete firewall"
-            description="Deleting the firewall is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Firewall{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  perimeter-firewall-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action will permanently delete the firewall and all its rules.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Firewalls Modal */}
-          <ModalPreview
-            title="Delete firewalls"
-            description="Deleting the selected firewalls is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Firewalls that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>perimeter-firewall-01</li>
-                  <li>internal-firewall-01</li>
-                  <li>test-firewall-01</li>
-                  <li>dev-firewall-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Firewalls that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>production-firewall (in use)</li>
-                  <li>gateway-firewall (system)</li>
-                  <li>management-firewall (system)</li>
-                  <li>ha-firewall (high availability)</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  This action will permanently delete the firewalls and all their rules.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Unsaved Changes Admin Modal */}
-          <ModalPreview
-            title="Unsaved changes"
-            description="Any unsaved changes will be lost. Do you want to leave?"
-          >
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Leave{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Stay{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Release Floating IP Modal */}
-          <ModalPreview
-            title="Release floating IP"
-            description="Releasing the floating IP is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Floating IP{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  203.0.113.50{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Releasing this floating IP may limit external access for the associated resource.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Release{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Release Floating IPs Modal */}
-          <ModalPreview
-            title="Release floating IPs"
-            description="Releasing the floating IPs is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Floating IPs{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>203.0.113.50</li>
-                  <li>203.0.113.51</li>
-                  <li>203.0.113.52</li>
-                  <li>203.0.113.53</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Releasing these floating IPs may limit external access for the associated
-                  resource.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Release{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Load Balancer Admin Modal */}
-          <ModalPreview
-            title="Delete load balancer"
-            description="Removing the load balancer is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Load balancer{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-lb-01{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this load balancer may affect the listeners, pools that depend on it.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Load Balancers Admin Modal */}
-          <ModalPreview
-            title="Delete load balancers"
-            description="Removing the load balancers is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Load balancers that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-lb-01</li>
-                  <li>api-lb-01</li>
-                  <li>staging-lb-01</li>
-                  <li>dev-lb-01</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Load balancers that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>production-lb (in use)</li>
-                  <li>gateway-lb (external)</li>
-                  <li>ha-lb-01 (high availability)</li>
-                  <li>critical-lb (protected)</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these load balancers may affect the listeners, pools that depend on them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Listener Modal */}
-          <ModalPreview
-            title="Delete listener"
-            description="Removing the listener is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Listener{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  http-listener-443{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Listeners Modal */}
-          <ModalPreview
-            title="Delete listeners"
-            description="Removing the listeners is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Load balancers that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>http-listener-80</li>
-                  <li>https-listener-443</li>
-                  <li>api-listener-8080</li>
-                  <li>ws-listener-8443</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Load balancers that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>production-listener (in use)</li>
-                  <li>critical-listener (protected)</li>
-                  <li>ha-listener (high availability)</li>
-                  <li>gateway-listener (external)</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Pool Modal */}
-          <ModalPreview
-            title="Delete pool"
-            description="Removing the pool is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Pool{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-servers-pool{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this pool will also remove its associated members and health monitors.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Pools Modal */}
-          <ModalPreview
-            title="Delete pools"
-            description="Removing the pools is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Listeners that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-servers-pool</li>
-                  <li>api-servers-pool</li>
-                  <li>staging-pool</li>
-                  <li>dev-pool</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Listeners that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>production-pool (in use)</li>
-                  <li>critical-pool (protected)</li>
-                  <li>ha-pool (high availability)</li>
-                  <li>gateway-pool (external)</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these pools will also remove their associated members and health
-                  monitors.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Member Modal */}
-          <ModalPreview
-            title="Delete member"
-            description="Removing the member is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Member{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  192.168.1.10:8080{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Removing this member may affect traffic distribution for the pool.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Members Modal */}
-          <ModalPreview
-            title="Delete members"
-            description="Removing the members is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Members that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>192.168.1.10:8080</li>
-                  <li>192.168.1.11:8080</li>
-                  <li>192.168.1.12:8080</li>
-                  <li>192.168.1.13:8080</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Members that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>192.168.1.1:8080 (primary)</li>
-                  <li>192.168.1.2:8080 (backup)</li>
-                  <li>192.168.1.3:8080 (protected)</li>
-                  <li>192.168.1.4:8080 (critical)</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Removing these members may affect traffic distribution for the pool.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Security Group Rule Modal */}
-          <ModalPreview
-            title="Delete rule"
-            description="Removing the rule group is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Rule{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  Ingress/TCP/443{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this rule may affect network access for the resources that rely on it.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Security Group Rules Modal */}
-          <ModalPreview
-            title="Delete rules"
-            description="Removing the rules is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Rules that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>Ingress/TCP/80</li>
-                  <li>Ingress/TCP/443</li>
-                  <li>Egress/TCP/All</li>
-                  <li>Ingress/UDP/53</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Rules that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>Ingress/TCP/22 (SSH required)</li>
-                  <li>Egress/All/All (default)</li>
-                  <li>Ingress/ICMP/All (monitoring)</li>
-                  <li>Ingress/TCP/3389 (RDP required)</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this rule may affect network access for the resources that rely on them.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete L7 Policy Modal */}
-          <ModalPreview
-            title="Delete L7 policy"
-            description="Removing the L7 policy is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  L7 Policy{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  redirect-to-https{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this L7 policy may affect traffic routing for the listener.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete L7 Policies Modal */}
-          <ModalPreview
-            title="Delete L7 policies"
-            description="Removing the L7 policies is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  L7 Policies that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>redirect-to-https</li>
-                  <li>block-bad-bots</li>
-                  <li>rate-limit-api</li>
-                  <li>geo-redirect</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  L7 Policies that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>default-redirect (system)</li>
-                  <li>security-headers (required)</li>
-                  <li>cors-policy (protected)</li>
-                  <li>auth-redirect (critical)</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these L7 policies may affect traffic routing for the listeners.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Health Monitor Modal */}
-          <ModalPreview
-            title="Delete health monitor"
-            description="Removing the health monitor is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Health Monitor{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  http-health-check{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this health monitor may affect the pool&apos;s ability to detect
-                  unhealthy members.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Firewall Policy Modal */}
-          <ModalPreview
-            title="Delete firewall policy"
-            description="Deleting the firewall policy is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Firewall Policy{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  web-policy-01{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Firewall Policies Modal */}
-          <ModalPreview
-            title="Delete firewall policies"
-            description="Removing the selected firewall policies is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Firewall policies that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>web-policy-01</li>
-                  <li>api-policy-01</li>
-                  <li>staging-policy</li>
-                  <li>dev-policy</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Firewall policies that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>production-policy (in use)</li>
-                  <li>gateway-policy (system)</li>
-                  <li>default-policy (protected)</li>
-                  <li>critical-policy (in use)</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Firewall Rule Modal */}
-          <ModalPreview
-            title="Delete firewall rule"
-            description="Deleting the firewall rule is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Firewall Rule{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  allow-https-443{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Firewall Rules Modal */}
-          <ModalPreview
-            title="Delete firewall rules"
-            description="Removing the selected firewall rules is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Firewall rules that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>allow-https-443</li>
-                  <li>allow-http-80</li>
-                  <li>allow-ssh-22</li>
-                  <li>allow-dns-53</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Firewall rules that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>default-egress (system)</li>
-                  <li>management-access (protected)</li>
-                  <li>monitoring-rule (required)</li>
-                  <li>critical-ingress (in use)</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Tenant Modal */}
-          <ModalPreview
-            title="Delete tenant"
-            description="Deleting the tenant is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Tenant{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  project-alpha{' '}
-                </span>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting this tenant does not delete the resources inside it. Those resources will
-                  remain and must be managed separately.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Tenants Modal */}
-          <ModalPreview
-            title="Delete tenant"
-            description="Removing the selected tenants is permanent and cannot be undone."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Tenants{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>project-alpha</li>
-                  <li>project-beta</li>
-                  <li>project-gamma</li>
-                  <li>project-delta</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-                <IconAlertCircle
-                  size={14}
-                  className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                  stroke={1.5}
-                />
-                <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                  Deleting these tenants does not delete the resources inside them. Those resources
-                  will remain and must be managed separately.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Metadata Modal */}
-          <ModalPreview title="Delete metadata" description="This action removes the metadata.">
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Metadata{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  environment=production{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Delete Metadatas Modal */}
-          <ModalPreview
-            title="Delete metadata"
-            description="This action removes the selected metadata."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Metadata that can be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>environment=production</li>
-                  <li>team=platform</li>
-                  <li>cost-center=eng-001</li>
-                  <li>owner=admin</li>
-                </ul>
-              </div>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Metadata that cannot be delete{' '}
-                </span>
-                <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
-                  <li>system-id=xyz (system)</li>
-                  <li>created-by=admin (protected)</li>
-                  <li>managed-by=openstack (required)</li>
-                  <li>instance-type=vm (system)</li>
-                </ul>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Manage Member Modal */}
-          <ModalPreview
-            title="Manage member"
-            description="User management for this project is handled in the IAM app. You will be redirected to IAM to manage users and user groups."
-          >
-            <div className="flex flex-col gap-2">
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-                  Tenant{' '}
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  project-alpha{' '}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Go to IAM{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-        </CategorySection>
-
-        {/* ============================================================
-           CLOUD BUILDER MODALS
-           ============================================================ */}
-        <CategorySection title="Cloud Builder">
-          {/* Enable Compute Service Modal */}
-          <ModalPreview
-            title="Enable compute service"
-            description="Change this service status to Enabled?"
-          >
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Enable{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-
-          {/* Disable Compute Service Modal */}
-          <ModalPreview
-            title="Disable compute service"
-            description="Change this service status to Disabled?"
-          >
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col gap-2">
-                <span className="text-label-lg text-[var(--color-text-default)]">
-                  Reason <span className="text-[var(--color-state-danger)]">*</span>
-                </span>
-                <textarea
-                  className="w-full min-h-[80px] px-3 py-2 text-body-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] resize-y outline-none focus:border-[var(--color-border-focus)] focus:ring-1 focus:ring-[var(--color-border-focus)]"
-                  placeholder="Enter a reason for disabling"
-                />
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel{' '}
-              </Button>
-              <Button variant="primary" className="flex-1">
-                Disable{' '}
-              </Button>
-            </div>
-          </ModalPreview>
-        </CategorySection>
-
-        {/* ============================================================
-           AI AGENT MODALS
-           ============================================================ */}
-        <CategorySection title="AI Agent">
-          <ModalPreview
-            title="Delete agent source"
-            description="Are you sure you want to delete this agent source? This action cannot be undone."
-          >
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Agent name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                my-research-agent
-              </span>
-            </div>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="danger" className="flex-1">
-                Delete
-              </Button>
-            </div>
-          </ModalPreview>
-        </CategorySection>
-      </VStack>
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={passwordCopied ? <IconCheck size={14} /> : <IconCopy size={14} />}
+              aria-label="Copy password"
+              onClick={() => {
+                navigator.clipboard.writeText('Temp1234!@#');
+                setPasswordCopied(true);
+                setTimeout(() => setPasswordCopied(false), 2000);
+              }}
+            />
+          </div>
+          <InlineMessage variant="info">
+            The password can only be viewed at this step.
+          </InlineMessage>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Close
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={openModal === 'unsaved-changes'}
+        onClose={closeModal}
+        title="Unsaved changes"
+        description="Any unsaved changes will be lost. Do you want to leave?"
+        size="sm"
+      >
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Leave
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Stay
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={openModal === 'detach-user-group'}
+        onClose={closeModal}
+        title="Detach user group"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Username" value="john.doe@example.com" />
+          <InfoBox label="User group" value="developers" />
+          <DangerWarning>
+            Detaching this user from the group revokes permissions granted through this group&apos;s
+            roles for this user.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'detach-role'}
+        onClose={closeModal}
+        title="Detach role"
+        description="This action detaches the role from the user."
+      >
+        <ScrollableList label="Roles" items={['admin', 'developer', 'viewer', 'operator']} />
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="danger" />
+      </Modal>
+      <Modal isOpen={openModal === 'remove-otp-mfa'} onClose={closeModal} title="Remove OTP MFA">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Username" value="admin@thaki.cloud" />
+          <DangerWarning>
+            After removal, this user will not be asked for an OTP code at sign-in until they enroll
+            OTP MFA again.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Remove" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'terminate-all-sessions'}
+        onClose={closeModal}
+        title="Terminate all sessions"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="User" value="John Doe" />
+          <DangerWarning>
+            Terminating all sessions will immediately sign the user out from all devices and require
+            re-authentication.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Terminate" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'terminate-session'}
+        onClose={closeModal}
+        title="Terminate session"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Session" value="John Doe (Chrome on macOS)" />
+          <DangerWarning>
+            Terminating this session will sign the user out from this device and require
+            re-authentication.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Terminate" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'remove-user'}
+        onClose={closeModal}
+        title="Remove user"
+        description="This action removes the user from the group."
+      >
+        <ScrollableList
+          label="Users"
+          items={['john.doe@example.com', 'jane.smith@example.com', 'admin@example.com']}
+        />
+        <ModalButtons onClose={closeModal} confirmText="Remove" confirmVariant="danger" />
+      </Modal>
+      <Modal isOpen={openModal === 'delete-role'} onClose={closeModal} title="Delete role">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Role" value="developer-role" />
+          <DangerWarning>
+            If this role has active temporary grants, deleting it removes all of those grants.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal isOpen={openModal === 'delete-roles'} onClose={closeModal} title="Delete roles">
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Roles"
+            items={['developer-role', 'viewer-role', 'operator-role', 'auditor-role']}
+          />
+          <DangerWarning>
+            If any selected roles have active temporary grants, deleting them removes all of those
+            grants.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'revoke-access-single'}
+        onClose={closeModal}
+        title="Revoke access"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Principal" value="john.doe@example.com" />
+          <InfoBox label="Role" value="developer-role" />
+          <InfoBox label="Scheduled end" value="Apr 30, 2026 23:59:59 (UTC+9)" />
+          <DangerWarning>
+            Temporary access is revoked immediately, regardless of the scheduled end time.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Revoke" confirmVariant="danger" />
+      </Modal>
+      <Modal isOpen={openModal === 'revoke-access-bulk'} onClose={closeModal} title="Revoke access">
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Grants"
+            items={[
+              'john.doe / developer-role / Apr 30, 2026',
+              'jane.smith / viewer-role / May 15, 2026',
+              'ops-bot / operator-role / Jun 01, 2026',
+            ]}
+          />
+          <DangerWarning>
+            Temporary access is revoked immediately, regardless of the scheduled end time.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Revoke" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'detach-policy'}
+        onClose={closeModal}
+        title="Detach policy"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Username" value="{username}" />
+          <TdsInfoBox label="Policy" value="[policy_name]" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              This user will lose all permissions granted by this policy.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'detach-policy-group'}
+        onClose={closeModal}
+        title="Detach policy"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="User group" value="{name}" />
+          <TdsInfoBox label="Policy" value="[policy_name]" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              All members of this group will lose the permissions granted by this policy.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'detach-policy-role'}
+        onClose={closeModal}
+        title="Detach policy"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Role" value="{name}" />
+          <TdsInfoBox label="Policy" value="[policy_name]" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              All users and groups assigned to this role will lose the permissions granted by this
+              policy.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'detach-policy-service-account'}
+        onClose={closeModal}
+        title="Detach policy"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Service account" value="{username}" />
+          <TdsInfoBox label="Policy" value="[policy_name]" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              This service account will lose all permissions granted by this policy.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Detach" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-policy'}
+        onClose={closeModal}
+        title="Delete policy"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Policy" value="POLICYNAME" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              This policy will be permanently removed. Users or roles attached to this policy will
+              immediately lose access permissions.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-policies'}
+        onClose={closeModal}
+        title="Delete policies"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Policies that can be delete">
+            <div className="max-h-[64px] overflow-y-auto">
+              <ul className="list-disc pl-4 text-body-md text-[var(--color-text-default)]">
+                <li>policy</li>
+                <li>policy</li>
+                <li>policy</li>
+              </ul>
+            </div>
+          </TdsInfoBox>
+          <TdsInfoBox label="Policies that cannot be delete">
+            <div className="max-h-[64px] overflow-y-auto">
+              <ul className="list-disc pl-4 text-body-md text-[var(--color-text-default)]">
+                <li>policy (Built-in policies cannot be deleted.)</li>
+              </ul>
+            </div>
+          </TdsInfoBox>
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              These policies will be permanently removed. Users or roles attached to these policies
+              will immediately lose access permissions.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'revert-policy-version'}
+        onClose={closeModal}
+        title="Revert policy version"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="Current version" value="VERSION" />
+          <TdsInfoBox label="Target version" value="VERSION" />
+          <div className="flex gap-2 items-start p-3 bg-[var(--color-state-danger-bg)] rounded-[var(--radius-lg)]">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-sm text-[var(--color-text-default)]">
+              Reverting to this version changes the permissions applied to all attached entities.
+            </span>
+          </div>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Revert" confirmVariant="primary" />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'delete-policy-version'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete policy version"
+        infoLabel="Version"
+        infoValue="VERSION"
+        confirmText="Delete"
+        confirmVariant="danger"
+        size="sm"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'update-mfa-policy'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Update MFA enforcement policy"
+        description="This action applies the changes."
+        infoLabel="Change"
+        infoValue="Required → Optional"
+        confirmText="Apply"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'update-otp-enable'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Update OTP policy"
+        description="This action applies the changes."
+        infoLabel="Change"
+        infoValue="Disabled → Enabled"
+        confirmText="Apply"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'update-otp-disable'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Update OTP policy"
+        description="This action applies the changes."
+        infoLabel="Change"
+        infoValue="Enabled → Disabled"
+        confirmText="Apply"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'update-email-enable'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Update email policy"
+        description="This action applies the changes."
+        infoLabel="Change"
+        infoValue="Disabled → Enabled"
+        confirmText="Apply"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'update-email-disable'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Update email policy"
+        description="This action applies the changes."
+        infoLabel="Change"
+        infoValue="Enabled → Disabled"
+        confirmText="Apply"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'update-session-policy'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Update general session policy"
+        description="This action applies the changes."
+        confirmText="Apply"
+        confirmVariant="primary"
+      />
+      <Modal isOpen={openModal === 'delete-domain'} onClose={closeModal} title="Delete domain">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="domain" value="example.com" />
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              Deletion prerequisites
+            </span>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No bare metal instances
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No user-created tenants
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No storage buckets
+                </span>
+              </div>
+            </div>
+          </div>
+          <DangerWarning>
+            This removes IAM data for the domain (accounts, groups, policies, default tenant, and
+            settings). Thaki Storage domains also drop Ceph pools via the Storage API before IAM
+            cleanup.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'switch-domain'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Switch to domain"
+        description="Any unsaved changes may be lost when switching to another domain. Do you want to switch?"
+        infoLabel="Domain"
+        infoValue="thaki.cloud"
+        confirmText="Switch"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'delete-system-admin'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete system administrator"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Administrator"
+        infoValue="admin@system.local"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'update-password-policy'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Update password policy"
+        description="This action applies the changes."
+        confirmText="Apply"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'update-lockout-policy'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Update account lockout policy"
+        description="This action applies the changes."
+        confirmText="Apply"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'update-token-policy'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Update token policy"
+        description="This action applies the changes."
+        infoLabel="Change"
+        infoValue="24h → 12h"
+        confirmText="Apply"
+        confirmVariant="primary"
+      />
+
+      <Modal isOpen={openModal === 'password-reset'} onClose={closeModal} title="Password reset">
+        <div className="flex flex-col gap-2">
+          <InfoBoxCopyable label="Username" value="john.doe@example.com" />
+          <InfoBoxCopyable label="Password" value="Temp1234!@#" />
+          <DangerWarning>
+            The new password is shown only once. Copy and store it securely before closing this
+            dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </div>
+      </Modal>
+      <Modal isOpen={openModal === 'new-access-key'} onClose={closeModal} title="New access key">
+        <div className="flex flex-col gap-2">
+          <InfoBoxCopyable label="Access key ID" value="AKIAIOSFODNN7EXAMPLE" />
+          <InfoBoxCopyable
+            label="Secret access key"
+            value="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+          />
+          <DangerWarning>
+            These credentials are shown only once. Copy and store them securely before you close
+            this dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-domain-prereqs-fail'}
+        onClose={closeModal}
+        title="Delete domain"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="domain" value="example.com" />
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              Deletion prerequisites
+            </span>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconAlertCircle size={16} className="text-[var(--color-state-danger)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No bare metal instances
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No user-created tenants
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 px-2 py-1">
+                <IconCircleCheck size={16} className="text-[var(--color-state-success)] shrink-0" />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  No storage buckets
+                </span>
+              </div>
+            </div>
+          </div>
+          <DangerWarning>
+            This domain cannot be deleted because the deletion prerequisites are not met. Clear the
+            failed items, then try again.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Close
+          </Button>
+        </div>
+      </Modal>
+
+      {/* — System Administrator — */}
+
+      {/* New access key (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-new-access-key'}
+        onClose={closeModal}
+        title="New access key"
+        size="sm"
+      >
+        <InfoBoxCopyable label="Access key ID" value="AKIA112AK3IALQI2" />
+        <InfoBoxCopyable label="Secret access key" value="wJalrXUtnFEMI/K7MDENG/bPxRfiCY..." />
+        <DangerWarning>
+          These credentials are shown only once. Copy and store them securely before you close this
+          dialog.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Remove OTP MFA (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-remove-otp'}
+        onClose={closeModal}
+        title="Remove OTP MFA"
+        size="sm"
+      >
+        <InfoBox label="Username" value="thaki.kim" />
+        <DangerWarning>
+          After removal, this user will not be asked for an OTP code at sign-in until they enroll
+          OTP MFA again.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Remove
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Delete system administrator (single) */}
+      <Modal
+        isOpen={openModal === 'sa-delete-admin'}
+        onClose={closeModal}
+        title="Delete system administrator"
+        size="sm"
+      >
+        <InfoBox label="User" value="thaki.kim" />
+        <DangerWarning>
+          Deleting this user removes invalidates access keys, and ends active sessions.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={closeModal} className="flex-1">
+            Delete
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Terminate session (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-terminate-session'}
+        onClose={closeModal}
+        title="Terminate session"
+        size="sm"
+      >
+        <InfoBox label="Session" value="thaki.kim (Chrome / Windows)" />
+        <DangerWarning>
+          Terminating this session will sign the user out from this device and require
+          re-authentication.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Terminate
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Reset API key (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-reset-api-key'}
+        onClose={closeModal}
+        title="Reset API key"
+        size="sm"
+      >
+        <InfoBox label="Key ID" value="AKIA112AK3IALQI2" />
+        <DangerWarning>
+          The current key stops working immediately. The new key is shown only once on the next
+          screen.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Reset
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Terminate all sessions (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-terminate-all'}
+        onClose={closeModal}
+        title="Terminate all sessions"
+        size="sm"
+      >
+        <InfoBox label="User" value="thaki.kim" />
+        <DangerWarning>
+          Terminating all sessions will immediately sign the user out from all devices and require
+          re-authentication.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Terminate
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Delete access key (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-delete-access-key'}
+        onClose={closeModal}
+        title="Delete access key"
+        size="sm"
+      >
+        <InfoBox label="Key ID" value="AKIA112AK3IALQI2" />
+        <DangerWarning>
+          This key stops working immediately and is permanently removed from the account.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={closeModal} className="flex-1">
+            Delete
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* Delete system administrators (multi) */}
+      <Modal
+        isOpen={openModal === 'sa-delete-admins'}
+        onClose={closeModal}
+        title="Delete system administrator"
+        size="sm"
+      >
+        <ScrollableList
+          label="Users"
+          items={['thaki.kim', 'alex.jones', 'sarah.lee', 'john.doe', 'jane.smith']}
+        />
+        <DangerWarning>
+          Deleting the selected users removes invalidates their access keys, and ends their active
+          sessions.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="secondary" onClick={closeModal} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={closeModal} className="flex-1">
+            Delete
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* New API key (SA) */}
+      <Modal
+        isOpen={openModal === 'sa-new-api-key'}
+        onClose={closeModal}
+        title="New API key"
+        size="sm"
+      >
+        <InfoBoxCopyable label="Key ID" value="AKIA112AK3IALQI2" />
+        <InfoBoxCopyable label="New API key" value="wJalrXUtnFEMI/K7MDENG/bPxRfiCY..." />
+        <DangerWarning>
+          These credentials are shown only once. Copy and store them securely before you close this
+          dialog.
+        </DangerWarning>
+        <ModalButtons>
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </ModalButtons>
+      </Modal>
+
+      {/* — Service Account — */}
+      <Modal
+        isOpen={openModal === 'regenerate-client-secret'}
+        onClose={closeModal}
+        title="Regenerate client secret"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Name" value="ci-pipeline-bot" />
+          <InfoBoxCopyable label="Client ID" value="sa-client-abc123" />
+          <DangerWarning>
+            The current secret stops working immediately. The new secret is shown only once on the
+            next screen.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Regenerate" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'new-client-secret'}
+        onClose={closeModal}
+        title="New client secret"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Name" value="ci-pipeline-bot" />
+          <InfoBoxCopyable label="Client ID" value="sa-client-abc123" />
+          <InfoBoxCopyable label="New client secret" value="sk-xxxx-xxxx-xxxx-xxxx" />
+          <DangerWarning>
+            These credentials are shown only once. Copy and store them securely before you close
+            this dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </div>
+      </Modal>
+      <Modal isOpen={openModal === 'new-api-key'} onClose={closeModal} title="New API key">
+        <div className="flex flex-col gap-2">
+          <InfoBoxCopyable label="Key ID" value="ak-key-abc123" />
+          <InfoBoxCopyable label="New API key" value="thaki_sk_live_xxxxxxxxxxxx" />
+          <DangerWarning>
+            These credentials are shown only once. Copy and store them securely before you close
+            this dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </div>
+      </Modal>
+      <Modal isOpen={openModal === 'reset-api-key'} onClose={closeModal} title="Reset API key">
+        <div className="flex flex-col gap-2">
+          <InfoBoxCopyable label="Key ID" value="ak-key-abc123" />
+          <DangerWarning>
+            The current key stops working immediately. The new key is shown only once on the next
+            screen.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Reset" confirmVariant="primary" />
+      </Modal>
+      <Modal isOpen={openModal === 'delete-api-key'} onClose={closeModal} title="Delete API key">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Key ID" value="ak-key-abc123" />
+          <DangerWarning>
+            This key stops working immediately. Requests that use it will fail, and the key cannot
+            be restored.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-access-key'}
+        onClose={closeModal}
+        title="Delete access key"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Key ID" value="ak-key-abc123" />
+          <DangerWarning>
+            This key stops working immediately and is permanently removed from the account.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-service-account'}
+        onClose={closeModal}
+        title="Delete service account"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Service account" value="ci-pipeline-bot" />
+          <DangerWarning>
+            Client ID, Client Secret, all API keys, and permission bindings for this account will be
+            removed.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-service-accounts'}
+        onClose={closeModal}
+        title="Delete service accounts"
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Service accounts"
+            items={['ci-pipeline-bot', 'monitoring-agent', 'backup-service', 'deploy-bot']}
+          />
+          <DangerWarning>
+            Client ID, Client Secret, all API keys, and permission bindings for these accounts will
+            be removed.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'new-client-secret-close'}
+        onClose={closeModal}
+        title="New client secret"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Name" value="ci-pipeline-bot" />
+          <InfoBoxCopyable label="Client ID" value="sa-client-abc123" />
+          <InfoBoxCopyable label="New client secret" value="sk-xxxx-xxxx-xxxx-xxxx" />
+          <DangerWarning>
+            These credentials are shown only once. Copy and store them securely before you close
+            this dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Close
+          </Button>
+        </div>
+      </Modal>
+
+      {/* ================================================================
+         MODAL INSTANCES — Storage
+         ================================================================ */}
+      <Modal isOpen={openModal === 'delete-bucket'} onClose={closeModal} title="Delete bucket">
+        <DangerWarning>
+          Deleting this bucket will permanently remove all objects stored within it. This action
+          cannot be undone.
+        </DangerWarning>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+
+      {/* ================================================================
+         MODAL INSTANCES — Container
+         ================================================================ */}
+      <ConfirmModal
+        isOpen={openModal === 'delete-cluster'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete cluster"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Cluster"
+        infoValue="prod-cluster-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'delete-namespace'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete namespace"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Namespace"
+        infoValue="monitoring"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'delete-pod'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete pod"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Pod"
+        infoValue="nginx-7d9f..."
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'delete-job'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete job"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Job"
+        infoValue="data-migration-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'delete-cronjob'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete CronJob"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="CronJob"
+        infoValue="backup-daily"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'delete-deployment'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete deployment"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="Deployment"
+        infoValue="web-frontend"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'delete-statefulset'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete StatefulSet"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="StatefulSet"
+        infoValue="redis-cluster"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'delete-daemonset'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete DaemonSet"
+        description="Removing the selected instances is permanent and cannot be undone."
+        infoLabel="DaemonSet"
+        infoValue="log-collector"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'redeploy-deployment'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Redeploy deployment"
+        description="Are you sure you want to redeploy this deployment?"
+        infoLabel="Deployment"
+        infoValue="web-frontend"
+        confirmText="Redeploy"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'redeploy-statefulset'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Redeploy StatefulSet"
+        description="Are you sure you want to redeploy this StatefulSet?"
+        infoLabel="StatefulSet"
+        infoValue="redis-cluster"
+        confirmText="Redeploy"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'redeploy-daemonset'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Redeploy DaemonSet"
+        description="Are you sure you want to redeploy this DaemonSet?"
+        infoLabel="DaemonSet"
+        infoValue="log-collector"
+        confirmText="Redeploy"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'rollback-deployment'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Roll back deployment"
+        description="Select a revision to roll back to."
+        infoLabel="Deployment"
+        infoValue="web-frontend"
+        confirmText="Roll back"
+        confirmVariant="primary"
+      />
+      <Modal
+        isOpen={openModal === 'operator-required'}
+        onClose={closeModal}
+        title="Operator Required"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <InlineMessage variant="warning">
+            CNPG operator is not installed.
+            {'\n'}
+            CNPG is managed by CNPG operator. You must install the operator before creating
+            instances.
+          </InlineMessage>
+          <TdsInfoBox label="Application" value="CNPG" />
+          <TdsInfoBox label="Required operator" value="CNPG Operator" />
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Install" confirmVariant="primary" />
+      </Modal>
+      <Modal isOpen={openModal === 'delete-app'} onClose={closeModal} title="Delete app" size="sm">
+        <div className="flex flex-col gap-2">
+          <TdsInfoBox label="App / Namespace" value="postgresql-1 / default" />
+          <InlineMessage variant="error">
+            This will remove the Helm release and all associated Kubernetes resources. This action
+            cannot be undone.
+          </InlineMessage>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-operator'}
+        onClose={closeModal}
+        title="Delete operator"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <InlineMessage variant="error">
+            This will permanently remove the Operator and all Kubernetes resources it manages. The
+            Operator cannot be deleted while active CR Instances still exist.
+          </InlineMessage>
+          <TdsInfoBox label="Operator" value="CNPG Operator" />
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-operator-blocked'}
+        onClose={closeModal}
+        title="Delete operator"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <InlineMessage variant="error">
+            This will permanently remove the Operator and all Kubernetes resources it manages. The
+            Operator cannot be deleted while active CR Instances still exist.
+          </InlineMessage>
+          <TdsInfoBox label="Operator" value="CNPG Operator" />
+          <TdsInfoBox label="CR instances">
+            <ul className="list-disc ml-4 text-body-md text-[var(--color-text-default)]">
+              <li>cnpg-cluster-default</li>
+              <li>cnpg-cluster-ai</li>
+            </ul>
+          </TdsInfoBox>
+          <InlineMessage variant="error">
+            2 CR Instance(s) are currently running. Delete all CR Instances first, then retry.
+          </InlineMessage>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+
+      {/* ================================================================
+         MODAL INSTANCES — Compute Admin
+         ================================================================ */}
+      <ConfirmModal
+        isOpen={openModal === 'admin-stop-instance'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Stop instance"
+        description="This action stops the instance."
+        infoLabel="Instance"
+        infoValue="web-server-01"
+        confirmText="Stop"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-reboot-instance'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Reboot instance"
+        description="This action reboots the instance."
+        infoLabel="Instance"
+        infoValue="web-server-01"
+        confirmText="Reboot"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-soft-reboot'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Soft reboot instance"
+        description="This action performs a soft reboot of the instance."
+        infoLabel="Instance"
+        infoValue="web-server-01"
+        confirmText="Soft Reboot"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-confirm-resize'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Confirm resize"
+        description="This action confirms the resized state of the instance."
+        infoLabel="Instance"
+        infoValue="web-server-01"
+        confirmText="Confirm"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-revert-resize'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Revert resize"
+        description="This action reverts the instance to its previous state before the resize."
+        infoLabel="Instance"
+        infoValue="web-server-01"
+        confirmText="Revert"
+        confirmVariant="warning"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-instance'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete instance"
+        description="Removing the instance is permanent and cannot be undone."
+        infoLabel="Instance"
+        infoValue="web-server-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-shelve-instance'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Shelve instance"
+        description="This action shelves the instance."
+        infoLabel="Instance"
+        infoValue="web-server-01"
+        confirmText="Shelve"
+        confirmVariant="primary"
+      />
+      <Modal
+        isOpen={openModal === 'admin-start-instances'}
+        onClose={closeModal}
+        title="Start instances"
+        description="This action starts the selected instances."
+      >
+        <ScrollableList
+          label="Instances"
+          items={['web-server-01', 'web-server-02', 'api-server-01', 'db-server-01']}
+        />
+        <ModalButtons onClose={closeModal} confirmText="Start" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'admin-stop-instances'}
+        onClose={closeModal}
+        title="Stop instances"
+        description="This action stops the selected instances."
+      >
+        <ScrollableList
+          label="Instances"
+          items={['web-server-01', 'web-server-02', 'api-server-01', 'db-server-01']}
+        />
+        <ModalButtons onClose={closeModal} confirmText="Stop" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'admin-reboot-instances'}
+        onClose={closeModal}
+        title="Reboot instances"
+        description="This action reboots the selected instances."
+      >
+        <ScrollableList
+          label="Instances"
+          items={['web-server-01', 'web-server-02', 'api-server-01', 'db-server-01']}
+        />
+        <ModalButtons onClose={closeModal} confirmText="Reboot" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'admin-delete-instances'}
+        onClose={closeModal}
+        title="Delete instances"
+        description="Removing the selected instances is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Instances"
+          items={['web-server-01', 'web-server-02', 'api-server-01', 'db-server-01']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-template'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete instance template"
+        description="Deleting the instance template is permanent and cannot be undone."
+        infoLabel="Template"
+        infoValue="web-template-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-templates'}
+        onClose={closeModal}
+        title="Delete instance templates"
+        description="Deleting the selected instance templates is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Templates"
+          items={['web-template-01', 'api-template-01', 'db-template-01', 'dev-template']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-image'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete image"
+        description="Deleting the image is permanent and cannot be undone."
+        infoLabel="Image"
+        infoValue="ubuntu-22.04"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-images'}
+        onClose={closeModal}
+        title="Delete images"
+        description="Deleting the selected images is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Images"
+          items={['ubuntu-22.04', 'centos-9', 'debian-12', 'rocky-9']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-snapshot'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete snapshot"
+        description="Deleting the snapshot is permanent and cannot be undone."
+        infoLabel="Snapshot"
+        infoValue="snap-20240101"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-snapshots'}
+        onClose={closeModal}
+        title="Delete snapshots"
+        description="Deleting the selected snapshots is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Snapshots"
+          items={['snap-20240101', 'snap-20240201', 'snap-20240301', 'snap-20240401']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-volume'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete volume"
+        description="Deleting the volume is permanent and cannot be undone."
+        infoLabel="Volume"
+        infoValue="data-vol-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-volumes'}
+        onClose={closeModal}
+        title="Delete volumes"
+        description="Deleting the selected volumes is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Volumes"
+          items={['data-vol-01', 'data-vol-02', 'log-vol-01', 'backup-vol']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-volume-type'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete volume type"
+        description="Deleting the volume type is permanent and cannot be undone."
+        infoLabel="Volume type"
+        infoValue="SSD-Premium"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-volume-types'}
+        onClose={closeModal}
+        title="Delete volume types"
+        description="Deleting the selected volume types is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Volume types"
+          items={['SSD-Premium', 'SSD-Standard', 'HDD-Archive', 'NVMe-Ultra']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-backup'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete backup"
+        description="Deleting the backup is permanent and cannot be undone."
+        infoLabel="Backup"
+        infoValue="backup-2024-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-backups'}
+        onClose={closeModal}
+        title="Delete backups"
+        description="Deleting the selected backups is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Backups"
+          items={['backup-2024-01', 'backup-2024-02', 'backup-2024-03', 'backup-2024-04']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-encryption'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete encryption"
+        description="This action removes the encryption configuration from the volume type."
+        infoLabel="Volume type"
+        infoValue="SSD-Premium"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-extra-spec'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete extra spec"
+        description="This action removes the extra specification from the volume type."
+        infoLabel="Extra spec"
+        infoValue="volume_backend_name=lvm"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-extra-specs'}
+        onClose={closeModal}
+        title="Delete extra specs"
+        description="Deleting the selected extra specifications is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Extra specs"
+          items={['volume_backend_name=lvm', 'max_iops=3000', 'min_throughput=100MB/s']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-qos-spec'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete QoS spec"
+        description="This action removes the QoS specification."
+        infoLabel="QoS spec"
+        infoValue="high-iops"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-qos-specs'}
+        onClose={closeModal}
+        title="Delete QoS specs"
+        description="This action removes the selected QoS specifications."
+      >
+        <ScrollableList label="QoS specs" items={['high-iops', 'balanced', 'economy', 'burst']} />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-extra-spec-qos'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete extra spec"
+        description="This action removes the extra specification from the volume type."
+        infoLabel="Extra spec"
+        infoValue="read_iops_sec=3000"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-extra-specs-qos'}
+        onClose={closeModal}
+        title="Delete extra specs"
+        description="Deleting the selected extra specifications is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Extra specs"
+          items={[
+            'read_iops_sec=3000',
+            'write_iops_sec=2000',
+            'read_bytes_sec=100MB',
+            'write_bytes_sec=80MB',
+          ]}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-network'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete network"
+        description="Deleting the network is permanent and cannot be undone."
+        infoLabel="Network"
+        infoValue="private-net-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-networks'}
+        onClose={closeModal}
+        title="Delete networks"
+        description="Removing the selected networks is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Networks"
+          items={['private-net-01', 'private-net-02', 'dev-net', 'staging-net']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-subnet'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete subnet"
+        description="Deleting the subnet is permanent and cannot be undone."
+        infoLabel="Subnet"
+        infoValue="subnet-192-168-1"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-subnets'}
+        onClose={closeModal}
+        title="Delete subnets"
+        description="Deleting the selected subnets is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Subnets"
+          items={['subnet-192-168-1', 'subnet-10-0-1', 'subnet-172-16-0', 'subnet-dev']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-port'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete port"
+        description="Deleting the port is permanent and cannot be undone."
+        infoLabel="Port"
+        infoValue="port-abc123"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-ports'}
+        onClose={closeModal}
+        title="Delete ports"
+        description="Deleting the selected ports is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Ports"
+          items={['port-abc123', 'port-def456', 'port-ghi789', 'port-jkl012']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-router'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete router"
+        description="Deleting the router is permanent and cannot be undone."
+        infoLabel="Router"
+        infoValue="main-router"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-routers'}
+        onClose={closeModal}
+        title="Delete routers"
+        description="Removing the selected routers is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Routers"
+          items={['main-router', 'dev-router', 'staging-router', 'test-router']}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'admin-delete-static-routes'}
+        onClose={closeModal}
+        title="Delete static routes"
+        description="Deleting the selected static routes is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Static routes"
+          items={[
+            '10.0.0.0/24 → 192.168.1.1',
+            '172.16.0.0/16 → 192.168.1.1',
+            '10.10.0.0/24 → 10.0.0.1',
+          ]}
+        />
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'admin-remove-dhcp-agents'}
+        onClose={closeModal}
+        title="Remove DHCP agents"
+        description="This action removes the selected DHCP agents from the network."
+      >
+        <ScrollableList
+          label="DHCP agents"
+          items={['agent-01@host-1', 'agent-02@host-2', 'agent-03@host-3']}
+        />
+        <ModalButtons onClose={closeModal} confirmText="Remove" confirmVariant="danger" />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-release-fixed-ip'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Release fixed IP"
+        description="This action releases the fixed IP from the port."
+        infoLabel="Fixed IP"
+        infoValue="192.168.1.100"
+        confirmText="Release"
+        confirmVariant="primary"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-address-pair'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete allowed address pair"
+        description="This action removes the allowed address pair from the port."
+        infoLabel="Address pair"
+        infoValue="10.0.0.0/24 / fa:16:3e:xx:xx:xx"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-sg'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete security group"
+        description="Deleting the security group is permanent and cannot be undone."
+        infoLabel="Security group"
+        infoValue="web-servers-sg"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-sgs'}
+        onClose={closeModal}
+        title="Delete security groups"
+        description="Deleting the selected security groups is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Security groups that can be deleted"
+            items={['web-servers-sg', 'database-sg', 'api-servers-sg', 'monitoring-sg']}
+          />
+          <ScrollableList
+            label="Security groups that cannot be deleted"
+            items={[
+              'default (system)',
+              'production-sg (in use)',
+              'management-sg (system)',
+              'bastion-sg (in use)',
+            ]}
+          />
+          <DangerWarning>
+            This action will permanently delete the security groups and all their rules.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-firewall'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete firewall"
+        description="Deleting the firewall is permanent and cannot be undone."
+        infoLabel="Firewall"
+        infoValue="perimeter-firewall-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-firewalls'}
+        onClose={closeModal}
+        title="Delete firewalls"
+        description="Deleting the selected firewalls is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Firewalls that can be deleted"
+            items={[
+              'perimeter-firewall-01',
+              'internal-firewall-01',
+              'test-firewall-01',
+              'dev-firewall-01',
+            ]}
+          />
+          <ScrollableList
+            label="Firewalls that cannot be deleted"
+            items={[
+              'production-firewall (in use)',
+              'gateway-firewall (system)',
+              'management-firewall (system)',
+              'ha-firewall (high availability)',
+            ]}
+          />
+          <DangerWarning>
+            This action will permanently delete the firewalls and all their rules.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-fw-policy'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete firewall policy"
+        description="Deleting the firewall policy is permanent and cannot be undone."
+        infoLabel="Firewall Policy"
+        infoValue="web-policy-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-fw-policies'}
+        onClose={closeModal}
+        title="Delete firewall policies"
+        description="Removing the selected firewall policies is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Firewall policies that can be deleted"
+            items={['web-policy-01', 'api-policy-01', 'staging-policy', 'dev-policy']}
+          />
+          <ScrollableList
+            label="Firewall policies that cannot be deleted"
+            items={[
+              'production-policy (in use)',
+              'gateway-policy (system)',
+              'default-policy (protected)',
+              'critical-policy (in use)',
+            ]}
+          />
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-fw-rule'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete firewall rule"
+        description="Deleting the firewall rule is permanent and cannot be undone."
+        infoLabel="Firewall Rule"
+        infoValue="allow-https-443"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-fw-rules'}
+        onClose={closeModal}
+        title="Delete firewall rules"
+        description="Removing the selected firewall rules is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Firewall rules that can be deleted"
+            items={['allow-https-443', 'allow-http-80', 'allow-ssh-22', 'allow-dns-53']}
+          />
+          <ScrollableList
+            label="Firewall rules that cannot be deleted"
+            items={[
+              'default-egress (system)',
+              'management-access (protected)',
+              'monitoring-rule (required)',
+              'critical-ingress (in use)',
+            ]}
+          />
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-sg-rule'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete rule"
+        description="Removing the rule group is permanent and cannot be undone."
+        infoLabel="Rule"
+        infoValue="Ingress/TCP/443"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-sg-rules'}
+        onClose={closeModal}
+        title="Delete rules"
+        description="Removing the rules is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Rules that can be deleted"
+            items={['Ingress/TCP/80', 'Ingress/TCP/443', 'Egress/TCP/All', 'Ingress/UDP/53']}
+          />
+          <ScrollableList
+            label="Rules that cannot be deleted"
+            items={[
+              'Ingress/TCP/22 (SSH required)',
+              'Egress/All/All (default)',
+              'Ingress/ICMP/All (monitoring)',
+              'Ingress/TCP/3389 (RDP required)',
+            ]}
+          />
+          <DangerWarning>
+            Deleting these rules may affect network access for the resources that rely on them.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-unsaved-changes'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Unsaved changes"
+        description="Any unsaved changes will be lost. Do you want to leave?"
+        confirmText="Stay"
+        confirmVariant="primary"
+        cancelText="Leave"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-release-fip'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Release floating IP"
+        description="Releasing the floating IP is permanent and cannot be undone."
+        infoLabel="Floating IP"
+        infoValue="203.0.113.50"
+        confirmText="Release"
+        confirmVariant="primary"
+      />
+      <Modal
+        isOpen={openModal === 'admin-release-fips'}
+        onClose={closeModal}
+        title="Release floating IPs"
+        description="Releasing the floating IPs is permanent and cannot be undone."
+      >
+        <ScrollableList
+          label="Floating IPs"
+          items={['203.0.113.50', '203.0.113.51', '203.0.113.52', '203.0.113.53']}
+        />
+        <ModalButtons onClose={closeModal} confirmText="Release" confirmVariant="primary" />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-lb'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete load balancer"
+        description="Removing the load balancer is permanent and cannot be undone."
+        infoLabel="Load balancer"
+        infoValue="web-lb-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-lbs'}
+        onClose={closeModal}
+        title="Delete load balancers"
+        description="Removing the load balancers is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Load balancers that can be deleted"
+            items={['web-lb-01', 'api-lb-01', 'staging-lb-01', 'dev-lb-01']}
+          />
+          <ScrollableList
+            label="Load balancers that cannot be deleted"
+            items={[
+              'production-lb (in use)',
+              'gateway-lb (external)',
+              'ha-lb-01 (high availability)',
+              'critical-lb (protected)',
+            ]}
+          />
+          <DangerWarning>
+            Deleting these load balancers may affect the listeners, pools that depend on them.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-listener'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete listener"
+        description="Removing the listener is permanent and cannot be undone."
+        infoLabel="Listener"
+        infoValue="http-listener-443"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-listeners'}
+        onClose={closeModal}
+        title="Delete listeners"
+        description="Removing the listeners is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Listeners that can be deleted"
+            items={[
+              'http-listener-80',
+              'https-listener-443',
+              'api-listener-8080',
+              'ws-listener-8443',
+            ]}
+          />
+          <ScrollableList
+            label="Listeners that cannot be deleted"
+            items={[
+              'production-listener (in use)',
+              'critical-listener (protected)',
+              'ha-listener (high availability)',
+              'gateway-listener (external)',
+            ]}
+          />
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-pool'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete pool"
+        description="Removing the pool is permanent and cannot be undone."
+        infoLabel="Pool"
+        infoValue="web-servers-pool"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-pools'}
+        onClose={closeModal}
+        title="Delete pools"
+        description="Removing the pools is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Pools that can be deleted"
+            items={['web-servers-pool', 'api-servers-pool', 'staging-pool', 'dev-pool']}
+          />
+          <ScrollableList
+            label="Pools that cannot be deleted"
+            items={[
+              'production-pool (in use)',
+              'critical-pool (protected)',
+              'ha-pool (high availability)',
+              'gateway-pool (external)',
+            ]}
+          />
+          <DangerWarning>
+            Deleting these pools will also remove their associated members and health monitors.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-member'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete member"
+        description="Removing the member is permanent and cannot be undone."
+        infoLabel="Member"
+        infoValue="192.168.1.10:8080"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-members'}
+        onClose={closeModal}
+        title="Delete members"
+        description="Removing the members is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Members that can be deleted"
+            items={[
+              '192.168.1.10:8080',
+              '192.168.1.11:8080',
+              '192.168.1.12:8080',
+              '192.168.1.13:8080',
+            ]}
+          />
+          <ScrollableList
+            label="Members that cannot be deleted"
+            items={[
+              '192.168.1.1:8080 (primary)',
+              '192.168.1.2:8080 (backup)',
+              '192.168.1.3:8080 (protected)',
+              '192.168.1.4:8080 (critical)',
+            ]}
+          />
+          <DangerWarning>
+            Removing these members may affect traffic distribution for the pool.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-l7-policy'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete L7 policy"
+        description="Removing the L7 policy is permanent and cannot be undone."
+        infoLabel="L7 Policy"
+        infoValue="redirect-to-https"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-l7-policies'}
+        onClose={closeModal}
+        title="Delete L7 policies"
+        description="Removing the L7 policies is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="L7 Policies that can be deleted"
+            items={['redirect-to-https', 'block-bad-bots', 'rate-limit-api', 'geo-redirect']}
+          />
+          <ScrollableList
+            label="L7 Policies that cannot be deleted"
+            items={[
+              'default-redirect (system)',
+              'security-headers (required)',
+              'cors-policy (protected)',
+              'auth-redirect (critical)',
+            ]}
+          />
+          <DangerWarning>
+            Deleting these L7 policies may affect traffic routing for the listeners.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-health-monitor'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete health monitor"
+        description="Removing the health monitor is permanent and cannot be undone."
+        infoLabel="Health Monitor"
+        infoValue="http-health-check"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-tenant'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete tenant"
+        description="Deleting the tenant is permanent and cannot be undone."
+        infoLabel="Tenant"
+        infoValue="project-alpha"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-tenants'}
+        onClose={closeModal}
+        title="Delete tenants"
+        description="Removing the selected tenants is permanent and cannot be undone."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Tenants"
+            items={['project-alpha', 'project-beta', 'project-gamma', 'project-delta']}
+          />
+          <DangerWarning>
+            Deleting these tenants does not delete the resources inside them. Those resources will
+            remain and must be managed separately.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-delete-metadata'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete metadata"
+        description="This action removes the metadata."
+        infoLabel="Metadata"
+        infoValue="environment=production"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+      <Modal
+        isOpen={openModal === 'admin-delete-metadatas'}
+        onClose={closeModal}
+        title="Delete metadata"
+        description="This action removes the selected metadata."
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Metadata that can be deleted"
+            items={[
+              'environment=production',
+              'team=platform',
+              'cost-center=eng-001',
+              'owner=admin',
+            ]}
+          />
+          <ScrollableList
+            label="Metadata that cannot be deleted"
+            items={[
+              'system-id=xyz (system)',
+              'created-by=admin (protected)',
+              'managed-by=openstack (required)',
+              'instance-type=vm (system)',
+            ]}
+          />
+        </div>
+        <ModalButtons onClose={closeModal} />
+      </Modal>
+      <ConfirmModal
+        isOpen={openModal === 'admin-manage-member'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Manage member"
+        description="User management for this project is handled in the IAM app. You will be redirected to IAM to manage users and user groups."
+        infoLabel="Tenant"
+        infoValue="project-alpha"
+        confirmText="Go to IAM"
+        confirmVariant="primary"
+      />
+
+      {/* ================================================================
+         MODAL INSTANCES — Cloud Builder
+         ================================================================ */}
+      <ConfirmModal
+        isOpen={openModal === 'enable-compute-service'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Enable compute service"
+        description="Change this service status to Enabled?"
+        confirmText="Enable"
+        confirmVariant="primary"
+      />
+      <Modal
+        isOpen={openModal === 'disable-compute-service'}
+        onClose={closeModal}
+        title="Disable compute service"
+        description="Change this service status to Disabled?"
+      >
+        <div className="flex flex-col gap-2">
+          <span className="text-label-lg text-[var(--color-text-default)]">
+            Reason <span className="text-[var(--color-state-danger)]">*</span>
+          </span>
+          <textarea
+            className="w-full min-h-[80px] px-3 py-2 text-body-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] resize-y outline-none focus:border-[var(--color-border-focus)] focus:ring-1 focus:ring-[var(--color-border-focus)]"
+            placeholder="Enter a reason for disabling"
+          />
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Disable" confirmVariant="primary" />
+      </Modal>
+
+      {/* ================================================================
+         MODAL INSTANCES — AI Agent
+         ================================================================ */}
+      <ConfirmModal
+        isOpen={openModal === 'delete-agent-source'}
+        onClose={closeModal}
+        onConfirm={closeModal}
+        title="Delete agent source"
+        description="Are you sure you want to delete this agent source? This action cannot be undone."
+        infoLabel="Agent name"
+        infoValue="my-research-agent"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
     </PageShell>
   );
 }

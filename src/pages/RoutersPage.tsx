@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ConfirmModal,
@@ -30,11 +29,11 @@ import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import {
   IconTrash,
   IconDownload,
-  IconBell,
   IconExternalLink,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -70,7 +69,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '29tgj234',
     adminState: true,
     status: 'active',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'router-002',
@@ -82,7 +81,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-002',
     adminState: true,
     status: 'active',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
   },
   {
     id: 'router-003',
@@ -94,7 +93,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: true,
     status: 'active',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
   },
   {
     id: 'router-004',
@@ -106,7 +105,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-003',
     adminState: true,
     status: 'building',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
   },
   {
     id: 'router-005',
@@ -118,7 +117,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: false,
     status: 'active',
-    createdAt: 'Aug 30, 2025 21:37:41',
+    createdAt: 'Aug 30, 2026 21:37:41',
   },
   {
     id: 'router-006',
@@ -130,7 +129,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-004',
     adminState: true,
     status: 'active',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
   },
   {
     id: 'router-007',
@@ -142,7 +141,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-005',
     adminState: false,
     status: 'error',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
   {
     id: 'router-008',
@@ -154,7 +153,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: true,
     status: 'active',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
   {
     id: 'router-009',
@@ -166,7 +165,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-006',
     adminState: true,
     status: 'active',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
   },
   {
     id: 'router-010',
@@ -178,7 +177,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-007',
     adminState: true,
     status: 'active',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
   },
 ];
 
@@ -198,9 +197,9 @@ const routerStatusMap: Record<RouterStatus, 'active' | 'error' | 'building'> = {
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'externalGateway',
+    id: 'externalGateway',
     label: 'External gateway',
     type: 'select',
     options: [
@@ -208,10 +207,10 @@ const filterFields: FilterField[] = [
       { value: 'false', label: 'No' },
     ],
   },
-  { key: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
-  { key: 'externalNetwork', label: 'External network', type: 'text' },
+  { id: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
+  { id: 'externalNetwork', label: 'External network', type: 'text' },
   {
-    key: 'adminState',
+    id: 'adminState',
     label: 'Admin state',
     type: 'select',
     options: [
@@ -220,7 +219,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -232,6 +231,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function RoutersPage() {
+  const navigate = useNavigate();
   const [selectedRouters, setSelectedRouters] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -241,6 +241,7 @@ export function RoutersPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [routerToDelete, setRouterToDelete] = useState<Router | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Create router drawer state
   const [isCreateRouterDrawerOpen, setIsCreateRouterDrawerOpen] = useState(false);
@@ -262,8 +263,24 @@ export function RoutersPage() {
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Routers');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -280,7 +297,7 @@ export function RoutersPage() {
 
     return routers.filter((r) => {
       return appliedFilters.every((filter) => {
-        const value = String(r[filter.field as keyof Router] || '').toLowerCase();
+        const value = String(r[filter.fieldId as keyof Router] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -320,7 +337,12 @@ export function RoutersPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -354,8 +376,11 @@ export function RoutersPage() {
               {row.externalNetwork}
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.externalNetworkId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.externalNetworkId}>
+                ID : {row.externalNetworkId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.externalNetworkId} />
             </span>
           </div>
         ) : (
@@ -386,19 +411,49 @@ export function RoutersPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
-      render: () => (
+      sticky: 'right',
+      render: (_value: unknown, row: Router) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
             items={[
-              { id: 'connect-subnet', label: 'Connect subnet', onClick: () => {} },
-              { id: 'disconnect-subnet', label: 'Disconnect subnet', onClick: () => {} },
-              { id: 'external-gateway', label: 'External gateway Setting', onClick: () => {} },
-              { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+              {
+                id: 'connect-subnet',
+                label: 'Connect subnet',
+                onClick: () => navigate(`/compute/routers/${row.id}?tab=interfaces`),
+              },
+              {
+                id: 'disconnect-subnet',
+                label: 'Disconnect subnet',
+                onClick: () => navigate(`/compute/routers/${row.id}?tab=interfaces`),
+              },
+              {
+                id: 'external-gateway',
+                label: 'External gateway setting',
+                onClick: () => navigate(`/compute/routers/${row.id}?tab=details`),
+              },
+              {
+                id: 'edit',
+                label: 'Edit',
+                onClick: () => navigate(`/compute/routers/${row.id}?tab=details`),
+                divider: true,
+              },
+              {
+                id: 'delete',
+                label: 'Delete',
+                status: 'danger',
+                onClick: () => {
+                  setRouterToDelete(row);
+                  setDeleteModalOpen(true);
+                },
+              },
             ]}
             trigger="click"
           >
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              type="button"
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -428,6 +483,11 @@ export function RoutersPage() {
     setRouterToDelete(null);
   };
 
+  const handleBulkDelete = () => {
+    setIsBulkDeleteOpen(false);
+    setSelectedRouters([]);
+  };
+
   return (
     <PageShell
       sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
@@ -449,20 +509,12 @@ export function RoutersPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Routers' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Routers' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -492,6 +544,7 @@ export function RoutersPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -502,6 +555,7 @@ export function RoutersPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedRouters.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -528,6 +582,8 @@ export function RoutersPage() {
           selectable
           selectedKeys={selectedRouters}
           onSelectionChange={setSelectedRouters}
+          emptyMessage="No routers found"
+          loading={loading}
         />
       </VStack>
 
@@ -539,7 +595,7 @@ export function RoutersPage() {
           setRouterToDelete(null);
         }}
         title="Delete router"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected routers is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
@@ -561,6 +617,19 @@ export function RoutersPage() {
       <CreateRouterDrawer
         isOpen={isCreateRouterDrawerOpen}
         onClose={() => setIsCreateRouterDrawerOpen(false)}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected routers"
+        description="Removing the selected routers is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRouters.length} router(s)`}
       />
     </PageShell>
   );

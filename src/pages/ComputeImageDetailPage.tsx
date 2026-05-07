@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -21,13 +20,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import {
-  IconCirclePlus,
-  IconTrash,
-  IconEdit,
-  IconBell,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -77,7 +70,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'Ubuntu-22.04-base',
     status: 'active',
     access: 'Private',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     usageType: 'Common Server',
     protected: true,
     description: 'Base Ubuntu 22.04 image',
@@ -113,7 +106,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'CentOS-8-minimal',
     status: 'active',
     access: 'Private',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     usageType: 'Common Server',
     protected: false,
     description: 'Minimal CentOS 8 installation',
@@ -137,7 +130,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'Rocky-Linux-9',
     status: 'active',
     access: 'Shared',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     usageType: 'Common Server',
     protected: true,
     description: 'Rocky Linux 9 server image',
@@ -161,7 +154,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'Debian-12-standard',
     status: 'active',
     access: 'Public',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     usageType: 'Common Server',
     protected: false,
     description: 'Standard Debian 12 image',
@@ -185,7 +178,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'Ubuntu-20.04-LTS',
     status: 'active',
     access: 'Private',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
     usageType: 'Common Server',
     protected: true,
     description: 'Ubuntu 20.04 LTS server',
@@ -216,7 +209,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'Windows-Server-2022',
     status: 'saving',
     access: 'Shared',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     usageType: 'Windows Server',
     protected: false,
     description: 'Windows Server 2022 Datacenter',
@@ -240,7 +233,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'Alpine-3.18-minimal',
     status: 'active',
     access: 'Public',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     usageType: 'Common Server',
     protected: false,
     description: 'Lightweight Alpine Linux',
@@ -264,7 +257,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'Fedora-39-workstation',
     status: 'active',
     access: 'Private',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     usageType: 'Common Server',
     protected: true,
     description: 'Fedora 39 workstation image',
@@ -288,7 +281,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'Oracle-Linux-8',
     status: 'error',
     access: 'Shared',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     usageType: 'Common Server',
     protected: false,
     description: 'Oracle Linux 8 for databases',
@@ -312,7 +305,7 @@ const mockImagesMap: Record<string, ImageDetail> = {
     name: 'Ubuntu-22.04-GPU',
     status: 'active',
     access: 'Private',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     usageType: 'GPU Server',
     protected: true,
     description: 'Ubuntu with GPU drivers',
@@ -391,11 +384,7 @@ export function ComputeImageDetailPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Images', href: '/compute/images' },
-    { label: image.name },
-  ];
+  const breadcrumbItems = [{ label: 'Images', href: '/compute/images' }, { label: image.name }];
 
   return (
     <PageShell
@@ -419,20 +408,13 @@ export function ComputeImageDetailPage() {
           onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => navigate('/compute/images')}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Image Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{image.name}</DetailHeader.Title>

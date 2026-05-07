@@ -6,7 +6,7 @@ import { Chip, SelectionIndicator, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -17,7 +17,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -26,7 +26,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -54,7 +56,7 @@ function ChipGuidelines() {
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[ label text  |  value text  ×  ]
    ①               ②          ③`}</pre>
         </div>
@@ -127,8 +129,6 @@ function ChipGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Variants */}
       <VStack gap={4}>
         <SectionTitle>Variants</SectionTitle>
@@ -158,8 +158,6 @@ function ChipGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* States */}
       <VStack gap={4}>
@@ -216,8 +214,6 @@ function ChipGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={4}>
@@ -289,8 +285,6 @@ function ChipGuidelines() {
         </VStack>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Usage Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
@@ -307,8 +301,6 @@ function ChipGuidelines() {
           ]}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Content Guidelines */}
       <VStack gap={4}>
@@ -375,7 +367,7 @@ export function ChipPage() {
                 Value 텍스트만 표시하는 기본형. 단일 값 필터, 태그 표시에 사용.
               </span>
             </VStack>
-            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <Chip value="Active" onRemove={() => {}} />
               <Chip value="Running" onRemove={() => {}} />
               <Chip value="production" onRemove={() => {}} />
@@ -389,7 +381,7 @@ export function ChipPage() {
                 Label(key)과 Value를 구분선으로 나누어 함께 표시. key=value 쌍에 사용.
               </span>
             </VStack>
-            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <Chip label="Name" value="a" onRemove={() => {}} />
               <Chip label="Status" value="Running" onRemove={() => {}} />
               <Chip label="Region" value="us-west-2" onRemove={() => {}} />
@@ -403,7 +395,7 @@ export function ChipPage() {
                 Radio/Checkbox 선택 결과를 표현하는 Chip. 파란 테두리로 강조.
               </span>
             </VStack>
-            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <Chip value="default-sg" variant="selected" onRemove={() => {}} />
               <Chip value="custom-group" variant="selected" onRemove={() => {}} />
               <Chip value="production" variant="selected" onRemove={() => {}} />
@@ -417,7 +409,7 @@ export function ChipPage() {
                 Default, Read-only, Selected, Disabled 상태 비교.
               </span>
             </VStack>
-            <div className="flex gap-4 items-start p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-4 items-start p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <VStack gap={1} align="center">
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Default</span>
                 <Chip label="Name" value="a" onRemove={() => {}} />
@@ -444,7 +436,7 @@ export function ChipPage() {
                 텍스트가 최대 너비를 초과하면 말줄임 처리. Tooltip으로 전체 텍스트 확인 가능.
               </span>
             </VStack>
-            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <Chip
                 value="very-long-label-name-that-gets-truncated"
                 maxWidth="120px"
@@ -459,8 +451,6 @@ export function ChipPage() {
             </div>
           </VStack>
 
-          <div className="w-full h-px bg-[var(--color-border-default)]" />
-
           <VStack gap={3}>
             <VStack gap={1}>
               <Label>SelectionIndicator</Label>
@@ -471,7 +461,7 @@ export function ChipPage() {
             </VStack>
             <VStack
               gap={4}
-              className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]"
+              className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]"
             >
               <VStack gap={1}>
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Empty</span>
@@ -498,7 +488,7 @@ export function ChipPage() {
       }
       guidelines={<ChipGuidelines />}
       tokens={
-        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           padding: 8×4px (removable 시 좌8 우6) · gap: 6px · border-radius: 6px · font-size: 11px
         </div>
       }

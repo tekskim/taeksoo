@@ -37,7 +37,7 @@ export function DeleteJobModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete job"
-      description="Removing the selected instances is permanent and cannot be undone."
+      description="Removing the selected jobs is permanent and cannot be undone."
       infoLabel="Job name"
       infoValue={job?.name ?? ''}
       confirmText="Delete"

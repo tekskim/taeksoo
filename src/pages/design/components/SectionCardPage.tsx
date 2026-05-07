@@ -19,7 +19,7 @@ import { IconEdit } from '@tabler/icons-react';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -30,7 +30,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -39,7 +39,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -142,12 +144,10 @@ function SectionCardGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`Section Card
 ├── 1. Header
 │   ├── a. Title (섹션 타이틀)
@@ -243,8 +243,6 @@ function SectionCardGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Behavior */}
       <VStack gap={4}>
         <SectionTitle>Behavior</SectionTitle>
@@ -280,8 +278,6 @@ function SectionCardGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Usage Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
@@ -297,8 +293,6 @@ function SectionCardGuidelines() {
           ]}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Content Guidelines */}
       <VStack gap={4}>
@@ -367,7 +361,7 @@ export function SectionCardPage() {
                 Header에 Edit 버튼이 포함된 기본 형태. Detail 페이지에서 사용.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <SectionCard>
                 <SectionCard.Header
                   title="Basic information"
@@ -393,7 +387,7 @@ export function SectionCardPage() {
                 isLink prop으로 클릭 가능한 링크 형태로 값 표시.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <SectionCard>
                 <SectionCard.Header title="Flavor" />
                 <SectionCard.Content>
@@ -417,7 +411,7 @@ export function SectionCardPage() {
                 Detail 페이지에서 복수의 Section Card를 나열하는 패턴.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <VStack gap={4}>
                 <SectionCard>
                   <SectionCard.Header
@@ -475,7 +469,7 @@ export function SectionCardPage() {
                 버튼 표시.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <SectionCard isActive>
                 <SectionCard.Header title="Basic information" showDivider={false} />
                 <SectionCard.Content showDividers={false}>
@@ -524,7 +518,7 @@ export function SectionCardPage() {
                 기본 테두리로 복귀. 입력한 값이 읽기 전용 DataRow로 요약 표시됨.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <SectionCard>
                 <SectionCard.Header
                   title="Basic information"
@@ -550,7 +544,7 @@ export function SectionCardPage() {
                 Open Section Card 내부에서 탭, 테이블, 검색 등 복합 UI를 포함하는 필드 블록 패턴.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <SectionCard isActive>
                 <SectionCard.Header title="Source" showDivider={false} />
                 <SectionCard.Content showDividers={false}>

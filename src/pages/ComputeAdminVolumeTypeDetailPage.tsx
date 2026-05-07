@@ -8,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -31,7 +30,6 @@ import {
   IconCirclePlus,
   IconTrash,
   IconEdit,
-  IconBell,
   IconChevronDown,
   IconDownload,
   IconDotsCircleHorizontal,
@@ -204,15 +202,14 @@ export default function ComputeAdminVolumeTypeDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Volume types', href: '/compute-admin/volume-types' },
+    { label: 'Volume Types', href: '/compute-admin/volume-types' },
     { label: volumeType.name },
   ];
 
   // Filter fields for search
   const filterFields: FilterField[] = [
-    { key: 'parameter', label: 'Parameter', type: 'text' },
-    { key: 'value', label: 'Value', type: 'text' },
+    { id: 'parameter', label: 'Parameter', type: 'text' },
+    { id: 'value', label: 'Value', type: 'text' },
   ];
 
   // Filter extra specs
@@ -230,7 +227,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
 
     appliedFilters.forEach((filter) => {
       result = result.filter((spec) => {
-        const value = spec[filter.field as keyof ExtraSpec];
+        const value = spec[filter.fieldId as keyof ExtraSpec];
         if (typeof value === 'string') {
           return value.toLowerCase().includes(filter.value.toLowerCase());
         }
@@ -268,6 +265,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -286,7 +284,10 @@ export default function ComputeAdminVolumeTypeDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -367,20 +368,13 @@ export default function ComputeAdminVolumeTypeDetailPage() {
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => navigate('/compute-admin/volume-types')}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Volume Type Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{volumeType.name}</DetailHeader.Title>
@@ -527,7 +521,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
         title="Delete extra spec"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected extra specs is permanent and cannot be undone."
         confirmText="Delete"
         variant="danger"
       />

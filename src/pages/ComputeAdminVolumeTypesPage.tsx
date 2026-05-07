@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -28,8 +27,9 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -152,6 +152,7 @@ const qosSpecFilterFields: FilterField[] = [
 ];
 
 export function ComputeAdminVolumeTypesPage() {
+  const navigate = useNavigate();
   const [selectedVolumeTypes, setSelectedVolumeTypes] = useState<string[]>([]);
   const [selectedQoSSpecs, setSelectedQoSSpecs] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
@@ -181,6 +182,13 @@ export function ComputeAdminVolumeTypesPage() {
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultVolumeTypeColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -294,7 +302,12 @@ export function ComputeAdminVolumeTypesPage() {
           >
             {value}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -321,7 +334,12 @@ export function ComputeAdminVolumeTypesPage() {
             >
               {row.qosSpec}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.qosSpecId}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.qosSpecId}>
+                ID : {row.qosSpecId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.qosSpecId} />
+            </span>
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
@@ -347,6 +365,7 @@ export function ComputeAdminVolumeTypesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -385,7 +404,10 @@ export function ComputeAdminVolumeTypesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -415,7 +437,12 @@ export function ComputeAdminVolumeTypesPage() {
           >
             {value}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -437,6 +464,7 @@ export function ComputeAdminVolumeTypesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -455,7 +483,10 @@ export function ComputeAdminVolumeTypesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -504,23 +535,9 @@ export function ComputeAdminVolumeTypesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Volume types' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Volume Types' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -603,6 +620,7 @@ export function ComputeAdminVolumeTypesPage() {
               selectable
               selectedKeys={selectedVolumeTypes}
               onSelectionChange={setSelectedVolumeTypes}
+              loading={loading}
             />
           </VStack>
         )}
@@ -665,6 +683,7 @@ export function ComputeAdminVolumeTypesPage() {
               selectable
               selectedKeys={selectedQoSSpecs}
               onSelectionChange={setSelectedQoSSpecs}
+              loading={loading}
             />
           </VStack>
         )}
@@ -676,7 +695,7 @@ export function ComputeAdminVolumeTypesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title={volumeTypeToDelete ? 'Delete Volume Type' : 'Delete QoS Spec'}
-        message="Removing the selected instances is permanent and cannot be undone."
+        message="Removing the selected volume types is permanent and cannot be undone."
         confirmText="Delete"
         variant="danger"
       />

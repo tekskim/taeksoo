@@ -1,10 +1,18 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { HStack, VStack, TabBar, SectionCard, Select, Toggle, PageShell } from '@/design-system';
+import {
+  Breadcrumb,
+  VStack,
+  SectionCard,
+  Select,
+  Toggle,
+  FormField,
+  PageShell,
+  TabBar,
+  TopBar,
+  useToast,
+} from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 
 // Language options
 const languageOptions = [
@@ -40,57 +48,41 @@ const timezoneOptions = [
    Settings General Page ---------------------------------------- */
 
 export default function SettingsGeneralPage() {
-  const navigate = useNavigate();
-  const { theme, setTheme, isDark } = useDarkMode();
-  const sidebarWidth = 200;
+  const { theme, setTheme } = useDarkMode();
+  const { success } = useToast();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // General settings state
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => localStorage.getItem('tds-language') || 'en');
   const [timezone, setTimezone] = useState('Asia/Seoul');
   const [useLocationTimezone, setUseLocationTimezone] = useState(false);
 
-  // Handle theme change
   const handleThemeChange = (value: string) => {
     setTheme(value as 'light' | 'dark' | 'system');
-  };
-
-  // Handle window close
-  const handleWindowClose = () => {
-    navigate('/');
+    success('Theme updated successfully.');
   };
 
   return (
     <PageShell
-      sidebar={<SettingsSidebar />}
+      sidebar={
+        <SettingsSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
       sidebarWidth={sidebarWidth}
-      tabBar={null}
+      tabBar={<TabBar tabs={[]} activeTab="" onTabChange={() => {}} showAddButton={false} />}
       topBar={
-        <div className="relative flex items-center w-full h-[var(--tabbar-height)] bg-[var(--color-surface-default)] shrink-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)]">
-          {/* Logo Area */}
-          <div className="w-[200px] h-full px-3 flex items-center">
-            <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
-          </div>
-
-          {/* TabBar (Window controls only) */}
-          <div className="flex-1">
-            <TabBar
-              tabs={[]}
-              activeTab=""
-              onTabChange={() => {}}
-              showAddButton={false}
-              showWindowControls={true}
-              showBottomBorder={false}
-              onWindowClose={handleWindowClose}
-            />
-          </div>
-        </div>
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={false}
+          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'General' }]} />}
+        />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         {/* Header */}
         <div>
-          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">General </h1>
+          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">General</h1>
           <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
             Configure your display and localization preferences.
           </p>
@@ -99,67 +91,53 @@ export default function SettingsGeneralPage() {
         {/* Settings Card */}
         <SectionCard>
           <SectionCard.Header title="Preferences" />
-          <SectionCard.Content gap={6}>
-            {/* Theme */}
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                  Theme{' '}
-                </span>
-                <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                  Choose your preferred color theme.
-                </p>
-              </VStack>
+          <SectionCard.Content>
+            <FormField label="Theme" description="Choose your preferred color theme.">
               <Select
                 value={theme}
                 onChange={handleThemeChange}
                 options={themeOptions}
                 width="md"
               />
-            </VStack>
+            </FormField>
 
-            {/* Divider */}
-            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
-            {/* Language */}
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                  Language{' '}
-                </span>
-                <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                  Select your preferred language for the interface.
-                </p>
-              </VStack>
+            <FormField
+              label="Language"
+              description="Select your preferred language for the interface."
+            >
               <Select
                 value={language}
-                onChange={setLanguage}
+                onChange={(val) => {
+                  setLanguage(val);
+                  localStorage.setItem('tds-language', val);
+                  success('Language updated successfully.');
+                }}
                 options={languageOptions}
                 width="md"
               />
-            </VStack>
+            </FormField>
 
-            {/* Divider */}
-            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
-            {/* Time Zone */}
             <VStack gap={4}>
-              <VStack gap={2}>
-                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                  Time Zone{' '}
-                </span>
-                <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                  Select your time zone. This affects timestamps globally.
-                </p>
-              </VStack>
-              <Select
-                value={timezone}
-                onChange={setTimezone}
-                options={timezoneOptions}
-                width="md"
-                disabled={useLocationTimezone}
-              />
-              <HStack gap={2} align="center" className="mt-2">
+              <FormField
+                label="Time Zone"
+                description="Select your time zone. This affects timestamps globally."
+              >
+                <Select
+                  value={timezone}
+                  onChange={(val) => {
+                    setTimezone(val);
+                    success('Time zone updated successfully.');
+                  }}
+                  options={timezoneOptions}
+                  width="md"
+                  disabled={useLocationTimezone}
+                />
+              </FormField>
+              <FormField
+                label="Set current time zone"
+                helperText="Automatically set time zone based on your location"
+                spacing="loose"
+              >
                 <Toggle
                   checked={useLocationTimezone}
                   onChange={(e) => {
@@ -174,13 +152,14 @@ export default function SettingsGeneralPage() {
                         setTimezone(detectedTimezone);
                       }
                     }
+                    success(
+                      checked
+                        ? 'Location-based time zone enabled.'
+                        : 'Location-based time zone disabled.'
+                    );
                   }}
-                  label="Set current time zone"
                 />
-              </HStack>
-              <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                Automatically set time zone based on your location{' '}
-              </p>
+              </FormField>
             </VStack>
           </SectionCard.Content>
         </SectionCard>

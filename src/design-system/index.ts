@@ -65,6 +65,8 @@ export * from './components/MetricCard';
 export * from './components/FileListCard';
 export * from './components/ExpandableChecklist';
 export * from './components/Card';
+export * from './components/CatalogCard';
+export * from './components/YamlEditor';
 
 // Layouts
 export * from './layouts';

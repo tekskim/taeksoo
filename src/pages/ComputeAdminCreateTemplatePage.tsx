@@ -6,12 +6,10 @@ import {
   Breadcrumb,
   FormField,
   NumberInput,
-  Slider,
   HStack,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Pagination,
   Table,
   Tabs,
@@ -34,7 +32,8 @@ import {
   PageShell,
   fixedColumns,
   columnMinWidths,
-  WizardSectionStatusIcon,
+  WizardSummary,
+  Disclosure,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -42,9 +41,6 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconAlertCircle,
-  IconBell,
-  IconCaretDownFilled,
-  IconCaretRightFilled,
   IconDots,
   IconDownload,
   IconEdit,
@@ -53,6 +49,7 @@ import {
   IconUpload,
   IconX,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -176,7 +173,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: 'Jan 15, 2025 12:22:26',
+    createdAt: 'Jan 15, 2026 12:22:26',
   },
   {
     id: 'e920j31d',
@@ -188,7 +185,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: 'Jan 14, 2025 05:09:09',
+    createdAt: 'Jan 14, 2026 05:09:09',
   },
   {
     id: 'e920j32d',
@@ -200,7 +197,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: 'Jan 13, 2025 22:56:52',
+    createdAt: 'Jan 13, 2026 22:56:52',
   },
   {
     id: 'e920j35d',
@@ -212,7 +209,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: 'Jan 10, 2025 01:17:01',
+    createdAt: 'Jan 10, 2026 01:17:01',
   },
   {
     id: 'e920j37d',
@@ -224,7 +221,7 @@ const mockImages: ImageRow[] = [
     minRam: '2 GiB',
     access: 'Public',
     os: 'windows',
-    createdAt: 'Jan 8, 2025 11:51:27',
+    createdAt: 'Jan 8, 2026 11:51:27',
   },
   {
     id: 'e920j39d',
@@ -236,7 +233,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'rocky',
-    createdAt: 'Jan 5, 2025 14:12:36',
+    createdAt: 'Jan 5, 2026 14:12:36',
   },
 ];
 
@@ -348,11 +345,11 @@ const mockNetworks: NetworkRow[] = [
 ];
 
 const mockSecurityGroups: SecurityGroupRow[] = [
-  { id: 'sg1', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
-  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
-  { id: 'sg3', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
-  { id: 'sg4', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
-  { id: 'sg5', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
+  { id: 'sg1', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2026 10:20:28' },
+  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2026 10:20:28' },
+  { id: 'sg3', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2026 10:20:28' },
+  { id: 'sg4', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2026 10:20:28' },
+  { id: 'sg5', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2026 10:20:28' },
 ];
 
 const mockPorts: PortRow[] = [
@@ -408,19 +405,19 @@ const mockKeyPairs: KeyPairRow[] = [
     id: 'kp1',
     name: 'dev-keypair',
     fingerprint: 'a1:b2:c3:d4:e5',
-    createdAt: 'Jan 1, 2025 10:20:28',
+    createdAt: 'Jan 1, 2026 10:20:28',
   },
   {
     id: 'kp2',
     name: 'prod-keypair',
     fingerprint: 'f6:g7:h8:i9:j0',
-    createdAt: 'Jan 15, 2025 12:22:26',
+    createdAt: 'Jan 15, 2026 12:22:26',
   },
   {
     id: 'kp3',
     name: 'staging-keypair',
     fingerprint: 'k1:l2:m3:n4:o5',
-    createdAt: 'Feb 1, 2025 10:20:28',
+    createdAt: 'Feb 1, 2026 10:20:28',
   },
 ];
 
@@ -457,33 +454,15 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
 
   return (
     <div className="w-[312px] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Summary</h5>
-            <div className="flex flex-col">
-              {SECTION_ORDER.map((sectionKey) => {
-                const isWriting = sectionStatus[sectionKey] === 'writing';
-
-                return (
-                  <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-body-md leading-5 text-[var(--color-text-default)]">
-                      {SECTION_LABELS[sectionKey]}
-                    </span>
-                    {isWriting ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </VStack>
-        </div>
+        <WizardSummary
+          items={SECTION_ORDER.map((key) => ({
+            key,
+            label: SECTION_LABELS[key],
+            status: sectionStatus[key],
+          }))}
+        />
 
         {/* Action Buttons */}
         <HStack gap={2}>
@@ -509,7 +488,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -527,7 +506,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -547,7 +526,7 @@ interface SkippedSectionProps {
 
 function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="flex items-center justify-between h-8">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <div className="flex items-center gap-3">
@@ -736,24 +715,23 @@ function TemplateInformationSection({
             <span className="text-label-lg text-[var(--color-text-default)]">
               Template name <span className="text-[var(--color-state-danger)]">*</span>
             </span>
-            <VStack gap={2}>
-              <Input
-                placeholder="Enter instance template name"
-                value={templateName}
-                onChange={(e) => handleNameChange(e.target.value)}
-                fullWidth
-                error={!!templateNameError}
-              />
-              {templateNameError && (
-                <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
-                  {templateNameError}
-                </span>
-              )}
-            </VStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              You can use letters, numbers, and special characters (+=,.@-_), and the length must be
-              between 2-128 characters.
-            </span>
+            <Input
+              placeholder="Enter instance template name"
+              value={templateName}
+              onChange={(e) => handleNameChange(e.target.value)}
+              fullWidth
+              error={!!templateNameError}
+            />
+            {templateNameError ? (
+              <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                {templateNameError}
+              </span>
+            ) : (
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                You can use letters, numbers, and special characters (+=,.@-_), and the length must
+                be between 2-128 characters.
+              </span>
+            )}
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -863,8 +841,11 @@ function TemplateInformationSection({
                             <span className="text-label-md text-[var(--color-action-primary)]">
                               {value}
                             </span>
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              ID: {row.id}
+                            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                              <span className="truncate" title={row.id}>
+                                ID : {row.id.slice(0, 8)}
+                              </span>
+                              <InlineCopyId value={row.id} />
                             </span>
                           </div>
                         ),
@@ -1042,7 +1023,9 @@ function ImageSection({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [createSystemDisk, setCreateSystemDisk] = useState(isV2 ? true : false);
-  const [_dataDisks, setDataDisks] = useState<{ id: string; type: string; size: number }[]>([]);
+  const [dataDisks, setDataDisks] = useState<
+    { id: string; type: string; size: number; deleteWithInstance: boolean }[]
+  >([]);
   const itemsPerPage = 5;
 
   const handleSelectImage = (id: string) => {
@@ -1075,7 +1058,18 @@ function ImageSection({
 
   // Add data disk handler
   const handleAddDataDisk = () => {
-    setDataDisks((prev) => [...prev, { id: `dd-${Date.now()}`, type: '_DEFAULT_', size: 10 }]);
+    setDataDisks((prev) => [
+      ...prev,
+      { id: `dd-${Date.now()}`, type: '_DEFAULT_', size: 10, deleteWithInstance: true },
+    ]);
+  };
+
+  const handleRemoveDataDisk = (id: string) => {
+    setDataDisks((prev) => prev.filter((d) => d.id !== id));
+  };
+
+  const handleDataDiskChange = (id: string, field: string, value: string | number | boolean) => {
+    setDataDisks((prev) => prev.map((d) => (d.id === id ? { ...d, [field]: value } : d)));
   };
 
   const imageColumns: TableColumn<ImageRow>[] = [
@@ -1113,15 +1107,17 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1168,15 +1164,17 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1190,15 +1188,17 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value || 'instance-01'}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1247,15 +1247,17 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1312,7 +1314,7 @@ function ImageSection({
               {isV2 ? (
                 <VStack gap={6}>
                   {/* Image block */}
-                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                     <VStack gap={2}>
                       <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
                         <TabList>
@@ -1394,7 +1396,7 @@ function ImageSection({
                   </div>
 
                   {/* Instance snapshot block */}
-                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                     <VStack gap={2}>
                       <Tabs value="snapshot" onChange={() => {}} variant="underline" size="sm">
                         <TabList>
@@ -1476,7 +1478,7 @@ function ImageSection({
                   </div>
 
                   {/* Bootable volume block */}
-                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                     <VStack gap={2}>
                       <Tabs value="volume" onChange={() => {}} variant="underline" size="sm">
                         <TabList>
@@ -1658,86 +1660,140 @@ function ImageSection({
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          <div className="py-6">
-            {/* System disk Section */}
-            <FormField>
-              <FormField.Label>System disk</FormField.Label>
-              <FormField.Description>
-                Configure whether to create a system disk for booting.
-              </FormField.Description>
-              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                <Toggle
-                  checked={createSystemDisk}
-                  onChange={setCreateSystemDisk}
-                  label="Create a new system disk"
+          {sourceTab === 'volume' ? (
+            <div className="py-6">
+              <VStack gap={3}>
+                <span className="text-label-lg text-[var(--color-text-default)]">
+                  Delete Volume on Instance Delete
+                </span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Selecting this option will remove the source volume when the instance is deleted.
+                </span>
+                <Checkbox
+                  label="Delete with instance"
+                  checked={deleteWithInstance}
+                  onChange={() => onDeleteWithInstanceChange(!deleteWithInstance)}
                 />
-              </FormField.Control>
-            </FormField>
+              </VStack>
+            </div>
+          ) : (
+            <div className="py-6">
+              {/* System disk Section */}
+              <FormField>
+                <FormField.Label>System disk</FormField.Label>
+                <FormField.Description>
+                  Configure whether to create a system disk for booting.
+                </FormField.Description>
+                <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                  <Toggle
+                    checked={createSystemDisk}
+                    onChange={setCreateSystemDisk}
+                    label="Create a new system disk"
+                  />
+                </FormField.Control>
+              </FormField>
 
-            {/* Storage Type Row - Bordered Container */}
-            {(isV2 || createSystemDisk) && (
-              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
-                <HStack gap={6} align="start" className="flex-wrap">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
+              {(isV2 || createSystemDisk) && (
+                <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
+                  <div className="grid grid-cols-[160px_auto_auto_1fr] gap-x-2 gap-y-2 items-center">
+                    <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
+                    <span className="text-label-sm text-[var(--color-text-default)] col-span-3">
+                      Size
+                    </span>
                     <Select
                       options={storageTypeOptions}
                       value={storageType}
                       onChange={onStorageTypeChange}
+                      className="w-[160px]"
                     />
-                  </HStack>
-                  <VStack gap={2}>
-                    <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
-                    <HStack gap={3} align="center">
-                      <Slider
-                        min={10}
-                        max={1000}
-                        step={10}
-                        value={storageSize}
-                        onChange={onStorageSizeChange}
-                      />
-                      <NumberInput
-                        value={storageSize}
-                        onChange={onStorageSizeChange}
-                        min={10}
-                        max={1000}
-                        step={1}
-                        width="xs"
-                        suffix="GiB"
-                      />
-                    </HStack>
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      10-1,000 GiB
-                    </span>
-                  </VStack>
-                  <Checkbox
-                    label="Deleted with the instance"
-                    checked={deleteWithInstance}
-                    onChange={() => onDeleteWithInstanceChange(!deleteWithInstance)}
-                  />
-                </HStack>
-              </div>
-            )}
-          </div>
+                    <NumberInput
+                      value={storageSize}
+                      onChange={onStorageSizeChange}
+                      min={10}
+                      max={1000}
+                      step={1}
+                      width="xs"
+                    />
+                    <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
+                    <Checkbox
+                      label="Deleted with the instance"
+                      checked={deleteWithInstance}
+                      onChange={() => onDeleteWithInstanceChange(!deleteWithInstance)}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           <div className="py-6">
             {/* Data disk Section */}
             <VStack gap={3} align="start">
-              <span className="text-label-lg text-[var(--color-text-default)]">Data disk</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Attach additional volumes for data storage.
-              </span>
+              <VStack gap={1}>
+                <span className="text-label-lg text-[var(--color-text-default)]">Data disk</span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Attach additional volumes for data storage.
+                </span>
+              </VStack>
 
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} />}
-                onClick={handleAddDataDisk}
-              >
-                Add Data disk
-              </Button>
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full flex flex-col gap-2 items-start">
+                {dataDisks.map((disk) => (
+                  <div
+                    key={disk.id}
+                    className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 relative"
+                  >
+                    <button
+                      onClick={() => handleRemoveDataDisk(disk.id)}
+                      className="absolute top-3 right-4 flex items-center justify-center text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] cursor-pointer"
+                      aria-label="Remove data disk"
+                    >
+                      <IconX size={14} />
+                    </button>
+                    <div className="grid grid-cols-[160px_auto_auto_1fr] gap-x-2 gap-y-2 items-center">
+                      <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
+                      <span className="text-label-sm text-[var(--color-text-default)] col-span-3">
+                        Size
+                      </span>
+                      <Select
+                        options={storageTypeOptions}
+                        value={disk.type}
+                        onChange={(val) => handleDataDiskChange(disk.id, 'type', val)}
+                        className="w-[160px]"
+                      />
+                      <NumberInput
+                        value={disk.size}
+                        onChange={(val) => handleDataDiskChange(disk.id, 'size', val)}
+                        min={10}
+                        max={1000}
+                        step={1}
+                        width="xs"
+                      />
+                      <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
+                      <Checkbox
+                        label="Deleted with the instance"
+                        checked={disk.deleteWithInstance}
+                        onChange={() =>
+                          handleDataDiskChange(
+                            disk.id,
+                            'deleteWithInstance',
+                            !disk.deleteWithInstance
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={handleAddDataDisk}
+                >
+                  Add Data disk
+                </Button>
+              </div>
             </VStack>
           </div>
 
@@ -1853,20 +1909,19 @@ function FlavorSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.hasWarning && (
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </VStack>
       ),
@@ -1937,7 +1992,7 @@ function FlavorSection({
                   className="w-[var(--search-input-width)]"
                 />
                 <button
-                  className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)]"
+                  className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[var(--radius-md)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)]"
                   title="Download"
                 >
                   <IconDownload size={12} stroke={1.5} />
@@ -2230,17 +2285,16 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </VStack>
       ),
@@ -2306,17 +2360,16 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </VStack>
       ),
@@ -2380,20 +2433,19 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </VStack>
       ),
@@ -2405,17 +2457,16 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.ownedNetworkId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetworkId}>
+              ID : {row.ownedNetworkId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetworkId} />
           </span>
         </VStack>
       ),
@@ -2491,7 +2542,7 @@ function NetworkSection({
                   size="sm"
                   className="w-[var(--search-input-width)]"
                 />
-                <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
+                <Button variant="secondary" size="sm" rightIcon={<IconExternalLink size={12} />}>
                   Create a new network
                 </Button>
               </HStack>
@@ -2540,17 +2591,17 @@ function NetworkSection({
                 </span>
               </VStack>
 
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
+                <VStack gap={1.5}>
                   {virtualLANs.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
-                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+                      <span className="block text-label-sm text-[var(--color-text-subtle)]">
                         Network
                       </span>
-                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-subtle)]">
                         Subnet
                       </span>
-                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-subtle)]">
                         IP Assignment
                       </span>
                       <div className="w-5" />
@@ -2559,7 +2610,7 @@ function NetworkSection({
                   {virtualLANs.map((vlan) => (
                     <div
                       key={vlan.id}
-                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                     >
                       <Select
                         options={[{ value: 'network', label: 'network' }]}
@@ -2633,7 +2684,7 @@ function NetworkSection({
                   size="sm"
                   className="w-[var(--search-input-width)]"
                 />
-                <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
+                <Button variant="secondary" size="sm" rightIcon={<IconExternalLink size={12} />}>
                   Create a new security group
                 </Button>
               </HStack>
@@ -2671,20 +2722,9 @@ function NetworkSection({
 
           {/* Port Section (Collapsible) */}
           <div className="py-6">
-            <VStack gap={3} align="stretch">
-              <button
-                className="flex items-center gap-1 text-label-lg text-[var(--color-text-default)]"
-                onClick={() => setPortExpanded(!portExpanded)}
-              >
-                {portExpanded ? (
-                  <IconCaretDownFilled size={12} />
-                ) : (
-                  <IconCaretRightFilled size={12} />
-                )}
-                Port
-              </button>
-
-              {(isV2 || portExpanded) && (
+            <Disclosure open={isV2 || portExpanded} onChange={(open) => setPortExpanded(open)}>
+              <Disclosure.Trigger>Port</Disclosure.Trigger>
+              <Disclosure.Panel className="pt-3">
                 <VStack gap={3} align="stretch">
                   {/* Port Search */}
                   <SearchInput
@@ -2727,8 +2767,8 @@ function NetworkSection({
                     />
                   </VStack>
                 </VStack>
-              )}
-            </VStack>
+              </Disclosure.Panel>
+            </Disclosure>
           </div>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -3032,7 +3072,7 @@ function AdvancedSection({
                 </span>
               </VStack>
 
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                 <VStack gap={1}>
                   {tags.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -3407,22 +3447,14 @@ export function ComputeAdminCreateTemplatePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Instance templates', href: '/compute-admin/instance-templates' },
-                { label: 'Create template' },
+                { label: 'Instance Templates', href: '/compute-admin/instance-templates' },
+                { label: 'Create Template' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />
@@ -3552,6 +3584,7 @@ export function ComputeAdminCreateTemplatePage() {
                   showDivider={false}
                 />
                 <SectionCard.DataRow label="System disk" value={getStorageSummary()} />
+                <SectionCard.DataRow label="Data disk" value="-" />
               </DoneSection>
             )}
 

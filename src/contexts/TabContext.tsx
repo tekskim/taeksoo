@@ -40,7 +40,10 @@ function getAppFromPath(path: string): string {
 
   const appPrefixes = [
     '/cloudbuilder',
+    '/compute-admin', // must be before /compute — path prefix overlap
     '/compute',
+    '/storage-domain-admin', // must be before /storage — path prefix overlap
+    '/storage-member', // must be before /storage — path prefix overlap
     '/storage',
     '/desktop',
     '/design',
@@ -68,19 +71,22 @@ function getStorageKeys(app: string) {
 // Get default home tab for an app
 function getDefaultHomeTab(app: string): TabItem {
   const appHomeMap: Record<string, { path: string; label: string }> = {
-    '/cloudbuilder': { path: '/cloudbuilder', label: 'Home' },
-    '/compute': { path: '/compute', label: 'Home' },
-    '/storage': { path: '/storage', label: 'Home' },
-    '/agent': { path: '/agent', label: 'Home' }, // Agent service home
-    '/desktop': { path: '/desktop', label: 'Home' },
-    '/design': { path: '/design', label: 'Home' },
-    '/container': { path: '/container', label: 'Dashboard' },
+    '/cloudbuilder': { path: '/cloudbuilder', label: 'Servers' },
+    '/compute-admin': { path: '/compute-admin', label: 'Dashboard' },
+    '/compute': { path: '/compute', label: 'Dashboard' },
+    '/storage': { path: '/storage', label: 'Dashboard' },
+    '/storage-domain-admin': { path: '/storage-domain-admin', label: 'Dashboard' },
+    '/storage-member': { path: '/storage-member', label: 'Dashboard' },
+    '/agent': { path: '/agent', label: 'Dashboard' }, // Agent service home
+    '/desktop': { path: '/desktop', label: 'Dashboard' },
+    '/design': { path: '/design', label: 'Dashboard' },
+    '/container': { path: '/container', label: 'Home' },
     '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
-    '/iam': { path: '/iam', label: 'Home' },
-    '/': { path: '/', label: 'Home' },
+    '/iam': { path: '/iam', label: 'Dashboard' },
+    '/': { path: '/', label: 'Dashboard' },
   };
 
-  const homeInfo = appHomeMap[app] || { path: '/', label: 'Home' };
+  const homeInfo = appHomeMap[app] || { path: '/', label: 'Dashboard' };
   return {
     id: `${app === '/' ? 'home' : app.slice(1)}-home`,
     label: homeInfo.label,
@@ -102,15 +108,18 @@ const TabContext = createContext<TabContextValue | null>(null);
 interface TabProviderProps {
   children: React.ReactNode;
   defaultTabs?: TabItem[];
+  onLastTabClose?: () => void;
+  persistTabs?: boolean;
 }
 
 // Helper function to get label from path - returns the most recent breadcrumb item
 function getLabelFromPath(path: string): string {
   const pathLabelMap: Record<string, string> = {
-    '/': 'Home',
-    '/home': 'Home',
-    '/compute': 'Home',
-    '/compute/home': 'Home',
+    '/': 'Dashboard',
+    '/home': 'Dashboard',
+    '/compute': 'Dashboard',
+    '/compute-admin': 'Dashboard',
+    '/compute/home': 'Dashboard',
     '/compute/instances': 'Instances',
     '/compute/instances/create': 'Create instance',
     '/compute/instance-templates': 'Instance templates',
@@ -131,25 +140,33 @@ function getLabelFromPath(path: string): string {
     '/compute/certificates': 'Certificates',
     '/compute/topology': 'Topology',
     '/compute/console': 'Console',
-    '/agent': 'Home',
+    '/agent': 'Dashboard',
     '/agent/list': 'Agent',
     '/agent/create': 'Create agent',
     '/agent/storage': 'Data sources',
     '/chat': 'Chat',
     '/mcp-tools': 'MCP Tools',
-    '/storage': 'Home',
+    '/storage': 'Dashboard',
     '/storage/osds': 'OSDs',
     '/storage/hosts': 'Hosts',
     '/storage/pools': 'Pools',
+    '/storage-domain-admin': 'Dashboard',
+    '/storage-domain-admin/osds': 'OSDs',
+    '/storage-domain-admin/hosts': 'Hosts',
+    '/storage-domain-admin/pools': 'Pools',
+    '/storage-member': 'Dashboard',
+    '/storage-member/osds': 'OSDs',
+    '/storage-member/hosts': 'Hosts',
+    '/storage-member/pools': 'Pools',
     '/design': 'Design system',
     '/design/components': 'Design system',
     '/design/drawers': 'Drawers',
     '/design/modals': 'Modals',
     '/design-system': 'Design system',
-    '/container': 'Dashboard',
+    '/container': 'Home',
     '/ai-platform': 'Dashboard',
     '/ai-platform/workloads': 'Workloads',
-    '/iam': 'Home',
+    '/iam': 'Dashboard',
     '/iam/users': 'Users',
     '/iam/users/create': 'Create user',
     '/iam/groups': 'Groups',
@@ -159,6 +176,8 @@ function getLabelFromPath(path: string): string {
     '/iam/roles/create': 'Create role',
     '/iam/policies': 'Policies',
     '/iam/policies/create': 'Create policy',
+    '/iam/action-catalog': 'Action catalog',
+    '/iam/policy-simulator': 'Policy simulator',
   };
 
   // Check for exact match first
@@ -171,12 +190,17 @@ function getLabelFromPath(path: string): string {
 
   // For all other paths, use just the last segment (most recent breadcrumb)
   const segments = path.split('/').filter(Boolean);
-  const lastSegment = segments[segments.length - 1] || 'Home';
+  const lastSegment = segments[segments.length - 1] || 'Dashboard';
   // Format: capitalize first letter and replace hyphens with spaces
   return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
 }
 
-export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
+export function TabProvider({
+  children,
+  defaultTabs = [],
+  onLastTabClose,
+  persistTabs = true,
+}: TabProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -186,35 +210,40 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   // Initialize from localStorage or use defaultTabs
   const [tabs, setTabs] = useState<TabItem[]>(() => {
     const app = getAppFromPath(location.pathname);
-    const storageKeys = getStorageKeys(app);
-    try {
-      const stored = localStorage.getItem(storageKeys.tabs);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+    if (persistTabs) {
+      const storageKeys = getStorageKeys(app);
+      try {
+        const stored = localStorage.getItem(storageKeys.tabs);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
         }
+      } catch {
+        // Ignore parse errors
       }
-    } catch {
-      // Ignore parse errors
     }
-    // Return default home tab for the app
     return [getDefaultHomeTab(app)];
   });
 
   const [activeTabId, setActiveTabId] = useState<string>(() => {
     const app = getAppFromPath(location.pathname);
-    const storageKeys = getStorageKeys(app);
-    const stored = localStorage.getItem(storageKeys.activeTab);
-    if (stored) {
-      return stored;
+    if (persistTabs) {
+      const storageKeys = getStorageKeys(app);
+      const stored = localStorage.getItem(storageKeys.activeTab);
+      if (stored) {
+        return stored;
+      }
     }
     return getDefaultHomeTab(app).id;
   });
 
-  // Use ref to access latest tabs without re-creating callbacks
+  // Use refs to access latest values without re-creating callbacks
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
+  const activeTabIdRef = useRef(activeTabId);
+  activeTabIdRef.current = activeTabId;
 
   // Refs for controlling location sync behavior
   const initializedRef = useRef(false);
@@ -238,15 +267,17 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
 
   // Persist tabs to localStorage (app-specific)
   useEffect(() => {
+    if (!persistTabs) return;
     const storageKeys = getStorageKeys(currentApp);
     localStorage.setItem(storageKeys.tabs, JSON.stringify(tabs));
-  }, [tabs, currentApp]);
+  }, [tabs, currentApp, persistTabs]);
 
   // Persist active tab to localStorage (app-specific)
   useEffect(() => {
+    if (!persistTabs) return;
     const storageKeys = getStorageKeys(currentApp);
     localStorage.setItem(storageKeys.activeTab, activeTabId);
-  }, [activeTabId, currentApp]);
+  }, [activeTabId, currentApp, persistTabs]);
 
   // On initial mount, sync tabs with current URL (prioritize current URL over stored active tab)
   useEffect(() => {
@@ -280,6 +311,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
 
   // Sync tab with current route when location changes
   // 각 탭은 독립적 - 다른 탭에 같은 경로가 있어도 현재 탭만 업데이트
+  // activeTabId를 의존성에서 제거하고 ref로 읽어 탭 전환 시 타이밍 이슈 방지
   useEffect(() => {
     if (!initializedRef.current) return;
 
@@ -291,16 +323,17 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
 
     const currentPath = location.pathname;
     const currentLabel = getLabelFromPath(currentPath);
+    const currentActiveTabId = activeTabIdRef.current;
 
     setTabs((prevTabs) => {
       // 현재 활성 탭 찾기
-      const activeTab = prevTabs.find((t) => t.id === activeTabId);
+      const activeTab = prevTabs.find((t) => t.id === currentActiveTabId);
 
       if (activeTab) {
         // 경로가 다르면 현재 탭 업데이트 (다른 탭에 같은 경로가 있어도 무시)
         if (activeTab.path !== currentPath) {
           return prevTabs.map((tab) =>
-            tab.id === activeTabId ? { ...tab, path: currentPath, label: currentLabel } : tab
+            tab.id === currentActiveTabId ? { ...tab, path: currentPath, label: currentLabel } : tab
           );
         }
         return prevTabs;
@@ -316,7 +349,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
         return [...prevTabs, newTab];
       }
     });
-  }, [location.pathname, activeTabId]);
+  }, [location.pathname]);
 
   // Add a new tab
   const addTab = useCallback((tab: TabItem) => {
@@ -331,14 +364,23 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   }, []);
 
   // Close a tab
+  const onLastTabCloseRef = useRef(onLastTabClose);
+  onLastTabCloseRef.current = onLastTabClose;
+
   const closeTab = useCallback(
     (tabId: string) => {
       setTabs((prev) => {
         const closedIndex = prev.findIndex((t) => t.id === tabId);
         const newTabs = prev.filter((t) => t.id !== tabId);
 
-        // 탭이 모두 닫히면 현재 앱의 홈 탭 생성
+        // 마지막 탭을 닫는 경우
         if (newTabs.length === 0) {
+          if (onLastTabCloseRef.current) {
+            // 콜백이 있으면 앱 종료 (Desktop: 윈도우 닫기, 일반: 엔트리 이동)
+            setTimeout(() => onLastTabCloseRef.current?.(), 0);
+            return prev; // setState 안에서는 상태를 유지하고, 콜백에서 처리
+          }
+          // 콜백이 없으면 기존 동작: 홈 탭 생성
           const homeTab = getDefaultHomeTab(currentApp);
           setActiveTabId(homeTab.id);
           navigate(homeTab.path);
@@ -400,7 +442,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       const newTabId = `home-${Date.now()}`;
       const newTab: TabItem = {
         id: newTabId,
-        label: 'Home',
+        label: 'Dashboard',
         path: '/agent',
         closable: true,
       };
@@ -410,20 +452,23 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       return;
     }
 
-    // 애플리케이션별 홈 페이지 매핑 (라벨은 모두 Home으로 통일)
+    // 애플리케이션별 홈 페이지 매핑 (라벨은 모두 Dashboard로 통일)
     const appHomeMap: Record<string, { path: string; label: string }> = {
-      '/cloudbuilder': { path: '/cloudbuilder', label: 'Home' },
-      '/compute': { path: '/compute', label: 'Home' },
-      '/storage': { path: '/storage', label: 'Home' },
-      '/desktop': { path: '/desktop', label: 'Home' },
-      '/design': { path: '/design', label: 'Home' },
-      '/container': { path: '/container', label: 'Dashboard' },
+      '/cloudbuilder': { path: '/cloudbuilder', label: 'Servers' },
+      '/compute-admin': { path: '/compute-admin', label: 'Dashboard' },
+      '/compute': { path: '/compute', label: 'Dashboard' },
+      '/storage': { path: '/storage', label: 'Dashboard' },
+      '/storage-domain-admin': { path: '/storage-domain-admin', label: 'Dashboard' },
+      '/storage-member': { path: '/storage-member', label: 'Dashboard' },
+      '/desktop': { path: '/desktop', label: 'Dashboard' },
+      '/design': { path: '/design', label: 'Dashboard' },
+      '/container': { path: '/container', label: 'Home' },
       '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
-      '/iam': { path: '/iam', label: 'Home' },
+      '/iam': { path: '/iam', label: 'Dashboard' },
     };
 
     // 현재 경로에서 애플리케이션 찾기
-    let targetApp = { path: '/', label: 'Home' };
+    let targetApp = { path: '/', label: 'Dashboard' };
     for (const [prefix, appInfo] of Object.entries(appHomeMap)) {
       if (currentPath.startsWith(prefix)) {
         targetApp = appInfo;
@@ -444,14 +489,11 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
   }, [addTab, navigate, location.pathname]);
 
   // Update the label of the active tab
-  const updateActiveTabLabel = useCallback(
-    (label: string) => {
-      setTabs((prevTabs) =>
-        prevTabs.map((tab) => (tab.id === activeTabId ? { ...tab, label } : tab))
-      );
-    },
-    [activeTabId]
-  );
+  const updateActiveTabLabel = useCallback((label: string) => {
+    setTabs((prevTabs) =>
+      prevTabs.map((tab) => (tab.id === activeTabIdRef.current ? { ...tab, label } : tab))
+    );
+  }, []);
 
   // Move tab from one position to another (for drag and drop reordering)
   const moveTab = useCallback((fromIndex: number, toIndex: number) => {

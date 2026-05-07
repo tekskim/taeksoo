@@ -365,7 +365,7 @@ function NodeSchedulingFinal() {
             {terms.map((term, ti) => (
               <div
                 key={ti}
-                className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full overflow-hidden"
+                className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] w-full overflow-hidden"
               >
                 <Disclosure defaultOpen={ti === 0}>
                   <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">
@@ -581,7 +581,7 @@ function PodAffinityFinal() {
             {terms.map((term, ti) => (
               <div
                 key={ti}
-                className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full overflow-hidden"
+                className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] w-full overflow-hidden"
               >
                 <Disclosure defaultOpen={ti === 0}>
                   <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">
@@ -839,7 +839,7 @@ function IngressRulesFinal() {
             {rules.map((rule, ri) => (
               <div
                 key={rule.id}
-                className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full overflow-hidden"
+                className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] w-full overflow-hidden"
               >
                 <Disclosure defaultOpen={ri === 0}>
                   <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">
@@ -1349,7 +1349,7 @@ function NetworkPolicyFinal() {
             {rules.map((rule, ri) => (
               <div
                 key={rule.id}
-                className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full overflow-hidden"
+                className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] w-full overflow-hidden"
               >
                 <Disclosure defaultOpen={ri === 0}>
                   <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">
@@ -1706,7 +1706,7 @@ function VolumeClaimFinal() {
             {templates.map((tpl, ti) => (
               <div
                 key={tpl.id}
-                className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full overflow-hidden"
+                className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] w-full overflow-hidden"
               >
                 <Disclosure defaultOpen={ti === 0}>
                   <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">
@@ -1929,7 +1929,7 @@ function CertificatesFinal() {
             {certs.map((cert, ci) => (
               <div
                 key={cert.id}
-                className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full overflow-hidden"
+                className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] w-full overflow-hidden"
               >
                 <Disclosure defaultOpen={ci === 0}>
                   <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">
@@ -2221,7 +2221,7 @@ function HPAMetricsFinal() {
             {metrics.map((metric, mi) => (
               <div
                 key={metric.id}
-                className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full overflow-hidden"
+                className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] w-full overflow-hidden"
               >
                 <Disclosure defaultOpen={mi === 0}>
                   <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">

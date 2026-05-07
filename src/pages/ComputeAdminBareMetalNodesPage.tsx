@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,12 +7,11 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
-  StatusIndicator,
   Badge,
   PageShell,
   PageHeader,
+  ContextMenu,
   type TableColumn,
   type FilterField,
   type AppliedFilter,
@@ -21,28 +20,26 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDownload, IconBell, IconCirclePlus } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
+import { AssignTenantDrawer, type AssignTenantNodeInfo } from '@/components/AssignTenantDrawer';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-type NodeStatus = 'active' | 'available' | 'deploying' | 'error' | 'maintenance';
-type PowerState = 'Power On' | 'Power Off';
+type NodeStatus = 'active' | 'available' | 'deploying' | 'deploy_failed' | 'error' | 'maintenance';
 
 interface BareMetalNode {
   id: string;
-  name: string;
+  serial: string;
   status: NodeStatus;
-  tenant: { id: string; name: string } | null;
-  powerState: PowerState;
-  maintained: boolean;
   cpu: number;
   ram: string;
   disk: string;
   gpu: string | null;
-  npu: string | null;
+  assignedTenant: { id: string; name: string } | null;
 }
 
 /* ----------------------------------------
@@ -52,133 +49,103 @@ interface BareMetalNode {
 const mockBareMetalNodes: BareMetalNode[] = [
   {
     id: '12345678',
-    name: 'node',
-    status: 'active',
-    tenant: null,
-    powerState: 'Power On',
-    maintained: true,
+    serial: 'node-bm-001',
+    status: 'available',
     cpu: 32,
     ram: '128GiB',
-    disk: '2GiB',
+    disk: '2TB',
     gpu: null,
-    npu: null,
+    assignedTenant: null,
   },
   {
     id: '12345679',
-    name: 'node',
+    serial: 'node-bm-002',
     status: 'active',
-    tenant: null,
-    powerState: 'Power On',
-    maintained: true,
-    cpu: 32,
-    ram: '128GiB',
-    disk: '2GiB',
-    gpu: null,
-    npu: null,
+    cpu: 64,
+    ram: '256GiB',
+    disk: '4TB',
+    gpu: 'NVIDIA A100',
+    assignedTenant: { id: 'a1b2c3d4', name: 'acme-corp' },
   },
   {
     id: '12345680',
-    name: 'node',
-    status: 'active',
-    tenant: null,
-    powerState: 'Power On',
-    maintained: true,
+    serial: 'node-bm-003',
+    status: 'deploying',
     cpu: 32,
     ram: '128GiB',
-    disk: '2GiB',
+    disk: '2TB',
     gpu: null,
-    npu: null,
+    assignedTenant: null,
   },
   {
     id: '12345681',
-    name: 'node',
-    status: 'active',
-    tenant: null,
-    powerState: 'Power On',
-    maintained: true,
-    cpu: 32,
-    ram: '128GiB',
-    disk: '2GiB',
+    serial: 'node-bm-004',
+    status: 'error',
+    cpu: 48,
+    ram: '192GiB',
+    disk: '2TB',
     gpu: null,
-    npu: null,
+    assignedTenant: null,
   },
   {
     id: '12345682',
-    name: 'node',
+    serial: 'node-bm-005',
     status: 'available',
-    tenant: null,
-    powerState: 'Power On',
-    maintained: true,
     cpu: 32,
     ram: '128GiB',
-    disk: '2GiB',
+    disk: '2TB',
     gpu: null,
-    npu: null,
+    assignedTenant: null,
   },
   {
     id: '12345683',
-    name: 'node',
-    status: 'available',
-    tenant: null,
-    powerState: 'Power On',
-    maintained: true,
-    cpu: 32,
-    ram: '128GiB',
-    disk: '2GiB',
-    gpu: null,
-    npu: null,
+    serial: 'node-bm-006',
+    status: 'maintenance',
+    cpu: 96,
+    ram: '512GiB',
+    disk: '8TB',
+    gpu: 'NVIDIA H100',
+    assignedTenant: null,
   },
   {
     id: '12345684',
-    name: 'node',
-    status: 'available',
-    tenant: null,
-    powerState: 'Power On',
-    maintained: true,
+    serial: 'node-bm-007',
+    status: 'active',
     cpu: 32,
     ram: '128GiB',
-    disk: '2GiB',
+    disk: '2TB',
     gpu: null,
-    npu: null,
+    assignedTenant: { id: 'e5f6g7h8', name: 'research-lab' },
   },
   {
     id: '12345685',
-    name: 'node',
-    status: 'available',
-    tenant: null,
-    powerState: 'Power On',
-    maintained: true,
-    cpu: 32,
-    ram: '128GiB',
-    disk: '2GiB',
+    serial: 'node-bm-008',
+    status: 'deploy_failed',
+    cpu: 16,
+    ram: '64GiB',
+    disk: '1TB',
     gpu: null,
-    npu: null,
+    assignedTenant: null,
   },
   {
     id: '12345686',
-    name: 'node',
+    serial: 'node-bm-009',
     status: 'available',
-    tenant: null,
-    powerState: 'Power On',
-    maintained: true,
     cpu: 32,
     ram: '128GiB',
-    disk: '2GiB',
+    disk: '2TB',
     gpu: null,
-    npu: null,
+    assignedTenant: null,
   },
   {
     id: '12345687',
-    name: 'node',
-    status: 'deploying',
-    tenant: { id: '12345678', name: 'tenant' },
-    powerState: 'Power On',
-    maintained: false,
-    cpu: 32,
-    ram: '128 GB',
-    disk: '2GiB',
-    gpu: null,
-    npu: null,
+    serial: 'node-bm-010',
+    status: 'active',
+    cpu: 128,
+    ram: '1TiB',
+    disk: '4TB',
+    gpu: 'NVIDIA A100',
+    assignedTenant: { id: 'i9j0k1l2', name: 'data-platform' },
   },
 ];
 
@@ -187,31 +154,24 @@ const mockBareMetalNodes: BareMetalNode[] = [
    ---------------------------------------- */
 
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'serial', label: 'Serial', type: 'text' },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
       { value: 'active', label: 'Active' },
       { value: 'available', label: 'Available' },
       { value: 'deploying', label: 'Deploying' },
+      { value: 'deploy_failed', label: 'Deploy Failed' },
       { value: 'error', label: 'Error' },
       { value: 'maintenance', label: 'Maintenance' },
-    ],
-  },
-  {
-    key: 'powerState',
-    label: 'Power State',
-    type: 'select',
-    options: [
-      { value: 'Power On', label: 'Power On' },
-      { value: 'Power Off', label: 'Power Off' },
     ],
   },
 ];
 
 export function ComputeAdminBareMetalNodesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -221,20 +181,29 @@ export function ComputeAdminBareMetalNodesPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [isAssignTenantOpen, setIsAssignTenantOpen] = useState(false);
+  const [selectedNodeForAssign, setSelectedNodeForAssign] = useState<AssignTenantNodeInfo | null>(
+    null
+  );
+
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true },
-    { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'tenant', label: 'Tenant', visible: true },
-    { id: 'powerState', label: 'Power State', visible: true },
-    { id: 'maintained', label: 'Maintained', visible: true },
+    { id: 'serial', label: 'Serial', visible: true, locked: true },
     { id: 'cpu', label: 'CPU', visible: true },
     { id: 'ram', label: 'RAM', visible: true },
     { id: 'disk', label: 'Disk', visible: true },
     { id: 'gpu', label: 'GPU', visible: true },
-    { id: 'npu', label: 'NPU', visible: true },
+    { id: 'assignedTenant', label: 'Assigned tenant', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
@@ -248,7 +217,7 @@ export function ComputeAdminBareMetalNodesPage() {
     if (appliedFilters.length === 0) return nodes;
     return nodes.filter((node) => {
       return appliedFilters.every((filter) => {
-        const value = String(node[filter.field as keyof BareMetalNode] || '').toLowerCase();
+        const value = String(node[filter.fieldId as keyof BareMetalNode] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -260,18 +229,18 @@ export function ComputeAdminBareMetalNodesPage() {
     return filteredItems.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
   }, [filteredItems, currentPage, rowsPerPage]);
 
-  const getStatusIndicator = (status: NodeStatus) => {
-    const statusMap: Record<
-      NodeStatus,
-      'active' | 'building' | 'error' | 'pending' | 'maintenance'
-    > = {
-      active: 'active',
-      available: 'pending',
-      deploying: 'building',
-      error: 'error',
-      maintenance: 'maintenance',
+  const getStatusBadge = (
+    status: NodeStatus
+  ): { label: string; theme: 'green' | 'red' | 'white' } => {
+    const map: Record<NodeStatus, { label: string; theme: 'green' | 'red' | 'white' }> = {
+      active: { label: 'Active', theme: 'green' },
+      available: { label: 'Available', theme: 'green' },
+      deploying: { label: 'Deploying', theme: 'white' },
+      deploy_failed: { label: 'Deploy Failed', theme: 'red' },
+      error: { label: 'Error', theme: 'red' },
+      maintenance: { label: 'Maintenance', theme: 'white' },
     };
-    return statusMap[status] || 'pending';
+    return map[status] || { label: status, theme: 'white' };
   };
 
   const columns: TableColumn<BareMetalNode>[] = useMemo(
@@ -279,69 +248,31 @@ export function ComputeAdminBareMetalNodesPage() {
       {
         key: 'status',
         label: 'Status',
-        width: fixedColumns.status,
-        align: 'center',
-        render: (_, row) => (
-          <StatusIndicator layout="icon-only" status={getStatusIndicator(row.status)} />
-        ),
+        flex: 1,
+        render: (_, row) => {
+          const { label, theme } = getStatusBadge(row.status);
+          return (
+            <Badge theme={theme} size="sm">
+              {label}
+            </Badge>
+          );
+        },
       },
       {
-        key: 'name',
-        label: 'Name',
+        key: 'serial',
+        label: 'Serial',
         flex: 1,
         sortable: true,
         render: (_, row) => (
           <div className="flex flex-col gap-0.5 min-w-0">
-            <Link
-              to={`/compute-admin/bare-metal-nodes/${row.id}`}
-              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
-          </div>
-        ),
-      },
-      {
-        key: 'tenant',
-        label: 'Tenant',
-        flex: 1,
-        sortable: true,
-        render: (_, row) =>
-          row.tenant ? (
-            <div className="flex flex-col gap-0.5 min-w-0">
-              <Link
-                to={`/compute-admin/tenants/${row.tenant.id}`}
-                className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {row.tenant.name}
-              </Link>
-              <span className="text-body-sm text-[var(--color-text-muted)]">
-                ID: {row.tenant.id}
+            <span className="text-label-md text-[var(--color-text-default)]">{row.serial}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
               </span>
-            </div>
-          ) : (
-            <span className="text-[var(--color-text-muted)]">-</span>
-          ),
-      },
-      {
-        key: 'powerState',
-        label: 'Power State',
-        flex: 1,
-        render: (value) => (
-          <Badge variant={value === 'Power On' ? 'success' : 'default'} size="sm">
-            {value}
-          </Badge>
-        ),
-      },
-      {
-        key: 'maintained',
-        label: 'Maintained',
-        flex: 1,
-        render: (value) => (
-          <span className="text-[var(--color-text-default)]">{value ? 'Yes' : 'No'}</span>
+              <InlineCopyId value={row.id} />
+            </span>
+          </div>
         ),
       },
       {
@@ -373,28 +304,70 @@ export function ComputeAdminBareMetalNodesPage() {
         render: (value) => <span className="text-[var(--color-text-default)]">{value || '-'}</span>,
       },
       {
-        key: 'npu',
-        label: 'NPU',
+        key: 'assignedTenant',
+        label: 'Assigned tenant',
         flex: 1,
         sortable: true,
-        render: (value) => <span className="text-[var(--color-text-default)]">{value || '-'}</span>,
+        render: (_, row) =>
+          row.assignedTenant ? (
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <Link
+                to={`/compute-admin/tenants/${row.assignedTenant.id}`}
+                className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {row.assignedTenant.name}
+              </Link>
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.assignedTenant.id}>
+                  ID : {row.assignedTenant.id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.assignedTenant.id} />
+              </span>
+            </div>
+          ) : (
+            <span className="text-[var(--color-text-muted)]">-</span>
+          ),
       },
       {
         key: 'actions',
         label: 'Action',
-        width: '110px',
+        width: fixedColumns.actions,
         align: 'center',
+        sticky: 'right',
         render: (_, row) => (
           <div onClick={(e) => e.stopPropagation()}>
-            {row.tenant ? (
-              <Button variant="secondary" size="sm">
-                Release
-              </Button>
-            ) : (
-              <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                Assign
-              </Button>
-            )}
+            <ContextMenu
+              items={[
+                {
+                  id: 'assign',
+                  label: 'Assign',
+                  onClick: () => {
+                    setSelectedNodeForAssign({ id: row.id, serial: row.serial });
+                    setIsAssignTenantOpen(true);
+                  },
+                },
+                {
+                  id: 'return',
+                  label: 'Return to Cloud builder',
+                  status: 'danger',
+                  onClick: () => {},
+                },
+              ]}
+              trigger="click"
+              align="right"
+            >
+              <button
+                className="p-1 rounded-[var(--radius-md)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                aria-label={`Actions for ${row.serial}`}
+              >
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--color-text-muted)]"
+                />
+              </button>
+            </ContextMenu>
           </div>
         ),
       },
@@ -436,28 +409,14 @@ export function ComputeAdminBareMetalNodesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Bare Metal Nodes' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Bare metal nodes' }]} />}
         />
       }
     >
       <VStack gap={3}>
-        <PageHeader title="Bare Metal Nodes" />
+        <PageHeader title="Bare metal nodes" />
 
         {/* Search Bar */}
         <div className="flex items-center gap-1">
@@ -493,6 +452,7 @@ export function ComputeAdminBareMetalNodesPage() {
           data={paginatedItems}
           rowKey="id"
           emptyMessage="No bare metal nodes found"
+          loading={loading}
         />
       </VStack>
 
@@ -505,6 +465,17 @@ export function ComputeAdminBareMetalNodesPage() {
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
       />
+
+      {selectedNodeForAssign && (
+        <AssignTenantDrawer
+          isOpen={isAssignTenantOpen}
+          onClose={() => {
+            setIsAssignTenantOpen(false);
+            setSelectedNodeForAssign(null);
+          }}
+          node={selectedNodeForAssign}
+        />
+      )}
     </PageShell>
   );
 }

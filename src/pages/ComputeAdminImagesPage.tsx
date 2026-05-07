@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -8,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -26,8 +25,9 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -65,7 +65,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Base Ubuntu 22.04 image',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     status: 'active',
     tenant: 'Tenant A',
     tenantId: 'tenant-001',
@@ -79,7 +79,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Private',
     description: 'Minimal CentOS 8 installation',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     status: 'active',
     tenant: 'Tenant B',
     tenantId: 'tenant-002',
@@ -93,7 +93,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Shared',
     description: 'Rocky Linux 9 server image',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     status: 'active',
     tenant: 'Tenant A',
     tenantId: 'tenant-001',
@@ -107,7 +107,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Public',
     description: 'Standard Debian 12 image',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     status: 'active',
     tenant: 'Tenant C',
     tenantId: 'tenant-003',
@@ -121,7 +121,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Ubuntu 20.04 LTS server',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
     status: 'active',
     tenant: 'Tenant B',
     tenantId: 'tenant-002',
@@ -135,7 +135,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Shared',
     description: 'Windows Server 2022 Datacenter',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     status: 'pending',
     tenant: 'Tenant A',
     tenantId: 'tenant-001',
@@ -149,7 +149,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Public',
     description: 'Lightweight Alpine Linux',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     status: 'active',
     tenant: 'Tenant D',
     tenantId: 'tenant-004',
@@ -163,7 +163,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Fedora 39 workstation image',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     status: 'active',
     tenant: 'Tenant C',
     tenantId: 'tenant-003',
@@ -177,7 +177,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Shared',
     description: 'Oracle Linux 8 for databases',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     status: 'deactivated',
     tenant: 'Tenant B',
     tenantId: 'tenant-002',
@@ -191,7 +191,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Ubuntu with GPU drivers',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     status: 'active',
     tenant: 'Tenant A',
     tenantId: 'tenant-001',
@@ -204,10 +204,10 @@ const mockImages: Image[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'os', label: 'OS', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'os', label: 'OS', type: 'text' },
   {
-    key: 'diskFormat',
+    id: 'diskFormat',
     label: 'Disk Format',
     type: 'select',
     options: [
@@ -216,7 +216,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'access',
+    id: 'access',
     label: 'Access',
     type: 'select',
     options: [
@@ -226,7 +226,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -268,6 +268,13 @@ export function ComputeAdminImagesPage() {
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -311,7 +318,7 @@ export function ComputeAdminImagesPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((img) => {
         return appliedFilters.every((filter) => {
-          const value = String(img[filter.field as keyof Image] || '').toLowerCase();
+          const value = String(img[filter.fieldId as keyof Image] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });
@@ -358,7 +365,12 @@ export function ComputeAdminImagesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -377,7 +389,12 @@ export function ComputeAdminImagesPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -422,6 +439,7 @@ export function ComputeAdminImagesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -450,7 +468,10 @@ export function ComputeAdminImagesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -502,20 +523,9 @@ export function ComputeAdminImagesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Images' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Images' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -587,6 +597,7 @@ export function ComputeAdminImagesPage() {
           selectable
           selectedKeys={selectedImages}
           onSelectionChange={setSelectedImages}
+          loading={loading}
         />
       </VStack>
 
@@ -596,7 +607,7 @@ export function ComputeAdminImagesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete image"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected images is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

@@ -11,7 +11,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Pagination,
   Table,
   Tabs,
@@ -35,17 +34,19 @@ import {
   PageShell,
   fixedColumns,
   columnMinWidths,
-  WizardSectionStatusIcon,
   FormField,
+  WizardSummary,
   Popover,
   Badge,
+  Tooltip,
+  Password,
 } from '@/design-system';
+import type { WizardSummaryItem } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
-  IconBell,
   IconDots,
   IconEdit,
   IconExternalLink,
@@ -57,6 +58,7 @@ import {
   IconAlertCircle,
   IconDownload,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -164,7 +166,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.tiny',
     description: '-',
     visibility: 'Private',
-    createdAt: 'Nov 19, 2025 10:22:15',
+    createdAt: 'Nov 19, 2026 10:22:15',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'tiny-instance',
@@ -188,7 +190,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.small',
     description: 'Small instance',
     visibility: 'Public',
-    createdAt: 'Nov 18, 2025 14:38:42',
+    createdAt: 'Nov 18, 2026 14:38:42',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'small-instance',
@@ -212,7 +214,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.medium',
     description: 'Medium instance',
     visibility: 'Private',
-    createdAt: 'Nov 17, 2025 09:15:33',
+    createdAt: 'Nov 17, 2026 09:15:33',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'medium-instance',
@@ -236,7 +238,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.large',
     description: 'Large instance',
     visibility: 'Public',
-    createdAt: 'Nov 16, 2025 16:52:07',
+    createdAt: 'Nov 16, 2026 16:52:07',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'large-instance',
@@ -259,7 +261,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.xlarge',
     description: 'Extra large instance',
     visibility: 'Private',
-    createdAt: 'Nov 15, 2025 11:03:28',
+    createdAt: 'Nov 15, 2026 11:03:28',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'xlarge-instance',
@@ -283,7 +285,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.2xlarge',
     description: '2x large instance',
     visibility: 'Public',
-    createdAt: 'Nov 14, 2025 13:47:19',
+    createdAt: 'Nov 14, 2026 13:47:19',
     isFavorite: false,
     config: {
       instanceNamePrefix: '2xlarge-instance',
@@ -314,6 +316,7 @@ interface QuotaSidebarProps {
   onNumberOfInstancesChange: (value: number) => void;
   quota: QuotaItem[];
   onCancel: () => void;
+  onCreate: () => void;
   sectionStatus: SectionStatus;
   editingSection: SectionStep | null;
 }
@@ -323,6 +326,7 @@ function QuotaSidebar({
   onNumberOfInstancesChange,
   quota,
   onCancel,
+  onCreate,
   sectionStatus,
   editingSection,
 }: QuotaSidebarProps) {
@@ -331,39 +335,19 @@ function QuotaSidebar({
     (section) => sectionStatus[section] === 'done' || sectionStatus[section] === 'skipped'
   );
 
+  const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
+    key,
+    label: SECTION_LABELS[key],
+    status: sectionStatus[key],
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
-        {/* Summary Card */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            <h5 className="text-heading-h5 text-[var(--color-text-default)]">Summary</h5>
-            <div className="flex flex-col">
-              {SECTION_ORDER.map((sectionKey) => {
-                // Show "Writing..." for sections in 'writing' state
-                const isWriting = sectionStatus[sectionKey] === 'writing';
-
-                return (
-                  <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SECTION_LABELS[sectionKey]}
-                    </span>
-                    {isWriting ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </VStack>
-        </div>
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
+        <WizardSummary items={summaryItems} />
 
         {/* Quota Card */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={3}>
             <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
             <VStack gap={3}>
@@ -399,7 +383,12 @@ function QuotaSidebar({
           <Button variant="secondary" size="md" onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="primary" disabled={!isAllCompleted} className="flex-1">
+          <Button
+            variant="primary"
+            disabled={!isAllCompleted}
+            onClick={onCreate}
+            className="flex-1"
+          >
             Create
           </Button>
         </HStack>
@@ -418,7 +407,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -436,7 +425,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -456,7 +445,7 @@ interface SkippedSectionProps {
 
 function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="flex items-center justify-between h-8">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <div className="flex items-center gap-3">
@@ -597,13 +586,14 @@ function BasicInformationSection({
                   placeholder="Instance name"
                   value={instanceName}
                   onChange={(e) => handleInstanceNameChange(e.target.value)}
+                  error={!!instanceNameError}
                   fullWidth
                 />
               </FormField.Control>
               <FormField.ErrorMessage>{instanceNameError}</FormField.ErrorMessage>
               <FormField.HelperText>
-                The name should start with upper letter, lower letter or chinese, and be a string
-                with 1~128 characters.
+                You can use letters, numbers, and special characters (+=,.@-_), and the length must
+                be between 2-128 characters.
               </FormField.HelperText>
             </FormField>
           </div>
@@ -637,6 +627,9 @@ function BasicInformationSection({
           <div className="py-6">
             <FormField required>
               <FormField.Label>AZ (Availability zone)</FormField.Label>
+              <FormField.Description>
+                Select the availability zone for the instance.
+              </FormField.Description>
               <FormField.Control>
                 <Select
                   options={availabilityZoneOptions}
@@ -646,9 +639,6 @@ function BasicInformationSection({
                   fullWidth
                 />
               </FormField.Control>
-              <FormField.HelperText>
-                Select the availability zone for the instance.
-              </FormField.HelperText>
             </FormField>
           </div>
 
@@ -847,7 +837,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '24.04',
     size: '709.98 MiB',
     sourceInstance: 'th-server',
-    createdAt: 'Sep 1, 2025 08:14:32',
+    createdAt: 'Sep 1, 2026 08:14:32',
   },
   {
     id: 's2',
@@ -856,7 +846,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '22.04',
     size: '1.2 GiB',
     sourceInstance: 'web-server-01',
-    createdAt: 'Aug 28, 2025 12:25:41',
+    createdAt: 'Aug 28, 2026 12:25:41',
   },
   {
     id: 's3',
@@ -865,7 +855,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '9.2',
     size: '2.5 GiB',
     sourceInstance: 'db-master',
-    createdAt: 'Aug 25, 2025 15:33:18',
+    createdAt: 'Aug 25, 2026 15:33:18',
   },
   {
     id: 's4',
@@ -874,7 +864,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '24.04',
     size: '890.00 MiB',
     sourceInstance: 'app-server',
-    createdAt: 'Aug 20, 2025 09:42:55',
+    createdAt: 'Aug 20, 2026 09:42:55',
   },
   {
     id: 's5',
@@ -883,7 +873,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '22.04',
     size: '512.00 MiB',
     sourceInstance: 'test-vm',
-    createdAt: 'Aug 15, 2025 17:08:27',
+    createdAt: 'Aug 15, 2026 17:08:27',
   },
 ];
 
@@ -894,7 +884,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-01',
     size: '50 GiB',
     type: 'SSD',
-    createdAt: 'Sep 1, 2025 10:55:12',
+    createdAt: 'Sep 1, 2026 10:55:12',
   },
   {
     id: 'v2',
@@ -902,7 +892,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-02',
     size: '100 GiB',
     type: 'SSD',
-    createdAt: 'Aug 28, 2025 14:22:36',
+    createdAt: 'Aug 28, 2026 14:22:36',
   },
   {
     id: 'v3',
@@ -910,7 +900,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'system-disk',
     size: '80 GiB',
     type: 'HDD',
-    createdAt: 'Aug 20, 2025 11:18:44',
+    createdAt: 'Aug 20, 2026 11:18:44',
   },
 ];
 
@@ -1020,8 +1010,10 @@ function ImageSection({
     setDataDisks((prev) => prev.map((d) => (d.id === id ? { ...d, [field]: value } : d)));
   };
 
-  // Handle image selection with error clearing
+  // Handle image selection with error clearing (skip error rows)
   const handleImageSelect = (id: string) => {
+    const img = mockImages.find((i) => i.id === id);
+    if (img?.status === 'error') return;
     onSelectImage(id);
     setSourceError(null);
   };
@@ -1058,6 +1050,7 @@ function ImageSection({
             value={row.id}
             checked={selectedImageId === row.id}
             onChange={() => handleImageSelect(row.id)}
+            disabled={row.status === 'error'}
           />
         </div>
       ),
@@ -1082,16 +1075,26 @@ function ImageSection({
       minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
-          <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+          <HStack gap={1} align="center" className="min-w-0">
+            <span
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
+              title={value}
             >
               {value}
-            </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            </span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
+            {row.status === 'error' && (
+              <Tooltip content="This volume is currently unavailable.">
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
+              </Tooltip>
+            )}
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1154,15 +1157,17 @@ function ImageSection({
       render: (value: string, row: SnapshotRow) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            </span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1177,15 +1182,17 @@ function ImageSection({
       render: (value: string, row: SnapshotRow) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            </span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1239,15 +1246,17 @@ function ImageSection({
       render: (value: string, row: BootableVolumeRow) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            </span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1302,7 +1311,7 @@ function ImageSection({
             {isV2 ? (
               <VStack gap={6}>
                 {/* Image block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1320,7 +1329,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                     >
-                      <TabList className="mt-2">
+                      <TabList>
                         <Tab value="other">
                           <HStack gap={1} align="center">
                             <IconDots size={14} />
@@ -1356,7 +1365,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                       size="sm"
-                      className="w-[var(--search-input-width)] mt-2"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Pagination
                       currentPage={currentPage}
@@ -1369,7 +1378,8 @@ function ImageSection({
                       columns={imageColumns}
                       data={paginatedImages}
                       rowKey="id"
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                     <SelectionIndicator
                       selectedItems={
@@ -1383,7 +1393,7 @@ function ImageSection({
                 </div>
 
                 {/* Instance snapshot block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="snapshot" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1401,7 +1411,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                     >
-                      <TabList className="mt-2">
+                      <TabList>
                         <Tab value="other">
                           <HStack gap={1} align="center">
                             <IconDots size={14} />
@@ -1437,7 +1447,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                       size="sm"
-                      className="w-[var(--search-input-width)] mt-2"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Pagination
                       currentPage={currentPage}
@@ -1453,7 +1463,8 @@ function ImageSection({
                         currentPage * itemsPerPage
                       )}
                       rowKey="id"
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                     <SelectionIndicator
                       selectedItems={
@@ -1467,7 +1478,7 @@ function ImageSection({
                 </div>
 
                 {/* Bootable volume block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="volume" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1485,7 +1496,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                     >
-                      <TabList className="mt-2">
+                      <TabList>
                         <Tab value="other">
                           <HStack gap={1} align="center">
                             <IconDots size={14} />
@@ -1521,7 +1532,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                       size="sm"
-                      className="w-[var(--search-input-width)] mt-2"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Pagination
                       currentPage={currentPage}
@@ -1537,7 +1548,8 @@ function ImageSection({
                         currentPage * itemsPerPage
                       )}
                       rowKey="id"
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                     <SelectionIndicator
                       selectedItems={
@@ -1574,7 +1586,7 @@ function ImageSection({
                       setCurrentPage(1);
                     }}
                   >
-                    <TabList className="mt-2">
+                    <TabList>
                       <Tab value="other">
                         <HStack gap={1} align="center">
                           <IconDots size={14} />
@@ -1613,7 +1625,7 @@ function ImageSection({
                     setCurrentPage(1);
                   }}
                   size="sm"
-                  className="w-[var(--search-input-width)] mt-2"
+                  className="w-[var(--search-input-width)]"
                 />
 
                 {/* Pagination */}
@@ -1638,7 +1650,8 @@ function ImageSection({
                       columns={imageColumns}
                       data={paginatedImages}
                       rowKey="id"
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                   )}
                   {sourceTab === 'snapshot' && (
@@ -1649,7 +1662,8 @@ function ImageSection({
                         currentPage * itemsPerPage
                       )}
                       rowKey="id"
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                   )}
                   {sourceTab === 'volume' && (
@@ -1660,7 +1674,8 @@ function ImageSection({
                         currentPage * itemsPerPage
                       )}
                       rowKey="id"
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                   )}
 
@@ -1678,84 +1693,88 @@ function ImageSection({
             )}
           </VStack>
 
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)] mt-6" />
-
-          {/* System disk Section */}
-          <div className="py-6">
-            <span className="text-body-md italic text-[var(--color-text-subtle)] mb-2 block">
-              Image, Instance snapshot
-            </span>
-            <FormField required>
-              <FormField.Label>System disk</FormField.Label>
-              <FormField.Description>
-                Configure whether to create a system disk for booting.
-              </FormField.Description>
-              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                <Toggle
-                  checked={createSystemDisk}
-                  onChange={setCreateSystemDisk}
-                  label="Create a new system disk"
-                />
-              </FormField.Control>
-            </FormField>
-
-            {/* Storage Type & Size Row */}
-            {(isV2 || createSystemDisk) && (
-              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
-                <HStack gap={6} align="center">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
-                    <Select
-                      options={storageTypeOptions}
-                      value={storageType}
-                      onChange={setStorageType}
+          {/* System disk Section — visible for Image & Instance snapshot */}
+          {(isV2 || sourceTab === 'image' || sourceTab === 'snapshot') && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <div className="py-6">
+                <FormField required>
+                  <FormField.Label>System disk</FormField.Label>
+                  <FormField.Description>
+                    Configure whether to create a system disk for booting.
+                  </FormField.Description>
+                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                    <Toggle
+                      checked={createSystemDisk}
+                      onChange={setCreateSystemDisk}
+                      label="Create a new system disk"
                     />
-                  </HStack>
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
-                    <NumberInput
-                      value={storageSize}
-                      onChange={(v) => setStorageSize(v ?? 30)}
-                      min={1}
-                      max={1000}
-                      step={1}
-                      width="sm"
-                      suffix="GiB"
-                    />
-                  </HStack>
-                  <Checkbox
-                    label="Deleted with the instance"
-                    checked={deleteWithInstance}
-                    onChange={(e) => setDeleteWithInstance(e.target.checked)}
-                  />
-                </HStack>
+                  </FormField.Control>
+                </FormField>
+
+                {/* Storage Type & Size Row */}
+                {(isV2 || createSystemDisk) && (
+                  <div className="mt-3 w-full rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3">
+                    <div className="flex items-end gap-2">
+                      <VStack gap={1} className="w-[280px]">
+                        <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
+                        <Select
+                          options={storageTypeOptions}
+                          value={storageType}
+                          onChange={setStorageType}
+                          fullWidth
+                        />
+                      </VStack>
+                      <VStack gap={1}>
+                        <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
+                        <NumberInput
+                          value={storageSize}
+                          onChange={(v) => setStorageSize(v ?? 30)}
+                          min={1}
+                          max={1000}
+                          step={1}
+                          width="sm"
+                        />
+                      </VStack>
+                      <span className="text-body-md text-[var(--color-text-muted)] h-[32px] flex items-center">
+                        GiB
+                      </span>
+                      <div className="h-[32px] flex items-center">
+                        <Checkbox
+                          label="Deleted with the instance"
+                          checked={deleteWithInstance}
+                          onChange={(e) => setDeleteWithInstance(e.target.checked)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
 
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-          {/* Delete Volume on Instance Delete Section */}
-          <div className="py-6">
-            <span className="text-body-md italic text-[var(--color-text-subtle)] mb-2 block">
-              Bootable volume
-            </span>
-            <FormField required>
-              <FormField.Label>Delete volume on instance delete</FormField.Label>
-              <FormField.Description>
-                Selecting this option will remove the source volume when the instance is deleted.
-              </FormField.Description>
-              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                <Checkbox
-                  checked={deleteWithInstance2}
-                  onChange={(e) => setDeleteWithInstance2(e.target.checked)}
-                  label="Delete with instance"
-                />
-              </FormField.Control>
-            </FormField>
-          </div>
+          {/* Delete Volume on Instance Delete Section — visible for Bootable volume */}
+          {(isV2 || sourceTab === 'volume') && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <div className="py-6">
+                <FormField required>
+                  <FormField.Label>Delete volume on instance delete</FormField.Label>
+                  <FormField.Description>
+                    Selecting this option will remove the source volume when the instance is
+                    deleted.
+                  </FormField.Description>
+                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                    <Checkbox
+                      checked={deleteWithInstance2}
+                      onChange={(e) => setDeleteWithInstance2(e.target.checked)}
+                      label="Delete with instance"
+                    />
+                  </FormField.Control>
+                </FormField>
+              </div>
+            </>
+          )}
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1769,62 +1788,77 @@ function ImageSection({
               </span>
             </VStack>
 
-            <VStack gap={2} className="w-full">
-              {dataDisks.map((disk) => (
-                <div
-                  key={disk.id}
-                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
-                >
-                  <HStack gap={6} align="center">
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
-                      <Select
-                        options={storageTypeOptions}
-                        value={disk.type}
-                        onChange={(v) => handleUpdateDataDisk(disk.id, 'type', v)}
-                      />
-                    </HStack>
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
-                      <NumberInput
-                        value={disk.size}
-                        onChange={(v) => handleUpdateDataDisk(disk.id, 'size', v ?? 10)}
-                        min={1}
-                        max={1000}
-                        step={1}
-                        width="sm"
-                        suffix="GiB"
-                      />
-                    </HStack>
-                    <Checkbox
-                      label="Deleted with the instance"
-                      checked={disk.deleteWithInstance}
-                      onChange={(e) =>
-                        handleUpdateDataDisk(disk.id, 'deleteWithInstance', e.target.checked)
-                      }
-                    />
-                    <div className="ml-auto">
-                      <button
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                        onClick={() => handleRemoveDataDisk(disk.id)}
-                      >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
+              <VStack gap={2}>
+                {dataDisks.map((disk, index) => (
+                  <div
+                    key={disk.id}
+                    className="w-full rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3"
+                  >
+                    <div className="flex items-end gap-2">
+                      <VStack gap={1} className="w-[280px]">
+                        {index === 0 && (
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Type
+                          </span>
+                        )}
+                        <Select
+                          options={storageTypeOptions}
+                          value={disk.type}
+                          onChange={(v) => handleUpdateDataDisk(disk.id, 'type', v)}
+                          fullWidth
+                        />
+                      </VStack>
+                      <VStack gap={1}>
+                        {index === 0 && (
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Size
+                          </span>
+                        )}
+                        <NumberInput
+                          value={disk.size}
+                          onChange={(v) => handleUpdateDataDisk(disk.id, 'size', v ?? 10)}
+                          min={1}
+                          max={1000}
+                          step={1}
+                          width="sm"
+                        />
+                      </VStack>
+                      <span className="text-body-md text-[var(--color-text-muted)] h-[32px] flex items-center">
+                        GiB
+                      </span>
+                      <div className="h-[32px] flex items-center">
+                        <Checkbox
+                          label="Deleted with the instance"
+                          checked={disk.deleteWithInstance}
+                          onChange={(e) =>
+                            handleUpdateDataDisk(disk.id, 'deleteWithInstance', e.target.checked)
+                          }
+                        />
+                      </div>
+                      <div className="ml-auto h-[32px] flex items-center">
+                        <button
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          onClick={() => handleRemoveDataDisk(disk.id)}
+                        >
+                          <IconX size={14} className="text-[var(--color-text-muted)]" />
+                        </button>
+                      </div>
                     </div>
-                  </HStack>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={handleAddDataDisk}
+                  >
+                    Add Data disk
+                  </Button>
                 </div>
-              ))}
-              <div className="w-fit">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<IconCirclePlus size={12} />}
-                  onClick={handleAddDataDisk}
-                >
-                  Add Data disk
-                </Button>
-              </div>
-            </VStack>
+              </VStack>
+            </div>
           </VStack>
 
           {/* Divider + Next Button - hidden in edit mode */}
@@ -2000,8 +2034,10 @@ function FlavorSection({
   // Validation error
   const [flavorError, setFlavorError] = useState<string | null>(null);
 
-  // Handle flavor selection with error clearing
+  // Handle flavor selection with error clearing (skip warning rows)
   const handleSelectFlavor = (id: string) => {
+    const flavor = mockFlavors.find((f) => f.id === id);
+    if (flavor?.hasWarning) return;
     onSelectFlavor(id);
     setFlavorError(null);
   };
@@ -2054,6 +2090,7 @@ function FlavorSection({
             value={row.id}
             checked={selectedFlavorId === row.id}
             onChange={() => handleSelectFlavor(row.id)}
+            disabled={row.hasWarning}
           />
         </div>
       ),
@@ -2065,22 +2102,20 @@ function FlavorSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            </span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
             {row.hasWarning && (
-              <IconAlertCircle
-                size={14}
-                stroke={1.5}
-                className="text-[var(--color-state-danger)]"
-              />
+              <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
             )}
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -2112,11 +2147,11 @@ function FlavorSection({
                   delay={100}
                   hideDelay={100}
                   content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="p-3 min-w-[160px] max-w-[320px]">
                       <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                         All Metadata ({entries.length})
                       </div>
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                         {entries.map(([k, v], i) => (
                           <Badge key={i} theme="white" size="sm">
                             {k}={v}
@@ -2218,6 +2253,7 @@ function FlavorSection({
                   columns={flavorColumns}
                   data={paginatedFlavors}
                   rowKey="id"
+                  selectedKeys={selectedFlavorId ? [selectedFlavorId] : []}
                   onRowClick={(row) => handleSelectFlavor(row.id)}
                 />
 
@@ -2271,6 +2307,7 @@ interface NetworkRow {
   external: boolean;
   access: string;
   subnetCidr: string;
+  hasWarning?: boolean;
 }
 
 interface FloatingIPPoolRow {
@@ -2302,6 +2339,7 @@ interface PortRow {
   ownedNetwork: string;
   fixedIp: string;
   macAddress: string;
+  hasWarning?: boolean;
 }
 
 const mockNetworks: NetworkRow[] = [
@@ -2316,7 +2354,7 @@ const mockNetworks: NetworkRow[] = [
   {
     id: 'd32059d2',
     name: 'internal-02',
-    status: 'In-active',
+    status: 'Active',
     external: true,
     access: 'Public',
     subnetCidr: '192.168.10.0/24',
@@ -2344,6 +2382,7 @@ const mockNetworks: NetworkRow[] = [
     external: true,
     access: 'Public',
     subnetCidr: '10.7.61.0/24',
+    hasWarning: true,
   },
 ];
 
@@ -2397,20 +2436,20 @@ const mockSecurityGroups: SecurityGroupRow[] = [
     id: 'sg1',
     name: 'default',
     description: 'Default security group',
-    createdAt: 'Aug 15, 2025 13:40:22',
+    createdAt: 'Aug 15, 2026 13:40:22',
   },
-  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 09:12:05' },
+  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2026 09:12:05' },
   {
     id: 'sg3',
     name: 'web-sg',
     description: 'Web server security group',
-    createdAt: 'Sep 10, 2025 16:28:51',
+    createdAt: 'Sep 10, 2026 16:28:51',
   },
   {
     id: 'sg4',
     name: 'db-sg',
     description: 'Database security group',
-    createdAt: 'Sep 15, 2025 10:55:33',
+    createdAt: 'Sep 15, 2026 10:55:33',
   },
 ];
 
@@ -2438,6 +2477,7 @@ const mockPorts: PortRow[] = [
     ownedNetwork: 'internal-01',
     fixedIp: '192.168.1.10',
     macAddress: 'fa:16:3e:11:22:33',
+    hasWarning: true,
   },
 ];
 
@@ -2561,6 +2601,7 @@ function NetworkSection({
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
             checked={selectedNetworkIds.has(row.id)}
+            disabled={row.hasWarning}
             onChange={() => {
               const newSet = new Set(selectedNetworkIds);
               if (newSet.has(row.id)) {
@@ -2589,16 +2630,26 @@ function NetworkSection({
       sortable: true,
       render: (_, row) => (
         <VStack gap={0}>
-          <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+          <HStack gap={1} align="center" className="min-w-0">
+            <span
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
+              title={row.name}
             >
               {row.name}
-            </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            </span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
+            {row.hasWarning && (
+              <Tooltip content="This network has no subnets available.">
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
+              </Tooltip>
+            )}
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -2706,7 +2757,12 @@ function NetworkSection({
       sortable: true,
       render: (_, row) => (
         <VStack gap={0} align="start">
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
           <span>{row.description}</span>
         </VStack>
       ),
@@ -2784,7 +2840,12 @@ function NetworkSection({
               <line x1="10" y1="14" x2="21" y2="3" />
             </svg>
           </a>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -2809,6 +2870,7 @@ function NetworkSection({
             value={row.id}
             checked={selectedPortId === row.id}
             onChange={() => setSelectedPortId(row.id)}
+            disabled={row.hasWarning}
           />
         </div>
       ),
@@ -2838,7 +2900,7 @@ function NetworkSection({
           >
             <span>{row.name}</span>
             <svg
-              className="w-3 h-3"
+              className="w-3 h-3 shrink-0"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -2848,8 +2910,21 @@ function NetworkSection({
               <polyline points="15 3 21 3 21 9" />
               <line x1="10" y1="14" x2="21" y2="3" />
             </svg>
+            {row.hasWarning && (
+              <Tooltip
+                content="This port is already attached to another resource."
+                position="bottom"
+              >
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
+              </Tooltip>
+            )}
           </a>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -2877,7 +2952,12 @@ function NetworkSection({
               <line x1="10" y1="14" x2="21" y2="3" />
             </svg>
           </a>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -2962,7 +3042,8 @@ function NetworkSection({
                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
               </span>
               <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select the networks to attach to the instance.
+                If you select a port, selecting a network is optional. You may still add another
+                network if required.
               </span>
             </VStack>
 
@@ -3011,7 +3092,9 @@ function NetworkSection({
                 columns={networkColumns}
                 data={filteredNetworks}
                 rowKey="id"
+                selectedKeys={Array.from(selectedNetworkIds)}
                 onRowClick={(row) => {
+                  if (row.hasWarning) return;
                   const newSet = new Set(selectedNetworkIds);
                   if (newSet.has(row.id)) {
                     newSet.delete(row.id);
@@ -3019,7 +3102,6 @@ function NetworkSection({
                     newSet.add(row.id);
                   }
                   setSelectedNetworkIds(newSet);
-                  // Clear error when network is selected
                   if (newSet.size > 0) {
                     setNetworkError(null);
                   }
@@ -3054,16 +3136,16 @@ function NetworkSection({
               </span>
             </VStack>
 
-            <VStack gap={2} className="w-full">
-              {vlans.map((vlan) => (
-                <div
-                  key={vlan.id}
-                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
-                >
-                  <HStack gap={2} align="center" className="justify-between">
-                    <HStack gap={2} align="center">
-                      <HStack gap={1.5} align="center">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
+              <VStack gap={2}>
+                {vlans.map((vlan) => (
+                  <div
+                    key={vlan.id}
+                    className="w-full rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3"
+                  >
+                    <div className="flex items-start gap-2">
+                      <VStack gap={1} className="flex-1">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
                           Network
                         </span>
                         <Select
@@ -3075,10 +3157,11 @@ function NetworkSection({
                           value={vlan.network}
                           onChange={(v) => updateVlan(vlan.id, 'network', v)}
                           placeholder="network"
+                          fullWidth
                         />
-                      </HStack>
-                      <HStack gap={1.5} align="center">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
+                      </VStack>
+                      <VStack gap={1} className="flex-1">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
                           Subnet
                         </span>
                         <Select
@@ -3090,37 +3173,44 @@ function NetworkSection({
                           value={vlan.subnet}
                           onChange={(v) => updateVlan(vlan.id, 'subnet', v)}
                           placeholder="subnet"
+                          fullWidth
                         />
-                      </HStack>
-                      <Select
-                        options={[
-                          { value: 'Auto-assign', label: 'Auto-assign' },
-                          { value: 'Manual', label: 'Manual' },
-                        ]}
-                        value={vlan.autoAssign}
-                        onChange={(v) => updateVlan(vlan.id, 'autoAssign', v)}
-                      />
-                    </HStack>
-                    <button
-                      onClick={() => removeVlan(vlan.id)}
-                      className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
-                    >
-                      <IconX size={14} className="text-[var(--color-text-muted)]" />
-                    </button>
-                  </HStack>
+                      </VStack>
+                      <VStack gap={1} className="flex-1">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          IP Assignment
+                        </span>
+                        <Select
+                          options={[
+                            { value: 'Auto-assign', label: 'Auto-assign' },
+                            { value: 'Manual', label: 'Manual' },
+                          ]}
+                          value={vlan.autoAssign}
+                          onChange={(v) => updateVlan(vlan.id, 'autoAssign', v)}
+                          fullWidth
+                        />
+                      </VStack>
+                      <button
+                        onClick={() => removeVlan(vlan.id)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-px"
+                      >
+                        <IconX size={14} className="text-[var(--color-text-muted)]" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={addVlan}
+                  >
+                    Add virtual LAN
+                  </Button>
                 </div>
-              ))}
-
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} />}
-                onClick={addVlan}
-                className="self-start"
-              >
-                Add virtual LAN
-              </Button>
-            </VStack>
+              </VStack>
+            </div>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -3176,6 +3266,7 @@ function NetworkSection({
               columns={securityGroupColumns}
               data={filteredSecurityGroups}
               rowKey="id"
+              selectedKeys={Array.from(selectedSecurityGroups)}
               onRowClick={(row) => {
                 const newSet = new Set(selectedSecurityGroups);
                 if (newSet.has(row.id)) {
@@ -3236,7 +3327,11 @@ function NetworkSection({
                       columns={portColumns}
                       data={filteredPorts}
                       rowKey="id"
-                      onRowClick={(row) => setSelectedPortId(row.id)}
+                      selectedKeys={selectedPortId ? [selectedPortId] : []}
+                      onRowClick={(row) => {
+                        if (row.hasWarning) return;
+                        setSelectedPortId(row.id);
+                      }}
                     />
 
                     {/* Selection Indicator for Port */}
@@ -3340,8 +3435,6 @@ function AuthenticationSection({
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Validation error
   const [authError, setAuthError] = useState<string | null>(null);
@@ -3474,14 +3567,11 @@ function AuthenticationSection({
             {isV2 ? (
               <VStack gap={6}>
                 {/* Key pair block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={4}>
-                    <Tabs value="keypair" onChange={() => {}} variant="underline" size="sm">
-                      <TabList>
-                        <Tab value="keypair">Key pair</Tab>
-                        <Tab value="password">Password</Tab>
-                      </TabList>
-                    </Tabs>
+                    <span className="text-heading-h6 text-[var(--color-text-default)]">
+                      Key pair
+                    </span>
                     <HStack gap={2} align="center" justify="between" className="w-full">
                       <SearchInput
                         placeholder="Search key pair by attributes"
@@ -3523,6 +3613,7 @@ function AuthenticationSection({
                         columns={keyPairColumns}
                         data={filteredKeyPairs}
                         rowKey="id"
+                        selectedKeys={selectedKeyPairId ? [selectedKeyPairId] : []}
                         onRowClick={(row) => handleSelectKeyPair(row.id)}
                       />
                       <SelectionIndicator
@@ -3545,16 +3636,13 @@ function AuthenticationSection({
                 </div>
 
                 {/* Password block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={4}>
-                    <Tabs value="password" onChange={() => {}} variant="underline" size="sm">
-                      <TabList>
-                        <Tab value="keypair">Key pair</Tab>
-                        <Tab value="password">Password</Tab>
-                      </TabList>
-                    </Tabs>
+                    <span className="text-heading-h6 text-[var(--color-text-default)]">
+                      Password
+                    </span>
                     <FormField
-                      label="Login Name"
+                      label="Login name"
                       helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
                     >
                       <Input
@@ -3573,94 +3661,31 @@ function AuthenticationSection({
                         'You must use a mix of at least 3 types (uppercase/lowercase letters, numbers, special characters), and the length must be between 8-32 characters. Note that your Login Name, spaces, and specific symbols (" \' < > & \\ |) are not allowed.'
                       }
                     >
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? 'text' : 'password'}
-                          value={password}
-                          onChange={(e) => {
-                            setPassword(e.target.value);
-                            setAuthError(null);
-                          }}
-                          placeholder="Enter password"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          {showPassword ? (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                              <line x1="1" y1="1" x2="23" y2="23" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
+                      <Password
+                        value={password}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          setAuthError(null);
+                        }}
+                        placeholder="Enter password"
+                        fullWidth
+                      />
                     </FormField>
                     <FormField
-                      label="Confirm Password"
+                      label="Confirm password"
                       error={!!authError}
                       errorMessage={authError || undefined}
                     >
-                      <div className="relative">
-                        <Input
-                          type={showConfirmPassword ? 'text' : 'password'}
-                          value={confirmPassword}
-                          onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            setAuthError(null);
-                          }}
-                          placeholder="Enter password again"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          {showConfirmPassword ? (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                              <line x1="1" y1="1" x2="23" y2="23" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
+                      <Password
+                        value={confirmPassword}
+                        onChange={(e) => {
+                          setConfirmPassword(e.target.value);
+                          setAuthError(null);
+                        }}
+                        placeholder="Enter password again"
+                        fullWidth
+                        error={!!authError}
+                      />
                     </FormField>
                   </VStack>
                 </div>
@@ -3675,14 +3700,23 @@ function AuthenticationSection({
                 {/* Key pair Tab Content */}
                 <TabPanel value="keypair" className="pt-4">
                   <VStack gap={3}>
-                    <SearchInput
-                      placeholder="Search key pair by attributes"
-                      value={keyPairSearch}
-                      onChange={(e) => setKeyPairSearch(e.target.value)}
-                      onClear={() => setKeyPairSearch('')}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
+                    <HStack gap={2} align="center" justify="between" className="w-full">
+                      <SearchInput
+                        placeholder="Search key pair by attributes"
+                        value={keyPairSearch}
+                        onChange={(e) => setKeyPairSearch(e.target.value)}
+                        onClear={() => setKeyPairSearch('')}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        rightIcon={<IconExternalLink size={12} />}
+                      >
+                        Create new key pair
+                      </Button>
+                    </HStack>
                     <Pagination
                       currentPage={keyPairPage}
                       totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
@@ -3695,6 +3729,7 @@ function AuthenticationSection({
                         columns={keyPairColumns}
                         data={filteredKeyPairs}
                         rowKey="id"
+                        selectedKeys={selectedKeyPairId ? [selectedKeyPairId] : []}
                         onRowClick={(row) => handleSelectKeyPair(row.id)}
                       />
                       <SelectionIndicator
@@ -3719,7 +3754,10 @@ function AuthenticationSection({
                 {/* Password Tab Content */}
                 <TabPanel value="password" className="pt-4">
                   <VStack gap={4}>
-                    <FormField label="Login Name">
+                    <FormField
+                      label="Login name"
+                      helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
+                    >
                       <Input
                         value={loginName}
                         onChange={(e) => {
@@ -3730,95 +3768,37 @@ function AuthenticationSection({
                         fullWidth
                       />
                     </FormField>
-                    <FormField label="Password">
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? 'text' : 'password'}
-                          value={password}
-                          onChange={(e) => {
-                            setPassword(e.target.value);
-                            setAuthError(null);
-                          }}
-                          placeholder="Enter password"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          {showPassword ? (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                              <line x1="1" y1="1" x2="23" y2="23" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
+                    <FormField
+                      label="Password"
+                      helperText={
+                        'You must use a mix of at least 3 types (uppercase/lowercase letters, numbers, special characters), and the length must be between 8-32 characters. Note that your Login Name, spaces, and specific symbols (" \' < > & \\ |) are not allowed.'
+                      }
+                    >
+                      <Password
+                        value={password}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          setAuthError(null);
+                        }}
+                        placeholder="Enter password"
+                        fullWidth
+                      />
                     </FormField>
                     <FormField
-                      label="Confirm Password"
+                      label="Confirm password"
                       error={!!authError && loginType === 'password'}
                       errorMessage={authError && loginType === 'password' ? authError : undefined}
                     >
-                      <div className="relative">
-                        <Input
-                          type={showConfirmPassword ? 'text' : 'password'}
-                          value={confirmPassword}
-                          onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            setAuthError(null);
-                          }}
-                          placeholder="Enter password again"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          {showConfirmPassword ? (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                              <line x1="1" y1="1" x2="23" y2="23" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
+                      <Password
+                        value={confirmPassword}
+                        onChange={(e) => {
+                          setConfirmPassword(e.target.value);
+                          setAuthError(null);
+                        }}
+                        placeholder="Enter password again"
+                        fullWidth
+                        error={!!(authError && loginType === 'password')}
+                      />
                     </FormField>
                   </VStack>
                 </TabPanel>
@@ -3941,7 +3921,12 @@ function AdvancedSection({
               <line x1="10" y1="14" x2="21" y2="3" />
             </svg>
           </a>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -4024,59 +4009,59 @@ function AdvancedSection({
               </span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={3}>
-                {tags.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 items-center w-full">
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">Key</span>
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
-                    <div />
-                    {tags.map((tag, i) => (
-                      <React.Fragment key={tag.id}>
-                        <Input
-                          value={tag.key}
-                          onChange={(e) => {
-                            const newTags = [...tags];
-                            newTags[i] = { ...newTags[i], key: e.target.value };
-                            setTags(newTags);
-                          }}
-                          placeholder="Enter key"
-                          fullWidth
-                        />
-                        <Input
-                          value={tag.value}
-                          onChange={(e) => {
-                            const newTags = [...tags];
-                            newTags[i] = { ...newTags[i], value: e.target.value };
-                            setTags(newTags);
-                          }}
-                          placeholder="Enter value"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setTags(tags.filter((_, idx) => idx !== i))}
-                          className="flex items-center justify-center text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          <IconX size={14} />
-                        </button>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                )}
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
+              <VStack gap={2}>
+                <div className="grid grid-cols-[1fr_1fr_20px] gap-x-2 gap-y-1 items-center w-full">
+                  <span className="text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Value</span>
+                  <div />
+                  {tags.map((tag, i) => (
+                    <React.Fragment key={tag.id}>
+                      <Input
+                        value={tag.key}
+                        onChange={(e) => {
+                          const newTags = [...tags];
+                          newTags[i] = { ...newTags[i], key: e.target.value };
+                          setTags(newTags);
+                        }}
+                        placeholder="Enter key"
+                        fullWidth
+                      />
+                      <Input
+                        value={tag.value}
+                        onChange={(e) => {
+                          const newTags = [...tags];
+                          newTags[i] = { ...newTags[i], value: e.target.value };
+                          setTags(newTags);
+                        }}
+                        placeholder="Enter value"
+                        fullWidth
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setTags(tags.filter((_, idx) => idx !== i))}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={14} className="text-[var(--color-text-subtle)]" />
+                      </button>
+                    </React.Fragment>
+                  ))}
+                </div>
 
                 <HStack gap={3} align="center">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} />}
-                    onClick={() =>
-                      setTags([...tags, { id: crypto.randomUUID(), key: '', value: '' }])
-                    }
-                    disabled={tags.length >= MAX_TAGS}
-                  >
-                    Add tag
-                  </Button>
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} />}
+                      onClick={() =>
+                        setTags([...tags, { id: crypto.randomUUID(), key: '', value: '' }])
+                      }
+                      disabled={tags.length >= MAX_TAGS}
+                    >
+                      Add tag
+                    </Button>
+                  </div>
                   <span className="text-body-md text-[var(--color-text-subtle)]">
                     {tags.length} / {MAX_TAGS} tags
                   </span>
@@ -4118,6 +4103,7 @@ function AdvancedSection({
                 columns={serverGroupColumns}
                 data={filteredServerGroups}
                 rowKey="id"
+                selectedKeys={selectedServerGroupId ? [selectedServerGroupId] : []}
                 onRowClick={(row) => setSelectedServerGroupId(row.id)}
               />
 
@@ -4143,7 +4129,12 @@ function AdvancedSection({
 
           {/* User data */}
           <VStack gap={3} className="py-6">
-            <span className="text-label-lg">User data</span>
+            <VStack gap={1}>
+              <span className="text-label-lg">User data</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Enter a script or cloud-init configuration to run when the instance first boots.
+              </span>
+            </VStack>
             {/* Upload Button */}
             <div>
               <input
@@ -4211,6 +4202,8 @@ interface TemplatesSectionProps {
   templates: TemplateRow[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  resourceType: 'vm' | 'baremetal';
+  onResourceTypeChange: (type: 'vm' | 'baremetal') => void;
   onSkip: () => void;
   onNext: () => void;
   isActive?: boolean;
@@ -4223,6 +4216,8 @@ function TemplatesSection({
   templates,
   selectedId,
   onSelect,
+  resourceType,
+  onResourceTypeChange,
   onSkip,
   onNext,
   isActive = false,
@@ -4235,7 +4230,6 @@ function TemplatesSection({
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [resourceType, setResourceType] = useState<'vm' | 'baremetal'>('vm');
 
   // Filter templates based on active tab
   const getFilteredTemplates = () => {
@@ -4303,7 +4297,12 @@ function TemplatesSection({
               className="text-[var(--color-action-primary)]"
             />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -4363,13 +4362,13 @@ function TemplatesSection({
                   <Radio
                     value="vm"
                     checked={resourceType === 'vm'}
-                    onChange={() => setResourceType('vm')}
+                    onChange={() => onResourceTypeChange('vm')}
                     label="Virtual machine"
                   />
                   <Radio
                     value="baremetal"
                     checked={resourceType === 'baremetal'}
-                    onChange={() => setResourceType('baremetal')}
+                    onChange={() => onResourceTypeChange('baremetal')}
                     label="Bare metal"
                   />
                 </VStack>
@@ -4377,191 +4376,196 @@ function TemplatesSection({
             </FormField>
           </div>
 
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+          {resourceType === 'vm' && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Templates Sub-section */}
-          <VStack gap={3} align="start" className="w-full py-6">
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select the template to use for creating the instance. A template includes predefined
-                settings such as the image, flavor, and network configuration required for the
-                instance.
-              </span>
-            </VStack>
+              {/* Templates Sub-section */}
+              <VStack gap={3} align="start" className="w-full py-6">
+                <VStack gap={1}>
+                  <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                    Select the template to use for creating the instance. A template includes
+                    predefined settings such as the image, flavor, and network configuration
+                    required for the instance.
+                  </span>
+                </VStack>
 
-            {/* Tabs */}
-            <div className="w-full">
-              <Tabs
-                value={activeTab}
-                onChange={setActiveTab}
-                size="sm"
-                variant="underline"
-                className="w-full"
-              >
-                <TabList>
-                  <Tab value="favorites">Favorites</Tab>
-                  <Tab value="current-tenant">Current tenant</Tab>
-                  <Tab value="public">Public</Tab>
-                </TabList>
+                {/* Tabs */}
+                <div className="w-full">
+                  <Tabs
+                    value={activeTab}
+                    onChange={setActiveTab}
+                    size="sm"
+                    variant="underline"
+                    className="w-full"
+                  >
+                    <TabList>
+                      <Tab value="favorites">Favorites</Tab>
+                      <Tab value="current-tenant">Current tenant</Tab>
+                      <Tab value="public">Public</Tab>
+                    </TabList>
 
-                <TabPanel value="favorites" className="pt-3">
-                  <VStack gap={2} className="w-full">
-                    {/* Action Bar - Search + Create Button */}
-                    <HStack justify="between" align="center" className="w-full">
-                      <SearchInput
-                        placeholder="Search templates by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onClear={() => setSearchQuery('')}
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Button variant="outline" size="sm">
-                        <span>Create a new template</span>
-                        <IconExternalLink size={12} stroke={1.5} />
-                      </Button>
-                    </HStack>
+                    <TabPanel value="favorites" className="pt-3">
+                      <VStack gap={2} className="w-full">
+                        {/* Action Bar - Search + Create Button */}
+                        <HStack justify="between" align="center" className="w-full">
+                          <SearchInput
+                            placeholder="Search templates by attributes"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onClear={() => setSearchQuery('')}
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Button variant="outline" size="sm">
+                            <span>Create a new template</span>
+                            <IconExternalLink size={12} stroke={1.5} />
+                          </Button>
+                        </HStack>
 
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                      totalItems={filteredTemplates.length}
-                      onPageChange={setCurrentPage}
-                      selectedCount={selectedId ? 1 : 0}
-                    />
-
-                    {/* Table with Selection */}
-                    <VStack gap={2}>
-                      {filteredTemplates.length > 0 ? (
-                        <Table
-                          columns={columns}
-                          data={filteredTemplates}
-                          rowKey="id"
-                          onRowClick={(row) => onSelect(row.id)}
+                        {/* Pagination */}
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                          totalItems={filteredTemplates.length}
+                          onPageChange={setCurrentPage}
+                          selectedCount={selectedId ? 1 : 0}
                         />
-                      ) : (
-                        <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                          No favorite templates
-                        </div>
-                      )}
-                    </VStack>
-                  </VStack>
-                </TabPanel>
 
-                <TabPanel value="current-tenant" className="pt-3">
-                  <VStack gap={2} className="w-full">
-                    {/* Action Bar - Search + Create Button */}
-                    <HStack justify="between" align="center" className="w-full">
-                      <SearchInput
-                        placeholder="Search templates by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onClear={() => setSearchQuery('')}
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Button variant="outline" size="sm">
-                        <span>Create a new template</span>
-                        <IconExternalLink size={12} stroke={1.5} />
-                      </Button>
-                    </HStack>
+                        {/* Table with Selection */}
+                        <VStack gap={2}>
+                          {filteredTemplates.length > 0 ? (
+                            <Table
+                              columns={columns}
+                              data={filteredTemplates}
+                              rowKey="id"
+                              selectedKeys={selectedId ? [selectedId] : []}
+                              onRowClick={(row) => onSelect(row.id)}
+                            />
+                          ) : (
+                            <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                              No favorite templates
+                            </div>
+                          )}
+                        </VStack>
+                      </VStack>
+                    </TabPanel>
 
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                      totalItems={filteredTemplates.length}
-                      onPageChange={setCurrentPage}
-                      selectedCount={selectedId ? 1 : 0}
-                    />
+                    <TabPanel value="current-tenant" className="pt-3">
+                      <VStack gap={2} className="w-full">
+                        {/* Action Bar - Search + Create Button */}
+                        <HStack justify="between" align="center" className="w-full">
+                          <SearchInput
+                            placeholder="Search templates by attributes"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onClear={() => setSearchQuery('')}
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Button variant="outline" size="sm">
+                            <span>Create a new template</span>
+                            <IconExternalLink size={12} stroke={1.5} />
+                          </Button>
+                        </HStack>
 
-                    {/* Table with Selection */}
-                    {filteredTemplates.length > 0 ? (
-                      <Table
-                        columns={columns}
-                        data={filteredTemplates}
-                        rowKey="id"
-                        onRowClick={(row) => onSelect(row.id)}
-                      />
-                    ) : (
-                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                        No templates in current tenant
-                      </div>
-                    )}
-                  </VStack>
-                </TabPanel>
+                        {/* Pagination */}
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                          totalItems={filteredTemplates.length}
+                          onPageChange={setCurrentPage}
+                          selectedCount={selectedId ? 1 : 0}
+                        />
 
-                <TabPanel value="public" className="pt-3">
-                  <VStack gap={2} className="w-full">
-                    {/* Action Bar - Search + Create Button */}
-                    <HStack justify="between" align="center" className="w-full">
-                      <SearchInput
-                        placeholder="Search templates by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onClear={() => setSearchQuery('')}
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Button variant="outline" size="sm">
-                        <span>Create a new template</span>
-                        <IconExternalLink size={12} stroke={1.5} />
-                      </Button>
-                    </HStack>
+                        {/* Table with Selection */}
+                        {filteredTemplates.length > 0 ? (
+                          <Table
+                            columns={columns}
+                            data={filteredTemplates}
+                            rowKey="id"
+                            selectedKeys={selectedId ? [selectedId] : []}
+                            onRowClick={(row) => onSelect(row.id)}
+                          />
+                        ) : (
+                          <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                            No templates in current tenant
+                          </div>
+                        )}
+                      </VStack>
+                    </TabPanel>
 
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                      totalItems={filteredTemplates.length}
-                      onPageChange={setCurrentPage}
-                      selectedCount={selectedId ? 1 : 0}
-                    />
+                    <TabPanel value="public" className="pt-3">
+                      <VStack gap={2} className="w-full">
+                        {/* Action Bar - Search + Create Button */}
+                        <HStack justify="between" align="center" className="w-full">
+                          <SearchInput
+                            placeholder="Search templates by attributes"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onClear={() => setSearchQuery('')}
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Button variant="outline" size="sm">
+                            <span>Create a new template</span>
+                            <IconExternalLink size={12} stroke={1.5} />
+                          </Button>
+                        </HStack>
 
-                    {/* Table with Selection */}
-                    {filteredTemplates.length > 0 ? (
-                      <Table
-                        columns={columns}
-                        data={filteredTemplates}
-                        rowKey="id"
-                        onRowClick={(row) => onSelect(row.id)}
-                      />
-                    ) : (
-                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                        No public templates available
-                      </div>
-                    )}
-                  </VStack>
-                </TabPanel>
-              </Tabs>
-            </div>
+                        {/* Pagination */}
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                          totalItems={filteredTemplates.length}
+                          onPageChange={setCurrentPage}
+                          selectedCount={selectedId ? 1 : 0}
+                        />
 
-            {/* Selection Indicator for Templates */}
-            <SelectionIndicator
-              selectedItems={
-                selectedId
-                  ? [
-                      {
-                        id: selectedId,
-                        label: templates.find((t) => t.id === selectedId)?.name || selectedId,
-                      },
-                    ]
-                  : []
-              }
-              onRemove={() => onSelect('')}
-            />
-          </VStack>
+                        {/* Table with Selection */}
+                        {filteredTemplates.length > 0 ? (
+                          <Table
+                            columns={columns}
+                            data={filteredTemplates}
+                            rowKey="id"
+                            selectedKeys={selectedId ? [selectedId] : []}
+                            onRowClick={(row) => onSelect(row.id)}
+                          />
+                        ) : (
+                          <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                            No public templates available
+                          </div>
+                        )}
+                      </VStack>
+                    </TabPanel>
+                  </Tabs>
+                </div>
+
+                {/* Selection Indicator for Templates */}
+                <SelectionIndicator
+                  className="-mt-1"
+                  selectedItems={
+                    selectedId
+                      ? [
+                          {
+                            id: selectedId,
+                            label: templates.find((t) => t.id === selectedId)?.name || selectedId,
+                          },
+                        ]
+                      : []
+                  }
+                  onRemove={() => onSelect('')}
+                />
+              </VStack>
+            </>
+          )}
 
           {/* Action Buttons - only show when not editing or v2 */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
               <HStack gap={2} justify="end" className="pt-3">
-                <Button variant="outline" onClick={onSkip} className="min-w-[80px]">
-                  Skip
-                </Button>
                 <Button variant="primary" onClick={onNext} className="min-w-[80px]">
                   Next
                 </Button>
@@ -4605,6 +4609,7 @@ export function CreateInstancePage() {
   // Form state
   const [numberOfInstances, setNumberOfInstances] = useState(1);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const [selectedResourceType, setSelectedResourceType] = useState<'vm' | 'baremetal'>('vm');
 
   // Basic information state
   const [instanceName, setInstanceName] = useState('');
@@ -4942,22 +4947,14 @@ export function CreateInstancePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instances list', href: '/compute/instances' },
-                { label: 'Create instance' },
+                { label: 'Instances', href: '/compute/instances' },
+                { label: 'Create Instance' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />
@@ -4984,6 +4981,8 @@ export function CreateInstancePage() {
                 templates={mockTemplates}
                 selectedId={selectedTemplateId}
                 onSelect={setSelectedTemplateId}
+                resourceType={selectedResourceType}
+                onResourceTypeChange={setSelectedResourceType}
                 onSkip={() => handleSkip('templates')}
                 onNext={() => handleNext('templates')}
                 isActive
@@ -4996,13 +4995,15 @@ export function CreateInstancePage() {
               <DoneSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')}>
                 <SectionCard.DataRow
                   label="Resource type"
-                  value="Virtual machine"
-                  showDivider={false}
+                  value={selectedResourceType === 'baremetal' ? 'Bare metal' : 'Virtual machine'}
+                  showDivider={selectedResourceType === 'vm'}
                 />
-                <SectionCard.DataRow
-                  label="Template"
-                  value={getTemplateSummary() || 'None selected'}
-                />
+                {selectedResourceType === 'vm' && (
+                  <SectionCard.DataRow
+                    label="Template"
+                    value={getTemplateSummary() || 'None selected'}
+                  />
+                )}
               </DoneSection>
             )}
             {sectionStatus.templates === 'skipped' && (
@@ -5192,6 +5193,7 @@ export function CreateInstancePage() {
             onNumberOfInstancesChange={setNumberOfInstances}
             quota={mockQuota}
             onCancel={handleCancel}
+            onCreate={handleCreate}
             sectionStatus={sectionStatus}
             editingSection={editingSection}
           />

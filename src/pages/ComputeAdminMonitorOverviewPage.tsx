@@ -1,45 +1,40 @@
-import { useState, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import { useState, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import {
   Badge,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   MonitoringToolbar,
   PageShell,
   PageHeader,
   ProgressBar,
+  Tabs,
+  TabList,
+  Tab,
   STATUS_THRESHOLDS,
   type TimeRangeValue,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconArrowsMaximize,
-  IconArrowsMinimize,
-  IconDotsCircleHorizontal,
-} from '@tabler/icons-react';
-import { DataViewDrawer } from '@/components/DataViewDrawer';
+import { useNavigate } from 'react-router-dom';
 import {
   ChartWithFullScreen,
-  getAreaGradient,
   chartColors as baseChartColors,
 } from '@/pages/design-system-sections/ChartComponents';
 
 const chartColors = { ...baseChartColors, orange400: '#f97316' };
 
+function resolvedChartColor(cssVar: string, chartFallback: string): string {
+  if (typeof window === 'undefined') return chartFallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  return v || chartFallback;
+}
+
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
-
-const alarmTrendData = {
-  labels: ['1/1', '1/2', '1/3', '1/4', '1/5', '1/6', '1/7'],
-  values: [1, 2, 3, 2, 1, 0, 1],
-};
 
 const hostUsageData = [
   {
@@ -89,32 +84,63 @@ const hostUsageData = [
   },
 ];
 
-const diskIOPSData = {
-  labels: ['16:00', '16:10', '16:20', '16:30', '16:40', '16:50'],
-  reads: [400, 450, 500, 600, 550, 500],
-  writes: [600, 650, 700, 800, 750, 700],
-};
+const diskIOPSHosts = [
+  {
+    name: 'host-01',
+    total: [100, 200, 250, 350, 300, 550],
+    read: [50, 100, 120, 180, 150, 280],
+    write: [50, 100, 130, 170, 150, 270],
+  },
+  {
+    name: 'host-02',
+    total: [200, 250, 300, 350, 250, 400],
+    read: [100, 130, 150, 180, 130, 200],
+    write: [100, 120, 150, 170, 120, 200],
+  },
+  {
+    name: 'host-03',
+    total: [150, 200, 280, 300, 220, 300],
+    read: [80, 100, 140, 160, 110, 150],
+    write: [70, 100, 140, 140, 110, 150],
+  },
+  {
+    name: 'host-04',
+    total: [80, 100, 150, 200, 180, 200],
+    read: [40, 50, 80, 100, 90, 100],
+    write: [40, 50, 70, 100, 90, 100],
+  },
+];
 
-const networkIOData = {
-  labels: ['16:00', '16:10', '16:20', '16:30', '16:40', '16:50'],
-  receive: [400, 450, 500, 600, 550, 500],
-  transmit: [500, 550, 600, 700, 650, 600],
-};
+const networkIOHosts = [
+  {
+    name: 'host-01',
+    total: [100, 200, 250, 350, 300, 550],
+    receive: [50, 100, 120, 180, 150, 280],
+    transmit: [50, 100, 130, 170, 150, 270],
+  },
+  {
+    name: 'host-02',
+    total: [200, 250, 300, 350, 250, 400],
+    receive: [100, 130, 150, 180, 130, 200],
+    transmit: [100, 120, 150, 170, 120, 200],
+  },
+  {
+    name: 'host-03',
+    total: [150, 200, 280, 300, 220, 300],
+    receive: [80, 100, 140, 160, 110, 150],
+    transmit: [70, 100, 140, 140, 110, 150],
+  },
+  {
+    name: 'host-04',
+    total: [80, 100, 150, 200, 180, 200],
+    receive: [40, 50, 80, 100, 90, 100],
+    transmit: [40, 50, 70, 100, 90, 100],
+  },
+];
 
 /* ----------------------------------------
    Card Components
    ---------------------------------------- */
-
-function AlertCard({ title, value }: { title: string; value: number }) {
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-5 flex-1 flex flex-col">
-      <span className="chartTitle">{title}</span>
-      <div className="flex-1 flex items-center justify-center text-heading-h1 text-[var(--color-text-default)]">
-        {value}
-      </div>
-    </div>
-  );
-}
 
 function GaugeCard({
   title,
@@ -248,7 +274,7 @@ function GaugeCard({
       {/* Tooltip */}
       {showTooltip && (
         <div
-          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-sm px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
           style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
         >
           <div className="flex items-center gap-1.5">
@@ -293,13 +319,13 @@ function PieChartCard({
     tooltip: {
       show: true,
       trigger: 'item',
-      backgroundColor: '#ffffff',
-      borderColor: '#e2e8f0',
+      backgroundColor: resolvedChartColor('--color-surface-default', '#ffffff'),
+      borderColor: resolvedChartColor('--color-border-default', '#e2e8f0'),
       borderWidth: 1,
       borderRadius: 6,
       padding: [8, 12],
       textStyle: {
-        color: '#1e293b',
+        color: chartColors.slate800,
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
@@ -332,7 +358,7 @@ function PieChartCard({
           },
           fontSize: 12,
           fontWeight: 600,
-          color: '#ffffff',
+          color: resolvedChartColor('--color-text-on-primary', '#ffffff'),
           fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
         },
         emphasis: {
@@ -425,24 +451,31 @@ function HostUsageCard({
   );
 }
 
-function AreaChartCard({
+const hostChartColors = [
+  baseChartColors.cyan400,
+  baseChartColors.emerald400,
+  baseChartColors.amber400,
+  baseChartColors.violet400,
+];
+
+function TabbedAreaChartCard({
   title,
-  series,
-  colors,
-  legendLabels,
+  tabs,
+  hosts,
   yAxisUnit,
 }: {
   title: string;
-  series: number[][];
-  colors: string[];
-  legendLabels: string[];
+  tabs: { value: string; label: string; dataKey: string }[];
+  hosts: { name: string; [key: string]: string | number[] }[];
   yAxisUnit: string;
 }) {
-  // Convert to LineChartSeries format used by ChartWithFullScreen
-  const chartSeries = legendLabels.map((label, index) => ({
-    name: label,
-    data: series[index],
-    color: colors[index],
+  const [activeTab, setActiveTab] = useState(tabs[0].value);
+
+  const activeDataKey = tabs.find((t) => t.value === activeTab)?.dataKey ?? tabs[0].dataKey;
+  const chartSeries = hosts.map((host, index) => ({
+    name: host.name,
+    data: host[activeDataKey] as number[],
+    color: hostChartColors[index % hostChartColors.length],
   }));
 
   return (
@@ -450,221 +483,18 @@ function AreaChartCard({
       title={title}
       series={chartSeries}
       yAxisFormatter={(v: number) => `${v} ${yAxisUnit}`}
-    />
-  );
-}
-
-function AlarmTrendCard() {
-  const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>({
-    'Total alerts': true,
-  });
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showDataView, setShowDataView] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [fullScreenTimeRange, setFullScreenTimeRange] = useState<TimeRangeValue>('1h');
-
-  const fullScreenTimeRangeOptions = [
-    { label: '1h', value: '1h' as TimeRangeValue },
-    { label: '3h', value: '3h' as TimeRangeValue },
-    { label: '1d', value: '1d' as TimeRangeValue },
-    { label: '1w', value: '1w' as TimeRangeValue },
-  ];
-
-  const legendLabels = ['Total alerts'];
-  const colors = [chartColors.cyan400];
-
-  const allVisible = Object.values(visibleSeries).every((v) => v);
-  const toggleAll = () => {
-    const newState = !allVisible;
-    setVisibleSeries(Object.fromEntries(legendLabels.map((label) => [label, newState])));
-  };
-
-  // Close fullscreen on ESC key
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isFullScreen) {
-        setIsFullScreen(false);
+      subHeader={
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            {tabs.map((tab) => (
+              <Tab key={tab.value} value={tab.value}>
+                {tab.label}
+              </Tab>
+            ))}
+          </TabList>
+        </Tabs>
       }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isFullScreen]);
-
-  // Convert series data to format expected by DataViewDrawer
-  const drawerSeries = legendLabels.map((label, index) => ({
-    name: label,
-    data: alarmTrendData.values,
-    color: colors[index],
-  }));
-
-  const getOption = () => ({
-    animation: false,
-    grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
-    xAxis: {
-      type: 'category' as const,
-      data: alarmTrendData.labels,
-      axisLine: { show: false },
-      axisTick: { show: false },
-      axisLabel: { color: chartColors.slate400, fontSize: 10 },
-      boundaryGap: false,
-    },
-    yAxis: {
-      type: 'value' as const,
-      axisLine: { show: false },
-      axisTick: { show: false },
-      splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
-      axisLabel: { color: chartColors.slate400, fontSize: 10 },
-      min: 0,
-      max: 4,
-    },
-    tooltip: {
-      trigger: 'axis' as const,
-      backgroundColor: 'white',
-      borderColor: '#e2e8f0',
-      textStyle: { color: chartColors.slate800, fontSize: 11 },
-    },
-    series: legendLabels
-      .filter((label) => visibleSeries[label])
-      .map((label, index) => ({
-        name: label,
-        type: 'line',
-        data: alarmTrendData.values,
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 6,
-        showSymbol: false,
-        lineStyle: { color: colors[index], width: 1 },
-        itemStyle: { color: colors[index] },
-        areaStyle: getAreaGradient(colors[index]),
-      })),
-  });
-
-  // Render chart content with unique key to force fresh re-render
-  const renderChartContent = (mode: 'normal' | 'fullscreen') => (
-    <div
-      key={`alarm-container-${mode}`}
-      className={`chartCard flex-1 ${mode === 'fullscreen' ? 'chartCardFullScreen' : ''}`}
-      style={mode === 'normal' && isFullScreen ? { visibility: 'hidden' } : undefined}
-    >
-      {/* Header */}
-      <div className="chartHeader">
-        <span className="chartTitle">Last Week Alarm Trend</span>
-        {/* Fullscreen Toolbar - centered */}
-        {mode === 'fullscreen' && (
-          <div className="chartHeaderCenter">
-            <MonitoringToolbar
-              timeRangeOptions={fullScreenTimeRangeOptions}
-              timeRange={fullScreenTimeRange}
-              onTimeRangeChange={setFullScreenTimeRange}
-              onRefresh={() => console.log('Refresh chart')}
-            />
-          </div>
-        )}
-        <div className="chartControls">
-          {legendLabels.length > 1 && (
-            <>
-              <button className="toggleBtn" onClick={toggleAll}>
-                <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
-                <span>{allVisible ? 'Hide All' : 'View All'}</span>
-              </button>
-              <span className="toggleDivider">|</span>
-            </>
-          )}
-          <div className="menuContainer">
-            <button
-              className="menuTrigger"
-              onClick={(e) => {
-                e.stopPropagation();
-                setMenuOpen(!menuOpen);
-              }}
-            >
-              <IconDotsCircleHorizontal size={16} stroke={1.5} />
-            </button>
-            {menuOpen && (
-              <div className="contextMenu">
-                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
-                  Download Image
-                </button>
-                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
-                  Download CSV
-                </button>
-                <button
-                  className="contextMenuItemLast"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setShowDataView(true);
-                  }}
-                >
-                  View Data
-                </button>
-              </div>
-            )}
-          </div>
-          <button
-            className="expandTrigger"
-            title={mode === 'fullscreen' ? 'Minimize' : 'Expand'}
-            onClick={() => setIsFullScreen(mode !== 'fullscreen')}
-          >
-            {mode === 'fullscreen' ? (
-              <IconArrowsMinimize size={16} stroke={1.5} />
-            ) : (
-              <IconArrowsMaximize size={16} stroke={1.5} />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Chart Body */}
-      <div className="chartBody">
-        <div className="chartWrapper">
-          <ReactECharts
-            key={`alarm-echart-${mode}`}
-            option={getOption()}
-            style={{ height: '100%', width: '100%' }}
-            notMerge={true}
-            opts={{ devicePixelRatio: window.devicePixelRatio }}
-          />
-        </div>
-        <div className="chartLegend">
-          {legendLabels.map((label, index) => (
-            <div
-              key={label}
-              className={`legendItem ${!visibleSeries[label] ? 'legendItemHidden' : ''}`}
-              onClick={() => setVisibleSeries((prev) => ({ ...prev, [label]: !prev[label] }))}
-            >
-              <div className="legendDot" style={{ backgroundColor: colors[index] }} />
-              <span>{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <>
-      {/* Normal mode - always render in place */}
-      {renderChartContent('normal')}
-
-      {/* Fullscreen mode - render via portal to document.body */}
-      {isFullScreen &&
-        createPortal(
-          <>
-            <div className="fullScreenOverlay" onClick={() => setIsFullScreen(false)} />
-            <div className="fullScreenFloating">{renderChartContent('fullscreen')}</div>
-          </>,
-          document.body
-        )}
-
-      {/* Data View Drawer */}
-      <DataViewDrawer
-        isOpen={showDataView}
-        onClose={() => setShowDataView(false)}
-        title="Last week alarm trend (RAW)"
-        series={drawerSeries}
-        timeLabels={alarmTrendData.labels}
-      />
-    </>
+    />
   );
 }
 
@@ -673,6 +503,7 @@ function AlarmTrendCard() {
    ---------------------------------------- */
 
 export default function ComputeAdminMonitorOverviewPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [timeRange, setTimeRange] = useState<TimeRangeValue>('1h');
@@ -686,10 +517,7 @@ export default function ComputeAdminMonitorOverviewPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Monitor Overview' },
-  ];
+  const breadcrumbItems = [{ label: 'Monitor Overview' }];
 
   const timeRangeOptions = [
     { label: '1h', value: '1h' as TimeRangeValue },
@@ -724,16 +552,9 @@ export default function ComputeAdminMonitorOverviewPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -750,17 +571,8 @@ export default function ComputeAdminMonitorOverviewPage() {
           onRefresh={() => console.log('Refresh')}
         />
 
-        {/* Row 1: Alert Cards + Alarm Trend */}
-        <div className="grid grid-cols-4 gap-4">
-          <AlertCard title="Today CPU usage > 80% alert" value={0} />
-          <AlertCard title="Today RAM usage > 80% alert" value={0} />
-          <div className="col-span-2">
-            <AlarmTrendCard />
-          </div>
-        </div>
-
-        {/* Row 2: Gauge Charts + Pie Chart */}
-        <div className="grid grid-cols-4 gap-4">
+        {/* Row 1: Gauge Charts + Pie Chart */}
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-6">
           <GaugeCard title="Physical CPU usage" value={70} used={7} total={10} unit="vCPU" />
           <GaugeCard title="Total RAM usage" value={70} used={8} total={10} unit="GiB" />
           <GaugeCard title="Physical storage usage" value={70} used={8} total={10} unit="TiB" />
@@ -768,25 +580,31 @@ export default function ComputeAdminMonitorOverviewPage() {
         </div>
 
         {/* Row 3: Host Usage Charts */}
-        <div className="flex gap-4">
+        <div className="flex gap-6">
           <HostUsageCard title="Host CPU usage" data={hostUsageData} type="cpu" />
           <HostUsageCard title="Host RAM usage" data={hostUsageData} type="ram" />
         </div>
 
         {/* Row 4: Area Charts */}
-        <div className="flex gap-4">
-          <AreaChartCard
+        <div className="flex gap-6">
+          <TabbedAreaChartCard
             title="Host disk average IOPS"
-            series={[diskIOPSData.reads, diskIOPSData.writes]}
-            colors={[chartColors.cyan400, chartColors.emerald400]}
-            legendLabels={['Reads', 'Writes']}
+            tabs={[
+              { value: 'total', label: 'Total', dataKey: 'total' },
+              { value: 'read', label: 'Read', dataKey: 'read' },
+              { value: 'write', label: 'Write', dataKey: 'write' },
+            ]}
+            hosts={diskIOPSHosts}
             yAxisUnit="ops/s"
           />
-          <AreaChartCard
+          <TabbedAreaChartCard
             title="Host average network IO"
-            series={[networkIOData.receive, networkIOData.transmit]}
-            colors={[chartColors.cyan400, chartColors.emerald400]}
-            legendLabels={['Receive', 'Transmit']}
+            tabs={[
+              { value: 'total', label: 'Total', dataKey: 'total' },
+              { value: 'receive', label: 'Receive', dataKey: 'receive' },
+              { value: 'transmit', label: 'Transmit', dataKey: 'transmit' },
+            ]}
+            hosts={networkIOHosts}
             yAxisUnit="KB/s"
           />
         </div>

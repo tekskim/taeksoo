@@ -71,12 +71,12 @@ export function MLflowPage() {
           title="MLflow"
           actions={
             <HStack gap={2}>
-              <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>
+              <Button variant="secondary" size="md" icon={<IconRefresh size={14} stroke={1.5} />}>
                 Refresh
               </Button>
               <Button
                 variant="primary"
-                size="sm"
+                size="md"
                 icon={<IconExternalLink size={14} stroke={1.5} />}
               >
                 Open MLflow

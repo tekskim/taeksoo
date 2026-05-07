@@ -1,49 +1,37 @@
-import { useNavigate } from 'react-router-dom';
-import { VStack, TabBar, SectionCard, DetailHeader, PageShell } from '@/design-system';
+import { useState } from 'react';
+import {
+  Breadcrumb,
+  VStack,
+  SectionCard,
+  DetailHeader,
+  PageShell,
+  TabBar,
+  TopBar,
+} from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
-import { useDarkMode } from '@/hooks/useDarkMode';
 import { IconExternalLink } from '@tabler/icons-react';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 
 /* ----------------------------------------
    Settings Information Page ---------------------------------------- */
 
 export default function SettingsInformationPage() {
-  const navigate = useNavigate();
-  const { isDark } = useDarkMode();
-  const sidebarWidth = 200;
-
-  // Handle window close
-  const handleWindowClose = () => {
-    navigate('/');
-  };
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   return (
     <PageShell
-      sidebar={<SettingsSidebar />}
+      sidebar={
+        <SettingsSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
       sidebarWidth={sidebarWidth}
-      tabBar={null}
+      tabBar={<TabBar tabs={[]} activeTab="" onTabChange={() => {}} showAddButton={false} />}
       topBar={
-        <div className="relative flex items-center w-full h-[var(--tabbar-height)] bg-[var(--color-surface-default)] shrink-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)]">
-          {/* Logo Area */}
-          <div className="w-[200px] h-full px-3 flex items-center">
-            <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
-          </div>
-
-          {/* TabBar (Window controls only) */}
-          <div className="flex-1">
-            <TabBar
-              tabs={[]}
-              activeTab=""
-              onTabChange={() => {}}
-              showAddButton={false}
-              showWindowControls={true}
-              showBottomBorder={false}
-              onWindowClose={handleWindowClose}
-            />
-          </div>
-        </div>
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={false}
+          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'Information' }]} />}
+        />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
@@ -51,7 +39,7 @@ export default function SettingsInformationPage() {
         {/* Header */}
         <div>
           <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-            Information{' '}
+            Information
           </h1>
           <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
             View application version and related resources.
@@ -78,17 +66,17 @@ export default function SettingsInformationPage() {
                 href="https://thaki.cloud/terms"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 min-w-0 text-label-lg text-[var(--color-action-primary)] hover:underline w-fit"
+                className="inline-flex items-center gap-1.5 min-w-0 text-body-md text-[var(--color-action-primary)] hover:underline w-fit"
               >
-                Terms of Service <IconExternalLink size={14} stroke={1.5} />
+                Terms of Service <IconExternalLink size={12} stroke={1.5} />
               </a>
               <a
                 href="https://thaki.cloud/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 min-w-0 text-label-lg text-[var(--color-action-primary)] hover:underline w-fit"
+                className="inline-flex items-center gap-1.5 min-w-0 text-body-md text-[var(--color-action-primary)] hover:underline w-fit"
               >
-                Privacy Policy <IconExternalLink size={14} stroke={1.5} />
+                Privacy Policy <IconExternalLink size={12} stroke={1.5} />
               </a>
             </div>
           </SectionCard.Content>
@@ -103,17 +91,17 @@ export default function SettingsInformationPage() {
                 href="https://thaki.cloud"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 min-w-0 text-label-lg text-[var(--color-action-primary)] hover:underline w-fit"
+                className="inline-flex items-center gap-1.5 min-w-0 text-body-md text-[var(--color-action-primary)] hover:underline w-fit"
               >
-                Official Website <IconExternalLink size={14} stroke={1.5} />
+                Official Website <IconExternalLink size={12} stroke={1.5} />
               </a>
               <a
                 href="https://support.thaki.cloud"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 min-w-0 text-label-lg text-[var(--color-action-primary)] hover:underline w-fit"
+                className="inline-flex items-center gap-1.5 min-w-0 text-body-md text-[var(--color-action-primary)] hover:underline w-fit"
               >
-                Support Center <IconExternalLink size={14} stroke={1.5} />
+                Support Center <IconExternalLink size={12} stroke={1.5} />
               </a>
             </div>
           </SectionCard.Content>

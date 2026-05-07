@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -6,7 +6,7 @@ import {
   Breadcrumb,
   Table,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ContextMenu,
   ListToolbar,
@@ -14,27 +14,26 @@ import {
   PageHeader,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
+  ConfirmModal,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
   IconRefresh,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -66,7 +65,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '1/1',
     upToDate: 1,
     available: 1,
-    createdAt: 'Nov 10, 2025 08:35:22',
+    createdAt: 'Nov 10, 2026 08:35:22',
   },
   {
     id: '2',
@@ -77,7 +76,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '3/3',
     upToDate: 3,
     available: 3,
-    createdAt: 'Nov 8, 2025 11:42:18',
+    createdAt: 'Nov 8, 2026 11:42:18',
   },
   {
     id: '3',
@@ -88,7 +87,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '1/1',
     upToDate: 1,
     available: 1,
-    createdAt: 'Nov 7, 2025 14:28:45',
+    createdAt: 'Nov 7, 2026 14:28:45',
   },
   {
     id: '4',
@@ -99,7 +98,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '0/1',
     upToDate: 1,
     available: 0,
-    createdAt: 'Nov 9, 2025 09:15:33',
+    createdAt: 'Nov 9, 2026 09:15:33',
   },
   {
     id: '5',
@@ -110,7 +109,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '1/1',
     upToDate: 1,
     available: 1,
-    createdAt: 'Nov 6, 2025 16:52:07',
+    createdAt: 'Nov 6, 2026 16:52:07',
   },
   {
     id: '6',
@@ -121,7 +120,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '0/2',
     upToDate: 0,
     available: 0,
-    createdAt: 'Nov 10, 2025 10:18:41',
+    createdAt: 'Nov 10, 2026 10:18:41',
   },
   {
     id: '7',
@@ -132,7 +131,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '2/2',
     upToDate: 2,
     available: 2,
-    createdAt: 'Nov 5, 2025 13:45:29',
+    createdAt: 'Nov 5, 2026 13:45:29',
   },
   {
     id: '8',
@@ -143,8 +142,29 @@ const deploymentsData: DeploymentRow[] = [
     ready: '3/3',
     upToDate: 3,
     available: 3,
-    createdAt: 'Nov 4, 2025 11:22:14',
+    createdAt: 'Nov 4, 2026 11:22:14',
   },
+];
+
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'namespace', label: 'Namespace', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'Active', label: 'Active' },
+      { value: 'Stopped', label: 'Stopped' },
+      { value: 'Processing', label: 'Processing' },
+      { value: 'Error', label: 'Error' },
+    ],
+  },
+  { id: 'image', label: 'Image', type: 'text' },
+  { id: 'ready', label: 'Ready', type: 'text' },
+  { id: 'upToDate', label: 'Up to date', type: 'text' },
+  { id: 'available', label: 'Available', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
 ];
 
 /* ----------------------------------------
@@ -162,17 +182,51 @@ export function DeploymentsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const [data, setData] = useState(deploymentsData);
   const [currentPage, setCurrentPage] = useState(1);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
     updateActiveTabLabel('Deployments');
   }, [updateActiveTabLabel]);
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters([]);
+  };
+
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      return appliedFilters.every((filter) => {
+        const raw = item[filter.fieldId as keyof DeploymentRow];
+        const value = String(typeof raw === 'number' ? raw : (raw ?? '')).toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [data, appliedFilters]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -191,8 +245,8 @@ export function DeploymentsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(deploymentsData.length / rowsPerPage);
-  const paginatedData = deploymentsData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -227,16 +281,14 @@ export function DeploymentsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <Link
+          to={`/container/deployments/${row.id}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate"
           title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/deployments/${row.id}`);
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -301,6 +353,7 @@ export function DeploymentsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -324,11 +377,6 @@ export function DeploymentsPage() {
             onClick: () => console.log('Rollback:', row.id),
           },
           {
-            id: 'edit-config',
-            label: 'Edit config',
-            onClick: () => navigate(`/container/deployments/${row.id}/edit`),
-          },
-          {
             id: 'edit-yaml',
             label: 'Edit YAML',
             onClick: () => navigate(`/container/deployments/${row.id}/edit-yaml`),
@@ -349,7 +397,10 @@ export function DeploymentsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -363,12 +414,10 @@ export function DeploymentsPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
+  const handleBulkDeleteConfirm = () => {
+    setData((prev) => prev.filter((row) => !selectedRows.includes(row.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
   };
 
   // Create menu items
@@ -406,55 +455,20 @@ export function DeploymentsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Deployments' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Deployments' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-deployments', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-deployments', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -476,6 +490,7 @@ export function DeploymentsPage() {
         />
       }
       bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -498,10 +513,14 @@ export function DeploymentsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
                 placeholder="Search deployments by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -518,6 +537,7 @@ export function DeploymentsPage() {
                 size="sm"
                 leftIcon={<IconRefresh size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Redeploy:', selectedRows)}
               >
                 Redeploy
               </Button>
@@ -526,6 +546,7 @@ export function DeploymentsPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML:', selectedRows)}
               >
                 Download YAML
               </Button>
@@ -534,18 +555,15 @@ export function DeploymentsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
-          filters={filters.map((filter, index) => ({
-            id: String(index),
-            field: filter.key,
-            value: filter.value,
-          }))}
-          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-          onFiltersClear={handleClearFilters}
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
         />
 
         {/* Pagination */}
@@ -553,22 +571,35 @@ export function DeploymentsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={deploymentsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
         <Table<DeploymentRow>
           columns={columns}
+          loading={loading}
           data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No deployments found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete selected deployments"
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} deployment(s)`}
+      />
     </PageShell>
   );
 }

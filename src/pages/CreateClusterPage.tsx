@@ -1,14 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
-import {
-  IconX,
-  IconCirclePlus,
-  IconInfoCircle,
-  IconHelpCircle,
-  IconEye,
-  IconEyeOff,
-} from '@tabler/icons-react';
+import { IconInfoCircle, IconHelpCircle } from '@tabler/icons-react';
 import {
   Button,
   Breadcrumb,
@@ -30,6 +23,7 @@ import {
   FormField,
   SelectionIndicator,
   Tooltip,
+  Password,
   Tabs,
   TabList,
   Tab,
@@ -66,18 +60,6 @@ interface KeyPairRow {
   fingerprint: string;
 }
 
-interface Label {
-  id: string;
-  key: string;
-  value: string;
-}
-
-interface Annotation {
-  id: string;
-  key: string;
-  value: string;
-}
-
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
@@ -101,20 +83,20 @@ const tenantOptions = [
 ];
 
 const mockExternalNetworks: NetworkRow[] = [
-  { id: 'ext-01', name: 'ext-01', subnetCidr: '10.70.62.120/91 +9' },
-  { id: 'ext-02', name: 'ext-02', subnetCidr: '102.68.8.0.0/4 0 +5' },
-  { id: 'ext-03', name: 'ext-03', subnetCidr: '40.068.43.0/4 1 +5' },
-  { id: 'ext-04', name: 'ext-04', subnetCidr: '102.68.19.0/2 3' },
-  { id: 'ext-05', name: 'ext-05', subnetCidr: '102.70.8.0.0/4 8' },
-  { id: 'ext-06', name: 'ext-06', subnetCidr: '10.17.84.01.1/4 8' },
+  { id: 'ext-01', name: 'ext-01', subnetCidr: '10.244.0.0/16' },
+  { id: 'ext-02', name: 'ext-02', subnetCidr: '10.96.0.0/12' },
+  { id: 'ext-03', name: 'ext-03', subnetCidr: '192.168.0.0/16' },
+  { id: 'ext-04', name: 'ext-04', subnetCidr: '172.16.0.0/12' },
+  { id: 'ext-05', name: 'ext-05', subnetCidr: '10.128.0.0/12' },
+  { id: 'ext-06', name: 'ext-06', subnetCidr: '10.10.0.0/16' },
 ];
 
 const mockTenantNetworks: NetworkRow[] = [
-  { id: 'net-01', name: 'net-01', subnetCidr: '10.70.62.120/91 +9' },
-  { id: 'net-02', name: 'net-02', subnetCidr: '102.68.8.0.0/4 0 +5' },
-  { id: 'net-03', name: 'net-03', subnetCidr: '40.068.43.0/4 1 +5' },
-  { id: 'net-04', name: 'net-04', subnetCidr: '102.68.19.0/2 3' },
-  { id: 'net-05', name: 'net-05', subnetCidr: '102.70.8.0.0/4 8' },
+  { id: 'net-01', name: 'net-01', subnetCidr: '10.20.0.0/16' },
+  { id: 'net-02', name: 'net-02', subnetCidr: '10.30.0.0/16' },
+  { id: 'net-03', name: 'net-03', subnetCidr: '192.168.100.0/24' },
+  { id: 'net-04', name: 'net-04', subnetCidr: '172.20.0.0/16' },
+  { id: 'net-05', name: 'net-05', subnetCidr: '10.50.0.0/24' },
 ];
 
 const subnetOptions = [
@@ -206,62 +188,28 @@ export function CreateClusterPage() {
   const [cpFlavorFilter, setCpFlavorFilter] = useState('vcpu');
 
   // Authentication
+  const [cpAuthMethod, setCpAuthMethod] = useState('keypair');
   const [selectedKeyPair, setSelectedKeyPair] = useState<string>('');
   const [keyPairSearch, setKeyPairSearch] = useState('');
   const [keyPairPage, setKeyPairPage] = useState(1);
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Worker Nodes
   const [nodeImage, setNodeImage] = useState('ubuntu-24.04-tk-base');
   const [nodeFlavor, setNodeFlavor] = useState('th-tiny');
-  const [nodeCount, setNodeCount] = useState(1);
+  const [nodeCount, setNodeCount] = useState(0);
   const [nodeFlavorFilter, setNodeFlavorFilter] = useState('vcpu');
 
   // Worker Nodes Authentication
+  const [workerAuthMethod, setWorkerAuthMethod] = useState('keypair');
   const [workerSelectedKeyPair, setWorkerSelectedKeyPair] = useState<string>('');
   const [workerKeyPairSearch, setWorkerKeyPairSearch] = useState('');
   const [workerKeyPairPage, setWorkerKeyPairPage] = useState(1);
   const [workerLoginName, setWorkerLoginName] = useState('');
   const [workerPassword, setWorkerPassword] = useState('');
   const [workerConfirmPassword, setWorkerConfirmPassword] = useState('');
-  const [workerShowPassword, setWorkerShowPassword] = useState(false);
-  const [workerShowConfirmPassword, setWorkerShowConfirmPassword] = useState(false);
-
-  // Labels & Annotations
-  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ id: '0', key: '', value: '' }] : []);
-  const [annotations, setAnnotations] = useState<Annotation[]>(
-    isV2 ? [{ id: '0', key: '', value: '' }] : []
-  );
-
-  // Label management
-  const addLabel = useCallback(() => {
-    setLabels((prev) => [...prev, { id: Date.now().toString(), key: '', value: '' }]);
-  }, []);
-
-  const removeLabel = useCallback((id: string) => {
-    setLabels((prev) => prev.filter((l) => l.id !== id));
-  }, []);
-
-  const updateLabel = useCallback((id: string, field: 'key' | 'value', value: string) => {
-    setLabels((prev) => prev.map((l) => (l.id === id ? { ...l, [field]: value } : l)));
-  }, []);
-
-  // Annotation management
-  const addAnnotation = useCallback(() => {
-    setAnnotations((prev) => [...prev, { id: Date.now().toString(), key: '', value: '' }]);
-  }, []);
-
-  const removeAnnotation = useCallback((id: string) => {
-    setAnnotations((prev) => prev.filter((a) => a.id !== id));
-  }, []);
-
-  const updateAnnotation = useCallback((id: string, field: 'key' | 'value', value: string) => {
-    setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
-  }, []);
 
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
@@ -494,8 +442,6 @@ export function CreateClusterPage() {
       nodeImage,
       nodeFlavor,
       nodeCount,
-      labels,
-      annotations,
     });
     navigate('/container/cluster-management');
   };
@@ -531,8 +477,8 @@ export function CreateClusterPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -547,7 +493,7 @@ export function CreateClusterPage() {
       contentClassName="pt-4 px-8 pb-20"
     >
       {/* Header */}
-      <VStack gap={2} className="mb-6">
+      <VStack gap={1} className="mb-6">
         <h1 className="text-heading-h4 leading-7 font-semibold text-[var(--color-text-default)]">
           Create cluster
         </h1>
@@ -848,8 +794,6 @@ export function CreateClusterPage() {
                             <TabList>
                               <Tab value="vcpu">vCPU</Tab>
                               <Tab value="gpu">GPU</Tab>
-                              <Tab value="npu">NPU</Tab>
-                              <Tab value="custom">Custom</Tab>
                             </TabList>
                           </Tabs>
                           <SearchInput
@@ -964,24 +908,24 @@ export function CreateClusterPage() {
                       <FormField.Control>
                         <HStack gap={3} align="center">
                           <Slider
-                            min={10}
-                            max={100}
-                            step={5}
+                            min={1}
+                            max={1000}
+                            step={10}
                             value={etcdVolumeSize}
                             onChange={setEtcdVolumeSize}
                           />
                           <NumberInput
                             value={etcdVolumeSize}
                             onChange={setEtcdVolumeSize}
-                            min={10}
-                            max={100}
+                            min={1}
+                            max={1000}
                             step={1}
                             width="xs"
                             suffix="GiB"
                           />
                         </HStack>
                       </FormField.Control>
-                      <FormField.HelperText>10-100 GiB</FormField.HelperText>
+                      <FormField.HelperText>1-1000 GiB</FormField.HelperText>
                     </FormField>
 
                     {/* Authentication */}
@@ -992,115 +936,92 @@ export function CreateClusterPage() {
                         either the Key Pair method or the Password method.
                       </FormField.Description>
                       <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                        <Tabs value="keypair" onChange={() => {}} variant="underline" size="sm">
+                        <Tabs
+                          value={cpAuthMethod}
+                          onChange={setCpAuthMethod}
+                          variant="underline"
+                          size="sm"
+                        >
                           <TabList>
                             <Tab value="keypair">Key Pair</Tab>
                             <Tab value="password">Password</Tab>
                           </TabList>
                         </Tabs>
 
-                        {/* Key Pair section */}
-                        <VStack gap={3} className="pt-4">
-                          <SearchInput
-                            placeholder="Search key pairs by attributes"
-                            value={keyPairSearch}
-                            onChange={(e) => setKeyPairSearch(e.target.value)}
-                            className="w-[var(--search-input-width)]"
-                          />
-                          <Pagination
-                            currentPage={keyPairPage}
-                            totalPages={5}
-                            onPageChange={setKeyPairPage}
-                            totalItems={115}
-                            selectedCount={selectedKeyPair ? 1 : 0}
-                          />
-                          <VStack gap={2}>
-                            <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
-                            <SelectionIndicator
-                              selectedItems={
-                                selectedKeyPair
-                                  ? [
-                                      {
-                                        id: selectedKeyPair,
-                                        label:
-                                          mockKeyPairs.find((kp) => kp.id === selectedKeyPair)
-                                            ?.name || selectedKeyPair,
-                                      },
-                                    ]
-                                  : []
-                              }
-                              emptyText="No item selected"
-                              onRemove={() => setSelectedKeyPair('')}
+                        {cpAuthMethod === 'keypair' && (
+                          <VStack gap={3} className="pt-4">
+                            <SearchInput
+                              placeholder="Search key pairs by attributes"
+                              value={keyPairSearch}
+                              onChange={(e) => setKeyPairSearch(e.target.value)}
+                              className="w-[var(--search-input-width)]"
                             />
+                            <Pagination
+                              currentPage={keyPairPage}
+                              totalPages={5}
+                              onPageChange={setKeyPairPage}
+                              totalItems={115}
+                              selectedCount={selectedKeyPair ? 1 : 0}
+                            />
+                            <VStack gap={2}>
+                              <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
+                              <SelectionIndicator
+                                selectedItems={
+                                  selectedKeyPair
+                                    ? [
+                                        {
+                                          id: selectedKeyPair,
+                                          label:
+                                            mockKeyPairs.find((kp) => kp.id === selectedKeyPair)
+                                              ?.name || selectedKeyPair,
+                                        },
+                                      ]
+                                    : []
+                                }
+                                emptyText="No item selected"
+                                onRemove={() => setSelectedKeyPair('')}
+                              />
+                            </VStack>
                           </VStack>
-                        </VStack>
+                        )}
 
-                        {/* Password section */}
-                        <VStack gap={6} className="pt-6">
-                          <FormField>
-                            <FormField.Label>Login name</FormField.Label>
-                            <FormField.Control>
-                              <Input
-                                placeholder="Enter login name"
-                                value={loginName}
-                                onChange={(e) => setLoginName(e.target.value)}
-                                fullWidth
-                              />
-                            </FormField.Control>
-                          </FormField>
-                          <FormField>
-                            <FormField.Label>Password</FormField.Label>
-                            <FormField.Control>
-                              <Input
-                                type={showPassword ? 'text' : 'password'}
-                                placeholder="Enter password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                fullWidth
-                                rightElement={
-                                  <button
-                                    type="button"
-                                    className="flex items-center"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    tabIndex={-1}
-                                  >
-                                    {showPassword ? (
-                                      <IconEyeOff size={14} />
-                                    ) : (
-                                      <IconEye size={14} />
-                                    )}
-                                  </button>
-                                }
-                              />
-                            </FormField.Control>
-                          </FormField>
-                          <FormField>
-                            <FormField.Label>Confirm password</FormField.Label>
-                            <FormField.Control>
-                              <Input
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                placeholder="Enter password again"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                fullWidth
-                                rightElement={
-                                  <button
-                                    type="button"
-                                    className="flex items-center"
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    tabIndex={-1}
-                                  >
-                                    {showConfirmPassword ? (
-                                      <IconEyeOff size={14} />
-                                    ) : (
-                                      <IconEye size={14} />
-                                    )}
-                                  </button>
-                                }
-                              />
-                            </FormField.Control>
-                          </FormField>
-                        </VStack>
+                        {cpAuthMethod === 'password' && (
+                          <VStack gap={6} className="pt-6">
+                            <FormField>
+                              <FormField.Label>Login name</FormField.Label>
+                              <FormField.Control>
+                                <Input
+                                  placeholder="Enter login name"
+                                  value={loginName}
+                                  onChange={(e) => setLoginName(e.target.value)}
+                                  fullWidth
+                                />
+                              </FormField.Control>
+                            </FormField>
+                            <FormField>
+                              <FormField.Label>Password</FormField.Label>
+                              <FormField.Control>
+                                <Password
+                                  placeholder="Enter password"
+                                  value={password}
+                                  onChange={(e) => setPassword(e.target.value)}
+                                  fullWidth
+                                />
+                              </FormField.Control>
+                            </FormField>
+                            <FormField>
+                              <FormField.Label>Confirm password</FormField.Label>
+                              <FormField.Control>
+                                <Password
+                                  placeholder="Enter password again"
+                                  value={confirmPassword}
+                                  onChange={(e) => setConfirmPassword(e.target.value)}
+                                  fullWidth
+                                />
+                              </FormField.Control>
+                            </FormField>
+                          </VStack>
+                        )}
                       </FormField.Control>
                     </FormField>
 
@@ -1114,8 +1035,8 @@ export function CreateClusterPage() {
                         <HStack gap={3} align="center">
                           <Slider
                             min={1}
-                            max={7}
-                            step={2}
+                            max={10}
+                            step={1}
                             value={cpNodeCount}
                             onChange={setCpNodeCount}
                           />
@@ -1123,13 +1044,13 @@ export function CreateClusterPage() {
                             value={cpNodeCount}
                             onChange={setCpNodeCount}
                             min={1}
-                            max={7}
-                            step={2}
+                            max={10}
+                            step={1}
                             width="xs"
                           />
                         </HStack>
                       </FormField.Control>
-                      <FormField.HelperText>1-7 nodes (odd numbers)</FormField.HelperText>
+                      <FormField.HelperText>1-10 nodes</FormField.HelperText>
                     </FormField>
                   </VStack>
                 </div>
@@ -1176,8 +1097,6 @@ export function CreateClusterPage() {
                         <TabList>
                           <Tab value="vcpu">vCPU</Tab>
                           <Tab value="gpu">GPU</Tab>
-                          <Tab value="npu">NPU</Tab>
-                          <Tab value="custom">Custom</Tab>
                         </TabList>
                       </Tabs>
                       <SearchInput
@@ -1222,117 +1141,92 @@ export function CreateClusterPage() {
                     either the Key Pair method or the Password method.
                   </FormField.Description>
                   <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                    <Tabs value="keypair" onChange={() => {}} variant="underline" size="sm">
+                    <Tabs
+                      value={workerAuthMethod}
+                      onChange={setWorkerAuthMethod}
+                      variant="underline"
+                      size="sm"
+                    >
                       <TabList>
                         <Tab value="keypair">Key Pair</Tab>
                         <Tab value="password">Password</Tab>
                       </TabList>
                     </Tabs>
 
-                    {/* Key Pair section */}
-                    <VStack gap={3} className="pt-4">
-                      <SearchInput
-                        placeholder="Search key pairs by attributes"
-                        value={workerKeyPairSearch}
-                        onChange={(e) => setWorkerKeyPairSearch(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Pagination
-                        currentPage={workerKeyPairPage}
-                        totalPages={5}
-                        onPageChange={setWorkerKeyPairPage}
-                        totalItems={115}
-                        selectedCount={workerSelectedKeyPair ? 1 : 0}
-                      />
-                      <VStack gap={2}>
-                        <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
-                        <SelectionIndicator
-                          selectedItems={
-                            workerSelectedKeyPair
-                              ? [
-                                  {
-                                    id: workerSelectedKeyPair,
-                                    label:
-                                      mockKeyPairs.find((kp) => kp.id === workerSelectedKeyPair)
-                                        ?.name || workerSelectedKeyPair,
-                                  },
-                                ]
-                              : []
-                          }
-                          emptyText="No item selected"
-                          onRemove={() => setWorkerSelectedKeyPair('')}
+                    {workerAuthMethod === 'keypair' && (
+                      <VStack gap={3} className="pt-4">
+                        <SearchInput
+                          placeholder="Search key pairs by attributes"
+                          value={workerKeyPairSearch}
+                          onChange={(e) => setWorkerKeyPairSearch(e.target.value)}
+                          className="w-[var(--search-input-width)]"
                         />
+                        <Pagination
+                          currentPage={workerKeyPairPage}
+                          totalPages={5}
+                          onPageChange={setWorkerKeyPairPage}
+                          totalItems={115}
+                          selectedCount={workerSelectedKeyPair ? 1 : 0}
+                        />
+                        <VStack gap={2}>
+                          <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
+                          <SelectionIndicator
+                            selectedItems={
+                              workerSelectedKeyPair
+                                ? [
+                                    {
+                                      id: workerSelectedKeyPair,
+                                      label:
+                                        mockKeyPairs.find((kp) => kp.id === workerSelectedKeyPair)
+                                          ?.name || workerSelectedKeyPair,
+                                    },
+                                  ]
+                                : []
+                            }
+                            emptyText="No item selected"
+                            onRemove={() => setWorkerSelectedKeyPair('')}
+                          />
+                        </VStack>
                       </VStack>
-                    </VStack>
+                    )}
 
-                    {/* Password section */}
-                    <VStack gap={6} className="pt-6">
-                      <FormField>
-                        <FormField.Label>Login name</FormField.Label>
-                        <FormField.Control>
-                          <Input
-                            placeholder="Enter login name"
-                            value={workerLoginName}
-                            onChange={(e) => setWorkerLoginName(e.target.value)}
-                            fullWidth
-                          />
-                        </FormField.Control>
-                      </FormField>
-                      <FormField>
-                        <FormField.Label>Password</FormField.Label>
-                        <FormField.Control>
-                          <Input
-                            type={workerShowPassword ? 'text' : 'password'}
-                            placeholder="Enter password"
-                            value={workerPassword}
-                            onChange={(e) => setWorkerPassword(e.target.value)}
-                            fullWidth
-                            rightElement={
-                              <button
-                                type="button"
-                                className="flex items-center"
-                                onClick={() => setWorkerShowPassword(!workerShowPassword)}
-                                tabIndex={-1}
-                              >
-                                {workerShowPassword ? (
-                                  <IconEyeOff size={14} />
-                                ) : (
-                                  <IconEye size={14} />
-                                )}
-                              </button>
-                            }
-                          />
-                        </FormField.Control>
-                      </FormField>
-                      <FormField>
-                        <FormField.Label>Confirm password</FormField.Label>
-                        <FormField.Control>
-                          <Input
-                            type={workerShowConfirmPassword ? 'text' : 'password'}
-                            placeholder="Enter password again"
-                            value={workerConfirmPassword}
-                            onChange={(e) => setWorkerConfirmPassword(e.target.value)}
-                            fullWidth
-                            rightElement={
-                              <button
-                                type="button"
-                                className="flex items-center"
-                                onClick={() =>
-                                  setWorkerShowConfirmPassword(!workerShowConfirmPassword)
-                                }
-                                tabIndex={-1}
-                              >
-                                {workerShowConfirmPassword ? (
-                                  <IconEyeOff size={14} />
-                                ) : (
-                                  <IconEye size={14} />
-                                )}
-                              </button>
-                            }
-                          />
-                        </FormField.Control>
-                      </FormField>
-                    </VStack>
+                    {workerAuthMethod === 'password' && (
+                      <VStack gap={6} className="pt-6">
+                        <FormField>
+                          <FormField.Label>Login name</FormField.Label>
+                          <FormField.Control>
+                            <Input
+                              placeholder="Enter login name"
+                              value={workerLoginName}
+                              onChange={(e) => setWorkerLoginName(e.target.value)}
+                              fullWidth
+                            />
+                          </FormField.Control>
+                        </FormField>
+                        <FormField>
+                          <FormField.Label>Password</FormField.Label>
+                          <FormField.Control>
+                            <Password
+                              placeholder="Enter password"
+                              value={workerPassword}
+                              onChange={(e) => setWorkerPassword(e.target.value)}
+                              fullWidth
+                            />
+                          </FormField.Control>
+                        </FormField>
+                        <FormField>
+                          <FormField.Label>Confirm password</FormField.Label>
+                          <FormField.Control>
+                            <Password
+                              placeholder="Enter password again"
+                              value={workerConfirmPassword}
+                              onChange={(e) => setWorkerConfirmPassword(e.target.value)}
+                              fullWidth
+                            />
+                          </FormField.Control>
+                        </FormField>
+                      </VStack>
+                    )}
                   </FormField.Control>
                 </FormField>
 
@@ -1344,165 +1238,19 @@ export function CreateClusterPage() {
                   </FormField.Description>
                   <FormField.Control>
                     <HStack gap={3} align="center">
-                      <Slider min={1} max={10} step={1} value={nodeCount} onChange={setNodeCount} />
+                      <Slider min={0} max={20} step={1} value={nodeCount} onChange={setNodeCount} />
                       <NumberInput
                         value={nodeCount}
                         onChange={setNodeCount}
-                        min={1}
-                        max={10}
+                        min={0}
+                        max={20}
                         step={1}
                         width="xs"
                       />
                     </HStack>
                   </FormField.Control>
-                  <FormField.HelperText>1-10 nodes</FormField.HelperText>
+                  <FormField.HelperText>0-20 nodes</FormField.HelperText>
                 </FormField>
-              </VStack>
-            </SectionCard.Content>
-          </SectionCard>
-
-          {/* Labels & Annotations */}
-          <SectionCard className="pb-4">
-            <SectionCard.Header title="Labels & annotations" />
-            <SectionCard.Content>
-              <VStack gap={6}>
-                {/* Labels */}
-                <VStack gap={3}>
-                  <VStack gap={1.5}>
-                    <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-                    <p className="text-body-md text-[var(--color-text-subtle)]">
-                      Specify the labels used to identify and categorize the resource.
-                    </p>
-                  </VStack>
-
-                  {/* Bordered container for labels */}
-                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={1.5}>
-                      {labels.length > 0 && (
-                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
-                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                            Key
-                          </span>
-                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                            Value
-                          </span>
-                          <div className="w-5" />
-                        </div>
-                      )}
-                      {labels.map((label) => (
-                        <div
-                          key={label.id}
-                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                        >
-                          <Input
-                            placeholder="label key"
-                            value={label.key}
-                            onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
-                            fullWidth
-                          />
-                          <Input
-                            placeholder="label value"
-                            value={label.value}
-                            onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
-                            fullWidth
-                          />
-                          <button
-                            onClick={() => removeLabel(label.id)}
-                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                          >
-                            <IconX
-                              size={16}
-                              className="text-[var(--color-text-muted)]"
-                              stroke={1.5}
-                            />
-                          </button>
-                        </div>
-                      ))}
-
-                      <div className="w-fit">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                          onClick={addLabel}
-                        >
-                          Add label
-                        </Button>
-                      </div>
-                    </VStack>
-                  </div>
-                </VStack>
-
-                {/* Annotations */}
-                <VStack gap={3}>
-                  <VStack gap={1.5}>
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Annotations
-                    </span>
-                    <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                      Specify the annotations used to provide additional metadata for the resource.
-                    </p>
-                  </VStack>
-
-                  {/* Bordered container for annotations */}
-                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={1.5}>
-                      {annotations.length > 0 && (
-                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
-                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                            Key
-                          </span>
-                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                            Value
-                          </span>
-                          <div className="w-5" />
-                        </div>
-                      )}
-                      {annotations.map((annotation) => (
-                        <div
-                          key={annotation.id}
-                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                        >
-                          <Input
-                            placeholder="annotation key"
-                            value={annotation.key}
-                            onChange={(e) => updateAnnotation(annotation.id, 'key', e.target.value)}
-                            fullWidth
-                          />
-                          <Input
-                            placeholder="annotation value"
-                            value={annotation.value}
-                            onChange={(e) =>
-                              updateAnnotation(annotation.id, 'value', e.target.value)
-                            }
-                            fullWidth
-                          />
-                          <button
-                            onClick={() => removeAnnotation(annotation.id)}
-                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                          >
-                            <IconX
-                              size={16}
-                              className="text-[var(--color-text-muted)]"
-                              stroke={1.5}
-                            />
-                          </button>
-                        </div>
-                      ))}
-
-                      <div className="w-fit">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                          onClick={addAnnotation}
-                        >
-                          Add annotation
-                        </Button>
-                      </div>
-                    </VStack>
-                  </div>
-                </VStack>
               </VStack>
             </SectionCard.Content>
           </SectionCard>
@@ -1510,14 +1258,13 @@ export function CreateClusterPage() {
 
         {/* Right Column - Summary (Floating Card Style) */}
         <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
             {/* Summary Content Area */}
             <WizardSummary
               items={[
                 { key: 'basic-info', label: 'Basic information', status: 'active' },
                 { key: 'networking', label: 'Networking', status: 'active' },
                 { key: 'node-config', label: 'Node configuration', status: 'done' },
-                { key: 'labels', label: 'Labels & annotations', status: 'done' },
               ]}
             />
 

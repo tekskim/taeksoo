@@ -19,20 +19,14 @@ import {
   Tooltip,
   PageShell,
   CopyButton,
+  ErrorState,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconChevronDown,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -60,7 +54,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'app-config',
     status: 'OK',
     namespace: 'default',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
     labels: {},
     annotations: {},
     data: {
@@ -77,7 +71,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'nginx-config',
     status: 'True',
     namespace: 'nginx-ingress',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
     labels: {
       app: 'nginx',
     },
@@ -94,7 +88,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'kube-root-ca.crt',
     status: 'Raw',
     namespace: 'kube-system',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
     labels: {},
     annotations: {},
     data: {
@@ -107,7 +101,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'coredns',
     status: 'None',
     namespace: 'kube-system',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
     labels: {
       'k8s-app': 'kube-dns',
     },
@@ -125,7 +119,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'prometheus-config',
     status: 'OK',
     namespace: 'monitoring',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
     labels: {
       app: 'prometheus',
     },
@@ -170,17 +164,7 @@ export function ConfigMapDetailPage() {
   // Shell Panel state
   const shellPanel = useShellPanel();
 
-  // Load ConfigMap data
-  const [configMapData, setConfigMapData] = useState<ConfigMapData | null>(null);
-
-  useEffect(() => {
-    if (configMapId && mockConfigMapData[configMapId]) {
-      setConfigMapData(mockConfigMapData[configMapId]);
-    } else {
-      // Default to first configmap if not found
-      setConfigMapData(mockConfigMapData['1']);
-    }
-  }, [configMapId]);
+  const configMapData = configMapId ? mockConfigMapData[configMapId] : undefined;
 
   // Update tab label to match the ConfigMap name (most recent breadcrumb)
   useEffect(() => {
@@ -204,18 +188,78 @@ export function ConfigMapDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
+  if (!configMapData) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'ConfigMaps', href: '/container/configmaps' },
+                  { label: configMapId ?? 'ConfigMap' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="ConfigMap not found"
+          description={`The config map "${configMapId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/configmaps')}>
+              Back to Config Maps
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/configmaps/${configMapId}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () =>
-        navigate(`/container/configmaps/${configMapData?.name ?? configMapId}/edit-yaml`),
+      onClick: () => navigate(`/container/configmaps/${configMapData.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -229,10 +273,6 @@ export function ConfigMapDetailPage() {
       onClick: () => console.log('Delete'),
     },
   ];
-
-  if (!configMapData) {
-    return <div>Loading...</div>;
-  }
 
   // Format labels
   const labelsCount = Object.keys(configMapData.labels).length;
@@ -264,70 +304,31 @@ export function ConfigMapDetailPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'ConfigMaps', href: '/container/configmaps' },
                 { label: configMapData.name },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-cm', `Kubectl: ${configMapData.name}`);
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
         <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
           tabs={shellPanel.tabs}
           activeTabId={shellPanel.activeTabId}
-          isExpanded={shellPanel.isExpanded}
-          onTabChange={shellPanel.setActiveTabId}
-          onTabClose={shellPanel.closeTab}
-          onToggleExpand={() => shellPanel.setIsExpanded(!shellPanel.isExpanded)}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
           onOpenInNewTab={handleOpenInNewTab}
-          sidebarOpen={sidebarOpen}
           sidebarWidth={sidebarWidth}
         />
       }

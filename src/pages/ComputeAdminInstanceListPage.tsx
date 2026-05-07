@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useLayoutEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   Button,
   FilterSearchInput,
@@ -9,7 +10,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -26,6 +26,11 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Tooltip,
+  Modal,
+  ConfirmModal,
+  InfoBox,
+  InlineMessage,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -36,11 +41,11 @@ import {
   IconPlayerStop,
   IconTrash,
   IconArrowUp,
-  IconBell,
   IconDownload,
   IconLock,
   IconTerminal2,
   IconPower,
+  IconExclamationCircle,
 } from '@tabler/icons-react';
 import containerIcon from '@/assets/appIcon/container.png';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -49,15 +54,16 @@ import {
   type InstanceInfo,
 } from '@/components/CreateInstanceSnapshotDrawer';
 import {
-  LockSettingDrawer,
+  LockInstanceDrawer,
   type InstanceInfo as LockInstanceInfo,
-} from '@/components/LockSettingDrawer';
+} from '@/components/LockInstanceDrawer';
 import {
   EditInstanceDrawer,
   type InstanceInfo as EditInstanceInfo,
 } from '@/components/EditInstanceDrawer';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -77,26 +83,34 @@ interface Instance {
   floatingIp: string;
   image: string;
   flavor: string;
+  flavorId: string;
   vcpu: number;
   ram: string;
   disk: string;
   gpu: string;
   az: string;
   description?: string;
+  hasContainer?: boolean;
 }
 
 interface BareMetalInstance {
   id: string;
   name: string;
   status: InstanceStatus;
+  locked: boolean;
+  tenant: string;
+  tenantId: string;
+  host: string;
   ip: string;
-  image: string;
+  os: string;
   flavor: string;
+  flavorId: string;
   cpu: number;
   ram: string;
   disk: string;
   gpu: string;
   az: string;
+  hasContainer?: boolean;
 }
 
 /* ----------------------------------------
@@ -116,11 +130,13 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.50',
     image: 'CentOS 7',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
     gpu: '1',
     az: 'keystone',
+    hasContainer: true,
   },
   {
     id: 'vm-002',
@@ -134,11 +150,13 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.51',
     image: 'CentOS 7',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
     gpu: '1',
     az: 'keystone',
+    hasContainer: true,
   },
   {
     id: 'vm-003',
@@ -152,11 +170,13 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.10',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '16GB',
     disk: '200GB',
     gpu: '-',
     az: 'nova',
+    hasContainer: true,
   },
   {
     id: 'vm-004',
@@ -170,6 +190,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'CentOS 8',
     flavor: 'XLarge',
+    flavorId: 'flavor-xlarge-001',
     vcpu: 16,
     ram: '64GB',
     disk: '500GB',
@@ -188,6 +209,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.60',
     image: 'Ubuntu 22.04',
     flavor: 'GPU Large',
+    flavorId: 'flavor-gpu-large-001',
     vcpu: 32,
     ram: '128GB',
     disk: '1TB',
@@ -206,6 +228,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.61',
     image: 'Ubuntu 22.04',
     flavor: 'GPU Large',
+    flavorId: 'flavor-gpu-large-001',
     vcpu: 32,
     ram: '128GB',
     disk: '1TB',
@@ -224,6 +247,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Rocky Linux 9',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -242,6 +266,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Rocky Linux 9',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -260,6 +285,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'XLarge',
+    flavorId: 'flavor-xlarge-001',
     vcpu: 16,
     ram: '32GB',
     disk: '500GB',
@@ -278,6 +304,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.90',
     image: 'Debian 12',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '16GB',
     disk: '100GB',
@@ -296,11 +323,13 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.100',
     image: 'Ubuntu 22.04',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
     gpu: '-',
     az: 'nova',
+    hasContainer: true,
   },
   {
     id: 'vm-012',
@@ -314,6 +343,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.101',
     image: 'Ubuntu 22.04',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
@@ -332,6 +362,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'CentOS 8',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '32GB',
     disk: '500GB',
@@ -350,6 +381,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'XLarge',
+    flavorId: 'flavor-xlarge-001',
     vcpu: 16,
     ram: '64GB',
     disk: '2TB',
@@ -368,6 +400,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.130',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '16GB',
     disk: '200GB',
@@ -386,6 +419,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
@@ -404,6 +438,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
@@ -422,6 +457,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.140',
     image: 'CentOS 8',
     flavor: 'XLarge',
+    flavorId: 'flavor-xlarge-001',
     vcpu: 16,
     ram: '32GB',
     disk: '1TB',
@@ -440,6 +476,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Rocky Linux 9',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '16GB',
     disk: '500GB',
@@ -458,6 +495,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '16GB',
     disk: '50GB',
@@ -476,6 +514,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '16GB',
     disk: '50GB',
@@ -494,6 +533,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '16GB',
     disk: '50GB',
@@ -512,6 +552,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '32GB',
     disk: '500GB',
@@ -530,6 +571,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '32GB',
     disk: '500GB',
@@ -548,6 +590,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '32GB',
     disk: '500GB',
@@ -566,11 +609,13 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.180',
     image: 'Ubuntu 22.04',
     flavor: 'GPU XLarge',
+    flavorId: 'flavor-gpu-xlarge-001',
     vcpu: 64,
     ram: '256GB',
     disk: '2TB',
     gpu: '8',
     az: 'nova',
+    hasContainer: true,
   },
   {
     id: 'vm-027',
@@ -584,6 +629,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.181',
     image: 'Ubuntu 22.04',
     flavor: 'GPU Large',
+    flavorId: 'flavor-gpu-large-001',
     vcpu: 32,
     ram: '128GB',
     disk: '1TB',
@@ -602,6 +648,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.190',
     image: 'Rocky Linux 9',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -620,6 +667,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.200',
     image: 'CentOS 8',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -638,6 +686,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -651,22 +700,33 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-001',
     name: 'web-server-1',
     status: 'running',
+    locked: false,
+    tenant: 'Tenant A',
+    tenantId: 'tenant-001',
+    host: 'bm-host-01',
     ip: '10.62.0.30',
-    image: 'BM image',
+    os: 'CentOS 7',
     flavor: 'BM flavor',
+    flavorId: 'flavor-bm-flavor-001',
     cpu: 8,
     ram: '16GiB',
     disk: '10GiB',
     gpu: '-',
     az: 'zone-a',
+    hasContainer: true,
   },
   {
     id: 'bm-002',
     name: 'web-server-2',
     status: 'running',
+    locked: false,
+    tenant: 'Tenant A',
+    tenantId: 'tenant-001',
+    host: 'bm-host-01',
     ip: '10.62.0.31',
-    image: 'BM image',
+    os: 'CentOS 7',
     flavor: 'BM flavor',
+    flavorId: 'flavor-bm-flavor-001',
     cpu: 8,
     ram: '16GiB',
     disk: '10GiB',
@@ -677,9 +737,14 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-003',
     name: 'db-server-1',
     status: 'running',
+    locked: true,
+    tenant: 'Tenant B',
+    tenantId: 'tenant-002',
+    host: 'bm-host-02',
     ip: '10.62.0.40',
-    image: 'BM image',
+    os: 'Ubuntu 22.04',
     flavor: 'BM large',
+    flavorId: 'flavor-bm-large-001',
     cpu: 16,
     ram: '64GiB',
     disk: '500GiB',
@@ -690,9 +755,14 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-004',
     name: 'db-server-2',
     status: 'stopped',
+    locked: true,
+    tenant: 'Tenant B',
+    tenantId: 'tenant-002',
+    host: 'bm-host-02',
     ip: '10.62.0.41',
-    image: 'BM image',
+    os: 'Ubuntu 22.04',
     flavor: 'BM large',
+    flavorId: 'flavor-bm-large-001',
     cpu: 16,
     ram: '64GiB',
     disk: '500GiB',
@@ -703,35 +773,52 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-005',
     name: 'gpu-node-1',
     status: 'running',
+    locked: false,
+    tenant: 'Tenant C',
+    tenantId: 'tenant-003',
+    host: 'bm-host-03',
     ip: '10.62.0.50',
-    image: 'BM GPU',
+    os: 'Ubuntu 22.04',
     flavor: 'BM GPU',
+    flavorId: 'flavor-bm-gpu-001',
     cpu: 32,
     ram: '128GiB',
     disk: '1TiB',
     gpu: 'A100 x4',
     az: 'zone-c',
+    hasContainer: true,
   },
   {
     id: 'bm-006',
     name: 'gpu-node-2',
     status: 'running',
+    locked: false,
+    tenant: 'Tenant C',
+    tenantId: 'tenant-003',
+    host: 'bm-host-03',
     ip: '10.62.0.51',
-    image: 'BM GPU',
+    os: 'Ubuntu 22.04',
     flavor: 'BM GPU',
+    flavorId: 'flavor-bm-gpu-001',
     cpu: 32,
     ram: '128GiB',
     disk: '1TiB',
     gpu: 'A100 x4',
     az: 'zone-c',
+    hasContainer: true,
   },
   {
     id: 'bm-007',
     name: 'compute-1',
     status: 'pending',
+    locked: false,
+    tenant: 'Tenant A',
+    tenantId: 'tenant-001',
+    host: 'bm-host-04',
     ip: '—',
-    image: 'BM image',
+    os: 'Rocky Linux 9',
     flavor: 'BM xlarge',
+    flavorId: 'flavor-bm-xlarge-001',
     cpu: 64,
     ram: '256GiB',
     disk: '2TiB',
@@ -742,9 +829,14 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-008',
     name: 'compute-2',
     status: 'building',
+    locked: false,
+    tenant: 'Tenant A',
+    tenantId: 'tenant-001',
+    host: 'bm-host-04',
     ip: '—',
-    image: 'BM image',
+    os: 'Rocky Linux 9',
     flavor: 'BM xlarge',
+    flavorId: 'flavor-bm-xlarge-001',
     cpu: 64,
     ram: '256GiB',
     disk: '2TiB',
@@ -755,9 +847,14 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-009',
     name: 'storage-node-1',
     status: 'running',
+    locked: true,
+    tenant: 'Tenant B',
+    tenantId: 'tenant-002',
+    host: 'bm-host-05',
     ip: '10.62.0.60',
-    image: 'BM storage',
+    os: 'CentOS 7',
     flavor: 'BM storage',
+    flavorId: 'flavor-bm-storage-001',
     cpu: 8,
     ram: '32GiB',
     disk: '10TiB',
@@ -768,9 +865,14 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-010',
     name: 'storage-node-2',
     status: 'error',
+    locked: true,
+    tenant: 'Tenant B',
+    tenantId: 'tenant-002',
+    host: 'bm-host-05',
     ip: '10.62.0.61',
-    image: 'BM storage',
+    os: 'CentOS 7',
     flavor: 'BM storage',
+    flavorId: 'flavor-bm-storage-001',
     cpu: 8,
     ram: '32GiB',
     disk: '10TiB',
@@ -812,6 +914,8 @@ const filterFields: FilterField[] = [
       { value: 'stopped', label: 'Stopped' },
       { value: 'error', label: 'Error' },
       { value: 'building', label: 'Building' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'verify_resize', label: 'Verify Resize' },
     ],
   },
   {
@@ -848,6 +952,139 @@ const filterFields: FilterField[] = [
     placeholder: 'Enter flavor...',
   },
 ];
+
+type InstanceLike = { id: string; name: string; status: InstanceStatus; locked: boolean };
+
+function partitionBulkInstances(
+  kind: 'start' | 'stop' | 'reboot' | 'delete',
+  items: InstanceLike[]
+) {
+  const can: InstanceLike[] = [];
+  const cannot: InstanceLike[] = [];
+  for (const item of items) {
+    let eligible = false;
+    if (kind === 'start') {
+      eligible = item.status === 'stopped' || item.status === 'error';
+    } else if (kind === 'stop' || kind === 'reboot') {
+      eligible = item.status === 'running';
+    } else {
+      eligible = !item.locked && item.status !== 'building';
+    }
+    (eligible ? can : cannot).push(item);
+  }
+  return { can, cannot };
+}
+
+type SingleInstanceModalType =
+  | 'stop'
+  | 'reboot'
+  | 'softReboot'
+  | 'shelve'
+  | 'unrescue'
+  | 'confirmResize'
+  | 'revertResize'
+  | 'delete';
+
+type BulkInstanceModalType = 'start' | 'stop' | 'reboot' | 'delete';
+
+const SINGLE_INSTANCE_MODAL_COPY: Record<
+  SingleInstanceModalType,
+  { title: string; warning: string; confirmText: string; confirmVariant: 'primary' | 'danger' }
+> = {
+  stop: {
+    title: 'Stop Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Stop',
+    confirmVariant: 'danger',
+  },
+  reboot: {
+    title: 'Reboot Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Reboot',
+    confirmVariant: 'danger',
+  },
+  softReboot: {
+    title: 'Soft Reboot Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Soft Reboot',
+    confirmVariant: 'primary',
+  },
+  shelve: {
+    title: 'Shelve Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Shelve',
+    confirmVariant: 'primary',
+  },
+  unrescue: {
+    title: 'Unrescue Instance',
+    warning: 'Unrescuing this instance will restart it and may interrupt services running on it.',
+    confirmText: 'Unrescue',
+    confirmVariant: 'primary',
+  },
+  confirmResize: {
+    title: 'Confirm Resize',
+    warning: 'Confirming the resize may affect the services running on the instance.',
+    confirmText: 'Confirm',
+    confirmVariant: 'primary',
+  },
+  revertResize: {
+    title: 'Revert Resize',
+    warning: 'Reverting the resize may affect the services running on the instance.',
+    confirmText: 'Revert',
+    confirmVariant: 'primary',
+  },
+  delete: {
+    title: 'Delete Instance',
+    warning: 'Deleting this instance may interrupt the services running on it.',
+    confirmText: 'Delete',
+    confirmVariant: 'danger',
+  },
+};
+
+const BULK_INSTANCE_MODAL_COPY: Record<
+  BulkInstanceModalType,
+  {
+    title: string;
+    canLabel: string;
+    cannotLabel: string;
+    warning: string;
+    confirmText: string;
+    confirmVariant: 'primary' | 'danger';
+  }
+> = {
+  start: {
+    title: 'Start Instances',
+    canLabel: 'Instances that can be delete',
+    cannotLabel: 'Instances that cannot be delete',
+    warning: 'Starting these instances may affect the services running on them.',
+    confirmText: 'Start',
+    confirmVariant: 'primary',
+  },
+  stop: {
+    title: 'Stop Instances',
+    canLabel: 'Instances that can be stop',
+    cannotLabel: 'Instances that cannot be stop',
+    warning: 'Stopping these instances may interrupt the services running on them.',
+    confirmText: 'Stop',
+    confirmVariant: 'danger',
+  },
+  reboot: {
+    title: 'Reboot Instances',
+    canLabel: 'Instances that can be reboot',
+    cannotLabel: 'Instances that cannot be reboot',
+    warning: 'Rebooting these instances may interrupt the services running on them.',
+    confirmText: 'Reboot',
+    confirmVariant: 'danger',
+  },
+  delete: {
+    title: 'Delete Instances',
+    canLabel: 'Instances that can be delete',
+    cannotLabel: 'Instances that cannot be delete',
+    warning: 'Deleting these instances may interrupt the services running on them.',
+    confirmText: 'Delete',
+    confirmVariant: 'danger',
+  },
+};
 
 export function ComputeAdminInstanceListPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
@@ -904,6 +1141,21 @@ export function ComputeAdminInstanceListPage() {
   // Table selection state
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
   const [selectedBareMetalInstances, setSelectedBareMetalInstances] = useState<string[]>([]);
+
+  const [singleInstanceModal, setSingleInstanceModal] = useState<SingleInstanceModalType | null>(
+    null
+  );
+  const [targetInstanceName, setTargetInstanceName] = useState('');
+  const [bulkInstanceModal, setBulkInstanceModal] = useState<BulkInstanceModalType | null>(null);
+  const [bulkCanRows, setBulkCanRows] = useState<InstanceLike[]>([]);
+  const [bulkCannotRows, setBulkCannotRows] = useState<InstanceLike[]>([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Shell Panel state (using hook for multi-tab support)
   const shellPanel = useShellPanel();
@@ -1076,6 +1328,42 @@ export function ComputeAdminInstanceListPage() {
     setIsEditDrawerOpen(true);
   };
 
+  const openSingleInstanceModal = (type: SingleInstanceModalType, name: string) => {
+    setTargetInstanceName(name);
+    setSingleInstanceModal(type);
+  };
+
+  const closeSingleInstanceModal = () => {
+    setSingleInstanceModal(null);
+    setTargetInstanceName('');
+  };
+
+  const openBulkInstanceModal = (kind: BulkInstanceModalType) => {
+    const rows: InstanceLike[] =
+      activeTab === 'vm'
+        ? mockInstances.filter((i) => selectedInstances.includes(i.id))
+        : mockBareMetalInstances.filter((i) => selectedBareMetalInstances.includes(i.id));
+    const { can, cannot } = partitionBulkInstances(kind, rows);
+    setBulkCanRows(can);
+    setBulkCannotRows(cannot);
+    setBulkInstanceModal(kind);
+  };
+
+  const closeBulkInstanceModal = () => {
+    setBulkInstanceModal(null);
+    setBulkCanRows([]);
+    setBulkCannotRows([]);
+  };
+
+  const handleBulkInstanceConfirm = () => {
+    if (activeTab === 'vm') {
+      setSelectedInstances([]);
+    } else {
+      setSelectedBareMetalInstances([]);
+    }
+    closeBulkInstanceModal();
+  };
+
   // Context menu items for instances
   const getInstanceContextMenuItems = (instance: Instance): ContextMenuItem[] => [
     {
@@ -1083,17 +1371,39 @@ export function ComputeAdminInstanceListPage() {
       label: 'Instance status',
       submenu: [
         { id: 'start', label: 'Start' },
-        { id: 'stop', label: 'Stop', status: 'danger' },
-        { id: 'reboot', label: 'Reboot', status: 'danger' },
-        { id: 'soft-reboot', label: 'Soft reboot' },
+        {
+          id: 'stop',
+          label: 'Stop',
+          status: 'danger',
+          onClick: () => openSingleInstanceModal('stop', instance.name),
+        },
+        {
+          id: 'reboot',
+          label: 'Reboot',
+          status: 'danger',
+          onClick: () => openSingleInstanceModal('reboot', instance.name),
+        },
+        {
+          id: 'soft-reboot',
+          label: 'Soft reboot',
+          onClick: () => openSingleInstanceModal('softReboot', instance.name),
+        },
         { id: 'pause', label: 'Pause' },
         { id: 'suspend', label: 'Suspend' },
-        { id: 'shelve', label: 'Shelve' },
+        {
+          id: 'shelve',
+          label: 'Shelve',
+          onClick: () => openSingleInstanceModal('shelve', instance.name),
+        },
         { id: 'unpause', label: 'Unpause' },
         { id: 'resume', label: 'Resume' },
         { id: 'unshelve', label: 'Unshelve' },
         { id: 'rescue', label: 'Rescue' },
-        { id: 'unrescue', label: 'Unrescue' },
+        {
+          id: 'unrescue',
+          label: 'Unrescue',
+          onClick: () => openSingleInstanceModal('unrescue', instance.name),
+        },
       ],
     },
     {
@@ -1114,9 +1424,59 @@ export function ComputeAdminInstanceListPage() {
     },
     { id: 'migrate', label: 'Migrate' },
     { id: 'live-migrate', label: 'Live migrate' },
-    { id: 'confirm-resize', label: 'Confirm resize' },
-    { id: 'revert-resize', label: 'Revert resize' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+    {
+      id: 'confirm-resize',
+      label: 'Confirm resize',
+      onClick: () => openSingleInstanceModal('confirmResize', instance.name),
+    },
+    {
+      id: 'revert-resize',
+      label: 'Revert resize',
+      onClick: () => openSingleInstanceModal('revertResize', instance.name),
+    },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => openSingleInstanceModal('delete', instance.name),
+    },
+  ];
+
+  const getBareMetalContextMenuItems = (instance: BareMetalInstance): ContextMenuItem[] => [
+    {
+      id: 'instance-status',
+      label: 'Instance status',
+      submenu: [
+        { id: 'start-sub', label: 'Start' },
+        {
+          id: 'stop-sub',
+          label: 'Stop',
+          status: 'danger',
+          onClick: () => openSingleInstanceModal('stop', instance.name),
+        },
+        {
+          id: 'reboot-sub',
+          label: 'Reboot',
+          status: 'danger',
+          onClick: () => openSingleInstanceModal('reboot', instance.name),
+        },
+      ],
+    },
+    {
+      id: 'configuration',
+      label: 'Configuration',
+      submenu: [
+        { id: 'lock-setting', label: 'Lock setting' },
+        { id: 'manage-tags', label: 'Manage tags' },
+        { id: 'edit', label: 'Edit' },
+      ],
+    },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => openSingleInstanceModal('delete', instance.name),
+    },
   ];
 
   // Table columns definition
@@ -1137,21 +1497,36 @@ export function ComputeAdminInstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex items-center gap-2 min-w-0">
-          <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-            <img src={containerIcon} alt="Container" className="w-4 h-4" />
-          </div>
           <div className="flex flex-col gap-0.5 min-w-0">
-            <Link
-              to={`/compute-admin/instances/${row.id}`}
-              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-              ID : {row.id}
+            <span className="flex items-center gap-1 min-w-0">
+              <Link
+                to={`/compute-admin/instances/${row.id}`}
+                className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {row.name}
+              </Link>
+              {row.status === 'error' && (
+                <Tooltip content="The instance is in an error state. Detailed information is available on the instance detail page.">
+                  <IconExclamationCircle
+                    size={12}
+                    className="text-[var(--color-state-danger)] shrink-0"
+                  />
+                </Tooltip>
+              )}
+            </span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
             </span>
           </div>
+          {row.hasContainer && (
+            <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] ml-auto">
+              <img src={containerIcon} alt="Container" className="w-4 h-4" />
+            </div>
+          )}
         </div>
       ),
     },
@@ -1181,7 +1556,12 @@ export function ComputeAdminInstanceListPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -1227,14 +1607,17 @@ export function ComputeAdminInstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/flavors/${row.id}`}
+            to={`/compute-admin/flavors/${row.flavorId}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.flavor}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.flavorId}>
+              ID : {row.flavorId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.flavorId} />
           </span>
         </div>
       ),
@@ -1286,7 +1669,14 @@ export function ComputeAdminInstanceListPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => {
               e.stopPropagation();
-              shellPanel.openConsole(row.id, row.name);
+              const consolePath = `/compute-admin/console/${row.id}?name=${encodeURIComponent(row.name)}`;
+              addTab({
+                id: `console-${row.id}`,
+                label: row.name,
+                path: consolePath,
+                closable: true,
+              });
+              navigate(consolePath);
             }}
             title="Open console"
           >
@@ -1294,7 +1684,10 @@ export function ComputeAdminInstanceListPage() {
           </button>
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -1336,44 +1729,92 @@ export function ComputeAdminInstanceListPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute-admin/bare-metal/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="flex items-center gap-1 min-w-0">
+              <Link
+                to={`/compute-admin/bare-metal/${row.id}`}
+                className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {row.name}
+              </Link>
+              {row.status === 'error' && (
+                <Tooltip content="The instance is in an error state. Detailed information is available on the instance detail page.">
+                  <IconExclamationCircle
+                    size={12}
+                    className="text-[var(--color-state-danger)] shrink-0"
+                  />
+                </Tooltip>
+              )}
+            </span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
+          </div>
+          {row.hasContainer && (
+            <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] ml-auto">
+              <img src={containerIcon} alt="Container" className="w-4 h-4" />
+            </div>
+          )}
         </div>
       ),
     },
     {
-      key: 'ip',
-      label: 'Fixed IP',
-      flex: 1,
-      minWidth: columnMinWidths.fixedIp,
+      key: 'locked',
+      label: 'Locked',
+      width: fixedColumns.locked,
+      align: 'center',
       sortable: false,
+      render: (_, row) =>
+        row.locked ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        ) : null,
     },
     {
-      key: 'image',
-      label: 'Image',
+      key: 'tenant',
+      label: 'Tenant',
       flex: 1,
-      minWidth: columnMinWidths.image,
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/images/${row.id}`}
+            to={`/compute-admin/tenants/${row.tenantId}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {row.image}
+            {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
           </span>
         </div>
+      ),
+    },
+    {
+      key: 'host',
+      label: 'Host',
+      flex: 1,
+      minWidth: columnMinWidths.hostname,
+      sortable: true,
+    },
+    {
+      key: 'os',
+      label: 'OS',
+      flex: 1,
+      minWidth: columnMinWidths.image,
+      sortable: true,
+      render: (_, row) => (
+        <span className="truncate block w-full" title={row.os}>
+          {row.os}
+        </span>
       ),
     },
     {
@@ -1385,14 +1826,17 @@ export function ComputeAdminInstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/flavors/${row.id}`}
+            to={`/compute-admin/flavors/${row.flavorId}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.flavor}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.flavorId}>
+              ID : {row.flavorId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.flavorId} />
           </span>
         </div>
       ),
@@ -1444,19 +1888,34 @@ export function ComputeAdminInstanceListPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => {
               e.stopPropagation();
-              shellPanel.openConsole(row.id, row.name);
+              const consolePath = `/compute-admin/console/${row.id}?name=${encodeURIComponent(row.name)}`;
+              addTab({
+                id: `console-${row.id}`,
+                label: row.name,
+                path: consolePath,
+                closable: true,
+              });
+              navigate(consolePath);
             }}
             title="Open console"
           >
             <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-            <IconDotsCircleHorizontal
-              size={16}
-              stroke={1.5}
-              className="text-[var(--action-icon-color)]"
-            />
-          </button>
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={getBareMetalContextMenuItems(row)} trigger="click" align="right">
+              <button
+                type="button"
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
+              </button>
+            </ContextMenu>
+          </div>
         </HStack>
       ),
     },
@@ -1483,23 +1942,9 @@ export function ComputeAdminInstanceListPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Instances list' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Instances' }]} />}
         />
       }
       bottomPanel={
@@ -1565,6 +2010,7 @@ export function ComputeAdminInstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => openBulkInstanceModal('start')}
               >
                 Start
               </Button>
@@ -1577,6 +2023,7 @@ export function ComputeAdminInstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => openBulkInstanceModal('stop')}
               >
                 Stop
               </Button>
@@ -1589,6 +2036,7 @@ export function ComputeAdminInstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => openBulkInstanceModal('reboot')}
               >
                 Reboot
               </Button>
@@ -1601,6 +2049,7 @@ export function ComputeAdminInstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => openBulkInstanceModal('delete')}
               >
                 Delete
               </Button>
@@ -1645,6 +2094,7 @@ export function ComputeAdminInstanceListPage() {
             selectable
             selectedKeys={selectedInstances}
             onSelectionChange={setSelectedInstances}
+            loading={loading}
           />
         )}
 
@@ -1658,6 +2108,7 @@ export function ComputeAdminInstanceListPage() {
             selectable
             selectedKeys={selectedBareMetalInstances}
             onSelectionChange={setSelectedBareMetalInstances}
+            loading={loading}
           />
         )}
       </VStack>
@@ -1666,7 +2117,7 @@ export function ComputeAdminInstanceListPage() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
+          className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-[var(--color-text-on-primary)] rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
           <IconArrowUp size={20} stroke={1.5} />
@@ -1706,7 +2157,7 @@ export function ComputeAdminInstanceListPage() {
       />
 
       {/* Lock setting Drawer */}
-      <LockSettingDrawer
+      <LockInstanceDrawer
         isOpen={isLockDrawerOpen}
         onClose={() => {
           setIsLockDrawerOpen(false);
@@ -1744,6 +2195,108 @@ export function ComputeAdminInstanceListPage() {
           // TODO: Implement actual edit API call
         }}
       />
+
+      {singleInstanceModal &&
+        (SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].confirmVariant === 'danger' ? (
+          <ConfirmModal
+            isOpen
+            onClose={closeSingleInstanceModal}
+            onConfirm={closeSingleInstanceModal}
+            title={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].title}
+            description={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].warning}
+            infoLabel="Instance"
+            infoValue={targetInstanceName}
+            confirmText={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].confirmText}
+            cancelText="Cancel"
+            confirmVariant="danger"
+          />
+        ) : (
+          <Modal
+            isOpen
+            onClose={closeSingleInstanceModal}
+            title={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].title}
+            size="sm"
+          >
+            <InfoBox label="Instance" value={targetInstanceName} />
+            <InlineMessage variant="error">
+              {SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].warning}
+            </InlineMessage>
+            <div className="flex gap-2 w-full">
+              <Button variant="secondary" onClick={closeSingleInstanceModal} className="flex-1">
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={closeSingleInstanceModal} className="flex-1">
+                {SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].confirmText}
+              </Button>
+            </div>
+          </Modal>
+        ))}
+
+      {bulkInstanceModal && (
+        <Modal
+          isOpen
+          onClose={closeBulkInstanceModal}
+          title={BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].title}
+          size="sm"
+        >
+          <OverlayScrollbarsComponent
+            options={{
+              overflow: { x: 'hidden', y: 'scroll' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            defer={false}
+            className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px]"
+          >
+            <p className="text-label-sm text-[var(--color-text-subtle)]">
+              {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].canLabel}
+            </p>
+            <ul className="list-disc pl-[18px] mt-1.5">
+              {bulkCanRows.map((row) => (
+                <li key={row.id} className="text-body-md text-[var(--color-text-default)]">
+                  {row.name}
+                </li>
+              ))}
+            </ul>
+          </OverlayScrollbarsComponent>
+          {bulkCannotRows.length > 0 && (
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'hidden', y: 'scroll' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px]"
+            >
+              <p className="text-label-sm text-[var(--color-text-subtle)]">
+                {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].cannotLabel}
+              </p>
+              <ul className="list-disc pl-[18px] mt-1.5">
+                {bulkCannotRows.map((row) => (
+                  <li key={row.id} className="text-body-md text-[var(--color-text-default)]">
+                    {row.name}
+                  </li>
+                ))}
+              </ul>
+            </OverlayScrollbarsComponent>
+          )}
+          <InlineMessage variant="error">
+            {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].warning}
+          </InlineMessage>
+          <div className="flex gap-2 w-full">
+            <Button variant="secondary" onClick={closeBulkInstanceModal} className="flex-1">
+              Cancel
+            </Button>
+            <Button
+              variant={BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].confirmVariant}
+              onClick={handleBulkInstanceConfirm}
+              className="flex-1"
+              disabled={bulkCanRows.length === 0}
+            >
+              {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].confirmText}
+            </Button>
+          </div>
+        </Modal>
+      )}
     </PageShell>
   );
 }

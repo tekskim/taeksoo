@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -19,6 +19,7 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -29,11 +30,11 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconCirclePlus,
-  IconBell,
   IconDotsCircleHorizontal,
   IconLock,
   IconTerminal2,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -87,7 +88,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 2,
     ram: '16GiB',
     visibility: 'Public',
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -104,7 +105,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 4,
     ram: '32GiB',
     visibility: 'Public',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -121,7 +122,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 2,
     ram: '8GiB',
     visibility: 'Public',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -138,7 +139,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 4,
     ram: '16GiB',
     visibility: 'Public',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -155,7 +156,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 2,
     ram: '16GiB',
     visibility: 'Public',
-    createdAt: 'Aug 30, 2025 21:37:41',
+    createdAt: 'Aug 30, 2026 21:37:41',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -172,7 +173,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 4,
     ram: '32GiB',
     visibility: 'Public',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -189,7 +190,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 2,
     ram: '1GiB',
     visibility: 'Public',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -206,7 +207,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 2,
     ram: '2GiB',
     visibility: 'Public',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -223,7 +224,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 4,
     ram: '16GiB',
     visibility: 'Public',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     architecture: 'X86 Architecture',
     ephemeralDisk: '125GiB',
     numaNodes: '1',
@@ -240,7 +241,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 8,
     ram: '32GiB',
     visibility: 'Public',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     architecture: 'X86 Architecture',
     ephemeralDisk: '225GiB',
     numaNodes: '1',
@@ -257,7 +258,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 8,
     ram: '61GiB',
     visibility: 'Public',
-    createdAt: 'Aug 1, 2025 10:20:28',
+    createdAt: 'Aug 1, 2026 10:20:28',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '1',
@@ -274,7 +275,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 4,
     ram: '8GiB',
     visibility: 'Public',
-    createdAt: 'Jul 28, 2025 07:11:07',
+    createdAt: 'Jul 28, 2026 07:11:07',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -291,7 +292,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 8,
     ram: '16GiB',
     visibility: 'Public',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     architecture: 'X86 Architecture',
     ephemeralDisk: '0GiB',
     numaNodes: '0',
@@ -308,7 +309,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 2,
     ram: '4GiB',
     visibility: 'Private',
-    createdAt: 'Jul 20, 2025 23:27:51',
+    createdAt: 'Jul 20, 2026 23:27:51',
     architecture: 'X86 Architecture',
     ephemeralDisk: '20GiB',
     numaNodes: '0',
@@ -325,7 +326,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     vcpu: 4,
     ram: '8GiB',
     visibility: 'Private',
-    createdAt: 'Jul 15, 2025 12:22:26',
+    createdAt: 'Jul 15, 2026 12:22:26',
     architecture: 'X86 Architecture',
     ephemeralDisk: '50GiB',
     numaNodes: '0',
@@ -335,24 +336,6 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     internalNetworkBandwidth: '10Gbps',
     storageIOPS: '-',
   },
-};
-
-const defaultFlavorDetail: FlavorDetail = {
-  id: 'unknown',
-  name: 'Unknown Flavor',
-  category: '-',
-  vcpu: 0,
-  ram: '0GiB',
-  visibility: 'Public',
-  createdAt: '-',
-  architecture: '-',
-  ephemeralDisk: '0GiB',
-  numaNodes: '0',
-  cpuPolicy: '-',
-  cpuThreadPolicy: '-',
-  memoryPage: '-',
-  internalNetworkBandwidth: '-',
-  storageIOPS: '-',
 };
 
 // Mock flavor parameters (raw API response)
@@ -395,7 +378,7 @@ const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i)
   image: ['Ubuntu24.04', 'CentOS8', 'Debian12', 'Rocky9'][i % 4],
   fixedIP: `10.62.0.${30 + i}`,
   az: ['zone-a', 'zone-b', 'zone-o'][i % 3],
-  createdAt: `Sep ${String(30 - (i % 28)).padStart(2, '0')}, 2025`,
+  createdAt: `Sep ${String(30 - (i % 28)).padStart(2, '0')}, 2026`,
 }));
 
 /* ----------------------------------------
@@ -404,7 +387,7 @@ const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i)
 
 export function FlavorDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const flavor = id ? mockFlavorsMap[id] || defaultFlavorDetail : defaultFlavorDetail;
+  const flavor = id ? mockFlavorsMap[id] : undefined;
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -427,24 +410,11 @@ export function FlavorDetailPage() {
 
   // Update tab label to flavor name
   useEffect(() => {
-    if (flavor.name) {
+    if (flavor?.name) {
       updateActiveTabLabel(flavor.name);
     }
-  }, [flavor.name, updateActiveTabLabel]);
+  }, [flavor, updateActiveTabLabel]);
 
-  const tabBarTabs = tabs.map((tab) => ({
-    id: tab.id,
-    label: tab.label,
-    closable: tab.closable,
-  }));
-
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '#' },
-    { label: 'Flavors', href: '/compute/flavors' },
-    { label: flavor.name, href: `/flavors/${flavor.id}` },
-  ];
-
-  // Filter instances by search query
   const filteredInstances = useMemo(() => {
     if (!instanceSearchQuery) return instances;
     const query = instanceSearchQuery.toLowerCase();
@@ -456,6 +426,56 @@ export function FlavorDetailPage() {
         inst.fixedIP.toLowerCase().includes(query)
     );
   }, [instances, instanceSearchQuery]);
+
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
+
+  if (!flavor) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Flavors', href: '/compute/flavors' }, { label: id ?? '—' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Flavor not found"
+          description={`The flavor "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/flavors')}>
+              Back to Flavors
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
+  const breadcrumbItems = [{ label: 'Flavors', href: '/compute/flavors' }, { label: flavor.name }];
 
   const instanceTotalPages = Math.ceil(filteredInstances.length / instancesPerPage);
   const paginatedInstances = filteredInstances.slice(
@@ -495,8 +515,11 @@ export function FlavorDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -546,6 +569,7 @@ export function FlavorDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div className="flex items-center justify-center gap-1">
           <button
@@ -559,6 +583,8 @@ export function FlavorDetailPage() {
             items={getInstanceContextMenuItems(row)}
             trigger={
               <button
+                type="button"
+                aria-label="Row actions"
                 className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -593,20 +619,13 @@ export function FlavorDetailPage() {
           onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => navigate(-1)}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Flavor Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{flavor.name}</DetailHeader.Title>
@@ -724,11 +743,15 @@ export function FlavorDetailPage() {
             {/* Parameters Tab Panel */}
             <TabPanel value="parameters" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px]"
+                >
                   <pre className="font-mono text-body-md leading-[18px] text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre">
                     {JSON.stringify(mockFlavorParameters, null, 5)}
                   </pre>
-                </div>
+                </OverlayScrollbarsComponent>
               </div>
             </TabPanel>
           </Tabs>

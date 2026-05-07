@@ -1,17 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Breadcrumb, VStack, TabBar, TopBar, PageShell } from '@/design-system';
+import { Breadcrumb, Button, PageShell, TabBar, TopBar, VStack, YamlEditor } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconDownload,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Sample Node YAML
@@ -36,7 +29,7 @@ metadata:
     management.cattle.io/pod-requests: '{"cpu":"1360m","memory":"338Mi","pods":"43"}'
     node.alpha.kubernetes.io/ttl: '0'
     volumes.kubernetes.io/controller-managed-attach-detach: 'true'
-  creationTimestamp: '2025-10-14T06:59:07Z'
+  creationTimestamp: '2026-10-14T06:59:07Z'
   finalizers:
     - wrangler.cattle.io/node
   labels:
@@ -102,26 +95,26 @@ status:
     memory: 8019Mi
     pods: '110'
   conditions:
-    - lastHeartbeatTime: '2025-01-15T10:00:00Z'
-      lastTransitionTime: '2025-10-14T06:59:07Z'
+    - lastHeartbeatTime: '2026-01-15T10:00:00Z'
+      lastTransitionTime: '2026-10-14T06:59:07Z'
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: 'False'
       type: MemoryPressure
-    - lastHeartbeatTime: '2025-01-15T10:00:00Z'
-      lastTransitionTime: '2025-10-14T06:59:07Z'
+    - lastHeartbeatTime: '2026-01-15T10:00:00Z'
+      lastTransitionTime: '2026-10-14T06:59:07Z'
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: 'False'
       type: DiskPressure
-    - lastHeartbeatTime: '2025-01-15T10:00:00Z'
-      lastTransitionTime: '2025-10-14T06:59:07Z'
+    - lastHeartbeatTime: '2026-01-15T10:00:00Z'
+      lastTransitionTime: '2026-10-14T06:59:07Z'
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: 'False'
       type: PIDPressure
-    - lastHeartbeatTime: '2025-01-15T10:00:00Z'
-      lastTransitionTime: '2025-10-14T06:59:07Z'
+    - lastHeartbeatTime: '2026-01-15T10:00:00Z'
+      lastTransitionTime: '2026-10-14T06:59:07Z'
       message: kubelet is posting ready status
       reason: KubeletReady
       status: 'True'
@@ -137,81 +130,6 @@ status:
     operatingSystem: linux
     osImage: Ubuntu 22.04.3 LTS
     systemUUID: 12345678-90AB-CDEF-1234-567890ABCDEF`;
-
-/* ----------------------------------------
-   YAML Editor with Line Numbers
-   ---------------------------------------- */
-
-interface YamlEditorProps {
-  value: string;
-  onChange: (value: string) => void;
-  onCopy: () => void;
-  onDownload: () => void;
-}
-
-function YamlEditor({ value, onChange, onCopy, onDownload }: YamlEditorProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const lineNumbersRef = useRef<HTMLDivElement>(null);
-
-  const lines = value.split('\n');
-  const lineCount = lines.length;
-
-  // Sync scroll between line numbers and textarea
-  const handleScroll = useCallback(() => {
-    if (textareaRef.current && lineNumbersRef.current) {
-      lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
-    }
-  }, []);
-
-  return (
-    <div className="flex-1 flex min-h-0 border border-[var(--color-border-default)] rounded-[4px] bg-[var(--color-base-white)] overflow-hidden relative">
-      {/* Line Numbers */}
-      <div
-        ref={lineNumbersRef}
-        className="w-[44px] flex-shrink-0 overflow-y-scroll py-2 pr-2 select-none text-right bg-[var(--color-surface-default)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        <div className="font-mono text-body-md leading-[18px] text-[var(--color-text-subtle)]">
-          {Array.from({ length: lineCount }, (_, i) => (
-            <div key={i + 1}>{i + 1}</div>
-          ))}
-        </div>
-      </div>
-
-      {/* Editor */}
-      <div className="flex-1 min-w-0 overflow-hidden">
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onScroll={handleScroll}
-          className="w-full h-full py-2 px-2.5 pr-20 font-mono text-body-md leading-[18px] text-[var(--color-text-default)] bg-transparent border-none outline-none resize-none overflow-auto yaml-editor-scroll"
-          spellCheck={false}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-        />
-      </div>
-
-      {/* Action Buttons - Absolute positioned */}
-      <div className="absolute top-2 right-4 flex gap-2">
-        <button
-          onClick={onCopy}
-          className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-          title="Copy to clipboard"
-        >
-          <IconCopy size={12} stroke={1.5} />
-        </button>
-        <button
-          onClick={onDownload}
-          className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-          title="Download YAML"
-        >
-          <IconDownload size={16} stroke={1.5} />
-        </button>
-      </div>
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Main Page Component
@@ -249,16 +167,6 @@ export function EditNodeYamlPage() {
 
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
-
-  // Handle copy to clipboard
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(yamlContent);
-      // Could add a toast notification here
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  }, [yamlContent]);
 
   // Handle download
   const handleDownload = useCallback(() => {
@@ -306,43 +214,14 @@ export function EditNodeYamlPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Nodes', href: '/container/nodes' },
-                { label: `Edit YAML: ${nodeName}` },
-              ]}
+              items={[{ label: 'Nodes', href: '/container/nodes' }, { label: 'Edit Node' }]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="h-full flex flex-col pt-3 px-8 pb-6 min-h-0"
@@ -357,8 +236,17 @@ export function EditNodeYamlPage() {
         <YamlEditor
           value={yamlContent}
           onChange={setYamlContent}
-          onCopy={handleCopy}
-          onDownload={handleDownload}
+          trailingActions={
+            <button
+              type="button"
+              onClick={handleDownload}
+              className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[var(--radius-md)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+              title="Download YAML"
+              aria-label="Download YAML"
+            >
+              <IconDownload size={16} stroke={1.5} />
+            </button>
+          }
         />
 
         {/* Footer */}

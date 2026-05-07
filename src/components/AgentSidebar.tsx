@@ -10,6 +10,7 @@ import {
 import AgentLogo from '@/assets/icons/agent-logo.svg';
 import { useProject } from '@/contexts/ProjectContext';
 import { ProjectSelector } from '@/components/ProjectSelector';
+import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 /* ----------------------------------------
    Agent Sidebar Component
@@ -18,7 +19,10 @@ import { ProjectSelector } from '@/components/ProjectSelector';
 export function AgentSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
+  const isDesktopWindow = useIsDesktopWindow();
+  const desktopControls = useDesktopWindowControls();
+  const { projects, selectedProjectId, setSelectedProjectId, primaryProjectId, setPrimaryProject } =
+    useProject();
 
   // Helper to check if path is active
   const isActive = (paths: string[]) => {
@@ -34,7 +38,14 @@ export function AgentSidebar() {
       {/* Logo - Home/Dashboard link */}
       <Link
         to="/agent"
-        className="border-b border-[var(--color-border-default)] flex h-[36px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
+        className="border-b border-[var(--color-border-default)] flex h-[36px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0 select-none"
+        onMouseDown={(e) => {
+          if (isDesktopWindow && desktopControls) {
+            e.preventDefault();
+            desktopControls.onDragStart(e);
+          }
+        }}
+        onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
       >
         <img src={AgentLogo} alt="Agent" className="h-6 w-6" />
       </Link>
@@ -49,6 +60,8 @@ export function AgentSidebar() {
               projects={projects}
               selectedProjectId={selectedProjectId}
               onProjectSelect={setSelectedProjectId}
+              primaryProjectId={primaryProjectId}
+              onSetPrimary={setPrimaryProject}
               variant="sidebar-icon"
             />
           </div>

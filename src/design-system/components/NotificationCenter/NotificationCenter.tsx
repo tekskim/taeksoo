@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   IconCircleCheck,
-  IconAlertCircle,
   IconAlertTriangle,
   IconInfoCircle,
   IconCheckbox,
@@ -15,7 +15,7 @@ import { Chip } from '../Chip';
    Types
    ---------------------------------------- */
 
-export type NotificationType = 'success' | 'error' | 'warning' | 'info';
+export type NotificationType = 'success' | 'error' | 'info';
 
 export interface NotificationDetail {
   /** Error/Response code */
@@ -165,12 +165,20 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       </div>
 
       {/* Notifications List */}
-      <div className="max-h-[400px] overflow-y-auto p-2 drawer-scroll">
-        {filteredNotifications.length === 0 ? (
-          <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
-            No notifications
-          </div>
-        ) : (
+      {filteredNotifications.length === 0 ? (
+        <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
+          No notifications
+        </div>
+      ) : (
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          style={{ maxHeight: 400 }}
+          className="p-2"
+        >
           <div className="flex flex-col gap-2">
             {filteredNotifications.map((notification) => (
               <NotificationCard
@@ -182,8 +190,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
               />
             ))}
           </div>
-        )}
-      </div>
+        </OverlayScrollbarsComponent>
+      )}
     </div>
   );
 };
@@ -216,10 +224,6 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
       case 'error':
         return (
           <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
-        );
-      case 'warning':
-        return (
-          <IconAlertCircle size={16} stroke={1.5} className="text-[var(--color-state-warning)]" />
         );
       case 'info':
       default:

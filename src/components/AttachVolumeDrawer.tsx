@@ -199,15 +199,15 @@ export function AttachVolumeDrawer({
       description="Attach one or more available volumes to this instance. Once attached, the volumes will appear as additional storage devices inside the instance."
       width={696}
       footer={
-        <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleAttach}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="flex-1"
           >
             {isSubmitting ? 'Attaching...' : 'Attach'}
           </Button>

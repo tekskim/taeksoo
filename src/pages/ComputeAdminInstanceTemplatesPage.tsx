@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   Button,
   FilterSearchInput,
@@ -7,11 +8,12 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
-  ConfirmModal,
+  Modal,
+  InfoBox,
+  InlineMessage,
   PageShell,
   PageHeader,
   type TableColumn,
@@ -24,8 +26,9 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -43,6 +46,7 @@ interface InstanceTemplate {
   disk: string;
   network: string;
   floatingIp: string;
+  visibility: 'Private' | 'Public';
   access: AccessType;
   favorite: boolean;
 }
@@ -56,12 +60,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-001',
     name: 'hj-small',
     image: '-',
-    flavor: 'Jan 3, 2025',
+    flavor: 'Jan 3, 2026',
     vcpu: 8,
     ram: '16GiB',
     disk: '10GiB',
     network: 'in-net',
     floatingIp: 'None',
+    visibility: 'Private',
     access: 'Personal',
     favorite: true,
   },
@@ -69,12 +74,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-002',
     name: 'web-server-template',
     image: '-',
-    flavor: 'Jan 2, 2025',
+    flavor: 'Jan 2, 2026',
     vcpu: 16,
     ram: '32GiB',
     disk: '50GiB',
     network: 'public-net',
     floatingIp: 'Auto',
+    visibility: 'Private',
     access: 'Project',
     favorite: true,
   },
@@ -82,12 +88,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-003',
     name: 'db-template',
     image: '-',
-    flavor: 'Dec 28, 2024',
+    flavor: 'Dec 28, 2026',
     vcpu: 32,
     ram: '64GiB',
     disk: '200GiB',
     network: 'db-net',
     floatingIp: 'None',
+    visibility: 'Private',
     access: 'Personal',
     favorite: false,
   },
@@ -95,12 +102,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-004',
     name: 'gpu-ml-template',
     image: '-',
-    flavor: 'Dec 25, 2024',
+    flavor: 'Dec 25, 2026',
     vcpu: 16,
     ram: '128GiB',
     disk: '500GiB',
     network: 'ml-net',
     floatingIp: 'Auto',
+    visibility: 'Public',
     access: 'Public',
     favorite: true,
   },
@@ -108,12 +116,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-005',
     name: 'minimal-template',
     image: '-',
-    flavor: 'Dec 20, 2024',
+    flavor: 'Dec 20, 2026',
     vcpu: 2,
     ram: '4GiB',
     disk: '10GiB',
     network: 'in-net',
     floatingIp: 'None',
+    visibility: 'Private',
     access: 'Personal',
     favorite: false,
   },
@@ -121,12 +130,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-006',
     name: 'k8s-worker',
     image: '-',
-    flavor: 'Dec 18, 2024',
+    flavor: 'Dec 18, 2026',
     vcpu: 8,
     ram: '16GiB',
     disk: '100GiB',
     network: 'k8s-net',
     floatingIp: 'None',
+    visibility: 'Private',
     access: 'Project',
     favorite: true,
   },
@@ -134,12 +144,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-007',
     name: 'k8s-master',
     image: '-',
-    flavor: 'Dec 18, 2024',
+    flavor: 'Dec 18, 2026',
     vcpu: 4,
     ram: '8GiB',
     disk: '50GiB',
     network: 'k8s-net',
     floatingIp: 'Auto',
+    visibility: 'Public',
     access: 'Project',
     favorite: true,
   },
@@ -147,12 +158,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-008',
     name: 'dev-environment',
     image: '-',
-    flavor: 'Dec 15, 2024',
+    flavor: 'Dec 15, 2026',
     vcpu: 4,
     ram: '8GiB',
     disk: '30GiB',
     network: 'dev-net',
     floatingIp: 'Auto',
+    visibility: 'Private',
     access: 'Personal',
     favorite: false,
   },
@@ -160,12 +172,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-009',
     name: 'monitoring-stack',
     image: '-',
-    flavor: 'Dec 10, 2024',
+    flavor: 'Dec 10, 2026',
     vcpu: 8,
     ram: '16GiB',
     disk: '100GiB',
     network: 'monitor-net',
     floatingIp: 'Auto',
+    visibility: 'Public',
     access: 'Public',
     favorite: true,
   },
@@ -173,12 +186,13 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-010',
     name: 'cache-server',
     image: '-',
-    flavor: 'Dec 5, 2024',
+    flavor: 'Dec 5, 2026',
     vcpu: 4,
     ram: '32GiB',
     disk: '20GiB',
     network: 'cache-net',
     floatingIp: 'None',
+    visibility: 'Private',
     access: 'Project',
     favorite: false,
   },
@@ -190,10 +204,10 @@ const mockTemplates: InstanceTemplate[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'network', label: 'Network', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'network', label: 'Network', type: 'text' },
   {
-    key: 'access',
+    id: 'access',
     label: 'Access',
     type: 'select',
     options: [
@@ -215,6 +229,7 @@ export function ComputeAdminInstanceTemplatesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<InstanceTemplate | null>(null);
+  const [bulkDeleteModalOpen, setBulkDeleteModalOpen] = useState(false);
 
   // Selection state
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
@@ -223,11 +238,19 @@ export function ComputeAdminInstanceTemplatesPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'image', label: 'Description', visible: true },
     { id: 'flavor', label: 'Created at', visible: true },
+    { id: 'visibility', label: 'Visibility', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -261,6 +284,20 @@ export function ComputeAdminInstanceTemplatesPage() {
     setTemplateToDelete(null);
   };
 
+  const bulkDeleteTemplateRows = useMemo(
+    () =>
+      templates
+        .filter((t) => selectedTemplates.includes(t.id))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [templates, selectedTemplates]
+  );
+
+  const handleBulkDeleteConfirm = () => {
+    setTemplates((prev) => prev.filter((t) => !selectedTemplates.includes(t.id)));
+    setSelectedTemplates([]);
+    setBulkDeleteModalOpen(false);
+  };
+
   // Filter templates by search
   const filteredTemplates = useMemo(() => {
     let filtered = templates;
@@ -269,7 +306,7 @@ export function ComputeAdminInstanceTemplatesPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((t) => {
         return appliedFilters.every((filter) => {
-          const value = String(t[filter.field as keyof InstanceTemplate] || '').toLowerCase();
+          const value = String(t[filter.fieldId as keyof InstanceTemplate] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });
@@ -301,12 +338,6 @@ export function ComputeAdminInstanceTemplatesPage() {
     }
   };
 
-  // Bulk delete handler
-  const handleBulkDelete = () => {
-    setTemplates((prev) => prev.filter((t) => !selectedTemplates.includes(t.id)));
-    setSelectedTemplates([]);
-  };
-
   // Get current page IDs for "select all" checkbox state
   const currentPageIds = filteredTemplates
     .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
@@ -323,13 +354,21 @@ export function ComputeAdminInstanceTemplatesPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute-admin/instance-templates/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <Link
+            to={`/compute-admin/instance-templates/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </div>
       ),
     },
     {
@@ -345,16 +384,28 @@ export function ComputeAdminInstanceTemplatesPage() {
       sortable: true,
     },
     {
+      key: 'visibility',
+      label: 'Visibility',
+      flex: 1,
+      sortable: true,
+    },
+    {
       key: 'actions',
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'duplicate',
             label: 'Duplicate',
             onClick: () => console.log('Duplicate template:', row.id),
+          },
+          {
+            id: 'edit',
+            label: 'Edit',
+            onClick: () => navigate(`/compute-admin/instance-templates/${row.id}/edit`),
           },
           {
             id: 'delete',
@@ -367,7 +418,10 @@ export function ComputeAdminInstanceTemplatesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -413,23 +467,9 @@ export function ComputeAdminInstanceTemplatesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Instance templates' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Instance Templates' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -473,7 +513,7 @@ export function ComputeAdminInstanceTemplatesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedTemplates.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setBulkDeleteModalOpen(true)}
               >
                 Delete
               </Button>
@@ -501,22 +541,71 @@ export function ComputeAdminInstanceTemplatesPage() {
           selectable
           selectedKeys={selectedTemplates}
           onSelectionChange={setSelectedTemplates}
+          loading={loading}
         />
       </VStack>
 
-      {/* Delete Confirmation Modal */}
-      <ConfirmModal
+      {/* Delete single template */}
+      <Modal
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
-        onConfirm={handleDeleteConfirm}
-        title="Delete template"
-        description="Removing the selected instances is permanent and cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
-        confirmVariant="danger"
-        infoLabel="Template name"
-        infoValue={templateToDelete?.name}
-      />
+        title="Delete Instance Template"
+        size="sm"
+      >
+        <InfoBox label="Template" value={templateToDelete?.name ?? ''} />
+        <InlineMessage variant="error">
+          Deleting the selected instance templates is permanent and cannot be undone.
+        </InlineMessage>
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={handleDeleteCancel} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirm} className="flex-1">
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete instance templates (bulk) */}
+      <Modal
+        isOpen={bulkDeleteModalOpen}
+        onClose={() => setBulkDeleteModalOpen(false)}
+        title="Delete Instance Templates"
+        size="sm"
+      >
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px]"
+        >
+          <p className="text-label-sm text-[var(--color-text-subtle)]">Instance Templates</p>
+          <ul className="list-disc pl-[18px] mt-1.5">
+            {bulkDeleteTemplateRows.map((t) => (
+              <li key={t.id} className="text-body-md text-[var(--color-text-default)]">
+                {t.name}
+              </li>
+            ))}
+          </ul>
+        </OverlayScrollbarsComponent>
+        <InlineMessage variant="error">
+          Deleting the selected instance templates is permanent and cannot be undone.
+        </InlineMessage>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="secondary"
+            onClick={() => setBulkDeleteModalOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleBulkDeleteConfirm} className="flex-1">
+            Delete
+          </Button>
+        </div>
+      </Modal>
 
       {/* View Preferences Drawer */}
       <ViewPreferencesDrawer

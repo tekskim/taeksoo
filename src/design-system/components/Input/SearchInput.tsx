@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes, useState, useCallback } from 'react';
+import { forwardRef, type InputHTMLAttributes, useState, useCallback, useId } from 'react';
 import { twMerge } from '../../utils/cn';
 import { IconSearch, IconX } from '@tabler/icons-react';
 
@@ -6,14 +6,12 @@ import { IconSearch, IconX } from '@tabler/icons-react';
    SearchInput Types
    ---------------------------------------- */
 
-export type SearchInputSize = 'sm' | 'md';
-
 export interface SearchInputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'size' | 'type'
 > {
-  /** Input size */
-  size?: SearchInputSize;
+  /** @deprecated Single size only (28px). Prop kept for backward compatibility. */
+  size?: 'sm' | 'md';
   /** Label text */
   label?: string;
   /** Full width */
@@ -25,22 +23,13 @@ export interface SearchInputProps extends Omit<
 }
 
 /* ----------------------------------------
-   Size Styles
-   ---------------------------------------- */
-
-const sizes: Record<SearchInputSize, string> = {
-  sm: 'h-[var(--search-input-height-sm)] text-[length:var(--input-font-size-sm)]',
-  md: 'h-[var(--search-input-height-md)] text-[length:var(--input-font-size-sm)]',
-};
-
-/* ----------------------------------------
    SearchInput Component
    ---------------------------------------- */
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   (
     {
-      size = 'md',
+      size: _size,
       label,
       fullWidth = false,
       clearable = true,
@@ -55,7 +44,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     },
     ref
   ) => {
-    const inputId = id || `search-input-${Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
 
     // Track value for clear button visibility
     const [internalValue, setInternalValue] = useState(defaultValue ?? '');
@@ -115,7 +105,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       disabled
         ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed'
         : '',
-      sizes[size],
+      'h-[var(--search-input-height-sm)] text-[length:var(--input-font-size-sm)]',
       inputClassName
     );
 

@@ -145,16 +145,11 @@ export function ManageSecurityGroupsDrawer({
       description="When disabled, no security groups will be applied, and anti-spoofing checks are turned off."
       width={696}
       footer={
-        <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleSave}
-            disabled={isSubmitting}
-            className="w-[152px] h-8"
-          >
+          <Button variant="primary" onClick={handleSave} disabled={isSubmitting} className="flex-1">
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
         </HStack>

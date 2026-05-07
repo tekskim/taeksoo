@@ -1,11 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -31,7 +30,6 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconTrash,
-  IconBell,
   IconChevronDown,
   IconDotsCircleHorizontal,
   IconSettings,
@@ -95,7 +93,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     description: '-',
     algorithm: 'Round Robin',
     protocol: 'HTTP',
@@ -107,7 +105,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
-    createdAt: 'Jul 24, 2025 03:19:59',
+    createdAt: 'Jul 24, 2026 03:19:59',
     description: 'HTTP connection pool',
     algorithm: 'Round Robin',
     protocol: 'HTTP',
@@ -119,7 +117,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
-    createdAt: 'Jul 23, 2025 20:06:42',
+    createdAt: 'Jul 23, 2026 20:06:42',
     description: 'HTTP connection pool',
     algorithm: 'Round Robin',
     protocol: 'HTTP',
@@ -195,6 +193,7 @@ const memberStatusMap: Record<MemberStatus, 'active' | 'down' | 'error'> = {
    ---------------------------------------- */
 
 export default function PoolDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -225,10 +224,15 @@ export default function PoolDetailPage() {
   const healthMonitor = mockHealthMonitor;
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Load balancers', href: '/compute/load-balancers' },
-    { label: 'web-lb-01', href: '/compute/load-balancers/lb-001' },
-    { label: 'listener-http-80', href: '/listeners/listener-001' },
+    { label: 'Load Balancers', href: '/compute/load-balancers' },
+    {
+      label: pool.loadBalancer?.name ?? 'Unknown',
+      href: pool.loadBalancer?.id ? `/compute/load-balancers/${pool.loadBalancer.id}` : undefined,
+    },
+    {
+      label: pool.listener?.name ?? pool.listener?.id ?? '-',
+      href: pool.listener?.id ? `/compute/listeners/${pool.listener.id}` : undefined,
+    },
     { label: pool.name },
   ];
 
@@ -318,6 +322,7 @@ export default function PoolDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit member', row.id) },
@@ -331,7 +336,10 @@ export default function PoolDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={memberMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -365,22 +373,15 @@ export default function PoolDetailPage() {
       topBar={
         <TopBar
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           onSidebarToggle={openSidebar}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              hasNotification
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{pool.name}</DetailHeader.Title>
@@ -442,7 +443,7 @@ export default function PoolDetailPage() {
 
         {/* Tabs */}
         <div className="w-full">
-          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="members">Members</Tab>

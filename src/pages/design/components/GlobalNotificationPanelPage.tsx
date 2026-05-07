@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { VStack, Button, Badge, Tabs, TabList, Tab, Select } from '@/design-system';
+import { VStack, Button, Tabs, TabList, Tab, Select } from '@/design-system';
 import {
   IconCircleCheck,
   IconAlertTriangle,
-  IconAlertCircle,
   IconInfoCircle,
   IconChevronUp,
   IconChevronDown,
@@ -22,123 +23,139 @@ import AppIconStorage from '@/assets/appIcon/storage.png';
    Types
    ---------------------------------------- */
 
-type NotificationType = 'success' | 'error' | 'warning' | 'info';
-
 interface PanelNotification {
   id: string;
-  type: NotificationType;
   message: string;
+  statusIcon?: React.ReactNode;
   time: string;
-  project?: string;
+  partition?: string;
   app: string;
   appIcon: string;
   isRead?: boolean;
   detail?: { code?: string | number; message?: string };
+  href?: string;
 }
 
-const TYPE_ICONS: Record<NotificationType, React.ReactNode> = {
-  success: <IconCircleCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />,
-  error: <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />,
-  warning: <IconAlertCircle size={16} stroke={1.5} className="text-[var(--color-state-warning)]" />,
-  info: <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-state-info)]" />,
-};
-
 /* ----------------------------------------
-   StaticSnackbarCard
+   StaticPanelCard
    ---------------------------------------- */
 
-function StaticSnackbarCard({
-  type,
-  message,
-  time,
-  project,
-  isRead = true,
-  showAppIcon = false,
+function StaticPanelCard({
   appIcon,
+  message,
+  statusIcon,
+  time,
+  partition,
+  isRead = true,
+  showReadButton,
   detail,
   isExpanded,
 }: {
-  type: NotificationType;
-  message: string;
-  time: string;
-  project?: string;
-  isRead?: boolean;
-  showAppIcon?: boolean;
   appIcon?: string;
+  message: string;
+  statusIcon?: React.ReactNode;
+  time: string;
+  partition?: string;
+  isRead?: boolean;
+  showReadButton?: boolean;
   detail?: { code?: string | number; message?: string };
   isExpanded?: boolean;
 }) {
   const hasDetail = detail && (detail.code || detail.message);
+  const isUnread = !isRead;
 
   return (
-    <div
-      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] overflow-hidden ${
-        !isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'
-      }`}
-    >
-      <div className="flex gap-2 p-3">
-        <div className="shrink-0 pt-0.5">{TYPE_ICONS[type]}</div>
-        <div className="flex-1 min-w-0">
-          <div className="flex gap-2 items-stretch">
-            <div className="flex-1 min-w-0 flex flex-col items-start gap-2">
-              <p className="text-body-md text-[var(--color-text-muted)]">{message}</p>
-              {project && (
-                <Badge theme="white" size="sm">
-                  {project}
-                </Badge>
-              )}
-            </div>
-            <div className="shrink-0 flex flex-col items-end justify-between">
-              {showAppIcon && appIcon && (
-                <img
-                  src={appIcon}
-                  alt="App icon"
-                  className="size-5 object-cover pointer-events-none"
-                />
-              )}
-              <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
-                {time}
+    <div className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3">
+      <div className="flex items-start justify-between px-3">
+        <div className="flex gap-2 items-start w-[256px]">
+          {appIcon && <img src={appIcon} alt="" className="size-5 shrink-0 object-contain" />}
+          <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
+            <div className="flex flex-col">
+              <span className="text-body-md text-[var(--color-text-default)]">
+                {statusIcon
+                  ? (() => {
+                      const lastSpace = message.lastIndexOf(' ');
+                      if (lastSpace === -1)
+                        return (
+                          <span className="whitespace-nowrap">
+                            {message}
+                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
+                              {statusIcon}
+                            </span>
+                          </span>
+                        );
+                      return (
+                        <>
+                          {message.slice(0, lastSpace)}{' '}
+                          <span className="whitespace-nowrap">
+                            {message.slice(lastSpace + 1)}
+                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
+                              {statusIcon}
+                            </span>
+                          </span>
+                        </>
+                      );
+                    })()
+                  : message}
               </span>
             </div>
+
+            {partition && (
+              <span className="text-body-xs text-[var(--color-text-subtle)]">{partition}</span>
+            )}
+
+            {hasDetail && (
+              <div className="flex flex-col gap-2 rounded-[var(--radius-sm)]">
+                <button type="button" className="group flex items-center gap-1">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] whitespace-nowrap">
+                    View detail
+                  </span>
+                  {isExpanded ? (
+                    <IconChevronUp
+                      size={12}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  ) : (
+                    <IconChevronDown
+                      size={12}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  )}
+                </button>
+
+                {isExpanded && (
+                  <>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <div className="flex flex-col gap-1 text-body-sm text-[var(--color-text-muted)]">
+                      {detail.code !== undefined && <p>code: {detail.code}</p>}
+                      {detail.message && <p>{detail.message}</p>}
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
+        </div>
+        <div className="flex flex-col items-end justify-end self-stretch shrink-0">
+          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+            {time}
+          </span>
         </div>
       </div>
 
-      {hasDetail && (
-        <>
-          <div className="border-t border-[var(--color-border-subtle)]">
-            <button
-              type="button"
-              className="flex items-center justify-end gap-1.5 w-full px-3 pt-[9px] pb-2"
-            >
-              <span className="text-body-sm text-[var(--color-text-muted)]">View detail</span>
-              {isExpanded ? (
-                <IconChevronUp size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
-              ) : (
-                <IconChevronDown
-                  size={12}
-                  stroke={1.5}
-                  className="text-[var(--color-text-muted)]"
-                />
-              )}
-            </button>
-          </div>
+      {isUnread && !showReadButton && (
+        <div className="absolute top-3 right-3 size-1.5 rounded-full bg-[var(--color-action-primary)]" />
+      )}
 
-          {isExpanded && (
-            <div className="px-3 pb-3">
-              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] flex flex-col gap-1">
-                {detail.code && (
-                  <p className="text-label-md text-[var(--color-text-default)]">
-                    code: {detail.code}
-                  </p>
-                )}
-                {detail.message && (
-                  <p className="text-body-md text-[var(--color-text-muted)]">{detail.message}</p>
-                )}
-              </div>
-            </div>
-          )}
-        </>
+      {showReadButton && (
+        <button
+          type="button"
+          className="absolute top-[6px] right-[8px] size-4 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-muted)] transition-colors"
+        >
+          <IconCheckbox size={12} stroke={1.5} />
+        </button>
       )}
     </div>
   );
@@ -152,8 +169,7 @@ function GlobalPanelPreview() {
   return (
     <VStack gap={4}>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
-          {/* Tabs header */}
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
           <div className="relative pt-3 pb-0">
             <button
               type="button"
@@ -165,75 +181,7 @@ function GlobalPanelPreview() {
             <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
               <TabList className="w-full px-4">
                 <Tab value="all">All</Tab>
-                <Tab value="unread">
-                  Unread
-                  <span className="ml-1 text-[var(--color-text-muted)]">(3)</span>
-                </Tab>
-              </TabList>
-            </Tabs>
-          </div>
-
-          {/* App Filter */}
-          <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
-            <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="md" fullWidth />
-          </div>
-
-          <div className="max-h-[400px] overflow-y-auto px-3 py-2 drawer-scroll">
-            <div className="flex flex-col gap-2">
-              <StaticSnackbarCard
-                type="success"
-                message='Instance "web-server-01" created successfully.'
-                time="10:23"
-                project="Proj-1"
-                isRead={false}
-                showAppIcon
-                appIcon={AppIconCompute}
-              />
-              <StaticSnackbarCard
-                type="error"
-                message='Failed to create volume "data-vol-02".'
-                time="09:30"
-                project="Proj-2"
-                isRead={false}
-                showAppIcon
-                appIcon={AppIconCompute}
-                detail={{
-                  code: 400,
-                  message:
-                    "Flavor's disk is smaller than the minimum size specified in image metadata.",
-                }}
-              />
-              <StaticSnackbarCard
-                type="warning"
-                message="API key expires in 3 days."
-                time="08:45"
-                isRead={false}
-                showAppIcon
-                appIcon={AppIconIAM}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Preview with dropdown open */}
-      <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
-          <div className="relative pt-3 pb-0">
-            <button
-              type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)]"
-              aria-label="Mark all as read"
-            >
-              <IconCheckbox size={16} stroke={1.5} />
-            </button>
-            <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
-              <TabList className="w-full px-4">
-                <Tab value="all">All</Tab>
-                <Tab value="unread">
-                  Unread
-                  <span className="ml-1 text-[var(--color-text-muted)]">(3)</span>
-                </Tab>
+                <Tab value="unread">Unread (3)</Tab>
               </TabList>
             </Tabs>
           </div>
@@ -242,55 +190,36 @@ function GlobalPanelPreview() {
             <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="md" fullWidth />
           </div>
 
-          {/* Static open dropdown */}
-          <div className="mx-3 mb-2 border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] bg-[var(--select-menu-bg)] overflow-hidden">
-            {APP_OPTIONS.map((opt, i) => (
-              <div
-                key={opt.value}
-                className={`flex items-center gap-1.5 px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] ${
-                  i === 0
-                    ? 'bg-[var(--color-action-primary-subtle)] text-[var(--color-action-primary)] font-medium'
-                    : 'text-[var(--color-text-default)]'
-                }`}
-              >
-                {opt.icon && <span className="shrink-0 flex items-center">{opt.icon}</span>}
-                <span>{opt.label}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="max-h-[400px] overflow-y-auto px-3 py-2 drawer-scroll">
+          <div className="px-3 py-2">
             <div className="flex flex-col gap-2">
-              <StaticSnackbarCard
-                type="success"
-                message='Instance "web-server-01" created successfully.'
+              <StaticPanelCard
+                appIcon={AppIconCompute}
+                message={`Volume "backup-01" snapshot\nsuccessfully created`}
+                statusIcon={successIcon}
                 time="10:23"
-                project="Proj-1"
+                partition="proj-1"
                 isRead={false}
-                showAppIcon
-                appIcon={AppIconCompute}
               />
-              <StaticSnackbarCard
-                type="error"
-                message='Failed to create volume "data-vol-02".'
-                time="09:30"
-                project="Proj-2"
-                isRead={false}
-                showAppIcon
+              <StaticPanelCard
                 appIcon={AppIconCompute}
+                message={`Volume "backup-01" create failed.`}
+                statusIcon={errorIcon}
+                time="09:30"
+                partition="proj-2"
+                isRead={false}
                 detail={{
                   code: 400,
                   message:
                     "Flavor's disk is smaller than the minimum size specified in image metadata.",
                 }}
               />
-              <StaticSnackbarCard
-                type="warning"
-                message="API key expires in 3 days."
+              <StaticPanelCard
+                appIcon={AppIconContainer}
+                message={`Deployment "api-gateway" scaled to 3 replicas.`}
+                statusIcon={infoIcon}
                 time="08:45"
+                partition="default"
                 isRead={false}
-                showAppIcon
-                appIcon={AppIconIAM}
               />
             </div>
           </div>
@@ -304,27 +233,38 @@ function GlobalPanelPreview() {
    GlobalPanelDemo (interactive)
    ---------------------------------------- */
 
+const successIcon = (
+  <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+);
+const errorIcon = (
+  <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+);
+const infoIcon = (
+  <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+);
+
 const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   {
     id: '1',
-    type: 'success',
-    message: 'Instance "web-server-01" created successfully.',
+    message: 'Volume "backup-01" snapshot\nsuccessfully created',
+    statusIcon: successIcon,
     time: '10:23',
-    project: 'Proj-1',
+    partition: 'proj-1',
     app: 'Compute',
     appIcon: AppIconCompute,
     isRead: false,
-    detail: { code: 200, message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.' },
+    href: '/compute/volumes',
   },
   {
     id: '2',
-    type: 'error',
-    message: 'Failed to create volume "data-vol-02".',
+    message: 'Volume "data-vol-02" create failed.',
+    statusIcon: errorIcon,
     time: '09:30',
-    project: 'Proj-2',
+    partition: 'proj-2',
     app: 'Compute',
     appIcon: AppIconCompute,
     isRead: false,
+    href: '/compute/volumes',
     detail: {
       code: 400,
       message: "Flavor's disk is smaller than the minimum size specified in image metadata.",
@@ -332,43 +272,59 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '3',
-    type: 'success',
-    message: 'Volume "backup-01" snapshot completed.',
+    message: 'API key "prod-key-01" has been rotated.',
+    statusIcon: infoIcon,
     time: '10:10',
-    project: 'Proj-1',
-    app: 'Compute',
-    appIcon: AppIconCompute,
-    isRead: true,
+    partition: 'proj-1',
+    app: 'IAM',
+    appIcon: AppIconIAM,
+    isRead: false,
+    href: '/iam/api-keys',
   },
   {
     id: '4',
-    type: 'warning',
-    message: 'API key expires in 3 days.',
+    message: 'Deployment "api-gateway" scaled to 3 replicas.',
+    statusIcon: infoIcon,
     time: '08:45',
-    app: 'IAM',
-    appIcon: AppIconIAM,
-    isRead: false,
+    partition: 'default',
+    app: 'Container',
+    appIcon: AppIconContainer,
+    isRead: true,
+    href: '/container/deployments',
   },
   {
     id: '5',
-    type: 'info',
-    message: 'New policy "ReadOnly" attached to group.',
+    message: 'Instance "web-01" snapshot done.',
+    statusIcon: successIcon,
     time: '08:30',
-    project: 'Proj-1',
-    app: 'IAM',
-    appIcon: AppIconIAM,
+    partition: 'proj-1',
+    app: 'Compute',
+    appIcon: AppIconCompute,
     isRead: true,
+    href: '/compute/instances',
   },
   {
     id: '6',
-    type: 'error',
-    message: 'Pod "api-gateway" CrashLoopBackOff.',
+    message: 'Pod "api-gateway" crash loop.',
+    statusIcon: errorIcon,
     time: '09:55',
-    project: 'default',
+    partition: 'default',
     app: 'Container',
     appIcon: AppIconContainer,
     isRead: false,
+    href: '/container/pods',
     detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
+  },
+  {
+    id: '7',
+    message: 'Storage pool "pool-01" health check passed.',
+    statusIcon: successIcon,
+    time: '08:15',
+    partition: 'proj-1',
+    app: 'Storage',
+    appIcon: AppIconStorage,
+    isRead: true,
+    href: '/storage/pools',
   },
 ];
 
@@ -427,7 +383,7 @@ function GlobalPanelDemo() {
         </Button>
       </div>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
           {/* Tabs header */}
           <div className="relative pt-3 pb-0">
             <button
@@ -451,12 +407,7 @@ function GlobalPanelDemo() {
             >
               <TabList className="w-full px-4">
                 <Tab value="all">All</Tab>
-                <Tab value="unread">
-                  Unread
-                  {unreadCount > 0 && (
-                    <span className="ml-1 text-[var(--color-text-muted)]">({unreadCount})</span>
-                  )}
-                </Tab>
+                <Tab value="unread">Unread{unreadCount > 0 && ` (${unreadCount})`}</Tab>
               </TabList>
             </Tabs>
           </div>
@@ -477,7 +428,15 @@ function GlobalPanelDemo() {
               No notifications
             </div>
           ) : (
-            <div className="max-h-[420px] overflow-y-auto px-3 py-2 drawer-scroll">
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'hidden', y: 'scroll' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              style={{ maxHeight: 420 }}
+              className="px-3 py-2"
+            >
               <div className="flex flex-col gap-2">
                 {filteredNotifications.map((n) => (
                   <InteractiveNotificationCard
@@ -487,7 +446,7 @@ function GlobalPanelDemo() {
                   />
                 ))}
               </div>
-            </div>
+            </OverlayScrollbarsComponent>
           )}
         </div>
       </div>
@@ -502,146 +461,305 @@ function InteractiveNotificationCard({
   notification: PanelNotification;
   onMarkAsRead: () => void;
 }) {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const hasDetail =
     notification.detail && (notification.detail.code || notification.detail.message);
+  const isUnread = !notification.isRead;
+
+  const handleBodyClick = () => {
+    if (notification.href) {
+      navigate(notification.href);
+    }
+  };
 
   return (
     <div
-      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] overflow-hidden ${
-        !notification.isRead
-          ? 'bg-[var(--color-surface-subtle)]'
-          : 'bg-[var(--color-surface-default)]'
-      }`}
+      className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        onClick={() => {
-          if (!notification.isRead) onMarkAsRead();
-        }}
-        className="flex gap-3 p-3 cursor-pointer"
+        className={`flex items-start justify-between px-3${notification.href ? ' cursor-pointer' : ''}`}
+        onClick={handleBodyClick}
       >
-        <div className="shrink-0 pt-0.5">{TYPE_ICONS[notification.type]}</div>
-        <div className="flex-1 min-w-0">
-          <p className="text-body-md text-[var(--color-text-default)] mb-2 pr-6">
-            {notification.message}
-          </p>
-          {notification.project && (
-            <Badge theme="white" size="sm">
-              {notification.project}
-            </Badge>
-          )}
+        <div className="flex gap-2 items-start w-[256px]">
+          <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
+          <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
+            <div className="flex flex-col">
+              <span className="text-body-md text-[var(--color-text-default)]">
+                {notification.statusIcon
+                  ? (() => {
+                      const msg = notification.message;
+                      const lastSpace = msg.lastIndexOf(' ');
+                      if (lastSpace === -1)
+                        return (
+                          <span className="whitespace-nowrap">
+                            {msg}
+                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
+                              {notification.statusIcon}
+                            </span>
+                          </span>
+                        );
+                      return (
+                        <>
+                          {msg.slice(0, lastSpace)}{' '}
+                          <span className="whitespace-nowrap">
+                            {msg.slice(lastSpace + 1)}
+                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
+                              {notification.statusIcon}
+                            </span>
+                          </span>
+                        </>
+                      );
+                    })()
+                  : notification.message}
+              </span>
+            </div>
+
+            {notification.partition && (
+              <span className="text-body-xs text-[var(--color-text-subtle)]">
+                {notification.partition}
+              </span>
+            )}
+
+            {hasDetail && (
+              <div
+                className="flex flex-col gap-2 rounded-[var(--radius-sm)]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="group flex items-center gap-1"
+                >
+                  <span className="text-body-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] whitespace-nowrap">
+                    View detail
+                  </span>
+                  {isExpanded ? (
+                    <IconChevronUp
+                      size={12}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  ) : (
+                    <IconChevronDown
+                      size={12}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  )}
+                </button>
+
+                {isExpanded && (
+                  <>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <div className="flex flex-col gap-1 text-body-sm text-[var(--color-text-muted)]">
+                      {notification.detail?.code !== undefined && (
+                        <p>code: {notification.detail.code}</p>
+                      )}
+                      {notification.detail?.message && <p>{notification.detail.message}</p>}
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-        <div className="shrink-0 flex flex-col items-end gap-1">
-          <img
-            src={notification.appIcon}
-            alt="App icon"
-            className="size-5 object-cover pointer-events-none"
-          />
-          <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
+        <div className="flex flex-col items-end justify-end self-stretch shrink-0">
+          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
             {notification.time}
           </span>
         </div>
       </div>
 
-      {hasDetail && (
-        <>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpanded(!isExpanded);
-            }}
-            className="flex items-center justify-end gap-1 w-full px-3 py-2 text-body-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] border-t border-[var(--color-border-subtle)] transition-colors"
-          >
-            <span>View detail</span>
-            {isExpanded ? (
-              <IconChevronUp size={14} stroke={1.5} />
-            ) : (
-              <IconChevronDown size={14} stroke={1.5} />
-            )}
-          </button>
+      {isUnread && !isHovered && (
+        <div className="absolute top-3 right-3 size-1.5 rounded-full bg-[var(--color-action-primary)]" />
+      )}
 
-          {isExpanded && (
-            <div className="px-3 pb-3">
-              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] flex flex-col gap-1">
-                {notification.detail?.code && (
-                  <p className="text-label-md text-[var(--color-text-default)]">
-                    code: {notification.detail.code}
-                  </p>
-                )}
-                {notification.detail?.message && (
-                  <p className="text-body-md text-[var(--color-text-muted)]">
-                    {notification.detail.message}
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
-        </>
+      {isUnread && isHovered && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onMarkAsRead();
+          }}
+          className="absolute top-[6px] right-[8px] size-4 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-muted)] transition-colors"
+        >
+          <IconCheckbox size={12} stroke={1.5} />
+        </button>
       )}
     </div>
   );
 }
 
 /* ----------------------------------------
-   NotificationTypeCards
+   PanelCardStates
    ---------------------------------------- */
 
-function NotificationTypeCards() {
+function PanelCardStates() {
+  const PARTITION = 'ultra-resilient-cloud-native-infrastructure-management-platform';
+
   return (
     <VStack gap={3}>
-      <span className="text-label-md text-[var(--color-text-default)]">Notification types</span>
+      <span className="text-label-md text-[var(--color-text-default)]">
+        Notification card states
+      </span>
       <p className="text-body-sm text-[var(--color-text-subtle)]">
-        Each notification card uses a type icon to indicate the notification category. When
-        displayed in the global panel, app icons identify which application generated the
-        notification.
+        10 visual states of a notification card: info / success / error types, read/unread, hover
+        mark-as-read, detail collapsed/expanded.
       </p>
-      <div className="grid grid-cols-2 gap-4 max-w-[760px]">
+      <div className="grid grid-cols-[320px_320px] gap-6">
+        {/* Row 1: Info */}
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Success</span>
-          <StaticSnackbarCard
-            type="success"
-            message='Instance "web-server-01" created successfully.'
-            time="10:23"
-            project="Proj-1"
-            isRead={false}
-            showAppIcon
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Info — Default</span>
+          <StaticPanelCard
             appIcon={AppIconCompute}
+            message={`Deployment "api-gateway" scaled to 3 replicas.`}
+            statusIcon={infoIcon}
+            time="10:33"
+            partition={PARTITION}
           />
         </VStack>
+
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Error</span>
-          <StaticSnackbarCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj-2"
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Info — Unread</span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message={`Deployment "api-gateway" scaled to 3 replicas.`}
+            statusIcon={infoIcon}
+            time="10:33"
+            partition={PARTITION}
             isRead={false}
-            showAppIcon
-            appIcon={AppIconStorage}
           />
         </VStack>
+
+        {/* Row 2: Info hover */}
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Warning</span>
-          <StaticSnackbarCard
-            type="warning"
-            message="API key expires in 3 days."
-            time="08:45"
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Info — Hover (mark as read)
+          </span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message={`Deployment "api-gateway" scaled to 3 replicas.`}
+            statusIcon={infoIcon}
+            time="10:33"
+            partition={PARTITION}
             isRead={false}
-            showAppIcon
-            appIcon={AppIconIAM}
+            showReadButton
           />
         </VStack>
+
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Info</span>
-          <StaticSnackbarCard
-            type="info"
-            message='Pod "api-gateway" scaling to 3 replicas.'
-            time="08:30"
-            project="default"
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Success — Default</span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message={`Volume "backup-01" snapshot\nsuccessfully created`}
+            statusIcon={successIcon}
+            time="10:33"
+            partition={PARTITION}
+          />
+        </VStack>
+
+        {/* Row 3: Success */}
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Success — Read</span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message={`Volume "backup-01" snapshot\nsuccessfully created`}
+            statusIcon={successIcon}
+            time="10:33"
+            partition={PARTITION}
+          />
+        </VStack>
+
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Success — Unread (hover)
+          </span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message={`Volume "backup-01" snapshot\nsuccessfully created`}
+            statusIcon={successIcon}
+            time="10:33"
+            partition={PARTITION}
             isRead={false}
-            showAppIcon
-            appIcon={AppIconContainer}
+            showReadButton
+          />
+        </VStack>
+
+        {/* Row 4: Failed */}
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Failed — Detail closed (unread)
+          </span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message={`Volume "backup-01" create failed.`}
+            statusIcon={errorIcon}
+            time="10:33"
+            partition={PARTITION}
+            isRead={false}
+            detail={{
+              code: 200,
+              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+            }}
+          />
+        </VStack>
+
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Failed — Detail closed (read)
+          </span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message={`Volume "backup-01" create failed.`}
+            statusIcon={errorIcon}
+            time="10:33"
+            partition={PARTITION}
+            detail={{
+              code: 200,
+              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+            }}
+          />
+        </VStack>
+
+        {/* Row 5: Failed hover + expanded */}
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Failed — Hover (mark as read)
+          </span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message={`Volume "backup-01" create failed.`}
+            statusIcon={errorIcon}
+            time="10:33"
+            partition={PARTITION}
+            isRead={false}
+            showReadButton
+            detail={{
+              code: 200,
+              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+            }}
+          />
+        </VStack>
+
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Failed — Detail expanded
+          </span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message={`Volume "backup-01" create failed.`}
+            statusIcon={errorIcon}
+            time="10:33"
+            partition={PARTITION}
+            detail={{
+              code: 200,
+              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+            }}
+            isExpanded
           />
         </VStack>
       </div>
@@ -650,121 +768,77 @@ function NotificationTypeCards() {
 }
 
 /* ----------------------------------------
-   SnackbarCardStates
+   PanelEmptyStates
    ---------------------------------------- */
 
-function SnackbarCardStates() {
+function EmptyPanelShell({
+  activeTab,
+  children,
+}: {
+  activeTab: 'all' | 'unread';
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+      <div className="relative pt-3 pb-0">
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)]">
+          <IconCheckbox size={16} stroke={1.5} />
+        </div>
+        <Tabs
+          value={activeTab}
+          onChange={() => {}}
+          variant="underline"
+          size="sm"
+          className="w-full"
+        >
+          <TabList className="w-full px-4">
+            <Tab value="all">All</Tab>
+            <Tab value="unread">Unread</Tab>
+          </TabList>
+        </Tabs>
+      </div>
+      <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
+        <Select
+          options={[{ value: 'all', label: 'All apps' }]}
+          value="all"
+          onChange={() => {}}
+          size="md"
+          fullWidth
+        />
+      </div>
+      <div className="flex flex-col items-center justify-center h-[160px] px-6 text-center">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function PanelEmptyStates() {
   return (
     <VStack gap={3}>
-      <span className="text-label-md text-[var(--color-text-default)]">
-        Notification card states
-      </span>
+      <span className="text-label-md text-[var(--color-text-default)]">Empty states</span>
       <p className="text-body-sm text-[var(--color-text-subtle)]">
-        All six visual states of a notification card: read/unread, with/without detail disclosure,
-        and disclosure open.
+        목록이 비어 있을 때 표시되는 문구는 탭별로 고정된다.
       </p>
-      <div className="grid grid-cols-2 gap-6 max-w-[760px]">
+      <div className="flex gap-6 flex-wrap">
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Read (app icon)</span>
-          <StaticSnackbarCard
-            type="success"
-            message='Instance "web-server-01" created successfully.'
-            time="10:23"
-            project="Proj-1"
-            isRead
-            showAppIcon
-            appIcon={AppIconCompute}
-          />
+          <span className="text-label-sm text-[var(--color-text-subtle)]">All tab</span>
+          <EmptyPanelShell activeTab="all">
+            <span className="text-body-md text-[var(--color-text-muted)]">
+              No notifications.
+              <br />
+              They are deleted automatically after 72 hours.
+            </span>
+          </EmptyPanelShell>
         </VStack>
 
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Unread (app icon)</span>
-          <StaticSnackbarCard
-            type="success"
-            message='Volume "data-vol-01" attached to instance.'
-            time="10:15"
-            project="Proj-1"
-            isRead={false}
-            showAppIcon
-            appIcon={AppIconCompute}
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Read + Detail (collapsed)
-          </span>
-          <StaticSnackbarCard
-            type="warning"
-            message='Instance "db-server" is running low on disk space.'
-            time="09:15"
-            project="Proj-1"
-            isRead
-            showAppIcon
-            appIcon={AppIconCompute}
-            detail={{ code: 'WARN_DISK_LOW', message: 'Disk usage is at 92%.' }}
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Unread + Detail (collapsed)
-          </span>
-          <StaticSnackbarCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj-2"
-            isRead={false}
-            showAppIcon
-            appIcon={AppIconStorage}
-            detail={{
-              code: 400,
-              message:
-                "Flavor's disk is smaller than the minimum size specified in image metadata.",
-            }}
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Read + Detail (expanded)
-          </span>
-          <StaticSnackbarCard
-            type="success"
-            message='Instance "web-server-01" created successfully.'
-            time="10:23"
-            project="Proj-1"
-            isRead
-            showAppIcon
-            appIcon={AppIconCompute}
-            detail={{
-              code: 200,
-              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
-            }}
-            isExpanded
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Unread + Detail (expanded)
-          </span>
-          <StaticSnackbarCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj-2"
-            isRead={false}
-            showAppIcon
-            appIcon={AppIconStorage}
-            detail={{
-              code: 400,
-              message:
-                "Flavor's disk is smaller than the minimum size specified in image metadata.",
-            }}
-            isExpanded
-          />
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Unread tab</span>
+          <EmptyPanelShell activeTab="unread">
+            <span className="text-body-md text-[var(--color-text-muted)]">
+              No unread notifications.
+            </span>
+          </EmptyPanelShell>
         </VStack>
       </div>
     </VStack>
@@ -776,8 +850,10 @@ function SnackbarCardStates() {
    ---------------------------------------- */
 
 const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
-전역 알림 패널은 모든 앱의 '안읽은(Unread)' 기록형 알림을 한곳에서 모아 보여주는 데스크탑 레벨 보조 뷰이다.
-알림의 저장소가 아니라 unread 상태의 알림을 모아 보여주는 보조 인터페이스이다.
+
+앱 내부 알림센터는 **해당 앱에서 발생한 모든 기록형 알림의 원본 저장소**이다.
+
+따라서 사용자가 Snackbar를 놓치거나 과거 알림을 확인하려는 경우 **알림센터를 통해 확인할 수 있다.**
 
 ---
 
@@ -785,86 +861,132 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 
 | 요소 | 설명 |
 | --- | --- |
-| Panel Icon | 패널 열기/닫기 |
-| Panel | 알림 목록 컨테이너 |
-| App Filter | 앱별 알림 필터링 |
-| App Header | 앱별 그룹 헤더 |
-| Show more / Show less | 알림 목록 확장 |
+| Notification icon | 알림센터 열기 |
+| Unread badge | 안읽은 알림 표시 |
+| Tabs | 알림 필터 |
 | Mark all as read | 전체 읽음 처리 |
-| Notification Item | 개별 알림 카드 |
-| Unread Badge | 안읽은 알림 수 표시 |
+| Notification list | 알림 목록 |
+| Notification item | 개별 알림 |
 
-### Panel Icon
-- 전역 패널 열기/닫기 트리거
-- Unread badge와 함께 표시
+### 1) Notification Icon
 
-### Panel
-- 모든 앱의 안읽은 알림을 앱별 그룹으로 표시
-- 데스크탑 레벨 고정 위치
+- 알림센터 진입 아이콘이다.
+- 동작
+  - 클릭 시 알림센터 열림
+  - 안읽은 알림이 있을 경우 **badge 표시**
 
-### App Filter
-- 탭 아래에 위치하는 Select 드롭다운
-- 알림이 존재하는 앱만 옵션으로 노출
-- "All apps" 선택 시 전체 앱 알림 표시
-- 특정 앱 선택 시 해당 앱의 알림만 필터링
+### 2) Tabs
 
-### App Header
-- 알림이 존재하는 앱만 노출
-- 앱 아이콘, 앱 이름, Show more/less 버튼, Mark all as read 버튼
+- 알림 필터 기능 제공한다.
+  - All(모든 알림)
+  - Unread(읽지 않은 알림)
+- 정렬은 최신순이다. (가장 최근에 온 알림이 최상단)
 
-### Show more / Show less
-- 알림이 1개 이상일 때 표시
-- Show more 클릭 시 해당 앱 알림 전체 표시
-- Show less 클릭 시 최신 알림 1개만 노출
+### 3) Mark all as read
 
-### Mark all as read
-- 해당 앱의 모든 알림 읽음 처리
-- 클릭 시 패널에서 즉시 제거
+- 모든 알림을 읽음 처리한다.
+- 동작
+  - 현재 알림센터에 표시된 알림을 읽음 처리
+  - Badge 제거
+- 호버 시 툴팁이 노출된다. "Mark all as read"
 
-### Notification Item
-- 알림센터의 개별 알림과 동일한 구조
+### 4) Notification Item
 
-| 구성요소 | 설명 |
+- **알림센터의 개별 알림은 전역 패널의 개별 알림과 동일하다.**
+- 개별 알림은 스낵바와 유사한 구조를 가진다.
+- 구성 요소
+
+| 요소 | 설명 |
 | --- | --- |
-| Type icon | 알림 유형 (success/error/warning/info) |
-| Message | 알림 메시지 |
+| Type icon | 알림 유형 |
+| Message | 알림 내용 |
 | Timestamp | 발생 시각 |
-| Partition info | 프로젝트/네임스페이스 등 |
-| Read button | 읽음 처리 |
-| View details | 상세 메시지 확장 |
+| Partition info | tenant / cluster 등 |
+| Read button | 개별 읽음 처리 |
+| View details | 실패 상세 정보 |
 
 ---
 
 ## Behavior
 
-### 1) Snackbar suppression rule
+### 1) 기록 규칙
 
-| 조건 | 스낵바 동작 |
+- 스낵바 알림은 항상 알림 센터에 기록된다.
+- 토스트, 인라인, Validation 메시지는 알림센터에 기록되지 않는다.
+
+### 2) 스낵바 관계
+
+- 스낵바로 노출되는 메시지는 모두 알림센터에 기록된다.
+- 스낵바에서 동작에 따라 알림센터에서 읽음 처리에 영향을 준다.
+
+| 행동 | 읽음 처리 |
 | --- | --- |
-| 알림센터 열림 | 노출 안 됨 |
-| 글로벌 패널 열림 | 노출 안 됨 |
+| Snackbar 클릭 | ✔ |
+| Snackbar 닫기 | ✖ |
+| Snackbar 자동 종료 | ✖ |
+| View details | ✖ |
 
-### 2) 알림 센터 실시간 동기화
+### 3) Global Notification Panel
 
-| 이벤트 | 패널 동작 |
+- Global Panel은 **안읽은 알림 집계 뷰**이다.
+
+| 특성 | 설명 |
 | --- | --- |
-| 새 알림 발생 | 패널 상단 추가 |
-| 알림 읽음 처리 | 패널에서 제거 |
-| 알림 만료 | 패널에서 제거 |
+| 데이터 | 모든 앱의 안읽은 알림 |
+| 정렬 | 최신순 |
+| 필터 | 없음 |
 
-### 3) 인터랙션 규칙
-- 카드 본문 클릭 → 리소스 화면 이동 + 읽음 처리 + 패널 닫힘
-- 개별 읽음 버튼 → 해당 알림 읽음 + 패널에서 제거
-- 전체 읽음 버튼 → 현재 표시 알림 읽음 + 패널에서 제거
-- View details 버튼 → 상세 메시지 확장, 읽음 처리 안됨
+- 알림 센터와 실시간 동기화 된다.
 
-### 4) Real-time Behavior
-- 패널이 열린 상태에서 새 알림은 상단에 실시간 추가
-- Snackbar는 표시되지 않는다
+| 행동 | 결과 |
+| --- | --- |
+| 알림 클릭 | 리소스 이동 + 읽음 |
+| 개별 읽음 | 알림 제거 |
+| 전체 읽음 | 목록 초기화 |
 
-### 5) 표시 규칙
-- 안읽은 알림이 하나 이상 존재할 때만 표시
-- 읽음 처리 또는 보관 기간(30일) 만료 시 제거
+### 4) Snackbar Suppression Rule
+
+- 앱 내의 알림센터 또는 글로벌 알림 패널이 열려 있을 경우 스낵바가 노출되지 않는다.
+
+| 상황 | 동작 |
+| --- | --- |
+| Notification Center 열림 | Snackbar 억제 |
+| Global Panel 열림 | Snackbar 억제 |
+
+- 이 경우 알림은 스낵바 노출 없이 바로 알림센터와 글로벌 알림 패널 목록에 기록된다.
+
+### 5) 읽음 처리 기준
+
+- 알림 메시지가 읽음 처리가 되는 기준은 다음과 같다.
+
+| 행동 | 읽음 |
+| --- | --- |
+| Snackbar 클릭 | ✔ |
+| Notification item 클릭 | ✔ |
+| Read button | ✔ |
+| Mark all as read | ✔ |
+
+- 읽음 처리 후에는 해당 알림 메시지가 글로벌 알림 패널에서 제거된다.
+- 모두 읽음 처리가 되었을 경우 알림센터와 글로벌 알림 패널의 아이콘에 Badge가 제거된다.
+
+### 6) 알림 보관 정책
+
+- 알림은 사용자가 삭제할 수 없다.
+- 알림은 72시간 보관 이후 자동으로 삭제된다.
+
+### 7) Empty state
+
+목록이 비어 있을 때 표시하는 문구는 **탭별**로 고정한다.
+
+**All 탭**
+
+- EN (UI): \`No notifications. They are deleted automatically after 72 hours.\`
+- KO (참고): 알림이 없습니다. 알림은 72시간 후 자동으로 삭제됩니다.
+
+**Unread 탭**
+
+- EN (UI): \`No unread notifications.\`
+- KO (참고): 읽지 않은 알림이 없습니다.
 
 ---
 
@@ -874,9 +996,10 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 | --- | --- | --- |
 | Snackbar | Component | 기록형 알림 |
 | Toast | Component | 단발성 피드백 |
-| Notification Center | Component | 알림 원본 저장소 |
+| Inline Message | Component | 지속 경고 |
+| Modal | Component | 사용자 확인 |
+| Global Notification Panel | Pattern | 안읽은 알림 집계 |
 | Error & Alert | Foundation | 알림 유형 정의 |
-| Desktop UI | Pattern | 전역 패널 위치 |
 `;
 
 /* ----------------------------------------
@@ -887,48 +1010,48 @@ export function GlobalNotificationPanelPage() {
   return (
     <ComponentPageTemplate
       title="Global notification panel"
-      description="전역 알림 패널은 모든 앱의 '안읽은(Unread)' 기록형 알림을 한곳에서 모아 보여주는 데스크탑 레벨 보조 뷰. 알림의 저장소가 아니라 unread 상태의 알림을 모아 보여주는 보조 인터페이스."
+      description="해당 앱에서 발생한 모든 기록형 알림의 원본 저장소. Snackbar를 놓치거나 과거 알림을 확인할 때 알림센터를 통해 확인할 수 있다."
       whenToUse={[
-        '여러 앱에서 발생한 안읽은 알림을 한곳에서 확인해야 하는 경우',
-        '사용자가 현재 어떤 앱을 보고 있는지와 관계없이 새로운 알림을 빠르게 확인해야 하는 경우',
-        'Snackbar를 놓친 경우',
+        '해당 앱에서 발생한 알림 기록을 확인해야 하는 경우',
+        '오류 상세 정보 또는 작업 결과를 확인해야 하는 경우',
       ]}
       whenNotToUse={[
         '단순 UI 피드백 (→ Toast)',
         '지속 경고 메시지 (→ Inline)',
         '사용자 확인이 필요한 작업 (→ Modal)',
-        '특정 앱의 알림 기록을 상세히 확인 (→ Notification Center)',
+        '모든 앱의 알림을 한 번에 확인 (→ Global notification panel)',
       ]}
       preview={<GlobalPanelPreview />}
       examples={
         <VStack gap={8}>
           <GlobalPanelDemo />
-          <NotificationTypeCards />
-          <SnackbarCardStates />
+          <PanelCardStates />
+          <PanelEmptyStates />
         </VStack>
       }
       guidelines={
         <>
-          <NotionRenderer markdown={GLOBAL_NOTIFICATION_PANEL_GUIDELINES} />
           <DosDonts
             doItems={[
-              '안읽은 알림을 빠르게 확인할 수 있도록 사용한다',
-              '알림을 앱별로 그룹화한다',
-              '최신 알림을 상단에 표시한다',
+              '모든 기록형 알림을 알림센터에 저장한다',
+              '실패 알림은 상세 정보 제공',
+              '안읽은 알림을 명확히 표시한다',
             ]}
             dontItems={[
-              '전역 패널을 알림 저장소로 사용하지 않는다',
-              'Toast를 전역 패널에 표시하지 않는다',
-              '읽은 알림을 표시하지 않는다',
+              'Toast를 기록형 알림으로 사용하지 않는다',
+              '사용자가 알림을 삭제하도록 하지 않는다',
+              '기록형 알림을 자동으로 숨기지 않는다',
             ]}
           />
+          <NotionRenderer markdown={GLOBAL_NOTIFICATION_PANEL_GUIDELINES} />
         </>
       }
       relatedLinks={[
         { label: 'Snackbar', path: '/design/components/snackbar' },
         { label: 'Toast', path: '/design/components/toast' },
+        { label: 'Inline Message', path: '/design/components/inline-message' },
+        { label: 'Modal', path: '/design/components/modal' },
         { label: 'Error & Alert', path: '/design/policies/error-alert' },
-        { label: 'Desktop UI', path: '/design/patterns/desktop-grid' },
       ]}
     />
   );

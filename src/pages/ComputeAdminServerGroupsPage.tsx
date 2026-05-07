@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ConfirmModal,
@@ -24,8 +23,9 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -167,10 +167,10 @@ const mockServerGroups: ServerGroup[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'tenantName', label: 'Tenant', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'tenantName', label: 'Tenant', type: 'text' },
   {
-    key: 'policy',
+    id: 'policy',
     label: 'Policy',
     type: 'select',
     options: [
@@ -183,6 +183,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminServerGroupsPage() {
+  const navigate = useNavigate();
   const [selectedServerGroups, setSelectedServerGroups] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -207,6 +208,13 @@ export function ComputeAdminServerGroupsPage() {
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -243,7 +251,7 @@ export function ComputeAdminServerGroupsPage() {
 
     return serverGroups.filter((sg) => {
       return appliedFilters.every((filter) => {
-        const value = String(sg[filter.field as keyof ServerGroup] || '').toLowerCase();
+        const value = String(sg[filter.fieldId as keyof ServerGroup] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -292,7 +300,12 @@ export function ComputeAdminServerGroupsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -310,7 +323,12 @@ export function ComputeAdminServerGroupsPage() {
           >
             {row.tenantName}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -331,8 +349,11 @@ export function ComputeAdminServerGroupsPage() {
                 {firstInstance?.name || '-'}
               </span>
               {firstInstance && (
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                  ID: {firstInstance.id}
+                <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                  <span className="truncate" title={firstInstance.id}>
+                    ID : {firstInstance.id.slice(0, 8)}
+                  </span>
+                  <InlineCopyId value={firstInstance.id} />
                 </span>
               )}
             </div>
@@ -344,11 +365,11 @@ export function ComputeAdminServerGroupsPage() {
                   delay={100}
                   hideDelay={100}
                   content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="p-3 min-w-[160px] max-w-[320px]">
                       <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                         All Instances ({instanceCount})
                       </div>
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                         {row.instances.map((inst, i) => (
                           <Badge key={i} theme="white" size="sm">
                             {inst.name}
@@ -379,6 +400,7 @@ export function ComputeAdminServerGroupsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button
@@ -424,23 +446,9 @@ export function ComputeAdminServerGroupsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Server Groups' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Server Groups' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -503,6 +511,7 @@ export function ComputeAdminServerGroupsPage() {
           selectable
           selectedKeys={selectedServerGroups}
           onSelectionChange={setSelectedServerGroups}
+          loading={loading}
         />
       </VStack>
 
@@ -512,7 +521,7 @@ export function ComputeAdminServerGroupsPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete server group"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected server groups is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

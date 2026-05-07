@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   Table,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ListToolbar,
   StatusIndicator,
@@ -16,8 +16,11 @@ import {
   PageHeader,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
   fixedColumns,
   columnMinWidths,
+  ConfirmModal,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -49,32 +52,40 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   if (status === 'completed') {
     bgColor = 'bg-[var(--color-state-success-bg)]';
-    iconBg = 'bg-[var(--color-success)]';
+    iconBg = 'bg-[var(--color-state-success)]';
   } else if (status === 'error') {
     bgColor = 'bg-[var(--color-state-danger-bg)]';
-    iconBg = 'bg-[var(--color-danger)]';
+    iconBg = 'bg-[var(--color-state-danger)]';
   } else if (status === 'processing') {
-    bgColor = 'bg-[var(--color-info-weak-bg)]';
-    iconBg = 'bg-[var(--color-info)]';
+    bgColor = 'bg-[var(--color-state-info-bg)]';
+    iconBg = 'bg-[var(--color-state-info)]';
   }
 
   const getStatusIcon = () => {
     if (status === 'completed') {
-      return <IconTarget size={16} stroke={1} className="text-white" />;
+      return <IconTarget size={16} stroke={1} className="text-[var(--color-text-on-primary)]" />;
     } else if (status === 'error') {
-      return <IconAlertTriangle size={16} stroke={1} className="text-white" />;
+      return (
+        <IconAlertTriangle size={16} stroke={1} className="text-[var(--color-text-on-primary)]" />
+      );
     } else if (status === 'processing') {
-      return <IconLoader2 size={16} stroke={1} className="text-white animate-spin" />;
+      return (
+        <IconLoader2
+          size={16}
+          stroke={1}
+          className="text-[var(--color-text-on-primary)] animate-spin"
+        />
+      );
     } else if (status === 'pending') {
-      return <IconRefresh size={12} stroke={1} className="text-white" />;
+      return <IconRefresh size={12} stroke={1} className="text-[var(--color-text-on-primary)]" />;
     } else if (status === 'draft') {
-      return <IconPencil size={16} stroke={1} className="text-white" />;
+      return <IconPencil size={16} stroke={1} className="text-[var(--color-text-on-primary)]" />;
     }
   };
 
   return (
     <div
-      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
+      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-[var(--radius-lg)] shrink-0`}
     >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
         <p className="text-label-sm text-[var(--color-text-subtle)]">{label}</p>
@@ -105,6 +116,31 @@ interface DataSourceRow {
 }
 
 /* ----------------------------------------
+   Filter fields
+   ---------------------------------------- */
+const dataSourceFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [{ value: 'File', label: 'File' }],
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'completed', label: 'Completed' },
+      { value: 'error', label: 'Error' },
+      { value: 'processing', label: 'Processing' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'draft', label: 'Draft' },
+    ],
+  },
+];
+
+/* ----------------------------------------
    Main StoragePage Component
    ---------------------------------------- */
 export function StoragePage() {
@@ -113,9 +149,11 @@ export function StoragePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [selectedDataSources, setSelectedDataSources] = useState<string[]>([]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loading, setLoading] = useState(true);
 
   // Set page title
   useEffect(() => {
@@ -125,72 +163,91 @@ export function StoragePage() {
     };
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
+  useEffect(() => {
+    updateActiveTabLabel('Data Sources');
+  }, [updateActiveTabLabel]);
+
   // Mock data
-  const dataSources: DataSourceRow[] = [
+  const [dataSources, setDataSources] = useState<DataSourceRow[]>([
     {
       id: '1',
       favorite: false,
       status: 'draft',
-      name: 'lable',
+      name: 'production-db',
       type: 'File',
       documents: '-',
       size: '-',
-      createdAt: 'Nov 11, 2025, 2:51 PM',
+      createdAt: 'Nov 11, 2026, 2:51 PM',
     },
     {
       id: '2',
       favorite: false,
       status: 'pending',
-      name: 'lable',
+      name: 'user-analytics',
       type: 'File',
       documents: '-',
       size: '-',
-      createdAt: 'Nov 11, 2025, 2:51 PM',
+      createdAt: 'Nov 11, 2026, 2:51 PM',
     },
     {
       id: '3',
       favorite: false,
       status: 'completed',
-      name: 'lable',
+      name: 'log-archive',
       type: 'File',
       documents: '7',
       size: '60 MB',
-      createdAt: 'Nov 11, 2025, 2:51 PM',
+      createdAt: 'Nov 11, 2026, 2:51 PM',
     },
     {
       id: '4',
       favorite: false,
       status: 'processing',
-      name: 'lable',
+      name: 'customer-support-kb',
       type: 'File',
       documents: '7/10 (75%)',
       documentsProgress: { current: 7, total: 10, percentage: 75 },
       size: '60 MB',
-      createdAt: 'Nov 11, 2025, 2:51 PM',
+      createdAt: 'Nov 11, 2026, 2:51 PM',
     },
     {
       id: '5',
       favorite: false,
       status: 'error',
-      name: 'lable',
+      name: 'billing-reports',
       type: 'File',
       documents: '7/10 (75%)',
       documentsProgress: { current: 7, total: 10, percentage: 75, hasError: true },
       size: '60 MB',
-      createdAt: 'Nov 11, 2025, 2:51 PM',
+      createdAt: 'Nov 11, 2026, 2:51 PM',
     },
     {
       id: '6',
       favorite: false,
       status: 'processing',
-      name: 'lable',
+      name: 'product-docs',
       type: 'File',
       documents: '(75%)',
       documentsProgress: { current: 7, total: 10, percentage: 75 },
       size: '60 MB',
-      createdAt: 'Nov 11, 2025, 2:51 PM',
+      createdAt: 'Nov 11, 2026, 2:51 PM',
     },
-  ];
+  ]);
+
+  const handleBulkDelete = () => {
+    setDataSources((prev) => prev.filter((ds) => !selectedDataSources.includes(ds.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedDataSources([]);
+  };
 
   // Status mapping for StatusIndicator
   const statusMap: Record<DataSourceRow['status'], 'active' | 'shutoff' | 'pending'> = {
@@ -201,16 +258,20 @@ export function StoragePage() {
     draft: 'pending',
   };
 
-  // Filter data sources by search
+  // Filter data sources
   const filteredDataSources = useMemo(() => {
-    if (!searchQuery) return dataSources;
+    if (appliedFilters.length === 0) return dataSources;
 
-    return dataSources.filter(
-      (ds) =>
-        ds.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        ds.type.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [dataSources, searchQuery]);
+    return dataSources.filter((ds) => {
+      return appliedFilters.every((filter) => {
+        const value = ds[filter.fieldId as keyof DataSourceRow];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        return true;
+      });
+    });
+  }, [dataSources, appliedFilters]);
 
   const totalPages = Math.ceil(filteredDataSources.length / rowsPerPage);
   const paginatedDataSources = useMemo(() => {
@@ -279,7 +340,7 @@ export function StoragePage() {
               <div className="w-full h-1.5 bg-[var(--color-surface-subtle)] rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all ${
-                    hasError ? 'bg-[var(--color-danger)]' : 'bg-[var(--color-action-primary)]'
+                    hasError ? 'bg-[var(--color-state-danger)]' : 'bg-[var(--color-action-primary)]'
                   }`}
                   style={{ width: `${percentage}%` }}
                 />
@@ -311,6 +372,7 @@ export function StoragePage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -327,7 +389,10 @@ export function StoragePage() {
             onClick={(e) => e.stopPropagation()}
           >
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -365,11 +430,9 @@ export function StoragePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Data Sources' }]} />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Data Sources' }]} />}
           actions={
             <>
               <TopBarAction
@@ -400,12 +463,13 @@ export function StoragePage() {
           }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         <PageHeader
           title="Data sources"
           actions={
-            <Button variant="primary" size="md" onClick={() => {}}>
+            <Button variant="primary" size="md" onClick={() => console.log('Create data source')}>
               Create data source
             </Button>
           }
@@ -426,16 +490,15 @@ export function StoragePage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <div className="w-[var(--search-input-width)]">
-                  <SearchInput
-                    placeholder="Search data sources by attributes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
-                    size="sm"
-                    fullWidth
-                  />
-                </div>
+                <FilterSearchInput
+                  filters={dataSourceFilterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
+                  placeholder="Search data sources by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
+                />
               </ListToolbar.Actions>
             }
             bulkActions={
@@ -445,6 +508,7 @@ export function StoragePage() {
                   size="sm"
                   leftIcon={<IconTrash size={12} />}
                   disabled={selectedDataSources.length === 0}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Delete
                 </Button>
@@ -470,9 +534,23 @@ export function StoragePage() {
             selectable
             selectedKeys={selectedDataSources}
             onSelectionChange={setSelectedDataSources}
+            loading={loading}
           />
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected data sources"
+        description="Deleting the selected data sources is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedDataSources.length} data source(s)`}
+      />
     </PageShell>
   );
 }

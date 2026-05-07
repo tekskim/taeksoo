@@ -197,17 +197,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       </button>
 
       {/* Page Numbers */}
-      {isEmpty ? (
-        <button
-          type="button"
-          disabled
-          className={activePageClass}
-          aria-label="Page 1"
-          aria-current="page"
-        >
-          1
-        </button>
-      ) : (
+      {!isEmpty &&
         paginationRange.map((pageNumber, index) => {
           if (pageNumber === DOTS) {
             return (
@@ -233,8 +223,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               {page}
             </button>
           );
-        })
-      )}
+        })}
 
       {/* Next Button */}
       <button

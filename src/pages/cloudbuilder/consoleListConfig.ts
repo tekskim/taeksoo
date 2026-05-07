@@ -129,7 +129,7 @@ function makeRows(count: number, rowFactory: (i: number) => Record<string, strin
 }
 
 export const CLOUD_BUILDER_SLUGS = [
-  'severs0.7',
+  'servers',
   'services',
   'compute-services',
   'network-agents',
@@ -143,7 +143,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
   const COUNT = 115;
   const detailHrefBase = `/cloudbuilder/${slug}/detail`;
 
-  if (slug === 'severs0.7') {
+  if (slug === 'servers') {
     const roleTones: Record<string, BadgeTone> = {
       'Baremetal node': 'blue',
     };

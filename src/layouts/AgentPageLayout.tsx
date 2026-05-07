@@ -1,4 +1,5 @@
 import { ReactNode, useMemo } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate } from 'react-router-dom';
 import { TopBar, TopBarAction, Breadcrumb } from '@/design-system';
 import { IconBell, IconPalette } from '@tabler/icons-react';
@@ -87,7 +88,14 @@ export function AgentPageLayout({
   // Main content structure with header and children
   const mainContent = useMemo(
     () => (
-      <div className="bg-[var(--color-surface-default)] flex flex-1 flex-col gap-6 pb-[120px] pt-6 px-8 w-full overflow-y-auto min-h-0 min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="bg-[var(--color-surface-default)] flex flex-1 flex-col gap-6 pb-[120px] pt-6 px-8 w-full min-h-0 min-w-[var(--layout-content-min-width)] overscroll-contain"
+      >
         <div className="flex flex-col gap-6 items-start w-full">
           {/* Page Header */}
           <div className="flex items-center justify-between w-full">
@@ -102,7 +110,7 @@ export function AgentPageLayout({
           {/* Page Content */}
           <div className="flex flex-col gap-6 w-full">{children}</div>
         </div>
-      </div>
+      </OverlayScrollbarsComponent>
     ),
     [title, headerActions, children]
   );

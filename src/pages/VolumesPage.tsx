@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -28,8 +27,8 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeSnapshotDrawer } from '@/components/CreateVolumeSnapshotDrawer';
 import { CreateVolumeBackupDrawer } from '@/components/CreateVolumeBackupDrawer';
-import { CloneVolumeDrawer } from '@/components/CloneVolumeDrawer';
-import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
+import { CreateVolumeFromResourceDrawer } from '@/components/CreateVolumeFromResourceDrawer';
+import { RestoreVolumeSnapshotDrawer } from '@/components/RestoreVolumeSnapshotDrawer';
 import { CreateImageFromVolumeDrawer } from '@/components/CreateImageFromVolumeDrawer';
 import { EditVolumeDrawer } from '@/components/EditVolumeDrawer';
 import { ExtendVolumeDrawer } from '@/components/ExtendVolumeDrawer';
@@ -37,8 +36,9 @@ import { ChangeVolumeTypeDrawer } from '@/components/ChangeVolumeTypeDrawer';
 import { CreateTransferDrawer } from '@/components/CreateTransferDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import { DetachVolumeDrawer } from '@/components/DetachVolumeDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -71,7 +71,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data disk',
     attachedTo: 'web-server-1',
     attachedToId: 'inst-001',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     status: 'in-use',
   },
   {
@@ -82,7 +82,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data disk',
     attachedTo: 'app-server-1',
     attachedToId: 'inst-002',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     status: 'in-use',
   },
   {
@@ -93,7 +93,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Backup',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     status: 'active',
   },
   {
@@ -104,7 +104,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Logs',
     attachedTo: 'log-server',
     attachedToId: 'inst-003',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     status: 'in-use',
   },
   {
@@ -115,7 +115,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Cache',
     attachedTo: 'cache-01',
     attachedToId: 'inst-004',
-    createdAt: 'Aug 30, 2025 21:37:41',
+    createdAt: 'Aug 30, 2026 21:37:41',
     status: 'in-use',
   },
   {
@@ -126,7 +126,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Media',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -137,7 +137,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Temporary',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     status: 'pending',
   },
   {
@@ -148,7 +148,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'ML Dataset',
     attachedTo: 'gpu-server-1',
     attachedToId: 'inst-005',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     status: 'in-use',
   },
   {
@@ -159,7 +159,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Archive',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -170,7 +170,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Boot',
     attachedTo: 'web-server-2',
     attachedToId: 'inst-006',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     status: 'in-use',
   },
 ];
@@ -192,9 +192,9 @@ const volumeStatusMap: Record<VolumeStatus, 'active' | 'in-use' | 'error' | 'pen
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'type',
+    id: 'type',
     label: 'Type',
     type: 'select',
     options: [
@@ -204,10 +204,10 @@ const filterFields: FilterField[] = [
       { value: 'HDD', label: 'HDD' },
     ],
   },
-  { key: 'diskTag', label: 'Disk tag', type: 'text' },
-  { key: 'attachedTo', label: 'Attached to', type: 'text' },
+  { id: 'diskTag', label: 'Disk tag', type: 'text' },
+  { id: 'attachedTo', label: 'Attached to', type: 'text' },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -220,6 +220,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function VolumesPage() {
+  const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -228,6 +229,7 @@ export function VolumesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [volumeToDelete, setVolumeToDelete] = useState<Volume | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Selection state
   const [selectedVolumes, setSelectedVolumes] = useState<string[]>([]);
@@ -249,6 +251,13 @@ export function VolumesPage() {
   const [attachInstanceOpen, setAttachInstanceOpen] = useState(false);
   const [detachInstanceOpen, setDetachInstanceOpen] = useState(false);
   const [selectedVolumeForDrawer, setSelectedVolumeForDrawer] = useState<Volume | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Helper to parse size string to number (e.g., '1500GiB' -> 1500)
   const parseSizeToNumber = (size: string): number => {
@@ -326,13 +335,30 @@ export function VolumesPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, openInNewTab, addNewTab, moveTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    closeTab,
+    selectTab,
+    openInNewTab,
+    addNewTab,
+    moveTab,
+    updateActiveTabLabel,
+  } = useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Volumes');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Handle opening instance in new tab
   const handleOpenInNewTab = (instanceId: string, instanceName: string) => {
-    openInNewTab(instanceId, instanceName, `/instances/${instanceId}`);
+    openInNewTab(instanceId, instanceName, `/compute/instances/${instanceId}`);
   };
 
   // Convert tabs to TabBar format
@@ -361,13 +387,19 @@ export function VolumesPage() {
     setVolumeToDelete(null);
   };
 
+  const handleBulkDelete = () => {
+    setVolumes((prev) => prev.filter((v) => !selectedVolumes.includes(v.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedVolumes([]);
+  };
+
   // Filter volumes by applied filters
   const filteredVolumes = useMemo(() => {
     if (appliedFilters.length === 0) return volumes;
 
     return volumes.filter((v) => {
       return appliedFilters.every((filter) => {
-        const value = String(v[filter.field as keyof Volume] || '').toLowerCase();
+        const value = String(v[filter.fieldId as keyof Volume] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -401,7 +433,12 @@ export function VolumesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -443,8 +480,11 @@ export function VolumesPage() {
             >
               {row.attachedTo}
             </button>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.attachedToId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.attachedToId}>
+                ID : {row.attachedToId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.attachedToId} />
             </span>
           </div>
         ) : (
@@ -464,6 +504,7 @@ export function VolumesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -559,7 +600,10 @@ export function VolumesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -605,18 +649,9 @@ export function VolumesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Volumes' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Volumes' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -627,7 +662,11 @@ export function VolumesPage() {
           title="Volumes"
           actions={
             <>
-              <Button variant="primary" size="md">
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => console.log('Accept volume transfer')}
+              >
                 Accept Volume Transfer
               </Button>
               <Button size="md" as={Link} to="/compute/volumes/create">
@@ -654,6 +693,7 @@ export function VolumesPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -664,6 +704,7 @@ export function VolumesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedVolumes.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -691,6 +732,7 @@ export function VolumesPage() {
           selectable
           selectedKeys={selectedVolumes}
           onSelectionChange={setSelectedVolumes}
+          loading={loading}
         />
       </VStack>
 
@@ -700,12 +742,25 @@ export function VolumesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete volume"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing this volume is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         infoLabel="Volume name"
         infoValue={volumeToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected volumes"
+        description="Removing the selected volumes is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedVolumes.length} volume(s)`}
       />
 
       {/* View Preferences Drawer */}
@@ -748,7 +803,7 @@ export function VolumesPage() {
         }
       />
 
-      <CloneVolumeDrawer
+      <CreateVolumeFromResourceDrawer
         isOpen={cloneVolumeOpen}
         onClose={() => setCloneVolumeOpen(false)}
         volume={
@@ -762,7 +817,7 @@ export function VolumesPage() {
         }
       />
 
-      <RestoreFromSnapshotDrawer
+      <RestoreVolumeSnapshotDrawer
         isOpen={restoreSnapshotOpen}
         onClose={() => setRestoreSnapshotOpen(false)}
         volume={

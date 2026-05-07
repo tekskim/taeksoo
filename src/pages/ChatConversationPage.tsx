@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import {
   TopBar,
@@ -289,7 +290,7 @@ function ReadOnlyBar() {
             </Tooltip>
           </div>
         </div>
-      </div>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }

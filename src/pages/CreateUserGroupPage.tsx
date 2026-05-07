@@ -20,7 +20,7 @@ import {
   type TableColumn,
   fixedColumns,
   columnMinWidths,
-  WizardSectionStatusIcon,
+  WizardSummary,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -64,228 +64,228 @@ const SECTION_ORDER: SectionStep[] = ['basic-info', 'add-users'];
 const mockUsers: User[] = [
   {
     id: 'user-1',
-    username: 'thaki-kim',
+    username: 'thaki-lee',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     status: 'active',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'user-2',
-    username: 'thaki-kim',
+    username: 'thaki-park',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     status: 'active',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'user-3',
-    username: 'thaki-kim',
+    username: 'thaki-choi',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     status: 'active',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'user-4',
-    username: 'thaki-kim',
+    username: 'thaki-jung',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     status: 'active',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'user-5',
-    username: 'thaki-kim',
+    username: 'thaki-kang',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     status: 'active',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'user-6',
-    username: 'thaki-kim',
+    username: 'thaki-han',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     status: 'active',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'user-7',
-    username: 'thaki-kim',
+    username: 'thaki-ryu',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     status: 'active',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'user-8',
     username: 'admin-user',
     userGroups: 'admins (+1)',
     roles: 'full-access (+5)',
-    lastSignIn: 'Sep 10, 2025',
+    lastSignIn: 'Sep 10, 2026',
     status: 'active',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
   },
   {
     id: 'user-9',
     username: 'dev-user',
     userGroups: 'developers (+3)',
     roles: 'write-access (+2)',
-    lastSignIn: 'Sep 8, 2025',
+    lastSignIn: 'Sep 8, 2026',
     status: 'active',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
   },
   {
     id: 'user-10',
     username: 'viewer-user',
     userGroups: 'viewers',
     roles: 'read-only',
-    lastSignIn: 'Sep 5, 2025',
+    lastSignIn: 'Sep 5, 2026',
     status: 'inactive',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
   },
   {
     id: 'user-11',
     username: 'test-user-1',
     userGroups: 'testers (+1)',
     roles: 'qa-role (+2)',
-    lastSignIn: 'Sep 1, 2025',
+    lastSignIn: 'Sep 1, 2026',
     status: 'active',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
   },
   {
     id: 'user-12',
     username: 'test-user-2',
     userGroups: 'testers (+1)',
     roles: 'qa-role (+2)',
-    lastSignIn: 'Aug 28, 2025',
+    lastSignIn: 'Aug 28, 2026',
     status: 'active',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
   },
   {
     id: 'user-13',
     username: 'ops-user',
     userGroups: 'ops-team (+2)',
     roles: 'infra-admin (+3)',
-    lastSignIn: 'Aug 25, 2025',
+    lastSignIn: 'Aug 25, 2026',
     status: 'active',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
   },
   {
     id: 'user-14',
     username: 'support-user',
     userGroups: 'support (+1)',
     roles: 'support-role',
-    lastSignIn: 'Aug 20, 2025',
+    lastSignIn: 'Aug 20, 2026',
     status: 'active',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
   {
     id: 'user-15',
     username: 'manager-user',
     userGroups: 'managers (+2)',
     roles: 'manager-role (+4)',
-    lastSignIn: 'Aug 15, 2025',
+    lastSignIn: 'Aug 15, 2026',
     status: 'active',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
   {
     id: 'user-16',
     username: 'analyst-user',
     userGroups: 'analysts',
     roles: 'read-analytics',
-    lastSignIn: 'Aug 10, 2025',
+    lastSignIn: 'Aug 10, 2026',
     status: 'active',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
   },
   {
     id: 'user-17',
     username: 'security-user',
     userGroups: 'security (+3)',
     roles: 'security-admin (+5)',
-    lastSignIn: 'Aug 5, 2025',
+    lastSignIn: 'Aug 5, 2026',
     status: 'active',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
   },
   {
     id: 'user-18',
     username: 'finance-user',
     userGroups: 'finance (+1)',
     roles: 'finance-role (+2)',
-    lastSignIn: 'Aug 1, 2025',
+    lastSignIn: 'Aug 1, 2026',
     status: 'inactive',
-    createdAt: 'Aug 1, 2025 10:20:28',
+    createdAt: 'Aug 1, 2026 10:20:28',
   },
   {
     id: 'user-19',
     username: 'hr-user',
     userGroups: 'hr-team (+2)',
     roles: 'hr-role (+3)',
-    lastSignIn: 'Jul 28, 2025',
+    lastSignIn: 'Jul 28, 2026',
     status: 'active',
-    createdAt: 'Jul 28, 2025 07:11:07',
+    createdAt: 'Jul 28, 2026 07:11:07',
   },
   {
     id: 'user-20',
     username: 'legal-user',
     userGroups: 'legal',
     roles: 'legal-role',
-    lastSignIn: 'Jul 25, 2025',
+    lastSignIn: 'Jul 25, 2026',
     status: 'active',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: 'user-21',
     username: 'marketing-user',
     userGroups: 'marketing (+1)',
     roles: 'marketing-role (+2)',
-    lastSignIn: 'Jul 20, 2025',
+    lastSignIn: 'Jul 20, 2026',
     status: 'active',
-    createdAt: 'Jul 20, 2025 23:27:51',
+    createdAt: 'Jul 20, 2026 23:27:51',
   },
   {
     id: 'user-22',
     username: 'sales-user',
     userGroups: 'sales (+2)',
     roles: 'sales-role (+3)',
-    lastSignIn: 'Jul 15, 2025',
+    lastSignIn: 'Jul 15, 2026',
     status: 'active',
-    createdAt: 'Jul 15, 2025 12:22:26',
+    createdAt: 'Jul 15, 2026 12:22:26',
   },
   {
     id: 'user-23',
     username: 'customer-user',
     userGroups: 'customers',
     roles: 'customer-role',
-    lastSignIn: 'Jul 10, 2025',
+    lastSignIn: 'Jul 10, 2026',
     status: 'active',
-    createdAt: 'Jul 10, 2025 01:17:01',
+    createdAt: 'Jul 10, 2026 01:17:01',
   },
   {
     id: 'user-24',
     username: 'partner-user',
     userGroups: 'partners (+1)',
     roles: 'partner-role (+2)',
-    lastSignIn: 'Jul 5, 2025',
+    lastSignIn: 'Jul 5, 2026',
     status: 'active',
-    createdAt: 'Jul 5, 2025 14:12:36',
+    createdAt: 'Jul 5, 2026 14:12:36',
   },
   {
     id: 'user-25',
     username: 'vendor-user',
     userGroups: 'vendors',
     roles: 'vendor-role',
-    lastSignIn: 'Jul 1, 2025',
+    lastSignIn: 'Jul 1, 2026',
     status: 'inactive',
-    createdAt: 'Jul 1, 2025 10:20:28',
+    createdAt: 'Jul 1, 2026 10:20:28',
   },
 ];
 
@@ -299,7 +299,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -317,7 +317,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -371,36 +371,16 @@ function SummarySidebar({
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card with Header and Status */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Header */}
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Create user group</h4>
-
-            {/* Section Status List */}
-            <div className="flex flex-col">
-              {SECTION_ORDER.map((sectionKey) => {
-                const isWriting = sectionStatus[sectionKey] === 'writing';
-
-                return (
-                  <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SECTION_LABELS[sectionKey]}
-                    </span>
-                    {isWriting ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </VStack>
-        </div>
+        <WizardSummary
+          title="Create user group"
+          items={SECTION_ORDER.map((key) => ({
+            key,
+            label: SECTION_LABELS[key],
+            status: sectionStatus[key],
+          }))}
+        />
 
         {/* Action Buttons */}
         <HStack gap={2}>
@@ -974,14 +954,13 @@ export default function CreateUserGroupPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'User groups', href: '/iam/user-groups' },
-                { label: 'Create user group' },
+                { label: 'User Groups', href: '/iam/user-groups' },
+                { label: 'Create User Group' },
               ]}
             />
           }

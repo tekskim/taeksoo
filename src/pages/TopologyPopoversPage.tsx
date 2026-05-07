@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { Link } from 'react-router-dom';
 import {
   IconX,
@@ -192,7 +193,11 @@ function HealthMonitorEmpty() {
 
 export function TopologyPopoversPage() {
   return (
-    <div className="h-screen overflow-auto bg-[var(--color-surface-subtle)]">
+    <OverlayScrollbarsComponent
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+      defer={false}
+      className="h-screen bg-[var(--color-surface-subtle)]"
+    >
       {/* Header */}
       <div className="sticky top-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
         <div className="max-w-7xl mx-auto px-8 py-6">
@@ -265,7 +270,13 @@ export function TopologyPopoversPage() {
               <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">
                 2. 타이포그래피
               </h3>
-              <div className="overflow-x-auto">
+              <OverlayScrollbarsComponent
+                options={{
+                  overflow: { x: 'scroll', y: 'hidden' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+              >
                 <table className="w-full text-body-sm">
                   <thead>
                     <tr className="border-b border-[var(--color-border-default)]">
@@ -331,7 +342,7 @@ export function TopologyPopoversPage() {
                     </tr>
                   </tbody>
                 </table>
-              </div>
+              </OverlayScrollbarsComponent>
             </div>
 
             {/* Spacing */}
@@ -524,7 +535,13 @@ export function TopologyPopoversPage() {
           <h2 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
             타입별 데이터 필드
           </h2>
-          <div className="overflow-x-auto">
+          <OverlayScrollbarsComponent
+            options={{
+              overflow: { x: 'scroll', y: 'hidden' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            defer={false}
+          >
             <table className="w-full text-body-sm">
               <thead>
                 <tr className="border-b border-[var(--color-border-default)]">
@@ -695,7 +712,7 @@ export function TopologyPopoversPage() {
                 </tr>
               </tbody>
             </table>
-          </div>
+          </OverlayScrollbarsComponent>
         </div>
       </div>
 
@@ -854,7 +871,7 @@ export function TopologyPopoversPage() {
           </PopoverCard>
         </div>
       </div>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

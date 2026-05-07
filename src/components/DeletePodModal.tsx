@@ -37,7 +37,7 @@ export function DeletePodModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete pod"
-      description="Removing the selected instances is permanent and cannot be undone."
+      description="Removing the selected pods is permanent and cannot be undone."
       infoLabel="Pod name"
       infoValue={pod?.name ?? ''}
       confirmText="Delete"

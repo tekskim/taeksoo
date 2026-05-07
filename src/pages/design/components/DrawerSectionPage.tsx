@@ -1,187 +1,115 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 import { DrawerDemo } from '../../design-system-sections/OverlayDemos';
 import { VStack, Button } from '@/design-system';
 import { CreateInstanceSnapshotDrawer } from '@/components/CreateInstanceSnapshotDrawer';
 import { EditInstanceDrawer } from '@/components/EditInstanceDrawer';
-import { LockSettingDrawer } from '@/components/LockSettingDrawer';
+import { LockInstanceDrawer } from '@/components/LockInstanceDrawer';
 
-function TableWrapper({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
-        {children}
-      </table>
-    </div>
-  );
-}
+const DRAWER_GUIDELINES = `## Overview
 
-function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
-  return (
-    <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
-    >
-      {children}
-    </th>
-  );
-}
+**Drawer**는 화면 **왼쪽**에서 **세로 전체 높이**로 슬라이드되어 열리는 **오버레이 패널**이다.
+**반투명 딤(배경)** 위에 표시되며, 열린 동안 **배경 스크롤을 잠그고** 패널 안에 **포커스를 가두는** 동작(포커스 트랩)을 기본으로 한다.
+**짧은 폼·리스트 선택·보조 상세** 등 **작업을 끝까지 같은 맥락에서** 처리할 때 쓴다.
 
-function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
-  return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
-      {children}
-    </td>
-  );
-}
+---
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
-}
+## Composition
 
-function SubSectionTitle({ children }: { children: React.ReactNode }) {
-  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
-}
+구조는 **기획·화면 스펙**이 정하고, **간격·타이포 토큰·스크롤바** 등 세부는 **디자인 시스템 구현**을 따른다.
 
-function Prose({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
-      {children}
-    </div>
-  );
-}
+\`\`\`
+[딤: 전체 화면]
+[패널 aside: dialog]
+  [헤더: title(필수) · description(선택)]
+  [본문: 스크롤 영역 — 필수]
+  [푸터: 버튼 영역 — 필수]
+\`\`\`
 
-function DrawerSectionPageGuidelines() {
-  return (
-    <VStack gap={10}>
-      <VStack gap={4}>
-        <VStack gap={2}>
-          <SubSectionTitle>Drawer vs Modal 선택 기준</SubSectionTitle>
-          <TableWrapper>
-            <thead>
-              <tr>
-                <Th>조건</Th>
-                <Th>권장 컴포넌트</Th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <Td>간단한 확인/결정 (예/아니오)</Td>
-                <Td>
-                  <strong>Modal (sm)</strong>
-                </Td>
-              </tr>
-              <tr>
-                <Td>간단한 폼 (필드 1~5개)</Td>
-                <Td>
-                  <strong>Drawer (4col / 360px)</strong>
-                </Td>
-              </tr>
-              <tr>
-                <Td>선택/검색 필요 (리스트에서 선택)</Td>
-                <Td>
-                  <strong>Drawer (8col / 696px)</strong>
-                </Td>
-              </tr>
-              <tr>
-                <Td>복잡한 리소스 생성 (많은 필드)</Td>
-                <Td>
-                  <strong>별도 Create 페이지</strong>{' '}
-                  <span className="text-body-sm text-[var(--color-text-subtle)]">
-                    (
-                    <a
-                      href="/design/patterns/wizard"
-                      className="underline hover:text-[var(--color-action-primary)]"
-                    >
-                      Wizard 패턴
-                    </a>{' '}
-                    참고)
-                  </span>
-                </Td>
-              </tr>
-            </tbody>
-          </TableWrapper>
-        </VStack>
-        <VStack gap={2}>
-          <SubSectionTitle>너비 정책 (Grid 기반)</SubSectionTitle>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
-            Column 60px, Gutter 24px, Margin 24px 그리드 기준
-          </p>
-          <TableWrapper>
-            <thead>
-              <tr>
-                <Th>컬럼</Th>
-                <Th>너비</Th>
-                <Th>용도</Th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <Td>
-                  <strong>4 columns</strong>
-                </Td>
-                <Td className="font-mono">360px</Td>
-                <Td>폼 Drawer (Edit, Create with few fields)</Td>
-              </tr>
-              <tr>
-                <Td>
-                  <strong>8 columns</strong>
-                </Td>
-                <Td className="font-mono">696px</Td>
-                <Td>선택 Drawer (리스트에서 리소스 선택, 상세 정보 표시)</Td>
-              </tr>
-              <tr>
-                <Td>
-                  <strong>12 columns</strong>
-                </Td>
-                <Td className="font-mono">1032px</Td>
-                <Td>대형 Drawer (복잡한 레이아웃, 멀티 패널)</Td>
-              </tr>
-            </tbody>
-          </TableWrapper>
-        </VStack>
-        <VStack gap={2}>
-          <SubSectionTitle>구조 규칙</SubSectionTitle>
-          <Prose>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>
-                <strong>헤더</strong>: title prop으로 타이틀 설정. Close 버튼과 border-bottom은
-                제거됨. showCloseButton prop은 deprecated이며 무시된다.
-              </li>
-              <li>
-                <strong>Footer</strong>: 액션 버튼은 footer prop에 배치. Cancel(secondary) 왼쪽,
-                Submit(primary) 오른쪽. flex-1로 균등 너비.
-              </li>
-              <li>
-                <strong>컨텍스트 정보</strong>: 수정 대상 리소스의 ID/이름은 상단 InfoBox로 표시.
-              </li>
-              <li>
-                <strong>스크롤</strong>: 콘텐츠가 길면 body 영역만 스크롤. Footer는 하단 고정.
-                스크롤바는 overlay 방식으로 콘텐츠 위에 표시되어 좌우 패딩(24px)이 항상 균등하게
-                유지됩니다.
-              </li>
-            </ul>
-          </Prose>
-        </VStack>
-      </VStack>
+| 영역 / 슬롯 | 필수 | 기획 역할 |
+| --- | --- | --- |
+| **title** | 필수 | 패널 목적을 한눈에 알 수 있는 **제목** |
+| **description** | 선택 | 타이틀 아래 **부가 설명** — 짧은 안내·범위 |
+| **children (본문)** | 필수 | 화면 목적에 맞는 콘텐츠(아래 **본문 구성** 참고) |
+| **footer** | 필수 | **하단 버튼** — Drawer를 닫거나 주요 액션을 수행(아래 **푸터 버튼** 참고) |
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
+### 본문 (children)
 
-      <DosDonts
-        doItems={[
-          'Drawer가 열려 있을 때 배경 콘텐츠와의 맥락을 유지합니다.',
-          '닫기 전 미저장 변경사항이 있으면 확인 모달을 표시합니다.',
-          'ESC 키와 외부 클릭으로 닫을 수 있도록 합니다.',
-        ]}
-        dontItems={[
-          'Drawer 안에서 또 다른 Drawer를 열지 않습니다.',
-          '필드 6개 이상을 Drawer에 넣지 않습니다 (별도 Create 페이지(Wizard 패턴) 사용).',
-          'Drawer를 전체 화면 너비로 사용하지 않습니다.',
-        ]}
-      />
-    </VStack>
-  );
-}
+- 본문에는 **Input**, **Table**, **Toggle**, **Select**, **Form field** 등 **TDS 컴포넌트를 조합**해 넣는다. **한 화면·한 Drawer**의 목적에 맞게 구성한다.
+
+### 본문 내 테이블 (행 수)
+
+- **기본(일반)**: 테이블 **데이터 행**은 **5개 이하**를 기준으로 한다(헤더 제외).
+- **예외**: 본문에 **테이블이 하나만** 있는 등 **특수한 경우**에는 **최대 10행**까지 허용한다.
+- 여러 블록(폼+표 등)이 함께 있을 때는 **기본 5행** 규칙을 우선한다.
+
+### 푸터 (footer) 버튼
+
+- **버튼이 1개일 때**: Drawer를 닫기 위한 **\`Close\` 버튼**으로 **통일**한다.
+- **버튼이 2개 이상일 때**: **Secondary** 슬롯에는 반드시 **\`Cancel\`** 또는 **\`Close\`** 중 하나를 두어 **닫기 경로**를 포함한다. Primary는 저장·확인 등 주요 액션에 둔다.
+- **정렬**: 2개 이상일 때 **Cancel/Close(secondary) 왼쪽 · Primary 오른쪽**을 기본으로 한다.
+
+### 구조 규칙 (제품·레이아웃)
+
+- **헤더**: \`title\`은 **필수**, \`description\`은 **선택**.
+- **닫기**: **드로어 외부 딤 처리 영역 클릭 또는** 푸터의 **Close / Cancel 클릭.**
+- **푸터**: 액션은 **footer** 슬롯에 둔다.
+- **스크롤**: 내용이 길면 **본문만** 스크롤하고 **푸터는 하단 고정**. 스크롤바는 **오버레이** 방식으로 좌우 패딩이 흔들리지 않게 한다.
+- **중첩**: **Drawer 안에서 또 다른 Drawer를 열지 않는다.**
+
+---
+
+## Behavior
+
+### 열기·닫기
+
+- **제어**: \`isOpen\` / \`onClose\`로 연다·닫는다.
+- **딤 클릭**: 기본 **닫기** (\`closeOnBackdropClick\`, 기본 true).
+- **스크롤 잠금**: 열린 동안 \`document.body\` **overflow hidden**으로 배경 스크롤을 막는다.
+
+### 포커스·접근성
+
+- **포커스 트랩**: 패널이 열리면 포커스는 **패널 내부**에 유지된다.
+- **시맨틱**: \`role="dialog"\`, \`aria-modal="true"\`, 타이틀이 있으면 \`aria-labelledby\`와 제목 \`id\` 연결.
+- **애니메이션**: 슬라이드·딤 페이드 **300ms** \`ease-out\` 계열(구현 기준).
+
+### 상태 (기획 관점)
+
+| 상태 | 설명 |
+| --- | --- |
+| Closed | 마운트 해제 또는 대기 — 배경 상호작용 가능 |
+| Open | 패널·딤 표시, 포커스 트랩·배경 스크롤 잠금 |
+| Dirty (제품 상태) | 저장 안 된 변경 — 닫기 시 **확인 Modal** |
+
+---
+
+## Usage Guidelines
+
+### 너비 정책 (Grid 기반)
+
+Column **60px**, Gutter **24px**, Margin **24px** 그리드 기준.
+
+| 컬럼 | 너비 | 용도 |
+| --- | --- | --- |
+| **4 columns** | 360px | 폼 Drawer (Edit, 필드 적은 Create) |
+| **8 columns** | 696px | 선택 Drawer (목록에서 리소스 선택·상세) |
+| **12 columns** | 1032px | 대형 Drawer (복잡 레이아웃·멀티 패널) |
+
+구현 **기본 width**는 **320**이나, 제품 정책상 폼·선택 용도에 맞춰 **360 / 696 / 1032**를 지정한다. **전체 뷰포트 너비에 가깝게 쓰지 않는다.**
+
+---
+
+## Related
+
+| 항목 | 유형 | 비고 |
+| --- | --- | --- |
+| Modal | Component | 중앙·차단형 확인·짧은 결정 |
+| Popover | Pattern | 트리거 옆 경량 패널 (딤 없음) |
+| Form Field | Pattern | Drawer 내 폼 구성 |
+| Wizard (Create Flow) | Pattern | 필드 많은 생성 플로우 |
+`;
 
 export function DrawerSectionPage() {
   const [snapshotOpen, setSnapshotOpen] = useState(false);
@@ -201,18 +129,17 @@ export function DrawerSectionPage() {
   return (
     <ComponentPageTemplate
       title="Drawer"
-      description="Slide-out panel for forms, details, and secondary content"
+      description="화면 왼쪽에서 세로 전체 높이로 슬라이드되어 열리는 오버레이 패널이다. 반투명 딤(배경) 위에 표시되며, 열린 동안 배경 스크롤을 잠그고 패널 안에 포커스를 가두는 동작(포커스 트랩)을 기본으로 한다. 짧은 폼·리스트 선택·보조 상세 등 작업을 끝까지 같은 맥락에서 처리할 때 쓴다."
       whenToUse={[
-        '리소스 생성/편집 등 짧은 폼을 메인 화면 위에 슬라이드 형태로 표시할 때',
-        '상세 정보나 설정을 메인 콘텐츠와 나란히 보여줘야 할 때',
-        '작업 흐름을 중단하지 않으면서 보조 콘텐츠를 제공할 때',
-        '스냅샷 생성, 잠금 설정 등 컨텍스트 정보와 함께 간단한 입력이 필요할 때',
+        '리소스 생성/편집 등 필드 수가 제한된 짧은 폼을 메인 화면 위에 슬라이드로 열 때',
+        '선택·검색이 필요한 목록(리소스 고르기)을 옆 패널로 둘 때',
+        '상세·설정을 메인 콘텐츠와 나란히 보여줄 때',
+        '스냅샷 생성·잠금 설정처럼 컨텍스트(대상 ID/이름) + 입력이 함께 필요할 때',
       ]}
       whenNotToUse={[
-        '파괴적 액션(삭제, 중단) 확인이 필요한 경우 → Modal 사용',
-        '폼이 매우 길거나 복잡한 위자드가 필요한 경우 → 전체 페이지(Create Page) 사용',
-        '단순 정보 안내만 필요한 경우 → Inline Message 또는 Toast 사용',
-        '인터랙티브 없는 짧은 추가 정보만 보여줄 때 → Tooltip 또는 Popover 사용',
+        '파괴적 확인(삭제 등)만 필요할 때 → Modal (sm 등)',
+        '필드가 매우 많거나 위자드·다단계가 필요할 때 → 전용 Create 페이지 (Wizard 패턴)',
+        '트리거 옆 경량 정보만 → Popover / Tooltip',
       ]}
       preview={<DrawerDemo />}
       examples={
@@ -253,14 +180,31 @@ export function DrawerSectionPage() {
             onClose={() => setEditOpen(false)}
             instance={sampleInstance}
           />
-          <LockSettingDrawer
+          <LockInstanceDrawer
             isOpen={lockOpen}
             onClose={() => setLockOpen(false)}
             instance={sampleInstance}
           />
         </VStack>
       }
-      guidelines={<DrawerSectionPageGuidelines />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={DRAWER_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '슬롯은 title·본문·footer 필수, description 선택을 지킨다.',
+              '본문 테이블 행 수는 기본 5행 이하, 본문에 표가 하나뿐인 특수 경우에만 최대 10행까지 허용한다.',
+              '푸터 버튼 1개는 Close, 2개 이상은 secondary에 Cancel 또는 Close를 둔다.',
+              '열린 동안 배경 맥락을 기억할 수 있게 짧은 작업에 쓴다. ESC·딤으로 닫을 수 있게 한다.',
+              '닫기 전 미저장 변경이 있으면 확인 Modal을 띄운다.',
+            ]}
+            dontItems={[
+              'Drawer 안에서 두 번째 Drawer를 열지 않는다.',
+              '필드 6개 이상을 한 Drawer에 우겨 넣지 않는다 → Create 페이지 / Wizard.',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           width: 320px (default) · Form: 360px (4col) · Selection: 696px (8col) · Large: 1032px
@@ -269,16 +213,25 @@ export function DrawerSectionPage() {
         </div>
       }
       relatedLinks={[
-        { label: 'Modal', path: '/design/components/modal', description: 'Dialog overlay' },
+        {
+          label: 'Modal',
+          path: '/design/components/modal',
+          description: '중앙·차단형 확인·짧은 결정',
+        },
         {
           label: 'Popover',
           path: '/design/components/popover',
-          description: 'Lightweight overlay',
+          description: '트리거 옆 경량 패널 (딤 없음)',
         },
         {
           label: 'Form Field',
           path: '/design/patterns/form-field',
-          description: 'Form in drawer',
+          description: 'Drawer 내 폼 구성',
+        },
+        {
+          label: 'Wizard (Create Flow)',
+          path: '/design/patterns/wizard',
+          description: '필드 많은 생성 플로우',
         },
       ]}
     />

@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -7,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   NumberInput,
   Slider,
@@ -30,7 +30,6 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
 import {
-  IconBell,
   IconEdit,
   IconExternalLink,
   IconCirclePlus,
@@ -38,6 +37,7 @@ import {
   IconChevronRight,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -100,7 +100,7 @@ function SummarySidebar({
 
   return (
     <div className="w-[312px] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
@@ -209,7 +209,7 @@ export function ComputeAdminCreateFlavorPage() {
 
   const breadcrumbItems = [
     { label: 'Flavors', href: '/compute-admin/flavors' },
-    { label: 'Create flavor' },
+    { label: 'Create Flavor' },
   ];
 
   // Navigation handlers
@@ -302,7 +302,12 @@ export function ComputeAdminCreateFlavorPage() {
             </Link>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -383,19 +388,7 @@ export function ComputeAdminCreateFlavorPage() {
           showWindowControls={true}
         />
       }
-      topBar={
-        <TopBar
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => console.log('Notifications clicked')}
-              aria-label="Notifications"
-              badge
-            />
-          }
-        />
-      }
+      topBar={<TopBar breadcrumb={<Breadcrumb items={breadcrumbItems} />} />}
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3} className="min-w-[1176px]">
@@ -928,7 +921,14 @@ export function ComputeAdminCreateFlavorPage() {
                           </div>
 
                           {/* Metadata List */}
-                          <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
+                          <OverlayScrollbarsComponent
+                            options={{
+                              overflow: { x: 'hidden', y: 'scroll' },
+                              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                            }}
+                            defer={false}
+                            className="flex flex-col gap-1 flex-1 min-h-0"
+                          >
                             {availableMetadataOptions
                               .filter(
                                 (item) =>
@@ -1052,7 +1052,7 @@ export function ComputeAdminCreateFlavorPage() {
                                   )}
                                 </div>
                               ))}
-                          </div>
+                          </OverlayScrollbarsComponent>
                         </div>
 
                         {/* Right Column - Existing Metadata */}
@@ -1070,7 +1070,14 @@ export function ComputeAdminCreateFlavorPage() {
                           />
 
                           {/* Selected Metadata List */}
-                          <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
+                          <OverlayScrollbarsComponent
+                            options={{
+                              overflow: { x: 'hidden', y: 'scroll' },
+                              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                            }}
+                            defer={false}
+                            className="flex flex-col gap-1 flex-1 min-h-0"
+                          >
                             {selectedMetadata
                               .filter(
                                 (item) =>
@@ -1130,7 +1137,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 </span>
                               </div>
                             )}
-                          </div>
+                          </OverlayScrollbarsComponent>
                         </div>
                       </div>
                     </VStack>

@@ -1,5 +1,6 @@
 import { type HTMLAttributes, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { twMerge } from '../../utils/cn';
 import {
   IconX,
@@ -84,13 +85,13 @@ function StatusIcon({ status }: { status: SectionStatus }) {
     case 'success':
       return (
         <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-          <IconCheck size={10} stroke={2} className="text-white" />
+          <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
         </div>
       );
     case 'warning':
       return (
         <div className="size-4 rounded-full border border-[var(--color-state-danger)] bg-[var(--color-state-danger)] shrink-0 flex items-center justify-center">
-          <IconAlertTriangle size={10} stroke={2} className="text-white" />
+          <IconAlertTriangle size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
         </div>
       );
     case 'processing':
@@ -217,8 +218,13 @@ export function FloatingCard({
       <div className="flex flex-col h-fit min-h-0 gap-0">
         {/* Summary Section - Scrollable, separated from Quota */}
         {/* Title is required, sections are optional */}
-        <div
-          className="overflow-y-auto flex flex-col gap-4 shrink-0 m-4 rounded-md"
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex flex-col gap-4 shrink-0 m-4 rounded-md"
           style={{
             maxHeight: '340px',
             minHeight: '160px',
@@ -258,13 +264,13 @@ export function FloatingCard({
                         <div className="flex items-center gap-1">
                           {isExpanded ? (
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               stroke={1}
                               className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors"
                             />
                           ) : (
                             <IconChevronRight
-                              size={12}
+                              size={16}
                               stroke={1}
                               className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors"
                             />
@@ -322,7 +328,7 @@ export function FloatingCard({
               })}
             </div>
           )}
-        </div>
+        </OverlayScrollbarsComponent>
 
         {/* Quota Section - Fixed with white background, separated area */}
         {quota.length > 0 && (

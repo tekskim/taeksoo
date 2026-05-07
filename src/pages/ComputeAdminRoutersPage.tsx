@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ConfirmModal,
@@ -26,8 +25,10 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
-import { IconTrash, IconDownload, IconBell, IconDotsCircleHorizontal } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDrawer';
+import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -67,7 +68,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '29tgj234',
     adminState: 'Up',
     status: 'active',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
   },
   {
     id: 'router-002',
@@ -81,7 +82,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-002',
     adminState: 'Up',
     status: 'active',
-    createdAt: 'Dec 24, 2025 03:19:59',
+    createdAt: 'Dec 24, 2026 03:19:59',
   },
   {
     id: 'router-003',
@@ -95,7 +96,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: 'Up',
     status: 'active',
-    createdAt: 'Dec 23, 2025 20:06:42',
+    createdAt: 'Dec 23, 2026 20:06:42',
   },
   {
     id: 'router-004',
@@ -109,7 +110,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-003',
     adminState: 'Up',
     status: 'building',
-    createdAt: 'Dec 22, 2025 13:53:25',
+    createdAt: 'Dec 22, 2026 13:53:25',
   },
   {
     id: 'router-005',
@@ -123,7 +124,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: 'Down',
     status: 'active',
-    createdAt: 'Dec 21, 2025 06:40:08',
+    createdAt: 'Dec 21, 2026 06:40:08',
   },
   {
     id: 'router-006',
@@ -137,7 +138,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-004',
     adminState: 'Up',
     status: 'active',
-    createdAt: 'Dec 20, 2025 23:27:51',
+    createdAt: 'Dec 20, 2026 23:27:51',
   },
   {
     id: 'router-007',
@@ -151,7 +152,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-005',
     adminState: 'Down',
     status: 'error',
-    createdAt: 'Dec 19, 2025 16:14:34',
+    createdAt: 'Dec 19, 2026 16:14:34',
   },
   {
     id: 'router-008',
@@ -165,7 +166,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: 'Up',
     status: 'active',
-    createdAt: 'Dec 18, 2025 09:01:17',
+    createdAt: 'Dec 18, 2026 09:01:17',
   },
   {
     id: 'router-009',
@@ -179,7 +180,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-006',
     adminState: 'Up',
     status: 'active',
-    createdAt: 'Dec 17, 2025 02:48:00',
+    createdAt: 'Dec 17, 2026 02:48:00',
   },
   {
     id: 'router-010',
@@ -193,7 +194,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-007',
     adminState: 'Up',
     status: 'active',
-    createdAt: 'Dec 16, 2025 19:35:43',
+    createdAt: 'Dec 16, 2026 19:35:43',
   },
 ];
 
@@ -213,10 +214,10 @@ const routerStatusMap: Record<RouterStatus, 'active' | 'error' | 'building'> = {
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'tenant', label: 'Tenant', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
   {
-    key: 'externalGateway',
+    id: 'externalGateway',
     label: 'External gateway',
     type: 'select',
     options: [
@@ -224,10 +225,10 @@ const filterFields: FilterField[] = [
       { value: 'false', label: 'Closed' },
     ],
   },
-  { key: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
-  { key: 'externalNetwork', label: 'External network', type: 'text' },
+  { id: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
+  { id: 'externalNetwork', label: 'External network', type: 'text' },
   {
-    key: 'adminState',
+    id: 'adminState',
     label: 'Admin state',
     type: 'select',
     options: [
@@ -236,7 +237,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -248,6 +249,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminRoutersPage() {
+  const navigate = useNavigate();
   const [selectedRouters, setSelectedRouters] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -261,6 +263,9 @@ export function ComputeAdminRoutersPage() {
 
   // Create router drawer state
   const [isCreateRouterDrawerOpen, setIsCreateRouterDrawerOpen] = useState(false);
+
+  // External gateway drawer state
+  const [gatewayDrawerRouter, setGatewayDrawerRouter] = useState<string | null>(null);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -280,6 +285,13 @@ export function ComputeAdminRoutersPage() {
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
@@ -296,7 +308,7 @@ export function ComputeAdminRoutersPage() {
 
     return routers.filter((r) => {
       return appliedFilters.every((filter) => {
-        const value = String(r[filter.field as keyof Router] || '').toLowerCase();
+        const value = String(r[filter.fieldId as keyof Router] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -336,7 +348,12 @@ export function ComputeAdminRoutersPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -355,7 +372,12 @@ export function ComputeAdminRoutersPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -388,8 +410,11 @@ export function ComputeAdminRoutersPage() {
             >
               {row.externalNetwork}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID: {row.externalNetworkId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.externalNetworkId}>
+                ID : {row.externalNetworkId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.externalNetworkId} />
             </span>
           </div>
         ) : (
@@ -420,16 +445,26 @@ export function ComputeAdminRoutersPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
-      render: () => (
+      sticky: 'right',
+      render: (_: unknown, row: Router) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
             items={[
               { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+              {
+                id: 'external-gateway',
+                label: 'External gateway setting',
+                onClick: () => setGatewayDrawerRouter(row.name),
+              },
+              { id: 'delete', label: 'Delete', status: 'danger', divider: true, onClick: () => {} },
             ]}
             trigger="click"
           >
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              type="button"
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -485,20 +520,9 @@ export function ComputeAdminRoutersPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Routers' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Routers' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -567,6 +591,8 @@ export function ComputeAdminRoutersPage() {
           selectable
           selectedKeys={selectedRouters}
           onSelectionChange={setSelectedRouters}
+          emptyMessage="No routers found"
+          loading={loading}
         />
       </VStack>
 
@@ -578,7 +604,7 @@ export function ComputeAdminRoutersPage() {
           setRouterToDelete(null);
         }}
         title="Delete router"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected routers is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
@@ -600,6 +626,13 @@ export function ComputeAdminRoutersPage() {
       <CreateRouterDrawer
         isOpen={isCreateRouterDrawerOpen}
         onClose={() => setIsCreateRouterDrawerOpen(false)}
+      />
+
+      {/* External Gateway Setting Drawer */}
+      <AdminExternalGatewayDrawer
+        isOpen={!!gatewayDrawerRouter}
+        onClose={() => setGatewayDrawerRouter(null)}
+        routerName={gatewayDrawerRouter ?? ''}
       />
     </PageShell>
   );

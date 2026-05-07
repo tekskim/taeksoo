@@ -1,11 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -20,20 +19,15 @@ import {
   Tooltip,
   Badge,
   PageShell,
+  ConfirmModal,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconTrash,
-  IconBell,
-  IconDownload,
-  IconRouter,
-  IconCube,
-  IconServer,
-} from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconRouter, IconCube, IconServer } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -86,7 +80,7 @@ const mockFirewallsMap: Record<string, FirewallDetail> = {
     ingressPolicyId: 'fwp-001',
     egressPolicy: 'egress-policy-1',
     egressPolicyId: 'fwp-002',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
   },
   'fw-002': {
     id: '8394e0285f92542f04171b0ccd3deff0',
@@ -100,7 +94,7 @@ const mockFirewallsMap: Record<string, FirewallDetail> = {
     ingressPolicyId: 'fwp-003',
     egressPolicy: 'db-egress-policy',
     egressPolicyId: 'fwp-004',
-    createdAt: 'Dec 20, 2025 23:27:51',
+    createdAt: 'Dec 20, 2026 23:27:51',
   },
 };
 
@@ -139,6 +133,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
    ---------------------------------------- */
 
 export default function FirewallDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -150,6 +145,8 @@ export default function FirewallDetailPage() {
   const [portSearchTerm, setPortSearchTerm] = useState('');
   const [portCurrentPage, setPortCurrentPage] = useState(1);
   const portsPerPage = 10;
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -220,7 +217,12 @@ export default function FirewallDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -238,8 +240,11 @@ export default function FirewallDetailPage() {
             >
               {row.attachedToName}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.attachedToId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.attachedToId}>
+                ID : {row.attachedToId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.attachedToId} />
             </span>
           </div>
           <Tooltip
@@ -253,7 +258,7 @@ export default function FirewallDetailPage() {
             position="top"
             delay={0}
           >
-            <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
+            <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] p-1">
               {row.attachedToType === 'Router(Interface)' ? (
                 <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
               ) : row.attachedToType === 'Instance' ? (
@@ -280,7 +285,12 @@ export default function FirewallDetailPage() {
           >
             {row.network}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.networkId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.networkId}>
+              ID : {row.networkId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.networkId} />
+          </span>
         </div>
       ),
     },
@@ -332,34 +342,28 @@ export default function FirewallDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/compute' },
-                { label: 'NACLs', href: '/compute/firewall' },
-                { label: firewall.name },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
+              items={[{ label: 'NACL', href: '/compute/firewall' }, { label: firewall.name }]}
             />
           }
         />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{firewall.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setDeleteModalOpen(true)}
+            >
               Delete
             </Button>
           </DetailHeader.Actions>
@@ -378,7 +382,7 @@ export default function FirewallDetailPage() {
 
         {/* Tabs Section */}
         <div className="w-full">
-          <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="ports">Ports</Tab>
@@ -470,6 +474,20 @@ export default function FirewallDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        title="Delete NACL"
+        description="Removing this NACL is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          console.log('Delete NACL:', firewall.id);
+          setDeleteModalOpen(false);
+        }}
+      />
     </PageShell>
   );
 }

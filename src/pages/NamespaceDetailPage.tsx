@@ -12,30 +12,23 @@ import {
   Tab,
   TabPanel,
   Badge,
+  BadgeList,
   Pagination,
   DetailHeader,
   Button,
   ContextMenu,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
   Tooltip,
-  Popover,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
-  IconChevronDown,
-  IconDotsCircleHorizontal,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -73,7 +66,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   'production-microservices-platform-namespace': {
     name: 'production-microservices-platform-namespace',
     status: 'Active',
-    createdAt: 'Nov 10, 2025 08:12:33',
+    createdAt: 'Nov 10, 2026 08:12:33',
     labels: { 'kubernetes.io/metadata.name': 'production-microservices-platform-namespace' },
     annotations: {},
     resources: { active: 122, processing: 0, error: 0, total: 138 },
@@ -81,7 +74,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   'monitoring-observability-stack-namespace': {
     name: 'monitoring-observability-stack-namespace',
     status: 'Processing',
-    createdAt: 'Nov 10, 2025 15:31:14',
+    createdAt: 'Nov 10, 2026 15:31:14',
     labels: { 'kubernetes.io/metadata.name': 'monitoring-observability-stack-namespace' },
     annotations: {},
     resources: { active: 80, processing: 12, error: 0, total: 92 },
@@ -89,7 +82,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   'kube-public-cluster-info-public-namespace': {
     name: 'kube-public-cluster-info-public-namespace',
     status: 'Terminating',
-    createdAt: 'Nov 10, 2025 17:57:02',
+    createdAt: 'Nov 10, 2026 17:57:02',
     labels: { 'kubernetes.io/metadata.name': 'kube-public-cluster-info-public-namespace' },
     annotations: {},
     resources: { active: 0, processing: 0, error: 0, total: 5 },
@@ -97,7 +90,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   'kube-system-cluster-components-namespace': {
     name: 'kube-system-cluster-components-namespace',
     status: 'CreateContainerConfigError',
-    createdAt: 'Nov 10, 2025 18:09:45',
+    createdAt: 'Nov 10, 2026 18:09:45',
     labels: { 'kubernetes.io/metadata.name': 'kube-system-cluster-components-namespace' },
     annotations: {},
     resources: { active: 95, processing: 0, error: 3, total: 98 },
@@ -105,7 +98,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   'cattle-clusters-system': {
     name: 'cattle-clusters-system',
     status: 'Active',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
     labels: { 'kubernetes.io/metadata.name': 'cattle-clusters-system' },
     annotations: {},
     resources: { active: 122, processing: 0, error: 0, total: 138 },
@@ -113,7 +106,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   'kube-system': {
     name: 'kube-system',
     status: 'Active',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
     labels: { 'kubernetes.io/metadata.name': 'kube-system' },
     annotations: {},
     resources: { active: 122, processing: 0, error: 0, total: 138 },
@@ -121,7 +114,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   default: {
     name: 'default',
     status: 'Active',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
     labels: { 'kubernetes.io/metadata.name': 'default' },
     annotations: {},
     resources: { active: 10, processing: 0, error: 0, total: 10 },
@@ -156,7 +149,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Deployment',
     image: 'thakicloud/frontend:v2.1.0',
     restarts: 0,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     health: '3 Running',
     status: 'Active',
   },
@@ -167,7 +160,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Deployment',
     image: 'thakicloud/api:v1.2.0',
     restarts: 2,
-    createdAt: 'Jul 24, 2025 03:19:59',
+    createdAt: 'Jul 24, 2026 03:19:59',
     health: '5 Running',
     status: 'Active',
   },
@@ -178,7 +171,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'DaemonSet',
     image: 'fluent/fluentd:v1.16',
     restarts: 0,
-    createdAt: 'Jul 20, 2025 23:27:51',
+    createdAt: 'Jul 20, 2026 23:27:51',
     health: '4 Running',
     status: 'Active',
   },
@@ -189,7 +182,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'DaemonSet',
     image: 'prom/node-exporter:v1.6.0',
     restarts: 1,
-    createdAt: 'Jul 18, 2025 09:01:17',
+    createdAt: 'Jul 18, 2026 09:01:17',
     health: '4 Running',
     status: 'Active',
   },
@@ -200,7 +193,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'StatefulSet',
     image: 'postgres:15-alpine',
     restarts: 0,
-    createdAt: 'Jul 15, 2025 12:22:26',
+    createdAt: 'Jul 15, 2026 12:22:26',
     health: '3 Running',
     status: 'Active',
   },
@@ -211,7 +204,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'StatefulSet',
     image: 'redis:7.0-alpine',
     restarts: 0,
-    createdAt: 'Jul 14, 2025 05:09:09',
+    createdAt: 'Jul 14, 2026 05:09:09',
     health: '3 Running',
     status: 'Processing',
   },
@@ -222,7 +215,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'CronJob',
     image: 'thakicloud/backup:v1.0.0',
     restarts: 0,
-    createdAt: 'Jul 10, 2025 01:17:01',
+    createdAt: 'Jul 10, 2026 01:17:01',
     health: '0 Running',
     status: 'Terminating',
   },
@@ -233,7 +226,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'CronJob',
     image: 'thakicloud/reports:v2.3.1',
     restarts: 0,
-    createdAt: 'Jul 12, 2025 15:43:35',
+    createdAt: 'Jul 12, 2026 15:43:35',
     health: '0 Running',
     status: 'Active',
   },
@@ -244,7 +237,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Job',
     image: 'thakicloud/migrate:v1.5.0',
     restarts: 0,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     health: '1 Running',
     status: 'Stopped',
   },
@@ -255,7 +248,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Job',
     image: 'elasticsearch:8.9.0',
     restarts: 1,
-    createdAt: 'Jul 24, 2025 03:19:59',
+    createdAt: 'Jul 24, 2026 03:19:59',
     health: '0 Completed',
     status: 'CreateContainerConfigError',
   },
@@ -266,7 +259,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Pod',
     image: 'thakicloud/api:v1.2.0',
     restarts: 0,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     health: '1 Running',
     status: 'InvalidImageName',
   },
@@ -277,7 +270,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Pod',
     image: 'thakicloud/worker:v3.0.2',
     restarts: 3,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     health: '1 Running',
     status: 'ImagePullBackOff',
   },
@@ -297,35 +290,35 @@ const mockConditionsData: ConditionRow[] = [
     condition: 'NamespaceDeletionDiscoveryFailure',
     status: 'True',
     message: '',
-    updated: 'Nov 10, 2025',
+    updated: 'Nov 10, 2026',
   },
   {
     id: '2',
     condition: 'NamespaceDeletionGroupVersionParsingFailure',
     status: 'True',
     message: '',
-    updated: 'Nov 10, 2025',
+    updated: 'Nov 10, 2026',
   },
   {
     id: '3',
     condition: 'NamespaceDeletionContentFailure',
     status: 'False',
     message: '',
-    updated: 'Nov 10, 2025',
+    updated: 'Nov 10, 2026',
   },
   {
     id: '4',
     condition: 'NamespaceContentRemaining',
     status: 'False',
     message: '',
-    updated: 'Nov 10, 2025',
+    updated: 'Nov 10, 2026',
   },
   {
     id: '5',
     condition: 'NamespaceFinalizersRemaining',
     status: 'False',
     message: '',
-    updated: 'Nov 10, 2025',
+    updated: 'Nov 10, 2026',
   },
 ];
 
@@ -356,7 +349,7 @@ function StatCard({ label, value, color }: StatCardProps) {
   };
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
       <VStack gap={1.5}>
         <span className={`text-label-sm ${colorStyles[color].text}`}>{label}</span>
         <span className={`text-heading-h3 ${colorStyles[color].text}`}>{value}</span>
@@ -661,6 +654,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: WorkloadRow) => (
         <ContextMenu
           items={getWorkloadMenuItems(row.type, row, handleMenuAction)}
@@ -668,6 +662,8 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
           align="right"
         >
           <button
+            type="button"
+            aria-label="Row actions"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => e.stopPropagation()}
           >
@@ -804,14 +800,7 @@ export function NamespaceDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get namespace data
-  const namespace = mockNamespaceData[namespaceName || ''] || {
-    name: namespaceName || 'unknown',
-    status: 'Active' as const,
-    createdAt: 'Nov 6, 2025 21:25:53',
-    labels: { 'kubernetes.io/metadata.name': namespaceName || '' },
-    annotations: {},
-    resources: { active: 0, processing: 0, error: 0, total: 0 },
-  };
+  const namespace = namespaceName ? mockNamespaceData[namespaceName] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -819,8 +808,10 @@ export function NamespaceDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Namespace: ${namespace.name}`);
-  }, [updateActiveTabLabel, namespace.name]);
+    if (namespace) {
+      updateActiveTabLabel(`Namespace: ${namespace.name}`);
+    }
+  }, [updateActiveTabLabel, namespace]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -830,6 +821,57 @@ export function NamespaceDetailPage() {
 
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
+
+  if (!namespace) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Namespaces', href: '/container/namespaces' },
+                  { label: namespaceName ?? 'Namespace' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-6"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Namespace not found"
+          description={`The namespace "${namespaceName ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/namespaces')}>
+              Back to Namespaces
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Context menu items for more actions
   const moreActionsItems: ContextMenuItem[] = [
@@ -877,41 +919,17 @@ export function NamespaceDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Namespaces', href: '/container/namespaces' },
                 { label: namespace.name },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={namespace.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -951,47 +969,19 @@ export function NamespaceDetailPage() {
             <DetailHeader.InfoCard label="Created at" value={namespace.createdAt} />
             <DetailHeader.InfoCard
               label={`Labels (${Object.keys(namespace.labels).length})`}
-              value={(() => {
-                const entries = Object.entries(namespace.labels);
-                if (entries.length === 0) return '-';
-                const [firstKey, firstVal] = entries[0];
-                const text = `${firstKey}: ${firstVal}`;
-                return (
-                  <div className="flex items-center gap-1 min-w-0 w-full">
-                    <Tooltip content={text} position="top">
-                      <Badge theme="white" size="sm" className="max-w-full">
-                        <span className="truncate">{text}</span>
-                      </Badge>
-                    </Tooltip>
-                    {entries.length > 1 && (
-                      <Popover
-                        trigger="hover"
-                        position="bottom"
-                        delay={100}
-                        hideDelay={100}
-                        content={
-                          <div className="p-3 min-w-[120px] max-w-[320px]">
-                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                              All Labels ({entries.length})
-                            </div>
-                            <div className="flex flex-wrap gap-1">
-                              {entries.map(([k, v], i) => (
-                                <Badge key={i} theme="white" size="sm">
-                                  {k}: {v}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        }
-                      >
-                        <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                          +{entries.length - 1}
-                        </span>
-                      </Popover>
-                    )}
-                  </div>
-                );
-              })()}
+              value={
+                Object.keys(namespace.labels).length === 0 ? (
+                  '-'
+                ) : (
+                  <BadgeList
+                    items={Object.entries(namespace.labels).map(([k, v]) => `${k}: ${v}`)}
+                    maxVisible={2}
+                    theme="white"
+                    popoverTitle={`All Labels (${Object.keys(namespace.labels).length})`}
+                    maxBadgeWidth="140px"
+                  />
+                )
+              }
             />
             <DetailHeader.InfoCard
               label={`Annotations (${Object.keys(namespace.annotations).length})`}
@@ -1005,7 +995,7 @@ export function NamespaceDetailPage() {
         </DetailHeader>
 
         {/* Resources Section */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4 w-full">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 pt-3 pb-4 w-full">
           <VStack gap={3}>
             <h2 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
               Workload

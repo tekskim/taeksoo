@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -22,7 +21,8 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconLock } from '@tabler/icons-react';
+import { IconTrash, IconLock } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -79,7 +79,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.30',
     az: 'zone-a',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
   },
   {
     id: '29tgj235',
@@ -91,7 +91,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.31',
     az: 'zone-a',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
   },
   {
     id: '29tgj236',
@@ -103,7 +103,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.32',
     az: 'zone-b',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
   },
   {
     id: '29tgj237',
@@ -115,7 +115,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '-',
     az: 'zone-b',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
   },
   {
     id: '29tgj238',
@@ -127,7 +127,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.34',
     az: 'zone-a',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
   },
 ];
 
@@ -171,7 +171,6 @@ export function ComputeAdminServerGroupDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
     { label: 'Server Groups', href: '/compute-admin/server-groups' },
     { label: serverGroup.name },
   ];
@@ -212,7 +211,12 @@ export function ComputeAdminServerGroupDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)] truncate">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -299,18 +303,11 @@ export function ComputeAdminServerGroupDetailPage() {
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         <DetailHeader>
           <DetailHeader.Title>{serverGroup.name}</DetailHeader.Title>
           <DetailHeader.Actions>

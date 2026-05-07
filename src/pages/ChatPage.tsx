@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate } from 'react-router-dom';
 import {
   TopBar,
@@ -46,7 +47,7 @@ function AgentCard({
       onClick={onClick}
       className={`
         bg-[var(--color-surface-default)] 
-        border rounded-lg p-3
+        border rounded-[var(--radius-lg)] p-3
         flex flex-col gap-2
         cursor-pointer 
         transition-all duration-150
@@ -406,15 +407,10 @@ export function ChatPage() {
           canGoForward={false}
           onBack={() => {}}
           onForward={() => {}}
-          breadcrumb={<Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Chat' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Chat' }]} />}
           actions={
             <>
               <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
             </>
           }
         />
@@ -427,7 +423,14 @@ export function ChatPage() {
         <ChatSidebar />
 
         {/* Content Container */}
-        <div className="flex-1 flex flex-col gap-4 px-6 pt-4 pb-[120px] overflow-y-auto min-h-0">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex-1 flex flex-col gap-4 px-6 pt-4 pb-[120px] min-h-0"
+        >
           {/* Header */}
           <div className="flex flex-col gap-2">
             <h4 className="text-heading-h4 text-[var(--color-text-default)]">New Chat</h4>
@@ -468,7 +471,7 @@ export function ChatPage() {
               />
             ))}
           </div>
-        </div>
+        </OverlayScrollbarsComponent>
       </div>
 
       {/* New Chat Drawer */}

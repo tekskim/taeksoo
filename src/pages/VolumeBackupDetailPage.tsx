@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -14,11 +13,12 @@ import {
   DetailHeader,
   SectionCard,
   PageShell,
+  ErrorState,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconTrash, IconEdit, IconBell, IconRestore } from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconRestore } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -52,7 +52,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'db-data-backup',
     status: 'available',
     size: '1500GiB',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     description: 'Database data backup',
     sourceVolume: 'vol-1',
     sourceVolumeId: 'vol-001',
@@ -65,7 +65,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'app-storage-backup',
     status: 'available',
     size: '500GiB',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     description: 'Application storage backup',
     sourceVolume: 'vol-2',
     sourceVolumeId: 'vol-002',
@@ -78,7 +78,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'backup-vol-backup',
     status: 'available',
     size: '2000GiB',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     description: 'Backup volume snapshot',
     sourceVolume: 'vol-3',
     sourceVolumeId: 'vol-003',
@@ -91,7 +91,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'log-storage-backup',
     status: 'creating',
     size: '100GiB',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     description: 'Log storage backup',
     sourceVolume: 'vol-4',
     sourceVolumeId: 'vol-004',
@@ -104,7 +104,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'cache-vol-backup',
     status: 'available',
     size: '256GiB',
-    createdAt: 'Aug 30, 2025 21:37:41',
+    createdAt: 'Aug 30, 2026 21:37:41',
     description: 'Cache volume backup',
     sourceVolume: 'vol-5',
     sourceVolumeId: 'vol-005',
@@ -117,7 +117,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'media-storage-backup',
     status: 'restoring',
     size: '5000GiB',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     description: 'Media storage backup',
     sourceVolume: 'vol-6',
     sourceVolumeId: 'vol-006',
@@ -130,7 +130,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'temp-vol-backup',
     status: 'error',
     size: '50GiB',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     description: 'Temporary volume backup',
     sourceVolume: 'vol-7',
     sourceVolumeId: 'vol-007',
@@ -143,7 +143,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'ml-data-backup',
     status: 'available',
     size: '1000GiB',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     description: 'ML data backup',
     sourceVolume: 'vol-8',
     sourceVolumeId: 'vol-008',
@@ -156,7 +156,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'archive-vol-backup',
     status: 'available',
     size: '10000GiB',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     description: 'Archive volume backup',
     sourceVolume: 'vol-9',
     sourceVolumeId: 'vol-009',
@@ -169,7 +169,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'boot-vol-backup',
     status: 'deleting',
     size: '100GiB',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     description: 'Boot volume backup',
     sourceVolume: 'vol-10',
     sourceVolumeId: 'vol-010',
@@ -177,21 +177,6 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     container: 'cinder-backups',
     availabilityZone: 'nova',
   },
-};
-
-// Default backup for unknown IDs
-const defaultBackup: VolumeBackupDetail = {
-  id: 'unknown',
-  name: 'Unknown Backup',
-  status: 'available',
-  size: '0 GiB',
-  createdAt: '-',
-  description: '-',
-  sourceVolume: '-',
-  sourceVolumeId: '-',
-  backupMode: '-',
-  container: '-',
-  availabilityZone: '-',
 };
 
 /* ----------------------------------------
@@ -228,7 +213,7 @@ export function VolumeBackupDetailPage() {
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get backup data based on the ID
-  const backup = id && mockBackupDetails[id] ? mockBackupDetails[id] : defaultBackup;
+  const backup = id && mockBackupDetails[id] ? mockBackupDetails[id] : undefined;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -236,10 +221,10 @@ export function VolumeBackupDetailPage() {
 
   // Update tab label to backup name
   useEffect(() => {
-    if (backup.name) {
+    if (backup?.name) {
       updateActiveTabLabel(backup.name);
     }
-  }, [backup.name, updateActiveTabLabel]);
+  }, [backup?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -248,10 +233,62 @@ export function VolumeBackupDetailPage() {
     closable: tab.closable,
   }));
 
+  if (!backup) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Volume Backups', href: '/compute/volume-backups' },
+                  { label: id ?? '—' },
+                ]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Volume backup not found"
+          description={`The volume backup "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/compute/volume-backups')}
+            >
+              Back to Volume Backups
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Volumes', href: '/compute/volume-backups' },
+    { label: 'Volume Backups', href: '/compute/volume-backups' },
     { label: backup.name },
   ];
 
@@ -276,21 +313,14 @@ export function VolumeBackupDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => navigate('/volume-backups')}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Backup Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{backup.name}</DetailHeader.Title>

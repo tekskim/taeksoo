@@ -16,29 +16,13 @@ import {
   WizardSummary,
   WritingSection,
   PreSection,
+  Toggle,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconEdit,
-  IconEye,
-  IconEyeOff,
-  IconPencilCog,
-} from '@tabler/icons-react';
-
-function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <button
-      className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-      aria-label={label}
-    >
-      <span className="text-[var(--color-text-muted)]">{icon}</span>
-    </button>
-  );
-}
+import { IconEdit, IconEye, IconEyeOff } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -55,6 +39,11 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 const SECTION_ORDER: SectionStep[] = ['target', 'version', 'configuration'];
 
 const appCatalog: Record<string, { name: string; description: string }> = {
+  cnpg: {
+    name: 'CNPG',
+    description:
+      'PostgreSQL cluster instance managed by CloudNativePG Operator. Requires CNPG Operator to be installed first. Supports HA, PgBouncer pooling, and automated backups.',
+  },
   postgresql: {
     name: 'PostgreSQL',
     description:
@@ -120,6 +109,40 @@ const storageClassOptions = [
   { value: 'local-path', label: 'local-path' },
 ];
 
+const imagePullPolicyOptions = [
+  { value: 'IfNotPresent', label: 'IfNotPresent' },
+  { value: 'Always', label: 'Always' },
+  { value: 'Never', label: 'Never' },
+];
+
+const resourceTierOptions = [
+  { value: 'small', label: 'Small' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'large', label: 'Large' },
+  { value: 'xlarge', label: 'X-Large' },
+];
+
+const updateStrategyOptions = [
+  { value: 'unsupervised', label: 'unsupervised (automatic)' },
+  { value: 'supervised', label: 'supervised (manual)' },
+];
+
+const updateMethodOptions = [
+  { value: 'restart', label: 'restart' },
+  { value: 'switchover', label: 'switchover' },
+];
+
+const poolerConnectionTypeOptions = [
+  { value: 'rw', label: 'rw (read-write)' },
+  { value: 'ro', label: 'ro (read-only)' },
+];
+
+const poolModeOptions = [
+  { value: 'transaction', label: 'transaction' },
+  { value: 'session', label: 'session' },
+  { value: 'statement', label: 'statement' },
+];
+
 /* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
@@ -145,7 +168,7 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         <div className="flex flex-col w-full">
@@ -196,20 +219,41 @@ export default function CatalogInstallPage() {
   const [selectedVersion, setSelectedVersion] = useState('');
 
   // Configuration section state
-  const [configAppName, setConfigAppName] = useState('postgresql-2');
-  const [adminPassword, setAdminPassword] = useState('');
-  const [databaseName, setDatabaseName] = useState('');
+  const [configAppName] = useState('cnpg-instance');
+  const [instanceName, setInstanceName] = useState('postgres');
+  const [postgresImage, setPostgresImage] = useState(
+    'ghcr.io/cloudnative-pg/postgresql:17.6-system-trixie'
+  );
+  const [imagePullPolicy, setImagePullPolicy] = useState('IfNotPresent');
+  const [resourceTier, setResourceTier] = useState('medium');
+  const [instanceCount, setInstanceCount] = useState<number | undefined>(3);
+  const [cpuRequest, setCpuRequest] = useState('500m');
+  const [cpuLimit, setCpuLimit] = useState('1000m');
+  const [memoryRequest, setMemoryRequest] = useState('1Gi');
+  const [memoryLimit, setMemoryLimit] = useState('2Gi');
+  const [updateStrategy, setUpdateStrategy] = useState('unsupervised');
+  const [updateMethod, setUpdateMethod] = useState('restart');
+  const [dataStorageSize, setDataStorageSize] = useState('20Gi');
   const [storageClass, setStorageClass] = useState('');
-  const [storageSize, setStorageSize] = useState<number | undefined>(undefined);
-  const [showPassword, setShowPassword] = useState(false);
+  const [appDatabaseName, setAppDatabaseName] = useState('app');
+  const [appDbUsername, setAppDbUsername] = useState('app');
+  const [appDbPassword, setAppDbPassword] = useState('');
+  const [enableSuperuser, setEnableSuperuser] = useState(false);
+  const [superuserPassword, setSuperuserPassword] = useState('');
+  const [enablePgBouncer, setEnablePgBouncer] = useState(false);
+  const [poolerConnectionType, setPoolerConnectionType] = useState('rw');
+  const [poolerInstanceCount, setPoolerInstanceCount] = useState<number | undefined>(3);
+  const [poolMode, setPoolMode] = useState('transaction');
+  const [enableClusterPodMonitor, setEnableClusterPodMonitor] = useState(false);
+  const [enablePoolerPodMonitor, setEnablePoolerPodMonitor] = useState(false);
+  const [showAppDbPassword, setShowAppDbPassword] = useState(false);
+  const [showSuperuserPassword, setShowSuperuserPassword] = useState(false);
 
   // Validation errors
   const [namespaceError, setNamespaceError] = useState<string | null>(null);
   const [versionError, setVersionError] = useState<string | null>(null);
-  const [adminPasswordError, setAdminPasswordError] = useState<string | null>(null);
-  const [databaseNameError, setDatabaseNameError] = useState<string | null>(null);
+  const [instanceNameError, setInstanceNameError] = useState<string | null>(null);
   const [storageClassError, setStorageClassError] = useState<string | null>(null);
-  const [storageSizeError, setStorageSizeError] = useState<string | null>(null);
 
   // Wizard state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
@@ -240,29 +284,17 @@ export default function CatalogInstallPage() {
 
   const validateConfiguration = () => {
     let hasError = false;
-    if (!adminPassword.trim()) {
-      setAdminPasswordError('Please enter an admin password.');
+    if (!instanceName.trim()) {
+      setInstanceNameError('Please enter an instance name.');
       hasError = true;
     } else {
-      setAdminPasswordError(null);
-    }
-    if (!databaseName.trim()) {
-      setDatabaseNameError('Please enter a database name.');
-      hasError = true;
-    } else {
-      setDatabaseNameError(null);
+      setInstanceNameError(null);
     }
     if (!storageClass) {
       setStorageClassError('Please select a storage class.');
       hasError = true;
     } else {
       setStorageClassError(null);
-    }
-    if (storageSize === undefined || storageSize < 1) {
-      setStorageSizeError('Please enter a valid storage size.');
-      hasError = true;
-    } else {
-      setStorageSizeError(null);
     }
     return !hasError;
   };
@@ -291,15 +323,7 @@ export default function CatalogInstallPage() {
         }));
       }
     },
-    [
-      releaseName,
-      namespace,
-      selectedVersion,
-      adminPassword,
-      databaseName,
-      storageClass,
-      storageSize,
-    ]
+    [releaseName, namespace, selectedVersion, instanceName, storageClass]
   );
 
   const isEditing = SECTION_ORDER.some((s) => sectionStatus[s] === 'writing');
@@ -362,10 +386,25 @@ export default function CatalogInstallPage() {
       namespace,
       selectedVersion,
       configAppName,
-      adminPassword,
-      databaseName,
+      instanceName,
+      postgresImage,
+      imagePullPolicy,
+      resourceTier,
+      instanceCount,
+      cpuRequest,
+      cpuLimit,
+      memoryRequest,
+      memoryLimit,
+      updateStrategy,
+      updateMethod,
+      dataStorageSize,
       storageClass,
-      storageSize,
+      appDatabaseName,
+      appDbUsername,
+      enableSuperuser,
+      enablePgBouncer,
+      enableClusterPodMonitor,
+      enablePoolerPodMonitor,
     });
     navigate('/container/installed-apps');
   };
@@ -395,34 +434,14 @@ export default function CatalogInstallPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Catalog', href: '/container/catalog' },
-                { label: `Install ${appName}` },
-              ]}
+              items={[{ label: 'Catalog', href: '/container/catalog' }, { label: 'Install' }]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
-              <TopBarActionButton
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-              />
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
@@ -503,6 +522,7 @@ export default function CatalogInstallPage() {
                               }}
                               placeholder="Select namespace"
                               options={namespaceOptions}
+                              error={!!namespaceError}
                               fullWidth
                             />
                           </FormField.Control>
@@ -570,7 +590,7 @@ export default function CatalogInstallPage() {
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                       <div className="py-6">
                         <FormField required error={!!versionError}>
-                          <FormField.Label>Chart version</FormField.Label>
+                          <FormField.Label>Version</FormField.Label>
                           <FormField.Control>
                             <Select
                               value={selectedVersion}
@@ -580,6 +600,7 @@ export default function CatalogInstallPage() {
                               }}
                               placeholder="Select version"
                               options={currentVersions}
+                              error={!!versionError}
                               fullWidth
                             />
                           </FormField.Control>
@@ -599,7 +620,7 @@ export default function CatalogInstallPage() {
                 )}
                 {sectionStatus['version'] === 'done' && (
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Chart version" value={selectedVersion || '-'} />
+                    <SectionCard.DataRow label="Version" value={selectedVersion || '-'} />
                   </SectionCard.Content>
                 )}
               </SectionCard>
@@ -644,108 +665,466 @@ export default function CatalogInstallPage() {
                   <SectionCard.Content showDividers={false}>
                     <VStack gap={0}>
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* App name (disabled) */}
                       <div className="py-6">
-                        <FormField>
-                          <FormField.Label>App name</FormField.Label>
-                          <FormField.Control>
-                            <Input value={configAppName} disabled fullWidth />
-                          </FormField.Control>
+                        <FormField label="App name">
+                          <Input value={configAppName} disabled fullWidth />
                         </FormField>
                       </div>
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Instance Name */}
                       <div className="py-6">
-                        <FormField required error={!!adminPasswordError}>
-                          <FormField.Label>Admin Password</FormField.Label>
-                          <FormField.Control>
-                            <div className="relative w-full">
-                              <Input
-                                type={showPassword ? 'text' : 'password'}
-                                value={adminPassword}
-                                onChange={(e) => {
-                                  setAdminPassword(e.target.value);
-                                  setAdminPasswordError(null);
-                                }}
-                                placeholder="Enter admin password"
+                        <FormField
+                          label="Instance Name"
+                          helperText="Cluster resource name (must be unique within the namespace)"
+                          required
+                          error={!!instanceNameError}
+                          errorMessage={instanceNameError ?? undefined}
+                        >
+                          <Input
+                            value={instanceName}
+                            onChange={(e) => {
+                              setInstanceName(e.target.value);
+                              setInstanceNameError(null);
+                            }}
+                            placeholder="postgres"
+                            fullWidth
+                            error={!!instanceNameError}
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* PostgreSQL Image */}
+                      <div className="py-6">
+                        <FormField
+                          label="PostgreSQL Image"
+                          helperText="CNPG-compatible operand image"
+                          required
+                        >
+                          <Input
+                            value={postgresImage}
+                            onChange={(e) => setPostgresImage(e.target.value)}
+                            placeholder="ghcr.io/cloudnative-pg/postgresql:17.6-system-trixie"
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Image Pull Policy */}
+                      <div className="py-6">
+                        <FormField label="Image Pull Policy" required>
+                          <Select
+                            options={imagePullPolicyOptions}
+                            value={imagePullPolicy}
+                            onChange={setImagePullPolicy}
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* RESOURCES sub-header */}
+                      <div className="pt-4 pb-2">
+                        <h6 className="text-heading-h6 text-[var(--color-text-default)]">
+                          Resources
+                        </h6>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Resource Tier */}
+                      <div className="py-6">
+                        <FormField label="Resource Tier">
+                          <Select
+                            options={resourceTierOptions}
+                            value={resourceTier}
+                            onChange={setResourceTier}
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Instance Count */}
+                      <div className="py-6">
+                        <FormField label="Instance Count" required>
+                          <NumberInput
+                            value={instanceCount}
+                            onChange={setInstanceCount}
+                            min={1}
+                            max={10}
+                            width="sm"
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* CPU Request */}
+                      <div className="py-6">
+                        <FormField label="CPU Request" required>
+                          <Input
+                            value={cpuRequest}
+                            onChange={(e) => setCpuRequest(e.target.value)}
+                            placeholder="500m"
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* CPU Limit */}
+                      <div className="py-6">
+                        <FormField label="CPU Limit" required>
+                          <Input
+                            value={cpuLimit}
+                            onChange={(e) => setCpuLimit(e.target.value)}
+                            placeholder="1000m"
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Memory Request */}
+                      <div className="py-6">
+                        <FormField label="Memory Request" required>
+                          <Input
+                            value={memoryRequest}
+                            onChange={(e) => setMemoryRequest(e.target.value)}
+                            placeholder="1Gi"
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Memory Limit */}
+                      <div className="py-6">
+                        <FormField label="Memory Limit" required>
+                          <Input
+                            value={memoryLimit}
+                            onChange={(e) => setMemoryLimit(e.target.value)}
+                            placeholder="2Gi"
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* UPDATE POLICY sub-header */}
+                      <div className="pt-4 pb-2">
+                        <h6 className="text-heading-h6 text-[var(--color-text-default)]">
+                          Update Policy
+                        </h6>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Primary Update Strategy */}
+                      <div className="py-6">
+                        <FormField label="Primary Update Strategy" required>
+                          <Select
+                            options={updateStrategyOptions}
+                            value={updateStrategy}
+                            onChange={setUpdateStrategy}
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Primary Update Method */}
+                      <div className="py-6">
+                        <FormField label="Primary Update Method" required>
+                          <Select
+                            options={updateMethodOptions}
+                            value={updateMethod}
+                            onChange={setUpdateMethod}
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* STORAGE sub-header */}
+                      <div className="pt-4 pb-2">
+                        <h6 className="text-heading-h6 text-[var(--color-text-default)]">
+                          Storage
+                        </h6>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Data Storage Size */}
+                      <div className="py-6">
+                        <FormField
+                          label="Data Storage Size"
+                          helperText="PVC size per instance (e.g. 20Gi)"
+                          required
+                        >
+                          <Input
+                            value={dataStorageSize}
+                            onChange={(e) => setDataStorageSize(e.target.value)}
+                            placeholder="20Gi"
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* StorageClass */}
+                      <div className="py-6">
+                        <FormField
+                          label="StorageClass"
+                          required
+                          error={!!storageClassError}
+                          errorMessage={storageClassError ?? undefined}
+                        >
+                          <Select
+                            options={storageClassOptions}
+                            value={storageClass}
+                            onChange={(value) => {
+                              setStorageClass(value);
+                              setStorageClassError(null);
+                            }}
+                            placeholder="Select..."
+                            fullWidth
+                            error={!!storageClassError}
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* DATABASE sub-header */}
+                      <div className="pt-4 pb-2">
+                        <h6 className="text-heading-h6 text-[var(--color-text-default)]">
+                          Database
+                        </h6>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* App Database Name */}
+                      <div className="py-6">
+                        <FormField
+                          label="App Database Name"
+                          helperText="Initial database name created during bootstrap"
+                          required
+                        >
+                          <Input
+                            value={appDatabaseName}
+                            onChange={(e) => setAppDatabaseName(e.target.value)}
+                            placeholder="app"
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* App DB Username */}
+                      <div className="py-6">
+                        <FormField label="App DB Username" required>
+                          <Input
+                            value={appDbUsername}
+                            onChange={(e) => setAppDbUsername(e.target.value)}
+                            placeholder="app"
+                            fullWidth
+                          />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* App DB Password */}
+                      <div className="py-6">
+                        <FormField label="App DB Password" required>
+                          <div className="relative w-full">
+                            <Input
+                              type={showAppDbPassword ? 'text' : 'password'}
+                              value={appDbPassword}
+                              onChange={(e) => setAppDbPassword(e.target.value)}
+                              placeholder="Enter password"
+                              fullWidth
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+                              onClick={() => setShowAppDbPassword(!showAppDbPassword)}
+                              aria-label={showAppDbPassword ? 'Hide password' : 'Show password'}
+                            >
+                              {showAppDbPassword ? (
+                                <IconEyeOff size={14} className="text-[var(--color-text-subtle)]" />
+                              ) : (
+                                <IconEye size={14} className="text-[var(--color-text-subtle)]" />
+                              )}
+                            </button>
+                          </div>
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Enable Superuser Access */}
+                      <div className="py-6">
+                        <FormField
+                          label="Enable Superuser Access"
+                          helperText="Creates a Kubernetes Secret for the postgres superuser account"
+                          spacing="loose"
+                        >
+                          <Toggle checked={enableSuperuser} onChange={setEnableSuperuser} />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Superuser Password (shown when superuser enabled) */}
+                      {enableSuperuser && (
+                        <>
+                          <div className="py-6">
+                            <FormField
+                              label="Superuser Password"
+                              helperText="Required when Superuser Access is enabled"
+                              required
+                            >
+                              <div className="relative w-full">
+                                <Input
+                                  type={showSuperuserPassword ? 'text' : 'password'}
+                                  value={superuserPassword}
+                                  onChange={(e) => setSuperuserPassword(e.target.value)}
+                                  placeholder="Enter superuser password"
+                                  fullWidth
+                                />
+                                <button
+                                  type="button"
+                                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+                                  onClick={() => setShowSuperuserPassword(!showSuperuserPassword)}
+                                  aria-label={
+                                    showSuperuserPassword ? 'Hide password' : 'Show password'
+                                  }
+                                >
+                                  {showSuperuserPassword ? (
+                                    <IconEyeOff
+                                      size={14}
+                                      className="text-[var(--color-text-subtle)]"
+                                    />
+                                  ) : (
+                                    <IconEye
+                                      size={14}
+                                      className="text-[var(--color-text-subtle)]"
+                                    />
+                                  )}
+                                </button>
+                              </div>
+                            </FormField>
+                          </div>
+                          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        </>
+                      )}
+
+                      {/* PGBOUNCER sub-header */}
+                      <div className="pt-4 pb-2">
+                        <h6 className="text-heading-h6 text-[var(--color-text-default)]">
+                          PgBouncer
+                        </h6>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Enable PgBouncer Pooler */}
+                      <div className="py-6">
+                        <FormField
+                          label="Enable PgBouncer Pooler"
+                          helperText="Activates PgBouncer connection pooler"
+                          spacing="loose"
+                        >
+                          <Toggle checked={enablePgBouncer} onChange={setEnablePgBouncer} />
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* PgBouncer fields (shown when enabled) */}
+                      {enablePgBouncer && (
+                        <>
+                          {/* Pooler Connection Type */}
+                          <div className="py-6">
+                            <FormField label="Pooler Connection Type" required>
+                              <Select
+                                options={poolerConnectionTypeOptions}
+                                value={poolerConnectionType}
+                                onChange={setPoolerConnectionType}
                                 fullWidth
                               />
-                              <button
-                                type="button"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
-                                onClick={() => setShowPassword(!showPassword)}
-                                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                              >
-                                {showPassword ? (
-                                  <IconEyeOff
-                                    size={14}
-                                    className="text-[var(--color-text-subtle)]"
-                                  />
-                                ) : (
-                                  <IconEye size={14} className="text-[var(--color-text-subtle)]" />
-                                )}
-                              </button>
-                            </div>
-                          </FormField.Control>
-                          <FormField.ErrorMessage>{adminPasswordError}</FormField.ErrorMessage>
-                        </FormField>
+                            </FormField>
+                          </div>
+                          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                          {/* Pooler Instance Count */}
+                          <div className="py-6">
+                            <FormField
+                              label="Pooler Instance Count"
+                              helperText="Number of PgBouncer replicas"
+                              required
+                            >
+                              <NumberInput
+                                value={poolerInstanceCount}
+                                onChange={setPoolerInstanceCount}
+                                min={1}
+                                max={10}
+                                width="sm"
+                              />
+                            </FormField>
+                          </div>
+                          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                          {/* Pool Mode */}
+                          <div className="py-6">
+                            <FormField label="Pool Mode">
+                              <Select
+                                options={poolModeOptions}
+                                value={poolMode}
+                                onChange={setPoolMode}
+                                fullWidth
+                              />
+                            </FormField>
+                          </div>
+                          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        </>
+                      )}
+
+                      {/* MONITORING sub-header */}
+                      <div className="pt-4 pb-2">
+                        <h6 className="text-heading-h6 text-[var(--color-text-default)]">
+                          Monitoring
+                        </h6>
                       </div>
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Enable Cluster PodMonitor */}
                       <div className="py-6">
-                        <FormField required error={!!databaseNameError}>
-                          <FormField.Label>Database Name</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              value={databaseName}
-                              onChange={(e) => {
-                                setDatabaseName(e.target.value);
-                                setDatabaseNameError(null);
-                              }}
-                              placeholder="Enter Database Name"
-                              fullWidth
-                            />
-                          </FormField.Control>
-                          <FormField.ErrorMessage>{databaseNameError}</FormField.ErrorMessage>
+                        <FormField
+                          label="Enable Cluster PodMonitor"
+                          helperText="Requires Prometheus Operator"
+                          spacing="loose"
+                        >
+                          <Toggle
+                            checked={enableClusterPodMonitor}
+                            onChange={setEnableClusterPodMonitor}
+                          />
                         </FormField>
                       </div>
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      {/* Enable Pooler PodMonitor */}
                       <div className="py-6">
-                        <FormField required error={!!storageClassError}>
-                          <FormField.Label>Storage Class</FormField.Label>
-                          <FormField.Control>
-                            <Select
-                              options={storageClassOptions}
-                              value={storageClass}
-                              onChange={(value) => {
-                                setStorageClass(value);
-                                setStorageClassError(null);
-                              }}
-                              placeholder="Select StorageClass"
-                              fullWidth
-                            />
-                          </FormField.Control>
-                          <FormField.ErrorMessage>{storageClassError}</FormField.ErrorMessage>
+                        <FormField
+                          label="Enable Pooler PodMonitor"
+                          helperText="Requires Prometheus Operator"
+                          spacing="loose"
+                        >
+                          <Toggle
+                            checked={enablePoolerPodMonitor}
+                            onChange={setEnablePoolerPodMonitor}
+                          />
                         </FormField>
                       </div>
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                      <div className="py-6">
-                        <FormField required error={!!storageSizeError}>
-                          <FormField.Label>Storage Size</FormField.Label>
-                          <FormField.Control>
-                            <NumberInput
-                              value={storageSize}
-                              onChange={(v) => {
-                                setStorageSize(v);
-                                setStorageSizeError(null);
-                              }}
-                              min={1}
-                              placeholder="eg. 8"
-                              width="sm"
-                              suffix="GiB"
-                            />
-                          </FormField.Control>
-                          <FormField.ErrorMessage>{storageSizeError}</FormField.ErrorMessage>
-                        </FormField>
-                      </div>
-                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
                       {!isEditing && (
                         <HStack justify="end" className="pt-3">
                           <Button
@@ -762,15 +1141,75 @@ export default function CatalogInstallPage() {
                 {sectionStatus['configuration'] === 'done' && (
                   <SectionCard.Content>
                     <SectionCard.DataRow label="App name" value={configAppName || '-'} />
+                    <SectionCard.DataRow label="Instance Name" value={instanceName || '-'} />
+                    <SectionCard.DataRow label="PostgreSQL Image" value={postgresImage || '-'} />
+                    <SectionCard.DataRow label="Image Pull Policy" value={imagePullPolicy || '-'} />
                     <SectionCard.DataRow
-                      label="Admin Password"
-                      value={adminPassword ? '••••••' : '-'}
+                      label="Resource Tier"
+                      value={
+                        resourceTierOptions.find((o) => o.value === resourceTier)?.label || '-'
+                      }
                     />
-                    <SectionCard.DataRow label="Database Name" value={databaseName || '-'} />
-                    <SectionCard.DataRow label="Storage Class" value={storageClass || '-'} />
                     <SectionCard.DataRow
-                      label="Storage Size"
-                      value={storageSize ? `${storageSize} GiB` : '-'}
+                      label="Instance Count"
+                      value={instanceCount?.toString() || '-'}
+                    />
+                    <SectionCard.DataRow label="CPU Request" value={cpuRequest || '-'} />
+                    <SectionCard.DataRow label="CPU Limit" value={cpuLimit || '-'} />
+                    <SectionCard.DataRow label="Memory Request" value={memoryRequest || '-'} />
+                    <SectionCard.DataRow label="Memory Limit" value={memoryLimit || '-'} />
+                    <SectionCard.DataRow
+                      label="Primary Update Strategy"
+                      value={
+                        updateStrategyOptions.find((o) => o.value === updateStrategy)?.label || '-'
+                      }
+                    />
+                    <SectionCard.DataRow
+                      label="Primary Update Method"
+                      value={
+                        updateMethodOptions.find((o) => o.value === updateMethod)?.label || '-'
+                      }
+                    />
+                    <SectionCard.DataRow label="Data Storage Size" value={dataStorageSize || '-'} />
+                    <SectionCard.DataRow label="StorageClass" value={storageClass || '-'} />
+                    <SectionCard.DataRow label="App Database Name" value={appDatabaseName || '-'} />
+                    <SectionCard.DataRow label="App DB Username" value={appDbUsername || '-'} />
+                    <SectionCard.DataRow
+                      label="App DB Password"
+                      value={appDbPassword ? '••••••' : '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Superuser Access"
+                      value={enableSuperuser ? 'Enabled' : 'Disabled'}
+                    />
+                    <SectionCard.DataRow
+                      label="PgBouncer Pooler"
+                      value={enablePgBouncer ? 'Enabled' : 'Disabled'}
+                    />
+                    {enablePgBouncer && (
+                      <>
+                        <SectionCard.DataRow
+                          label="Pooler Connection Type"
+                          value={
+                            poolerConnectionTypeOptions.find(
+                              (o) => o.value === poolerConnectionType
+                            )?.label || '-'
+                          }
+                        />
+                        <SectionCard.DataRow
+                          label="Pooler Instance Count"
+                          value={poolerInstanceCount?.toString() || '-'}
+                        />
+                        <SectionCard.DataRow label="Pool Mode" value={poolMode || '-'} />
+                      </>
+                    )}
+                    <SectionCard.DataRow
+                      label="Cluster PodMonitor"
+                      value={enableClusterPodMonitor ? 'Enabled' : 'Disabled'}
+                    />
+                    <SectionCard.DataRow
+                      label="Pooler PodMonitor"
+                      value={enablePoolerPodMonitor ? 'Enabled' : 'Disabled'}
                     />
                   </SectionCard.Content>
                 )}

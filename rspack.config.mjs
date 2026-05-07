@@ -28,6 +28,7 @@ export default defineConfig({
       '@thaki/shared/styles': path.resolve(__dirname, './thaki-shared-v2/src/styles'),
     },
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    conditionNames: ['import', 'module', 'require', 'default'],
   },
   module: {
     rules: [
@@ -109,6 +110,14 @@ export default defineConfig({
     allowedHosts: ['local.thakicloud.net'],
     static: {
       directory: path.join(__dirname, 'public'),
+    },
+    client: {
+      overlay: {
+        runtimeErrors: (error) => {
+          if (error?.message?.includes('ResizeObserver loop')) return false;
+          return true;
+        },
+      },
     },
   },
   optimization: {

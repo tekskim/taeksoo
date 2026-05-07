@@ -675,7 +675,7 @@ function ColorRow({ index, name, hex }: { index: number; name: string; hex: stri
 function ChartColorTokens() {
   return (
     <VStack gap={6}>
-      <pre className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] text-body-sm text-[var(--color-text-default)] overflow-x-auto border border-[var(--color-border-subtle)]">
+      <pre className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] text-body-sm text-[var(--color-text-default)] overflow-x-auto border border-[var(--color-border-subtle)]">
         {`fill-opacity: 0.1  line-width: 1px  smooth: true  symbol-size: 6px`}
       </pre>
 
@@ -699,7 +699,7 @@ function ChartColorTokens() {
         </VStack>
       </VStack>
 
-      <div className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] border border-[var(--color-border-subtle)] text-body-sm text-[var(--color-text-muted)]">
+      <div className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] text-body-sm text-[var(--color-text-muted)]">
         <span className="text-[var(--color-text-default)] font-medium">CSS tokens:</span>{' '}
         --chart-color-1 … --chart-color-10
         {' · '}
@@ -746,6 +746,16 @@ export function LineChartPage() {
               </span>
             </VStack>
             <AreaChartDemo variant="stacked" />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>With Dropdown Filter</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                헤더에 Select 드롭다운을 추가하여 데이터를 필터링할 수 있다. 노드, 디바이스,
+                인터페이스 등 리소스를 전환할 때 사용.
+              </span>
+            </VStack>
+            <AreaChartDemo variant="dropdown" />
           </VStack>
           <VStack gap={3}>
             <VStack gap={1}>

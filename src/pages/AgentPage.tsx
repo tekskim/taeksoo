@@ -47,7 +47,7 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   if (status === 'active') {
     bgColor = 'bg-[var(--color-state-success-bg)]';
-    iconBg = 'bg-[var(--color-success)]';
+    iconBg = 'bg-[var(--color-state-success)]';
   }
 
   const getStatusIcon = () => {
@@ -96,6 +96,42 @@ interface AgentRow {
   updatedAt: string;
   createdAt: string;
 }
+
+const MOCK_AGENTS: AgentRow[] = [
+  {
+    id: '1',
+    favorite: false,
+    status: 'draft',
+    name: 'lable',
+    model: 'claude-sonnet-4-5',
+    modelProvider: 'anthropic',
+    chats: '-',
+    updatedAt: 'Nov 11, 2025, 2:51 PM',
+    createdAt: 'Nov 11, 2025, 2:51 PM',
+  },
+  {
+    id: '2',
+    favorite: false,
+    status: 'active',
+    name: 'lable',
+    model: 'claude-sonnet-4-5',
+    modelProvider: 'anthropic',
+    chats: '5',
+    updatedAt: 'Nov 11, 2025, 2:51 PM',
+    createdAt: 'Nov 11, 2025, 2:51 PM',
+  },
+  {
+    id: '3',
+    favorite: true,
+    status: 'inactive',
+    name: 'lable',
+    model: 'claude-sonnet-4-5',
+    modelProvider: 'anthropic',
+    chats: '-',
+    updatedAt: 'Nov 11, 2025, 2:51 PM',
+    createdAt: 'Nov 11, 2025, 2:51 PM',
+  },
+];
 
 /* ----------------------------------------
    Main AgentPage Component
@@ -160,7 +196,7 @@ export function AgentPage() {
         a.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
         a.modelProvider.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [agents, searchQuery]);
+  }, [searchQuery]);
 
   const paginatedAgents = useMemo(() => {
     return filteredAgents.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);

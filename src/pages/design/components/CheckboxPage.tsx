@@ -175,6 +175,22 @@ export function CheckboxPage() {
                 </span>
                 <Checkbox label="Label" checked disabled />
               </VStack>
+              <VStack gap={2}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Focused
+                </span>
+                <div className="[&_input+span]:ring-2 [&_input+span]:ring-[var(--color-border-focus)] [&_input+span]:ring-offset-2">
+                  <Checkbox label="Label" checked={false} onChange={() => {}} />
+                </div>
+              </VStack>
+              <VStack gap={2}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Focused + Checked
+                </span>
+                <div className="[&_input+span]:ring-2 [&_input+span]:ring-[var(--color-border-focus)] [&_input+span]:ring-offset-2">
+                  <Checkbox label="Label" checked onChange={() => {}} />
+                </div>
+              </VStack>
             </div>
           </VStack>
 

@@ -119,7 +119,7 @@ export function NumberInputPage() {
           {/* Composition */}
           <VStack gap={6} align="stretch">
             <h3 className="text-heading-h5 text-[var(--color-text-default)]">Composition</h3>
-            <pre className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] text-body-sm text-[var(--color-text-muted)] overflow-x-auto whitespace-pre">
+            <pre className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] text-body-sm text-[var(--color-text-muted)] overflow-x-auto whitespace-pre">
               {`[input field ↑ ↓] 또는 [ - ] [ input field ] [ + ]`}
             </pre>
             <div className="overflow-x-auto">

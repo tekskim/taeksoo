@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   Pagination,
   VStack,
@@ -12,15 +12,18 @@ import {
   PageShell,
   PageHeader,
   ListToolbar,
+  ConfirmModal,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
-import { ManageUsersDrawer } from '@/components/ManageUsersDrawer';
+import { GroupRolesDrawer } from '@/components/GroupRolesDrawer';
+import { GroupMembersDrawer } from '@/components/GroupMembersDrawer';
 import { EditUserGroupDrawer } from '@/components/EditUserGroupDrawer';
 import { IconDownload, IconTrash, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -56,7 +59,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'admin (+3)',
     userCount: 100,
     description: 'Development team administrators',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'ug-002',
@@ -66,7 +69,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'network-admin (+1)',
     userCount: 25,
     description: 'Operations team',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
   },
   {
     id: 'ug-003',
@@ -76,7 +79,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'qa-lead (+2)',
     userCount: 15,
     description: 'Quality assurance team',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
   },
   {
     id: 'ug-004',
@@ -86,7 +89,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'Viewer (+3)',
     userCount: 130,
     description: '-',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'ug-005',
@@ -96,7 +99,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'super-admin',
     userCount: 5,
     description: 'System administrators',
-    createdAt: 'Aug 1, 2025 10:20:28',
+    createdAt: 'Aug 1, 2026 10:20:28',
   },
   {
     id: 'ug-006',
@@ -106,7 +109,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'developer (+2)',
     userCount: 45,
     description: 'Development team',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
   {
     id: 'ug-007',
@@ -116,7 +119,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'security-admin',
     userCount: 8,
     description: 'Security operations',
-    createdAt: 'Jul 20, 2025 23:27:51',
+    createdAt: 'Jul 20, 2026 23:27:51',
   },
   {
     id: 'ug-008',
@@ -126,7 +129,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'support (+1)',
     userCount: 20,
     description: 'Customer support team',
-    createdAt: 'Jul 10, 2025 01:17:01',
+    createdAt: 'Jul 10, 2026 01:17:01',
   },
   {
     id: 'ug-009',
@@ -136,7 +139,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'analyst',
     userCount: 12,
     description: 'Data analysis team',
-    createdAt: 'Jun 25, 2025 10:32:16',
+    createdAt: 'Jun 25, 2026 10:32:16',
   },
   {
     id: 'ug-010',
@@ -146,8 +149,25 @@ const mockUserGroups: UserGroup[] = [
     roles: 'viewer',
     userCount: 50,
     description: 'External partners',
-    createdAt: 'Jun 1, 2025 10:20:28',
+    createdAt: 'Jun 1, 2026 10:20:28',
   },
+];
+
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [
+      { value: 'Built-in', label: 'Built-in' },
+      { value: 'Custom', label: 'Custom' },
+    ],
+  },
+  { id: 'roles', label: 'Roles', type: 'text' },
+  { id: 'userCount', label: 'User count', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
 ];
 
 /* ----------------------------------------
@@ -157,9 +177,12 @@ const mockUserGroups: UserGroup[] = [
 export function IAMUserGroupsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [userGroups, setUserGroups] = useState(mockUserGroups);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -168,16 +191,27 @@ export function IAMUserGroupsPage() {
     updateActiveTabLabel('User groups');
   }, [updateActiveTabLabel]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter user groups by search query
-  const filteredGroups = mockUserGroups.filter(
-    (group) =>
-      group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      group.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      group.roles.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredGroups = useMemo(() => {
+    return userGroups.filter((group) => {
+      return appliedFilters.every((filter) => {
+        const raw = group[filter.fieldId as keyof UserGroup];
+        const value = String(typeof raw === 'number' ? raw : (raw ?? '')).toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [userGroups, appliedFilters]);
 
   // Pagination
   const itemsPerPage = 10;
@@ -210,6 +244,12 @@ export function IAMUserGroupsPage() {
   const handleEditGroup = (group: UserGroup) => {
     setSelectedGroupForDrawer(group);
     setEditGroupOpen(true);
+  };
+
+  const handleBulkDelete = () => {
+    setUserGroups((prev) => prev.filter((g) => !selectedRows.includes(g.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
   };
 
   // Context menu items factory
@@ -306,9 +346,11 @@ export function IAMUserGroupsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
           <button
+            aria-label="Row actions"
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
@@ -342,13 +384,12 @@ export function IAMUserGroupsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'User groups' }]} />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'User Groups' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -367,17 +408,21 @@ export function IAMUserGroupsPage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <SearchInput
+                <FilterSearchInput
+                  filters={filterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
                   placeholder="Search user groups by attributes"
-                  value={searchQuery}
-                  onChange={setSearchQuery}
+                  size="sm"
                   className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
                 />
                 <Button
                   variant="secondary"
                   size="sm"
                   icon={<IconDownload size={12} />}
                   aria-label="Download"
+                  onClick={() => console.log('Download')}
                 />
               </ListToolbar.Actions>
             }
@@ -388,6 +433,7 @@ export function IAMUserGroupsPage() {
                   size="sm"
                   disabled={!hasSelection}
                   leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Delete
                 </Button>
@@ -413,18 +459,20 @@ export function IAMUserGroupsPage() {
             selectable
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
+            emptyMessage="No user groups found"
+            loading={loading}
           />
         </VStack>
       </VStack>
 
       {/* User Group Drawers */}
-      <ManageRolesDrawer
+      <GroupRolesDrawer
         isOpen={manageRolesOpen}
         onClose={() => setManageRolesOpen(false)}
         userName={selectedGroupForDrawer?.name}
       />
 
-      <ManageUsersDrawer
+      <GroupMembersDrawer
         isOpen={manageUsersOpen}
         onClose={() => setManageUsersOpen(false)}
         userGroupName={selectedGroupForDrawer?.name}
@@ -441,6 +489,19 @@ export function IAMUserGroupsPage() {
               }
             : undefined
         }
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected user groups"
+        description="Removing the selected user groups is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} user group(s)`}
       />
     </PageShell>
   );

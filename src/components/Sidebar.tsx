@@ -1,6 +1,7 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconCube,
   IconTemplate,
   IconCamera,
@@ -43,7 +44,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps) {
-  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
+  const { projects, selectedProjectId, setSelectedProjectId, primaryProjectId, setPrimaryProject } =
+    useProject();
   const location = useLocation();
   const isCloudBuilder =
     location.pathname.startsWith('/cloudbuilder') || location.pathname.startsWith('/cloud-builder');
@@ -115,13 +117,24 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
             projects={projects}
             selectedProjectId={selectedProjectId}
             onProjectSelect={setSelectedProjectId}
+            primaryProjectId={primaryProjectId}
+            onSetPrimary={setPrimaryProject}
             variant="default"
           />
         </div>
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 pb-6 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2 pb-6"
+        aria-label="Compute navigation"
+      >
         <VStack gap={4} className="w-[175px] min-w-0">
           {/* Back to Entry */}
 
@@ -130,9 +143,9 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
               <MenuSection title="Inventory" defaultOpen={true}>
                 <MenuItem
                   icon={<IconServer2 size={16} stroke={1.5} />}
-                  label="Severs"
-                  href="/cloudbuilder/severs0.7"
-                  active={isActive('/cloudbuilder/severs0.7')}
+                  label="Servers"
+                  href="/cloudbuilder/servers"
+                  active={isActive('/cloudbuilder/servers')}
                 />
               </MenuSection>
 
@@ -182,8 +195,8 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
             <>
               {/* Compute Admin Sidebar Menu */}
               <MenuItem
-                icon={<IconHome size={16} stroke={1.5} />}
-                label="Home"
+                icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+                label="Dashboard"
                 href="/compute-admin"
                 active={isActive('/compute-admin')}
               />
@@ -339,8 +352,8 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
             <>
               {/* Home */}
               <MenuItem
-                icon={<IconHome size={16} stroke={1.5} />}
-                label="Home"
+                icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+                label="Dashboard"
                 href={basePath}
                 active={isActive(basePath)}
               />
@@ -453,7 +466,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
                 />
                 <MenuItem
                   icon={<BrickWallFire size={16} strokeWidth={1.5} />}
-                  label="NACL"
+                  label="NACLs"
                   href={`${basePath}/firewall`}
                   active={isActive(`${basePath}/firewall`)}
                 />
@@ -473,7 +486,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
             </>
           )}
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

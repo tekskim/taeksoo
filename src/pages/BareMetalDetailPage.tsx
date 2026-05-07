@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -36,7 +35,6 @@ import {
   IconTrash,
   IconChevronDown,
   IconChevronRight,
-  IconBell,
   IconSquarePlus,
   IconPower,
   IconDotsCircleHorizontal,
@@ -44,6 +42,7 @@ import {
   IconLock,
   IconLockOpen,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -103,7 +102,7 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     name: 'web-server-1',
     status: 'active',
     host: 'compute-03',
-    createdAt: 'Dec 25, 2025 09:12:20',
+    createdAt: 'Dec 25, 2026 09:12:20',
     origin: 'Container cluster (k8s-prod)',
     availabilityZone: 'zone-a',
     description: '-',
@@ -122,7 +121,7 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     name: 'web-server-2',
     status: 'active',
     host: 'compute-04',
-    createdAt: 'Dec 20, 2025 14:30:00',
+    createdAt: 'Dec 20, 2026 14:30:00',
     origin: 'Container cluster (k8s-prod)',
     availabilityZone: 'zone-a',
     description: 'Secondary web server',
@@ -138,7 +137,7 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     name: 'db-server-1',
     status: 'active',
     host: 'compute-05',
-    createdAt: 'Nov 15, 2025 08:45:00',
+    createdAt: 'Nov 15, 2026 08:45:00',
     origin: 'Manual deployment',
     availabilityZone: 'zone-b',
     description: 'Primary database server',
@@ -157,7 +156,7 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     name: 'ml-node-1',
     status: 'shutoff',
     host: 'compute-gpu-01',
-    createdAt: 'Oct 10, 2025 17:20:00',
+    createdAt: 'Oct 10, 2026 17:20:00',
     origin: 'Container cluster (ml-cluster)',
     availabilityZone: 'zone-a',
     description: 'Machine learning compute node',
@@ -173,7 +172,7 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     name: 'storage-node-1',
     status: 'active',
     host: 'compute-06',
-    createdAt: 'Sep 5, 2025 11:00:00',
+    createdAt: 'Sep 5, 2026 11:00:00',
     origin: 'Manual deployment',
     availabilityZone: 'zone-b',
     description: 'Distributed storage node',
@@ -194,7 +193,7 @@ const defaultBareMetalDetail: BareMetalDetail = {
   name: 'Unknown Instance',
   status: 'active',
   host: 'compute-03',
-  createdAt: 'Dec 25, 2025 09:12:20',
+  createdAt: 'Dec 25, 2026 09:12:20',
   origin: '-',
   availabilityZone: 'nova',
   description: '-',
@@ -215,7 +214,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.20.30.40',
     macAddress: 'fa:16:3e:aa:bb:cc',
-    createdAt: 'Dec 25, 2025 09:12:20',
+    createdAt: 'Dec 25, 2026 09:12:20',
   },
   {
     id: 'iface-002',
@@ -225,7 +224,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '192.168.1.10',
     macAddress: 'fa:16:3e:dd:ee:ff',
-    createdAt: 'Dec 25, 2025 09:12:20',
+    createdAt: 'Dec 25, 2026 09:12:20',
   },
   {
     id: 'iface-003',
@@ -235,7 +234,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '172.16.0.5',
     macAddress: 'fa:16:3e:11:22:33',
-    createdAt: 'Dec 26, 2025 10:00:00',
+    createdAt: 'Dec 26, 2026 10:00:00',
   },
   {
     id: 'iface-004',
@@ -245,7 +244,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Inactive',
     fixedIp: '10.30.40.50',
     macAddress: 'fa:16:3e:44:55:66',
-    createdAt: 'Dec 27, 2025 08:30:00',
+    createdAt: 'Dec 27, 2026 08:30:00',
   },
 ];
 
@@ -254,10 +253,10 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-001',
     operationName: 'Create',
     requestId: 'req-1a2b3c4d5e6f',
-    requestedTime: 'Dec 25, 2025 09:12:20',
+    requestedTime: 'Dec 25, 2026 09:12:20',
     result: 'Success',
-    startTime: 'Dec 25, 2025 09:12:20',
-    endTime: 'Dec 25, 2025 09:15:45',
+    startTime: 'Dec 25, 2026 09:12:20',
+    endTime: 'Dec 25, 2026 09:15:45',
   },
   {
     id: 'log-002',
@@ -302,6 +301,7 @@ const mockActionLogs: ActionLog[] = [
    ---------------------------------------- */
 
 export function BareMetalDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -400,29 +400,18 @@ export function BareMetalDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instances list', href: '/compute/instances' },
-                { label: instance.name },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
+              items={[{ label: 'Instances', href: '/compute/instances' }, { label: instance.name }]}
             />
           }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail Header */}
         <DetailHeader>
           <DetailHeader.Title>
@@ -622,8 +611,11 @@ export function BareMetalDetailPage() {
                           >
                             {iface.name}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {iface.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={iface.id}>
+                              ID : {iface.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={iface.id} />
                           </span>
                         </div>
                       ),
@@ -642,8 +634,11 @@ export function BareMetalDetailPage() {
                           >
                             {iface.network}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {iface.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={iface.id}>
+                              ID : {iface.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={iface.id} />
                           </span>
                         </div>
                       ),
@@ -681,6 +676,7 @@ export function BareMetalDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center' as const,
+                      sticky: 'right',
                       render: (_: unknown, iface: AttachedInterface) => {
                         const interfaceMenuItems: ContextMenuItem[] = [
                           {
@@ -693,7 +689,10 @@ export function BareMetalDetailPage() {
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={interfaceMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}

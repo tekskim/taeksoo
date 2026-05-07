@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -14,7 +15,8 @@ import {
   Select,
   FormField,
   PageShell,
-  WizardSectionStatusIcon,
+  ProgressBar,
+  WizardSummary,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -58,7 +60,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -76,7 +78,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -130,53 +132,22 @@ function SummarySidebar({
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card with Header and Status */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Header */}
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Create policy</h4>
-
-            {/* Section Status List */}
-            <div className="flex flex-col">
-              {SECTION_ORDER.map((sectionKey) => {
-                const isWriting = sectionStatus[sectionKey] === 'writing';
-
-                return (
-                  <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SECTION_LABELS[sectionKey]}
-                    </span>
-                    {isWriting ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </VStack>
-        </div>
+        <WizardSummary
+          title="Create policy"
+          items={SECTION_ORDER.map((key) => ({
+            key,
+            label: SECTION_LABELS[key],
+            status: sectionStatus[key],
+          }))}
+        />
 
         {/* Quota Section */}
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Quota</span>
-          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-lg p-4">
-            <VStack gap={2}>
-              <div className="flex items-center justify-between w-full">
-                <span className="text-label-lg text-[var(--color-text-default)]">Permissions</span>
-                <span className="text-body-md text-[var(--color-text-default)]">20/50</span>
-              </div>
-              <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg overflow-hidden">
-                <div
-                  className="h-full bg-[var(--color-state-success)] rounded-lg"
-                  style={{ width: '40%' }}
-                />
-              </div>
-            </VStack>
+          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] p-4">
+            <ProgressBar variant="quota" label="Permissions" value={20} max={50} />
           </div>
         </VStack>
 
@@ -281,6 +252,7 @@ function BasicInformationSection({
                     onPolicyNameChange(e.target.value);
                     onPolicyNameErrorChange(null);
                   }}
+                  error={!!policyNameError}
                   fullWidth
                 />
               </FormField.Control>
@@ -743,7 +715,7 @@ function PolicyEditorSection({
           {permissions.map((permission, index) => (
             <div
               key={permission.id}
-              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-4 w-full relative"
+              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full relative"
             >
               {/* Delete button - only show for cards after the first one */}
               {index > 0 && (
@@ -885,7 +857,7 @@ function PolicyEditorSection({
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
                         <div
                           key={action}
-                          className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 cursor-pointer h-[44px] flex items-center ${
+                          className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 cursor-pointer h-[44px] flex items-center ${
                             actionErrors[permission.id]
                               ? 'ring-1 ring-[var(--color-state-danger)]'
                               : ''
@@ -928,7 +900,7 @@ function PolicyEditorSection({
                         return (
                           <div
                             key={category}
-                            className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 flex flex-col min-w-0 overflow-hidden ${
+                            className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col min-w-0 overflow-hidden ${
                               actionErrors[permission.id]
                                 ? 'ring-1 ring-[var(--color-state-danger)]'
                                 : ''
@@ -952,13 +924,20 @@ function PolicyEditorSection({
                             </label>
 
                             {/* Actions List */}
-                            <div className="flex flex-col gap-2 mt-6 overflow-y-auto overflow-x-hidden flex-1 min-h-0 legend-scroll">
+                            <OverlayScrollbarsComponent
+                              options={{
+                                overflow: { x: 'hidden', y: 'scroll' },
+                                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                              }}
+                              defer={false}
+                              className="flex flex-col gap-2 mt-6 flex-1 min-h-0"
+                            >
                               {filteredActions.map((actionName) => {
                                 const isSelected = permission.detailedActions[actionName];
                                 return (
                                   <label
                                     key={actionName}
-                                    className={`bg-[var(--color-surface-default)] border rounded-[6px] p-2 flex items-center gap-1.5 cursor-pointer shrink-0 min-w-0 ${
+                                    className={`bg-[var(--color-surface-default)] border rounded-[var(--radius-md)] p-2 flex items-center gap-1.5 cursor-pointer shrink-0 min-w-0 ${
                                       isSelected
                                         ? 'border-[var(--color-action-primary)]'
                                         : 'border-[var(--color-border-strong)]'
@@ -979,7 +958,7 @@ function PolicyEditorSection({
                                   </label>
                                 );
                               })}
-                            </div>
+                            </OverlayScrollbarsComponent>
                           </div>
                         );
                       })}
@@ -1291,15 +1270,11 @@ export default function CreatePolicyPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'Policies', href: '/iam/policies' },
-                { label: 'Create policy' },
-              ]}
+              items={[{ label: 'Policies', href: '/iam/policies' }, { label: 'Create Policy' }]}
             />
           }
         />

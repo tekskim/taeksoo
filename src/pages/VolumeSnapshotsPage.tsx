@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -28,8 +27,9 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeFromVolumeSnapshotDrawer } from '@/components/CreateVolumeFromVolumeSnapshotDrawer';
 import { EditVolumeSnapshotDrawer } from '@/components/EditVolumeSnapshotDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -58,7 +58,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '1500GiB',
     sourceVolume: 'vol-1',
     sourceVolumeId: 'vol-001',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     status: 'active',
   },
   {
@@ -67,7 +67,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '500GiB',
     sourceVolume: 'vol-2',
     sourceVolumeId: 'vol-002',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -76,7 +76,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '2000GiB',
     sourceVolume: 'vol-3',
     sourceVolumeId: 'vol-003',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     status: 'active',
   },
   {
@@ -85,7 +85,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '100GiB',
     sourceVolume: 'vol-4',
     sourceVolumeId: 'vol-004',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     status: 'creating',
   },
   {
@@ -94,7 +94,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '256GiB',
     sourceVolume: 'vol-5',
     sourceVolumeId: 'vol-005',
-    createdAt: 'Aug 30, 2025 21:37:41',
+    createdAt: 'Aug 30, 2026 21:37:41',
     status: 'active',
   },
   {
@@ -103,7 +103,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '5000GiB',
     sourceVolume: 'vol-6',
     sourceVolumeId: 'vol-006',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -112,7 +112,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '50GiB',
     sourceVolume: 'vol-7',
     sourceVolumeId: 'vol-007',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     status: 'error',
   },
   {
@@ -121,7 +121,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '1000GiB',
     sourceVolume: 'vol-8',
     sourceVolumeId: 'vol-008',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     status: 'active',
   },
   {
@@ -130,7 +130,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '10000GiB',
     sourceVolume: 'vol-9',
     sourceVolumeId: 'vol-009',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -139,7 +139,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '100GiB',
     sourceVolume: 'vol-10',
     sourceVolumeId: 'vol-010',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     status: 'deleting',
   },
 ];
@@ -178,16 +178,17 @@ const filterFields: FilterField[] = [
 ];
 
 export function VolumeSnapshotsPage() {
+  const navigate = useNavigate();
   const [selectedSnapshots, setSelectedSnapshots] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [snapshots, setSnapshots] = useState(mockVolumeSnapshots);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [snapshotToDelete, setSnapshotToDelete] = useState<VolumeSnapshot | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -228,8 +229,24 @@ export function VolumeSnapshotsPage() {
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Volume Snapshots');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -257,6 +274,12 @@ export function VolumeSnapshotsPage() {
   const handleDeleteCancel = () => {
     setDeleteModalOpen(false);
     setSnapshotToDelete(null);
+  };
+
+  const handleBulkDelete = () => {
+    setSnapshots((prev) => prev.filter((s) => !selectedSnapshots.includes(s.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedSnapshots([]);
   };
 
   // Filter snapshots by search
@@ -309,7 +332,12 @@ export function VolumeSnapshotsPage() {
           >
             {value}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -335,8 +363,11 @@ export function VolumeSnapshotsPage() {
           >
             {row.sourceVolume}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.sourceVolumeId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.sourceVolumeId}>
+              ID : {row.sourceVolumeId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.sourceVolumeId} />
           </span>
         </div>
       ),
@@ -354,6 +385,7 @@ export function VolumeSnapshotsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -382,7 +414,10 @@ export function VolumeSnapshotsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -428,20 +463,9 @@ export function VolumeSnapshotsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Volume snapshots' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Volume Snapshots' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -469,6 +493,7 @@ export function VolumeSnapshotsPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -479,6 +504,7 @@ export function VolumeSnapshotsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedSnapshots.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -505,6 +531,8 @@ export function VolumeSnapshotsPage() {
           selectable
           selectedKeys={selectedSnapshots}
           onSelectionChange={setSelectedSnapshots}
+          emptyMessage="No volume snapshots found"
+          loading={loading}
         />
       </VStack>
 
@@ -513,11 +541,24 @@ export function VolumeSnapshotsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         title="Delete volume snapshot"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected volume snapshots is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={handleDeleteConfirm}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected volume snapshots"
+        description="Removing the selected volume snapshots is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedSnapshots.length} volume snapshot(s)`}
       />
 
       {/* View Preferences Drawer */}

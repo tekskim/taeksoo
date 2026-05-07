@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useId, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { twMerge } from '../../utils/cn';
 import { IconChevronDown, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -75,6 +76,7 @@ export function Select({
   const id = useId();
   const triggerId = `select-trigger-${id}`;
   const listboxId = `select-listbox-${id}`;
+  const optionIdPrefix = `select-option-${id}`;
 
   // State
   const [isOpen, setIsOpen] = useState(false);
@@ -84,7 +86,8 @@ export function Select({
 
   // Refs
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const listboxRef = useRef<HTMLDivElement>(null);
+  const listboxOsRef = useRef<OverlayScrollbarsComponentRef>(null);
+  const getListboxEl = useCallback(() => listboxOsRef.current?.getElement() ?? null, []);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Controlled vs Uncontrolled
@@ -217,7 +220,7 @@ export function Select({
     const handleClickOutside = (e: MouseEvent) => {
       if (
         triggerRef.current?.contains(e.target as Node) ||
-        listboxRef.current?.contains(e.target as Node)
+        getListboxEl()?.contains(e.target as Node)
       ) {
         return;
       }
@@ -240,12 +243,12 @@ export function Select({
     };
   }, [isOpen, updatePosition]);
 
-  // Focus listbox when opened
+  // Sync listboxRef from OverlayScrollbarsComponent's underlying DOM element
   useEffect(() => {
-    if (isOpen && listboxRef.current) {
-      listboxRef.current.focus();
+    if (isOpen) {
+      getListboxEl()?.focus();
     }
-  }, [isOpen]);
+  }, [isOpen, getListboxEl]);
 
   // Width-based styles: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%)
   const widthStyles = {
@@ -303,7 +306,7 @@ export function Select({
     'border border-[var(--select-menu-border)]',
     'rounded-[var(--select-menu-radius)]',
     'shadow-[var(--select-menu-shadow)]',
-    'overflow-hidden',
+    'max-h-[240px]',
     'focus:outline-none'
   );
 
@@ -326,6 +329,11 @@ export function Select({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-controls={listboxId}
+        aria-activedescendant={
+          isOpen && focusedIndex >= 0
+            ? `${optionIdPrefix}-${enabledOptions[focusedIndex]?.value}`
+            : undefined
+        }
         aria-invalid={!!error}
         disabled={disabled}
         onClick={() => (isOpen ? closeDropdown() : openDropdown())}
@@ -375,7 +383,9 @@ export function Select({
       )}
 
       {/* Error */}
-      {error && <p className="text-body-sm text-[var(--color-state-danger)]">{error}</p>}
+      {typeof error === 'string' && error && (
+        <p className="text-body-sm text-[var(--color-state-danger)]">{error}</p>
+      )}
 
       {/* Dropdown Portal */}
       {isOpen &&
@@ -386,8 +396,13 @@ export function Select({
             }
             className={containerRef.current?.closest('[data-theme="dark"]') ? 'dark' : ''}
           >
-            <div
-              ref={listboxRef}
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'hidden', y: 'scroll' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              ref={listboxOsRef}
               id={listboxId}
               role="listbox"
               aria-labelledby={triggerId}
@@ -424,6 +439,7 @@ export function Select({
                 return (
                   <div
                     key={option.value}
+                    id={`${optionIdPrefix}-${option.value}`}
                     role="option"
                     aria-selected={isSelected}
                     aria-disabled={option.disabled}
@@ -466,7 +482,7 @@ export function Select({
                   </div>
                 );
               })}
-            </div>
+            </OverlayScrollbarsComponent>
           </div>,
           document.body
         )}

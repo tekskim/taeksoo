@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
-  HStack,
   PageShell,
   PageHeader,
   TabBar,
@@ -13,6 +12,7 @@ import {
   SearchInput,
   Pagination,
   ContextMenu,
+  ListToolbar,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -21,20 +21,15 @@ import {
   Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconTrash,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -68,7 +63,7 @@ const hpaData: HPARow[] = [
     minReplicas: 1,
     maxReplicas: 10,
     currentReplicas: 5,
-    createdAt: 'Nov 10, 2025 10:15:33',
+    createdAt: 'Nov 10, 2026 10:15:33',
   },
   {
     id: '2',
@@ -79,7 +74,7 @@ const hpaData: HPARow[] = [
     minReplicas: 2,
     maxReplicas: 20,
     currentReplicas: 8,
-    createdAt: 'Nov 9, 2025 15:28:47',
+    createdAt: 'Nov 9, 2026 15:28:47',
   },
   {
     id: '3',
@@ -90,7 +85,7 @@ const hpaData: HPARow[] = [
     minReplicas: 3,
     maxReplicas: 15,
     currentReplicas: 3,
-    createdAt: 'Nov 8, 2025 08:52:19',
+    createdAt: 'Nov 8, 2026 08:52:19',
   },
   {
     id: '4',
@@ -101,7 +96,7 @@ const hpaData: HPARow[] = [
     minReplicas: 1,
     maxReplicas: 5,
     currentReplicas: 1,
-    createdAt: 'Nov 7, 2025 13:44:26',
+    createdAt: 'Nov 7, 2026 13:44:26',
   },
 ];
 
@@ -111,10 +106,35 @@ const hpaData: HPARow[] = [
 
 export function ContainerHPAPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    updateActiveTabLabel('Horizontal pod autoscalers');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   const navigate = useNavigate();
 
   // Create menu items
@@ -148,6 +168,33 @@ export function ContainerHPAPage() {
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 248 : 48;
+
+  const filteredData = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return hpaData;
+    return hpaData.filter((row) => {
+      const haystack = [
+        row.name,
+        row.namespace,
+        row.workload,
+        row.status,
+        row.createdAt,
+        String(row.minReplicas),
+        String(row.maxReplicas),
+        String(row.currentReplicas),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [searchTerm]);
+
+  const rowsPerPage = 10;
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   const getStatusType = (status: string): 'active' | 'building' | 'error' => {
     switch (status) {
@@ -289,7 +336,10 @@ export function ContainerHPAPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -340,58 +390,20 @@ export function ContainerHPAPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Horizontal pod autoscalers' },
-              ]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Horizontal pod autoscalers' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-hpa', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-hpa', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -428,69 +440,77 @@ export function ContainerHPAPage() {
           }
         />
 
-        {/* Action Bar */}
-        <HStack gap={2} align="center" className="w-full min-h-7">
-          {/* Search */}
-          <HStack gap={1} align="center">
-            <SearchInput
-              placeholder="Search horizontal pod autoscaler by attributes"
-              size="sm"
-              className="w-[var(--search-input-width)]"
-            />
-            <Button
-              variant="secondary"
-              size="sm"
-              aria-label="Download"
-              className="!p-0 !w-7 !h-7 !min-w-7"
-            >
-              <IconDownload size={12} stroke={1.5} />
-            </Button>
-          </HStack>
-
-          {/* Divider */}
-          <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-          {/* Actions */}
-          <HStack gap={1} align="center">
-            <Button
-              variant="muted"
-              size="sm"
-              leftIcon={<IconDownload size={12} stroke={1.5} />}
-              disabled={selectedRows.length === 0}
-            >
-              Download YAML
-            </Button>
-            <Button
-              variant="muted"
-              size="sm"
-              leftIcon={<IconTrash size={12} stroke={1.5} />}
-              disabled={selectedRows.length === 0}
-            >
-              Delete
-            </Button>
-          </HStack>
-        </HStack>
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <SearchInput
+                placeholder="Search horizontal pod autoscaler by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                aria-label="Download"
+                className="!p-0 !w-7 !h-7 !min-w-7"
+              >
+                <IconDownload size={12} stroke={1.5} />
+              </Button>
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconDownload size={12} stroke={1.5} />}
+                disabled={selectedRows.length === 0}
+              >
+                Download YAML
+              </Button>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} stroke={1.5} />}
+                disabled={selectedRows.length === 0}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+          filters={filters.map((f, i) => ({
+            id: String(i),
+            field: f.key,
+            value: f.value,
+          }))}
+          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
+          onFiltersClear={handleClearFilters}
+          clearFiltersLabel="Clear filters"
+        />
 
         {/* Pagination */}
         <Pagination
           currentPage={currentPage}
-          totalPages={1}
+          totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={hpaData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
         <Table<HPARow>
           columns={columns}
-          data={hpaData}
+          data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
           onRowClick={(row) => navigate(`/container/hpa/${row.id}`)}
+          loading={loading}
+          emptyMessage="No autoscalers found"
         />
       </VStack>
     </PageShell>

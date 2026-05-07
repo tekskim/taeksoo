@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -6,7 +6,7 @@ import {
   Breadcrumb,
   Table,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ListToolbar,
   ContextMenu,
@@ -14,24 +14,23 @@ import {
   PageHeader,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
   fixedColumns,
   columnMinWidths,
+  ConfirmModal,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -56,7 +55,7 @@ const secretsData: SecretRow[] = [
     namespace: 'namespaceName',
     type: 'Opaque',
     data: 'keyName01 (+3)',
-    createdAt: 'Nov 10, 2025 09:23:41',
+    createdAt: 'Nov 10, 2026 09:23:41',
   },
   {
     id: '2',
@@ -64,7 +63,7 @@ const secretsData: SecretRow[] = [
     namespace: 'default',
     type: 'Opaque',
     data: 'username, password (+1)',
-    createdAt: 'Nov 9, 2025 14:07:22',
+    createdAt: 'Nov 9, 2026 14:07:22',
   },
   {
     id: '3',
@@ -72,7 +71,7 @@ const secretsData: SecretRow[] = [
     namespace: 'nginx-ingress',
     type: 'kubernetes.io/tls',
     data: 'tls.crt, tls.key',
-    createdAt: 'Nov 8, 2025 11:45:33',
+    createdAt: 'Nov 8, 2026 11:45:33',
   },
   {
     id: '4',
@@ -80,7 +79,7 @@ const secretsData: SecretRow[] = [
     namespace: 'default',
     type: 'kubernetes.io/dockerconfigjson',
     data: '.dockerconfigjson',
-    createdAt: 'Nov 7, 2025 16:52:08',
+    createdAt: 'Nov 7, 2026 16:52:08',
   },
   {
     id: '5',
@@ -88,8 +87,16 @@ const secretsData: SecretRow[] = [
     namespace: 'kube-system',
     type: 'kubernetes.io/service-account-token',
     data: 'ca.crt, namespace, token',
-    createdAt: 'Nov 6, 2025 08:30:15',
+    createdAt: 'Nov 6, 2026 08:30:15',
   },
+];
+
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'namespace', label: 'Namespace', type: 'text' },
+  { id: 'type', label: 'Type', type: 'text' },
+  { id: 'data', label: 'Data', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
 ];
 
 /* ----------------------------------------
@@ -107,17 +114,71 @@ export function SecretsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const [data, setData] = useState(secretsData);
   const [currentPage, setCurrentPage] = useState(1);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
     updateActiveTabLabel('Secrets');
   }, [updateActiveTabLabel]);
+
+  const handleFiltersChange = (filters: AppliedFilter[]) => {
+    setAppliedFilters(filters);
+    setCurrentPage(1);
+  };
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters([]);
+    setCurrentPage(1);
+  };
+
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: filterFields.find((ff) => ff.id === f.fieldId)?.label ?? f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const filteredData = useMemo(() => {
+    let result = data;
+    appliedFilters.forEach((filter) => {
+      const val = filter.value.toLowerCase();
+      switch (filter.fieldId) {
+        case 'name':
+          result = result.filter((item) => item.name.toLowerCase().includes(val));
+          break;
+        case 'namespace':
+          result = result.filter((item) => item.namespace.toLowerCase().includes(val));
+          break;
+        case 'type':
+          result = result.filter((item) => item.type.toLowerCase().includes(val));
+          break;
+        case 'data':
+          result = result.filter((item) => item.data.toLowerCase().includes(val));
+          break;
+        case 'createdAt':
+          result = result.filter((item) => item.createdAt.toLowerCase().includes(val));
+          break;
+        default:
+          break;
+      }
+    });
+    return result;
+  }, [data, appliedFilters]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -136,8 +197,8 @@ export function SecretsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(secretsData.length / rowsPerPage);
-  const paginatedData = secretsData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -148,11 +209,6 @@ export function SecretsPage() {
   // Create menu items for each row
   const createMenuItems = (row: SecretRow): ContextMenuItem[] => {
     return [
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/secrets/${row.id}/edit`),
-      },
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
@@ -182,16 +238,14 @@ export function SecretsPage() {
       sortable: true,
       render: (value: string, row) => (
         <div className="min-w-0">
-          <span
-            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          <Link
+            to={`/container/secrets/${row.id}`}
+            className="text-[var(--color-action-primary)] font-medium hover:underline truncate block"
             title={value}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/container/secrets/${row.id}`);
-            }}
+            onClick={(e) => e.stopPropagation()}
           >
             {value}
-          </span>
+          </Link>
         </div>
       ),
     },
@@ -260,10 +314,14 @@ export function SecretsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -276,12 +334,10 @@ export function SecretsPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
+  const handleBulkDeleteConfirm = () => {
+    setData((prev) => prev.filter((row) => !selectedRows.includes(row.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
   };
 
   // Create menu items
@@ -319,55 +375,20 @@ export function SecretsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Secrets' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Secrets' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-secrets', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-secrets', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -389,6 +410,7 @@ export function SecretsPage() {
         />
       }
       bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -411,10 +433,14 @@ export function SecretsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={handleFiltersChange}
                 placeholder="Search secrets by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -431,6 +457,7 @@ export function SecretsPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML:', selectedRows)}
               >
                 Download YAML
               </Button>
@@ -439,18 +466,15 @@ export function SecretsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
-          filters={filters.map((filter, index) => ({
-            id: String(index),
-            field: filter.key,
-            value: filter.value,
-          }))}
-          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-          onFiltersClear={handleClearFilters}
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
         />
 
         {/* Pagination */}
@@ -458,10 +482,8 @@ export function SecretsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={secretsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
@@ -472,8 +494,23 @@ export function SecretsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          loading={loading}
+          emptyMessage="No secrets found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete selected secrets"
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} secret(s)`}
+      />
     </PageShell>
   );
 }

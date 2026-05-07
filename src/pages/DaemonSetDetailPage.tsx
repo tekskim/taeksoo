@@ -18,27 +18,24 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
   Tooltip,
   Popover,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
+  IconAlertTriangle,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -116,7 +113,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
     status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
-    createdAt: 'Jul 25, 2025 11:32:18',
+    createdAt: 'Jul 25, 2026 11:32:18',
     podRestarts: 1,
     ready: { current: 1, desired: 1 },
     labels: {
@@ -136,7 +133,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
     status: 'Active',
     namespace: 'kube-system',
     image: 'fluentd:v1.16',
-    createdAt: 'Nov 9, 2025 08:45:22',
+    createdAt: 'Nov 9, 2026 08:45:22',
     podRestarts: 0,
     ready: { current: 3, desired: 3 },
     labels: {
@@ -159,7 +156,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 11:35:42',
+    createdAt: 'Jul 25, 2026 11:35:42',
     containers: [
       'container-0',
       'container-1',
@@ -178,7 +175,7 @@ const mockPodsData: PodRow[] = [
     restarts: 2,
     ip: '10.11.0.12',
     node: 'nodeName',
-    createdAt: 'Nov 9, 2025 08:46:10',
+    createdAt: 'Nov 9, 2026 08:46:10',
     containers: ['container-0'],
   },
   {
@@ -190,7 +187,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.11.0.13',
     node: 'nodeName',
-    createdAt: 'Nov 9, 2025 08:47:05',
+    createdAt: 'Nov 9, 2026 08:47:05',
     containers: ['container-0'],
   },
 ];
@@ -203,7 +200,7 @@ const mockServicesData: ServiceRow[] = [
     target: '10.0.0.100:80',
     selector: 'app=daemonset',
     type: 'ClusterIP',
-    createdAt: 'Jul 25, 2025 11:38:05',
+    createdAt: 'Jul 25, 2026 11:38:05',
   },
 ];
 
@@ -214,8 +211,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'MinimumReplicasAvailable',
     message: 'DaemonSet has minimum availability.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
 ];
 
@@ -261,11 +258,6 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
         id: 'view-logs',
         label: 'View logs',
         onClick: () => onViewLogs(row.name),
-      },
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/pods/${row.id}/edit`),
       },
       {
         id: 'edit-yaml',
@@ -388,9 +380,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -460,11 +456,6 @@ function ServicesTab({ services }: ServicesTabProps) {
 
   const createServiceMenuItems = (row: ServiceRow): ContextMenuItem[] => {
     return [
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/services/${row.id}/edit`),
-      },
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
@@ -575,9 +566,13 @@ function ServicesTab({ services }: ServicesTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: ServiceRow) => (
         <ContextMenu items={createServiceMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -812,9 +807,13 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -884,7 +883,7 @@ export function DaemonSetDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get daemonset data
-  const daemonset = mockDaemonSetData[daemonsetId || '1'] || mockDaemonSetData['1'];
+  const daemonset = daemonsetId ? mockDaemonSetData[daemonsetId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -892,8 +891,10 @@ export function DaemonSetDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`DaemonSet: ${daemonset.name}`);
-  }, [updateActiveTabLabel, daemonset.name]);
+    if (daemonset) {
+      updateActiveTabLabel(`DaemonSet: ${daemonset.name}`);
+    }
+  }, [updateActiveTabLabel, daemonset]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -922,6 +923,73 @@ export function DaemonSetDetailPage() {
     shellPanel.openConsole(podName, `Shell: ${podName}`);
   };
 
+  if (!daemonset) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'DaemonSets', href: '/container/daemonsets' },
+                  { label: daemonsetId ?? 'DaemonSet' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="DaemonSet not found"
+          description={`The daemon set "${daemonsetId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/daemonsets')}>
+              Back to DaemonSets
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // Container submenu for Execute Shell
   const containerSubmenu: ContextMenuItem[] = [
     { id: 'container-0', label: 'container-0', onClick: () => handleExecuteShell('container-0') },
@@ -944,11 +1012,6 @@ export function DaemonSetDetailPage() {
       id: 'redeploy',
       label: 'Redeploy',
       onClick: () => console.log('Redeploy'),
-    },
-    {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/daemonsets/${daemonset.id}/edit`),
     },
     {
       id: 'edit-yaml',
@@ -989,46 +1052,17 @@ export function DaemonSetDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'DaemonSets', href: '/container/daemonsets' },
                 { label: daemonset.name },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton
-                value={`${daemonset.namespace}/${daemonset.name}`}
-                size="sm"
-                iconOnly
-                tooltip="Copy DaemonSet reference"
-              />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -1090,7 +1124,7 @@ export function DaemonSetDetailPage() {
 
           {/* Second row: Pod Restarts, Ready, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Pod restarts</span>
                 <span className="text-body-md text-[var(--color-text-default)]">
@@ -1098,7 +1132,7 @@ export function DaemonSetDetailPage() {
                 </span>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Ready</span>
                 <span className="text-body-md text-[var(--color-text-default)]">
@@ -1106,7 +1140,7 @@ export function DaemonSetDetailPage() {
                 </span>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(daemonset.labels).length})
@@ -1131,14 +1165,14 @@ export function DaemonSetDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All labels ({Object.keys(daemonset.labels).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(daemonset.labels).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>
@@ -1153,7 +1187,7 @@ export function DaemonSetDetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(daemonset.annotations).length})
@@ -1178,14 +1212,14 @@ export function DaemonSetDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All annotations ({Object.keys(daemonset.annotations).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(daemonset.annotations).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>

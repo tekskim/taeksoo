@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { IconLayoutSidebar } from '@tabler/icons-react';
+import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 // App icons
 import ComputeIcon from '@/assets/appIcon/compute.png';
@@ -35,7 +36,19 @@ const apps: AppItem[] = [
   { id: 'compute-admin', title: 'Compute Admin', icon: ComputeAdminIcon, path: '/compute-admin' },
   { id: 'compute', title: 'Compute', icon: ComputeIcon, path: '/compute' },
   { id: 'storage-admin', title: 'Storage Admin', icon: StorageAdminIcon, path: '/storage-admin' },
-  { id: 'storage', title: 'Storage', icon: StorageIcon, path: '/storage' },
+  {
+    id: 'storage-system-admin',
+    title: 'Storage - System admin',
+    icon: StorageAdminIcon,
+    path: '/storage',
+  },
+  {
+    id: 'storage-domain-admin',
+    title: 'Storage - Domain admin',
+    icon: StorageAdminIcon,
+    path: '/storage-domain-admin',
+  },
+  { id: 'storage-member', title: 'Storage - Member', icon: StorageIcon, path: '/storage-member' },
   { id: 'container', title: 'Container', icon: ContainerIcon, path: '/container' },
   { id: 'ai-platform', title: 'AI Platform', icon: AIPlatformIcon, path: '/ai-platform' },
   { id: 'agent-ops', title: 'Agent Studio', icon: AgentOpsIcon, path: '/agent' },
@@ -55,6 +68,8 @@ interface AppSwitcherProps {
 
 export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps) {
   const location = useLocation();
+  const isDesktopWindow = useIsDesktopWindow();
+  const desktopControls = useDesktopWindowControls();
 
   // Determine current app from path if not provided
   const getCurrentApp = () => {
@@ -69,7 +84,11 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
   const currentApp = getCurrentApp();
 
   return (
-    <div className="h-10 px-3 flex items-center gap-2">
+    <div
+      className="h-10 px-3 flex items-center gap-2"
+      onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+      onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+    >
       {currentApp && (
         <>
           <img
@@ -77,7 +96,7 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
             alt={currentApp.title}
             className="w-[24px] h-[24px] flex-shrink-0"
           />
-          <span className="flex-1 text-label-lg leading-[20px] text-[var(--color-text-default)] truncate">
+          <span className="flex-1 text-label-lg leading-[20px] text-[var(--color-text-default)] truncate select-none">
             {currentApp.title}
           </span>
         </>
@@ -86,12 +105,13 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer flex-shrink-0"
+          onMouseDown={(e) => e.stopPropagation()}
+          className="group p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer flex-shrink-0"
           aria-label="Toggle sidebar"
         >
           <IconLayoutSidebar
             size={14}
-            className="text-[var(--color-text-muted)] pointer-events-none"
+            className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors pointer-events-none"
             stroke={1.5}
           />
         </button>

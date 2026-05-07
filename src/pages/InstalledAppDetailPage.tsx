@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   VStack,
   TabBar,
@@ -20,19 +21,12 @@ import {
 } from '@/design-system';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconEdit,
-  IconTrash,
-  IconCopy,
-  IconDownload,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconCopy, IconDownload } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
-function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
+function IconButton({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <button
       className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
@@ -229,38 +223,21 @@ primary:
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Installed Apps', href: '/container/installed-apps' },
+                { label: 'Installed apps', href: '/container/installed-apps' },
                 { label: app.name },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
-              <TopBarActionButton
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-              />
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
     >
-      <VStack gap={4}>
+      <VStack gap={6}>
         <DetailHeader>
           <DetailHeader.Title>{app.name}</DetailHeader.Title>
 
@@ -333,7 +310,11 @@ primary:
                 </Button>
               </div>
               <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden p-2">
-                <div className="overflow-auto bg-[var(--color-surface-default)]">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-surface-default)]"
+                >
                   <table className="w-full border-collapse">
                     <tbody>
                       {valuesYaml.split('\n').map((line, i) => (
@@ -348,7 +329,7 @@ primary:
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </OverlayScrollbarsComponent>
               </div>
             </VStack>
           </TabPanel>

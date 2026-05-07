@@ -13,21 +13,18 @@ import {
   Select,
   SectionCard,
   PageShell,
+  WizardSummary,
 } from '@/design-system';
+import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
-  IconTerminal2,
   IconFile,
-  IconCopy,
-  IconSearch,
   IconCirclePlus,
   IconX,
-  IconCheck,
   IconChevronDown,
   IconChevronRight,
-  IconPencilCog,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -79,37 +76,6 @@ interface DataEntry {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 
@@ -151,25 +117,19 @@ function SummarySidebar({
     return 'pending';
   };
 
+  const toWizardState = (s: 'done' | 'active' | 'pending'): WizardSectionState =>
+    s === 'pending' ? 'pre' : s;
+
+  const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
+    key,
+    label: SECTION_LABELS[key],
+    status: toWizardState(getSectionStatus(key)),
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={4}>
-            <span className="text-heading-h5">Summary</span>
-            <VStack gap={0}>
-              {SECTION_ORDER.map((step) => (
-                <HStack key={step} justify="between" className="py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={getSectionStatus(step)} />
-                </HStack>
-              ))}
-            </VStack>
-          </VStack>
-        </div>
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+        <WizardSummary items={summaryItems} />
 
         {/* Button row */}
         <HStack gap={2}>
@@ -250,24 +210,22 @@ function BasicInfoSection({
             <FormField.HelperText>Create a Secret with a custom type</FormField.HelperText>
           </FormField>
 
-          {/* Custom Type (shown when Secret Type is "custom") */}
-          {(isV2 || secretType === 'custom') && (
-            <FormField required error={!!customTypeError}>
-              <FormField.Label>Custom Type</FormField.Label>
-              <FormField.Control>
-                <Input
-                  placeholder="Custom Type"
-                  value={customType}
-                  onChange={(e) => {
-                    onCustomTypeChange(e.target.value);
-                    if (customTypeError) onCustomTypeErrorChange(null);
-                  }}
-                  fullWidth
-                />
-              </FormField.Control>
-              <FormField.ErrorMessage>{customTypeError}</FormField.ErrorMessage>
-            </FormField>
-          )}
+          {/* Custom type */}
+          <FormField required error={!!customTypeError}>
+            <FormField.Label>Custom type</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="Custom Type"
+                value={customType}
+                onChange={(e) => {
+                  onCustomTypeChange(e.target.value);
+                  if (customTypeError) onCustomTypeErrorChange(null);
+                }}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.ErrorMessage>{customTypeError}</FormField.ErrorMessage>
+          </FormField>
 
           {/* Namespace */}
           <FormField required>
@@ -333,6 +291,8 @@ function BasicInfoSection({
    ---------------------------------------- */
 
 interface DataSectionProps {
+  secretType: string;
+  isV2: boolean;
   dataEntries: DataEntry[];
   onDataEntriesChange: (entries: DataEntry[]) => void;
   stringDataEntries: DataEntry[];
@@ -346,6 +306,8 @@ interface DataSectionProps {
 }
 
 function DataSection({
+  secretType,
+  isV2,
   dataEntries,
   onDataEntriesChange,
   stringDataEntries,
@@ -420,116 +382,57 @@ function DataSection({
       <SectionCard.Header title="Data" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>
-          {/* Data */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-body-md text-[var(--color-text-subtle)] italic">
-                Custom type, Opaque
-              </span>
-              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
-            </VStack>
-
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1.5}>
-                {dataEntries.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <div className="w-5" />
-                  </div>
-                )}
-                {dataEntries.map((entry, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                  >
-                    <Input
-                      placeholder="Enter key"
-                      value={entry.key}
-                      onChange={(e) => updateDataEntry(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Enter value"
-                      value={entry.value}
-                      onChange={(e) => updateDataEntry(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => removeDataEntry(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+          {/* Data — shown for Custom type & Opaque */}
+          {(isV2 || secretType === 'custom' || secretType === 'opaque') && (
+            <VStack gap={3}>
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                <VStack gap={2}>
+                  {dataEntries.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div className="w-5" />
+                    </div>
+                  )}
+                  {dataEntries.map((entry, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
-                      <IconX size={14} className="text-[var(--color-text-muted)]" />
-                    </button>
-                  </div>
-                ))}
+                      <Input
+                        placeholder="Enter key"
+                        value={entry.key}
+                        onChange={(e) => updateDataEntry(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Enter value"
+                        value={entry.value}
+                        onChange={(e) => updateDataEntry(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => removeDataEntry(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                      >
+                        <IconX size={14} className="text-[var(--color-text-muted)]" />
+                      </button>
+                    </div>
+                  ))}
 
-                <HStack gap={1}>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} />}
-                    onClick={addDataEntry}
-                  >
-                    Add Data Entry
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconFile size={12} />}
-                    onClick={() => {
-                      console.log('Read from file clicked');
-                    }}
-                  >
-                    Read from File
-                  </Button>
-                </HStack>
-              </VStack>
-            </div>
-          </VStack>
-
-          {/* String Data */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-body-md text-[var(--color-text-subtle)] italic">SSH Key</span>
-              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
-            </VStack>
-
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1.5}>
-                {stringDataEntries.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Public key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                    </span>
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Private key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                    </span>
-                  </div>
-                )}
-                {stringDataEntries.map((entry, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr] gap-1 w-full items-center">
-                    <Input
-                      placeholder="Enter key"
-                      value={entry.key}
-                      onChange={(e) => updateStringDataEntry(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Enter value"
-                      value={entry.value}
-                      onChange={(e) => updateStringDataEntry(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                ))}
-
-                <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
-                  <div className="w-fit">
+                  <HStack gap={1}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} />}
+                      onClick={addDataEntry}
+                    >
+                      Add Data Entry
+                    </Button>
                     <Button
                       variant="secondary"
                       size="sm"
@@ -540,153 +443,145 @@ function DataSection({
                     >
                       Read from File
                     </Button>
+                  </HStack>
+                </VStack>
+              </div>
+            </VStack>
+          )}
+
+          {/* SSH Key Data */}
+          {(isV2 || secretType === 'ssh-auth') && (
+            <VStack gap={3}>
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                <VStack gap={2}>
+                  {stringDataEntries.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Public key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                      </span>
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Private key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                      </span>
+                    </div>
+                  )}
+                  {stringDataEntries.map((entry, index) => (
+                    <div key={index} className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                      <Input
+                        placeholder="Enter key"
+                        value={entry.key}
+                        onChange={(e) => updateStringDataEntry(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Enter value"
+                        value={entry.value}
+                        onChange={(e) => updateStringDataEntry(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                    </div>
+                  ))}
+
+                  <div className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                    <div className="w-fit">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconFile size={12} />}
+                        onClick={() => {
+                          console.log('Read from file clicked');
+                        }}
+                      >
+                        Read from File
+                      </Button>
+                    </div>
+                    <div className="w-fit">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconFile size={12} />}
+                        onClick={() => {
+                          console.log('Read from file clicked');
+                        }}
+                      >
+                        Read from File
+                      </Button>
+                    </div>
                   </div>
-                  <div className="w-fit">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconFile size={12} />}
-                      onClick={() => {
-                        console.log('Read from file clicked');
-                      }}
-                    >
-                      Read from File
-                    </Button>
-                  </div>
-                </div>
-              </VStack>
-            </div>
-          </VStack>
+                </VStack>
+              </div>
+            </VStack>
+          )}
 
           {/* TLS Certificate Data */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-body-md text-[var(--color-text-subtle)] italic">
-                TLS Certificate
-              </span>
-              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
+          {(isV2 || secretType === 'tls') && (
+            <VStack gap={3}>
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                <VStack gap={2}>
+                  {tlsDataEntries.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Private key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                      </span>
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Certificate<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                      </span>
+                    </div>
+                  )}
+                  {tlsDataEntries.map((entry, index) => (
+                    <div key={index} className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                      <Input
+                        placeholder="Enter key"
+                        value={entry.key}
+                        onChange={(e) => updateTlsDataEntry(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Enter value"
+                        value={entry.value}
+                        onChange={(e) => updateTlsDataEntry(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                    </div>
+                  ))}
+
+                  <div className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                    <div className="w-fit">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconFile size={12} />}
+                        onClick={() => {
+                          console.log('Read from file clicked');
+                        }}
+                      >
+                        Read from File
+                      </Button>
+                    </div>
+                    <div className="w-fit">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconFile size={12} />}
+                        onClick={() => {
+                          console.log('Read from file clicked');
+                        }}
+                      >
+                        Read from File
+                      </Button>
+                    </div>
+                  </div>
+                </VStack>
+              </div>
             </VStack>
-
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1.5}>
-                {tlsDataEntries.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Private key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                    </span>
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Certificate<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                    </span>
-                  </div>
-                )}
-                {tlsDataEntries.map((entry, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr] gap-1 w-full items-center">
-                    <Input
-                      placeholder="Enter key"
-                      value={entry.key}
-                      onChange={(e) => updateTlsDataEntry(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Enter value"
-                      value={entry.value}
-                      onChange={(e) => updateTlsDataEntry(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                ))}
-
-                <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
-                  <div className="w-fit">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconFile size={12} />}
-                      onClick={() => {
-                        console.log('Read from file clicked');
-                      }}
-                    >
-                      Read from File
-                    </Button>
-                  </div>
-                  <div className="w-fit">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconFile size={12} />}
-                      onClick={() => {
-                        console.log('Read from file clicked');
-                      }}
-                    >
-                      Read from File
-                    </Button>
-                  </div>
-                </div>
-              </VStack>
-            </div>
-          </VStack>
+          )}
 
           {/* HTTP Basic Auth Data */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-body-md text-[var(--color-text-subtle)] italic">
-                HTTP Basic Auth
-              </span>
-              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
-            </VStack>
-
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1.5}>
-                {httpBasicAuthDataEntries.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Username<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                    </span>
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Password<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                    </span>
-                  </div>
-                )}
-                {httpBasicAuthDataEntries.map((entry, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr] gap-1 w-full items-center">
-                    <Input
-                      placeholder="Enter key"
-                      value={entry.key}
-                      onChange={(e) => updateHttpBasicAuthDataEntry(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Enter value"
-                      value={entry.value}
-                      onChange={(e) => updateHttpBasicAuthDataEntry(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                ))}
-              </VStack>
-            </div>
-          </VStack>
-
-          {/* Registry Data */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-body-md text-[var(--color-text-subtle)] italic">Registry</span>
-              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
-            </VStack>
-
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={3}>
+          {(isV2 || secretType === 'basic-auth') && (
+            <VStack gap={3}>
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={2}>
-                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                    Registry domain name
-                    <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                  </span>
-                  <Input placeholder="Enter registry domain name" fullWidth />
-                </VStack>
-
-                <VStack gap={2}>
-                  {registryDataEntries.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
+                  {httpBasicAuthDataEntries.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Username<span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </span>
@@ -695,26 +590,77 @@ function DataSection({
                       </span>
                     </div>
                   )}
-                  {registryDataEntries.map((entry, index) => (
-                    <div key={index} className="grid grid-cols-[1fr_1fr] gap-1 w-full items-center">
+                  {httpBasicAuthDataEntries.map((entry, index) => (
+                    <div key={index} className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
                       <Input
                         placeholder="Enter key"
                         value={entry.key}
-                        onChange={(e) => updateRegistryDataEntry(index, 'key', e.target.value)}
+                        onChange={(e) => updateHttpBasicAuthDataEntry(index, 'key', e.target.value)}
                         fullWidth
                       />
                       <Input
                         placeholder="Enter value"
                         value={entry.value}
-                        onChange={(e) => updateRegistryDataEntry(index, 'value', e.target.value)}
+                        onChange={(e) =>
+                          updateHttpBasicAuthDataEntry(index, 'value', e.target.value)
+                        }
                         fullWidth
                       />
                     </div>
                   ))}
                 </VStack>
-              </VStack>
-            </div>
-          </VStack>
+              </div>
+            </VStack>
+          )}
+
+          {/* Registry Data */}
+          {(isV2 || secretType === 'docker-registry') && (
+            <VStack gap={3}>
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                <VStack gap={3}>
+                  <VStack gap={2}>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Registry domain name
+                      <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                    </span>
+                    <Input placeholder="Enter registry domain name" fullWidth />
+                  </VStack>
+
+                  <VStack gap={2}>
+                    {registryDataEntries.length > 0 && (
+                      <div className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                          Username<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                        </span>
+                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                          Password<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                        </span>
+                      </div>
+                    )}
+                    {registryDataEntries.map((entry, index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center"
+                      >
+                        <Input
+                          placeholder="Enter key"
+                          value={entry.key}
+                          onChange={(e) => updateRegistryDataEntry(index, 'key', e.target.value)}
+                          fullWidth
+                        />
+                        <Input
+                          placeholder="Enter value"
+                          value={entry.value}
+                          onChange={(e) => updateRegistryDataEntry(index, 'value', e.target.value)}
+                          fullWidth
+                        />
+                      </div>
+                    ))}
+                  </VStack>
+                </VStack>
+              </div>
+            </VStack>
+          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -761,9 +707,9 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1.5}>
+              <VStack gap={2}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -776,7 +722,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="Key"
@@ -823,9 +769,9 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1.5}>
+              <VStack gap={2}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -838,7 +784,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="Key"
@@ -1054,50 +1000,21 @@ export function CreateSecretPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Secrets', href: '/container/secrets' },
-                { label: 'Create secret' },
-              ]}
+              items={[{ label: 'Secrets', href: '/container/secrets' }, { label: 'Create Secret' }]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
+        <VStack gap={1}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create secret</h1>
           </div>
@@ -1132,6 +1049,8 @@ export function CreateSecretPage() {
 
             {/* Data Section */}
             <DataSection
+              secretType={secretType}
+              isV2={isV2}
               dataEntries={dataEntries}
               onDataEntriesChange={setDataEntries}
               stringDataEntries={stringDataEntries}

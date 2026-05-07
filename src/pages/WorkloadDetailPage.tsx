@@ -6,7 +6,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -30,7 +29,6 @@ import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconPlayerPause,
-  IconBell,
   IconTerminal2,
   IconWorld,
   IconNetwork,
@@ -92,7 +90,7 @@ const mockWorkloadsMap: Record<string, WorkloadDetail> = {
     status: 'running',
     locked: true,
     namespace: 'default',
-    createdAt: 'Jan 8, 2025 11:51:27',
+    createdAt: 'Jan 8, 2026 11:51:27',
     computeType: 'gpu × 1',
     memory: '40960Mi',
     cost: '$0.89/hr',
@@ -121,7 +119,7 @@ const mockWorkloadsMap: Record<string, WorkloadDetail> = {
     status: 'running',
     locked: false,
     namespace: 'default',
-    createdAt: 'Jan 7, 2025 04:38:10',
+    createdAt: 'Jan 7, 2026 04:38:10',
     computeType: 'gpu × 1',
     memory: '40960Mi',
     cost: '$0.89/hr',
@@ -222,8 +220,8 @@ function ConnectionCard({
       case 'setup-required':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border-default)]">
-            <IconCircleCheck size={16} />
-            Available
+            <IconSettings size={16} />
+            Setup Required
           </span>
         );
       default:
@@ -237,7 +235,7 @@ function ConnectionCard({
 
   return (
     <div
-      className={`border rounded-lg p-4 ${highlighted ? 'border-[var(--color-action-primary)] border-2' : 'border-[var(--color-border-default)]'}`}
+      className={`border rounded-[var(--radius-lg)] p-4 ${highlighted ? 'border-[var(--color-action-primary)] border-2' : 'border-[var(--color-border-default)]'}`}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-start gap-3">
@@ -384,7 +382,7 @@ export function WorkloadDetailPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={handleTabClose}
-          onTabMove={moveTab}
+          onTabReorder={moveTab}
           showWindowControls={true}
           onWindowClose={() => navigate('/')}
         />
@@ -392,25 +390,18 @@ export function WorkloadDetailPage() {
       topBar={
         <TopBar
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Pods', href: '/ai-platform/workloads' }, { label: workload.name }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Workload Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{workload.name}</DetailHeader.Title>
@@ -489,7 +480,7 @@ export function WorkloadDetailPage() {
                 {/* Quick Access Section */}
                 <div>
                   <div className="flex items-center gap-2 mb-4">
-                    <h3 className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                    <h3 className="text-heading-h6 text-[var(--color-text-default)]">
                       Quick Access
                     </h3>
                     <Badge variant="default" size="sm">
@@ -653,35 +644,45 @@ export function WorkloadDetailPage() {
             {/* Logs Tab Panel */}
             <TabPanel value="logs" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px] overflow-auto">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px]"
+                >
                   <pre className="whitespace-pre-wrap">
-                    {`[2025-01-08 14:30:00] Starting container...
-[2025-01-08 14:30:02] Pulling image presidio-pii-deid:latest
-[2025-01-08 14:30:15] Image pulled successfully
-[2025-01-08 14:30:16] Creating container...
-[2025-01-08 14:30:18] Container created
-[2025-01-08 14:30:19] Starting services...
-[2025-01-08 14:30:25] GPU initialized: NVIDIA A100 40GB
-[2025-01-08 14:30:30] Service ready on port 8080
-[2025-01-08 14:30:30] Workload is now running`}
+                    {`[2026-01-08 14:30:00] Starting container...
+[2026-01-08 14:30:02] Pulling image presidio-pii-deid:latest
+[2026-01-08 14:30:15] Image pulled successfully
+[2026-01-08 14:30:16] Creating container...
+[2026-01-08 14:30:18] Container created
+[2026-01-08 14:30:19] Starting services...
+[2026-01-08 14:30:25] GPU initialized: NVIDIA A100 40GB
+[2026-01-08 14:30:30] Service ready on port 8080
+[2026-01-08 14:30:30] Workload is now running`}
                   </pre>
-                </div>
+                </OverlayScrollbarsComponent>
               </div>
             </TabPanel>
 
             {/* Terminal Tab Panel */}
             <TabPanel value="terminal" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[#1e1e1e] rounded-lg p-4 font-mono text-body-md text-[#d4d4d4] h-[400px] overflow-auto">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-text-default)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-subtle)] h-[400px]"
+                >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[#4ec9b0]">root</span>
-                    <span className="text-[#d4d4d4]">@</span>
-                    <span className="text-[#569cd6]">{workload.name}</span>
-                    <span className="text-[#d4d4d4]">:~$</span>
+                    <span className="text-[var(--color-state-success)]">root</span>
+                    <span className="text-[var(--color-text-subtle)]">@</span>
+                    <span className="text-[var(--color-state-info)]">{workload.name}</span>
+                    <span className="text-[var(--color-text-subtle)]">:~$</span>
                     <span className="animate-pulse">▊</span>
                   </div>
-                  <p className="text-[#808080] text-center mt-20">Click to connect to terminal</p>
-                </div>
+                  <p className="text-[var(--color-text-muted)] text-center mt-20">
+                    Terminal not connected
+                  </p>
+                </OverlayScrollbarsComponent>
               </div>
             </TabPanel>
           </Tabs>

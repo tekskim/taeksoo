@@ -1,0 +1,210 @@
+import { useState, useEffect } from 'react';
+import { Drawer, Button, Input, FormField } from '@/design-system';
+import { HStack, VStack } from '@/design-system/layouts';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+export interface TagItem {
+  id: string;
+  key: string;
+  value: string;
+}
+
+export interface EditFileDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  objectName?: string;
+  initialTags?: TagItem[];
+  onSubmit?: (name: string, tags: TagItem[]) => void;
+}
+
+/* ----------------------------------------
+   EditFileDrawer Component
+   ---------------------------------------- */
+
+const DEFAULT_TAGS: TagItem[] = [];
+
+export function EditFileDrawer({
+  isOpen,
+  onClose,
+  objectName = '',
+  initialTags = DEFAULT_TAGS,
+  onSubmit,
+}: EditFileDrawerProps) {
+  const [name, setName] = useState(objectName);
+  const [tags, setTags] = useState<TagItem[]>(initialTags);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
+
+  // Reset form when drawer opens
+  useEffect(() => {
+    if (isOpen) {
+      setName(objectName);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
+      setTags(
+        initialTags.length > 0
+          ? initialTags
+          : [
+              { id: '1', key: '30', value: '30' },
+              { id: '2', key: '30', value: '30' },
+            ]
+      );
+    }
+  }, [isOpen, objectName, initialTags]);
+
+  const handleAddTag = () => {
+    const newTag: TagItem = {
+      id: `tag-${Date.now()}`,
+      key: '',
+      value: '',
+    };
+    setTags([...tags, newTag]);
+  };
+
+  const handleRemoveTag = (tagId: string) => {
+    setTags(tags.filter((tag) => tag.id !== tagId));
+  };
+
+  const handleTagChange = (tagId: string, field: 'key' | 'value', value: string) => {
+    setTags(tags.map((tag) => (tag.id === tagId ? { ...tag, [field]: value } : tag)));
+  };
+
+  const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
+
+    if (!name.trim()) {
+      setNameError('Please enter a file name.');
+      return;
+    }
+    setNameError(null);
+
+    setIsSubmitting(true);
+    try {
+      await onSubmit?.(name, tags);
+      onClose();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    setName(objectName);
+    setTags(initialTags);
+    setHasAttemptedSubmit(false);
+    setNameError(null);
+    onClose();
+  };
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Edit file"
+      width={696}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="flex-1"
+          >
+            {isSubmitting ? 'Saving...' : 'Save'}
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        {/* Header */}
+
+        <VStack gap={4} className="w-full">
+          {/* Folder name Input */}
+          <FormField required error={!!nameError}>
+            <FormField.Label>File name</FormField.Label>
+            <FormField.Control>
+              <Input
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (nameError) setNameError(null);
+                }}
+                placeholder="file name"
+                fullWidth
+                error={!!nameError}
+              />
+            </FormField.Control>
+            <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
+          </FormField>
+
+          {/* Tags Section */}
+          <VStack gap={3} className="w-full">
+            <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
+
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={1}>
+                {tags.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div />
+                  </div>
+                )}
+                {tags.map((tag) => (
+                  <div
+                    key={tag.id}
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                  >
+                    <Input
+                      placeholder="tag key"
+                      value={tag.key}
+                      onChange={(e) => handleTagChange(tag.id, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="tag value"
+                      value={tag.value}
+                      onChange={(e) => handleTagChange(tag.id, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(tag.id)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    >
+                      <IconX size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                    </button>
+                  </div>
+                ))}
+
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={handleAddTag}
+                  >
+                    Add Tag
+                  </Button>
+                </div>
+              </VStack>
+            </div>
+          </VStack>
+        </VStack>
+      </VStack>
+    </Drawer>
+  );
+}
+
+export default EditFileDrawer;

@@ -1,4 +1,13 @@
-import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useId,
+  type ReactNode,
+} from 'react';
 import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
@@ -10,6 +19,8 @@ interface TabsContextValue {
   setActiveTab: (value: string) => void;
   size: TabSize;
   variant: TabVariant;
+  /** Stable prefix for tab/panel id wiring (accessibility) */
+  baseId: string;
 }
 
 const TabsContext = createContext<TabsContextValue | null>(null);
@@ -116,8 +127,10 @@ export function Tabs({
     onChange?.(newValue);
   };
 
+  const baseId = useId();
+
   return (
-    <TabsContext.Provider value={{ activeTab, setActiveTab, size, variant }}>
+    <TabsContext.Provider value={{ activeTab, setActiveTab, size, variant, baseId }}>
       <div
         data-figma-name="[TDS] Tabs"
         className={twMerge('flex flex-col h-fit', className)}
@@ -134,7 +147,8 @@ export function Tabs({
    ---------------------------------------- */
 
 export function TabList({ children, className = '', ...rest }: TabListProps) {
-  const { variant, setActiveTab } = useTabsContext();
+  const { variant, setActiveTab, activeTab } = useTabsContext();
+  const listRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -179,24 +193,32 @@ export function TabList({ children, className = '', ...rest }: TabListProps) {
 
   const variantStyles = {
     underline:
-      'flex gap-[var(--tabs-gap)] relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)] after:pointer-events-none after:z-10',
+      'flex gap-[var(--tabs-gap)] overflow-x-auto scrollbar-none shadow-[inset_0_-1px_0_0_var(--color-border-default)]',
     boxed: [
       'inline-flex',
       'items-center',
-      'gap-1',
+      'gap-2',
       'p-1',
-      'h-10',
       'bg-[var(--color-surface-subtle)]',
-      'shadow-[inset_0_0_0_1px_var(--color-border-subtle)]',
-      'rounded-lg',
+      'shadow-[inset_0_0_0_1px_var(--color-border-default)]',
+      'rounded-[8px]',
       'w-fit',
     ].join(' '),
   };
+
+  useEffect(() => {
+    if (!listRef.current || !activeTab) return;
+    const el = listRef.current.querySelector<HTMLElement>(`[data-tab-value="${activeTab}"]`);
+    if (el?.scrollIntoView) {
+      el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    }
+  }, [activeTab]);
 
   return (
     <div
       data-figma-name="[TDS] Tabs.List"
       {...rest}
+      ref={listRef}
       role="tablist"
       className={twMerge(variantStyles[variant], className)}
       onKeyDown={handleKeyDown}
@@ -210,9 +232,16 @@ export function TabList({ children, className = '', ...rest }: TabListProps) {
    Tab Component
    ---------------------------------------- */
 
+function tabValueIdSegment(value: string) {
+  return value.replace(/\s+/g, '-');
+}
+
 export function Tab({ value, children, disabled = false, className = '', ...rest }: TabProps) {
-  const { activeTab, setActiveTab, size, variant } = useTabsContext();
+  const { activeTab, setActiveTab, size, variant, baseId } = useTabsContext();
   const isActive = activeTab === value;
+  const idSuffix = tabValueIdSegment(value);
+  const tabDomId = `${baseId}-tab-${idSuffix}`;
+  const panelDomId = `${baseId}-panel-${idSuffix}`;
 
   const sizeStyles = {
     sm: 'text-[length:var(--tabs-font-size-sm)] leading-[var(--tabs-line-height-sm)]',
@@ -225,17 +254,19 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
       <button
         data-figma-name="[TDS] Tabs.Tab"
         {...rest}
+        id={tabDomId}
         role="tab"
         type="button"
         data-tab-value={value}
         tabIndex={isActive ? 0 : -1}
         aria-selected={isActive}
+        aria-controls={panelDomId}
         aria-disabled={disabled}
         disabled={disabled}
         onClick={() => !disabled && setActiveTab(value)}
         className={twMerge(
           'flex flex-col items-center gap-[var(--tabs-indicator-gap)]',
-          'min-w-[var(--tabs-min-width)]',
+          'min-w-[var(--tabs-min-width)] shrink-0',
           'cursor-pointer transition-colors duration-[var(--duration-fast)]',
           disabled && 'cursor-not-allowed opacity-50',
           className
@@ -273,21 +304,23 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
     <button
       data-figma-name="[TDS] Tabs.Tab"
       {...rest}
+      id={tabDomId}
       role="tab"
       type="button"
       data-tab-value={value}
       tabIndex={isActive ? 0 : -1}
       aria-selected={isActive}
+      aria-controls={panelDomId}
       aria-disabled={disabled}
       disabled={disabled}
       onClick={() => !disabled && setActiveTab(value)}
       className={twMerge(
         'flex items-center justify-center',
-        'min-w-[80px] px-3 h-8',
+        'min-w-[80px] px-4 py-1',
         'font-medium text-center whitespace-nowrap',
-        'rounded-md',
+        'rounded-[6px]',
+        'text-[length:var(--font-size-11)] leading-[var(--line-height-16)]',
         'cursor-pointer transition-colors duration-[var(--duration-fast)]',
-        sizeStyles[size],
         isActive
           ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
           : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]',
@@ -305,14 +338,19 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
    ---------------------------------------- */
 
 export function TabPanel({ value, children, className = '', ...rest }: TabPanelProps) {
-  const { activeTab } = useTabsContext();
+  const { activeTab, baseId } = useTabsContext();
   const isActive = activeTab === value;
+  const idSuffix = tabValueIdSegment(value);
+  const tabDomId = `${baseId}-tab-${idSuffix}`;
+  const panelDomId = `${baseId}-panel-${idSuffix}`;
 
   return (
     <div
       data-figma-name="[TDS] Tabs.Panel"
       {...rest}
+      id={panelDomId}
       role="tabpanel"
+      aria-labelledby={tabDomId}
       aria-hidden={!isActive}
       className={twMerge('pt-[var(--tabs-panel-padding)]', !isActive && 'hidden', className)}
     >

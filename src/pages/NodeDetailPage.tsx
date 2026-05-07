@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
@@ -22,28 +22,27 @@ import {
   Badge,
   SectionCard,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
   Popover,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
+  IconAlertTriangle,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconHelpCircle,
+  IconInfoCircle,
   IconTrash,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+
+const PAGE_SIZE = 10;
 
 /* ----------------------------------------
    Types
@@ -157,7 +156,7 @@ const mockNodeData: Record<string, NodeData> = {
       'alpha.kubernetes.io/provided-node-ip': '172.16.0.237',
       'csi.volume.kubernetes.io/nodeid': '{"driver.csi.io":"thakicloud"}',
     },
-    createdAt: 'Jul 25, 2025 16:45:11',
+    createdAt: 'Jul 25, 2026 16:45:11',
     cpu: { used: 0.24, total: 4 },
     memory: { used: 5.45, total: 14, unit: 'GB' },
     pods: { used: 17, total: 110 },
@@ -190,7 +189,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.42.0.29',
     node: 'thakicloud',
-    createdAt: 'Nov 3, 2025 09:12:33',
+    createdAt: 'Nov 3, 2026 09:12:33',
   },
   {
     id: '2',
@@ -202,7 +201,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.42.0.30',
     node: 'thakicloud',
-    createdAt: 'Nov 3, 2025 10:24:15',
+    createdAt: 'Nov 3, 2026 10:24:15',
   },
   {
     id: '3',
@@ -214,7 +213,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.42.0.31',
     node: 'thakicloud',
-    createdAt: 'Nov 3, 2025 11:36:47',
+    createdAt: 'Nov 3, 2026 11:36:47',
   },
 ];
 
@@ -237,8 +236,8 @@ const mockConditionsData: ConditionRow[] = [
     reason: 'KubeletHasSufficientMemory',
     size: '14 GB',
     message: 'kubelet has sufficient memory available',
-    lastTransition: 'Oct 14, 2025',
-    lastHeartbeat: 'Jan 15, 2025',
+    lastTransition: 'Oct 14, 2026',
+    lastHeartbeat: 'Jan 15, 2026',
   },
   {
     id: '2',
@@ -247,8 +246,8 @@ const mockConditionsData: ConditionRow[] = [
     reason: 'KubeletHasNoDiskPressure',
     size: '256 GB',
     message: 'kubelet has no disk pressure',
-    lastTransition: 'Oct 14, 2025',
-    lastHeartbeat: 'Jan 15, 2025',
+    lastTransition: 'Oct 14, 2026',
+    lastHeartbeat: 'Jan 15, 2026',
   },
   {
     id: '3',
@@ -257,8 +256,8 @@ const mockConditionsData: ConditionRow[] = [
     reason: 'KubeletHasSufficientPID',
     size: '32768',
     message: 'kubelet has sufficient PID available',
-    lastTransition: 'Oct 14, 2025',
-    lastHeartbeat: 'Jan 15, 2025',
+    lastTransition: 'Oct 14, 2026',
+    lastHeartbeat: 'Jan 15, 2026',
   },
   {
     id: '4',
@@ -267,8 +266,8 @@ const mockConditionsData: ConditionRow[] = [
     reason: 'KubeletReady',
     size: '—',
     message: 'kubelet is posting ready status',
-    lastTransition: 'Oct 14, 2025',
-    lastHeartbeat: 'Jan 15, 2025',
+    lastTransition: 'Oct 14, 2026',
+    lastHeartbeat: 'Jan 15, 2026',
   },
 ];
 
@@ -311,7 +310,7 @@ interface ConditionCardProps {
 
 function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 min-w-0">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 min-w-0">
       <HStack justify="between" align="center">
         <VStack gap={0.5}>
           <span className="text-label-sm text-[var(--color-text-default)] leading-[16px]">
@@ -322,8 +321,11 @@ function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
           </Badge>
         </VStack>
         <Tooltip content={tooltip}>
-          <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
+          <button
+            type="button"
+            className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
+            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
           </button>
         </Tooltip>
       </HStack>
@@ -346,7 +348,7 @@ function ResourceUsage({ label, used, total, unit = '' }: ResourceUsageProps) {
   const suffix = unit ? ` ${unit}` : '';
 
   return (
-    <div className="flex-1 border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="flex-1 border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <ProgressBar
         variant="quota"
         label={`${label}${suffix}`}
@@ -371,6 +373,30 @@ interface PodsTabProps {
 function PodsTab({ pods }: PodsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredPods = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return pods;
+    return pods.filter((row) => {
+      const haystack = [row.name, row.namespace, row.status, row.ip, row.node]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [pods, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredPods.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedPods = filteredPods.slice(start, start + PAGE_SIZE);
 
   const columns: TableColumn<PodRow>[] = [
     {
@@ -398,10 +424,7 @@ function PodsTab({ pods }: PodsTabProps) {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-          title={value}
-        >
+        <span className="text-[var(--color-text-default)] font-medium truncate" title={value}>
           {value}
         </span>
       ),
@@ -448,12 +471,12 @@ function PodsTab({ pods }: PodsTabProps) {
         />
       </HStack>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
-        totalItems={pods.length}
+        totalItems={filteredPods.length}
       />
-      <Table columns={columns} data={pods} rowKey="id" />
+      <Table columns={columns} data={paginatedPods} rowKey="id" />
     </VStack>
   );
 }
@@ -469,11 +492,11 @@ interface LabelWithTooltipProps {
 
 function LabelWithTooltip({ label, tooltip }: LabelWithTooltipProps) {
   return (
-    <span className="flex items-center gap-[2px]">
+    <span className="flex items-center gap-0.5">
       {label}
       <Tooltip content={tooltip}>
-        <button className="p-0 bg-transparent border-none cursor-pointer">
-          <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
+        <button type="button" className="p-0 bg-transparent border-none cursor-pointer">
+          <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
         </button>
       </Tooltip>
     </span>
@@ -567,6 +590,29 @@ function ImagesTab({ images }: ImagesTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const filteredImages = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return images;
+    return images.filter((row) => {
+      const tag = row.name.includes(':') ? (row.name.split(':').pop() ?? '') : '';
+      const haystack = [row.name, row.size, tag].join(' ').toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [images, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredImages.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedImages = filteredImages.slice(start, start + PAGE_SIZE);
+
   const columns: TableColumn<ImageRow>[] = [
     {
       key: 'name',
@@ -592,12 +638,12 @@ function ImagesTab({ images }: ImagesTabProps) {
         />
       </HStack>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
-        totalItems={images.length}
+        totalItems={filteredImages.length}
       />
-      <Table columns={columns} data={images} rowKey="id" />
+      <Table columns={columns} data={paginatedImages} rowKey="id" />
     </VStack>
   );
 }
@@ -613,6 +659,15 @@ interface TaintsTabProps {
 function TaintsTab({ taints }: TaintsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
+  const totalPages = Math.max(1, Math.ceil(taints.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedTaints = taints.slice(start, start + PAGE_SIZE);
+
   const columns: TableColumn<TaintRow>[] = [
     { key: 'key', label: 'Key', flex: 1, sortable: true },
     { key: 'value', label: 'Value', flex: 1, render: (v: string) => v || '-' },
@@ -623,12 +678,12 @@ function TaintsTab({ taints }: TaintsTabProps) {
     <VStack gap={3}>
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Taints</h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={taints.length}
       />
-      <Table columns={columns} data={taints} rowKey="id" />
+      <Table columns={columns} data={paginatedTaints} rowKey="id" />
     </VStack>
   );
 }
@@ -643,6 +698,15 @@ interface ConditionsTabProps {
 
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(conditions.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedConditions = conditions.slice(start, start + PAGE_SIZE);
 
   const columns: TableColumn<ConditionRow>[] = [
     {
@@ -675,12 +739,12 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
         Conditions
       </h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={conditions.length}
       />
-      <Table columns={columns} data={conditions} rowKey="id" />
+      <Table columns={columns} data={paginatedConditions} rowKey="id" />
     </VStack>
   );
 }
@@ -697,6 +761,30 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const filteredEvents = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return events;
+    return events.filter((row) => {
+      const haystack = [row.name, row.type, row.reason, row.message, row.source, row.subobject]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [events, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredEvents.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedEvents = filteredEvents.slice(start, start + PAGE_SIZE);
 
   const columns: TableColumn<EventRow>[] = [
     {
@@ -746,15 +834,36 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
-      render: () => (
-        <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-          <IconDotsCircleHorizontal
-            size={16}
-            className="text-[var(--color-text-subtle)]"
-            stroke={1.5}
-          />
-        </button>
-      ),
+      sticky: 'right',
+      render: (_: unknown, row: EventRow) => {
+        const items: ContextMenuItem[] = [
+          { id: 'view', label: 'View details', onClick: () => {} },
+          {
+            id: 'copy-name',
+            label: 'Copy event name',
+            onClick: () => navigator.clipboard.writeText(row.name),
+          },
+          {
+            id: 'copy-message',
+            label: 'Copy message',
+            onClick: () => navigator.clipboard.writeText(row.message),
+          },
+        ];
+        return (
+          <ContextMenu items={items} trigger="click">
+            <button
+              type="button"
+              className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+            >
+              <IconDotsCircleHorizontal
+                size={16}
+                className="text-[var(--color-text-subtle)]"
+                stroke={1.5}
+              />
+            </button>
+          </ContextMenu>
+        );
+      },
     },
   ];
 
@@ -785,15 +894,15 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
         </HStack>
       </HStack>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
-        totalItems={events.length}
+        totalItems={filteredEvents.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={events}
+        data={paginatedEvents}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -816,7 +925,7 @@ export function NodeDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get node data
-  const node = mockNodeData[nodeName || ''] || mockNodeData['node-control-plane-01'];
+  const node = nodeName ? mockNodeData[nodeName] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -824,8 +933,10 @@ export function NodeDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Node: ${node.name}`);
-  }, [updateActiveTabLabel, node.name]);
+    if (node) {
+      updateActiveTabLabel(`Node: ${node.name}`);
+    }
+  }, [updateActiveTabLabel, node]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -835,6 +946,57 @@ export function NodeDetailPage() {
 
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
+
+  if (!node) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Nodes', href: '/container/nodes' },
+                  { label: nodeName ?? 'Node' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Node not found"
+          description={`The node "${nodeName ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/nodes')}>
+              Back to Nodes
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Context menu items
   const moreActionsItems: ContextMenuItem[] = [
@@ -882,41 +1044,14 @@ export function NodeDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Nodes', href: '/container/nodes' },
-                { label: node.name },
-              ]}
+              items={[{ label: 'Nodes', href: '/container/nodes' }, { label: node.name }]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={node.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
@@ -983,14 +1118,14 @@ export function NodeDetailPage() {
                         delay={100}
                         hideDelay={100}
                         content={
-                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="p-3 min-w-[160px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                               All Labels ({Object.keys(node.labels).length})
                             </div>
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                               {Object.entries(node.labels).map(([k, v]) => (
                                 <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                  <span className="break-all">{v ? `${k}: ${v}` : k}</span>
+                                  {v ? `${k}: ${v}` : k}
                                 </Badge>
                               ))}
                             </div>
@@ -1032,14 +1167,14 @@ export function NodeDetailPage() {
                         delay={100}
                         hideDelay={100}
                         content={
-                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="p-3 min-w-[160px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                               All annotations ({Object.keys(node.annotations).length})
                             </div>
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                               {Object.entries(node.annotations).map(([k, v]) => (
                                 <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                  <span className="break-all">{v ? `${k}: ${v}` : k}</span>
+                                  {v ? `${k}: ${v}` : k}
                                 </Badge>
                               ))}
                             </div>

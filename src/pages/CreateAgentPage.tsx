@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   PageShell,
   TabBar,
@@ -322,11 +323,11 @@ export function CreateAgentPage() {
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All Tags ({row.tags.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {row.tags.map((tag, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {tag}
@@ -403,8 +404,8 @@ export function CreateAgentPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Agent', href: '/agent/list' }, { label: 'Create Agent' }]}
@@ -428,7 +429,14 @@ export function CreateAgentPage() {
       }
     >
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-auto min-h-0 overscroll-contain sidebar-scroll">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 min-h-0 overscroll-contain"
+      >
         <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
           <div className="flex flex-col gap-3 items-start min-w-[1176px] relative shrink-0 w-full">
             <div className="flex items-center justify-between h-8 w-full">
@@ -909,7 +917,7 @@ export function CreateAgentPage() {
             </div>
           </div>
         </div>
-      </div>
+      </OverlayScrollbarsComponent>
     </PageShell>
   );
 }

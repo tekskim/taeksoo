@@ -5,10 +5,11 @@ import { DosDonts } from '../_shared/DosDonts';
 import { PropsTable } from '../_shared/PropsTable';
 import type { PropDef } from '../_shared/PropsTable';
 import { Label } from '../../design-system-sections/HelperComponents';
-import { VStack } from '@/design-system';
+import { VStack, Badge } from '@/design-system';
 import { ProjectSelector } from '@/components/ProjectSelector';
 import type { Project } from '@/contexts/ProjectContext';
-import { IconSearch, IconCheck } from '@tabler/icons-react';
+import { IconDotsVertical } from '@tabler/icons-react';
+import { SearchInput } from '@/design-system';
 
 /* ----------------------------------------
    Mock Data
@@ -48,7 +49,7 @@ const mockProjects: Project[] = [
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -59,7 +60,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -68,7 +69,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -111,6 +114,19 @@ const projectSelectorProps: PropDef[] = [
     description: '프로젝트 선택 시 호출되는 콜백. 선택된 프로젝트 ID를 전달.',
   },
   {
+    name: 'primaryProjectId',
+    type: 'string',
+    required: false,
+    description: 'Primary로 지정된 프로젝트 ID. 해당 항목에 "Primary" 뱃지가 표시된다.',
+  },
+  {
+    name: 'onSetPrimary',
+    type: '(projectId: string) => void',
+    required: false,
+    description:
+      'Primary 설정 콜백. 제공 시 각 항목에 3-dot 메뉴가 표시되며, 클릭 시 ConfirmModal을 통해 "Set primary tenant"를 확인한다. Primary 항목의 아이콘은 비활성화된다.',
+  },
+  {
     name: 'variant',
     type: "'default' | 'sidebar-icon'",
     default: "'default'",
@@ -148,12 +164,15 @@ const projectTypeProps: PropDef[] = [
 
 function DefaultDemo() {
   const [selected, setSelected] = useState(mockProjects[0].id);
+  const [primary, setPrimary] = useState(mockProjects[1].id);
   return (
     <div className="w-[200px]">
       <ProjectSelector
         projects={mockProjects}
         selectedProjectId={selected}
         onProjectSelect={setSelected}
+        primaryProjectId={primary}
+        onSetPrimary={(id) => setPrimary((prev) => (prev === id ? '' : id))}
         variant="default"
       />
     </div>
@@ -162,12 +181,15 @@ function DefaultDemo() {
 
 function SidebarIconDemo() {
   const [selected, setSelected] = useState(mockProjects[0].id);
+  const [primary, setPrimary] = useState(mockProjects[0].id);
   return (
     <div className="flex items-center justify-center w-10 h-10">
       <ProjectSelector
         projects={mockProjects}
         selectedProjectId={selected}
         onProjectSelect={setSelected}
+        primaryProjectId={primary}
+        onSetPrimary={(id) => setPrimary((prev) => (prev === id ? '' : id))}
         variant="sidebar-icon"
       />
     </div>
@@ -176,59 +198,69 @@ function SidebarIconDemo() {
 
 function StaticDropdown() {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg p-3 flex flex-col gap-2 w-[280px]">
-      <div className="flex items-center justify-between px-2.5 py-1.5 border border-[var(--color-border-strong)] rounded-md bg-[var(--color-surface-default)]">
-        <span className="text-body-sm text-[var(--color-text-muted)]">Search projects</span>
-        <IconSearch size={16} className="text-[var(--color-text-muted)]" />
-      </div>
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl shadow-lg p-2 flex flex-col gap-2 w-[280px]">
+      <SearchInput
+        placeholder="Search tenants"
+        value=""
+        onChange={() => {}}
+        onClear={() => {}}
+        fullWidth
+      />
       <div className="flex flex-col gap-2">
-        {mockProjects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            isSelected={project.id === mockProjects[0].id}
-          />
-        ))}
+        <TenantCell project={mockProjects[0]} isSelected />
+        <TenantCell project={mockProjects[1]} isPrimary />
+        <TenantCell project={mockProjects[2]} />
       </div>
     </div>
   );
 }
 
-function ProjectCard({ project, isSelected = false }: { project: Project; isSelected?: boolean }) {
+function TenantCell({
+  project,
+  isSelected = false,
+  isPrimary = false,
+}: {
+  project: Project;
+  isSelected?: boolean;
+  isPrimary?: boolean;
+}) {
   const isDisabled = project.disabled;
   return (
     <div
-      className={`w-full text-left px-3 py-2 rounded-md border ${
+      className={`w-full text-left pl-3 pr-2 py-2 rounded-lg border transition-colors ${
         isSelected
-          ? 'border-2 border-[var(--color-action-primary)] bg-[var(--color-surface-default)]'
-          : 'border border-[var(--color-border-default)] bg-[var(--color-surface-default)]'
-      } ${isDisabled ? 'opacity-60' : ''}`}
+          ? 'border-[var(--color-action-primary)] bg-[var(--color-surface-subtle)]'
+          : 'border-[var(--color-border-default)]'
+      } ${isDisabled ? 'opacity-50' : ''}`}
     >
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <span
-            className={`text-label-md ${isDisabled ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]'}`}
-          >
-            {project.name}
-          </span>
-          {isSelected && !isDisabled && (
-            <IconCheck size={20} className="text-[var(--color-action-primary)]" stroke={1} />
-          )}
-          {isDisabled && (
-            <span className="text-body-sm text-[var(--color-state-danger)]">Disabled</span>
-          )}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-label-md text-[var(--color-text-default)]">{project.name}</span>
+          <div className="flex items-center gap-1 shrink-0">
+            {isPrimary && (
+              <Badge theme="white" size="sm">
+                Primary
+              </Badge>
+            )}
+            {!isDisabled && (
+              <button
+                type="button"
+                className={`size-5 flex items-center justify-center rounded ${
+                  isPrimary
+                    ? 'text-[var(--color-text-disabled)] cursor-not-allowed'
+                    : 'text-[var(--color-text-muted)]'
+                }`}
+                disabled={isPrimary}
+              >
+                <IconDotsVertical size={14} stroke={1.5} />
+              </button>
+            )}
+          </div>
         </div>
-        <p
-          className={`text-body-sm leading-4 ${isDisabled ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-subtle)]'}`}
-        >
-          {project.description}
-        </p>
-        <div
-          className={`flex items-center justify-between text-body-xs ${isDisabled ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-subtle)]'}`}
-        >
-          <span>ID: {project.id}</span>
-          <span>{project.createdAt}</span>
-        </div>
+        <p className="text-body-sm text-[var(--color-text-default)]">{project.description}</p>
+        <span className="text-[11px] leading-4 text-[var(--color-text-muted)]">
+          ID: {project.id}
+        </span>
       </div>
     </div>
   );
@@ -258,8 +290,6 @@ function ProjectSelectorGuidelines() {
           </ul>
         </Prose>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Variants */}
       <VStack gap={4}>
@@ -294,23 +324,21 @@ function ProjectSelectorGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
-      {/* Project Card */}
+      {/* Tenant Cell */}
       <VStack gap={4}>
-        <SectionTitle>Project Card</SectionTitle>
+        <SectionTitle>Tenant Cell</SectionTitle>
         <Prose>
-          <p>드롭다운 내 각 프로젝트 카드는 다음 정보를 표시한다:</p>
+          <p>드롭다운 내 각 Tenant 셀은 border가 있는 카드 형태이며 다음 정보를 표시한다:</p>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>Header</strong> — 프로젝트 이름 (좌) + 선택 체크 아이콘 또는 Disabled 뱃지
+              <strong>Row 1</strong> — Tenant 이름 (좌) + Primary 뱃지 (조건부) + 3-dot 메뉴 버튼
               (우)
             </li>
             <li>
-              <strong>Description</strong> — 프로젝트 설명 텍스트
+              <strong>Row 2</strong> — Description (12px)
             </li>
             <li>
-              <strong>Footer</strong> — 프로젝트 ID (좌) + 생성 일시 (우)
+              <strong>Row 3</strong> — ID (11px, muted)
             </li>
           </ul>
         </Prose>
@@ -326,25 +354,32 @@ function ProjectSelectorGuidelines() {
               <Td>
                 <strong>Default</strong>
               </Td>
-              <Td>1px border-default, hover 시 surface-subtle 배경</Td>
+              <Td>border-default, hover 시 surface-subtle 배경</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Selected</strong>
               </Td>
-              <Td>2px border-action-primary, Check 아이콘 표시</Td>
+              <Td>border-action-primary (파란색 테두리) + surface-subtle 배경</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Primary</strong>
+              </Td>
+              <Td>
+                Row 1 이름 우측에 &quot;Primary&quot; 뱃지 (Badge theme=white size=sm), 3-dot 아이콘
+                비활성화 (text-disabled, cursor-not-allowed)
+              </Td>
             </tr>
             <tr>
               <Td>
                 <strong>Disabled</strong>
               </Td>
-              <Td>text-muted 색상, cursor-not-allowed, &quot;Disabled&quot; 레이블 표시</Td>
+              <Td>opacity-50, cursor-not-allowed, 3-dot 메뉴 숨김</Td>
             </tr>
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Interaction */}
       <VStack gap={4}>
@@ -352,9 +387,19 @@ function ProjectSelectorGuidelines() {
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>트리거 버튼 클릭으로 드롭다운을 토글한다.</li>
-            <li>드롭다운 내 검색 입력에 autoFocus가 적용되어 즉시 타이핑할 수 있다.</li>
-            <li>프로젝트 이름 또는 ID로 필터링 검색이 가능하다.</li>
-            <li>프로젝트 카드 클릭 시 해당 프로젝트가 선택되고 드롭다운이 닫힌다.</li>
+            <li>
+              드롭다운 내 검색 입력(DS SearchInput)에 autoFocus가 적용되어 즉시 타이핑할 수 있다.
+            </li>
+            <li>Tenant 이름 또는 ID로 필터링 검색이 가능하다.</li>
+            <li>Tenant 셀 클릭 시 해당 tenant가 선택되고 드롭다운이 닫힌다.</li>
+            <li>
+              3-dot 메뉴 버튼 클릭 시 ContextMenu가 열리며 &quot;Set primary tenant&quot; 옵션을
+              제공한다. 메뉴 선택 시 ConfirmModal이 열려 사용자 확인을 거친다.
+            </li>
+            <li>
+              Primary로 지정된 tenant는 Row 1 이름 우측에 &quot;Primary&quot; 뱃지가 표시되고, 3-dot
+              아이콘은 비활성화(disabled) 된다.
+            </li>
             <li>
               <strong>Escape</strong> 키 또는 드롭다운 외부 클릭으로 닫을 수 있다.
             </li>
@@ -362,7 +407,28 @@ function ProjectSelectorGuidelines() {
         </Prose>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
+      {/* Confirm Modal */}
+      <VStack gap={4}>
+        <SectionTitle>Confirm Modal</SectionTitle>
+        <Prose>
+          <p>3-dot 메뉴에서 &quot;Set primary tenant&quot;를 선택하면 DS ConfirmModal이 열린다:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              <strong>Title</strong> — &quot;Set primary tenant&quot;
+            </li>
+            <li>
+              <strong>Description</strong> — &quot;Set &#123;tenant name&#125; as your primary
+              tenant? This tenant will be selected by default when you open the Compute app.&quot;
+            </li>
+            <li>
+              <strong>Actions</strong> — Cancel (닫기) / Save (primary 설정 후 닫기)
+            </li>
+            <li>
+              <strong>Size</strong> — sm
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
 
       {/* Best Practices */}
       <VStack gap={4}>
@@ -408,6 +474,8 @@ export function ProjectSelectorPage() {
   projects={projects}
   selectedProjectId={selectedId}
   onProjectSelect={setSelectedId}
+  primaryProjectId={primaryId}
+  onSetPrimary={handleSetPrimary}
   variant="default"
 />`}
         >
@@ -423,7 +491,7 @@ export function ProjectSelectorPage() {
                 사이드바 전체 폭 트리거. 프로젝트 이름 + 전환 아이콘을 표시한다.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <DefaultDemo />
             </div>
           </VStack>
@@ -435,30 +503,34 @@ export function ProjectSelectorPage() {
                 트리거 클릭 시 열리는 드롭다운 패널. 검색 입력과 프로젝트 카드 리스트로 구성된다.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <StaticDropdown />
             </div>
           </VStack>
 
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Project Card — States</Label>
+              <Label>Tenant Cell — States</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                프로젝트 카드의 3가지 상태: 선택됨(Selected), 기본(Default), 비활성(Disabled).
+                Tenant 셀의 4가지 상태: Selected, Default, Primary, Disabled.
               </span>
             </VStack>
-            <div className="flex gap-4 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-4 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <VStack gap={1.5} className="w-[260px]">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Selected</span>
-                <ProjectCard project={mockProjects[0]} isSelected />
+                <TenantCell project={mockProjects[0]} isSelected />
               </VStack>
               <VStack gap={1.5} className="w-[260px]">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Default</span>
-                <ProjectCard project={mockProjects[1]} />
+                <TenantCell project={mockProjects[1]} />
+              </VStack>
+              <VStack gap={1.5} className="w-[260px]">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Primary</span>
+                <TenantCell project={mockProjects[2]} isPrimary />
               </VStack>
               <VStack gap={1.5} className="w-[260px]">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Disabled</span>
-                <ProjectCard project={mockProjects[3]} />
+                <TenantCell project={mockProjects[3]} />
               </VStack>
             </div>
           </VStack>
@@ -470,7 +542,7 @@ export function ProjectSelectorPage() {
                 38x38px 정사각형 아이콘 버튼. Tooltip으로 프로젝트 이름을 표시한다.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <SidebarIconDemo />
             </div>
           </VStack>
@@ -526,34 +598,46 @@ export function ProjectSelectorPage() {
                 </tr>
                 <tr>
                   <Td>Max Height</Td>
-                  <Td>400px</Td>
+                  <Td>400px (내부 스크롤 300px)</Td>
                 </tr>
                 <tr>
                   <Td>Padding</Td>
-                  <Td>12px</Td>
+                  <Td>8px (p-2)</Td>
                 </tr>
                 <tr>
                   <Td>Gap</Td>
-                  <Td>8px</Td>
+                  <Td>8px (gap-2)</Td>
                 </tr>
                 <tr>
                   <Td>Radius</Td>
-                  <Td>8px (lg)</Td>
+                  <Td>16px (rounded-2xl)</Td>
                 </tr>
                 <tr>
                   <Td>Shadow</Td>
                   <Td>shadow-lg</Td>
                 </tr>
                 <tr>
+                  <Td>Border</Td>
+                  <Td>1px border-default</Td>
+                </tr>
+                <tr>
                   <Td>Z-index</Td>
                   <Td>100</Td>
+                </tr>
+                <tr>
+                  <Td>Search</Td>
+                  <Td>DS SearchInput (fullWidth, autoFocus)</Td>
+                </tr>
+                <tr>
+                  <Td>Scroll</Td>
+                  <Td>OverlayScrollbars (autoHide: scroll)</Td>
                 </tr>
               </tbody>
             </TableWrapper>
           </VStack>
 
           <VStack gap={2}>
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Project Card</h4>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Tenant Cell</h4>
             <TableWrapper>
               <thead>
                 <tr>
@@ -564,35 +648,51 @@ export function ProjectSelectorPage() {
               <tbody>
                 <tr>
                   <Td>Padding</Td>
-                  <Td>12px 8px</Td>
+                  <Td>8px 8px 8px 12px (pl-3 pr-2 py-2)</Td>
+                </tr>
+                <tr>
+                  <Td>Border</Td>
+                  <Td>1px border-default (Selected: border-action-primary)</Td>
                 </tr>
                 <tr>
                   <Td>Radius</Td>
-                  <Td>6px (md)</Td>
+                  <Td>8px (rounded-lg)</Td>
                 </tr>
                 <tr>
                   <Td>Gap (내부)</Td>
-                  <Td>6px</Td>
+                  <Td>8px (gap-2)</Td>
+                </tr>
+                <tr>
+                  <Td>Gap (셀 간)</Td>
+                  <Td>8px (gap-2)</Td>
                 </tr>
                 <tr>
                   <Td>Name font</Td>
-                  <Td>text-label-md (12px, medium)</Td>
+                  <Td>text-label-md (14px, medium)</Td>
                 </tr>
                 <tr>
                   <Td>Description font</Td>
-                  <Td>text-body-sm (11px)</Td>
+                  <Td>text-body-sm (12px)</Td>
                 </tr>
                 <tr>
-                  <Td>Footer font</Td>
-                  <Td>text-body-xs (10px)</Td>
+                  <Td>ID font</Td>
+                  <Td>11px, text-muted</Td>
                 </tr>
                 <tr>
-                  <Td>Selected border</Td>
-                  <Td>2px action-primary</Td>
+                  <Td>Selected BG</Td>
+                  <Td>surface-subtle</Td>
                 </tr>
                 <tr>
-                  <Td>Default border</Td>
-                  <Td>1px border-default</Td>
+                  <Td>3-dot icon</Td>
+                  <Td>14px, size-5 (20px) 버튼, text-muted</Td>
+                </tr>
+                <tr>
+                  <Td>3-dot (Primary)</Td>
+                  <Td>disabled, text-disabled, cursor-not-allowed</Td>
+                </tr>
+                <tr>
+                  <Td>Primary badge</Td>
+                  <Td>Badge theme=white size=sm (Row 1, 이름 우측)</Td>
                 </tr>
               </tbody>
             </TableWrapper>
@@ -614,6 +714,16 @@ export function ProjectSelectorPage() {
           label: 'Tooltip',
           path: '/design/components/tooltip',
           description: 'sidebar-icon variant에서 프로젝트명 표시',
+        },
+        {
+          label: 'Modal / ConfirmModal',
+          path: '/design/components/modal',
+          description: 'Primary tenant 설정 확인 모달',
+        },
+        {
+          label: 'Context Menu',
+          path: '/design/components/context-menu',
+          description: '3-dot 버튼의 ContextMenu',
         },
       ]}
     >

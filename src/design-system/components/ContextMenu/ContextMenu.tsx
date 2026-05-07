@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { IconChevronRight } from '@tabler/icons-react';
-import { Tooltip } from '../Tooltip';
 
 /* ----------------------------------------
    Types
@@ -82,13 +82,14 @@ const ContextMenuItemComponent: React.FC<{
   const [submenuPosition, setSubmenuPosition] = useState({ x: 0, y: 0 });
   const [submenuDirection, setSubmenuDirection] = useState<'left' | 'right'>('right');
   const itemRef = useRef<HTMLDivElement>(null);
-  const submenuRef = useRef<HTMLDivElement>(null);
+  const submenuOsRef = useRef<OverlayScrollbarsComponentRef>(null);
   const closeTimeoutRef = useRef<number | null>(null);
 
   // Adjust submenu position after it renders
   useEffect(() => {
-    if (showSubmenu && submenuRef.current && itemRef.current) {
-      const submenuRect = submenuRef.current.getBoundingClientRect();
+    const submenuEl = submenuOsRef.current?.getElement();
+    if (showSubmenu && submenuEl && itemRef.current) {
+      const submenuRect = submenuEl.getBoundingClientRect();
       const itemRect = itemRef.current.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
@@ -250,6 +251,7 @@ const ContextMenuItemComponent: React.FC<{
       ref={itemRef}
       role="menuitem"
       tabIndex={-1}
+      title={typeof item.tooltip === 'string' ? item.tooltip : undefined}
       aria-disabled={item.disabled || undefined}
       aria-haspopup={hasSubmenu ? 'menu' : undefined}
       aria-expanded={hasSubmenu ? showSubmenu : undefined}
@@ -291,24 +293,23 @@ const ContextMenuItemComponent: React.FC<{
 
   return (
     <>
-      {item.tooltip ? (
-        <Tooltip content={item.tooltip} position={item.tooltipPosition || 'left'}>
-          {menuItem}
-        </Tooltip>
-      ) : (
-        menuItem
-      )}
+      {menuItem}
 
       {/* Submenu - rendered via portal */}
       {showSubmenu &&
         item.submenu &&
         createPortal(
-          <div
-            ref={submenuRef}
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
+          <OverlayScrollbarsComponent
+            ref={submenuOsRef}
+            onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
             onMouseEnter={handleSubmenuMouseEnter}
             onMouseLeave={handleSubmenuMouseLeave}
+            options={{
+              overflow: { x: 'hidden', y: 'scroll' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            defer={false}
             className="
             fixed
             flex flex-col
@@ -319,7 +320,6 @@ const ContextMenuItemComponent: React.FC<{
             overflow-hidden
             z-[calc(var(--z-context-menu)+1)]
             max-h-[calc(100vh-16px)]
-            overflow-y-auto
           "
             style={{
               left: submenuPosition.x,
@@ -335,7 +335,7 @@ const ContextMenuItemComponent: React.FC<{
                 itemId={subItem.id}
               />
             ))}
-          </div>,
+          </OverlayScrollbarsComponent>,
           document.body
         )}
     </>
@@ -439,6 +439,12 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         case 'End': {
           e.preventDefault();
           menuItems[menuItems.length - 1].focus();
+          break;
+        }
+        case 'Escape': {
+          e.preventDefault();
+          e.stopPropagation();
+          onClose();
           break;
         }
         case 'Enter':

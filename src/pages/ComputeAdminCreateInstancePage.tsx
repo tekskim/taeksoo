@@ -11,7 +11,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Pagination,
   Table,
   Tabs,
@@ -35,15 +34,15 @@ import {
   PageShell,
   fixedColumns,
   columnMinWidths,
-  WizardSectionStatusIcon,
+  WizardSummary,
   FormField,
+  Password,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
-  IconBell,
   IconDots,
   IconEdit,
   IconExternalLink,
@@ -53,6 +52,7 @@ import {
   IconStarFilled,
   IconUpload,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -160,7 +160,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.tiny',
     description: '-',
     visibility: 'Private',
-    createdAt: 'Nov 19, 2025 16:14:34',
+    createdAt: 'Nov 19, 2026 16:14:34',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'tiny-instance',
@@ -184,7 +184,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.small',
     description: 'Small instance',
     visibility: 'Public',
-    createdAt: 'Nov 18, 2025 09:01:17',
+    createdAt: 'Nov 18, 2026 09:01:17',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'small-instance',
@@ -208,7 +208,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.medium',
     description: 'Medium instance',
     visibility: 'Private',
-    createdAt: 'Nov 17, 2025 02:48:00',
+    createdAt: 'Nov 17, 2026 02:48:00',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'medium-instance',
@@ -232,7 +232,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.large',
     description: 'Large instance',
     visibility: 'Public',
-    createdAt: 'Nov 16, 2025 19:35:43',
+    createdAt: 'Nov 16, 2026 19:35:43',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'large-instance',
@@ -255,7 +255,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.xlarge',
     description: 'Extra large instance',
     visibility: 'Private',
-    createdAt: 'Nov 15, 2025 12:22:26',
+    createdAt: 'Nov 15, 2026 12:22:26',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'xlarge-instance',
@@ -279,7 +279,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.2xlarge',
     description: '2x large instance',
     visibility: 'Public',
-    createdAt: 'Nov 14, 2025 05:09:09',
+    createdAt: 'Nov 14, 2026 05:09:09',
     isFavorite: false,
     config: {
       instanceNamePrefix: '2xlarge-instance',
@@ -329,37 +329,18 @@ function QuotaSidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Summary</h5>
-            <div className="flex flex-col">
-              {SECTION_ORDER.map((sectionKey) => {
-                // Show "Writing..." for sections in 'writing' state
-                const isWriting = sectionStatus[sectionKey] === 'writing';
-
-                return (
-                  <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-body-md leading-5 text-[var(--color-text-default)]">
-                      {SECTION_LABELS[sectionKey]}
-                    </span>
-                    {isWriting ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </VStack>
-        </div>
+        <WizardSummary
+          items={SECTION_ORDER.map((key) => ({
+            key,
+            label: SECTION_LABELS[key],
+            status: sectionStatus[key],
+          }))}
+        />
 
         {/* Quota Card */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={3}>
             <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Quota</h5>
             <VStack gap={3}>
@@ -417,7 +398,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -435,7 +416,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -455,7 +436,7 @@ interface SkippedSectionProps {
 
 function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="flex items-center justify-between h-8">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <div className="flex items-center gap-3">
@@ -843,7 +824,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'newsnapshot',
     size: '709.98 MiB',
     sourceInstance: 'th-server',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
   },
   {
     id: 's2',
@@ -851,7 +832,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'web-backup',
     size: '1.2 GiB',
     sourceInstance: 'web-server-01',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
   },
   {
     id: 's3',
@@ -859,7 +840,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'db-snapshot',
     size: '2.5 GiB',
     sourceInstance: 'db-master',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
   },
   {
     id: 's4',
@@ -867,7 +848,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'app-snapshot',
     size: '890.00 MiB',
     sourceInstance: 'app-server',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
   {
     id: 's5',
@@ -875,7 +856,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'test-snapshot',
     size: '512.00 MiB',
     sourceInstance: 'test-vm',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
 ];
 
@@ -886,7 +867,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-01',
     size: '50 GiB',
     type: 'SSD',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
   },
   {
     id: 'v2',
@@ -894,7 +875,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-02',
     size: '100 GiB',
     type: 'SSD',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
   },
   {
     id: 'v3',
@@ -902,7 +883,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'system-disk',
     size: '80 GiB',
     type: 'HDD',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
 ];
 
@@ -1071,15 +1052,17 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1234,7 +1217,7 @@ function ImageSection({
             {isV2 ? (
               <VStack gap={6}>
                 {/* Image block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1315,7 +1298,7 @@ function ImageSection({
                 </div>
 
                 {/* Instance snapshot block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="snapshot" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1399,7 +1382,7 @@ function ImageSection({
                 </div>
 
                 {/* Bootable volume block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="volume" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1665,7 +1648,7 @@ function ImageSection({
 
           {/* System disk Section */}
           <div className="py-6">
-            <FormField required>
+            <FormField required spacing="loose">
               <FormField.Label>System disk</FormField.Label>
               <FormField.Description>
                 Configure whether to create a system disk for booting.
@@ -1681,7 +1664,7 @@ function ImageSection({
 
             {/* Storage Type & Size Row */}
             {createSystemDisk && (
-              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-2">
                 <HStack gap={6} align="center">
                   <HStack gap={1.5} align="center">
                     <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
@@ -1729,7 +1712,7 @@ function ImageSection({
               {dataDisks.map((disk) => (
                 <div
                   key={disk.id}
-                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
+                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-2"
                 >
                   <HStack gap={6} align="center">
                     <HStack gap={1.5} align="center">
@@ -1983,16 +1966,18 @@ function FlavorSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.hasWarning && <span className="text-[var(--color-state-warning)]">⚠</span>}
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -2265,20 +2250,20 @@ const mockSecurityGroups: SecurityGroupRow[] = [
     id: 'sg1',
     name: 'default',
     description: 'Default security group',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
-  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
+  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2026 10:20:28' },
   {
     id: 'sg3',
     name: 'web-sg',
     description: 'Web server security group',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
   },
   {
     id: 'sg4',
     name: 'db-sg',
     description: 'Database security group',
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
   },
 ];
 
@@ -2427,7 +2412,12 @@ function NetworkSection({
       sortable: true,
       render: (_, row) => (
         <VStack gap={0} align="start">
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
           <span>{row.name}</span>
         </VStack>
       ),
@@ -2537,7 +2527,12 @@ function NetworkSection({
       sortable: true,
       render: (_, row) => (
         <VStack gap={0} align="start">
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
           <span>{row.description}</span>
         </VStack>
       ),
@@ -2637,7 +2632,12 @@ function NetworkSection({
       sortable: true,
       render: (_, row) => (
         <VStack gap={0} align="start">
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
           <span>{row.name}</span>
         </VStack>
       ),
@@ -3158,8 +3158,6 @@ function AuthenticationSection({
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Validation error
   const [authError, setAuthError] = useState<string | null>(null);
@@ -3336,93 +3334,45 @@ function AuthenticationSection({
                         />
                       </div>
                       <div>
-                        <label className="block text-label-lg mb-2">Password</label>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? 'text' : 'password'}
-                            value={password}
+                        <label
+                          htmlFor="compute-admin-create-instance-password"
+                          className="block text-label-lg mb-2"
+                        >
+                          Password
+                        </label>
+                        <Password
+                          id="compute-admin-create-instance-password"
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                            setAuthError(null);
+                          }}
+                          placeholder="Input password"
+                          fullWidth
+                          showLabel="Show password"
+                          hideLabel="Hide password"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="compute-admin-create-instance-confirm-password"
+                          className="block text-label-lg mb-2"
+                        >
+                          Confirm Password
+                        </label>
+                        <VStack gap={2}>
+                          <Password
+                            id="compute-admin-create-instance-confirm-password"
+                            value={confirmPassword}
                             onChange={(e) => {
-                              setPassword(e.target.value);
+                              setConfirmPassword(e.target.value);
                               setAuthError(null);
                             }}
                             placeholder="Input password"
                             fullWidth
+                            showLabel="Show confirm password"
+                            hideLabel="Hide confirm password"
                           />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                          >
-                            {showPassword ? (
-                              <svg
-                                className="w-[14px] h-[14px]"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                                <line x1="1" y1="1" x2="23" y2="23" />
-                              </svg>
-                            ) : (
-                              <svg
-                                className="w-[14px] h-[14px]"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                <circle cx="12" cy="12" r="3" />
-                              </svg>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-label-lg mb-2">Confirm Password</label>
-                        <VStack gap={2}>
-                          <div className="relative">
-                            <Input
-                              type={showConfirmPassword ? 'text' : 'password'}
-                              value={confirmPassword}
-                              onChange={(e) => {
-                                setConfirmPassword(e.target.value);
-                                setAuthError(null);
-                              }}
-                              placeholder="Input password"
-                              fullWidth
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                            >
-                              {showConfirmPassword ? (
-                                <svg
-                                  className="w-[14px] h-[14px]"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                >
-                                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                                  <line x1="1" y1="1" x2="23" y2="23" />
-                                </svg>
-                              ) : (
-                                <svg
-                                  className="w-[14px] h-[14px]"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                >
-                                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                  <circle cx="12" cy="12" r="3" />
-                                </svg>
-                              )}
-                            </button>
-                          </div>
                           {authError && loginType === 'password' && (
                             <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
                               {authError}
@@ -3826,7 +3776,12 @@ function TemplatesSection({
               className="text-[var(--color-action-primary)]"
             />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -4496,22 +4451,14 @@ export function ComputeAdminCreateInstancePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Instances', href: '/compute-admin/instances' },
-                { label: 'Create instance' },
+                { label: 'Create Instance' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

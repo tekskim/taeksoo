@@ -7,7 +7,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   Select,
   SectionCard,
@@ -35,7 +34,8 @@ import { Sidebar } from '@/components/Sidebar';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconBell, IconEdit, IconExternalLink, IconCirclePlus, IconX } from '@tabler/icons-react';
+import { IconEdit, IconExternalLink, IconCirclePlus, IconX } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -144,11 +144,11 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         {/* Quota Card */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={3}>
             <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
             <VStack gap={3}>
@@ -260,35 +260,35 @@ export default function CreateVirtualAdapterPage() {
       id: 'sg-01',
       name: 'default-sg',
       description: '-',
-      createdAt: 'Aug 23, 2025 20:06:42',
+      createdAt: 'Aug 23, 2026 20:06:42',
       subtitle: 'internal-02',
     },
     {
       id: 'sg-02',
       name: 'web-sg',
       description: 'Web server security group',
-      createdAt: 'Aug 22, 2025 13:53:25',
+      createdAt: 'Aug 22, 2026 13:53:25',
       subtitle: 'web-tier',
     },
     {
       id: 'sg-03',
       name: 'db-sg',
       description: 'Database security group',
-      createdAt: 'Aug 21, 2025 06:40:08',
+      createdAt: 'Aug 21, 2026 06:40:08',
       subtitle: 'db-tier',
     },
     {
       id: 'sg-04',
       name: 'app-sg',
       description: 'Application security group',
-      createdAt: 'Aug 20, 2025 23:27:51',
+      createdAt: 'Aug 20, 2026 23:27:51',
       subtitle: 'app-tier',
     },
     {
       id: 'sg-05',
       name: 'internal-sg',
       description: '-',
-      createdAt: 'Aug 19, 2025 16:14:34',
+      createdAt: 'Aug 19, 2026 16:14:34',
       subtitle: 'internal-01',
     },
   ];
@@ -340,7 +340,12 @@ export default function CreateVirtualAdapterPage() {
               <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
           </VStack>
         ),
       },
@@ -518,20 +523,10 @@ export default function CreateVirtualAdapterPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/compute' },
                 { label: 'Ports', href: '/compute/ports' },
-                { label: 'Create virtual adapter' },
+                { label: 'Create Virtual Adapter' },
               ]}
             />
-          }
-          actions={
-            <>
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-              />
-            </>
           }
         />
       }
@@ -586,6 +581,7 @@ export default function CreateVirtualAdapterPage() {
                                 setAdapterNameError(null);
                               }}
                               fullWidth
+                              error={!!adapterNameError}
                             />
                           </VStack>
                         </FormField.Control>

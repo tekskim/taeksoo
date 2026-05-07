@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -18,7 +17,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconEdit, IconBell, IconExternalLink } from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -58,7 +57,7 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     name: 'Ubuntu-22.04-base',
     status: 'active',
     size: '16 GiB',
-    createdAt: 'Sep 12, 2025 11:24:36',
+    createdAt: 'Sep 12, 2026 11:24:36',
     description: 'Base web server snapshot',
     sourceInstance: 'web-server-01',
     os: 'Ubuntu 22.04',
@@ -96,7 +95,7 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     name: 'CentOS-8-web',
     status: 'active',
     size: '32 GiB',
-    createdAt: 'Sep 10, 2025 15:47:19',
+    createdAt: 'Sep 10, 2026 15:47:19',
     description: 'Database server backup',
     sourceInstance: 'db-server-01',
     os: 'CentOS 8',
@@ -122,7 +121,7 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     name: 'Debian-12-db',
     status: 'active',
     size: '64 GiB',
-    createdAt: 'Sep 8, 2025 08:33:52',
+    createdAt: 'Sep 8, 2026 08:33:52',
     description: 'Application server snapshot',
     sourceInstance: 'app-server-01',
     os: 'Debian 12',
@@ -204,8 +203,7 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Instance snapshots', href: '/compute-admin/instance-snapshots' },
+    { label: 'Instance Snapshots', href: '/compute-admin/instance-snapshots' },
     { label: snapshot.name },
   ];
 
@@ -233,20 +231,13 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => navigate('/compute-admin/instance-snapshots')}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Snapshot Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>
@@ -373,7 +364,7 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
             <TabPanel value="metadata" className="pt-0">
               <VStack gap={4} className="pt-4">
                 {/* Metadata Card - matching Figma design */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
                   {/* Title */}
                   <div className="h-8 flex items-center">
                     <span className="text-heading-h5 text-[var(--color-text-default)]">

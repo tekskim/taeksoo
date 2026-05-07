@@ -21,19 +21,14 @@ import {
   Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -65,7 +60,7 @@ const mockClusters: Cluster[] = [
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
-    createdAt: 'Nov 11, 2025 08:30:18',
+    createdAt: 'Nov 11, 2026 08:30:18',
   },
   {
     id: 'cluster-002',
@@ -75,7 +70,7 @@ const mockClusters: Cluster[] = [
     cpu: '4 cores',
     memory: '8 GiB',
     pods: '23/110',
-    createdAt: 'Oct 6, 2025 21:25:53',
+    createdAt: 'Oct 6, 2026 21:25:53',
   },
   {
     id: 'cluster-003',
@@ -85,7 +80,7 @@ const mockClusters: Cluster[] = [
     cpu: '16 cores',
     memory: '32 GiB',
     pods: '89/110',
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
   },
   {
     id: 'cluster-004',
@@ -95,7 +90,7 @@ const mockClusters: Cluster[] = [
     cpu: '4 cores',
     memory: '8 GiB',
     pods: '12/110',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
   {
     id: 'cluster-005',
@@ -105,7 +100,17 @@ const mockClusters: Cluster[] = [
     cpu: '2 cores',
     memory: '4 GiB',
     pods: '5/110',
-    createdAt: 'Jul 10, 2025 01:17:01',
+    createdAt: 'Jul 10, 2026 01:17:01',
+  },
+  {
+    id: 'cluster-006',
+    name: 'analytics-data-processing-pipeline-cluster',
+    status: 'Updating',
+    kubernetesVersion: 'v1.33.4',
+    cpu: '12 cores',
+    memory: '24 GiB',
+    pods: '67/110',
+    createdAt: 'Jun 5, 2026 15:42:33',
   },
 ];
 
@@ -165,16 +170,14 @@ export function ClusterManagementPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <Link
+          to={`/container/cluster-management/${row.id}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate"
           title={value as string}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/cluster-management/${row.id}`);
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
           {value as string}
-        </span>
+        </Link>
       ),
     },
     {
@@ -200,6 +203,7 @@ export function ClusterManagementPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -247,7 +251,10 @@ export function ClusterManagementPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -299,8 +306,8 @@ export function ClusterManagementPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -309,34 +316,10 @@ export function ClusterManagementPage() {
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -443,8 +426,6 @@ export function ClusterManagementPage() {
           onPageChange={setCurrentPage}
           totalItems={mockClusters.length}
           selectedCount={selectedClusters.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -27,9 +26,11 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { EditVolumeDrawer } from '@/components/EditVolumeDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { UpdateVolumeStatusDrawer } from '@/components/UpdateVolumeStatusDrawer';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
 import containerIcon from '@/assets/appIcon/container.png';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -68,7 +69,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: 'instance',
     attachedToId: '12345678',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -82,7 +83,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: 'instance',
     attachedToId: '12345679',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -96,7 +97,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: 'instance',
     attachedToId: '12345680',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -110,7 +111,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -124,7 +125,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'pending',
   },
   {
@@ -138,7 +139,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Backup',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -152,7 +153,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Cache',
     attachedTo: 'instance',
     attachedToId: '12345684',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'in-use',
   },
   {
@@ -166,7 +167,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Archive',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -180,7 +181,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Boot',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'error',
   },
   {
@@ -194,7 +195,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'ML Dataset',
     attachedTo: 'instance',
     attachedToId: '12345687',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
     status: 'in-use',
   },
 ];
@@ -216,9 +217,9 @@ const volumeStatusMap: Record<VolumeStatus, 'active' | 'in-use' | 'error' | 'pen
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'type',
+    id: 'type',
     label: 'Type',
     type: 'select',
     options: [
@@ -228,10 +229,10 @@ const filterFields: FilterField[] = [
       { value: 'HDD', label: 'HDD' },
     ],
   },
-  { key: 'diskTag', label: 'Disk tag', type: 'text' },
-  { key: 'attachedTo', label: 'Attached to', type: 'text' },
+  { id: 'diskTag', label: 'Disk tag', type: 'text' },
+  { id: 'attachedTo', label: 'Attached to', type: 'text' },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -244,6 +245,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminVolumesPage() {
+  const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -263,12 +265,18 @@ export function ComputeAdminVolumesPage() {
 
   // Drawer states
   const [editVolumeOpen, setEditVolumeOpen] = useState(false);
+  const [updateStatusOpen, setUpdateStatusOpen] = useState(false);
   const [selectedVolumeForDrawer, setSelectedVolumeForDrawer] = useState<Volume | null>(null);
 
   // Drawer handlers
   const handleEditVolume = (volume: Volume) => {
     setSelectedVolumeForDrawer(volume);
     setEditVolumeOpen(true);
+  };
+
+  const handleUpdateStatus = (volume: Volume) => {
+    setSelectedVolumeForDrawer(volume);
+    setUpdateStatusOpen(true);
   };
 
   // Default column config
@@ -285,6 +293,13 @@ export function ComputeAdminVolumesPage() {
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -321,7 +336,7 @@ export function ComputeAdminVolumesPage() {
 
     return volumes.filter((v) => {
       return appliedFilters.every((filter) => {
-        const value = String(v[filter.field as keyof Volume] || '').toLowerCase();
+        const value = String(v[filter.fieldId as keyof Volume] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -348,10 +363,7 @@ export function ComputeAdminVolumesPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex items-center gap-2 min-w-0">
-          <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-            <img src={containerIcon} alt="Volume" className="w-4 h-4" />
-          </div>
-          <div className="flex flex-col gap-0.5 min-w-0">
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
             <Link
               to={`/compute-admin/volumes/${row.id}`}
               className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
@@ -359,10 +371,18 @@ export function ComputeAdminVolumesPage() {
             >
               {row.name}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-              ID : {row.id}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
             </span>
           </div>
+          {row.attachedTo && (
+            <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+              <img src={containerIcon} alt="Attached to instance" className="w-4 h-4" />
+            </div>
+          )}
         </div>
       ),
     },
@@ -382,7 +402,12 @@ export function ComputeAdminVolumesPage() {
             >
               {row.tenant}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.tenantId}>
+                ID : {row.tenantId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.tenantId} />
+            </span>
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
@@ -430,8 +455,11 @@ export function ComputeAdminVolumesPage() {
             >
               {row.attachedTo}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.attachedToId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.attachedToId}>
+                ID : {row.attachedToId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.attachedToId} />
             </span>
           </div>
         ) : (
@@ -451,13 +479,14 @@ export function ComputeAdminVolumesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => handleEditVolume(row) },
           {
             id: 'update-status',
             label: 'Update status',
-            onClick: () => console.log('Update status:', row.id),
+            onClick: () => handleUpdateStatus(row),
           },
           {
             id: 'migrate-volume',
@@ -480,7 +509,10 @@ export function ComputeAdminVolumesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -526,20 +558,9 @@ export function ComputeAdminVolumesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Volumes' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Volumes' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -602,6 +623,7 @@ export function ComputeAdminVolumesPage() {
           selectable
           selectedKeys={selectedVolumes}
           onSelectionChange={setSelectedVolumes}
+          loading={loading}
         />
       </VStack>
 
@@ -611,7 +633,7 @@ export function ComputeAdminVolumesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete volume"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected volumes is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
@@ -642,6 +664,24 @@ export function ComputeAdminVolumesPage() {
               }
             : null
         }
+      />
+
+      {/* Update Volume Status Drawer */}
+      <UpdateVolumeStatusDrawer
+        isOpen={updateStatusOpen}
+        onClose={() => setUpdateStatusOpen(false)}
+        volume={
+          selectedVolumeForDrawer
+            ? {
+                id: selectedVolumeForDrawer.id,
+                name: selectedVolumeForDrawer.name,
+                currentStatus: selectedVolumeForDrawer.status,
+              }
+            : null
+        }
+        onSubmit={(status) => {
+          console.log('Update volume status:', selectedVolumeForDrawer?.id, status);
+        }}
       />
     </PageShell>
   );

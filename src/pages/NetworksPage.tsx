@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -8,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -32,10 +31,11 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
+import { SubnetDrawer } from '@/components/SubnetDrawer';
 import { EditNetworkDrawer } from '@/components/EditNetworkDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -188,10 +188,10 @@ const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> =
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'subnetCidr', label: 'Subnet CIDR', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'subnetCidr', label: 'Subnet CIDR', type: 'text' },
   {
-    key: 'external',
+    id: 'external',
     label: 'External',
     type: 'select',
     options: [
@@ -200,7 +200,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'shared',
+    id: 'shared',
     label: 'Shared',
     type: 'select',
     options: [
@@ -209,7 +209,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'adminState',
+    id: 'adminState',
     label: 'Admin state',
     type: 'select',
     options: [
@@ -218,7 +218,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -235,7 +235,7 @@ export function NetworksPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [networks] = useState(mockNetworks);
+  const [networks, setNetworks] = useState(mockNetworks);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'current';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -243,6 +243,7 @@ export function NetworksPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [networkToDelete, setNetworkToDelete] = useState<Network | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -252,6 +253,13 @@ export function NetworksPage() {
   const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
   const [editNetworkOpen, setEditNetworkOpen] = useState(false);
   const [selectedNetworkForDrawer, setSelectedNetworkForDrawer] = useState<Network | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleCreateSubnet = (network: Network) => {
@@ -278,7 +286,16 @@ export function NetworksPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Networks');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -321,7 +338,7 @@ export function NetworksPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((n) => {
         return appliedFilters.every((filter) => {
-          const value = String(n[filter.field as keyof Network] || '').toLowerCase();
+          const value = String(n[filter.fieldId as keyof Network] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });
@@ -364,7 +381,12 @@ export function NetworksPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -385,11 +407,11 @@ export function NetworksPage() {
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All Subnet CIDRs ({row.subnetCidr.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {row.subnetCidr.map((cidr, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {cidr}
@@ -448,10 +470,14 @@ export function NetworksPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -481,10 +507,18 @@ export function NetworksPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && networkToDelete) {
-      // Handle delete
+      const id = networkToDelete.id;
+      setNetworks((prev) => prev.filter((n) => n.id !== id));
       setDeleteModalOpen(false);
       setNetworkToDelete(null);
+      setSelectedNetworks((prev) => prev.filter((x) => x !== id));
     }
+  };
+
+  const handleBulkDelete = () => {
+    setNetworks((prev) => prev.filter((n) => !selectedNetworks.includes(n.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedNetworks([]);
   };
 
   return (
@@ -508,20 +542,12 @@ export function NetworksPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Networks' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Networks' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -564,6 +590,7 @@ export function NetworksPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -574,6 +601,7 @@ export function NetworksPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedNetworks.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -600,6 +628,8 @@ export function NetworksPage() {
           selectable
           selectedKeys={selectedNetworks}
           onSelectionChange={setSelectedNetworks}
+          loading={loading}
+          emptyMessage="No networks found"
         />
       </VStack>
 
@@ -611,11 +641,24 @@ export function NetworksPage() {
           setNetworkToDelete(null);
         }}
         title="Delete network"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected networks is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected networks"
+        description="Removing the selected networks is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedNetworks.length} network(s)`}
       />
 
       {/* View Preferences Drawer */}
@@ -630,7 +673,7 @@ export function NetworksPage() {
       />
 
       {/* Network Drawers */}
-      <CreateSubnetDrawer
+      <SubnetDrawer
         isOpen={createSubnetOpen}
         onClose={() => setCreateSubnetOpen(false)}
         networkId={selectedNetworkForDrawer?.id}

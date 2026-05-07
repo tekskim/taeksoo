@@ -66,6 +66,8 @@ export function Drawer({
   footer,
   className,
 }: DrawerProps) {
+  const titleId = useId();
+  const descriptionId = useId();
   const [shouldRender, setShouldRender] = useState(isOpen);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isFirstDrawer, setIsFirstDrawer] = useState(false);
@@ -169,10 +171,18 @@ export function Drawer({
         style={{ width: widthValue, ...transitionStyle }}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? 'drawer-title' : undefined}
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={title && description ? descriptionId : undefined}
       >
         {/* Content */}
-        <div className="flex-1 px-6 pt-4 pb-8 drawer-scroll">
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: { x: 'hidden', y: 'scroll' },
+            scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+          }}
+          defer={false}
+          className="flex-1 px-6 pt-4 pb-8"
+        >
           {title && (
             <>
               <div className="flex items-center justify-between">
@@ -182,7 +192,10 @@ export function Drawer({
                 {titleActions}
               </div>
               {description && (
-                <p className="text-body-md text-[var(--color-text-subtle)] mt-1 mb-4">
+                <p
+                  id={descriptionId}
+                  className="text-body-md text-[var(--color-text-subtle)] mt-1 mb-4"
+                >
                   {description}
                 </p>
               )}
@@ -190,7 +203,7 @@ export function Drawer({
             </>
           )}
           {children}
-        </div>
+        </OverlayScrollbarsComponent>
 
         {/* Footer */}
         {footer && (

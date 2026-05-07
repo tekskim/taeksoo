@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -10,10 +9,11 @@ import {
   Button,
   SearchInput,
   Pagination,
-  Chip,
   ContextMenu,
   PageShell,
   PageHeader,
+  ListToolbar,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -23,20 +23,15 @@ import {
   Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconTrash,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -70,7 +65,7 @@ const servicesData: ServiceRow[] = [
     selector: ['key1=value1'],
     type: 'LoadBalancer',
     ipAddresses: ['10.96.0.1', '203.0.113.10'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '2',
@@ -81,7 +76,7 @@ const servicesData: ServiceRow[] = [
     selector: ['key1=value1', 'key2=value2', 'key3=value3'],
     type: 'ClusterIP (Headless)',
     ipAddresses: ['None'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '3',
@@ -92,7 +87,7 @@ const servicesData: ServiceRow[] = [
     selector: ['-'],
     type: 'ExternalName',
     ipAddresses: ['-'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '4',
@@ -103,7 +98,7 @@ const servicesData: ServiceRow[] = [
     selector: ['key1=value1', 'key2=value2'],
     type: 'LoadBalancer',
     ipAddresses: ['10.96.12.34', '203.0.113.50'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '5',
@@ -114,7 +109,18 @@ const servicesData: ServiceRow[] = [
     selector: ['key1=value1'],
     type: 'NodePort',
     ipAddresses: ['10.96.5.67'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
+  },
+  {
+    id: '6',
+    status: 'Active',
+    name: 'internal-api-clusterip-service',
+    namespace: 'namespaceName',
+    target: ['http + 80/TCP'],
+    selector: ['key1=value1'],
+    type: 'ClusterIP',
+    ipAddresses: ['10.100.12.210'],
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
 ];
 
@@ -124,11 +130,65 @@ const servicesData: ServiceRow[] = [
 
 export function ContainerServicesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [services, setServices] = useState(servicesData);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    updateActiveTabLabel('Services');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   const navigate = useNavigate();
+
+  const filteredServices = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return services;
+    return services.filter((row) => {
+      if (row.name.toLowerCase().includes(q) || row.namespace.toLowerCase().includes(q)) {
+        return true;
+      }
+      if (
+        row.status.toLowerCase().includes(q) ||
+        row.type.toLowerCase().includes(q) ||
+        row.createdAt.toLowerCase().includes(q)
+      ) {
+        return true;
+      }
+      if (row.target.some((t) => t.toLowerCase().includes(q))) return true;
+      if (row.selector.some((s) => s.toLowerCase().includes(q))) return true;
+      if (row.ipAddresses.some((ip) => ip.toLowerCase().includes(q))) return true;
+      return false;
+    });
+  }, [searchTerm, services]);
+
+  const handleBulkDeleteServices = () => {
+    setServices((prev) => prev.filter((s) => !selectedRows.includes(s.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
 
   // Create menu items
   const createDropdownItems: ContextMenuItem[] = [
@@ -161,8 +221,8 @@ export function ContainerServicesPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(servicesData.length / rowsPerPage);
-  const paginatedData = servicesData.slice(
+  const totalPages = Math.max(1, Math.ceil(filteredServices.length / rowsPerPage));
+  const paginatedData = filteredServices.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -249,11 +309,11 @@ export function ContainerServicesPage() {
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All targets ({value.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {value.map((item, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {item}
@@ -290,11 +350,11 @@ export function ContainerServicesPage() {
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All IP addresses ({value.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {value.map((item, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {item}
@@ -332,11 +392,11 @@ export function ContainerServicesPage() {
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All selectors ({value.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {value.map((item, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {item}
@@ -404,7 +464,10 @@ export function ContainerServicesPage() {
         return (
           <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -447,55 +510,20 @@ export function ContainerServicesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Services' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Services' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-services', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-services', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -532,13 +560,13 @@ export function ContainerServicesPage() {
           }
         />
 
-        {/* Toolbar */}
-        <div className="flex flex-col gap-2">
-          {/* Action Bar */}
-          <HStack gap={2} align="center" className="w-full min-h-7">
-            {/* Search */}
-            <HStack gap={1} align="center">
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
               <SearchInput
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 placeholder="Search service by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
@@ -548,21 +576,20 @@ export function ContainerServicesPage() {
                 size="sm"
                 aria-label="Download"
                 className="!p-0 !w-7 !h-7 !min-w-7"
+                onClick={() => console.log('Download')}
               >
                 <IconDownload size={12} stroke={1.5} />
               </Button>
-            </HStack>
-
-            {/* Divider */}
-            <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-            {/* Actions */}
-            <HStack gap={1} align="center">
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
               <Button
                 variant="muted"
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML')}
               >
                 Download YAML
               </Button>
@@ -571,62 +598,57 @@ export function ContainerServicesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
-            </HStack>
-          </HStack>
-
-          {/* Filter Bar */}
-          {filters.length > 0 && (
-            <HStack
-              gap={2}
-              justify="between"
-              align="center"
-              className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
-            >
-              <HStack gap={1} align="center">
-                {filters.map((filter, index) => (
-                  <Chip
-                    key={index}
-                    label={filter.key}
-                    value={filter.value}
-                    onRemove={() => handleRemoveFilter(index)}
-                  />
-                ))}
-              </HStack>
-              <button
-                onClick={handleClearFilters}
-                className="text-label-sm text-[var(--color-action-primary)] hover:underline"
-              >
-                Clear filters
-              </button>
-            </HStack>
-          )}
-        </div>
+            </ListToolbar.Actions>
+          }
+          filters={filters.map((f, i) => ({
+            id: String(i),
+            field: f.key,
+            value: f.value,
+          }))}
+          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
+          onFiltersClear={handleClearFilters}
+          clearFiltersLabel="Clear filters"
+        />
 
         {/* Pagination */}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={servicesData.length}
+          totalItems={filteredServices.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
         <Table<ServiceRow>
           columns={columns}
+          loading={loading}
           data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
           onRowClick={(row) => navigate(`/container/services/${row.id}`)}
+          emptyMessage="No services found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteServices}
+        title="Delete selected services"
+        description="Removing the selected services is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} service(s)`}
+      />
     </PageShell>
   );
 }

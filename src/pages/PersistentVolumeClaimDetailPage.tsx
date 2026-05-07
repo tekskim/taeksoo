@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
@@ -26,25 +26,17 @@ import {
   Pagination,
   SearchInput,
   PageShell,
+  ErrorState,
   type ContextMenuItem,
   Popover,
   SectionCard,
   columnMinWidths,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
-  IconChevronDown,
-  IconDownload,
-  IconTrash,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown, IconDownload, IconTrash } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -102,7 +94,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'cert-manager',
     status: 'OK',
     namespace: 'default',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
     },
@@ -124,14 +116,14 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Volume bound successfully',
-        updated: 'Jul 25, 2025',
+        updated: 'Jul 25, 2026',
       },
       {
         id: '2',
         condition: 'FileSystemResizePending',
         size: 'False',
         message: '[Info] No resize pending',
-        updated: 'Jul 25, 2025',
+        updated: 'Jul 25, 2026',
       },
     ],
     events: [
@@ -166,7 +158,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'data-postgres-0',
     status: 'OK',
     namespace: 'database',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
     labels: {
       app: 'postgres',
     },
@@ -188,7 +180,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Volume bound to pvc-abc12345',
-        updated: 'Nov 9, 2025',
+        updated: 'Nov 9, 2026',
       },
     ],
     events: [
@@ -211,7 +203,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'redis-data',
     status: 'True',
     namespace: 'cache',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
     labels: {
       app: 'redis',
     },
@@ -231,7 +223,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Bound to existing PV',
-        updated: 'Nov 8, 2025',
+        updated: 'Nov 8, 2026',
       },
     ],
     events: [
@@ -254,7 +246,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'pending-claim',
     status: 'Raw',
     namespace: 'default',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
     labels: {},
     annotations: {},
     source: 'storage-class',
@@ -272,7 +264,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Pending',
         size: 'True',
         message: '[Waiting] Waiting for volume to be provisioned',
-        updated: 'Nov 10, 2025',
+        updated: 'Nov 10, 2026',
       },
     ],
     events: [
@@ -307,7 +299,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'elasticsearch-data-0',
     status: 'OK',
     namespace: 'logging',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
     labels: {
       app: 'elasticsearch',
     },
@@ -329,7 +321,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Volume bound to pvc-elastic-001',
-        updated: 'Nov 7, 2025',
+        updated: 'Nov 7, 2026',
       },
     ],
     events: [
@@ -348,6 +340,8 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     ],
   },
 };
+
+const EVENTS_PAGE_SIZE = 10;
 
 /* ----------------------------------------
    Component
@@ -371,21 +365,46 @@ export function PersistentVolumeClaimDetailPage() {
   const activeTab = searchParams.get('tab') || 'volume-claim';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedEventKeys, setSelectedEventKeys] = useState<string[]>([]);
+  const [eventsSearch, setEventsSearch] = useState('');
+  const [eventsPage, setEventsPage] = useState(1);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
 
-  // Load PVC data
-  const [pvcData, setPvcData] = useState<PersistentVolumeClaimData | null>(null);
+  const pvcData = pvcId ? mockPersistentVolumeClaimData[pvcId] : undefined;
+
+  const filteredEvents = useMemo(() => {
+    const events = pvcData?.events ?? [];
+    const q = eventsSearch.trim().toLowerCase();
+    if (!q) return events;
+    return events.filter((ev) => {
+      const haystack = [
+        ev.name,
+        ev.type,
+        ev.reason,
+        ev.message,
+        ev.subobject,
+        ev.source,
+        ev.lastSeen,
+        ev.firstSeen,
+        String(ev.count),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [pvcData, eventsSearch]);
 
   useEffect(() => {
-    if (pvcId && mockPersistentVolumeClaimData[pvcId]) {
-      setPvcData(mockPersistentVolumeClaimData[pvcId]);
-    } else {
-      // Default to first PVC if not found
-      setPvcData(mockPersistentVolumeClaimData['1']);
-    }
-  }, [pvcId]);
+    setEventsPage(1);
+  }, [eventsSearch]);
+
+  const eventsTotalPages = Math.max(1, Math.ceil(filteredEvents.length / EVENTS_PAGE_SIZE));
+
+  const paginatedEvents = useMemo(
+    () => filteredEvents.slice((eventsPage - 1) * EVENTS_PAGE_SIZE, eventsPage * EVENTS_PAGE_SIZE),
+    [filteredEvents, eventsPage]
+  );
 
   // Update tab label to match the PVC name (most recent breadcrumb)
   useEffect(() => {
@@ -410,16 +429,76 @@ export function PersistentVolumeClaimDetailPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
   if (!pvcData) {
-    return <div>Loading...</div>;
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Persistent Volume Claims', href: '/container/pvc' },
+                  { label: pvcId ?? 'Persistent volume claim' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            minHeight={300}
+            sidebarOpen={sidebarOpen}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Persistent volume claim not found"
+          description={`The persistent volume claim "${pvcId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/pvc')}>
+              Back to Persistent Volume Claims
+            </Button>
+          }
+        />
+      </PageShell>
+    );
   }
 
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
-    {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/pvc/${pvcId}/edit`),
-    },
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
@@ -473,56 +552,18 @@ export function PersistentVolumeClaimDetailPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Persistent volume claims', href: '/container/pvc' },
+                { label: 'Persistent Volume Claims', href: '/container/pvc' },
                 { label: pvcData.name },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-pvc', `Kubectl: ${pvcData.name}`);
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={pvcData.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -609,14 +650,14 @@ export function PersistentVolumeClaimDetailPage() {
                         delay={100}
                         hideDelay={100}
                         content={
-                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="p-3 min-w-[160px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                               All labels ({labelsCount})
                             </div>
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                               {Object.entries(pvcData.labels).map(([k, v]) => (
                                 <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                  <span className="break-all">{`${k}: ${v}`}</span>
+                                  {`${k}: ${v}`}
                                 </Badge>
                               ))}
                             </div>
@@ -658,14 +699,14 @@ export function PersistentVolumeClaimDetailPage() {
                         delay={100}
                         hideDelay={100}
                         content={
-                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="p-3 min-w-[160px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                               All annotations ({annotationsCount})
                             </div>
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                               {Object.entries(pvcData.annotations).map(([k, v]) => (
                                 <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                  <span className="break-all">{`${k}: ${v}`}</span>
+                                  {`${k}: ${v}`}
                                 </Badge>
                               ))}
                             </div>
@@ -909,6 +950,9 @@ export function PersistentVolumeClaimDetailPage() {
                   placeholder="Search events by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={eventsSearch}
+                  onChange={(e) => setEventsSearch(e.target.value)}
+                  onClear={() => setEventsSearch('')}
                 />
                 <div className="w-px h-5 bg-[var(--color-border-default)]" />
                 <HStack gap={1}>
@@ -933,90 +977,96 @@ export function PersistentVolumeClaimDetailPage() {
 
               {/* Pagination */}
               <Pagination
-                currentPage={1}
-                totalPages={1}
-                onPageChange={() => {}}
-                totalItems={pvcData.events.length}
+                currentPage={eventsPage}
+                totalPages={eventsTotalPages}
+                onPageChange={setEventsPage}
+                totalItems={filteredEvents.length}
                 selectedCount={selectedEventKeys.length}
               />
 
               {/* Table */}
               {pvcData.events.length > 0 ? (
-                <Table<PVCEvent>
-                  columns={[
-                    {
-                      key: 'lastSeen',
-                      label: 'Last seen',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.lastSeen,
-                    },
-                    {
-                      key: 'type',
-                      label: 'Type',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.type,
-                    },
-                    {
-                      key: 'reason',
-                      label: 'Reason',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.reason,
-                    },
-                    {
-                      key: 'subobject',
-                      label: 'Subobject',
-                      flex: 1,
-                      minWidth: columnMinWidths.subobject,
-                    },
-                    {
-                      key: 'source',
-                      label: 'Source',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: '120px',
-                    },
-                    {
-                      key: 'message',
-                      label: 'Message',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: '350px',
-                    },
-                    {
-                      key: 'firstSeen',
-                      label: 'First seen',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.firstSeen,
-                    },
-                    {
-                      key: 'count',
-                      label: 'Count',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.count,
-                    },
-                    {
-                      key: 'name',
-                      label: 'Name',
-                      sortable: true,
-                      flex: 1,
-                      render: (value: string) => (
-                        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium">
-                          {value}
-                        </span>
-                      ),
-                    },
-                  ]}
-                  data={pvcData.events}
-                  rowKey="id"
-                  selectable
-                  selectedKeys={selectedEventKeys}
-                  onSelectionChange={setSelectedEventKeys}
-                />
+                filteredEvents.length > 0 ? (
+                  <Table<PVCEvent>
+                    columns={[
+                      {
+                        key: 'lastSeen',
+                        label: 'Last seen',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.lastSeen,
+                      },
+                      {
+                        key: 'type',
+                        label: 'Type',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.type,
+                      },
+                      {
+                        key: 'reason',
+                        label: 'Reason',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.reason,
+                      },
+                      {
+                        key: 'subobject',
+                        label: 'Subobject',
+                        flex: 1,
+                        minWidth: columnMinWidths.subobject,
+                      },
+                      {
+                        key: 'source',
+                        label: 'Source',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: '120px',
+                      },
+                      {
+                        key: 'message',
+                        label: 'Message',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: '350px',
+                      },
+                      {
+                        key: 'firstSeen',
+                        label: 'First seen',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.firstSeen,
+                      },
+                      {
+                        key: 'count',
+                        label: 'Count',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.count,
+                      },
+                      {
+                        key: 'name',
+                        label: 'Name',
+                        sortable: true,
+                        flex: 1,
+                        render: (value: string) => (
+                          <span className="text-[var(--color-text-default)] font-medium">
+                            {value}
+                          </span>
+                        ),
+                      },
+                    ]}
+                    data={paginatedEvents}
+                    rowKey="id"
+                    selectable
+                    selectedKeys={selectedEventKeys}
+                    onSelectionChange={setSelectedEventKeys}
+                  />
+                ) : (
+                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                    No events match your search.
+                  </p>
+                )
               ) : (
                 <p className="text-body-md text-[var(--color-text-subtle)]">
                   No recent events to display.

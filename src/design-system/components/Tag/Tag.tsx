@@ -44,27 +44,28 @@ const variantStyles: Record<TagVariant, { solid: string; outline: string }> = {
     outline: 'bg-transparent text-[var(--color-text-default)] border-[var(--color-border-default)]',
   },
   primary: {
-    solid: 'bg-[var(--color-action-primary)] text-white border-transparent',
+    solid:
+      'bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)] border-transparent',
     outline:
       'bg-transparent text-[var(--color-action-primary)] border-[var(--color-action-primary)]',
   },
   success: {
-    solid: 'bg-[var(--color-state-success)] text-white border-transparent',
+    solid: 'bg-[var(--color-state-success)] text-[var(--color-text-on-primary)] border-transparent',
     outline:
       'bg-[var(--color-state-success-subtle)] text-[var(--color-state-success)] border-[var(--color-state-success)]',
   },
   warning: {
-    solid: 'bg-[var(--color-state-warning)] text-white border-transparent',
+    solid: 'bg-[var(--color-state-warning)] text-[var(--color-text-on-primary)] border-transparent',
     outline:
       'bg-[var(--color-state-warning-subtle)] text-[var(--color-state-warning)] border-[var(--color-state-warning)]',
   },
   danger: {
-    solid: 'bg-[var(--color-state-danger)] text-white border-transparent',
+    solid: 'bg-[var(--color-state-danger)] text-[var(--color-text-on-primary)] border-transparent',
     outline:
       'bg-[var(--color-state-danger-subtle)] text-[var(--color-state-danger)] border-[var(--color-state-danger)]',
   },
   info: {
-    solid: 'bg-[var(--color-state-info)] text-white border-transparent',
+    solid: 'bg-[var(--color-state-info)] text-[var(--color-text-on-primary)] border-transparent',
     outline:
       'bg-[var(--color-state-info-subtle)] text-[var(--color-state-info)] border-[var(--color-state-info)]',
   },

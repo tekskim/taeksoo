@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Table,
   StatusIndicator,
   Pagination,
@@ -13,34 +13,39 @@ import {
   PageShell,
   PageHeader,
   ListToolbar,
+  ConfirmModal,
+  BadgeList,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
   type StatusType,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { ManageUserGroupsDrawer } from '@/components/ManageUserGroupsDrawer';
-import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
-import { EditUserDrawer } from '@/components/EditUserDrawer';
+import { UserGroupsDrawer } from '@/components/UserGroupsDrawer';
+import { GroupRolesDrawer } from '@/components/GroupRolesDrawer';
+import { UserEditDrawer } from '@/components/UserEditDrawer';
 import { IconDownload, IconTrash, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-type UserStatus = 'active' | 'disabled' | 'locked';
+type UserStatus = 'active' | 'deactivated';
 
 interface User {
   id: string;
   username: string;
   status: UserStatus;
-  userGroups: string;
-  roles: string;
+  userGroups: string[];
+  roles: string[];
   lastSignIn: string;
-  mfa: string;
+  mfa: string[];
   createdAt: string;
 }
 
@@ -53,101 +58,101 @@ const mockUsers: User[] = [
     id: 'user-001',
     username: 'thaki-kim',
     status: 'active',
-    userGroups: 'dev-admin-group (+2)',
-    roles: 'compute-admin (+3)',
-    lastSignIn: 'Sep 12, 2025',
-    mfa: 'OTP / Email',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    userGroups: ['Compute:tenantA', 'Network:tenantB', 'Storage:tenantA'],
+    roles: ['compute-admin', 'network-viewer', 'storage-admin', 'iam-reader'],
+    lastSignIn: 'Sep 12, 2026',
+    mfa: ['OTP', 'Email'],
+    createdAt: 'Sep 12, 2026 09:23:41',
   },
   {
     id: 'user-002',
     username: 'alex.johnson',
     status: 'active',
-    userGroups: 'dev-team',
-    roles: 'viewer',
-    lastSignIn: 'Sep 11, 2025',
-    mfa: 'OTP',
-    createdAt: 'Aug 15, 2025 14:07:22',
+    userGroups: ['dev-team'],
+    roles: ['viewer'],
+    lastSignIn: 'Sep 11, 2026',
+    mfa: ['OTP'],
+    createdAt: 'Aug 15, 2026 14:07:22',
   },
   {
     id: 'user-003',
     username: 'sara.connor',
     status: 'active',
-    userGroups: 'ops-team (+1)',
-    roles: 'network-admin (+1)',
-    lastSignIn: 'Sep 10, 2025',
-    mfa: 'Email',
-    createdAt: 'Jul 20, 2025 11:45:33',
+    userGroups: ['ops-team', 'infra-team'],
+    roles: ['network-admin', 'compute-viewer'],
+    lastSignIn: 'Sep 10, 2026',
+    mfa: ['Email'],
+    createdAt: 'Jul 20, 2026 11:45:33',
   },
   {
     id: 'user-004',
     username: 'john.doe',
-    status: 'disabled',
-    userGroups: 'guest',
-    roles: 'viewer',
-    lastSignIn: 'Aug 1, 2025',
-    mfa: '-',
-    createdAt: 'Jun 10, 2025 16:52:08',
+    status: 'deactivated',
+    userGroups: ['guest'],
+    roles: ['viewer'],
+    lastSignIn: 'Aug 1, 2026',
+    mfa: [],
+    createdAt: 'Jun 10, 2026 16:52:08',
   },
   {
     id: 'user-005',
     username: 'jane.smith',
     status: 'active',
-    userGroups: 'admin-group',
-    roles: 'super-admin',
-    lastSignIn: 'Sep 12, 2025',
-    mfa: 'OTP / Email',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    userGroups: ['admin-group'],
+    roles: ['super-admin'],
+    lastSignIn: 'Sep 12, 2026',
+    mfa: ['OTP', 'Email'],
+    createdAt: 'Jan 5, 2026 08:30:15',
   },
   {
     id: 'user-006',
     username: 'mike.wilson',
-    status: 'locked',
-    userGroups: 'dev-team',
-    roles: 'developer',
-    lastSignIn: 'Sep 5, 2025',
-    mfa: 'OTP',
-    createdAt: 'Apr 18, 2025 13:19:44',
+    status: 'deactivated',
+    userGroups: ['dev-team'],
+    roles: ['developer'],
+    lastSignIn: 'Sep 5, 2026',
+    mfa: ['OTP'],
+    createdAt: 'Apr 18, 2026 13:19:44',
   },
   {
     id: 'user-007',
     username: 'emily.chen',
     status: 'active',
-    userGroups: 'qa-team (+2)',
-    roles: 'qa-lead (+2)',
-    lastSignIn: 'Sep 11, 2025',
-    mfa: 'Email',
-    createdAt: 'Mar 22, 2025 10:41:27',
+    userGroups: ['qa-team', 'dev-team', 'release-team'],
+    roles: ['qa-lead', 'dev-viewer', 'release-manager'],
+    lastSignIn: 'Sep 11, 2026',
+    mfa: ['Email'],
+    createdAt: 'Mar 22, 2026 10:41:27',
   },
   {
     id: 'user-008',
     username: 'david.lee',
     status: 'active',
-    userGroups: 'ops-team',
-    roles: 'storage-admin',
-    lastSignIn: 'Sep 12, 2025',
-    mfa: 'OTP / Email',
-    createdAt: 'Feb 14, 2025 17:03:56',
+    userGroups: ['ops-team'],
+    roles: ['storage-admin'],
+    lastSignIn: 'Sep 12, 2026',
+    mfa: ['OTP', 'Email'],
+    createdAt: 'Feb 14, 2026 17:03:56',
   },
   {
     id: 'user-009',
     username: 'lisa.park',
-    status: 'disabled',
-    userGroups: 'external',
-    roles: 'viewer',
-    lastSignIn: 'Jul 15, 2025',
-    mfa: '-',
-    createdAt: 'May 30, 2025 12:28:19',
+    status: 'deactivated',
+    userGroups: ['external'],
+    roles: ['viewer'],
+    lastSignIn: 'Jul 15, 2026',
+    mfa: [],
+    createdAt: 'May 30, 2026 12:28:19',
   },
   {
     id: 'user-010',
     username: 'chris.taylor',
     status: 'active',
-    userGroups: 'dev-admin-group',
-    roles: 'iam-admin (+1)',
-    lastSignIn: 'Sep 12, 2025',
-    mfa: 'OTP',
-    createdAt: 'Jan 28, 2025 15:55:02',
+    userGroups: ['dev-admin-group'],
+    roles: ['iam-admin', 'compute-viewer'],
+    lastSignIn: 'Sep 12, 2026',
+    mfa: ['OTP'],
+    createdAt: 'Jan 28, 2026 15:55:02',
   },
 ];
 
@@ -157,9 +162,26 @@ const mockUsers: User[] = [
 
 const statusMap: Record<UserStatus, StatusType> = {
   active: 'active',
-  disabled: 'shutoff',
-  locked: 'error',
+  deactivated: 'deactivated',
 };
+
+const filterFields: FilterField[] = [
+  { id: 'username', label: 'Username', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'deactivated', label: 'Deactivated' },
+    ],
+  },
+  { id: 'userGroups', label: 'User groups', type: 'text' },
+  { id: 'roles', label: 'Roles', type: 'text' },
+  { id: 'lastSignIn', label: 'Last sign-in', type: 'text' },
+  { id: 'mfa', label: 'MFA', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
 
 /* ----------------------------------------
    IAM Users Page
@@ -168,9 +190,12 @@ const statusMap: Record<UserStatus, StatusType> = {
 export function IAMUsersPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [users, setUsers] = useState(mockUsers);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -179,16 +204,26 @@ export function IAMUsersPage() {
     updateActiveTabLabel('Users');
   }, [updateActiveTabLabel]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter users by search query
-  const filteredUsers = mockUsers.filter(
-    (user) =>
-      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.userGroups.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.roles.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredUsers = useMemo(() => {
+    return users.filter((user) => {
+      return appliedFilters.every((filter) => {
+        const value = String(user[filter.fieldId as keyof User] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [users, appliedFilters]);
 
   // Pagination
   const itemsPerPage = 10;
@@ -223,6 +258,12 @@ export function IAMUsersPage() {
     setEditUserOpen(true);
   };
 
+  const handleBulkDelete = () => {
+    setUsers((prev) => prev.filter((u) => !selectedRows.includes(u.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedRows([]);
+  };
+
   // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<User>[] = [
     {
@@ -240,13 +281,19 @@ export function IAMUsersPage() {
       flex: 1,
       minWidth: columnMinWidths.username,
       sortable: true,
-      render: (value) => (
-        <Link
-          to={`/iam/users/${value}`}
-          className="text-[var(--color-action-primary)] font-medium hover:underline"
-        >
-          {value}
-        </Link>
+      render: (value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/iam/users/${value}`}
+            className="text-[var(--color-action-primary)] font-medium hover:underline"
+          >
+            {value}
+          </Link>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)]">
+            <span className="truncate">ID: {row.id}</span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </div>
       ),
     },
     {
@@ -254,12 +301,16 @@ export function IAMUsersPage() {
       label: 'User groups',
       flex: 1,
       minWidth: columnMinWidths.userGroups,
-    },
-    {
-      key: 'roles',
-      label: 'Roles',
-      flex: 1,
-      minWidth: columnMinWidths.roles,
+      render: (value: string[]) => (
+        <BadgeList
+          items={value}
+          maxVisible={1}
+          maxBadgeWidth="140px"
+          popoverTitle={`All User Groups (${value.length})`}
+          overflowAlign="right"
+          popoverMaxWidth="160px"
+        />
+      ),
     },
     {
       key: 'lastSignIn',
@@ -273,6 +324,17 @@ export function IAMUsersPage() {
       label: 'MFA',
       flex: 1,
       minWidth: columnMinWidths.mfa,
+      render: (value: string[]) =>
+        value.length > 0 ? (
+          <BadgeList
+            items={value}
+            maxVisible={2}
+            theme="white"
+            popoverTitle={`MFA Methods (${value.length})`}
+          />
+        ) : (
+          <span className="text-[var(--color-text-subtle)]">-</span>
+        ),
     },
     {
       key: 'createdAt',
@@ -287,39 +349,40 @@ export function IAMUsersPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => {
-        const isDisabled = row.status === 'disabled';
+        const isDeactivated = row.status === 'deactivated';
         const menuItems: ContextMenuItem[] = [
           {
             id: 'manage-user-groups',
             label: 'Manage user groups',
-            disabled: isDisabled,
+            disabled: isDeactivated,
             onClick: () => handleManageUserGroups(row),
-          },
-          {
-            id: 'manage-roles',
-            label: 'Manage roles',
-            disabled: isDisabled,
-            onClick: () => handleManageRoles(row),
           },
           {
             id: 'reset-password',
             label: 'Reset password',
-            disabled: isDisabled,
+            disabled: isDeactivated,
             onClick: () => console.log('Reset password', row.id),
           },
-          { id: 'edit', label: 'Edit', disabled: isDisabled, onClick: () => handleEditUser(row) },
+          {
+            id: 'edit',
+            label: 'Edit',
+            disabled: isDeactivated,
+            onClick: () => handleEditUser(row),
+          },
           {
             id: 'delete',
             label: 'Delete',
-            status: isDisabled ? undefined : 'danger',
-            disabled: isDisabled,
+            status: isDeactivated ? undefined : 'danger',
+            disabled: isDeactivated,
             onClick: () => console.log('Delete', row.id),
           },
         ];
         return (
           <ContextMenu items={menuItems} trigger="click" align="right">
             <button
+              aria-label="Row actions"
               type="button"
               className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
             >
@@ -354,11 +417,12 @@ export function IAMUsersPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Users' }]} />}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Users' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -377,17 +441,21 @@ export function IAMUsersPage() {
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
-                <SearchInput
+                <FilterSearchInput
+                  filters={filterFields}
+                  appliedFilters={appliedFilters}
+                  onFiltersChange={setAppliedFilters}
                   placeholder="Search users by attributes"
-                  value={searchQuery}
-                  onChange={setSearchQuery}
+                  size="sm"
                   className="w-[var(--search-input-width)]"
+                  hideAppliedFilters
                 />
                 <Button
                   variant="secondary"
                   size="sm"
                   icon={<IconDownload size={12} />}
                   aria-label="Download"
+                  onClick={() => console.log('Download')}
                 />
               </ListToolbar.Actions>
             }
@@ -398,6 +466,7 @@ export function IAMUsersPage() {
                   size="sm"
                   disabled={!hasSelection}
                   leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsBulkDeleteOpen(true)}
                 >
                   Delete
                 </Button>
@@ -423,27 +492,42 @@ export function IAMUsersPage() {
             selectable
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
+            emptyMessage="No users found"
+            loading={loading}
           />
         </VStack>
       </VStack>
 
       {/* User Drawers */}
-      <ManageUserGroupsDrawer
+      <UserGroupsDrawer
         isOpen={manageUserGroupsOpen}
         onClose={() => setManageUserGroupsOpen(false)}
         userName={selectedUserForDrawer?.username}
       />
 
-      <ManageRolesDrawer
+      <GroupRolesDrawer
         isOpen={manageRolesOpen}
         onClose={() => setManageRolesOpen(false)}
         userName={selectedUserForDrawer?.username}
       />
 
-      <EditUserDrawer
+      <UserEditDrawer
         isOpen={editUserOpen}
         onClose={() => setEditUserOpen(false)}
         userName={selectedUserForDrawer?.username}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected users"
+        description="Removing the selected users is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} user(s)`}
       />
     </PageShell>
   );

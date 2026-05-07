@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -17,7 +16,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -122,6 +121,7 @@ const defaultRuleDetail: FirewallRuleDetail = {
    ---------------------------------------- */
 
 export default function ComputeAdminFirewallRuleDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -176,29 +176,18 @@ export default function ComputeAdminFirewallRuleDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Firewalls', href: '/compute-admin/firewall' },
-                { label: rule.name },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
+              items={[{ label: 'NACL', href: '/compute-admin/firewall' }, { label: rule.name }]}
             />
           }
         />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{rule.name}</DetailHeader.Title>

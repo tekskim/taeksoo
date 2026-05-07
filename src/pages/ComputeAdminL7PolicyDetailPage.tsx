@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -24,7 +23,7 @@ import {
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -80,7 +79,7 @@ const mockL7PolicyDetail: L7PolicyDetail = {
   name: 'policy1',
   status: 'active',
   adminState: 'Up',
-  createdAt: 'Jul 25, 2025 09:12:43',
+  createdAt: 'Jul 25, 2026 09:12:43',
   // Basic information
   description: '-',
   behavior: 'Forward to Pool',
@@ -170,13 +169,9 @@ export default function L7PolicyDetailPage() {
   }, [l7Policy?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Load balancers', href: '/compute-admin/load-balancers' },
-    {
-      label: l7Policy.listener?.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}`,
-    },
-    { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
+    { label: 'Load Balancers', href: '/compute-admin/load-balancers' },
+    { label: l7Policy.listener?.loadBalancer?.name || 'Unknown' },
+    { label: l7Policy.listener?.name || 'Unknown' },
     { label: l7Policy.name },
   ];
 
@@ -259,6 +254,7 @@ export default function L7PolicyDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: L7Rule) => {
         const ruleMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit rule', row.id) },
@@ -303,23 +299,15 @@ export default function L7PolicyDetailPage() {
       topBar={
         <TopBar
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} align="stretch" className="min-w-[1176px]">
+      <VStack gap={6} align="stretch">
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>
@@ -414,7 +402,7 @@ export default function L7PolicyDetailPage() {
                   </div>
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedL7Rules.length === 0}

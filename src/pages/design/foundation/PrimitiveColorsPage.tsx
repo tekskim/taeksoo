@@ -137,6 +137,40 @@ export function PrimitiveColorsPage() {
             </div>
           </VStack>
 
+          {/* Emerald */}
+          <VStack gap={2}>
+            <Label>
+              Emerald <span className="text-[var(--color-text-subtle)] font-normal">(Chart)</span>
+            </Label>
+            <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+              {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
+                <ColorSwatch
+                  key={shade}
+                  name={`${shade}`}
+                  color={`var(--color-emerald-${shade})`}
+                  textLight={shade >= 500}
+                />
+              ))}
+            </div>
+          </VStack>
+
+          {/* Amber (Chart) */}
+          <VStack gap={2}>
+            <Label>
+              Amber <span className="text-[var(--color-text-subtle)] font-normal">(Chart)</span>
+            </Label>
+            <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+              {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
+                <ColorSwatch
+                  key={shade}
+                  name={`${shade}`}
+                  color={`var(--color-amber-${shade})`}
+                  textLight={shade >= 500}
+                />
+              ))}
+            </div>
+          </VStack>
+
           {/* Orange (Warning) */}
           <VStack gap={2}>
             <Label>Orange (Warning)</Label>

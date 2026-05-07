@@ -37,7 +37,7 @@ export function DeleteStatefulSetModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete statefulSet"
-      description="Removing the selected instances is permanent and cannot be undone."
+      description="Removing the selected stateful sets is permanent and cannot be undone."
       infoLabel="StatefulSet name"
       infoValue={statefulSet?.name ?? ''}
       confirmText="Delete"

@@ -37,7 +37,7 @@ export function DeleteCronJobModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete cronjob"
-      description="Removing the selected instances is permanent and cannot be undone."
+      description="Removing the selected cron jobs is permanent and cannot be undone."
       infoLabel="CronJob name"
       infoValue={cronJob?.name ?? ''}
       confirmText="Delete"

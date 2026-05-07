@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -18,6 +17,7 @@ import {
   Pagination,
   StatusIndicator,
   PageShell,
+  ErrorState,
   Tooltip,
   Popover,
   Badge,
@@ -27,14 +27,8 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconBell,
-  IconExternalLink,
-  IconServer,
-  IconRouter,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconExternalLink, IconServer, IconRouter } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -88,7 +82,7 @@ const mockSubnetDetail: SubnetDetail = {
   name: 'subnet-1',
   cidr: '192.168.2.0/24',
   gatewayIp: '192.168.2.1',
-  createdAt: 'Jul 25, 2025 10:32:16',
+  createdAt: 'Jul 25, 2026 10:32:16',
   // Basic information
   allocationPools: '192.168.2.2 - 192.168.2.254',
   dhcp: true,
@@ -135,8 +129,8 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
     id: '29ttgj234',
   },
   securityGroups: ['default-sg', 'web-sg', 'db-sg', 'app-sg', 'monitor-sg'].slice(0, (i % 5) + 1),
-  fixedIp: `10760.${91 + (i % 10)}`,
-  floatingIp: `10765.${39 + (i % 10)}`,
+  fixedIp: `10.0.${Math.floor(i / 10)}.${91 + (i % 10)}`,
+  floatingIp: `203.0.113.${39 + (i % 10)}`,
   macAddress: `fa:16:3e:34:85:${String(32 + (i % 50)).padStart(2, '0')}`,
 }));
 
@@ -155,6 +149,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'shutoff' | 'buildi
    ---------------------------------------- */
 
 export default function SubnetDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -176,21 +171,14 @@ export default function SubnetDetailPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // In a real app, fetch based on id
-  const subnet = id && mockSubnets[id] ? mockSubnets[id] : mockSubnetDetail;
+  const subnet = id ? mockSubnets[id] : undefined;
 
   // Update tab label to match the subnet name (most recent breadcrumb)
   useEffect(() => {
     if (subnet?.name) {
       updateActiveTabLabel(subnet.name);
     }
-  }, [subnet?.name, updateActiveTabLabel]);
-
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Networks', href: '/compute/networks' },
-    { label: subnet.network.name, href: `/networks/${subnet.network.id}` },
-    { label: subnet.name },
-  ];
+  }, [subnet, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -198,6 +186,56 @@ export default function SubnetDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!subnet) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Subnets', href: '/compute/subnets' }, { label: id ?? '—' }]}
+              />
+            }
+            onSidebarToggle={openSidebar}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Subnet not found"
+          description={`The subnet "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/subnets')}>
+              Back to Subnets
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
+  const breadcrumbItems = [
+    { label: 'Networks', href: '/compute/networks' },
+    { label: subnet.name },
+  ];
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(subnet.id);
@@ -268,8 +306,11 @@ export default function SubnetDetailPage() {
                 {row.attachedTo.name}
                 <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               </Link>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID : {row.attachedTo.id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedTo.id}>
+                  ID : {row.attachedTo.id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedTo.id} />
               </span>
             </div>
             <Tooltip
@@ -305,8 +346,11 @@ export default function SubnetDetailPage() {
             {row.ownedNetwork.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.ownedNetwork.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetwork.id}>
+              ID : {row.ownedNetwork.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetwork.id} />
           </span>
         </div>
       ),
@@ -326,11 +370,11 @@ export default function SubnetDetailPage() {
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All Security Groups ({row.securityGroups.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {row.securityGroups.map((sg, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {sg}
@@ -385,22 +429,15 @@ export default function SubnetDetailPage() {
       topBar={
         <TopBar
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           onSidebarToggle={openSidebar}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              hasNotification
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{subnet.name}</DetailHeader.Title>
@@ -434,7 +471,7 @@ export default function SubnetDetailPage() {
 
         {/* Tabs */}
         <div className="w-full">
-          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="ports">Ports</Tab>

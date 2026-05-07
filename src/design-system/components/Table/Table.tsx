@@ -1,7 +1,9 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
+import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import { IconChevronUp, IconChevronDown, IconSelector } from '@tabler/icons-react';
 import { Checkbox } from '../Checkbox';
 import { Radio } from '../Radio';
+import { Skeleton } from '../Skeleton/Skeleton';
 import { cn } from '../../utils/cn';
 import { useColumnResize } from './useColumnResize';
 
@@ -45,6 +47,8 @@ export interface TableProps<T = any> extends Omit<
   selectionType?: 'checkbox' | 'radio';
   selectedKeys?: string[];
   onSelectionChange?: (keys: string[]) => void;
+  /** Keys of rows that should not be selectable */
+  disabledKeys?: string[];
   hideSelectAll?: boolean;
   stickyHeader?: boolean;
   maxHeight?: string;
@@ -61,6 +65,10 @@ export interface TableProps<T = any> extends Omit<
   onColumnResize?: (columnKey: string, width: number) => void;
   /** Global minimum column width in px. Defaults to 50 */
   minColumnWidth?: number;
+  /** Show skeleton loading rows instead of data */
+  loading?: boolean;
+  /** Number of skeleton rows to display when loading. Defaults to 10 */
+  loadingRows?: number;
 }
 
 /* ----------------------------------------
@@ -98,6 +106,7 @@ export function Table<T extends Record<string, any>>({
   selectionType = 'checkbox',
   selectedKeys = [],
   onSelectionChange,
+  disabledKeys = [],
   hideSelectAll = false,
   stickyHeader = false,
   maxHeight,
@@ -110,9 +119,11 @@ export function Table<T extends Record<string, any>>({
   columnResizeMode = 'onEnd',
   onColumnResize,
   minColumnWidth,
+  loading = false,
+  loadingRows = 10,
   ...rest
 }: TableProps<T>) {
-  const tableData = data ?? rows ?? [];
+  const tableData = loading ? [] : (data ?? rows ?? []);
 
   const columns = rawColumns.map((col) => ({
     ...col,
@@ -187,7 +198,10 @@ export function Table<T extends Record<string, any>>({
     });
   }, [tableData, sortKey, sortDirection]);
 
+  const disabledSet = useMemo(() => new Set(disabledKeys), [disabledKeys]);
+
   const handleSelectRow = (key: string) => {
+    if (disabledSet.has(key)) return;
     if (selectionType === 'radio') {
       onSelectionChange?.(selectedKeys.includes(key) ? [] : [key]);
     } else {
@@ -199,17 +213,26 @@ export function Table<T extends Record<string, any>>({
     }
   };
 
-  const handleSelectAll = () => {
-    const allKeys = sortedData.map(getRowKey);
-    if (selectedKeys.length === sortedData.length && sortedData.length > 0) {
-      onSelectionChange?.([]);
+  const selectableKeysList = useMemo(
+    () => sortedData.map(getRowKey).filter((key) => !disabledSet.has(key)),
+    [sortedData, getRowKey, disabledSet]
+  );
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked } = e.target;
+    if (checked) {
+      onSelectionChange?.(selectableKeysList);
     } else {
-      onSelectionChange?.(allKeys);
+      onSelectionChange?.([]);
     }
   };
 
-  const allSelected = sortedData.length > 0 && selectedKeys.length === sortedData.length;
-  const someSelected = selectedKeys.length > 0 && selectedKeys.length < sortedData.length;
+  const allSelected =
+    selectableKeysList.length > 0 && selectableKeysList.every((key) => selectedKeys.includes(key));
+  const someSelected =
+    selectableKeysList.length > 0 &&
+    selectedKeys.some((key) => selectableKeysList.includes(key)) &&
+    !allSelected;
 
   const renderSortIcon = (columnKey: string) => {
     if (sortKey !== columnKey) {
@@ -368,6 +391,130 @@ export function Table<T extends Record<string, any>>({
     );
   };
 
+  const skeletonWidths = ['65%', '45%', '55%', '70%', '40%', '60%', '50%', '75%', '35%', '80%'];
+
+  const renderSkeletonCell = (
+    column: TableColumn<T>,
+    rowIndex: number,
+    colIndex: number,
+    showFirstDivider: boolean
+  ) => {
+    const isFirstColumn = colIndex === 0;
+    const showCellDivider = isFirstColumn ? showFirstDivider : true;
+    const align = column.align || 'left';
+    const widthIdx = (rowIndex * 7 + colIndex * 3) % skeletonWidths.length;
+
+    return (
+      <div
+        key={column.key}
+        data-column-key={column.key}
+        className={cn(
+          'flex items-center',
+          'px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]',
+          'min-w-0 overflow-hidden',
+          CELL_ALIGN_CLS[align],
+          showCellDivider && 'border-l border-transparent'
+        )}
+        style={getEffectiveColumnStyle(column)}
+      >
+        <div
+          className={cn(
+            'w-full min-w-0',
+            align === 'center' && 'flex justify-center',
+            align === 'right' && 'flex justify-end'
+          )}
+        >
+          <Skeleton variant="text" width={skeletonWidths[widthIdx]} height={14} />
+        </div>
+      </div>
+    );
+  };
+
+  const renderSkeletonRows = (
+    cols: TableColumn<T>[],
+    showCheckbox: boolean,
+    side?: 'left' | 'right'
+  ) => (
+    <div className="flex flex-col gap-[var(--table-row-gap)]">
+      {Array.from({ length: loadingRows }).map((_, rowIndex) => (
+        <div
+          key={`skeleton-${rowIndex}`}
+          className={cn(
+            'overflow-hidden',
+            'border border-[var(--color-border-default)]',
+            'bg-[var(--color-surface-default)]',
+            side === 'left' && 'rounded-l-[var(--table-row-radius)] border-r-0',
+            side === 'right' && 'rounded-r-[var(--table-row-radius)] border-l-0',
+            !side && 'rounded-[var(--table-row-radius)]'
+          )}
+        >
+          <div className="flex items-stretch min-h-[var(--table-row-height)] w-full">
+            {showCheckbox && (
+              <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                <Skeleton variant="text" width={16} height={16} />
+              </div>
+            )}
+            {cols.map((col, i) => renderSkeletonCell(col, rowIndex, i, showCheckbox))}
+            {hasResizedColumns && <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const leftBodyRef = useRef<HTMLDivElement>(null);
+  const rightBodyRef = useRef<HTMLDivElement>(null);
+  const scrollOsRef = useRef<OverlayScrollbarsComponentRef>(null);
+  const [hasHorizontalOverflow, setHasHorizontalOverflow] = useState(false);
+  const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!hasStickyColumns) return;
+    const instance = scrollOsRef.current?.osInstance();
+    if (!instance) return;
+
+    const checkOverflow = () => {
+      setHasHorizontalOverflow(instance.state().hasOverflow.x);
+    };
+    checkOverflow();
+    instance.on('updated', checkOverflow);
+    return () => instance.on('updated', checkOverflow, true);
+  }, [hasStickyColumns, loading]);
+
+  useLayoutEffect(() => {
+    if (!hasStickyColumns) return;
+    const leftBody = leftBodyRef.current;
+    const rightBody = rightBodyRef.current;
+    if (!leftBody || !rightBody) return;
+
+    const syncHeights = () => {
+      const leftRows = leftBody.querySelectorAll<HTMLElement>(':scope > [data-row-index]');
+      const rightRows = rightBody.querySelectorAll<HTMLElement>(':scope > [data-row-index]');
+      const count = Math.min(leftRows.length, rightRows.length);
+
+      for (let i = 0; i < count; i++) {
+        leftRows[i].style.height = '';
+        rightRows[i].style.height = '';
+      }
+
+      for (let i = 0; i < count; i++) {
+        const lh = leftRows[i].getBoundingClientRect().height;
+        const rh = rightRows[i].getBoundingClientRect().height;
+        const max = Math.max(lh, rh);
+        if (lh !== max) leftRows[i].style.height = `${max}px`;
+        if (rh !== max) rightRows[i].style.height = `${max}px`;
+      }
+    };
+
+    syncHeights();
+
+    const ro = new ResizeObserver(syncHeights);
+    const leftRows = leftBody.querySelectorAll<HTMLElement>(':scope > [data-row-index]');
+    leftRows.forEach((row) => ro.observe(row));
+
+    return () => ro.disconnect();
+  }, [hasStickyColumns, sortedData, loading, selectedKeys]);
+
   if (hasStickyColumns) {
     return (
       <div
@@ -379,8 +526,14 @@ export function Table<T extends Record<string, any>>({
       >
         <div className="flex">
           {/* Scrollable area */}
-          <div
-            className={cn('flex-1 min-w-0 overflow-x-auto', maxHeight && 'overflow-y-auto')}
+          <OverlayScrollbarsComponent
+            ref={scrollOsRef}
+            options={{
+              overflow: { x: 'scroll', y: maxHeight ? 'scroll' : 'hidden' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            defer={false}
+            className="flex-1 min-w-0"
             style={maxHeight ? { maxHeight } : undefined}
           >
             <div className="min-w-fit w-full">
@@ -413,8 +566,13 @@ export function Table<T extends Record<string, any>>({
               </div>
 
               {/* Body */}
-              <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full">
-                {sortedData.length === 0 ? (
+              <div
+                ref={leftBodyRef}
+                className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full"
+              >
+                {loading ? (
+                  renderSkeletonRows(scrollColumns, selectable, 'left')
+                ) : sortedData.length === 0 ? (
                   <div
                     className={cn(
                       'px-[var(--table-cell-padding-x)] py-[var(--table-empty-padding-y)] text-center',
@@ -428,45 +586,66 @@ export function Table<T extends Record<string, any>>({
                   sortedData.map((row, rowIndex) => {
                     const key = getRowKey(row);
                     const isSelected = selectedKeys.includes(key);
+                    const expanded = expandedContent?.(row, rowIndex);
                     return (
                       <div
                         key={key}
+                        data-row-index={rowIndex}
                         className={cn(
-                          'flex items-stretch min-h-[var(--table-row-height)] w-full',
-                          'rounded-l-[var(--table-row-radius)] border border-[var(--color-border-default)] border-r-0',
-                          'transition-all hover:bg-[var(--table-row-hover-bg)]',
+                          'rounded-l-[var(--table-row-radius)] overflow-hidden',
+                          'border border-[var(--color-border-default)] border-r-0',
                           isSelected
                             ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
-                            : 'bg-[var(--color-surface-default)]',
-                          onRowClick && 'cursor-pointer'
+                            : 'bg-[var(--color-surface-default)]'
                         )}
-                        onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
+                        onMouseEnter={() => setHoveredRowIndex(rowIndex)}
+                        onMouseLeave={() => setHoveredRowIndex(null)}
                       >
-                        {selectable && (
-                          <div
-                            className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {selectionType === 'radio' ? (
-                              <Radio
-                                checked={isSelected}
-                                onChange={() => handleSelectRow(key)}
-                                aria-label={`Select row ${rowIndex + 1}`}
-                              />
-                            ) : (
-                              <Checkbox
-                                checked={isSelected}
-                                onChange={() => handleSelectRow(key)}
-                                aria-label={`Select row ${rowIndex + 1}`}
-                              />
-                            )}
+                        <div
+                          className={cn(
+                            'flex items-stretch min-h-[var(--table-row-height)] w-full',
+                            hoveredRowIndex === rowIndex && 'bg-[var(--table-row-hover-bg)]',
+                            onRowClick && !disabledSet.has(key) && 'cursor-pointer'
+                          )}
+                          onClick={
+                            onRowClick && !disabledSet.has(key)
+                              ? () => onRowClick(row, rowIndex)
+                              : undefined
+                          }
+                        >
+                          {selectable && (
+                            <div
+                              className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {selectionType === 'radio' ? (
+                                <Radio
+                                  checked={isSelected}
+                                  disabled={disabledSet.has(key)}
+                                  onChange={() => handleSelectRow(key)}
+                                  aria-label={`Select row ${rowIndex + 1}`}
+                                />
+                              ) : (
+                                <Checkbox
+                                  checked={isSelected}
+                                  disabled={disabledSet.has(key)}
+                                  onChange={() => handleSelectRow(key)}
+                                  aria-label={`Select row ${rowIndex + 1}`}
+                                />
+                              )}
+                            </div>
+                          )}
+                          {scrollColumns.map((col, i) =>
+                            renderBodyCell(col, row, rowIndex, i, isSelected, selectable)
+                          )}
+                          {hasResizedColumns && (
+                            <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
+                          )}
+                        </div>
+                        {expanded && (
+                          <div className="border-t border-[var(--color-border-subtle)] w-full">
+                            {expanded}
                           </div>
-                        )}
-                        {scrollColumns.map((col, i) =>
-                          renderBodyCell(col, row, rowIndex, i, isSelected, selectable)
-                        )}
-                        {hasResizedColumns && (
-                          <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
                         )}
                       </div>
                     );
@@ -474,11 +653,15 @@ export function Table<T extends Record<string, any>>({
                 )}
               </div>
             </div>
-          </div>
+          </OverlayScrollbarsComponent>
 
           {/* Fixed right column(s) */}
           <div
-            className="shrink-0 flex flex-col gap-[var(--table-row-gap)]"
+            className={cn(
+              'shrink-0 flex flex-col gap-[var(--table-row-gap)] relative z-[1] transition-shadow duration-200',
+              hasHorizontalOverflow &&
+                'shadow-[-8px_0_16px_-4px_color-mix(in_srgb,var(--color-text-default)_4%,transparent)]'
+            )}
             style={{ width: stickyRightWidth }}
           >
             {/* Header */}
@@ -486,16 +669,17 @@ export function Table<T extends Record<string, any>>({
               className={cn(
                 'flex items-stretch min-h-[var(--table-row-height)]',
                 'bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-r-[var(--table-row-radius)]',
-                'border-l-0',
-                'shadow-[-8px_0_16px_-4px_rgba(0,0,0,0.04)]'
+                hasHorizontalOverflow && 'border-l-0'
               )}
             >
-              {stickyRightColumns.map((col, i) => renderHeaderCell(col, i, true))}
+              {stickyRightColumns.map((col, i) => renderHeaderCell(col, i, false))}
             </div>
 
             {/* Body */}
-            <div className="flex flex-col gap-[var(--table-row-gap)]">
-              {sortedData.length === 0 ? (
+            <div ref={rightBodyRef} className="flex flex-col gap-[var(--table-row-gap)]">
+              {loading ? (
+                renderSkeletonRows(stickyRightColumns, false, 'right')
+              ) : sortedData.length === 0 ? (
                 <div
                   className={cn(
                     'min-h-[var(--table-row-height)]',
@@ -509,17 +693,23 @@ export function Table<T extends Record<string, any>>({
                   return (
                     <div
                       key={key}
+                      data-row-index={rowIndex}
                       className={cn(
                         'flex items-stretch min-h-[var(--table-row-height)]',
                         'rounded-r-[var(--table-row-radius)] border border-[var(--color-border-default)] border-l-0',
-                        'transition-all hover:bg-[var(--table-row-hover-bg)]',
-                        'shadow-[-8px_0_16px_-4px_rgba(0,0,0,0.04)]',
                         isSelected
                           ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
                           : 'bg-[var(--color-surface-default)]',
-                        onRowClick && 'cursor-pointer'
+                        hoveredRowIndex === rowIndex && 'bg-[var(--table-row-hover-bg)]',
+                        onRowClick && !disabledSet.has(key) && 'cursor-pointer'
                       )}
-                      onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
+                      onMouseEnter={() => setHoveredRowIndex(rowIndex)}
+                      onMouseLeave={() => setHoveredRowIndex(null)}
+                      onClick={
+                        onRowClick && !disabledSet.has(key)
+                          ? () => onRowClick(row, rowIndex)
+                          : undefined
+                      }
                     >
                       {stickyRightColumns.map((col, i) =>
                         renderBodyCell(col, row, rowIndex, i, isSelected, true)
@@ -543,8 +733,12 @@ export function Table<T extends Record<string, any>>({
       className={cn('flex flex-col gap-[var(--table-row-gap)]', className)}
       style={rowHeight ? ({ '--table-row-height': rowHeight } as React.CSSProperties) : undefined}
     >
-      <div
-        className={cn('overflow-x-auto', maxHeight && 'overflow-y-auto')}
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'scroll', y: maxHeight ? 'scroll' : 'hidden' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
         style={maxHeight ? { maxHeight } : undefined}
       >
         <div className="min-w-fit w-full">
@@ -575,7 +769,9 @@ export function Table<T extends Record<string, any>>({
 
           {/* Body */}
           <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full">
-            {sortedData.length === 0 ? (
+            {loading ? (
+              renderSkeletonRows(columns, selectable)
+            ) : sortedData.length === 0 ? (
               <div
                 className={cn(
                   'px-[var(--table-cell-padding-x)] py-[var(--table-empty-padding-y)] text-center',
@@ -605,9 +801,13 @@ export function Table<T extends Record<string, any>>({
                       className={cn(
                         'flex items-stretch min-h-[var(--table-row-height)] w-full',
                         'transition-all hover:bg-[var(--table-row-hover-bg)]',
-                        onRowClick && 'cursor-pointer'
+                        onRowClick && !disabledSet.has(key) && 'cursor-pointer'
                       )}
-                      onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
+                      onClick={
+                        onRowClick && !disabledSet.has(key)
+                          ? () => onRowClick(row, rowIndex)
+                          : undefined
+                      }
                     >
                       {selectable && (
                         <div
@@ -617,12 +817,14 @@ export function Table<T extends Record<string, any>>({
                           {selectionType === 'radio' ? (
                             <Radio
                               checked={isSelected}
+                              disabled={disabledSet.has(key)}
                               onChange={() => handleSelectRow(key)}
                               aria-label={`Select row ${rowIndex + 1}`}
                             />
                           ) : (
                             <Checkbox
                               checked={isSelected}
+                              disabled={disabledSet.has(key)}
                               onChange={() => handleSelectRow(key)}
                               aria-label={`Select row ${rowIndex + 1}`}
                             />
@@ -637,7 +839,7 @@ export function Table<T extends Record<string, any>>({
                       )}
                     </div>
                     {expanded && (
-                      <div className="border-t border-[var(--color-border-subtle)] min-h-[var(--table-expanded-row-height)] flex items-center">
+                      <div className="border-t border-[var(--color-border-subtle)] min-h-[var(--table-expanded-row-height)] w-full">
                         {expanded}
                       </div>
                     )}
@@ -647,7 +849,7 @@ export function Table<T extends Record<string, any>>({
             )}
           </div>
         </div>
-      </div>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }

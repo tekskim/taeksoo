@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Badge,
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -16,11 +15,18 @@ import {
   SectionCard,
   PageShell,
   ProgressBar,
+  Tooltip,
   STATUS_THRESHOLDS,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconEdit, IconTrash, IconBell, IconSettings } from '@tabler/icons-react';
+import {
+  IconCirclePlus,
+  IconEdit,
+  IconTrash,
+  IconSettings,
+  IconInfoCircle,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -40,6 +46,7 @@ interface QuotaItem {
   used: number;
   limit: number;
   unit?: string;
+  tooltip?: string;
 }
 
 /* ----------------------------------------
@@ -57,7 +64,7 @@ const mockTenantsMap: Record<string, TenantDetail> = Object.fromEntries(
         description: i % 3 === 0 ? 'Production tenant' : i % 5 === 0 ? 'Development tenant' : '-',
         status: i === 4 ? 'deactivated' : i % 20 === 0 ? 'building' : 'active',
         enabled: i !== 4,
-        createdAt: `${15 + (i % 15)} Jan, 2025`,
+        createdAt: `${15 + (i % 15)} Jan, 2026`,
       },
     ];
   })
@@ -77,7 +84,12 @@ const computeQuotas: QuotaItem[] = [
   { label: 'vCPU', used: 8, limit: 10 },
   { label: 'RAM', used: 10, limit: 100, unit: 'GiB' },
   { label: 'Instances', used: 9, limit: 10 },
-  { label: 'Key Pairs', used: 500, limit: 500 },
+  {
+    label: 'Key Pairs',
+    used: 500,
+    limit: 500,
+    tooltip: 'Maximum number of key pairs each user can create in this tenant.',
+  },
   { label: 'Server Groups', used: 1, limit: 10 },
 ];
 
@@ -90,6 +102,31 @@ const storageQuotas: QuotaItem[] = [
   { label: 'Volume Backup Capacity', used: 1, limit: 10, unit: 'GiB' },
 ];
 
+// Volume Type Quota Data
+interface VolumeTypeQuota {
+  name: string;
+  quotas: QuotaItem[];
+}
+
+const volumeTypeQuotas: VolumeTypeQuota[] = [
+  {
+    name: 'Ssd-performance',
+    quotas: [
+      { label: 'Type', used: 8, limit: 10 },
+      { label: 'Type Capacity', used: 10, limit: 100, unit: 'GiB' },
+      { label: 'Type Snapshots', used: 9, limit: 10 },
+    ],
+  },
+  {
+    name: 'Hdd-standard',
+    quotas: [
+      { label: 'Type', used: 8, limit: 10 },
+      { label: 'Type Capacity', used: 10, limit: 100, unit: 'GiB' },
+      { label: 'Type Snapshots', used: 9, limit: 10 },
+    ],
+  },
+];
+
 // Network Quota Data
 const networkQuotas: QuotaItem[] = [
   { label: 'Routers', used: 8, limit: 10 },
@@ -99,9 +136,13 @@ const networkQuotas: QuotaItem[] = [
   { label: 'Ports', used: 1, limit: 10 },
   { label: 'Security Groups', used: 1, limit: 10 },
   { label: 'Security Group Rules', used: 1, limit: 10 },
-  { label: 'Firewalls', used: 1, limit: 10 },
-  { label: 'Firewall Policies', used: 1, limit: 10 },
-  { label: 'Firewall Rules', used: 1, limit: 10 },
+  { label: 'Load balancers', used: 1, limit: 10 },
+  { label: 'Listeners', used: 1, limit: 10 },
+  { label: 'Members', used: 1, limit: 10, tooltip: 'Backend servers registered to a pool.' },
+  { label: 'Pools', used: 1, limit: 10 },
+  { label: 'Health monitors', used: 1, limit: 10 },
+  { label: 'L7 policies', used: 1, limit: 10 },
+  { label: 'L7 rules', used: 1, limit: 10 },
 ];
 
 /* ----------------------------------------
@@ -113,6 +154,7 @@ function QuotaCard({
   used,
   limit,
   unit,
+  tooltip,
   showPercentage = true,
   coloredGauge = false,
 }: QuotaItem & { showPercentage?: boolean; coloredGauge?: boolean }) {
@@ -125,9 +167,16 @@ function QuotaCard({
   };
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] rounded-lg py-4 px-5 flex-1 min-w-0 h-[112px] flex flex-col justify-between">
+    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] py-4 px-5 flex-1 min-w-0 h-[112px] flex flex-col justify-between">
       <div className="flex items-center justify-between">
-        <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
+        <span className="flex items-center gap-1 text-label-md text-[var(--color-text-default)]">
+          {label}
+          {tooltip && (
+            <Tooltip content={tooltip}>
+              <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+            </Tooltip>
+          )}
+        </span>
         {showPercentage && (
           <Badge size="sm" type="subtle" theme={getBadgeTheme()}>
             {percentage}%
@@ -162,41 +211,51 @@ function QuotaSection({
   quotas,
   showPercentage = true,
   coloredGauge = false,
+  volumeTypeGroups,
 }: {
   title: string;
   quotas: QuotaItem[];
   showPercentage?: boolean;
   coloredGauge?: boolean;
+  volumeTypeGroups?: VolumeTypeQuota[];
 }) {
-  // Split quotas into rows of 5
-  const rows: QuotaItem[][] = [];
-  for (let i = 0; i < quotas.length; i += 5) {
-    rows.push(quotas.slice(i, i + 5));
-  }
-
   return (
     <SectionCard>
       <SectionCard.Header title={title} />
       <SectionCard.Content>
-        <div className="flex flex-col gap-4">
-          {rows.map((row, rowIndex) => (
-            <div key={rowIndex} className="flex gap-4">
-              {row.map((quota, index) => (
-                <QuotaCard
-                  key={`${quota.label}-${index}`}
-                  {...quota}
-                  showPercentage={showPercentage}
-                  coloredGauge={coloredGauge}
-                />
-              ))}
-              {/* Fill remaining space if row has fewer than 5 items */}
-              {row.length < 5 &&
-                Array.from({ length: 5 - row.length }).map((_, i) => (
-                  <div key={`empty-${i}`} className="flex-1 min-w-0" />
-                ))}
-            </div>
-          ))}
-        </div>
+        <VStack gap={6}>
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            {quotas.map((quota, index) => (
+              <QuotaCard
+                key={`${quota.label}-${index}`}
+                {...quota}
+                showPercentage={showPercentage}
+                coloredGauge={coloredGauge}
+              />
+            ))}
+          </div>
+          {volumeTypeGroups &&
+            volumeTypeGroups.map((group) => (
+              <VStack key={group.name} gap={3}>
+                <span
+                  className="text-label-lg text-[var(--color-text-default)] truncate max-w-full"
+                  title={group.name}
+                >
+                  {group.name}
+                </span>
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                  {group.quotas.map((quota, index) => (
+                    <QuotaCard
+                      key={`${quota.label}-${index}`}
+                      {...quota}
+                      showPercentage={showPercentage}
+                      coloredGauge={coloredGauge}
+                    />
+                  ))}
+                </div>
+              </VStack>
+            ))}
+        </VStack>
       </SectionCard.Content>
     </SectionCard>
   );
@@ -207,6 +266,7 @@ function QuotaSection({
    ---------------------------------------- */
 
 export default function ComputeAdminTenantDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -268,35 +328,24 @@ export default function ComputeAdminTenantDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Tenants', href: '/compute-admin/tenants' },
-                { label: tenant.name },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
+              items={[{ label: 'Tenants', href: '/compute-admin/tenants' }, { label: tenant.name }]}
             />
           }
         />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{tenant.name}</DetailHeader.Title>
           <DetailHeader.Actions>
             <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-              Modify Quotas
+              Modify quotas
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
               Edit
@@ -315,8 +364,7 @@ export default function ComputeAdminTenantDetailPage() {
               status={statusMap[tenant.status]}
             />
             <DetailHeader.InfoCard label="ID" value={tenant.id} copyable />
-            <DetailHeader.InfoCard label="Enabled" value={tenant.enabled ? 'Yes' : 'No'} />
-            <DetailHeader.InfoCard label="Created at" value={tenant.createdAt} />
+            <DetailHeader.InfoCard label="Description" value={tenant.description || '-'} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
@@ -336,6 +384,7 @@ export default function ComputeAdminTenantDetailPage() {
                   quotas={storageQuotas}
                   showPercentage={true}
                   coloredGauge={true}
+                  volumeTypeGroups={volumeTypeQuotas}
                 />
                 <QuotaSection title="Network quota" quotas={networkQuotas} coloredGauge={true} />
               </VStack>

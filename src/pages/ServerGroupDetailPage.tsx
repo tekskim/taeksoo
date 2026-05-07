@@ -6,7 +6,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -30,12 +29,12 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconCirclePlus,
   IconTrash,
-  IconBell,
   IconDotsCircleHorizontal,
   IconLock,
   IconLockOpen,
   IconTerminal2,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -96,7 +95,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj235',
@@ -107,7 +106,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj236',
@@ -118,7 +117,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj237',
@@ -129,7 +128,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj238',
@@ -140,7 +139,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj239',
@@ -151,7 +150,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj240',
@@ -162,7 +161,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj241',
@@ -173,7 +172,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj242',
@@ -184,7 +183,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj243',
@@ -195,7 +194,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
   {
     id: '29tgj244',
@@ -206,7 +205,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '192.168.1.10',
     az: 'zone-o',
     os: 'Ubuntu 24.04',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2026',
   },
 ];
 
@@ -257,8 +256,7 @@ export function ServerGroupDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Server group', href: '/compute/server-groups' },
+    { label: 'Server Groups', href: '/compute/server-groups' },
     { label: serverGroup.name },
   ];
 
@@ -320,8 +318,11 @@ export function ServerGroupDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -350,13 +351,7 @@ export function ServerGroupDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.fixedIp,
       render: (value) => (
-        <Link
-          to="#"
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {value}
-        </Link>
+        <span className="text-label-md text-[var(--color-action-primary)]">{value}</span>
       ),
     },
     {
@@ -386,6 +381,7 @@ export function ServerGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
           <button
@@ -402,6 +398,8 @@ export function ServerGroupDetailPage() {
             items={getInstanceContextMenuItems(row)}
             trigger={
               <button
+                type="button"
+                aria-label="Row actions"
                 className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -442,18 +440,11 @@ export function ServerGroupDetailPage() {
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{serverGroup.name}</DetailHeader.Title>

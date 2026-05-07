@@ -35,7 +35,7 @@ export function PropsTable({ props, name }: PropsTableProps) {
           <code className="text-label-md text-[var(--color-text-default)] font-mono">{name}</code>
         </HStack>
       )}
-      <div className="overflow-x-auto rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)]">
+      <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
         <table className="w-full text-body-sm">
           <thead>
             <tr className="bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   VStack,
   HStack,
@@ -900,7 +901,11 @@ export function ProductionComparisonPage() {
   };
 
   return (
-    <div className="h-screen w-full overflow-auto bg-[var(--color-surface-default)]">
+    <OverlayScrollbarsComponent
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+      defer={false}
+      className="h-screen w-full bg-[var(--color-surface-default)]"
+    >
       <div className="p-6">
         <VStack gap={6} className="max-w-7xl mx-auto pb-20">
           {/* Header */}
@@ -942,7 +947,7 @@ export function ProductionComparisonPage() {
 
           {/* Summary Cards */}
           <div className="grid grid-cols-4 gap-4">
-            <div className="p-4 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
               <p className="text-body-sm text-[var(--color-text-muted)]">토큰 일치율</p>
               <p className="text-heading-h4 text-[var(--color-text-default)] mt-1">
                 {Math.round((tokenStats.match / tokenStats.total) * 100)}%
@@ -951,7 +956,7 @@ export function ProductionComparisonPage() {
                 {tokenStats.match}/{tokenStats.total} 일치
               </p>
             </div>
-            <div className="p-4 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
               <p className="text-body-sm text-[var(--color-text-muted)]">컴포넌트 호환성</p>
               <p className="text-heading-h4 text-[var(--color-text-default)] mt-1">
                 {Math.round((componentStats.available / componentStats.total) * 100)}%
@@ -960,7 +965,7 @@ export function ProductionComparisonPage() {
                 {componentStats.available}/{componentStats.total} 호환
               </p>
             </div>
-            <div className="p-4 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
               <p className="text-body-sm text-[var(--color-text-muted)]">TDS 전용 컴포넌트</p>
               <p className="text-heading-h4 text-[var(--color-action-primary)] mt-1">
                 {componentStats.tdsOnly}
@@ -969,7 +974,7 @@ export function ProductionComparisonPage() {
                 새로 추가된 컴포넌트
               </p>
             </div>
-            <div className="p-4 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
               <p className="text-body-sm text-[var(--color-text-muted)]">마이그레이션 준비</p>
               <p className="text-heading-h4 text-[var(--color-state-success)] mt-1">Ready</p>
               <p className="text-body-sm text-[var(--color-text-subtle)] mt-1">바로 적용 가능</p>
@@ -1157,7 +1162,7 @@ export function ProductionComparisonPage() {
                 {/* Side by Side Comparison */}
                 <div className="grid grid-cols-2 gap-6">
                   {/* TDS Side */}
-                  <div className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
                     <div className="px-4 py-3 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
                       <span className="text-label-md text-[var(--color-text-default)]">
                         TDS (현재 프로젝트)
@@ -1218,7 +1223,7 @@ export function ProductionComparisonPage() {
                   </div>
 
                   {/* Production Side - iframe */}
-                  <div className="border border-[var(--color-border-default)] rounded-lg overflow-hidden">
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
                     <div className="px-4 py-3 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
                       <span className="text-label-md text-[var(--color-text-default)]">
                         Production (thaki-ui Storybook)
@@ -1252,7 +1257,7 @@ export function ProductionComparisonPage() {
                           onClick={() =>
                             window.open(`http://localhost:6006/?path=/docs/${comp.path}`, '_blank')
                           }
-                          className="px-4 py-3 text-left rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-action-primary)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                          className="px-4 py-3 text-left rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-action-primary)] hover:bg-[var(--color-surface-subtle)] transition-colors"
                         >
                           <span className="text-label-md text-[var(--color-text-default)]">
                             {comp.name}
@@ -1267,7 +1272,7 @@ export function ProductionComparisonPage() {
           </Tabs>
         </VStack>
       </div>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

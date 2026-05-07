@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   NumberInput,
   Select,
@@ -37,7 +36,8 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconUpload, IconExternalLink } from '@tabler/icons-react';
+import { IconEdit, IconUpload, IconExternalLink } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -98,7 +98,7 @@ function SummarySidebar({
 
   return (
     <div className="w-[312px] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
@@ -200,7 +200,7 @@ export function ComputeAdminCreateImagePage() {
 
   const breadcrumbItems = [
     { label: 'Images', href: '/compute-admin/images' },
-    { label: 'Create image' },
+    { label: 'Create Image' },
   ];
 
   // Filter tenants by search
@@ -265,7 +265,12 @@ export function ComputeAdminCreateImagePage() {
             </Link>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </div>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -437,19 +442,7 @@ export function ComputeAdminCreateImagePage() {
           showWindowControls={true}
         />
       }
-      topBar={
-        <TopBar
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => console.log('Notifications clicked')}
-              aria-label="Notifications"
-              badge
-            />
-          }
-        />
-      }
+      topBar={<TopBar breadcrumb={<Breadcrumb items={breadcrumbItems} />} />}
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3} className="min-w-[1176px]">
@@ -621,7 +614,7 @@ export function ComputeAdminCreateImagePage() {
                       {isV2 ? (
                         <VStack gap={6}>
                           {/* Public block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <RadioGroup value="public" onChange={() => {}}>
                                 <Radio value="public" label="Public" />
@@ -635,7 +628,7 @@ export function ComputeAdminCreateImagePage() {
                           </div>
 
                           {/* Shared block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <RadioGroup value="shared" onChange={() => {}}>
                                 <Radio value="public" label="Public" />
@@ -693,7 +686,7 @@ export function ComputeAdminCreateImagePage() {
                           </div>
 
                           {/* Private block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <RadioGroup value="private" onChange={() => {}}>
                                 <Radio value="public" label="Public" />
@@ -777,7 +770,7 @@ export function ComputeAdminCreateImagePage() {
 
                     {/* Protected */}
                     <div className="py-6">
-                      <FormField>
+                      <FormField spacing="loose">
                         <FormField.Label>Protected</FormField.Label>
                         <FormField.Description>
                           Protected images cannot be deleted, preventing accidental removal.
@@ -907,7 +900,7 @@ export function ComputeAdminCreateImagePage() {
                       {isV2 ? (
                         <VStack gap={6}>
                           {/* Upload file block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <Tabs value="file" onChange={() => {}} variant="underline" size="sm">
                                 <TabList>
@@ -931,7 +924,7 @@ export function ComputeAdminCreateImagePage() {
                           </div>
 
                           {/* File URL block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <Tabs value="url" onChange={() => {}} variant="underline" size="sm">
                                 <TabList>

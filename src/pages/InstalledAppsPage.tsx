@@ -21,16 +21,12 @@ import {
 } from '@/design-system';
 import { Link, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconDotsCircleHorizontal,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
-function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
+function IconButton({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <button
       className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
@@ -198,10 +194,14 @@ export default function InstalledAppsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -235,38 +235,16 @@ export default function InstalledAppsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Installed Apps' },
-              ]}
-            />
-          }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
-              <TopBarActionButton
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-              />
-            </>
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Installed apps' }]} />}
+          actions={<ContainerTopBarActions />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
-        <PageHeader title="Installed Apps" />
+        <PageHeader title="Installed apps" />
 
         <ListToolbar
           primaryActions={

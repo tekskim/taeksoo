@@ -1,8 +1,12 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useCallback } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { NotFoundPage } from '@/pages/NotFoundPage';
 import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
 import { ProjectProvider } from '@/contexts/ProjectContext';
+import { ToastProvider, ToastContainer } from '@/design-system';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Entry Page
 import { EntryPage } from '@/pages/EntryPage';
@@ -20,9 +24,6 @@ import { LinkExpiredPage } from '@/pages/LinkExpiredPage';
 import { MailTemplatePreviewPage } from '@/pages/MailTemplatePreviewPage';
 
 // Pages - Compute (Pilot - Phase 2-A)
-import { DNSZonesPage } from '@/pages/DNSZonesPage';
-import { BackupPoliciesPage } from '@/pages/BackupPoliciesPage';
-import { ScheduledTasksPage } from '@/pages/ScheduledTasksPage';
 
 // Pages - Compute
 import { InstanceListPage } from '@/pages/InstanceListPage';
@@ -34,6 +35,7 @@ import { ComputeAdminHomePage } from '@/pages/ComputeAdminHomePage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
 import { ComputeAdminInstanceTemplatesPage } from '@/pages/ComputeAdminInstanceTemplatesPage';
 import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
+import { InstanceTemplateDetailViewPage } from '@/pages/InstanceTemplateDetailViewPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
 import { ComputeAdminInstanceSnapshotsPage } from '@/pages/ComputeAdminInstanceSnapshotsPage';
 import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
@@ -41,13 +43,32 @@ import { ComputeAdminInstanceSnapshotDetailPage } from '@/pages/ComputeAdminInst
 import { ComputeAdminImagesPage } from '@/pages/ComputeAdminImagesPage';
 import { ComputeAdminImageDetailPage } from '@/pages/ComputeAdminImageDetailPage';
 import { ComputeAdminCreateImagePage } from '@/pages/ComputeAdminCreateImagePage';
-import { ImagesPage } from '@/pages/ImagesPage';
 import { ComputeImagesPage } from '@/pages/ComputeImagesPage';
-import { ImageDetailPage } from '@/pages/ImageDetailPage';
 import { ComputeImageDetailPage } from '@/pages/ComputeImageDetailPage';
-import { BucketsPage } from '@/pages/BucketsPage';
-import { BucketDetailPage } from '@/pages/BucketDetailPage';
-import CreateBucketPage from '@/pages/CreateBucketPage';
+
+// Storage - System Admin pages
+import { ImagesPage as SysAdminImagesPage } from '@/pages/storage-system-admin/ImagesPage';
+import { ImageDetailPage as SysAdminImageDetailPage } from '@/pages/storage-system-admin/ImageDetailPage';
+import { BucketsPage as SysAdminBucketsPage } from '@/pages/storage-system-admin/BucketsPage';
+import { BucketDetailPage as SysAdminBucketDetailPage } from '@/pages/storage-system-admin/BucketDetailPage';
+import SysAdminCreateBucketPage from '@/pages/storage-system-admin/CreateBucketPage';
+
+// Storage - Domain Admin pages
+import { ImagesPage as DomainAdminImagesPage } from '@/pages/storage-domain-admin/ImagesPage';
+import { ImageDetailPage as DomainAdminImageDetailPage } from '@/pages/storage-domain-admin/ImageDetailPage';
+import { BucketsPage as DomainAdminBucketsPage } from '@/pages/storage-domain-admin/BucketsPage';
+import { BucketDetailPage as DomainAdminBucketDetailPage } from '@/pages/storage-domain-admin/BucketDetailPage';
+import DomainAdminCreateBucketPage from '@/pages/storage-domain-admin/CreateBucketPage';
+import DomainAdminEditBucketPage from '@/pages/storage-domain-admin/EditBucketPage';
+import { OverallPerformancePage as DomainAdminOverallPerformancePage } from '@/pages/storage-domain-admin/OverallPerformancePage';
+import { PoolsPage as DomainAdminPoolsPage } from '@/pages/storage-domain-admin/PoolsPage';
+import { StoragePoolDetailPage as DomainAdminStoragePoolDetailPage } from '@/pages/storage-domain-admin/StoragePoolDetailPage';
+
+// Storage - Member pages
+import { BucketsPage as MemberBucketsPage } from '@/pages/storage-member/BucketsPage';
+import { BucketDetailPage as MemberBucketDetailPage } from '@/pages/storage-member/BucketDetailPage';
+import MemberCreateBucketPage from '@/pages/storage-member/CreateBucketPage';
+import MemberEditBucketPage from '@/pages/storage-member/EditBucketPage';
 import { FlavorsPage } from '@/pages/FlavorsPage';
 import { FlavorDetailPage } from '@/pages/FlavorDetailPage';
 import { ComputeAdminFlavorsPage } from '@/pages/ComputeAdminFlavorsPage';
@@ -100,6 +121,7 @@ import { ComputeAdminBareMetalNodesPage } from '@/pages/ComputeAdminBareMetalNod
 import { ComputeAdminInstanceDetailPage } from '@/pages/ComputeAdminInstanceDetailPage';
 import { ComputeAdminInstanceListPage } from '@/pages/ComputeAdminInstanceListPage';
 import { ComputeAdminCreateInstancePage } from '@/pages/ComputeAdminCreateInstancePage';
+import { ComputeAdminInstanceTemplateDetailViewPage } from '@/pages/ComputeAdminInstanceTemplateDetailViewPage';
 import { ComputeAdminInstanceTemplateDetailPage } from '@/pages/ComputeAdminInstanceTemplateDetailPage';
 import CreateTemplatePage from '@/pages/CreateTemplatePage';
 import { ComputeAdminCreateTemplatePage } from '@/pages/ComputeAdminCreateTemplatePage';
@@ -159,18 +181,20 @@ import { MCPToolsPage } from '@/pages/MCPToolsPage';
 import { MCPToolDetailPage } from '@/pages/MCPToolDetailPage';
 import { CreateMCPTemplatePage } from '@/pages/CreateMCPTemplatePage';
 import { StorageHomePage } from '@/pages/StorageHomePage';
-import { PoolsPage } from '@/pages/PoolsPage';
-import { StoragePoolDetailPage } from '@/pages/StoragePoolDetailPage';
-import { HostsPage } from '@/pages/HostsPage';
-import HostDetailPage from '@/pages/HostDetailPage';
-import { OSDsPage } from '@/pages/OSDsPage';
-import { OSDDetailPage } from '@/pages/OSDDetailPage';
-import { PhysicalDisksPage } from '@/pages/PhysicalDisksPage';
-import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
-import { FileSystemsPage } from '@/pages/FileSystemsPage';
-import { FileSystemDetailPage } from '@/pages/FileSystemDetailPage';
-import { NFSPage } from '@/pages/NFSPage';
-import { NFSExportDetailPage } from '@/pages/NFSExportDetailPage';
+import { StorageDomainAdminHomePage } from '@/pages/StorageDomainAdminHomePage';
+import { StorageMemberHomePage } from '@/pages/StorageMemberHomePage';
+import { PoolsPage as SysAdminPoolsPage } from '@/pages/storage-system-admin/PoolsPage';
+import { StoragePoolDetailPage as SysAdminStoragePoolDetailPage } from '@/pages/storage-system-admin/StoragePoolDetailPage';
+import { HostsPage as SysAdminHostsPage } from '@/pages/storage-system-admin/HostsPage';
+import SysAdminHostDetailPage from '@/pages/storage-system-admin/HostDetailPage';
+import { OSDsPage as SysAdminOSDsPage } from '@/pages/storage-system-admin/OSDsPage';
+import { OSDDetailPage as SysAdminOSDDetailPage } from '@/pages/storage-system-admin/OSDDetailPage';
+import { PhysicalDisksPage as SysAdminPhysicalDisksPage } from '@/pages/storage-system-admin/PhysicalDisksPage';
+import { OverallPerformancePage as SysAdminOverallPerformancePage } from '@/pages/storage-system-admin/OverallPerformancePage';
+import { FileSystemsPage as SysAdminFileSystemsPage } from '@/pages/storage-system-admin/FileSystemsPage';
+import { FileSystemDetailPage as SysAdminFileSystemDetailPage } from '@/pages/storage-system-admin/FileSystemDetailPage';
+import { NFSPage as SysAdminNFSPage } from '@/pages/storage-system-admin/NFSPage';
+import { NFSExportDetailPage as SysAdminNFSExportDetailPage } from '@/pages/storage-system-admin/NFSExportDetailPage';
 
 // Pages - Container
 import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
@@ -282,6 +306,8 @@ import InstalledAppsPage from '@/pages/InstalledAppsPage';
 import InstalledAppDetailPage from '@/pages/InstalledAppDetailPage';
 import CatalogInstallPage from '@/pages/CatalogInstallPage';
 import InstalledAppEditPage from '@/pages/InstalledAppEditPage';
+import InstalledOperatorsPage from '@/pages/InstalledOperatorsPage';
+import InstalledOperatorDetailPage from '@/pages/InstalledOperatorDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -291,6 +317,8 @@ import CreateUserPage from '@/pages/CreateUserPage';
 import CreateUserGroupPage from '@/pages/CreateUserGroupPage';
 import { IAMUserGroupsPage } from '@/pages/IAMUserGroupsPage';
 import IAMUserGroupDetailPage from '@/pages/IAMUserGroupDetailPage';
+import { IAMServiceAccountsPage } from '@/pages/IAMServiceAccountsPage';
+import { IAMServiceAccountDetailPage } from '@/pages/IAMServiceAccountDetailPage';
 import IAMRolesPage from '@/pages/IAMRolesPage';
 import IAMRoleDetailPage from '@/pages/IAMRoleDetailPage';
 import CreateRolePage from '@/pages/CreateRolePage';
@@ -299,6 +327,7 @@ import IAMPolicyDetailPage from '@/pages/IAMPolicyDetailPage';
 import CreatePolicyPage from '@/pages/CreatePolicyPage';
 import IAMActiveSessionsPage from '@/pages/IAMActiveSessionsPage';
 import IAMDomainsPage from '@/pages/IAMDomainsPage';
+import CreateDomainPage from '@/pages/CreateDomainPage';
 import IAMSystemAdministratorsPage from '@/pages/IAMSystemAdministratorsPage';
 import IAMSystemAdminDetailPage from '@/pages/IAMSystemAdminDetailPage';
 import CreateSystemAdministratorPage from '@/pages/CreateSystemAdministratorPage';
@@ -307,6 +336,8 @@ import IAMMFAPoliciesPage from '@/pages/IAMMFAPoliciesPage';
 import IAMSessionPoliciesPage from '@/pages/IAMSessionPoliciesPage';
 import IAMTokenPoliciesPage from '@/pages/IAMTokenPoliciesPage';
 import IAMLoginPoliciesPage from '@/pages/IAMLoginPoliciesPage';
+import IAMActionCatalogPage from '@/pages/IAMActionCatalogPage';
+import IAMPolicySimulatorPage from '@/pages/IAMPolicySimulatorPage';
 
 // Pages - Cloud Builder
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
@@ -324,6 +355,7 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 import { ProductionComparisonPage } from '@/pages/ProductionComparisonPage';
 import { DesignSystemLayout } from '@/pages/design/DesignSystemLayout';
 import { LabLayout } from '@/pages/lab/LabLayout';
+import { LabHomePage } from '@/pages/lab/LabHomePage';
 import { DesignOverviewPage } from '@/pages/design/DesignOverviewPage';
 import { AllComponentsPage } from '@/pages/design/AllComponentsPage';
 import { TokenArchitecturePage } from '@/pages/design/foundation/TokenArchitecturePage';
@@ -357,8 +389,12 @@ import { RadioPage } from '@/pages/design/components/RadioPage';
 import { TablePage } from '@/pages/design/components/TablePage';
 import { BadgePage } from '@/pages/design/components/BadgePage';
 import { CardPage } from '@/pages/design/components/CardPage';
+import { CatalogCardPage } from '@/pages/design/components/CatalogCardPage';
 import { ChipPage } from '@/pages/design/components/ChipPage';
 import { StatusIndicatorPage } from '@/pages/design/components/StatusIndicatorPage';
+import { ComputeStatusPage } from '@/pages/design/status/ComputeStatusPage';
+import { ContainerStatusPage } from '@/pages/design/status/ContainerStatusPage';
+import { IAMStatusPage } from '@/pages/design/status/IAMStatusPage';
 import { PaginationPage } from '@/pages/design/components/PaginationPage';
 import { FileListCardPage } from '@/pages/design/components/FileListCardPage';
 import { ExpandableChecklistPage } from '@/pages/design/components/ExpandableChecklistPage';
@@ -367,6 +403,7 @@ import { LoadingPage } from '@/pages/design/components/LoadingPage';
 import { ProgressBarComponentPage } from '@/pages/design/components/ProgressBarComponentPage';
 import { SkeletonPage } from '@/pages/design/components/SkeletonPage';
 import { SpinnerPage } from '@/pages/design/components/SpinnerPage';
+import { DesktopTopGNBPage } from '@/pages/design/components/DesktopTopGNBPage';
 import { TopBarPage } from '@/pages/design/components/TopBarPage';
 import { TabBarPage } from '@/pages/design/components/TabBarPage';
 import { TabsPage } from '@/pages/design/components/TabsPage';
@@ -400,6 +437,9 @@ import { WizardPage } from '@/pages/design/patterns/WizardPage';
 import { OpenFormPage } from '@/pages/design/patterns/OpenFormPage';
 import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
 import { DesktopGridPage } from '@/pages/design/patterns/DesktopGridPage';
+import { AppLauncherPage } from '@/pages/design/desktop/AppLauncherPage';
+import { WindowSplitPage } from '@/pages/design/desktop/WindowSplitPage';
+import { AppWindowAnimationPage } from '@/pages/design/desktop/AppWindowAnimationPage';
 import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
 import { ListPagePatternPage } from '@/pages/design/patterns/ListPagePatternPage';
 import { DetailPagePatternPage } from '@/pages/design/patterns/DetailPagePatternPage';
@@ -415,6 +455,9 @@ import { DesignTodoPage } from '@/pages/design/DesignTodoPage';
 import { SharedComponentsPage } from '@/pages/design/SharedComponentsPage';
 import { ChangelogPage } from '@/pages/design/ChangelogPage';
 import { ProjectSelectorPage } from '@/pages/design/components/ProjectSelectorPage';
+import { TCAPage } from '@/pages/design/components/TCAPage';
+import { ContextSelectorPage } from '@/pages/design/components/ContextSelectorPage';
+import { ErrorBoundaryPage } from '@/pages/design/components/ErrorBoundaryPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
 import { UsageChartPage } from '@/pages/design/charts/UsageChartPage';
@@ -474,6 +517,8 @@ import { SystemAdminPage } from '@/pages/ai-platform/SystemAdminPage';
 const defaultTabs = [{ id: 'home', label: 'Home', path: '/compute', closable: true }];
 
 function AppRoutes() {
+  useDocumentTitle();
+
   return (
     <Routes>
       {/* Entry Page */}
@@ -526,7 +571,8 @@ function AppRoutes() {
       <Route path="/compute/instance-templates" element={<InstanceTemplatesPage />} />
       <Route path="/compute/instance-templates/create" element={<CreateTemplatePage />} />
       <Route path="/compute/instance-templates/create-v2" element={<CreateTemplatePage />} />
-      <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
+      <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailViewPage />} />
+      <Route path="/compute/instance-templates/:id/edit" element={<InstanceTemplateDetailPage />} />
       <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
       <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
       <Route path="/compute/images" element={<ComputeImagesPage />} />
@@ -577,9 +623,6 @@ function AppRoutes() {
       <Route path="/compute/firewall-rules/:id" element={<FirewallRuleDetailPage />} />
       <Route path="/compute/firewall/create-rule" element={<CreateFirewallRulePage />} />
       <Route path="/compute/firewall/create-rule-v2" element={<CreateFirewallRulePage />} />
-      <Route path="/compute/dns-zones" element={<DNSZonesPage />} />
-      <Route path="/compute/backup-policies" element={<BackupPoliciesPage />} />
-      <Route path="/compute/scheduled-tasks" element={<ScheduledTasksPage />} />
       <Route path="/compute/topology" element={<TopologyD3Page />} />
       <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
 
@@ -606,6 +649,10 @@ function AppRoutes() {
       />
       <Route
         path="/compute-admin/instance-templates/:id"
+        element={<ComputeAdminInstanceTemplateDetailViewPage />}
+      />
+      <Route
+        path="/compute-admin/instance-templates/:id/edit"
         element={<ComputeAdminInstanceTemplateDetailPage />}
       />
       <Route
@@ -635,6 +682,7 @@ function AppRoutes() {
         path="/compute-admin/bare-metal-nodes/:id"
         element={<ComputeAdminBareMetalDetailPage />}
       />
+      <Route path="/compute-admin/bare-metal/:id" element={<ComputeAdminBareMetalDetailPage />} />
       <Route path="/compute-admin/volumes" element={<ComputeAdminVolumesPage />} />
       <Route path="/compute-admin/volumes/:id" element={<ComputeAdminVolumeDetailPage />} />
       <Route path="/compute-admin/volume-snapshots" element={<ComputeAdminVolumeSnapshotsPage />} />
@@ -718,26 +766,57 @@ function AppRoutes() {
       <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
       <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
 
-      {/* Storage Routes */}
+      {/* Storage - System Admin Routes */}
       <Route path="/storage" element={<StorageHomePage />} />
-      <Route path="/storage/pools" element={<PoolsPage />} />
-      <Route path="/storage/pools/:id" element={<StoragePoolDetailPage />} />
-      <Route path="/storage/hosts" element={<HostsPage />} />
-      <Route path="/storage/hosts/:id" element={<HostDetailPage />} />
-      <Route path="/storage/osds" element={<OSDsPage />} />
-      <Route path="/storage/osds/:id" element={<OSDDetailPage />} />
-      <Route path="/storage/physical-disks" element={<PhysicalDisksPage />} />
-      <Route path="/storage/images" element={<ImagesPage />} />
-      <Route path="/storage/images/:id" element={<ImageDetailPage />} />
-      <Route path="/storage/buckets" element={<BucketsPage />} />
-      <Route path="/storage/buckets/create" element={<CreateBucketPage />} />
-      <Route path="/storage/buckets/create-v2" element={<CreateBucketPage />} />
-      <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
-      <Route path="/storage/performance" element={<OverallPerformancePage />} />
-      <Route path="/storage/file-systems" element={<FileSystemsPage />} />
-      <Route path="/storage/file-systems/:id" element={<FileSystemDetailPage />} />
-      <Route path="/storage/nfs" element={<NFSPage />} />
-      <Route path="/storage/nfs/:id" element={<NFSExportDetailPage />} />
+      <Route path="/storage/pools" element={<SysAdminPoolsPage />} />
+      <Route path="/storage/pools/:id" element={<SysAdminStoragePoolDetailPage />} />
+      <Route path="/storage/hosts" element={<SysAdminHostsPage />} />
+      <Route path="/storage/hosts/:id" element={<SysAdminHostDetailPage />} />
+      <Route path="/storage/osds" element={<SysAdminOSDsPage />} />
+      <Route path="/storage/osds/:id" element={<SysAdminOSDDetailPage />} />
+      <Route path="/storage/physical-disks" element={<SysAdminPhysicalDisksPage />} />
+      <Route path="/storage/images" element={<SysAdminImagesPage />} />
+      <Route path="/storage/images/:id" element={<SysAdminImageDetailPage />} />
+      <Route path="/storage/buckets" element={<SysAdminBucketsPage />} />
+      <Route path="/storage/buckets/create" element={<SysAdminCreateBucketPage />} />
+      <Route path="/storage/buckets/create-v2" element={<SysAdminCreateBucketPage />} />
+      <Route path="/storage/buckets/:id" element={<SysAdminBucketDetailPage />} />
+      <Route path="/storage/performance" element={<SysAdminOverallPerformancePage />} />
+      <Route path="/storage/file-systems" element={<SysAdminFileSystemsPage />} />
+      <Route path="/storage/file-systems/:id" element={<SysAdminFileSystemDetailPage />} />
+      <Route path="/storage/nfs" element={<SysAdminNFSPage />} />
+      <Route path="/storage/nfs/:id" element={<SysAdminNFSExportDetailPage />} />
+
+      {/* Storage - Domain Admin Routes */}
+      <Route path="/storage-domain-admin" element={<StorageDomainAdminHomePage />} />
+      <Route path="/storage-domain-admin/pools" element={<DomainAdminPoolsPage />} />
+      <Route
+        path="/storage-domain-admin/pools/:id"
+        element={<DomainAdminStoragePoolDetailPage />}
+      />
+      <Route path="/storage-domain-admin/images" element={<DomainAdminImagesPage />} />
+      <Route path="/storage-domain-admin/images/:id" element={<DomainAdminImageDetailPage />} />
+      <Route path="/storage-domain-admin/buckets" element={<DomainAdminBucketsPage />} />
+      <Route
+        path="/storage-domain-admin/buckets/create"
+        element={<DomainAdminCreateBucketPage />}
+      />
+      <Route
+        path="/storage-domain-admin/buckets/:id/edit"
+        element={<DomainAdminEditBucketPage />}
+      />
+      <Route path="/storage-domain-admin/buckets/:id" element={<DomainAdminBucketDetailPage />} />
+      <Route
+        path="/storage-domain-admin/performance"
+        element={<DomainAdminOverallPerformancePage />}
+      />
+
+      {/* Storage - Member Routes */}
+      <Route path="/storage-member" element={<StorageMemberHomePage />} />
+      <Route path="/storage-member/buckets" element={<MemberBucketsPage />} />
+      <Route path="/storage-member/buckets/create" element={<MemberCreateBucketPage />} />
+      <Route path="/storage-member/buckets/:id/edit" element={<MemberEditBucketPage />} />
+      <Route path="/storage-member/buckets/:id" element={<MemberBucketDetailPage />} />
 
       {/* Container Routes */}
       <Route path="/container" element={<ContainerHomePage />} />
@@ -959,11 +1038,16 @@ function AppRoutes() {
       <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
       <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
       <Route path="/container/installed-apps/:appId/edit" element={<InstalledAppEditPage />} />
+      <Route path="/container/installed-operators" element={<InstalledOperatorsPage />} />
+      <Route
+        path="/container/installed-operators/:operatorId"
+        element={<InstalledOperatorDetailPage />}
+      />
       <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
       <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
-      <Route path="/container/*" element={<ContainerDashboardPage />} />
+      <Route path="/container/*" element={<NotFoundPage />} />
 
       {/* IAM Routes */}
       <Route path="/iam" element={<IAMHomePage />} />
@@ -975,6 +1059,8 @@ function AppRoutes() {
       <Route path="/iam/user-groups/create" element={<CreateUserGroupPage />} />
       <Route path="/iam/user-groups/create-v2" element={<CreateUserGroupPage />} />
       <Route path="/iam/user-groups/:groupName" element={<IAMUserGroupDetailPage />} />
+      <Route path="/iam/service-accounts" element={<IAMServiceAccountsPage />} />
+      <Route path="/iam/service-accounts/:name" element={<IAMServiceAccountDetailPage />} />
       <Route path="/iam/roles" element={<IAMRolesPage />} />
       <Route path="/iam/roles/create" element={<CreateRolePage />} />
       <Route path="/iam/roles/create-v2" element={<CreateRolePage />} />
@@ -985,6 +1071,8 @@ function AppRoutes() {
       <Route path="/iam/policies/:policyId" element={<IAMPolicyDetailPage />} />
       <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
       <Route path="/iam/domains" element={<IAMDomainsPage />} />
+      <Route path="/iam/domains/create" element={<CreateDomainPage />} />
+      <Route path="/iam/domains/create-v2" element={<CreateDomainPage />} />
       <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
       <Route path="/iam/system-administrators/create" element={<CreateSystemAdministratorPage />} />
       <Route
@@ -997,7 +1085,9 @@ function AppRoutes() {
       <Route path="/iam/session-policies" element={<IAMSessionPoliciesPage />} />
       <Route path="/iam/token-policies" element={<IAMTokenPoliciesPage />} />
       <Route path="/iam/login-policies" element={<IAMLoginPoliciesPage />} />
-      <Route path="/iam/*" element={<IAMHomePage />} />
+      <Route path="/iam/action-catalog" element={<IAMActionCatalogPage />} />
+      <Route path="/iam/policy-simulator" element={<IAMPolicySimulatorPage />} />
+      <Route path="/iam/*" element={<NotFoundPage />} />
 
       {/* AI Platform Routes */}
       <Route path="/ai-platform" element={<AIPlatformPage />} />
@@ -1071,8 +1161,12 @@ function AppRoutes() {
         <Route path="components/table" element={<TablePage />} />
         <Route path="components/badge" element={<BadgePage />} />
         <Route path="components/card" element={<CardPage />} />
+        <Route path="components/catalog-card" element={<CatalogCardPage />} />
         <Route path="components/chip" element={<ChipPage />} />
         <Route path="components/status-indicator" element={<StatusIndicatorPage />} />
+        <Route path="status/compute" element={<ComputeStatusPage />} />
+        <Route path="status/container" element={<ContainerStatusPage />} />
+        <Route path="status/iam" element={<IAMStatusPage />} />
         <Route path="components/pagination" element={<PaginationPage />} />
         <Route path="components/file-list-card" element={<FileListCardPage />} />
         <Route path="components/expandable-checklist" element={<ExpandableChecklistPage />} />
@@ -1084,6 +1178,10 @@ function AppRoutes() {
         <Route path="components/progress-bar" element={<ProgressBarComponentPage />} />
         <Route path="components/skeleton" element={<SkeletonPage />} />
         <Route path="components/spinner" element={<SpinnerPage />} />
+        <Route
+          path="components/desktop-top-gnb"
+          element={<Navigate to="/design/desktop/top-gnb" replace />}
+        />
         <Route path="components/topbar" element={<TopBarPage />} />
         <Route path="components/tabbar" element={<TabBarPage />} />
         <Route path="components/tabs" element={<TabsPage />} />
@@ -1105,6 +1203,9 @@ function AppRoutes() {
         <Route path="components/window-control" element={<WindowControlPage />} />
         <Route path="components/scrollbar" element={<ScrollbarPage />} />
         <Route path="components/project-selector" element={<ProjectSelectorPage />} />
+        <Route path="components/tca" element={<TCAPage />} />
+        <Route path="components/context-selector" element={<ContextSelectorPage />} />
+        <Route path="components/error-boundary" element={<ErrorBoundaryPage />} />
         <Route path="patterns/detail-header" element={<DetailHeaderPage />} />
         <Route path="patterns/editor" element={<EditorPage />} />
         <Route path="patterns/section-card" element={<SectionCardPage />} />
@@ -1126,6 +1227,10 @@ function AppRoutes() {
         <Route path="patterns/empty-states" element={<EmptyStatesPage />} />
         <Route path="changelog" element={<ChangelogPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
+        <Route path="desktop/top-gnb" element={<DesktopTopGNBPage />} />
+        <Route path="desktop/app-launcher" element={<AppLauncherPage />} />
+        <Route path="desktop/window-split" element={<WindowSplitPage />} />
+        <Route path="desktop/app-window-animation" element={<AppWindowAnimationPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
         <Route path="charts/usage-chart" element={<UsageChartPage />} />
@@ -1159,6 +1264,7 @@ function AppRoutes() {
 
       {/* Lab Routes */}
       <Route path="/lab" element={<LabLayout />}>
+        <Route index element={<LabHomePage />} />
         <Route path="figma/guide" element={<FigmaGuidePage />} />
         <Route path="figma/foundation" element={<FigmaFoundationPage />} />
         <Route path="figma/components" element={<FigmaComponentsPage />} />
@@ -1169,6 +1275,7 @@ function AppRoutes() {
         <Route path="sidebar-icons" element={<SidebarIconsPage />} />
         <Route path="topology-popovers" element={<TopologyPopoversPage />} />
         <Route path="create-pages" element={<CreatePagesDirectoryPage />} />
+        <Route path="create-pages-2" element={<DetailPagesDirectoryPage />} />
         <Route path="form-patterns" element={<FormPatternsPage />} />
       </Route>
       <Route path="/lab/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
@@ -1178,7 +1285,7 @@ function AppRoutes() {
 
       {/* Developer Resources */}
       <Route path="/table-style-guide" element={<TableStyleGuidePage />} />
-      <Route path="/detail-pages" element={<DetailPagesDirectoryPage />} />
+
       <Route path="/system-errors" element={<SystemErrorPagesPage />} />
       <Route path="/system-errors/:variant" element={<SystemErrorPagesPage />} />
 
@@ -1192,15 +1299,27 @@ function AppRoutes() {
   );
 }
 
+function AppWithTabs() {
+  const navigate = useNavigate();
+  const handleLastTabClose = useCallback(() => navigate('/'), [navigate]);
+
+  return (
+    <TabProvider defaultTabs={defaultTabs} onLastTabClose={handleLastTabClose}>
+      <AppRoutes />
+    </TabProvider>
+  );
+}
+
 function App() {
   return (
     <DarkModeProvider>
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <ProjectProvider>
           <SidebarProvider>
-            <TabProvider defaultTabs={defaultTabs}>
-              <AppRoutes />
-            </TabProvider>
+            <ToastProvider>
+              <AppWithTabs />
+              <ToastContainer position="bottom-right" />
+            </ToastProvider>
           </SidebarProvider>
         </ProjectProvider>
       </BrowserRouter>

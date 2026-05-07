@@ -33,7 +33,7 @@ export function SemanticColorsPage() {
       preview={
         <div
           data-theme={previewTheme}
-          className={`p-6 rounded-[var(--primitive-radius-lg)] transition-colors bg-[var(--color-surface-default)] ${isDark ? 'dark' : ''}`}
+          className={`p-6 rounded-[var(--radius-lg)] transition-colors bg-[var(--color-surface-default)] ${isDark ? 'dark' : ''}`}
         >
           <VStack gap={8}>
             {/* Action & Text */}
@@ -221,24 +221,24 @@ export function SemanticColorsPage() {
                     {
                       token: 'state.success',
                       cssVar: '--color-state-success',
-                      primitive: 'green500',
-                      darkPrimitive: 'green400',
-                      darkHex: '#4ade80',
+                      primitive: 'emerald500',
+                      darkPrimitive: 'emerald400',
+                      darkHex: '#34d399',
                     },
                     {
                       token: 'state.success-bg',
                       cssVar: '--color-state-success-bg',
-                      primitive: 'green50',
-                      darkPrimitive: 'green900',
-                      darkHex: '#14532d',
+                      primitive: 'emerald50',
+                      darkPrimitive: 'emerald900',
+                      darkHex: '#064e3b',
                       border: true,
                     },
                     {
                       token: 'state.success-text',
                       cssVar: '--color-state-success-text',
-                      primitive: 'green600',
-                      darkPrimitive: 'green200',
-                      darkHex: '#bbf7d0',
+                      primitive: 'emerald600',
+                      darkPrimitive: 'emerald200',
+                      darkHex: '#a7f3d0',
                     },
                   ]}
                 />

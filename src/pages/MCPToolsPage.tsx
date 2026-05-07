@@ -11,6 +11,7 @@ import {
   StatusIndicator,
   ContextMenu,
   Badge,
+  BadgeList,
   PageShell,
   TabBar,
   TopBar,
@@ -18,7 +19,6 @@ import {
   Breadcrumb,
   VStack,
   PageHeader,
-  Popover,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -35,7 +35,6 @@ import {
   IconAlertTriangle,
   IconCircleX,
   IconLock,
-  IconBell,
   IconPalette,
 } from '@tabler/icons-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -46,7 +45,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 interface StatusCardProps {
   label: string;
   count: number;
-  status: 'active' | 'deactive' | 'error';
+  status: 'active' | 'inactive' | 'error';
 }
 
 function StatusCard({ label, count, status }: StatusCardProps) {
@@ -55,25 +54,27 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   if (status === 'active') {
     bgColor = 'bg-[var(--color-state-success-bg)]';
-    iconBg = 'bg-[var(--color-success)]';
+    iconBg = 'bg-[var(--color-state-success)]';
   } else if (status === 'error') {
     bgColor = 'bg-[var(--color-state-danger-bg)]';
-    iconBg = 'bg-[var(--color-danger)]';
+    iconBg = 'bg-[var(--color-state-danger)]';
   }
 
   const getStatusIcon = () => {
     if (status === 'active') {
-      return <IconTarget size={12} stroke={1} className="text-white" />;
-    } else if (status === 'deactive') {
-      return <IconCircleX size={12} stroke={1.5} className="text-white" />;
+      return <IconTarget size={12} stroke={1} className="text-[var(--color-text-on-primary)]" />;
+    } else if (status === 'inactive') {
+      return <IconCircleX size={12} stroke={1.5} className="text-[var(--color-text-on-primary)]" />;
     } else if (status === 'error') {
-      return <IconAlertTriangle size={12} stroke={1} className="text-white" />;
+      return (
+        <IconAlertTriangle size={12} stroke={1} className="text-[var(--color-text-on-primary)]" />
+      );
     }
   };
 
   return (
     <div
-      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
+      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-[var(--radius-lg)] shrink-0`}
     >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
         <p className="text-label-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
@@ -98,7 +99,7 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 interface MCPToolRow {
   id: string;
   favorite: boolean;
-  status: 'active' | 'deactive' | 'error' | 'processing' | 'deleted';
+  status: 'active' | 'inactive' | 'error' | 'processing' | 'deleted';
   title: string;
   mcpServer: {
     thumbnail: string;
@@ -155,7 +156,7 @@ export function MCPToolsPage() {
     'active' | 'error' | 'building' | 'deactivated' | 'pending'
   > = {
     active: 'active',
-    deactive: 'deactivated',
+    inactive: 'deactivated',
     error: 'error',
     processing: 'building',
     deleted: 'pending',
@@ -169,8 +170,8 @@ export function MCPToolsPage() {
     visibility: i === 1 ? 'visible' : i % 2 === 0 ? 'visible' : 'hidden',
     category: 'Communication',
     tools: 99,
-    updatedAt: 'Nov 11, 2025, 2:51 PM',
-    createdAt: 'Nov 11, 2025, 2:51 PM',
+    updatedAt: 'Nov 11, 2026, 2:51 PM',
+    createdAt: 'Nov 11, 2026, 2:51 PM',
   }));
 
   // Initialize template visibility state
@@ -316,12 +317,12 @@ export function MCPToolsPage() {
       },
       category: 'Communication',
       tags: ['Messaging', 'Team', 'Real-time'],
-      createdAt: 'Nov 11, 2025, 2:51 PM',
+      createdAt: 'Nov 11, 2026, 2:51 PM',
     },
     {
       id: '2',
       favorite: false,
-      status: 'deactive',
+      status: 'inactive',
       title: 'Google Cloud Platform',
       mcpServer: {
         thumbnail:
@@ -330,7 +331,7 @@ export function MCPToolsPage() {
       },
       category: 'Cloud',
       tags: ['Infrastructure', 'Storage', 'Compute', 'BigQuery', 'Cloud Functions'],
-      createdAt: 'Nov 10, 2025, 10:30 AM',
+      createdAt: 'Nov 10, 2026, 10:30 AM',
     },
     {
       id: '3',
@@ -343,7 +344,7 @@ export function MCPToolsPage() {
       },
       category: 'Communication',
       tags: ['Video', 'Meeting', 'Collaboration', 'Office 365', 'SharePoint'],
-      createdAt: 'Nov 9, 2025, 4:15 PM',
+      createdAt: 'Nov 9, 2026, 4:15 PM',
     },
     {
       id: '4',
@@ -356,7 +357,7 @@ export function MCPToolsPage() {
       },
       category: 'Development',
       tags: ['CI/CD', 'Version Control', 'Automation', 'Pull Request', 'Workflow'],
-      createdAt: 'Nov 8, 2025, 1:20 PM',
+      createdAt: 'Nov 8, 2026, 1:20 PM',
     },
     {
       id: '5',
@@ -369,7 +370,7 @@ export function MCPToolsPage() {
       },
       category: 'Productivity',
       tags: ['Documentation', 'Notes', 'Wiki', 'Database', 'Templates'],
-      createdAt: 'Nov 7, 2025, 9:45 AM',
+      createdAt: 'Nov 7, 2026, 9:45 AM',
     },
     {
       id: '6',
@@ -382,7 +383,7 @@ export function MCPToolsPage() {
       },
       category: 'Communication',
       tags: ['Chat', 'Community', 'Bot', 'Voice', 'Gaming'],
-      createdAt: 'Nov 6, 2025, 3:30 PM',
+      createdAt: 'Nov 6, 2026, 3:30 PM',
     },
     {
       id: '7',
@@ -395,7 +396,7 @@ export function MCPToolsPage() {
       },
       category: 'Cloud',
       tags: ['S3', 'Lambda', 'EC2', 'RDS', 'CloudWatch'],
-      createdAt: 'Nov 5, 2025, 11:00 AM',
+      createdAt: 'Nov 5, 2026, 11:00 AM',
     },
     {
       id: '8',
@@ -409,7 +410,7 @@ export function MCPToolsPage() {
       },
       category: 'Productivity',
       tags: ['Project', 'Issue Tracking', 'Agile', 'Sprint', 'Backlog'],
-      createdAt: 'Nov 4, 2025, 2:15 PM',
+      createdAt: 'Nov 4, 2026, 2:15 PM',
     },
     {
       id: '9',
@@ -422,7 +423,7 @@ export function MCPToolsPage() {
       },
       category: 'Development',
       tags: ['Issue', 'Sprint', 'Planning', 'Roadmap', 'Milestone'],
-      createdAt: 'Nov 3, 2025, 8:30 AM',
+      createdAt: 'Nov 3, 2026, 8:30 AM',
     },
     {
       id: '10',
@@ -435,7 +436,7 @@ export function MCPToolsPage() {
       },
       category: 'Design',
       tags: ['UI/UX', 'Prototype', 'Collaboration', 'Design system', 'Components'],
-      createdAt: 'Nov 2, 2025, 5:45 PM',
+      createdAt: 'Nov 2, 2026, 5:45 PM',
     },
   ];
 
@@ -573,41 +574,14 @@ export function MCPToolsPage() {
       minWidth: columnMinWidths.labels,
       sortable: false,
       render: (_, row) => (
-        <div className="flex w-full min-w-0 items-center gap-1 overflow-hidden">
-          {row.tags.slice(0, 2).map((tag, idx) => (
-            <Badge key={idx} theme="gray" type="subtle" size="sm">
-              {tag}
-            </Badge>
-          ))}
-          {row.tags.length > 2 && (
-            <span className="ml-auto">
-              <Popover
-                trigger="hover"
-                position="bottom"
-                delay={100}
-                hideDelay={100}
-                content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                      All Tags ({row.tags.length})
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {row.tags.map((tag, i) => (
-                        <Badge key={i} theme="white" size="sm">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                }
-              >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                  +{row.tags.length - 2}
-                </span>
-              </Popover>
-            </span>
-          )}
-        </div>
+        <BadgeList
+          items={row.tags}
+          maxVisible={2}
+          theme="gray"
+          type="subtle"
+          popoverTitle={`All Tags (${row.tags.length})`}
+          overflowAlign="right"
+        />
       ),
     },
     {
@@ -623,6 +597,7 @@ export function MCPToolsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -636,7 +611,10 @@ export function MCPToolsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -665,10 +643,7 @@ export function MCPToolsPage() {
               Official
             </Badge>
           )}
-          <span
-            className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate"
-            title={row.title}
-          >
+          <span className="text-[var(--color-text-default)] font-medium truncate" title={row.title}>
             {row.title}
           </span>
         </div>
@@ -722,6 +697,7 @@ export function MCPToolsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -745,7 +721,10 @@ export function MCPToolsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -783,8 +762,8 @@ export function MCPToolsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'MCP Tools' }]} />}
           actions={
             <>
@@ -793,15 +772,11 @@ export function MCPToolsPage() {
                 onClick={() => navigate('/design-system')}
                 aria-label="Design System"
               />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
-                aria-label="Notifications"
-                badge={true}
-              />
             </>
           }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader title="MCP tools" />
@@ -821,7 +796,7 @@ export function MCPToolsPage() {
         {activeTab === 'my-servers' && (
           <div className="flex gap-2 items-center relative shrink-0 w-full">
             <StatusCard label="Active" count={7} status="active" />
-            <StatusCard label="Deactive" count={1} status="deactive" />
+            <StatusCard label="Inactive" count={1} status="inactive" />
             <StatusCard label="Error" count={1} status="error" />
           </div>
         )}
@@ -930,14 +905,14 @@ export function MCPToolsPage() {
 
         {activeTab === 'catalog' && (
           /* Catalog Grid */
-          <div className="grid grid-cols-3 gap-4 relative shrink-0 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 relative shrink-0 w-full">
             {catalogTools.map((tool) => (
               <div
                 key={tool.id}
                 className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex flex-col gap-3 items-start p-4 rounded-md relative shrink-0"
               >
                 {/* Thumbnail */}
-                <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[6px] border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-surface-subtle)]">
+                <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-md)] border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-surface-subtle)]">
                   <img
                     src={tool.thumbnail}
                     alt={tool.title}
@@ -986,7 +961,7 @@ export function MCPToolsPage() {
                   {tool.tags.slice(0, 10).map((tag, idx) => (
                     <div
                       key={idx}
-                      className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-md text-body-sm leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
+                      className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-[var(--radius-md)] text-body-sm leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
                     >
                       {tag}
                     </div>

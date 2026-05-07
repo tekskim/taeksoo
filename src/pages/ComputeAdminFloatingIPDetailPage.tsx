@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
+  HStack,
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -14,10 +14,15 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  SearchInput,
+  Pagination,
+  Table,
+  InlineMessage,
+  type TableColumn,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconLinkOff } from '@tabler/icons-react';
+import { IconTrash, IconLinkOff, IconDownload, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -51,7 +56,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-001',
     floatingIp: '172.24.4.228',
     status: 'active',
-    createdAt: 'Oct 1, 2025 09:12:43',
+    createdAt: 'Oct 1, 2026 09:12:43',
     description: '-',
     network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Instance',
@@ -64,7 +69,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-002',
     floatingIp: '172.24.4.229',
     status: 'active',
-    createdAt: 'Oct 2, 2025 14:28:17',
+    createdAt: 'Oct 2, 2026 14:28:17',
     description: '-',
     network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Instance',
@@ -77,7 +82,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-003',
     floatingIp: '172.24.4.230',
     status: 'down',
-    createdAt: 'Oct 3, 2025 07:55:22',
+    createdAt: 'Oct 3, 2026 07:55:22',
     description: 'Unassociated',
     network: { name: 'external-net', id: 'net-001' },
     resourceType: null,
@@ -90,7 +95,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-004',
     floatingIp: '172.24.4.231',
     status: 'active',
-    createdAt: 'Sep 28, 2025 16:41:08',
+    createdAt: 'Sep 28, 2026 16:41:08',
     description: '-',
     network: { name: 'external-net-2', id: 'net-002' },
     resourceType: 'Instance',
@@ -103,7 +108,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-005',
     floatingIp: '172.24.4.232',
     status: 'active',
-    createdAt: 'Sep 25, 2025 11:03:55',
+    createdAt: 'Sep 25, 2026 11:03:55',
     description: '-',
     network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Load balancer',
@@ -116,7 +121,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-006',
     floatingIp: '172.24.4.233',
     status: 'error',
-    createdAt: 'Sep 20, 2025 08:19:34',
+    createdAt: 'Sep 20, 2026 08:19:34',
     description: 'Error state',
     network: { name: 'external-net-2', id: 'net-002' },
     resourceType: null,
@@ -129,7 +134,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-007',
     floatingIp: '172.24.4.234',
     status: 'active',
-    createdAt: 'Sep 15, 2025 13:47:21',
+    createdAt: 'Sep 15, 2026 13:47:21',
     description: '-',
     network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Instance',
@@ -142,7 +147,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-008',
     floatingIp: '172.24.4.235',
     status: 'active',
-    createdAt: 'Sep 10, 2025 10:26:49',
+    createdAt: 'Sep 10, 2026 10:26:49',
     description: '-',
     network: { name: 'external-net-3', id: 'net-003' },
     resourceType: 'VPN Gateway',
@@ -155,7 +160,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-009',
     floatingIp: '172.24.4.236',
     status: 'down',
-    createdAt: 'Sep 5, 2025 15:32:06',
+    createdAt: 'Sep 5, 2026 15:32:06',
     description: 'Unassociated',
     network: { name: 'external-net-2', id: 'net-002' },
     resourceType: null,
@@ -168,7 +173,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-010',
     floatingIp: '172.24.4.237',
     status: 'active',
-    createdAt: 'Sep 1, 2025 06:44:18',
+    createdAt: 'Sep 1, 2026 06:44:18',
     description: '-',
     network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Instance',
@@ -204,6 +209,24 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'shutoff' | 'erro
 };
 
 /* ----------------------------------------
+   Ingress ACL Mock Data
+   ---------------------------------------- */
+
+interface AclRule {
+  id: string;
+  priority: number;
+  sourceCidr: string;
+}
+
+const mockAclRules: AclRule[] = Array.from({ length: 115 }, (_, i) => ({
+  id: `acl-${i + 1}`,
+  priority: i + 1,
+  sourceCidr: '0.0.0.0/0',
+}));
+
+const ACL_ITEMS_PER_PAGE = 10;
+
+/* ----------------------------------------
    FloatingIPDetailPage Component
    ---------------------------------------- */
 
@@ -212,12 +235,17 @@ export default function FloatingIPDetailPage() {
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [copiedFqdn, setCopiedFqdn] = useState(false);
+
+  // Ingress ACL state
+  const [aclSearch, setAclSearch] = useState('');
+  const [aclPage, setAclPage] = useState(1);
 
   // Get floating IP data based on URL ID
   const floatingIP = id
@@ -232,9 +260,24 @@ export default function FloatingIPDetailPage() {
   }, [floatingIP.floatingIp, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Floating IPs', href: '/compute-admin/floating-ips' },
     { label: floatingIP.floatingIp },
+  ];
+
+  // Ingress ACL filtering & pagination
+  const filteredAclRules = useMemo(
+    () => mockAclRules.filter((r) => r.sourceCidr.toLowerCase().includes(aclSearch.toLowerCase())),
+    [aclSearch]
+  );
+  const totalAclPages = Math.ceil(filteredAclRules.length / ACL_ITEMS_PER_PAGE);
+  const paginatedAclRules = filteredAclRules.slice(
+    (aclPage - 1) * ACL_ITEMS_PER_PAGE,
+    aclPage * ACL_ITEMS_PER_PAGE
+  );
+
+  const aclColumns: TableColumn<AclRule>[] = [
+    { key: 'priority', label: 'Priority', width: '80px' },
+    { key: 'sourceCidr', label: 'Source CIDR', flex: 1 },
   ];
 
   // Convert tabs to TabBar format
@@ -275,21 +318,14 @@ export default function FloatingIPDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Floating IP Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{floatingIP.floatingIp}</DetailHeader.Title>
@@ -309,7 +345,22 @@ export default function FloatingIPDetailPage() {
             />
             <DetailHeader.InfoCard label="ID" value={floatingIP.id} copyable />
             <DetailHeader.InfoCard label="Tenant" value="tenantA" />
-            <DetailHeader.InfoCard label="Created at" value={floatingIP.createdAt} />
+            <DetailHeader.InfoCard
+              label="Origin"
+              value={
+                <span>
+                  Container (
+                  <Link
+                    to="/container"
+                    className="text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  >
+                    cluster-01
+                  </Link>
+                  )
+                </span>
+              }
+            />
+            <DetailHeader.InfoCard label="Created At" value={floatingIP.createdAt} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
@@ -318,6 +369,7 @@ export default function FloatingIPDetailPage() {
           <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>
+              <Tab value="ingress-acl">Ingress ACL</Tab>
             </TabList>
 
             {/* Details Tab Panel */}
@@ -384,6 +436,83 @@ export default function FloatingIPDetailPage() {
                     />
                   </SectionCard.Content>
                 </SectionCard>
+
+                {/* QoS policy */}
+                <SectionCard>
+                  <SectionCard.Header title="QoS policy" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="QoS policy"
+                      value={
+                        <Link
+                          to="/compute-admin/qos-policies/qos-01"
+                          className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                        >
+                          QoS policy
+                        </Link>
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Ingress ACL Tab Panel */}
+            <TabPanel value="ingress-acl" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <HStack className="w-full justify-between items-center">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Ingress ACL rules
+                  </h3>
+                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                    Manage rules
+                  </Button>
+                </HStack>
+
+                {/* Info Banner */}
+                <InlineMessage variant="info">
+                  Only traffic from configured CIDR rules is allowed. All other traffic is denied by
+                  default.
+                </InlineMessage>
+
+                {/* Action Bar */}
+                <div className="flex items-center gap-1">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={aclSearch}
+                      onChange={(e) => {
+                        setAclSearch(e.target.value);
+                        setAclPage(1);
+                      }}
+                      placeholder="Search source CIDR"
+                      size="sm"
+                    />
+                  </div>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    iconOnly
+                    icon={<IconDownload size={12} />}
+                    aria-label="Download"
+                  />
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={aclPage}
+                  totalPages={totalAclPages}
+                  onPageChange={setAclPage}
+                  totalItems={filteredAclRules.length}
+                />
+
+                {/* Table */}
+                <Table<AclRule>
+                  columns={aclColumns}
+                  data={paginatedAclRules}
+                  rowKey="id"
+                  emptyMessage="No ACL rules found"
+                />
               </VStack>
             </TabPanel>
           </Tabs>

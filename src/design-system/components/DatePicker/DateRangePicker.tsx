@@ -108,7 +108,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             transition-all duration-[var(--duration-fast)]
             ${
               selectingStart
-                ? 'bg-[rgba(37,99,235,0.1)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
+                ? 'bg-[var(--color-action-primary-subtle)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
                 : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
             }
           `}
@@ -134,7 +134,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             transition-all duration-[var(--duration-fast)]
             ${
               !selectingStart
-                ? 'bg-[rgba(37,99,235,0.1)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
+                ? 'bg-[var(--color-action-primary-subtle)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
                 : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
             }
           `}
@@ -160,21 +160,21 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       />
 
       {/* Action Buttons */}
-      <div className="flex justify-end items-center gap-2">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           className="
-            flex-1 min-w-[80px]
-            py-1.5 px-4
-            text-body-md font-medium
-            bg-transparent
-            border border-[var(--color-border-default)]
-            rounded-[var(--radius-md)]
-            text-[var(--color-text-muted)]
-            cursor-pointer
+            flex-1
+            h-[var(--button-height-sm)]
+            text-[length:var(--button-font-size-sm)]
+            leading-[var(--button-line-height-sm)]
+            font-medium
+            text-[var(--color-text-default)]
+            bg-[var(--color-surface-default)]
+            border border-[var(--color-border-strong)]
+            rounded-[var(--button-radius)]
             transition-colors duration-[var(--duration-fast)]
-            hover:border-[var(--color-border-strong)]
-            hover:text-[var(--color-text-default)]
+            hover:bg-[var(--button-secondary-hover-bg)]
           "
           onClick={onCancel}
         >
@@ -183,14 +183,14 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
         <button
           type="button"
           className={`
-            flex-1 min-w-[80px]
-            py-1.5 px-4
-            text-body-md font-medium
-            bg-[var(--color-action-primary)]
-            border border-[var(--color-action-primary)]
-            rounded-[var(--radius-md)]
+            flex-1
+            h-[var(--button-height-sm)]
+            text-[length:var(--button-font-size-sm)]
+            leading-[var(--button-line-height-sm)]
+            font-medium
             text-[var(--color-text-on-primary)]
-            cursor-pointer
+            bg-[var(--color-action-primary)]
+            rounded-[var(--button-radius)]
             transition-colors duration-[var(--duration-fast)]
             hover:bg-[var(--color-action-primary-hover)]
             ${!canApply ? 'opacity-50 cursor-not-allowed' : ''}

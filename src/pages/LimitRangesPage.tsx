@@ -1,40 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
   Table,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
-  Chip,
   ContextMenu,
   PageShell,
   PageHeader,
+  ListToolbar,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
+  ConfirmModal,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -59,36 +57,43 @@ const limitRangesData: LimitRangeRow[] = [
     status: 'OK',
     name: 'limitrangeName',
     namespace: 'namespaceName',
-    createdAt: 'Nov 10, 2025 09:23:41',
+    createdAt: 'Nov 10, 2026 09:23:41',
   },
   {
     id: '2',
     status: 'True',
     name: 'cpu-memory-limits',
     namespace: 'default',
-    createdAt: 'Nov 9, 2025 14:07:22',
+    createdAt: 'Nov 9, 2026 14:07:22',
   },
   {
     id: '3',
     status: 'None',
     name: 'storage-limits',
     namespace: 'kube-system',
-    createdAt: 'Nov 8, 2025 11:45:33',
+    createdAt: 'Nov 8, 2026 11:45:33',
   },
   {
     id: '4',
     status: 'CreateContainerConfigError',
     name: 'container-limits',
     namespace: 'production',
-    createdAt: 'Nov 7, 2025 16:52:08',
+    createdAt: 'Nov 7, 2026 16:52:08',
   },
   {
     id: '5',
     status: 'ImagePullBackOff',
     name: 'pod-limits',
     namespace: 'monitoring',
-    createdAt: 'Nov 6, 2025 08:30:15',
+    createdAt: 'Nov 6, 2026 08:30:15',
   },
+];
+
+const filterFields: FilterField[] = [
+  { id: 'status', label: 'Status', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'namespace', label: 'Namespace', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
 ];
 
 /* ----------------------------------------
@@ -107,17 +112,69 @@ export function LimitRangesPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const [data, setData] = useState(limitRangesData);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
     updateActiveTabLabel('Limit ranges');
   }, [updateActiveTabLabel]);
+
+  const handleFiltersChange = (filters: AppliedFilter[]) => {
+    setAppliedFilters(filters);
+    setCurrentPage(1);
+  };
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters([]);
+    setCurrentPage(1);
+  };
+
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: filterFields.find((ff) => ff.id === f.fieldId)?.label ?? f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const filteredData = useMemo(() => {
+    let result = data;
+    appliedFilters.forEach((filter) => {
+      const val = filter.value.toLowerCase();
+      switch (filter.fieldId) {
+        case 'status':
+          result = result.filter((row) => row.status.toLowerCase().includes(val));
+          break;
+        case 'name':
+          result = result.filter((row) => row.name.toLowerCase().includes(val));
+          break;
+        case 'namespace':
+          result = result.filter((row) => row.namespace.toLowerCase().includes(val));
+          break;
+        case 'createdAt':
+          result = result.filter((row) => row.createdAt.toLowerCase().includes(val));
+          break;
+        default:
+          break;
+      }
+    });
+    return result;
+  }, [data, appliedFilters]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -136,8 +193,8 @@ export function LimitRangesPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(limitRangesData.length / rowsPerPage);
-  const paginatedData = limitRangesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -148,11 +205,6 @@ export function LimitRangesPage() {
   // Create menu items for each row
   const createMenuItems = (row: LimitRangeRow): ContextMenuItem[] => {
     return [
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/limit-ranges/${row.id}/edit`),
-      },
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
@@ -230,10 +282,14 @@ export function LimitRangesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -246,12 +302,10 @@ export function LimitRangesPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
+  const handleBulkDeleteConfirm = () => {
+    setData((prev) => prev.filter((row) => !selectedRows.includes(row.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
   };
 
   // Create menu items
@@ -289,55 +343,20 @@ export function LimitRangesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Limit ranges' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Limit Ranges' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-lr', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-lr', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -359,6 +378,7 @@ export function LimitRangesPage() {
         />
       }
       bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -377,16 +397,17 @@ export function LimitRangesPage() {
           }
         />
 
-        {/* Toolbar */}
-        <div className="flex flex-col gap-2">
-          {/* Action Bar */}
-          <HStack gap={2} align="center" className="w-full min-h-7">
-            {/* Search */}
-            <HStack gap={1} align="center">
-              <SearchInput
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={handleFiltersChange}
                 placeholder="Search limit range by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -396,18 +417,16 @@ export function LimitRangesPage() {
               >
                 <IconDownload size={12} stroke={1.5} />
               </Button>
-            </HStack>
-
-            {/* Divider */}
-            <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-            {/* Actions */}
-            <HStack gap={1} align="center">
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
               <Button
                 variant="muted"
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML:', selectedRows)}
               >
                 Download YAML
               </Button>
@@ -416,49 +435,25 @@ export function LimitRangesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
-            </HStack>
-          </HStack>
-
-          {/* Filter Bar */}
-          {filters.length > 0 && (
-            <HStack
-              gap={2}
-              justify="between"
-              align="center"
-              className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
-            >
-              <HStack gap={1} align="center">
-                {filters.map((filter, index) => (
-                  <Chip
-                    key={index}
-                    label={filter.key}
-                    value={filter.value}
-                    onRemove={() => handleRemoveFilter(index)}
-                  />
-                ))}
-              </HStack>
-              <button
-                onClick={handleClearFilters}
-                className="text-label-sm text-[var(--color-action-primary)] hover:underline"
-              >
-                Clear filters
-              </button>
-            </HStack>
-          )}
-        </div>
+            </ListToolbar.Actions>
+          }
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
+          clearFiltersLabel="Clear filters"
+        />
 
         {/* Pagination */}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={limitRangesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
@@ -469,8 +464,23 @@ export function LimitRangesPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          loading={loading}
+          emptyMessage="No limit ranges found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete selected limit ranges"
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} limit range(s)`}
+      />
     </PageShell>
   );
 }

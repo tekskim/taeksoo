@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   PageShell,
   PageHeader,
@@ -10,7 +10,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ConfirmModal,
@@ -27,10 +26,11 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
-import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingIPToPortDrawer';
+import { AssociateFIPtoPortDrawer } from '@/components/AssociateFIPtoPortDrawer';
 import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
 import { EditPortDrawer } from '@/components/EditPortDrawer';
-import { IconTrash, IconDownload, IconBell, IconCube, IconRouter } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconCube, IconRouter } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -81,7 +81,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.39',
     macAddress: 'fa:16:3e:34:85:32',
     adminState: 'Up',
-    createdAt: 'Dec 15, 2025 12:22:26',
+    createdAt: 'Dec 15, 2026 12:22:26',
     status: 'active',
   },
   {
@@ -101,7 +101,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.40',
     macAddress: 'fa:16:3e:34:85:33',
     adminState: 'Up',
-    createdAt: 'Dec 14, 2025 05:09:09',
+    createdAt: 'Dec 14, 2026 05:09:09',
     status: 'active',
   },
   {
@@ -121,7 +121,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:34',
     adminState: 'Down',
-    createdAt: 'Dec 13, 2025 22:56:52',
+    createdAt: 'Dec 13, 2026 22:56:52',
     status: 'down',
   },
   {
@@ -141,7 +141,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:35',
     adminState: 'Up',
-    createdAt: 'Dec 12, 2025 15:43:35',
+    createdAt: 'Dec 12, 2026 15:43:35',
     status: 'active',
   },
   {
@@ -161,7 +161,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:36',
     adminState: 'Up',
-    createdAt: 'Dec 11, 2025 08:30:18',
+    createdAt: 'Dec 11, 2026 08:30:18',
     status: 'active',
   },
   {
@@ -181,7 +181,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.41',
     macAddress: 'fa:16:3e:34:85:37',
     adminState: 'Up',
-    createdAt: 'Dec 10, 2025 01:17:01',
+    createdAt: 'Dec 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -201,7 +201,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:38',
     adminState: 'Up',
-    createdAt: 'Dec 9, 2025 18:04:44',
+    createdAt: 'Dec 9, 2026 18:04:44',
     status: 'active',
   },
   {
@@ -221,7 +221,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.42',
     macAddress: 'fa:16:3e:34:85:39',
     adminState: 'Up',
-    createdAt: 'Dec 8, 2025 11:51:27',
+    createdAt: 'Dec 8, 2026 11:51:27',
     status: 'building',
   },
   {
@@ -241,7 +241,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:40',
     adminState: 'Down',
-    createdAt: 'Dec 7, 2025 04:38:10',
+    createdAt: 'Dec 7, 2026 04:38:10',
     status: 'error',
   },
   {
@@ -261,7 +261,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.43',
     macAddress: 'fa:16:3e:34:85:41',
     adminState: 'Up',
-    createdAt: 'Dec 6, 2025 21:25:53',
+    createdAt: 'Dec 6, 2026 21:25:53',
     status: 'active',
   },
 ];
@@ -283,16 +283,16 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'description', label: 'Description', type: 'text' },
-  { key: 'tenant', label: 'Tenant', type: 'text' },
-  { key: 'attachedTo', label: 'Attached to', type: 'text' },
-  { key: 'ownedNetwork', label: 'Network', type: 'text' },
-  { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
-  { key: 'floatingIp', label: 'Floating IP', type: 'text' },
-  { key: 'macAddress', label: 'MAC Address', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
+  { id: 'attachedTo', label: 'Attached to', type: 'text' },
+  { id: 'ownedNetwork', label: 'Network', type: 'text' },
+  { id: 'fixedIp', label: 'Fixed IP', type: 'text' },
+  { id: 'floatingIp', label: 'Floating IP', type: 'text' },
+  { id: 'macAddress', label: 'MAC Address', type: 'text' },
   {
-    key: 'adminState',
+    id: 'adminState',
     label: 'Admin state',
     type: 'select',
     options: [
@@ -301,7 +301,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -314,6 +314,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminPortsPage() {
+  const navigate = useNavigate();
   const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -335,6 +336,13 @@ export function ComputeAdminPortsPage() {
   const [manageSecurityGroupsOpen, setManageSecurityGroupsOpen] = useState(false);
   const [editPortOpen, setEditPortOpen] = useState(false);
   const [selectedPortForDrawer, setSelectedPortForDrawer] = useState<Port | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleAttachInstance = (port: Port) => {
@@ -391,7 +399,7 @@ export function ComputeAdminPortsPage() {
 
     return ports.filter((p) => {
       return appliedFilters.every((filter) => {
-        const value = String(p[filter.field as keyof Port] || '').toLowerCase();
+        const value = String(p[filter.fieldId as keyof Port] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -429,7 +437,12 @@ export function ComputeAdminPortsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -448,7 +461,12 @@ export function ComputeAdminPortsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -472,8 +490,11 @@ export function ComputeAdminPortsPage() {
               >
                 {row.attachedTo}
               </Link>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID: {row.attachedToId}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedToId}>
+                  ID : {row.attachedToId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedToId} />
               </span>
             </div>
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
@@ -505,8 +526,11 @@ export function ComputeAdminPortsPage() {
           >
             {row.ownedNetwork}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID: {row.ownedNetworkId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetworkId}>
+              ID : {row.ownedNetworkId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetworkId} />
           </span>
         </div>
       ),
@@ -522,8 +546,11 @@ export function ComputeAdminPortsPage() {
             {row.securityGroups}
           </span>
           {row.securityGroupId && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID: {row.securityGroupId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.securityGroupId}>
+                ID : {row.securityGroupId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.securityGroupId} />
             </span>
           )}
         </div>
@@ -577,6 +604,7 @@ export function ComputeAdminPortsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button
@@ -638,22 +666,12 @@ export function ComputeAdminPortsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Ports' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Ports' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader title="Ports" />
@@ -711,6 +729,7 @@ export function ComputeAdminPortsPage() {
           selectable
           selectedKeys={selectedPorts}
           onSelectionChange={setSelectedPorts}
+          loading={loading}
         />
       </VStack>
 
@@ -722,7 +741,7 @@ export function ComputeAdminPortsPage() {
           setPortToDelete(null);
         }}
         title="Delete port"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected ports is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
@@ -748,7 +767,7 @@ export function ComputeAdminPortsPage() {
         portName={selectedPortForDrawer?.name || ''}
       />
 
-      <AssociateFloatingIPToPortDrawer
+      <AssociateFIPtoPortDrawer
         isOpen={associateFIPOpen}
         onClose={() => setAssociateFIPOpen(false)}
         port={{ name: selectedPortForDrawer?.name || '' }}

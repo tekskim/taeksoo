@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 
 const ContainerHomePage = lazy(() => import('@/pages/ContainerHomePage'));
 const ContainerDashboardPage = lazy(() => import('@/pages/ContainerDashboardPage'));
@@ -122,6 +122,8 @@ const InstalledAppsPage = lazy(() => import('@/pages/InstalledAppsPage'));
 const InstalledAppDetailPage = lazy(() => import('@/pages/InstalledAppDetailPage'));
 const CatalogInstallPage = lazy(() => import('@/pages/CatalogInstallPage'));
 const InstalledAppEditPage = lazy(() => import('@/pages/InstalledAppEditPage'));
+const InstalledOperatorsPage = lazy(() => import('@/pages/InstalledOperatorsPage'));
+const InstalledOperatorDetailPage = lazy(() => import('@/pages/InstalledOperatorDetailPage'));
 
 export const containerRoutes = (
   <>
@@ -329,10 +331,15 @@ export const containerRoutes = (
     <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
     <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
     <Route path="/container/installed-apps/:appId/edit" element={<InstalledAppEditPage />} />
+    <Route path="/container/installed-operators" element={<InstalledOperatorsPage />} />
+    <Route
+      path="/container/installed-operators/:operatorId"
+      element={<InstalledOperatorDetailPage />}
+    />
     <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
     <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
-    <Route path="/container/*" element={<ContainerDashboardPage />} />
+    <Route path="/container/*" element={<Navigate to="/container" replace />} />
   </>
 );

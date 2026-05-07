@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -19,29 +19,28 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
   Popover,
   InfoBox,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
-  IconPencilCog,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+
+const PAGE_SIZE = 10;
 
 /* ----------------------------------------
    Types
@@ -66,6 +65,7 @@ interface PodRow {
   id: string;
   status: string;
   name: string;
+  namespace: string;
   image: string;
   ready: string;
   restarts: number;
@@ -119,7 +119,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
     status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     podRestarts: 3,
     ready: { current: 1, desired: 1 },
     upToDate: 1,
@@ -141,7 +141,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
     status: 'Active',
     namespace: 'ingress-nginx',
     image: 'nginx-ingress-controller:v1.9.4',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
     podRestarts: 0,
     ready: { current: 3, desired: 3 },
     upToDate: 3,
@@ -161,12 +161,13 @@ const mockPodsData: PodRow[] = [
     id: '1',
     status: 'Running',
     name: 'podName-77',
+    namespace: 'default',
     image: 'nginx:1.27',
     ready: '1/1',
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     containers: [
       'container-0',
       'container-1',
@@ -180,36 +181,39 @@ const mockPodsData: PodRow[] = [
     id: '2',
     status: 'Succeeded',
     name: 'podName-78',
+    namespace: 'default',
     image: 'nginx:1.27',
     ready: '1/1',
     restarts: 0,
     ip: '10.11.0.12',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     containers: ['container-0'],
   },
   {
     id: '3',
     status: 'Processing',
     name: 'podName-79',
+    namespace: 'default',
     image: 'nginx:1.27',
     ready: '0/1',
     restarts: 2,
     ip: '10.11.0.13',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     containers: ['container-0'],
   },
   {
     id: '4',
     status: 'Failed',
     name: 'podName-80',
+    namespace: 'default',
     image: 'nginx:1.27',
     ready: '0/1',
     restarts: 3,
     ip: '10.11.0.14',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     containers: ['container-0'],
   },
 ];
@@ -222,7 +226,7 @@ const mockServicesData: ServiceRow[] = [
     target: '10.43.136.100:443 → webhook-server/TCP',
     selector: 'cluster.x-k8s.io/provider=cluster-api',
     type: 'Cluster IP',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '2',
@@ -231,7 +235,7 @@ const mockServicesData: ServiceRow[] = [
     target: '10.43.136.101:80 → http/TCP',
     selector: 'app=cart-manager',
     type: 'Cluster IP',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
 ];
 
@@ -242,8 +246,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'MinimumReplicasAvailable',
     message: 'Deployment has minimum availability.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
   {
     id: '2',
@@ -251,8 +255,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet "cart-manager-77" has successfully progressed.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
 ];
 
@@ -287,6 +291,30 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
+  const filteredPods = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return pods;
+    return pods.filter((row) => {
+      const haystack = [row.name, row.namespace, row.status, row.ip, row.node]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [pods, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredPods.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedPods = filteredPods.slice(start, start + PAGE_SIZE);
+
   const createPodMenuItems = (row: PodRow): ContextMenuItem[] => {
     return [
       {
@@ -298,11 +326,6 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
         id: 'view-logs',
         label: 'View logs',
         onClick: () => onViewLogs(row.name),
-      },
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/pods/${row.id}/edit`),
       },
       {
         id: 'edit-yaml',
@@ -349,10 +372,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-          title={value}
-        >
+        <span className="text-[var(--color-text-default)] font-medium truncate" title={value}>
           {value}
         </span>
       ),
@@ -392,10 +412,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-          title={value}
-        >
+        <span className="text-[var(--color-text-default)] truncate" title={value}>
           {value}
         </span>
       ),
@@ -413,9 +430,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -452,15 +473,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
         </HStack>
       </HStack>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
-        totalItems={pods.length}
+        totalItems={filteredPods.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={pods}
+        data={paginatedPods}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -483,13 +504,17 @@ function ServicesTab({ services }: ServicesTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
+  const totalPages = Math.max(1, Math.ceil(services.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedServices = services.slice(start, start + PAGE_SIZE);
+
   const createServiceMenuItems = (row: ServiceRow): ContextMenuItem[] => {
     return [
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/services/${row.id}/edit`),
-      },
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
@@ -535,13 +560,13 @@ function ServicesTab({ services }: ServicesTabProps) {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: ServiceRow) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <Link
+          to={`/container/services/${row.name}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate"
           title={value}
-          onClick={() => navigate(`/container/services/${row.id}`)}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -577,9 +602,13 @@ function ServicesTab({ services }: ServicesTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: ServiceRow) => (
         <ContextMenu items={createServiceMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-muted)]"
@@ -595,15 +624,15 @@ function ServicesTab({ services }: ServicesTabProps) {
     <VStack gap={3}>
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Services</h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={services.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={services}
+        data={paginatedServices}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -624,6 +653,15 @@ interface ConditionsTabProps {
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
+  const totalPages = Math.max(1, Math.ceil(conditions.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedConditions = conditions.slice(start, start + PAGE_SIZE);
+
   const columns: TableColumn<ConditionRow>[] = [
     {
       key: 'type',
@@ -634,9 +672,9 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
+      label: 'Status',
       flex: 1,
-      minWidth: columnMinWidths.size,
+      minWidth: columnMinWidths.phase,
       sortable: true,
     },
     {
@@ -666,12 +704,12 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
         Conditions
       </h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={conditions.length}
       />
-      <Table columns={columns} data={conditions} rowKey="id" />
+      <Table columns={columns} data={paginatedConditions} rowKey="id" />
     </VStack>
   );
 }
@@ -688,6 +726,30 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const filteredEvents = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return events;
+    return events.filter((row) => {
+      const haystack = [row.name, row.type, row.reason, row.message, row.source, row.subobject]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [events, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredEvents.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedEvents = filteredEvents.slice(start, start + PAGE_SIZE);
 
   const createEventMenuItems = (row: EventRow): ContextMenuItem[] => {
     return [
@@ -758,9 +820,13 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -799,15 +865,15 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
         </HStack>
       </HStack>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
-        totalItems={events.length}
+        totalItems={filteredEvents.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={events}
+        data={paginatedEvents}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -830,7 +896,7 @@ export function DeploymentDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get deployment data
-  const deployment = mockDeploymentData[deploymentId || ''] || mockDeploymentData['1'];
+  const deployment = deploymentId ? mockDeploymentData[deploymentId] : null;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -838,8 +904,10 @@ export function DeploymentDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Deployment: ${deployment.name}`);
-  }, [updateActiveTabLabel, deployment.name]);
+    if (deployment) {
+      updateActiveTabLabel(`Deployment: ${deployment.name}`);
+    }
+  }, [updateActiveTabLabel, deployment]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -852,6 +920,61 @@ export function DeploymentDetailPage() {
 
   // Shell Panel state
   const shellPanel = useShellPanel();
+
+  if (!deployment) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Deployments', href: '/container/deployments' },
+                  { label: deploymentId ?? 'Deployment' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Deployment not found"
+          description={`The deployment "${deploymentId ?? ''}" does not exist.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/container/deployments')}
+            >
+              Back to Deployments
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {
@@ -902,11 +1025,6 @@ export function DeploymentDetailPage() {
       onClick: () => console.log('Rollback'),
     },
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/deployments/${deployment.id}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () => navigate(`/container/deployments/${deployment.name}/edit-yaml`),
@@ -945,46 +1063,17 @@ export function DeploymentDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Deployments', href: '/container/deployments' },
                 { label: deployment.name },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton
-                value={`${deployment.namespace}/${deployment.name}`}
-                size="sm"
-                iconOnly
-                tooltip="Copy deployment reference"
-              />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -1074,7 +1163,7 @@ export function DeploymentDetailPage() {
 
           {/* Labels & Annotations Cards */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(deployment.labels).length})
@@ -1099,14 +1188,14 @@ export function DeploymentDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All labels ({Object.keys(deployment.labels).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(deployment.labels).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>
@@ -1121,7 +1210,7 @@ export function DeploymentDetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(deployment.annotations).length})
@@ -1146,14 +1235,14 @@ export function DeploymentDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All annotations ({Object.keys(deployment.annotations).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(deployment.annotations).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>

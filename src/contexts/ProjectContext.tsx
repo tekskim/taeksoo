@@ -50,6 +50,8 @@ interface ProjectContextType {
   selectedProjectId: string;
   selectedProject: Project | undefined;
   setSelectedProjectId: (projectId: string) => void;
+  primaryProjectId: string;
+  setPrimaryProject: (projectId: string) => void;
 }
 
 /* ----------------------------------------
@@ -68,9 +70,14 @@ interface ProjectProviderProps {
 
 export function ProjectProvider({ children }: ProjectProviderProps) {
   const [selectedProjectId, setSelectedProjectIdState] = useState<string>(mockProjects[0].id);
+  const [primaryProjectId, setPrimaryProjectIdState] = useState<string>(mockProjects[0].id);
 
   const setSelectedProjectId = useCallback((projectId: string) => {
     setSelectedProjectIdState(projectId);
+  }, []);
+
+  const setPrimaryProject = useCallback((projectId: string) => {
+    setPrimaryProjectIdState((prev) => (prev === projectId ? '' : projectId));
   }, []);
 
   const selectedProject = mockProjects.find((p) => p.id === selectedProjectId);
@@ -80,6 +87,8 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     selectedProjectId,
     selectedProject,
     setSelectedProjectId,
+    primaryProjectId,
+    setPrimaryProject,
   };
 
   return <ProjectContext.Provider value={value}>{children}</ProjectContext.Provider>;

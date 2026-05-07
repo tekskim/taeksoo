@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -6,7 +6,7 @@ import {
   Breadcrumb,
   Table,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ListToolbar,
   ContextMenu,
@@ -14,26 +14,25 @@ import {
   PageHeader,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
+  ConfirmModal,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -64,7 +63,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: '1',
     maxUnavailable: 'N/A',
     allowedDisruption: '0',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '2',
@@ -74,7 +73,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: '2',
     maxUnavailable: 'N/A',
     allowedDisruption: '1',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
   },
   {
     id: '3',
@@ -84,7 +83,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: 'N/A',
     maxUnavailable: '1',
     allowedDisruption: '2',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
   },
   {
     id: '4',
@@ -94,7 +93,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: '50%',
     maxUnavailable: 'N/A',
     allowedDisruption: '0',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
   },
   {
     id: '5',
@@ -104,8 +103,18 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: 'N/A',
     maxUnavailable: '25%',
     allowedDisruption: '1',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
   },
+];
+
+const filterFields: FilterField[] = [
+  { id: 'status', label: 'Status', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'namespace', label: 'Namespace', type: 'text' },
+  { id: 'minAvailable', label: 'Min available', type: 'text' },
+  { id: 'maxUnavailable', label: 'Max unavailable', type: 'text' },
+  { id: 'allowedDisruption', label: 'Allowed disruption', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
 ];
 
 /* ----------------------------------------
@@ -124,11 +133,18 @@ export function PodDisruptionBudgetsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const [data, setData] = useState(podDisruptionBudgetsData);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -151,10 +167,64 @@ export function PodDisruptionBudgetsPage() {
     navigate(`/container/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
+  const handleFiltersChange = (filters: AppliedFilter[]) => {
+    setAppliedFilters(filters);
+    setCurrentPage(1);
+  };
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters([]);
+    setCurrentPage(1);
+  };
+
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: filterFields.find((ff) => ff.id === f.fieldId)?.label ?? f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const filteredData = useMemo(() => {
+    let result = data;
+    appliedFilters.forEach((filter) => {
+      const val = filter.value.toLowerCase();
+      switch (filter.fieldId) {
+        case 'status':
+          result = result.filter((pdb) => pdb.status.toLowerCase().includes(val));
+          break;
+        case 'name':
+          result = result.filter((pdb) => pdb.name.toLowerCase().includes(val));
+          break;
+        case 'namespace':
+          result = result.filter((pdb) => pdb.namespace.toLowerCase().includes(val));
+          break;
+        case 'minAvailable':
+          result = result.filter((pdb) => pdb.minAvailable.toLowerCase().includes(val));
+          break;
+        case 'maxUnavailable':
+          result = result.filter((pdb) => pdb.maxUnavailable.toLowerCase().includes(val));
+          break;
+        case 'allowedDisruption':
+          result = result.filter((pdb) => pdb.allowedDisruption.toLowerCase().includes(val));
+          break;
+        case 'createdAt':
+          result = result.filter((pdb) => pdb.createdAt.toLowerCase().includes(val));
+          break;
+        default:
+          break;
+      }
+    });
+    return result;
+  }, [data, appliedFilters]);
+
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(podDisruptionBudgetsData.length / rowsPerPage);
-  const paginatedData = podDisruptionBudgetsData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -210,13 +280,14 @@ export function PodDisruptionBudgetsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <Link
+          to={`/container/pdb/${row.id}`}
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0 block"
           title={value}
-          onClick={() => navigate(`/container/pdb/${row.id}`)}
+          onClick={(e) => e.stopPropagation()}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -283,10 +354,14 @@ export function PodDisruptionBudgetsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -299,12 +374,10 @@ export function PodDisruptionBudgetsPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
+  const handleBulkDeleteConfirm = () => {
+    setData((prev) => prev.filter((row) => !selectedRows.includes(row.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
   };
 
   // Create menu items
@@ -342,58 +415,20 @@ export function PodDisruptionBudgetsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Pod disruption budgets' },
-              ]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Pod Disruption Budgets' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-pdb', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-pdb', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -415,6 +450,7 @@ export function PodDisruptionBudgetsPage() {
         />
       }
       bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -437,10 +473,14 @@ export function PodDisruptionBudgetsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={handleFiltersChange}
                 placeholder="Search pod disruption budgets by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -457,6 +497,7 @@ export function PodDisruptionBudgetsPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML:', selectedRows)}
               >
                 Download YAML
               </Button>
@@ -465,18 +506,15 @@ export function PodDisruptionBudgetsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
-          filters={filters.map((filter, index) => ({
-            id: String(index),
-            field: filter.key,
-            value: filter.value,
-          }))}
-          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-          onFiltersClear={handleClearFilters}
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
         />
 
         {/* Pagination */}
@@ -484,10 +522,8 @@ export function PodDisruptionBudgetsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={podDisruptionBudgetsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
@@ -498,8 +534,23 @@ export function PodDisruptionBudgetsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          loading={loading}
+          emptyMessage="No pod disruption budgets found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete selected pod disruption budgets"
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} pod disruption budget(s)`}
+      />
     </PageShell>
   );
 }

@@ -5,13 +5,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.4);
+  background: color-mix(in srgb, var(--color-slate-900) 40%, transparent);
   z-index: 1000;
   animation: dataViewDrawer-overlayFadeIn 0.2s ease;
 }
 
 .dark .dataViewDrawer-overlay {
-  background: rgba(0, 0, 0, 0.6);
+  background: color-mix(in srgb, var(--color-slate-900) 60%, transparent);
 }
 
 @keyframes dataViewDrawer-overlayFadeIn {
@@ -32,7 +32,7 @@
   width: 700px;
   max-width: 90vw;
   background: var(--color-surface-default);
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-xl);
   z-index: 1001;
   display: flex;
   flex-direction: column;
@@ -40,7 +40,7 @@
 }
 
 .dark .dataViewDrawer-drawer {
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-xl), var(--shadow-md);
 }
 
 @keyframes dataViewDrawer-slideIn {
@@ -69,9 +69,9 @@
 
 .dataViewDrawer-title {
   font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 24px;
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-24);
   color: var(--color-text-default);
   margin: 0;
 }
@@ -110,9 +110,9 @@
   height: 40px;
   padding: 0 12px;
   font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 16px;
+  font-size: var(--table-header-font-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--table-line-height);
   color: var(--color-text-default);
   text-align: left;
   white-space: nowrap;
@@ -166,9 +166,9 @@
   height: 40px;
   padding: 8px 12px;
   font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 16px;
+  font-size: var(--table-font-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--table-line-height);
   color: var(--color-text-default);
   white-space: nowrap;
   background: var(--color-surface-default);
@@ -215,9 +215,9 @@
   border: 1px solid var(--color-border-strong);
   border-radius: 6px;
   font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
+  font-size: var(--font-size-12);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-16);
   color: var(--color-text-default);
   cursor: pointer;
   transition: all 0.15s ease;

@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { Button, HStack } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -64,6 +65,7 @@ function isValidVariant(v: string | undefined): v is ErrorVariant {
 }
 
 function FullPageError({ variant }: { variant: ErrorVariant }) {
+  const navigate = useNavigate();
   const config = ERROR_CONFIGS[variant];
 
   return (
@@ -71,17 +73,15 @@ function FullPageError({ variant }: { variant: ErrorVariant }) {
       <div className="text-center px-6 -mt-20">
         {config.statusCode && (
           <div className="mb-4">
-            <span className="text-[64px] font-black text-[var(--color-text-disabled)] leading-[80px] h-[80px] inline-block">
+            <span className="text-heading-h1 font-black text-[var(--color-text-disabled)] inline-block">
               {config.statusCode}
             </span>
           </div>
         )}
 
         <div className="mb-8">
-          <h1 className="text-[18px] font-semibold leading-[26px] text-[var(--color-text-default)] mb-2">
-            {config.title}
-          </h1>
-          <p className="text-[var(--color-text-muted)] text-[13px] leading-[20px] max-w-md mx-auto">
+          <h1 className="text-heading-h4 text-[var(--color-text-default)] mb-2">{config.title}</h1>
+          <p className="text-label-lg text-[var(--color-text-muted)] max-w-md mx-auto">
             {config.description}
           </p>
         </div>
@@ -92,7 +92,7 @@ function FullPageError({ variant }: { variant: ErrorVariant }) {
               variant="secondary"
               size="sm"
               leftIcon={<IconArrowLeft size={12} />}
-              onClick={() => window.history.back()}
+              onClick={() => navigate(-1)}
             >
               Go Back
             </Button>
@@ -102,7 +102,7 @@ function FullPageError({ variant }: { variant: ErrorVariant }) {
               variant="primary"
               size="sm"
               leftIcon={<IconHome size={12} />}
-              onClick={() => (window.location.href = '/')}
+              onClick={() => navigate('/')}
             >
               Go to Homepage
             </Button>
@@ -120,7 +120,11 @@ export function SystemErrorPagesPage() {
   const activeVariant: ErrorVariant = isValidVariant(urlVariant) ? urlVariant : '404';
 
   return (
-    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)] flex flex-col">
+    <OverlayScrollbarsComponent
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+      defer={false}
+      className="fixed inset-0 bg-[var(--color-surface-subtle)] flex flex-col"
+    >
       {/* Header */}
       <header className="sticky top-0 left-0 right-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
         <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
@@ -164,7 +168,7 @@ export function SystemErrorPagesPage() {
       <div className="flex-1">
         <FullPageError variant={activeVariant} />
       </div>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

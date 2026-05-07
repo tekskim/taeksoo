@@ -11,10 +11,10 @@ import {
   Button,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tooltip,
   PageShell,
+  PageHeader,
 } from '@/design-system';
 import {
   IconX,
@@ -22,30 +22,46 @@ import {
   IconExternalLink,
   IconRefresh,
   IconSearch,
-  IconBell,
   IconCheck,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Theme Configuration
+   D3 requires runtime hex strings. Values mirror TDS chart / semantic tokens:
+   - #3b82f6 blue500 — near --chart-color-8 (blue400 #60a5fa)
+   - #93c5fd blue300 — lighter active edge
+   - #6366f1 indigo500 — near --chart-color-4 (violet400 family)
+   - #a5b4fc indigo300
+   - #14b8a6 teal500 — near --chart-color-9 (teal400 #2dd4bf)
+   - #5eead4 teal300
+   - #eab308 yellow500 — near --chart-color-3 (amber400 #fbbf24)
+   - #fde047 yellow300
+   - #10b981 emerald500 — --color-state-success
+   - #94a3b8 slate400 — --chart-color-neutral
+   - #ef4444 red500 — --color-state-danger
+   - #f0fdfa teal-50 / #f1f5f9 slate-50 — --color-surface-subtle / --color-border-subtle family
+   - #fee2e2 red-100 — --color-state-danger-bg family
+   - #eef2ff indigo-50
+   - #cbd5e1 slate300 — --color-border-strong
+   - #fca5a5 red300 — danger border family
    ---------------------------------------- */
 const COLORS = {
-  externalNetwork: { active: '#3b82f6', inactive: '#93c5fd', error: '#ef4444' }, // Blue
-  router: { active: '#6366f1', inactive: '#a5b4fc', error: '#ef4444' }, // Indigo
-  subnet: { active: '#14b8a6', inactive: '#5eead4', error: '#ef4444' }, // Teal
-  loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' }, // Yellow
-  status: { active: '#22c55e', inactive: '#94a3b8', error: '#ef4444' },
-  vpcPanel: { active: '#f0fdfa', inactive: '#f1f5f9', error: '#fee2e2', split: '#eef2ff' }, // Teal-50 / Indigo-50
-  vpcBorder: { active: '#5eead4', inactive: '#cbd5e1', error: '#fca5a5', split: '#a5b4fc' }, // Teal-300 / Indigo-300
+  externalNetwork: { active: '#3b82f6', inactive: '#93c5fd', error: '#ef4444' },
+  router: { active: '#6366f1', inactive: '#a5b4fc', error: '#ef4444' },
+  subnet: { active: '#14b8a6', inactive: '#5eead4', error: '#ef4444' },
+  loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' },
+  status: { active: '#10b981', inactive: '#94a3b8', error: '#ef4444' },
+  vpcPanel: { active: '#f0fdfa', inactive: '#f1f5f9', error: '#fee2e2', split: '#eef2ff' },
+  vpcBorder: { active: '#5eead4', inactive: '#cbd5e1', error: '#fca5a5', split: '#a5b4fc' },
 };
 
-// Edge colors based on source node type
+// Edge colors based on source node type (same token mapping as COLORS node strokes above)
 const EDGE_COLORS = {
-  externalNetwork: { active: '#3b82f6', inactive: '#93c5fd', error: '#ef4444' }, // Blue
-  router: { active: '#6366f1', inactive: '#a5b4fc', error: '#ef4444' }, // Indigo
-  subnet: { active: '#14b8a6', inactive: '#5eead4', error: '#ef4444' }, // Teal
-  loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' }, // Yellow
+  externalNetwork: { active: '#3b82f6', inactive: '#93c5fd', error: '#ef4444' },
+  router: { active: '#6366f1', inactive: '#a5b4fc', error: '#ef4444' },
+  subnet: { active: '#14b8a6', inactive: '#5eead4', error: '#ef4444' },
+  loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' },
 };
 
 type NodeType = 'externalNetwork' | 'router' | 'subnet' | 'loadBalancer';
@@ -156,21 +172,21 @@ const externalNetworks: ExternalNetwork[] = [
     name: 'extnet-apne2-public',
     status: 'active',
     description: 'Seoul Region Public Internet',
-    createdAt: '2024-01-15T09:00:00Z',
+    createdAt: '2026-01-15T09:00:00Z',
   },
   {
     id: 'extnet-usw2-pub-001',
     name: 'extnet-usw2-public',
     status: 'active',
     description: 'Oregon Region Public Internet',
-    createdAt: '2024-02-20T14:30:00Z',
+    createdAt: '2026-02-20T14:30:00Z',
   },
   {
     id: 'extnet-dc-priv-001',
     name: 'extnet-dc-private',
     status: 'active',
     description: 'Datacenter Direct Connect',
-    createdAt: '2024-03-10T11:00:00Z',
+    createdAt: '2026-03-10T11:00:00Z',
   },
   // Case 1: 아무것도 연결되지 않은 External Network
   {
@@ -178,7 +194,7 @@ const externalNetworks: ExternalNetwork[] = [
     name: 'extnet-isolated',
     status: 'active',
     description: 'Isolated External Network (no connections)',
-    createdAt: '2024-06-01T08:00:00Z',
+    createdAt: '2026-06-01T08:00:00Z',
   },
   // Case 2: External Network + Router만 연결 (VPC 없음)
   {
@@ -186,7 +202,7 @@ const externalNetworks: ExternalNetwork[] = [
     name: 'extnet-router-only',
     status: 'active',
     description: 'External Network with Router only',
-    createdAt: '2024-04-05T16:00:00Z',
+    createdAt: '2026-04-05T16:00:00Z',
   },
 ];
 
@@ -198,21 +214,21 @@ const routers: Router[] = [
     name: 'prod-apne2-edge',
     status: 'active',
     externalNetworkId: 'extnet-apne2-pub-001',
-    createdAt: '2024-01-20T10:00:00Z',
+    createdAt: '2026-01-20T10:00:00Z',
   },
   {
     id: 'rtr-nprd-apne2-edge-001',
     name: 'k8s-clusterapi-cluster-tkdev-oks-tkdev-oks-003',
     status: 'active',
     externalNetworkId: 'extnet-apne2-pub-001',
-    createdAt: '2024-01-25T14:00:00Z',
+    createdAt: '2026-01-25T14:00:00Z',
   },
   {
     id: 'rtr-mgmt-apne2-int-001',
     name: 'mgmt-apne2-int',
     status: 'active',
     externalNetworkId: 'extnet-dc-priv-001',
-    createdAt: '2024-03-15T09:00:00Z',
+    createdAt: '2026-03-15T09:00:00Z',
   },
   // US Region (usw2)
   {
@@ -220,14 +236,14 @@ const routers: Router[] = [
     name: 'prod-usw2-edge',
     status: 'active',
     externalNetworkId: 'extnet-usw2-pub-001',
-    createdAt: '2024-02-25T11:00:00Z',
+    createdAt: '2026-02-25T11:00:00Z',
   },
   {
     id: 'rtr-dr-usw2-edge-001',
     name: 'dr-usw2-edge',
     status: 'inactive',
     externalNetworkId: 'extnet-usw2-pub-001',
-    createdAt: '2024-03-01T16:00:00Z',
+    createdAt: '2026-03-01T16:00:00Z',
   },
   // Shared Infrastructure
   {
@@ -235,7 +251,7 @@ const routers: Router[] = [
     name: 'shrd-dc-int',
     status: 'active',
     externalNetworkId: 'extnet-dc-priv-001',
-    createdAt: '2024-03-20T13:00:00Z',
+    createdAt: '2026-03-20T13:00:00Z',
   },
   // Case 2: External Network + Router만 연결
   {
@@ -243,7 +259,7 @@ const routers: Router[] = [
     name: 'router-only',
     status: 'active',
     externalNetworkId: 'extnet-router-only-001',
-    createdAt: '2024-04-10T10:00:00Z',
+    createdAt: '2026-04-10T10:00:00Z',
   },
   // Case 3: 아무것도 연결되지 않은 Router (standalone)
   {
@@ -251,14 +267,14 @@ const routers: Router[] = [
     name: 'isolated-router',
     status: 'active',
     // externalNetworkId 없음
-    createdAt: '2024-05-01T08:00:00Z',
+    createdAt: '2026-05-01T08:00:00Z',
   },
   // Case 4: Router + VPC + LB만 (External Network 없음)
   {
     id: 'rtr-internal-only-001',
     name: 'internal-only-router',
     status: 'active',
-    createdAt: '2024-05-15T12:00:00Z',
+    createdAt: '2026-05-15T12:00:00Z',
     // externalNetworkId 없음
   },
 ];
@@ -298,74 +314,74 @@ const networks: Network[] = [
     id: 'vpc-prod-apne2-web-001',
     name: 'prod-apne2-web',
     status: 'active',
-    createdAt: '2024-01-22T09:00:00Z',
+    createdAt: '2026-01-22T09:00:00Z',
   },
   {
     id: 'vpc-prod-apne2-app-001',
     name: 'prod-apne2-app',
     status: 'active',
-    createdAt: '2024-01-23T10:00:00Z',
+    createdAt: '2026-01-23T10:00:00Z',
   },
   {
     id: 'vpc-prod-apne2-data-001',
     name: 'prod-apne2-data',
     status: 'active',
-    createdAt: '2024-01-24T11:00:00Z',
+    createdAt: '2026-01-24T11:00:00Z',
   },
   // Production - US (usw2)
   {
     id: 'vpc-prod-usw2-web-001',
     name: 'prod-usw2-web',
     status: 'active',
-    createdAt: '2024-02-26T09:00:00Z',
+    createdAt: '2026-02-26T09:00:00Z',
   },
   {
     id: 'vpc-prod-usw2-app-001',
     name: 'prod-usw2-app',
     status: 'active',
-    createdAt: '2024-02-27T10:00:00Z',
+    createdAt: '2026-02-27T10:00:00Z',
   },
   // Non-Production
   {
     id: 'vpc-stg-apne2-001',
     name: 'stg-apne2',
     status: 'active',
-    createdAt: '2024-02-01T08:00:00Z',
+    createdAt: '2026-02-01T08:00:00Z',
   },
   {
     id: 'vpc-dev-apne2-001',
     name: 'dev-apne2',
     status: 'active',
-    createdAt: '2024-02-05T09:00:00Z',
+    createdAt: '2026-02-05T09:00:00Z',
   },
-  { id: 'vpc-qa-apne2-001', name: 'qa-apne2', status: 'active', createdAt: '2024-02-10T10:00:00Z' },
+  { id: 'vpc-qa-apne2-001', name: 'qa-apne2', status: 'active', createdAt: '2026-02-10T10:00:00Z' },
   // Infrastructure
-  { id: 'vpc-shrd-dc-001', name: 'shrd-dc', status: 'active', createdAt: '2024-03-18T08:00:00Z' },
+  { id: 'vpc-shrd-dc-001', name: 'shrd-dc', status: 'active', createdAt: '2026-03-18T08:00:00Z' },
   {
     id: 'vpc-mgmt-apne2-001',
     name: 'mgmt-apne2',
     status: 'active',
-    createdAt: '2024-03-16T09:00:00Z',
+    createdAt: '2026-03-16T09:00:00Z',
   },
   {
     id: 'vpc-dmz-apne2-001',
     name: 'dmz-apne2',
     status: 'active',
-    createdAt: '2024-03-17T10:00:00Z',
+    createdAt: '2026-03-17T10:00:00Z',
   },
   // Case 4: Router + VPC + LB만 (ExtNet 없음)
   {
     id: 'vpc-internal-only-001',
     name: 'internal-only-vpc',
     status: 'active',
-    createdAt: '2024-05-16T08:00:00Z',
+    createdAt: '2026-05-16T08:00:00Z',
   },
   // Case 5: VPC + LB만 (Router 없음)
   {
     id: 'vpc-standalone-001',
     name: 'standalone-vpc',
     status: 'active',
-    createdAt: '2024-06-01T09:00:00Z',
+    createdAt: '2026-06-01T09:00:00Z',
   },
 ];
 
@@ -989,7 +1005,7 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.100',
-    createdAt: '2024-03-18T09:00:00Z',
+    createdAt: '2026-03-18T09:00:00Z',
   },
   {
     id: 'alb-mgmt-apne2-grafana-001',
@@ -997,7 +1013,7 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.101',
-    createdAt: '2024-03-18T10:00:00Z',
+    createdAt: '2026-03-18T10:00:00Z',
   },
   {
     id: 'alb-mgmt-apne2-alertmgr-001',
@@ -1005,7 +1021,7 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.102',
-    createdAt: '2024-03-18T11:00:00Z',
+    createdAt: '2026-03-18T11:00:00Z',
   },
   {
     id: 'alb-mgmt-apne2-loki-001',
@@ -1013,7 +1029,7 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.103',
-    createdAt: '2024-03-18T12:00:00Z',
+    createdAt: '2026-03-18T12:00:00Z',
   },
   {
     id: 'alb-mgmt-apne2-jenkins-001',
@@ -1190,17 +1206,12 @@ function LinkText({ value, href }: { value: string; href?: string }) {
   );
 }
 
-// Helper component for view detail link
+// Helper — "View detail" is display-only (no destination in mock topology)
 function ViewDetailLink({ count }: { count: number }) {
   return (
     <span>
       <span className="font-medium">{count}</span>
-      <Link
-        to="#"
-        className="text-[var(--color-action-primary)] hover:underline ml-2 text-label-sm"
-      >
-        View detail
-      </Link>
+      <span className="text-[var(--color-text-subtle)] ml-2 text-label-sm">View detail</span>
     </span>
   );
 }
@@ -1220,9 +1231,7 @@ function ListenersSection({
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
         <span className="text-[var(--color-text-muted)]">Listeners ({listeners.length})</span>
-        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
-          View detail
-        </Link>
+        <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
       </div>
     </div>
   );
@@ -1234,9 +1243,7 @@ function RoutersSection({ routers }: { routers: RouterItem[] }) {
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
         <span className="text-[var(--color-text-muted)]">Routers ({routers.length})</span>
-        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
-          View detail
-        </Link>
+        <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
       </div>
     </div>
   );
@@ -1248,9 +1255,7 @@ function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
         <span className="text-[var(--color-text-muted)]">Subnets ({subnets.length})</span>
-        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
-          View detail
-        </Link>
+        <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
       </div>
     </div>
   );
@@ -1404,12 +1409,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                     Subnets ({data.vpcSubnetGroups.reduce((acc, g) => acc + g.subnets.length, 0)}{' '}
                     total)
                   </span>
-                  <Link
-                    to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-                  >
-                    View detail
-                  </Link>
+                  <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
                 </div>
               </div>
             )}
@@ -1457,12 +1457,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                   <span className="text-[var(--color-text-muted)]">
                     Routers ({data.routerList.length})
                   </span>
-                  <Link
-                    to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-                  >
-                    View detail
-                  </Link>
+                  <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
                 </div>
               </div>
             )}
@@ -1474,12 +1469,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                   <span className="text-[var(--color-text-muted)]">
                     Instances ({data.instanceList.length})
                   </span>
-                  <Link
-                    to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-                  >
-                    View detail
-                  </Link>
+                  <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
                 </div>
               </div>
             )}
@@ -1491,12 +1481,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                   <span className="text-[var(--color-text-muted)]">
                     Load balancers ({data.loadBalancerList.length})
                   </span>
-                  <Link
-                    to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-                  >
-                    View detail
-                  </Link>
+                  <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
                 </div>
               </div>
             )}
@@ -1588,6 +1573,7 @@ interface TooltipState {
    Main Component
    ---------------------------------------- */
 export function TopologyD3Page() {
+  const navigate = useNavigate();
   const svgRef = useRef<SVGSVGElement>(null);
   const minimapRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -3050,32 +3036,20 @@ export function TopologyD3Page() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Topology' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Topology' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6 flex flex-col"
     >
       <VStack gap={3} className="flex-1 min-h-0">
-        {/* Page Header */}
-        <div className="flex justify-between items-center h-8 w-full">
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Topology</h1>
-        </div>
+        <PageHeader title="Topology" />
 
         {/* Filters */}
-        <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-slate-200 p-3">
+        <div className="flex items-center gap-3 flex-wrap bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] p-3">
           {/* Search */}
-          <div className="w-[240px]">
+          <div className="w-[280px]">
             <SearchInput
               placeholder="Search subnets, VPCs, CIDRs..."
               value={searchTerm}
@@ -3142,10 +3116,10 @@ export function TopologyD3Page() {
 
         {/* Empty state when no results */}
         {filteredData.subnets.length === 0 ? (
-          <div className="flex-1 flex items-center justify-center bg-white border border-slate-200 rounded-lg">
+          <div className="flex-1 flex items-center justify-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
             <div className="text-center py-12">
-              <IconSearch size={48} className="mx-auto mb-3 text-slate-300" />
-              <p className="text-slate-500">No resources match your filters</p>
+              <IconSearch size={48} className="mx-auto mb-3 text-[var(--color-border-strong)]" />
+              <p className="text-[var(--color-text-subtle)]">No resources match your filters</p>
               <button onClick={resetFilters} className="mt-2 text-teal-600 hover:underline text-sm">
                 Clear filters
               </button>
@@ -3154,13 +3128,13 @@ export function TopologyD3Page() {
         ) : (
           <div
             ref={containerRef}
-            className="flex-1 bg-white border border-[var(--color-border-default)] rounded-lg overflow-hidden relative"
+            className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden relative"
             style={{ minHeight: '500px' }}
           >
             <svg ref={svgRef} className="w-full h-full" />
 
             {/* Stats & Zoom Controls */}
-            <div className="absolute top-4 left-4 flex items-center gap-3 bg-white/90 px-3 py-2 rounded-lg border border-slate-200">
+            <div className="absolute top-4 left-4 flex items-center gap-3 bg-[color-mix(in_srgb,var(--color-surface-default)_90%,transparent)] px-3 py-2 rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 {stats.filteredSubnets === stats.totalSubnets
                   ? `${stats.totalSubnets} subnets`
@@ -3196,35 +3170,35 @@ export function TopologyD3Page() {
             </div>
 
             {/* Legend */}
-            <div className="absolute bottom-4 left-4 flex items-center gap-6 bg-white/90 px-4 py-2 rounded-lg border border-slate-200">
-              <span className="text-sm font-medium text-slate-600">Legend:</span>
+            <div className="absolute bottom-4 left-4 flex items-center gap-6 bg-[color-mix(in_srgb,var(--color-surface-default)_90%,transparent)] px-4 py-2 rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+              <span className="text-sm font-medium text-[var(--color-text-muted)]">Legend:</span>
               <div className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: COLORS.externalNetwork.active }}
                 />
-                <span className="text-xs text-slate-600">External network</span>
+                <span className="text-xs text-[var(--color-text-muted)]">External network</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: COLORS.router.active }}
                 />
-                <span className="text-xs text-slate-600">Router</span>
+                <span className="text-xs text-[var(--color-text-muted)]">Router</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: COLORS.subnet.active }}
                 />
-                <span className="text-xs text-slate-600">Subnet</span>
+                <span className="text-xs text-[var(--color-text-muted)]">Subnet</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: COLORS.loadBalancer.active }}
                 />
-                <span className="text-xs text-slate-600">Load balancer</span>
+                <span className="text-xs text-[var(--color-text-muted)]">Load balancer</span>
               </div>
             </div>
           </div>
@@ -3234,22 +3208,24 @@ export function TopologyD3Page() {
       {/* Tooltip */}
       {tooltip.visible && (
         <div
-          className="fixed z-50 bg-slate-800 text-white px-3 py-2 rounded-lg text-xs shadow-lg pointer-events-none"
+          className="fixed z-50 bg-[var(--color-text-default)] text-[var(--color-text-on-primary)] px-3 py-2 rounded-[var(--radius-lg)] text-xs shadow-lg pointer-events-none"
           style={{ left: tooltip.x, top: tooltip.y }}
         >
           <div className="font-semibold">{tooltip.content.name}</div>
-          <div className="text-slate-300">{tooltip.content.type}</div>
+          <div className="text-[color-mix(in_srgb,var(--color-text-on-primary)_75%,transparent)]">
+            {tooltip.content.type}
+          </div>
           <div className="flex items-center gap-1 mt-1">
             <span
               className={`w-1.5 h-1.5 rounded-full ${
                 tooltip.content.status === 'active'
                   ? 'bg-green-400'
                   : tooltip.content.status === 'inactive'
-                    ? 'bg-slate-400'
+                    ? 'bg-[var(--color-text-disabled)]'
                     : 'bg-red-400'
               }`}
             />
-            <span className="text-slate-300">
+            <span className="text-[color-mix(in_srgb,var(--color-text-on-primary)_75%,transparent)]">
               {tooltip.content.status === 'active'
                 ? '활성'
                 : tooltip.content.status === 'inactive'
@@ -3258,7 +3234,9 @@ export function TopologyD3Page() {
             </span>
           </div>
           {tooltip.content.extra && (
-            <div className="text-slate-400 mt-1 font-mono">{tooltip.content.extra}</div>
+            <div className="text-[color-mix(in_srgb,var(--color-text-on-primary)_60%,transparent)] mt-1 font-mono">
+              {tooltip.content.extra}
+            </div>
           )}
         </div>
       )}

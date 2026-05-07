@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { Drawer, Button, SearchInput, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconCirclePlus, IconCircleMinus, IconGripVertical } from '@tabler/icons-react';
@@ -239,9 +240,13 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
                 className="w-full"
               />
 
-              <div
-                className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 p-px"
-                style={{ scrollbarGutter: 'stable' }}
+              <OverlayScrollbarsComponent
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+                className="flex flex-col gap-1 flex-1 min-h-0 p-px"
               >
                 {filteredAvailable.map((rule) => (
                   <div
@@ -289,7 +294,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
                     </span>
                   </div>
                 )}
-              </div>
+              </OverlayScrollbarsComponent>
             </div>
 
             {/* Right Column - Selected Rules */}
@@ -303,10 +308,14 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
                 className="w-full"
               />
 
-              <div
-                className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 p-px"
-                style={{ scrollbarGutter: 'stable' }}
-                onDragOver={(e) => e.preventDefault()}
+              <OverlayScrollbarsComponent
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+                className="flex flex-col gap-1 flex-1 min-h-0 p-px"
+                onDragOver={(e: React.DragEvent) => e.preventDefault()}
                 onDrop={handleDrop}
               >
                 {filteredSelected.map((rule, index) => {
@@ -386,7 +395,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
                     </span>
                   </div>
                 )}
-              </div>
+              </OverlayScrollbarsComponent>
             </div>
           </div>
         </VStack>

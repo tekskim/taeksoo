@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   VStack,
@@ -20,17 +20,10 @@ import {
   Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
+import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconDotsCircleHorizontal,
-  IconSettings,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconSettings } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -57,10 +50,10 @@ interface ClusterRow {
 const clustersData: ClusterRow[] = [
   {
     id: '1',
-    name: 'ClusterName',
+    name: 'prod-cluster-01',
     status: 'Provisioned',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -69,10 +62,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '2',
-    name: 'ClusterName',
+    name: 'staging-cluster',
     status: 'Failed',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -81,10 +74,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '3',
-    name: 'ClusterName',
+    name: 'dev-cluster-kr',
     status: 'Provisioning',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -93,10 +86,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '4',
-    name: 'ClusterName',
+    name: 'monitoring-cluster',
     status: 'Processing',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -105,10 +98,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '5',
-    name: 'ClusterName',
+    name: 'data-pipeline-cluster',
     status: 'Deleting',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -117,10 +110,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '6',
-    name: 'ClusterName',
+    name: 'analytics-cluster',
     status: 'Unknown',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -135,6 +128,14 @@ const clustersData: ClusterRow[] = [
 
 export function ContainerHomePage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const pageSize = 10;
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return clustersData;
+    const term = searchTerm.toLowerCase();
+    return clustersData.filter((c) => c.name.toLowerCase().includes(term));
+  }, [searchTerm]);
+  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -143,6 +144,8 @@ export function ContainerHomePage() {
   useEffect(() => {
     updateActiveTabLabel('Home');
   }, [updateActiveTabLabel]);
+
+  const shellPanel = useShellPanel();
 
   // Home page only shows icon sidebar (40px), menu sidebar is hidden
   const sidebarWidth = 48;
@@ -178,9 +181,8 @@ export function ContainerHomePage() {
       render: (value: string) => (
         <div className="min-w-0">
           <span
-            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+            className="text-body-md text-[var(--color-text-default)] font-medium truncate block"
             title={value}
-            onClick={() => navigate('/container/dashboard')}
           >
             {value}
           </span>
@@ -215,7 +217,7 @@ export function ContainerHomePage() {
           variant="outline"
           size="sm"
           leftIcon={<IconSettings size={12} />}
-          onClick={() => navigate(`/container/clusters/${row.id}`)}
+          onClick={() => navigate('/container/dashboard')}
         >
           Manage
         </Button>
@@ -226,20 +228,55 @@ export function ContainerHomePage() {
       label: 'Action',
       width: fixedColumns.actionWide,
       align: 'center',
+      sticky: 'right',
       sortable: false,
       render: (_value: string, row: ClusterRow) => (
         <ContextMenu
           items={[
-            { id: 'kubectl-shell', label: 'Kubectl Shell', onClick: () => {} },
-            { id: 'download-kubeconfig', label: 'Download KubeConfig', onClick: () => {} },
-            { id: 'copy-kubeconfig', label: 'Copy KubeConfig to Clipboard', onClick: () => {} },
-            { id: 'view-yaml', label: 'View YAML', onClick: () => {} },
-            { id: 'download-yaml', label: 'Download YAML', onClick: () => {} },
-            { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+            {
+              id: 'manage',
+              label: 'Manage',
+              onClick: () => navigate('/container/dashboard'),
+            },
+            {
+              id: 'kubectl-shell',
+              label: 'Kubectl Shell',
+              onClick: () => console.log('Kubectl Shell', row.id),
+            },
+            {
+              id: 'download-kubeconfig',
+              label: 'Download KubeConfig',
+              onClick: () => console.log('Download KubeConfig', row.id),
+            },
+            {
+              id: 'copy-kubeconfig',
+              label: 'Copy KubeConfig to Clipboard',
+              onClick: () => console.log('Copy KubeConfig to Clipboard', row.id),
+            },
+            {
+              id: 'view-yaml',
+              label: 'View YAML',
+              onClick: () => console.log('View YAML', row.id),
+            },
+            {
+              id: 'download-yaml',
+              label: 'Download YAML',
+              onClick: () => console.log('Download YAML', row.id),
+            },
+            {
+              id: 'delete',
+              label: 'Delete',
+              status: 'danger',
+              onClick: () => console.log('Delete cluster', row.id),
+            },
           ]}
           trigger="click"
         >
-          <button className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors">
+          <button
+            type="button"
+            aria-label="Row actions"
+            className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-muted)]"
@@ -270,36 +307,39 @@ export function ContainerHomePage() {
           showSidebarToggle={false}
           breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-home', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={true}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
       contentClassName="pt-6 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Welcome Header */}
         <SectionCard className="bg-[var(--color-surface-subtle)]">
           <SectionCard.Content>
@@ -326,16 +366,21 @@ export function ContainerHomePage() {
                   placeholder="Search clusters by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
                 />
                 <Pagination
                   currentPage={currentPage}
-                  totalPages={Math.ceil(clustersData.length / 10)}
+                  totalPages={Math.ceil(filteredData.length / pageSize)}
                   onPageChange={setCurrentPage}
-                  totalItems={clustersData.length}
+                  totalItems={filteredData.length}
                 />
                 <Table<ClusterRow>
                   columns={columns}
-                  data={clustersData}
+                  data={paginatedData}
                   rowKey="id"
                   rowHeight="40px"
                 />
@@ -355,7 +400,11 @@ export function ContainerHomePage() {
                   workloads.
                 </p>
                 <div className="w-full flex justify-end">
-                  <Button variant="primary" size="md">
+                  <Button
+                    variant="primary"
+                    size="md"
+                    onClick={() => navigate('/container/cluster-management/create')}
+                  >
                     Create cluster
                   </Button>
                 </div>

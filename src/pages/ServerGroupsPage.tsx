@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -26,8 +25,10 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconPlus } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
+import { CreateServerGroupDrawer } from '@/components/CreateServerGroupDrawer';
 
 /* ----------------------------------------
    Types
@@ -147,9 +148,9 @@ const mockServerGroups: ServerGroup[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'policy',
+    id: 'policy',
     label: 'Policy',
     type: 'select',
     options: [
@@ -159,19 +160,24 @@ const filterFields: FilterField[] = [
       { value: 'Soft-affinity', label: 'Soft-affinity' },
     ],
   },
-  { key: 'instances', label: 'Instances', type: 'text' },
+  { id: 'instances', label: 'Instances', type: 'text' },
 ];
 
 export function ServerGroupsPage() {
+  const navigate = useNavigate();
   const [selectedServerGroups, setSelectedServerGroups] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [serverGroups, setServerGroups] = useState(mockServerGroups);
 
+  // Create drawer state
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [serverGroupToDelete, setServerGroupToDelete] = useState<ServerGroup | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -186,8 +192,24 @@ export function ServerGroupsPage() {
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Server Groups');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -223,7 +245,7 @@ export function ServerGroupsPage() {
 
     return serverGroups.filter((sg) => {
       return appliedFilters.every((filter) => {
-        const value = String(sg[filter.field as keyof ServerGroup] || '').toLowerCase();
+        const value = String(sg[filter.fieldId as keyof ServerGroup] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -251,7 +273,7 @@ export function ServerGroupsPage() {
     }
   };
 
-  const handleBulkDelete = () => {
+  const performBulkDelete = () => {
     setServerGroups((prev) => prev.filter((sg) => !selectedServerGroups.includes(sg.id)));
     setSelectedServerGroups([]);
   };
@@ -272,7 +294,12 @@ export function ServerGroupsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)] truncate">ID:{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -291,8 +318,11 @@ export function ServerGroupsPage() {
               <span className="text-body-md text-[var(--color-text-default)] truncate">
                 {first.name}
               </span>
-              <span className="text-body-sm text-[var(--color-text-muted)] truncate">
-                ID:{first.id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={first.id}>
+                  ID : {first.id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={first.id} />
               </span>
             </div>
             {extra > 0 && (
@@ -303,11 +333,11 @@ export function ServerGroupsPage() {
                   delay={100}
                   hideDelay={100}
                   content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="p-3 min-w-[160px] max-w-[320px]">
                       <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                         All Instances ({row.instances.length})
                       </div>
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                         {row.instances.map((inst, i) => (
                           <Badge key={i} theme="white" size="sm">
                             {inst.name}
@@ -338,6 +368,7 @@ export function ServerGroupsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -356,7 +387,10 @@ export function ServerGroupsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -402,29 +436,24 @@ export function ServerGroupsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Server groups' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Server Groups' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
         <PageHeader
           title="Server groups"
           actions={
-            <Button variant="primary" size="md">
+            <Button
+              variant="primary"
+              size="md"
+              leftIcon={<IconPlus size={12} />}
+              onClick={() => setIsCreateDrawerOpen(true)}
+            >
               Create Server Group
             </Button>
           }
@@ -446,6 +475,7 @@ export function ServerGroupsPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -456,7 +486,7 @@ export function ServerGroupsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedServerGroups.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -484,6 +514,7 @@ export function ServerGroupsPage() {
           selectable
           selectedKeys={selectedServerGroups}
           onSelectionChange={setSelectedServerGroups}
+          loading={loading}
         />
       </VStack>
 
@@ -493,12 +524,26 @@ export function ServerGroupsPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete server group"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected server groups is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         infoLabel="Server group name"
         infoValue={serverGroupToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={() => {
+          performBulkDelete();
+          setIsBulkDeleteOpen(false);
+        }}
+        title="Delete selected server groups"
+        description="Removing the selected server groups is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
       />
 
       {/* View Preferences Drawer */}
@@ -510,6 +555,12 @@ export function ServerGroupsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Create Server Group Drawer */}
+      <CreateServerGroupDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
       />
     </PageShell>
   );

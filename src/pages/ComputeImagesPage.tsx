@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -8,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -31,8 +30,9 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeFromImageDrawer } from '@/components/CreateVolumeFromImageDrawer';
 import { EditImageDrawer } from '@/components/EditImageDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -70,7 +70,7 @@ const mockImages: Image[] = [
     visibility: 'Private',
     access: 'Private',
     description: 'Base Ubuntu 22.04 image',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     status: 'active',
   },
   {
@@ -83,7 +83,7 @@ const mockImages: Image[] = [
     visibility: 'Private',
     access: 'Private',
     description: 'Minimal CentOS 8 installation',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -96,7 +96,7 @@ const mockImages: Image[] = [
     visibility: 'Shared',
     access: 'Shared',
     description: 'Rocky Linux 9 server image',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     status: 'active',
   },
   {
@@ -109,7 +109,7 @@ const mockImages: Image[] = [
     visibility: 'Public',
     access: 'Public',
     description: 'Standard Debian 12 image',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     status: 'active',
   },
   {
@@ -122,7 +122,7 @@ const mockImages: Image[] = [
     visibility: 'Private',
     access: 'Private',
     description: 'Ubuntu 20.04 LTS server',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
     status: 'active',
   },
   {
@@ -135,7 +135,7 @@ const mockImages: Image[] = [
     visibility: 'Shared',
     access: 'Shared',
     description: 'Windows Server 2022 Datacenter',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     status: 'pending',
   },
   {
@@ -148,7 +148,7 @@ const mockImages: Image[] = [
     visibility: 'Public',
     access: 'Public',
     description: 'Lightweight Alpine Linux',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     status: 'active',
   },
   {
@@ -161,7 +161,7 @@ const mockImages: Image[] = [
     visibility: 'Community',
     access: 'Private',
     description: 'Fedora 39 workstation image',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     status: 'active',
   },
   {
@@ -174,7 +174,7 @@ const mockImages: Image[] = [
     visibility: 'Shared',
     access: 'Shared',
     description: 'Oracle Linux 8 for databases',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     status: 'deactivated',
   },
   {
@@ -187,7 +187,7 @@ const mockImages: Image[] = [
     visibility: 'Private',
     access: 'Private',
     description: 'Ubuntu with GPU drivers',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     status: 'active',
   },
 ];
@@ -198,10 +198,10 @@ const mockImages: Image[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'os', label: 'OS', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'os', label: 'OS', type: 'text' },
   {
-    key: 'diskFormat',
+    id: 'diskFormat',
     label: 'Disk Format',
     type: 'select',
     options: [
@@ -210,7 +210,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'access',
+    id: 'access',
     label: 'Access',
     type: 'select',
     options: [
@@ -220,7 +220,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -246,6 +246,7 @@ export function ComputeImagesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [imageToDelete, setImageToDelete] = useState<Image | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -255,6 +256,13 @@ export function ComputeImagesPage() {
   const [createVolumeOpen, setCreateVolumeOpen] = useState(false);
   const [editImageOpen, setEditImageOpen] = useState(false);
   const [selectedImageForDrawer, setSelectedImageForDrawer] = useState<Image | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Helper to parse size string to number
   const parseSizeToNumber = (size: string): number => {
@@ -288,7 +296,16 @@ export function ComputeImagesPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Images');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   // Handle window close - navigate to root
   const handleWindowClose = useCallback(() => {
@@ -343,7 +360,7 @@ export function ComputeImagesPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((img) => {
         return appliedFilters.every((filter) => {
-          const value = String(img[filter.field as keyof Image] || '').toLowerCase();
+          const value = String(img[filter.fieldId as keyof Image] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });
@@ -361,7 +378,7 @@ export function ComputeImagesPage() {
   );
 
   // Handle bulk delete
-  const handleBulkDelete = () => {
+  const performBulkDelete = () => {
     setImages((prev) => prev.filter((img) => !selectedImages.includes(img.id)));
     setSelectedImages([]);
   };
@@ -389,7 +406,12 @@ export function ComputeImagesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -434,6 +456,7 @@ export function ComputeImagesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -467,7 +490,10 @@ export function ComputeImagesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -516,20 +542,12 @@ export function ComputeImagesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Images' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Images' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -568,6 +586,7 @@ export function ComputeImagesPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -578,7 +597,7 @@ export function ComputeImagesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedImages.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -606,6 +625,7 @@ export function ComputeImagesPage() {
           selectable
           selectedKeys={selectedImages}
           onSelectionChange={setSelectedImages}
+          loading={loading}
         />
       </VStack>
 
@@ -615,12 +635,26 @@ export function ComputeImagesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete image"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected images is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         infoLabel="Image name"
         infoValue={imageToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={() => {
+          performBulkDelete();
+          setIsBulkDeleteOpen(false);
+        }}
+        title="Delete selected images"
+        description="Removing the selected images is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
       />
 
       {/* View Preferences Drawer */}

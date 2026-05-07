@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -22,11 +21,13 @@ import {
   Tooltip,
   fixedColumns,
   Popover,
+  ListToolbar,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconBell, IconCube, IconRouter } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconCube, IconRouter, IconDownload } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -78,7 +79,7 @@ const mockSubnetDetail: SubnetDetail = {
   name: 'subnet-1',
   cidr: '192.168.2.0/24',
   gatewayIp: '192.168.2.1',
-  createdAt: 'Jul 25, 2025 10:32:16',
+  createdAt: 'Jul 25, 2026 10:32:16',
   // Basic information
   allocationPools: '192.168.2.2 - 192.168.2.254',
   dhcp: true,
@@ -125,7 +126,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   floatingIp: i % 3 === 0 ? '' : '-',
   macAddress: 'fa:16:3e:77:62:19',
   adminState: i % 7 === 0 ? 'Down' : 'Up',
-  createdAt: 'Dec 15, 2025 12:22:26',
+  createdAt: 'Dec 15, 2026 12:22:26',
 }));
 
 /* ----------------------------------------
@@ -144,6 +145,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'shutoff' | 'buildi
 
 export default function SubnetDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -174,9 +176,8 @@ export default function SubnetDetailPage() {
   }, [subnet?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Networks', href: '/compute-admin/networks' },
-    { label: subnet.network.name, href: `/networks/${subnet.network.id}` },
+    { label: subnet.network.name },
     { label: subnet.name },
   ];
 
@@ -231,7 +232,12 @@ export default function SubnetDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -254,8 +260,11 @@ export default function SubnetDetailPage() {
               >
                 {row.attachedTo.name}
               </Link>
-              <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                ID: {row.attachedTo.id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedTo.id}>
+                  ID : {row.attachedTo.id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedTo.id} />
               </span>
             </div>
             <Tooltip
@@ -263,7 +272,7 @@ export default function SubnetDetailPage() {
               position="top"
               delay={0}
             >
-              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
+              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] p-1">
                 {row.attachedTo.type === 'router' ? (
                   <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
@@ -291,11 +300,11 @@ export default function SubnetDetailPage() {
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All Security Groups ({row.securityGroups.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {row.securityGroups.map((sg, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {sg}
@@ -354,6 +363,7 @@ export default function SubnetDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Port) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button
@@ -390,21 +400,14 @@ export default function SubnetDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              hasNotification
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{subnet.name}</DetailHeader.Title>
@@ -484,17 +487,41 @@ export default function SubnetDetailPage() {
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
                 </div>
 
-                {/* Search */}
-                <div className="w-[var(--search-input-width)]">
-                  <SearchInput
-                    value={portSearchTerm}
-                    onChange={(e) => {
-                      setPortSearchTerm(e.target.value);
-                      setPortCurrentPage(1);
-                    }}
-                    placeholder="Search port by attributes"
-                  />
-                </div>
+                {/* Toolbar */}
+                <ListToolbar
+                  primaryActions={
+                    <ListToolbar.Actions>
+                      <SearchInput
+                        value={portSearchTerm}
+                        onChange={(e) => {
+                          setPortSearchTerm(e.target.value);
+                          setPortCurrentPage(1);
+                        }}
+                        placeholder="Search port by attributes"
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
+                    </ListToolbar.Actions>
+                  }
+                  bulkActions={
+                    <ListToolbar.Actions>
+                      <Button
+                        variant="muted"
+                        size="sm"
+                        leftIcon={<IconTrash size={12} />}
+                        disabled={selectedPorts.length === 0}
+                      >
+                        Delete
+                      </Button>
+                    </ListToolbar.Actions>
+                  }
+                />
 
                 {/* Pagination */}
                 <Pagination

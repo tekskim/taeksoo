@@ -235,6 +235,8 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
           projects={projects}
           selectedProjectId={selectedProjectId}
           onProjectSelect={setSelectedProjectId}
+          primaryProjectId={primaryProjectId}
+          onSetPrimary={setPrimaryProject}
           variant="default"
         />
       </div>
@@ -403,7 +405,7 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }
@@ -1151,13 +1153,13 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   if (status === 'running') {
     bgColor = 'bg-[var(--color-state-success-bg)]';
-    iconBg = 'bg-[var(--color-success)]';
+    iconBg = 'bg-[var(--color-state-success)]';
   } else if (status === 'failed') {
     bgColor = 'bg-[var(--color-state-danger-bg)]';
-    iconBg = 'bg-[var(--color-danger)]';
+    iconBg = 'bg-[var(--color-state-danger)]';
   } else if (status === 'pending') {
     bgColor = 'bg-[var(--color-info-weak-bg)]';
-    iconBg = 'bg-[var(--color-info)]';
+    iconBg = 'bg-[var(--color-state-info)]';
   }
 
   const getStatusIcon = () => {
@@ -1322,7 +1324,7 @@ function WorkloadsContent() {
         <div className="flex flex-col">
           <Link
             to={`/ai-platform/workloads/${row.id}`}
-            className="text-[13px] text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-lg text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -1396,10 +1398,14 @@ function WorkloadsContent() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center' as const,
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getWorkloadContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}

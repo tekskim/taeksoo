@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -32,11 +31,11 @@ import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
-  IconBell,
   IconStar,
   IconStarFilled,
 } from '@tabler/icons-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -67,7 +66,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-001',
     name: 'hj-small',
     image: '-',
-    flavor: 'Jan 3, 2025',
+    flavor: 'Jan 3, 2026',
     vcpu: 8,
     ram: '16GiB',
     disk: '10GiB',
@@ -80,7 +79,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-002',
     name: 'web-server-template',
     image: '-',
-    flavor: 'Jan 2, 2025',
+    flavor: 'Jan 2, 2026',
     vcpu: 16,
     ram: '32GiB',
     disk: '50GiB',
@@ -93,7 +92,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-003',
     name: 'db-template',
     image: '-',
-    flavor: 'Dec 28, 2024',
+    flavor: 'Dec 28, 2026',
     vcpu: 32,
     ram: '64GiB',
     disk: '200GiB',
@@ -106,7 +105,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-004',
     name: 'gpu-ml-template',
     image: '-',
-    flavor: 'Dec 25, 2024',
+    flavor: 'Dec 25, 2026',
     vcpu: 16,
     ram: '128GiB',
     disk: '500GiB',
@@ -119,7 +118,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-005',
     name: 'minimal-template',
     image: '-',
-    flavor: 'Dec 20, 2024',
+    flavor: 'Dec 20, 2026',
     vcpu: 2,
     ram: '4GiB',
     disk: '10GiB',
@@ -132,7 +131,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-006',
     name: 'k8s-worker',
     image: '-',
-    flavor: 'Dec 18, 2024',
+    flavor: 'Dec 18, 2026',
     vcpu: 8,
     ram: '16GiB',
     disk: '100GiB',
@@ -145,7 +144,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-007',
     name: 'k8s-master',
     image: '-',
-    flavor: 'Dec 18, 2024',
+    flavor: 'Dec 18, 2026',
     vcpu: 4,
     ram: '8GiB',
     disk: '50GiB',
@@ -158,7 +157,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-008',
     name: 'dev-environment',
     image: '-',
-    flavor: 'Dec 15, 2024',
+    flavor: 'Dec 15, 2026',
     vcpu: 4,
     ram: '8GiB',
     disk: '30GiB',
@@ -171,7 +170,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-009',
     name: 'monitoring-stack',
     image: '-',
-    flavor: 'Dec 10, 2024',
+    flavor: 'Dec 10, 2026',
     vcpu: 8,
     ram: '16GiB',
     disk: '100GiB',
@@ -184,7 +183,7 @@ const mockTemplates: InstanceTemplate[] = [
     id: 'tpl-010',
     name: 'cache-server',
     image: '-',
-    flavor: 'Dec 5, 2024',
+    flavor: 'Dec 5, 2026',
     vcpu: 4,
     ram: '32GiB',
     disk: '20GiB',
@@ -201,10 +200,10 @@ const mockTemplates: InstanceTemplate[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'network', label: 'Network', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'network', label: 'Network', type: 'text' },
   {
-    key: 'access',
+    id: 'access',
     label: 'Access',
     type: 'select',
     options: [
@@ -228,6 +227,7 @@ export function InstanceTemplatesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<InstanceTemplate | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Selection state
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
@@ -246,8 +246,24 @@ export function InstanceTemplatesPage() {
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Instance Templates');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -289,20 +305,13 @@ export function InstanceTemplatesPage() {
       case 'personal':
         filtered = filtered.filter((t) => t.access === 'Personal');
         break;
-      case 'project':
-        filtered = filtered.filter((t) => t.access === 'Project');
-        break;
-      case 'public':
-        filtered = filtered.filter((t) => t.access === 'Public');
-        break;
-      // 'all' shows everything
     }
 
     // Filter by applied filters
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((t) => {
         return appliedFilters.every((filter) => {
-          const value = String(t[filter.field as keyof InstanceTemplate] || '').toLowerCase();
+          const value = String(t[filter.fieldId as keyof InstanceTemplate] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });
@@ -340,7 +349,7 @@ export function InstanceTemplatesPage() {
   };
 
   // Bulk delete handler
-  const handleBulkDelete = () => {
+  const performBulkDelete = () => {
     setTemplates((prev) => prev.filter((t) => !selectedTemplates.includes(t.id)));
     setSelectedTemplates([]);
   };
@@ -350,9 +359,6 @@ export function InstanceTemplatesPage() {
     () => ({
       favorites: templates.filter((t) => t.favorite).length,
       personal: templates.filter((t) => t.access === 'Personal').length,
-      project: templates.filter((t) => t.access === 'Project').length,
-      public: templates.filter((t) => t.access === 'Public').length,
-      all: templates.length,
     }),
     [templates]
   );
@@ -402,13 +408,21 @@ export function InstanceTemplatesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute/instance-templates/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <Link
+            to={`/compute/instance-templates/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </div>
       ),
     },
     {
@@ -430,8 +444,14 @@ export function InstanceTemplatesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
+          {
+            id: 'edit',
+            label: 'Edit',
+            onClick: () => navigate(`/compute/instance-templates/${row.id}/edit`),
+          },
           {
             id: 'create-instance',
             label: 'Create instance',
@@ -446,6 +466,7 @@ export function InstanceTemplatesPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
+            divider: true,
             onClick: () => handleDeleteClick(row),
           },
         ];
@@ -453,7 +474,10 @@ export function InstanceTemplatesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -499,22 +523,12 @@ export function InstanceTemplatesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Instance templates' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Instance Templates' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -530,8 +544,8 @@ export function InstanceTemplatesPage() {
         {/* Category Tabs */}
         <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
           <TabList>
-            <Tab value="favorites">Current tenant</Tab>
-            <Tab value="personal">Public</Tab>
+            <Tab value="favorites">Favorites</Tab>
+            <Tab value="personal">Personal</Tab>
           </TabList>
         </Tabs>
 
@@ -551,6 +565,7 @@ export function InstanceTemplatesPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -561,7 +576,7 @@ export function InstanceTemplatesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedTemplates.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -589,6 +604,7 @@ export function InstanceTemplatesPage() {
           selectable
           selectedKeys={selectedTemplates}
           onSelectionChange={setSelectedTemplates}
+          loading={loading}
         />
       </VStack>
 
@@ -598,12 +614,26 @@ export function InstanceTemplatesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete template"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected templates is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         infoLabel="Template name"
         infoValue={templateToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={() => {
+          performBulkDelete();
+          setIsBulkDeleteOpen(false);
+        }}
+        title="Delete selected templates"
+        description="Removing the selected instance templates is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
       />
 
       {/* View Preferences Drawer */}

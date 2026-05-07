@@ -1,6 +1,7 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconCube,
   IconTemplate,
   IconCamera,
@@ -71,6 +72,15 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
     ) {
       return true;
     }
+    // Match child resources - NACL / firewall-related routes under Firewall
+    if (
+      href === '/compute-admin/firewall' &&
+      (location.pathname.startsWith('/compute-admin/firewalls') ||
+        location.pathname.startsWith('/compute-admin/firewall-policies') ||
+        location.pathname.startsWith('/compute-admin/firewall-rules'))
+    ) {
+      return true;
+    }
     return false;
   };
 
@@ -82,14 +92,22 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
       <AppSwitcher currentAppId="compute-admin" onToggleSidebar={onToggle} />
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2"
+      >
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
 
           {/* Home */}
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
-            label="Home"
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+            label="Dashboard"
             href="/compute-admin"
             active={isActive('/compute-admin')}
           />
@@ -230,7 +248,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
             />
             <MenuItem
               icon={<IconFileCode size={16} stroke={1.5} />}
-              label="Metadata definition"
+              label="Metadata definitions"
               href="/compute-admin/metadata-definition"
               active={isActive('/compute-admin/metadata-definition')}
             />
@@ -252,7 +270,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }
