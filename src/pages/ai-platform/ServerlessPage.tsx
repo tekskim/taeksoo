@@ -10,7 +10,7 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AITopBarActions } from '@/components/AITopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { IconRefresh, IconBolt, IconPlus } from '@tabler/icons-react';

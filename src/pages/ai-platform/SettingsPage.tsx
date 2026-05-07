@@ -9,7 +9,7 @@ import {
   EmptyState,
   PageShell,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AITopBarActions } from '@/components/AITopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { IconRefresh, IconSettings } from '@tabler/icons-react';
