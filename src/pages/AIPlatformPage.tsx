@@ -27,6 +27,7 @@ import {
 import { useTabs } from '@/contexts/TabContext';
 import { useProject } from '@/contexts/ProjectContext';
 import { ProjectSelector } from '@/components/ProjectSelector';
+import { AITopBarActions } from '@/components/AITopBarActions';
 import {
   IconLayoutDashboard,
   IconSearch,
@@ -48,7 +49,6 @@ import {
   IconBoxModel,
   IconShield,
   IconApps,
-  IconBell,
   IconHome,
   IconRefresh,
   IconDotsCircleHorizontal,
@@ -355,11 +355,7 @@ export function AIPlatformPageLayout({
           onClick={() => navigate('/')}
           aria-label="Home"
         />
-        <TopBarAction
-          icon={<IconBell size={16} stroke={1.5} />}
-          aria-label="Notifications"
-          badge={true}
-        />
+        <AITopBarActions />
       </>
     ),
     [navigate]

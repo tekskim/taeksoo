@@ -16,9 +16,9 @@ import {
   EmptyState,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AITopBarActions } from '@/components/AITopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconSearch,
   IconRefresh,
   IconFilter,
@@ -304,16 +304,7 @@ export function DatasetsPage() {
               items={[{ label: 'AI Platform' }, { label: 'Hub' }, { label: 'Datasets' }]}
             />
           }
-          actions={
-            <HStack gap={2}>
-              <button className="p-2 hover:bg-[var(--color-surface-subtle)] rounded-md transition-colors">
-                <IconSearch size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-              </button>
-              <button className="p-2 hover:bg-[var(--color-surface-subtle)] rounded-md transition-colors">
-                <IconBell size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-              </button>
-            </HStack>
-          }
+          actions={<AITopBarActions />}
         />
       }
       contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
