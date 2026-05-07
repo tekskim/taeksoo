@@ -405,7 +405,7 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
             />
           </MenuSection>
         </VStack>
-      </OverlayScrollbarsComponent>
+      </nav>
     </aside>
   );
 }

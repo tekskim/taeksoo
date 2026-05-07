@@ -18,7 +18,7 @@ import {
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { ChatSidebar } from '@/components/ChatSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconSettings, IconStar, IconStarFilled } from '@tabler/icons-react';
+import { IconSettings, IconStar, IconStarFilled } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Agent Card Component

@@ -27,7 +27,7 @@ import {
   Badge,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
-import { IconBell, IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
+import { IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';

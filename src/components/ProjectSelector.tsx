@@ -266,7 +266,7 @@ export function ProjectSelector({
                           disabled={isDisabled}
                         >
                           {project.name}
-                        </span>
+                        </button>
                         {isSelected && !isDisabled && (
                           <IconCheck
                             size={16}

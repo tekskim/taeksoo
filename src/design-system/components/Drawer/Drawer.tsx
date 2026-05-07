@@ -1,5 +1,6 @@
-import React, { useEffect, useCallback, useState, useRef } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useId } from 'react';
 import { createPortal } from 'react-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { twMerge } from '../../utils/cn';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 

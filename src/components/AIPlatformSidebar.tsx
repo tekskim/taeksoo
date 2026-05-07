@@ -98,7 +98,7 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
             />
           </MenuSection>
         </VStack>
-      </OverlayScrollbarsComponent>
+      </nav>
     </aside>
   );
 }
