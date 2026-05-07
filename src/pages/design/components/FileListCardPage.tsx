@@ -256,11 +256,21 @@ function UploadErrorExample() {
   return (
     <div className="w-full max-w-[400px]">
       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-[var(--primitive-spacing-3)] flex flex-col gap-[var(--primitive-spacing-2)]">
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-state-danger)] rounded-[var(--primitive-radius-md)] px-4 flex flex-col justify-center gap-0.5 h-[56px]">
-          <span className="text-body-md text-[var(--color-text-default)]">report_Q1_2026.pdf</span>
-          <span className="text-body-sm text-[var(--color-state-danger)]">
-            Failed to upload file.
-          </span>
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-state-danger)] rounded-[var(--primitive-radius-md)] px-4 flex items-start justify-between gap-2 h-[56px] py-2">
+          <VStack gap={0.5} className="min-w-0 flex-1 mt-0.5">
+            <span className="text-body-md text-[var(--color-text-default)]">
+              report_Q1_2026.pdf
+            </span>
+            <span className="text-body-sm text-[var(--color-state-danger)]">
+              Failed to upload file.
+            </span>
+          </VStack>
+          <button
+            type="button"
+            className="shrink-0 mt-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+          >
+            <IconX size={16} stroke={1.5} />
+          </button>
         </div>
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 flex flex-col justify-center gap-1.5 h-[56px]">
           <div className="flex items-center justify-between">
