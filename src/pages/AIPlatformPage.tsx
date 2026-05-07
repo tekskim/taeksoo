@@ -195,7 +195,8 @@ function ClusterSelector({
 
 export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => void }) {
   const location = useLocation();
-  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
+  const { projects, selectedProjectId, setSelectedProjectId, primaryProjectId, setPrimaryProject } =
+    useProject();
   const [selectedClusterId, setSelectedClusterId] = useState(MOCK_CLUSTERS[0].id);
 
   const isActive = (href: string) => {
