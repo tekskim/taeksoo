@@ -30,7 +30,7 @@ import {
   IconBell,
   IconLock,
   IconCopy,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
   IconExternalLink,
 } from '@tabler/icons-react';
 import type { StatusType } from '@/design-system/components/StatusIndicator/StatusIndicator';
@@ -592,10 +592,14 @@ export function WorkloadsPage() {
         render: (_: unknown, row: WorkloadItem) => (
           <ContextMenu items={getRowActions(row)} trigger="click">
             <button
-              className="inline-flex items-center justify-center rounded-[var(--radius-md)] p-[10px] hover:bg-[var(--color-surface-hover)] transition-colors size-[28px]"
+              className="inline-flex items-center justify-center rounded-[var(--radius-md)] hover:bg-[var(--color-surface-hover)] transition-colors size-7"
               aria-label="Actions"
             >
-              <IconDotsVertical size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
             </button>
           </ContextMenu>
         ),

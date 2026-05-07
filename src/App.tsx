@@ -453,6 +453,9 @@ import { DeployNewPodPage } from '@/pages/ai-platform/DeployNewPodPage';
 import { EditPodPage } from '@/pages/ai-platform/EditPodPage';
 import { WorkloadDetailPage } from '@/pages/ai-platform/WorkloadDetailPage';
 import { MyTemplatesPage } from '@/pages/ai-platform/MyTemplatesPage';
+import { CreateTemplatePage as AIPlatformCreateTemplatePage } from '@/pages/ai-platform/CreateTemplatePage';
+import { EditTemplatePage } from '@/pages/ai-platform/EditTemplatePage';
+import { MyTemplateDetailPage } from '@/pages/ai-platform/MyTemplateDetailPage';
 import { StoragePage as AIPlatformStoragePage } from '@/pages/ai-platform/StoragePage';
 import { ServerlessPage } from '@/pages/ai-platform/ServerlessPage';
 import { DevSpacePage } from '@/pages/ai-platform/DevSpacePage';
@@ -1008,6 +1011,9 @@ function AppRoutes() {
       <Route path="/ai-platform/workloads/:id/edit" element={<EditPodPage />} />
       <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
       <Route path="/ai-platform/my-templates" element={<MyTemplatesPage />} />
+      <Route path="/ai-platform/my-templates/create" element={<AIPlatformCreateTemplatePage />} />
+      <Route path="/ai-platform/my-templates/:templateId/edit" element={<EditTemplatePage />} />
+      <Route path="/ai-platform/my-templates/:id" element={<MyTemplateDetailPage />} />
       <Route path="/ai-platform/storage" element={<AIPlatformStoragePage />} />
       <Route path="/ai-platform/serverless" element={<ServerlessPage />} />
       <Route path="/ai-platform/text-generation" element={<TextGenerationPage />} />

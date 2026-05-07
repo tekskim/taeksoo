@@ -228,7 +228,7 @@ export function FloatingCard({
           }}
         >
           {/* Title - Always required */}
-          <h2 className="text-label-lg text-[var(--color-text-default)] shrink-0">{title}</h2>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] shrink-0">{title}</h2>
 
           {/* Summary Sections - Only render if sections exist */}
           {sections && sections.length > 0 && (
@@ -243,6 +243,8 @@ export function FloatingCard({
                 const isCollapsible = section.collapsible ?? section.items.length > 0;
                 const isExpanded =
                   expandedSections[sectionIndex] ?? section.defaultExpanded ?? true;
+
+                const showItems = isCollapsible ? isExpanded : true;
 
                 return (
                   <div key={sectionIndex} className="flex flex-col gap-2 w-full">
@@ -277,7 +279,7 @@ export function FloatingCard({
                           </span>
                         )}
                       </button>
-                    ) : (
+                    ) : section.tabTitle ? (
                       <div className="flex items-center justify-between w-full">
                         <span className="text-label-md text-[var(--color-text-default)]">
                           {section.tabTitle}
@@ -288,20 +290,20 @@ export function FloatingCard({
                           </span>
                         )}
                       </div>
-                    )}
+                    ) : null}
 
-                    {/* Section Items (하위 섹션 타이틀) - Only show when expanded */}
-                    {isCollapsible && isExpanded && section.items.length > 0 && (
-                      <div className="flex flex-col gap-1 pl-4 w-full">
+                    {/* Section Items - shown when expanded (collapsible) or always (non-collapsible) */}
+                    {showItems && section.items.length > 0 && (
+                      <div className={`flex flex-col gap-0 w-full ${isCollapsible ? 'pl-4' : ''}`}>
                         {section.items.map((item) => (
                           <button
                             key={item.id}
                             type="button"
-                            className="flex items-center justify-between gap-2 w-full rounded px-2 -mx-2 py-1 transition-colors duration-[var(--duration-fast)] text-left group cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                            className="flex items-center justify-between gap-2 w-full rounded px-2 py-1 transition-colors duration-[var(--duration-fast)] text-left group cursor-pointer hover:bg-[var(--color-surface-muted)]"
                             onClick={item.onClick}
                             disabled={!item.onClick}
                           >
-                            <span className="text-body-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)] transition-colors">
+                            <span className="text-body-md text-[var(--color-text-default)] group-hover:text-[var(--color-text-default)] transition-colors">
                               {item.title}
                             </span>
                             {item.status === 'writing' ? (
@@ -333,15 +335,15 @@ export function FloatingCard({
             }}
           >
             <div className="flex flex-col items-start gap-3 w-full">
-              <h3 className="text-label-md text-[var(--color-text-default)]">Quota</h3>
+              <h3 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h3>
               <div className="flex flex-col gap-3 w-full">
                 {quota.map((item, index) => (
                   <div key={index} className="flex flex-col gap-1 w-full">
                     <div className="flex items-center justify-between">
-                      <span className="text-body-md text-[var(--color-text-default)]">
+                      <span className="text-label-lg text-[var(--color-text-default)]">
                         {item.label}
                       </span>
-                      <span className="text-body-md text-[var(--color-text-muted)]">
+                      <span className="text-body-md text-[var(--color-text-default)]">
                         {item.current}/{item.total}
                         {item.unit ? ` ${item.unit}` : ''}
                       </span>
@@ -376,11 +378,16 @@ export function FloatingCard({
           </div>
         )}
 
-        {/* Action Buttons - Fixed at bottom with white background, 3:7 ratio */}
+        {/* Action Buttons */}
         {(onCancel || onAction) && (
-          <div className="px-6 pb-6 pt-4 flex flex-row gap-2 shrink-0 bg-[var(--color-surface-default)]">
+          <div className="px-3 pb-4 pt-0 flex flex-row gap-2 shrink-0 bg-[var(--color-surface-default)]">
             {onCancel && (
-              <Button variant="secondary" size="md" onClick={onCancel} className="flex-[0.3]">
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={onCancel}
+                className="w-[80px] shrink-0"
+              >
                 {cancelLabel}
               </Button>
             )}
@@ -390,7 +397,7 @@ export function FloatingCard({
                 size="md"
                 onClick={onAction}
                 disabled={!actionEnabled}
-                className="flex-[0.7]"
+                className="flex-1"
               >
                 {actionLabel}
               </Button>
