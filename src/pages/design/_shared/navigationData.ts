@@ -127,6 +127,12 @@ const formControlItems: NavItem[] = [
   },
   { id: 'select', label: 'Select', icon: IconSelector, path: '/design/components/select' },
   {
+    id: 'chained-select',
+    label: 'Chained Select',
+    icon: IconSelector,
+    path: '/design/components/chained-select',
+  },
+  {
     id: 'datepicker',
     label: 'Date Picker',
     icon: IconCalendar,
