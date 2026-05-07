@@ -10,9 +10,8 @@ import {
   PageShell,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
-import { AITopBarActions } from '@/components/AITopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconRefresh, IconSettings } from '@tabler/icons-react';
+import { IconBell, IconSearch, IconRefresh, IconSettings } from '@tabler/icons-react';
 
 export function SettingsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -45,8 +44,17 @@ export function SettingsPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={<Breadcrumb items={[{ label: 'AI Platform' }, { label: 'Settings' }]} />}
-          actions={<AITopBarActions />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }]} />}
+          actions={
+            <>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+            </>
+          }
         />
       }
       contentClassName="pt-3 px-8 pb-20"
