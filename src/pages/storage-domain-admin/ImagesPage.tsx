@@ -422,17 +422,13 @@ export function ImagesPage() {
                 icon={<IconDownload size={12} stroke={1.5} />}
                 aria-label="Download"
               />
-              <div className="flex items-center gap-2 ml-1">
-                <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconRefresh size={12} stroke={1.5} />}
-                  onClick={() => console.log('Refresh clicked')}
-                >
-                  Refresh
-                </Button>
-              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconRefresh size={12} stroke={1.5} />}
+                aria-label="Refresh"
+                onClick={() => console.log('Refresh clicked')}
+              />
             </div>
           </div>
         </div>

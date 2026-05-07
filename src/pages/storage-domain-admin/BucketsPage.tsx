@@ -417,18 +417,16 @@ export function BucketsPage() {
                 icon={<IconDownload size={12} stroke={1.5} />}
                 aria-label="Download"
               />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconRefresh size={12} stroke={1.5} />}
+                aria-label="Refresh"
+              />
             </ListToolbar.Actions>
           }
           bulkActions={
             <ListToolbar.Actions>
-              <Button
-                variant="muted"
-                size="sm"
-                leftIcon={<IconRefresh size={12} stroke={1.5} />}
-                disabled={!hasSelection}
-              >
-                Refresh
-              </Button>
               <Button
                 variant="muted"
                 size="sm"
