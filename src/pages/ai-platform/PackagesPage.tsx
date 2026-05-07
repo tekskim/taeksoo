@@ -12,6 +12,7 @@ import {
   TabBar,
   TopBar,
   Breadcrumb,
+  EmptyState,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
@@ -171,15 +172,24 @@ export function PackagesPage() {
           totalItems={filtered.length}
         />
 
-        <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] items-start gap-4">
-          {filtered.map((pkg, i) => (
-            <PackageCard
-              key={`${pkg.title}-${i}`}
-              {...pkg}
-              onDeploy={() => console.log('Deploy', pkg.title)}
-            />
-          ))}
-        </div>
+        {filtered.length === 0 ? (
+          <EmptyState
+            variant="inline"
+            icon={<IconPackage size={48} stroke={1} />}
+            title="No packages found"
+            description="Try adjusting your search or filter criteria."
+          />
+        ) : (
+          <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] items-start gap-4">
+            {filtered.map((pkg, i) => (
+              <PackageCard
+                key={`${pkg.title}-${i}`}
+                {...pkg}
+                onDeploy={() => console.log('Deploy', pkg.title)}
+              />
+            ))}
+          </div>
+        )}
       </VStack>
     </PageShell>
   );

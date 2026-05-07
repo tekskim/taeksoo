@@ -23,7 +23,6 @@ import {
   TabList,
   Tab,
   TabPanel,
-  MetricCard,
   StatusIndicator,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
@@ -34,6 +33,9 @@ import {
   IconEye,
   IconEdit as IconPencil,
   IconShield,
+  IconPlayerPlay,
+  IconAlertTriangle,
+  IconCircleDot,
 } from '@tabler/icons-react';
 import {
   CreateVolumeDrawer,
@@ -441,27 +443,24 @@ function VolumeCard({
 function ShareVolumeCard({ share, onShare }: { share: ShareItem; onShare: () => void }) {
   return (
     <div
-      className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3 hover:border-[var(--color-border-strong)] transition-colors"
+      className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4 hover:border-[var(--color-border-strong)] transition-colors"
       data-figma-name="[TDS] Share volume card"
     >
-      <div className="flex items-start justify-between gap-2 min-w-0">
-        <HStack gap={2} align="center" className="min-w-0 flex-1">
-          <span
-            className="size-2 shrink-0 rounded-full bg-[var(--color-state-success)]"
-            aria-hidden
-          />
-          <span className="text-body-md font-medium text-[var(--color-text-default)] truncate">
+      <div className="flex items-start justify-between gap-3 min-w-0">
+        <HStack gap={3} align="start" className="min-w-0 flex-1">
+          <StatusIndicator status="active" layout="icon-only" size="sm" />
+          <span className="text-heading-h5 text-[var(--color-text-default)] truncate block min-w-0 flex-1">
             {share.name}
           </span>
         </HStack>
-        <span className="text-body-md text-[var(--color-text-default)] tabular-nums shrink-0">
+        <span className="text-heading-h5 text-[var(--color-text-default)] tabular-nums shrink-0">
           {share.size}
         </span>
       </div>
-      <span className="text-body-sm text-[var(--color-text-subtle)]">
+      <span className="text-label-sm text-[var(--color-text-subtle)]">
         shared with: {share.sharedWith}
       </span>
-      <div className="mt-auto">
+      <div className="flex justify-end mt-auto">
         <Button variant="outline" size="sm" onClick={onShare}>
           Share
         </Button>
@@ -473,28 +472,25 @@ function ShareVolumeCard({ share, onShare }: { share: ShareItem; onShare: () => 
 function SharedWithMeCard({ item }: { item: SharedVolumeItem }) {
   return (
     <div
-      className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3 hover:border-[var(--color-border-strong)] transition-colors"
+      className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4 hover:border-[var(--color-border-strong)] transition-colors"
       data-figma-name="[TDS] Shared volume card"
     >
-      <div className="flex items-start justify-between gap-2 min-w-0">
-        <HStack gap={2} align="center" className="min-w-0 flex-1">
-          <span
-            className="size-2 shrink-0 rounded-full bg-[var(--color-state-success)]"
-            aria-hidden
-          />
-          <span className="text-body-md font-medium text-[var(--color-text-default)] truncate">
+      <div className="flex items-start justify-between gap-3 min-w-0">
+        <HStack gap={3} align="start" className="min-w-0 flex-1">
+          <StatusIndicator status="active" layout="icon-only" size="sm" />
+          <span className="text-heading-h5 text-[var(--color-text-default)] truncate block min-w-0 flex-1">
             {item.name}
           </span>
         </HStack>
-        <span className="text-body-md text-[var(--color-text-default)] tabular-nums shrink-0">
+        <span className="text-heading-h5 text-[var(--color-text-default)] tabular-nums shrink-0">
           {item.size}
         </span>
       </div>
       <PermissionRow permission={item.permission} />
-      <VStack gap={1} align="start" className="text-body-sm text-[var(--color-text-subtle)]">
+      <HStack gap={2} align="center" className="text-label-sm text-[var(--color-text-subtle)]">
         <span>Shared at: {formatCardDate(item.sharedAt)}</span>
         <span>Expires at: {formatCardDate(item.expiresAt)}</span>
-      </VStack>
+      </HStack>
     </div>
   );
 }
@@ -527,6 +523,32 @@ function HeaderStorageCard({
           style={{ width: `${percent}%` }}
         />
         <div className="flex-1 h-1 rounded-full bg-[var(--color-border-default)] z-[1]" />
+      </div>
+    </div>
+  );
+}
+
+function InfoMetricCard({
+  label,
+  value,
+  indicatorBg,
+  icon,
+}: {
+  label: string;
+  value: number;
+  indicatorBg: string;
+  icon: ReactNode;
+}) {
+  return (
+    <div className="flex-1 min-w-0 flex items-center justify-between rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] px-4 py-3">
+      <VStack gap={1.5}>
+        <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
+        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
+      </VStack>
+      <div
+        className={`${indicatorBg} flex items-center justify-center rounded-full size-6 shrink-0`}
+      >
+        {icon}
       </div>
     </div>
   );
@@ -569,11 +591,26 @@ function VolumeListSection({
 
   return (
     <VStack gap={3} className="pt-4">
-      <MetricCard.Group>
-        <MetricCard title="Running" value={runningCount} accent="success" />
-        <MetricCard title="error" value={errorCount} accent="error" />
-        <MetricCard title="In use" value={inUseCount} />
-      </MetricCard.Group>
+      <div className="flex gap-2 w-full">
+        <InfoMetricCard
+          label="Running"
+          value={runningCount}
+          indicatorBg="bg-[#60a5fa]"
+          icon={<IconPlayerPlay size={16} className="text-white" />}
+        />
+        <InfoMetricCard
+          label="error"
+          value={errorCount}
+          indicatorBg="bg-[#f87171]"
+          icon={<IconAlertTriangle size={16} className="text-white" />}
+        />
+        <InfoMetricCard
+          label="In use"
+          value={inUseCount}
+          indicatorBg="bg-[var(--color-text-muted)]"
+          icon={<IconCircleDot size={16} className="text-white" />}
+        />
+      </div>
       {searchToolbar}
       {filteredVolumes.length === 0 ? (
         <EmptyState
