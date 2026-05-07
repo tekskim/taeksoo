@@ -6,6 +6,7 @@ import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
 import { ProjectProvider } from '@/contexts/ProjectContext';
 import { ToastProvider, ToastContainer } from '@/design-system';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Entry Page
 import { EntryPage } from '@/pages/EntryPage';
@@ -511,6 +512,8 @@ import { SystemAdminPage } from '@/pages/ai-platform/SystemAdminPage';
 const defaultTabs = [{ id: 'home', label: 'Home', path: '/compute', closable: true }];
 
 function AppRoutes() {
+  useDocumentTitle();
+
   return (
     <Routes>
       {/* Entry Page */}
