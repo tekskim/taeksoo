@@ -175,6 +175,7 @@ import AgentDetailPage from '@/pages/AgentDetailPage';
 import { CreateAgentPage } from '@/pages/CreateAgentPage';
 import { ChatPage } from '@/pages/ChatPage';
 import { ChatConversationPage } from '@/pages/ChatConversationPage';
+import { ChatSearchPage } from '@/pages/ChatSearchPage';
 import { StoragePage } from '@/pages/StoragePage';
 import { MCPToolsPage } from '@/pages/MCPToolsPage';
 import { MCPToolDetailPage } from '@/pages/MCPToolDetailPage';
@@ -485,9 +486,6 @@ import { FigmaGuidePage } from '@/pages/figma/FigmaGuidePage';
 import { FigmaCloudBuilderPage } from '@/pages/figma/FigmaCloudBuilderPage';
 
 // Pages - AI Platform
-import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
-
-// Pages - AI Platform
 import { AIPlatformPage } from '@/pages/AIPlatformPage';
 import { TextGenerationPage } from '@/pages/ai-platform/TextGenerationPage';
 import { ExplorePage } from '@/pages/ai-platform/ExplorePage';
@@ -495,8 +493,15 @@ import { PackagesPage } from '@/pages/ai-platform/PackagesPage';
 import { ModelsPage } from '@/pages/ai-platform/ModelsPage';
 import { DatasetsPage } from '@/pages/ai-platform/DatasetsPage';
 import { WorkloadsPage } from '@/pages/ai-platform/WorkloadsPage';
+import { DeployNewPodPage } from '@/pages/ai-platform/DeployNewPodPage';
+import { EditPodPage } from '@/pages/ai-platform/EditPodPage';
+import { WorkloadDetailPage } from '@/pages/ai-platform/WorkloadDetailPage';
 import { MyTemplatesPage } from '@/pages/ai-platform/MyTemplatesPage';
+import { CreateTemplatePage as AIPlatformCreateTemplatePage } from '@/pages/ai-platform/CreateTemplatePage';
+import { EditTemplatePage } from '@/pages/ai-platform/EditTemplatePage';
+import { MyTemplateDetailPage } from '@/pages/ai-platform/MyTemplateDetailPage';
 import { StoragePage as AIPlatformStoragePage } from '@/pages/ai-platform/StoragePage';
+import { VolumesPage as AIPlatformVolumesPage } from '@/pages/ai-platform/VolumesPage';
 import { ServerlessPage } from '@/pages/ai-platform/ServerlessPage';
 import { DevSpacePage } from '@/pages/ai-platform/DevSpacePage';
 import { PipelineBuilderPage } from '@/pages/ai-platform/PipelineBuilderPage';
@@ -537,6 +542,7 @@ function AppRoutes() {
       <Route path="/agent/create" element={<CreateAgentPage />} />
       <Route path="/agent/create-v2" element={<CreateAgentPage />} />
       <Route path="/chat" element={<ChatPage />} />
+      <Route path="/chat/search" element={<ChatSearchPage />} />
       <Route path="/chat/:id" element={<ChatConversationPage />} />
       <Route path="/agent/storage" element={<StoragePage />} />
       <Route path="/mcp-tools" element={<MCPToolsPage />} />
@@ -1089,11 +1095,19 @@ function AppRoutes() {
       <Route path="/ai-platform/explore" element={<ExplorePage />} />
       <Route path="/ai-platform/packages" element={<PackagesPage />} />
       <Route path="/ai-platform/models" element={<ModelsPage />} />
+      <Route path="/ai-platform/models/registry" element={<AIPlatformPage />} />
+      <Route path="/ai-platform/models/compare" element={<AIPlatformPage />} />
       <Route path="/ai-platform/datasets" element={<DatasetsPage />} />
       <Route path="/ai-platform/workloads" element={<WorkloadsPage />} />
+      <Route path="/ai-platform/workloads/deploy" element={<DeployNewPodPage />} />
+      <Route path="/ai-platform/workloads/:id/edit" element={<EditPodPage />} />
       <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
       <Route path="/ai-platform/my-templates" element={<MyTemplatesPage />} />
+      <Route path="/ai-platform/my-templates/create" element={<AIPlatformCreateTemplatePage />} />
+      <Route path="/ai-platform/my-templates/:templateId/edit" element={<EditTemplatePage />} />
+      <Route path="/ai-platform/my-templates/:id" element={<MyTemplateDetailPage />} />
       <Route path="/ai-platform/storage" element={<AIPlatformStoragePage />} />
+      <Route path="/ai-platform/volumes" element={<AIPlatformVolumesPage />} />
       <Route path="/ai-platform/serverless" element={<ServerlessPage />} />
       <Route path="/ai-platform/text-generation" element={<TextGenerationPage />} />
       <Route path="/ai-platform/devspace" element={<DevSpacePage />} />
@@ -1283,8 +1297,6 @@ function AppRoutes() {
         <Route path="components" element={<FigmaComponentsPage />} />
         <Route path="cloudbuilder" element={<FigmaCloudBuilderPage />} />
       </Route>
-
-      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

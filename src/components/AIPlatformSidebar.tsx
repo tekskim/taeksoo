@@ -1,36 +1,15 @@
-import { VStack, MenuItem, MenuSection } from '@/design-system';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
-import { useDarkMode } from '@/hooks/useDarkMode';
+import { VStack, MenuItem, MenuSection, Button } from '@/design-system';
 import {
-  IconLayoutDashboard,
-  IconCompass,
-  IconPackages,
-  IconBrain,
-  IconDatabase,
-  IconTemplate,
-  IconBox,
-  IconBolt,
+  IconHome,
   IconMessageCircle,
-  IconCode,
-  IconRoute,
-  IconChartBar,
-  IconSettings,
-  IconHelp,
-  IconList,
-  IconActivity,
-  IconGitBranch,
-  IconUserCog,
-  IconLayoutSidebar,
+  IconRobot,
+  IconDatabase,
+  IconApps,
+  IconTemplate,
+  IconFolder,
 } from '@tabler/icons-react';
-import { RefreshCw, CircleGauge, BrainCircuit } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
-
-/* ----------------------------------------
-   AI Platform Sidebar Component
-   ---------------------------------------- */
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AppSwitcher } from './AppSwitcher';
 
 interface AIPlatformSidebarProps {
   isOpen?: boolean;
@@ -38,21 +17,13 @@ interface AIPlatformSidebarProps {
 }
 
 export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebarProps) {
-  const { isDark } = useDarkMode();
   const location = useLocation();
-  const isDesktopWindow = useIsDesktopWindow();
-  const desktopControls = useDesktopWindowControls();
+  const navigate = useNavigate();
 
-  // Check if current path matches href
   const isActive = (href: string) => {
-    // Exact match
-    if (location.pathname === href) {
-      return true;
-    }
-    // Match detail pages
-    if (href !== '/ai-platform' && location.pathname.startsWith(href + '/')) {
-      return true;
-    }
+    if (location.pathname === href) return true;
+    if (href !== '/agent' && location.pathname.startsWith(href + '/')) return true;
+    if (href === '/chat' && location.pathname.startsWith('/chat')) return true;
     return false;
   };
 
@@ -60,196 +31,74 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
-      {/* Logo */}
-      <div
-        className="h-8 px-3 flex items-center justify-between select-none"
-        onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
-        onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
-      >
-        <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
-        <button
-          type="button"
-          onClick={onToggle}
-          onMouseDown={(e) => e.stopPropagation()}
-          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
-          aria-label="Toggle sidebar"
+      <AppSwitcher currentAppId="agent-ops" onToggleSidebar={onToggle} />
+
+      <div className="px-3 py-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full justify-center"
+          onClick={() => navigate('/agent/create')}
         >
-          <IconLayoutSidebar
-            size={14}
-            className="text-[var(--color-text-muted)] pointer-events-none"
-            stroke={1.5}
-          />
-        </button>
+          Create project
+        </Button>
       </div>
 
-      {/* Navigation */}
-      <OverlayScrollbarsComponent
-        element="nav"
-        options={{
-          overflow: { x: 'hidden', y: 'scroll' },
-          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
-        }}
-        defer={false}
-        className="flex-1 px-3 py-2 pb-6"
-      >
-        <VStack gap={4} className="w-full min-w-0">
-          {/* Back to Entry */}
-
-          {/* Dashboard */}
+      <nav className="flex-1 px-3 py-2 pb-6 overflow-y-auto overflow-x-hidden sidebar-scroll">
+        <VStack gap={4} className="w-[175px] min-w-0">
           <MenuItem
-            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
-            label="Dashboard"
-            href="/ai-platform"
-            active={isActive('/ai-platform')}
+            icon={<IconHome size={16} stroke={1.5} />}
+            label="Home"
+            href="/agent"
+            active={isActive('/agent')}
           />
 
-          {/* Explore */}
-          <MenuItem
-            icon={<IconCompass size={16} stroke={1.5} />}
-            label="Explore"
-            href="/ai-platform/explore"
-            active={isActive('/ai-platform/explore')}
-          />
-
-          {/* Hub Section */}
-          <MenuSection title="Hub" defaultOpen={true}>
+          <MenuSection title="Chat" defaultOpen={true}>
             <MenuItem
-              icon={<IconPackages size={16} stroke={1.5} />}
-              label="Packages"
-              href="/ai-platform/packages"
-              active={isActive('/ai-platform/packages')}
+              icon={<IconMessageCircle size={16} stroke={1.5} />}
+              label="Chatting"
+              href="/chat"
+              active={isActive('/chat')}
             />
+          </MenuSection>
+
+          <MenuSection title="Agent Builder" defaultOpen={true}>
             <MenuItem
-              icon={<IconBrain size={16} stroke={1.5} />}
-              label="Models"
-              href="/ai-platform/models"
-              active={isActive('/ai-platform/models')}
+              icon={<IconRobot size={16} stroke={1.5} />}
+              label="Agent"
+              href="/agent/list"
+              active={isActive('/agent/list')}
             />
             <MenuItem
               icon={<IconDatabase size={16} stroke={1.5} />}
-              label="Datasets"
-              href="/ai-platform/datasets"
-              active={isActive('/ai-platform/datasets')}
+              label="Datasource"
+              href="/agent/datasource"
+              active={isActive('/agent/datasource')}
+            />
+            <MenuItem
+              icon={<IconApps size={16} stroke={1.5} />}
+              label="MCP catalog"
+              href="/agent/mcp-catalog"
+              active={isActive('/agent/mcp-catalog')}
             />
           </MenuSection>
 
-          {/* Infrastructure Section */}
-          <MenuSection title="Infrastructure" defaultOpen={true}>
-            <MenuItem
-              icon={<CircleGauge size={16} strokeWidth={1.5} />}
-              label="Workloads"
-              href="/ai-platform/workloads"
-              active={isActive('/ai-platform/workloads')}
-            />
+          <MenuSection title="Admin management" defaultOpen={true}>
             <MenuItem
               icon={<IconTemplate size={16} stroke={1.5} />}
-              label="My templates"
-              href="/ai-platform/my-templates"
-              active={isActive('/ai-platform/my-templates')}
+              label="MCP templates"
+              href="/agent/mcp-templates"
+              active={isActive('/agent/mcp-templates')}
             />
             <MenuItem
-              icon={<IconBox size={16} stroke={1.5} />}
-              label="Storage"
-              href="/ai-platform/storage"
-              active={isActive('/ai-platform/storage')}
-            />
-            <MenuItem
-              icon={<IconBolt size={16} stroke={1.5} />}
-              label="Serverless"
-              href="/ai-platform/serverless"
-              active={isActive('/ai-platform/serverless')}
-            />
-          </MenuSection>
-
-          {/* ML Studio Section */}
-          <MenuSection title="ML Studio" defaultOpen={true}>
-            <MenuItem
-              icon={<IconMessageCircle size={16} stroke={1.5} />}
-              label="Text generation"
-              href="/ai-platform/text-generation"
-              active={isActive('/ai-platform/text-generation')}
-            />
-          </MenuSection>
-
-          {/* MLOps Section */}
-          <MenuSection title="MLOps" defaultOpen={true}>
-            <MenuItem
-              icon={<IconCode size={16} stroke={1.5} />}
-              label="DevSpace"
-              href="/ai-platform/devspace"
-              active={isActive('/ai-platform/devspace')}
-            />
-            <MenuItem
-              icon={<IconRoute size={16} stroke={1.5} />}
-              label="Pipeline builder"
-              href="/ai-platform/pipeline-builder"
-              active={isActive('/ai-platform/pipeline-builder')}
-            />
-            <MenuItem
-              icon={<IconChartBar size={16} stroke={1.5} />}
-              label="Benchmarks"
-              href="/ai-platform/benchmarks"
-              active={isActive('/ai-platform/benchmarks')}
-            />
-            <MenuItem
-              icon={<BrainCircuit size={16} strokeWidth={1.5} />}
-              label="Kubeflow"
-              href="/ai-platform/kubeflow"
-              active={isActive('/ai-platform/kubeflow')}
-            />
-            <MenuItem
-              icon={<RefreshCw size={16} strokeWidth={1.5} />}
-              label="MLflow"
-              href="/ai-platform/mlflow"
-              active={isActive('/ai-platform/mlflow')}
-            />
-          </MenuSection>
-
-          {/* Settings Section */}
-          <MenuSection title="Settings" defaultOpen={true}>
-            <MenuItem
-              icon={<IconSettings size={16} stroke={1.5} />}
-              label="Settings"
-              href="/ai-platform/settings"
-              active={isActive('/ai-platform/settings')}
-            />
-            <MenuItem
-              icon={<IconHelp size={16} stroke={1.5} />}
-              label="FAQ"
-              href="/ai-platform/faq"
-              active={isActive('/ai-platform/faq')}
-            />
-          </MenuSection>
-
-          {/* Operations Section */}
-          <MenuSection title="Operations" defaultOpen={true}>
-            <MenuItem
-              icon={<IconList size={16} stroke={1.5} />}
-              label="Kueue"
-              href="/ai-platform/kueue"
-              active={isActive('/ai-platform/kueue')}
-            />
-            <MenuItem
-              icon={<IconActivity size={16} stroke={1.5} />}
-              label="Monitoring"
-              href="/ai-platform/monitoring"
-              active={isActive('/ai-platform/monitoring')}
-            />
-            <MenuItem
-              icon={<IconGitBranch size={16} stroke={1.5} />}
-              label="Dependencies"
-              href="/ai-platform/dependencies"
-              active={isActive('/ai-platform/dependencies')}
-            />
-            <MenuItem
-              icon={<IconUserCog size={16} stroke={1.5} />}
-              label="System administration"
-              href="/ai-platform/system-admin"
-              active={isActive('/ai-platform/system-admin')}
+              icon={<IconFolder size={16} stroke={1.5} />}
+              label="Projects"
+              href="/agent/projects"
+              active={isActive('/agent/projects')}
             />
           </MenuSection>
         </VStack>
-      </OverlayScrollbarsComponent>
+      </nav>
     </aside>
   );
 }

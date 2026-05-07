@@ -26,7 +26,7 @@ import {
   Toggle,
   Badge,
 } from '@/design-system';
-import { AgentSidebar } from '@/components/AgentSidebar';
+import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -65,6 +65,8 @@ export function CreateMCPTemplatePage() {
   const navigate = useNavigate();
   const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeStep, setActiveStep] = useState<'configuration' | 'publish'>('configuration');
 
   // Configuration Tab State
@@ -216,8 +218,10 @@ export function CreateMCPTemplatePage() {
 
   return (
     <PageShell
-      sidebar={<AgentSidebar />}
-      sidebarWidth={60}
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
@@ -233,7 +237,8 @@ export function CreateMCPTemplatePage() {
       }
       topBar={
         <TopBar
-          showSidebarToggle={false}
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}

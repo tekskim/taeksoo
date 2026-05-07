@@ -91,7 +91,7 @@ export function ComputeAdminLayout() {
   const currentLabel = getBreadcrumbLabel(location.pathname);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)] min-w-[var(--layout-min-width)]">
       <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main

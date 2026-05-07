@@ -265,22 +265,50 @@ export function ProjectSelector({
                           onClick={() => handleProjectClick(project)}
                           disabled={isDisabled}
                         >
-                          <p className="text-body-sm text-[var(--color-text-default)]">
-                            {project.description}
-                          </p>
+                          {project.name}
                         </button>
-
-                        {/* Row 3: ID */}
-                        <button
-                          type="button"
-                          className="text-left"
-                          onClick={() => handleProjectClick(project)}
-                          disabled={isDisabled}
-                        >
-                          <span className="text-[11px] leading-4 text-[var(--color-text-muted)]">
-                            ID: {project.id}
+                        {isSelected && !isDisabled && (
+                          <IconCheck
+                            size={16}
+                            className="text-[var(--color-action-primary)]"
+                            stroke={1.5}
+                          />
+                        )}
+                        {isDisabled && (
+                          <span className="text-body-sm text-[var(--color-state-danger)]">
+                            Disabled
                           </span>
-                        </button>
+                        )}
+                      </div>
+
+                      {/* Description */}
+                      <p
+                        className={`text-body-sm leading-4 ${
+                          isDisabled
+                            ? 'text-[var(--color-text-muted)]'
+                            : 'text-[var(--color-text-subtle)]'
+                        }`}
+                      >
+                        {project.description}
+                      </p>
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between">
+                        {project.group && (
+                          <span className="inline-flex items-center rounded-[6px] bg-[#f3f4f6] px-1.5 py-0.5 text-label-sm text-[var(--color-text-muted)]">
+                            {project.group}
+                          </span>
+                        )}
+                        {!project.group && <span />}
+                        <span
+                          className={`text-body-xs ${
+                            isDisabled
+                              ? 'text-[var(--color-text-muted)]'
+                              : 'text-[var(--color-text-subtle)]'
+                          }`}
+                        >
+                          {project.createdAt}
+                        </span>
                       </div>
                     </div>
                   );

@@ -51,7 +51,7 @@ const apps: AppItem[] = [
   { id: 'storage-member', title: 'Storage - Member', icon: StorageIcon, path: '/storage-member' },
   { id: 'container', title: 'Container', icon: ContainerIcon, path: '/container' },
   { id: 'ai-platform', title: 'AI Platform', icon: AIPlatformIcon, path: '/ai-platform' },
-  { id: 'agent-ops', title: 'Agent Ops', icon: AgentOpsIcon, path: '/agent' },
+  { id: 'agent-ops', title: 'Agent Studio', icon: AgentOpsIcon, path: '/agent' },
   { id: 'settings', title: 'Settings', icon: SettingsIcon, path: '/settings' },
   { id: 'cloud-builder', title: 'Cloud Builder', icon: CloudBuilderIcon, path: '/cloudbuilder' },
   { id: 'admin-center', title: 'Admin Center', icon: AdminCenterIcon, path: '/admin-center' },

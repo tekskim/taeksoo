@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
+  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -19,6 +19,11 @@ import {
   ContextMenu,
   PageShell,
   CopyButton,
+  Drawer,
+  Toggle,
+  InfoBox,
+  Select,
+  FormField,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -32,7 +37,8 @@ import {
   IconAlertCircle,
   IconInfoCircle,
   IconCircleX,
-  IconSettings,
+  IconLock,
+  IconExternalLink,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -43,6 +49,7 @@ interface WorkloadDetail {
   id: string;
   name: string;
   status: 'running' | 'pending' | 'failed' | 'stopped';
+  locked: boolean;
   namespace: string;
   createdAt: string;
   computeType: string;
@@ -81,6 +88,7 @@ const mockWorkloadsMap: Record<string, WorkloadDetail> = {
     id: 'presidio-pii-deid-eb9502cc',
     name: 'presidio-pii-deid-eb9502cc',
     status: 'running',
+    locked: true,
     namespace: 'default',
     createdAt: 'Jan 8, 2026 11:51:27',
     computeType: 'gpu × 1',
@@ -109,6 +117,7 @@ const mockWorkloadsMap: Record<string, WorkloadDetail> = {
     id: 'audiocraft-f6c7d9c6',
     name: 'audiocraft-f6c7d9c6',
     status: 'running',
+    locked: false,
     namespace: 'default',
     createdAt: 'Jan 7, 2026 04:38:10',
     computeType: 'gpu × 1',
@@ -142,6 +151,7 @@ const defaultWorkloadDetail: WorkloadDetail = {
   id: 'unknown',
   name: 'Unknown Workload',
   status: 'stopped',
+  locked: false,
   namespace: 'default',
   createdAt: '-',
   computeType: '-',
@@ -154,6 +164,12 @@ const defaultWorkloadDetail: WorkloadDetail = {
   sshOverTcp: { status: 'unavailable' },
   directTcpPorts: { status: 'unavailable' },
 };
+
+const CONNECT_PORT_OPTIONS = [
+  { value: '80', label: 'Port 80' },
+  { value: '443', label: 'Port 443' },
+  { value: '8080', label: 'Port 8080' },
+];
 
 /* ----------------------------------------
    Connection Card Component
@@ -316,6 +332,44 @@ export function WorkloadDetailPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
+  const [isLockOpen, setIsLockOpen] = useState(false);
+  const [isConnectOpen, setIsConnectOpen] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+  const [selectedPort, setSelectedPort] = useState('80');
+  const [detailLocked, setDetailLocked] = useState(false);
+
+  useEffect(() => {
+    setDetailLocked(workload.locked);
+  }, [id, workload.locked]);
+
+  const connectAccessUrl = useMemo(
+    () => `https://${workload.name}.ai-platform.thaki.cloud:${selectedPort}`,
+    [workload.name, selectedPort]
+  );
+
+  const openLockDrawer = () => {
+    setIsLocked(detailLocked);
+    setIsLockOpen(true);
+  };
+
+  const closeLockDrawer = () => {
+    setIsLockOpen(false);
+  };
+
+  const handleLockSave = () => {
+    setDetailLocked(isLocked);
+    setIsLockOpen(false);
+  };
+
+  const openConnectDrawer = () => {
+    setSelectedPort('80');
+    setIsConnectOpen(true);
+  };
+
+  const closeConnectDrawer = () => {
+    setIsConnectOpen(false);
+  };
+
   return (
     <PageShell
       sidebar={
@@ -353,6 +407,22 @@ export function WorkloadDetailPage() {
           <DetailHeader.Title>{workload.name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconWorld size={12} />}
+              onClick={openConnectDrawer}
+            >
+              Connect
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconLock size={12} />}
+              onClick={openLockDrawer}
+            >
+              Lock
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconPlayerPause size={12} />}>
               Stop
             </Button>
@@ -618,6 +688,85 @@ export function WorkloadDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <Drawer
+        isOpen={isLockOpen}
+        onClose={closeLockDrawer}
+        title="Lock setting"
+        description="Locking an instance prevents it from being deleted or modified. You can unlock it anytime to allow changes again."
+        width={376}
+        footer={
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" onClick={closeLockDrawer} className="flex-1">
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleLockSave} className="flex-1">
+              Save
+            </Button>
+          </HStack>
+        }
+      >
+        <VStack gap={6}>
+          <InfoBox label="Workload" value={workload.name} />
+          <FormField label="Lock Status" spacing="loose">
+            <Toggle
+              checked={isLocked}
+              onChange={(e) => setIsLocked(e.target.checked)}
+              label="Locked"
+            />
+          </FormField>
+        </VStack>
+      </Drawer>
+
+      <Drawer
+        isOpen={isConnectOpen}
+        onClose={closeConnectDrawer}
+        title="Connect"
+        description="Enables external access to web services running inside a Pod via routing or by establishing a direct SSH session."
+        width={376}
+        footer={
+          <Button variant="secondary" onClick={closeConnectDrawer} className="w-full">
+            Close
+          </Button>
+        }
+      >
+        <VStack gap={6}>
+          <FormField label="HTTP service" description="Access your service through web browser">
+            <Select
+              options={CONNECT_PORT_OPTIONS}
+              value={selectedPort}
+              onChange={setSelectedPort}
+              fullWidth
+            />
+          </FormField>
+          <InfoBox label="Access URL" value={connectAccessUrl} copyable />
+          <InlineMessage variant="info">
+            This URL connects to your Pod&apos;s web service through a secure session-based proxy.
+            Most web applications like Jupyter, VS Code Server are supported.
+          </InlineMessage>
+          <Disclosure defaultOpen={false}>
+            <Disclosure.Trigger>
+              <span className="text-heading-h6 text-[var(--color-text-default)]">
+                Advanced connection options
+              </span>
+            </Disclosure.Trigger>
+            <Disclosure.Panel className="pt-2">
+              <VStack gap={2}>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Secure shell access for advanced users
+                </span>
+                <Button variant="secondary" size="sm" rightIcon={<IconExternalLink size={12} />}>
+                  Set Up SSH Connection
+                </Button>
+                <InlineMessage variant="info">
+                  SSH access requires setting up a secure connection through our bastion host. This
+                  process takes 5-10 seconds.
+                </InlineMessage>
+              </VStack>
+            </Disclosure.Panel>
+          </Disclosure>
+        </VStack>
+      </Drawer>
     </PageShell>
   );
 }

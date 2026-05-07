@@ -48,8 +48,9 @@
    - `path d` 속성 — 아이콘 형태 (TDS Tabler Icons path에 맞춤)
    - `strokeWidth`, `stroke`, `fill` — 아이콘 선 굵기/색상
    - 로직(이벤트, 조건부 렌더링 등)은 변경 불가
-7. **`wrapped.tsx`에 신규 아이콘 등록**: TDS에서 사용하는 Tabler 아이콘이 `src/components/Icon/svg/wrapped.tsx`에 미등록된 경우 `wrapTablerIcon`으로 등록
-8. **API 변경 (디자인 반영에 필수적인 경우)**:
+   - ⚠️ **Figma SVG의 viewBox를 임의로 16x16 등으로 재계산 금지** — Pitfall 1.5 참조
+   - ⚠️ **stroke-width가 없는 SVG에 임의로 strokeWidth prop 주입 금지** — SVG 기본값 1이 정답
+7. **API 변경 (디자인 반영에 필수적인 경우)**:
    - props 기본값 변경: `size='md'` → `size='sm'` (TDS 기본 스타일과 일치시키기 위해)
    - `@deprecated` JSDoc 추가: TDS에서 제거된 variant/type/size 표시
    - 새 variant/theme 값 추가: TDS에 존재하지만 shared에 없는 옵션
@@ -479,7 +480,63 @@ export const styles = cva(
 
 **적용 원칙**: 기본 상태(normal)의 스타일은 CVA base 클래스에 넣고, `disabled`/`error` 같은 특수 상태만 variant로 override.
 
-### Pitfall 2: Icon wrapper의 인라인 스타일 색상 우선순위 (Critical)
+### Pitfall 1.5: Figma 커스텀 아이콘 SVG — viewBox/stroke-width 임의 변환 금지 (Critical)
+
+Figma 원본 SVG를 TDS 커스텀 아이콘(`CustomIcons.tsx`)으로 재현할 때, **SVG 속성을 임의로 변환하면 굵기·비율이 틀어집니다.**
+
+#### 금지 패턴 (3회 반복 실패한 원인)
+
+| #   | 금지 행위                              | 발생하는 문제                                                              | 올바른 방법                                                                       |
+| --- | -------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 1   | viewBox를 `0 0 16 16`으로 재계산       | path 좌표를 스케일해야 하는데 부정확해짐                                   | **Figma 원본 viewBox를 그대로 유지** (width/height만 16으로 설정하면 자동 스케일) |
+| 2   | `strokeWidth={1.5}` 주입               | Figma SVG에 stroke-width 속성이 없으면 기본값은 1. 1.5를 넣으면 50% 굵어짐 | **stroke-width 미명시 = 기본값 1. `strokeWidth` prop을 아예 넣지 않는다**         |
+| 3   | Tabler 아이콘이 "비슷해 보인다"고 사용 | path d가 다르면 미세하게 다른 모양으로 렌더링                              | **path d를 좌표 수준에서 대조** 후 일치할 때만 Tabler 사용                        |
+
+#### 올바른 커스텀 아이콘 생성 절차
+
+1. **Figma SVG를 있는 그대로 사용**: `curl`로 다운로드한 SVG의 `viewBox`, `path d`, `stroke-*` 속성을 한 글자도 바꾸지 않음
+2. **viewBox에 padding 추가**: Figma SVG viewBox에 stroke가 잘리지 않도록 상하좌우 0.5px씩 여유를 준다
+   ```
+   원본 viewBox="0 0 12.6667 10.3333"
+   → 적용 viewBox="-0.5 -0.5 13.6667 11.3333"
+   ```
+3. **width/height만 `{size}` prop으로 설정**: `<svg width={size} height={size}>` — SVG 엔진이 viewBox 비율에 맞춰 자동 스케일
+4. **stroke-width는 절대 외부에서 주입하지 않음**: Figma SVG에 명시적 stroke-width가 있으면 해당 값을 `<path strokeWidth={값}>` 에 하드코딩. 없으면 SVG 기본값 1이 적용되도록 **strokeWidth prop 자체를 생략**
+5. **사용 시 `stroke` prop도 전달하지 않음**: `<IconCustomFigma size={16} />` 만 사용. `stroke={1.5}` 같은 prop 금지
+
+#### 코드 템플릿
+
+```tsx
+export const IconCustomFigma = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="{Figma 원본 viewBox에 ±0.5 padding 추가}"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <path
+          d="{Figma 원본 path d 그대로}"
+          stroke={color}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          {/* strokeWidth는 Figma SVG에 명시된 경우에만 추가. 없으면 생략 (기본값 1) */}
+        />
+      </svg>
+    );
+  }
+);
+```
+
+> ⚠️ 이 규칙을 어기면 "굵기가 다르다" "모양이 다르다" 피드백이 반복됩니다. 실제로 이 프로젝트에서 3회 반복된 사례입니다.
+
+### Pitfall 2: Icon 컴포넌트의 색상 상속 (`currentColor`)
 
 Icon wrapper(`src/components/Icon/Icon.tsx`)는 `color` prop이 없으면 `var(--semantic-color-text)`를 **인라인 스타일**(`style.color`)로 적용합니다. 인라인 스타일은 Tailwind 클래스보다 specificity가 높아서, 아이콘에 `className="text-text-inverse"`를 넣어도 무시됩니다.
 

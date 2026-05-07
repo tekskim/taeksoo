@@ -44,7 +44,7 @@ export function PageShell({
   return (
     <div
       data-figma-name="[TDS] AppLayout"
-      className={`fixed inset-0 min-w-[var(--layout-min-width)] bg-[var(--color-surface-subtle)] ${className}`.trim()}
+      className={`fixed inset-0 bg-[var(--color-surface-subtle)] min-w-[var(--layout-min-width)] ${className}`.trim()}
     >
       {/* Sidebar */}
       {sidebar}
@@ -72,7 +72,7 @@ export function PageShell({
             paddingBottom: bottomPanelPadding || '0',
           }}
         >
-          <div className={`bg-[var(--color-surface-default)] ${contentClassName}`.trim()}>
+          <div className={`bg-[var(--color-surface-default)] h-full ${contentClassName}`.trim()}>
             {children}
           </div>
         </OverlayScrollbarsComponent>

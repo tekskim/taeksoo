@@ -128,9 +128,8 @@ function getInitialIconLayout(): DesktopIconItem[] {
   const icons = [
     { id: 'iam', icon: imgIam, label: 'IAM' },
     { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
-    { id: 'compute', icon: imgCompute, label: 'Compute' },
-    { id: 'agent', icon: imgAgent, label: 'Agent Ops' },
-    { id: 'container', icon: imgContainer, label: 'Container' },
+    { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
+    { id: 'settings', icon: imgSettings, label: 'Settings' },
     { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
     { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
     { id: 'settings', icon: imgSettings, label: 'Settings' },
@@ -2025,7 +2024,7 @@ export function DesktopPage() {
       initialPath: '/storage-member',
     },
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
-    agent: { name: 'Agent Ops', icon: imgAgent, initialPath: '/agent' },
+    agent: { name: 'Agent Studio', icon: imgAgent, initialPath: '/agent' },
     'ai-platform': { name: 'AI Platform', icon: imgAi, initialPath: '/ai-platform' },
     iam: { name: 'IAM', icon: imgIam, initialPath: '/iam' },
     settings: { name: 'Settings', icon: imgSettings, initialPath: '/settings' },
@@ -2036,17 +2035,18 @@ export function DesktopPage() {
     },
     'cloud-builder': { name: 'Cloud Builder', icon: imgCloud, initialPath: '/cloudbuilder' },
   };
-  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set());
-  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([]);
-
-  const visibleDockApps = useMemo(() => {
-    const visible = dockAppOrder.filter(
-      (appId) => pinnedApps.has(appId) || windows.some((w) => w.appId === appId)
-    );
-    const pinned = visible.filter((appId) => pinnedApps.has(appId));
-    const unpinned = visible.filter((appId) => !pinnedApps.has(appId));
-    return [...pinned, ...unpinned];
-  }, [dockAppOrder, pinnedApps, windows]);
+  // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Studio, Settings는 Pin만 되어있음
+  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(
+    new Set(['ai-platform', 'agent', 'settings'])
+  );
+  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([
+    'compute',
+    'storage',
+    'container',
+    'ai-platform',
+    'agent',
+    'settings',
+  ]);
 
   // Window management functions
   const CASCADE_OFFSET = 30;

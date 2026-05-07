@@ -61,7 +61,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const currentLabel = getBreadcrumbLabel(location.pathname);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 bg-[var(--color-surface-subtle)] min-w-[var(--layout-min-width)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
 
       <main
