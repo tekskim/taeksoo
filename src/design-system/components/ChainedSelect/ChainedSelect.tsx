@@ -12,6 +12,7 @@ export interface ChainedSelectProps {
   onChange: (values: Record<string, string>) => void;
   className?: string;
   disabled?: boolean;
+  fullWidth?: boolean;
 }
 
 export function ChainedSelect({
@@ -20,6 +21,7 @@ export function ChainedSelect({
   onChange,
   className = '',
   disabled = false,
+  fullWidth = false,
 }: ChainedSelectProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -82,9 +84,12 @@ export function ChainedSelect({
   }, []);
 
   return (
-    <div ref={containerRef} className={`relative inline-flex ${className}`}>
+    <div
+      ref={containerRef}
+      className={`relative ${fullWidth ? 'flex w-full' : 'inline-flex'} ${className}`}
+    >
       <div
-        className={`flex items-center gap-1 border rounded-[var(--radius-md)] p-1 h-[32px] ${
+        className={`flex items-center gap-1 border rounded-[var(--radius-md)] p-1 h-[32px] ${fullWidth ? 'w-full' : ''} ${
           disabled
             ? 'border-[var(--color-border-default)] bg-[var(--color-surface-muted)] cursor-not-allowed'
             : 'border-[var(--color-border-strong)] bg-[var(--color-surface-default)]'
@@ -97,11 +102,16 @@ export function ChainedSelect({
           const selectedOption = segment.options.find((o) => o.value === values[segment.key]);
 
           return (
-            <div key={segment.key} className="contents">
+            <div
+              key={segment.key}
+              className={fullWidth ? 'flex items-center flex-1 min-w-0' : 'contents'}
+            >
               {index > 0 && (
-                <span className="text-body-md text-[var(--color-text-default)] select-none">:</span>
+                <span className="text-body-md text-[var(--color-text-default)] select-none shrink-0">
+                  :
+                </span>
               )}
-              <div className="relative">
+              <div className={`relative ${fullWidth ? 'flex-1 min-w-0' : ''}`}>
                 <button
                   ref={(el) => {
                     segmentRefs.current[index] = el;
@@ -109,7 +119,7 @@ export function ChainedSelect({
                   type="button"
                   onClick={() => handleSegmentClick(index)}
                   disabled={!clickable}
-                  className={`flex items-center gap-1 px-[5px] py-1 rounded-[3px] w-[120px] text-body-md transition-colors duration-[var(--duration-fast)] ${
+                  className={`flex items-center gap-1 px-[5px] py-1 rounded-[3px] ${fullWidth ? 'w-full' : 'w-[120px]'} text-body-md transition-colors duration-[var(--duration-fast)] ${
                     isOpen
                       ? 'bg-[var(--color-surface-muted)]'
                       : clickable

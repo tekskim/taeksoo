@@ -128,8 +128,9 @@ function getInitialIconLayout(): DesktopIconItem[] {
   const icons = [
     { id: 'iam', icon: imgIam, label: 'IAM' },
     { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
+    { id: 'compute', icon: imgCompute, label: 'Compute' },
     { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
-    { id: 'settings', icon: imgSettings, label: 'Settings' },
+    { id: 'container', icon: imgContainer, label: 'Container' },
     { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
     { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
     { id: 'settings', icon: imgSettings, label: 'Settings' },
@@ -1059,7 +1060,7 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
       {isOpen && (
         <>
           <motion.div
-            className="fixed inset-0 z-[6000] bg-black/50 backdrop-blur-xl"
+            className="fixed inset-0 z-[6000] bg-black/70 backdrop-blur-xl"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -2035,10 +2036,7 @@ export function DesktopPage() {
     },
     'cloud-builder': { name: 'Cloud Builder', icon: imgCloud, initialPath: '/cloudbuilder' },
   };
-  // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Studio, Settings는 Pin만 되어있음
-  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(
-    new Set(['ai-platform', 'agent', 'settings'])
-  );
+  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set());
   const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([
     'compute',
     'storage',
@@ -2047,6 +2045,14 @@ export function DesktopPage() {
     'agent',
     'settings',
   ]);
+
+  const visibleDockApps = useMemo(() => {
+    const pinned = dockAppOrder.filter((appId) => pinnedApps.has(appId));
+    const unpinned = dockAppOrder.filter(
+      (appId) => !pinnedApps.has(appId) && windows.some((w) => w.appId === appId)
+    );
+    return [...pinned, ...unpinned];
+  }, [dockAppOrder, pinnedApps, windows]);
 
   // Window management functions
   const CASCADE_OFFSET = 30;
