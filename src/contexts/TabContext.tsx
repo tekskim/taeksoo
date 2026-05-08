@@ -83,6 +83,7 @@ function getDefaultHomeTab(app: string): TabItem {
     '/container': { path: '/container', label: 'Home' },
     '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
     '/iam': { path: '/iam', label: 'Dashboard' },
+    '/security': { path: '/security/firewalls', label: 'Firewalls' },
     '/': { path: '/', label: 'Dashboard' },
   };
 
@@ -178,6 +179,9 @@ function getLabelFromPath(path: string): string {
     '/iam/policies/create': 'Create policy',
     '/iam/action-catalog': 'Action catalog',
     '/iam/policy-simulator': 'Policy simulator',
+    '/security/firewalls': 'Firewalls',
+    '/security/security-groups': 'Security groups',
+    '/security/network-policies': 'Network policies',
   };
 
   // Check for exact match first

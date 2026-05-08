@@ -97,19 +97,6 @@ const ComputeAdminCertificateDetailPage = lazy(
   () => import('@/pages/ComputeAdminCertificateDetailPage')
 );
 
-// Firewall
-const ComputeAdminFirewallsPage = lazy(() => import('@/pages/ComputeAdminFirewallsPage'));
-const ComputeAdminFirewallDetailPage = lazy(() => import('@/pages/ComputeAdminFirewallDetailPage'));
-const ComputeAdminFirewallPolicyDetailPage = lazy(
-  () => import('@/pages/ComputeAdminFirewallPolicyDetailPage')
-);
-const ComputeAdminFirewallRuleDetailPage = lazy(
-  () => import('@/pages/ComputeAdminFirewallRuleDetailPage')
-);
-const ComputeAdminCreateFirewallRulePage = lazy(
-  () => import('@/pages/ComputeAdminCreateFirewallRulePage')
-);
-
 // Tenants, Metadata, Monitor, Physical Nodes
 const ComputeAdminTenantsPage = lazy(() => import('@/pages/ComputeAdminTenantsPage'));
 const ComputeAdminTenantDetailPage = lazy(() => import('@/pages/ComputeAdminTenantDetailPage'));
@@ -234,22 +221,6 @@ export const computeAdminRoutes = (
     <Route path="/compute-admin/l7-policies/:id" element={<ComputeAdminL7PolicyDetailPage />} />
     <Route path="/compute-admin/certificates" element={<ComputeAdminCertificatesPage />} />
     <Route path="/compute-admin/certificates/:id" element={<ComputeAdminCertificateDetailPage />} />
-
-    {/* Firewall */}
-    <Route path="/compute-admin/firewall" element={<ComputeAdminFirewallsPage />} />
-    <Route
-      path="/compute-admin/firewall/create-rule"
-      element={<ComputeAdminCreateFirewallRulePage />}
-    />
-    <Route path="/compute-admin/firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
-    <Route
-      path="/compute-admin/firewall-policies/:id"
-      element={<ComputeAdminFirewallPolicyDetailPage />}
-    />
-    <Route
-      path="/compute-admin/firewall-rules/:id"
-      element={<ComputeAdminFirewallRuleDetailPage />}
-    />
 
     {/* Tenants & Management */}
     <Route path="/compute-admin/tenants" element={<ComputeAdminTenantsPage />} />

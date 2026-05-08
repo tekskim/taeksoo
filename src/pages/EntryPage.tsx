@@ -15,6 +15,7 @@ import AIAgentIcon from '@/assets/appIcon/agentops.png';
 import StorageIcon from '@/assets/appIcon/storage.png';
 import StorageAdminIcon from '@/assets/appIcon/storageadmin.png';
 import IAMIcon from '@/assets/appIcon/iam.png';
+import SecurityIcon from '@/assets/appIcon/security.png';
 import DesktopIcon from '@/assets/appIcon/desktop.png';
 import SettingsIcon from '@/assets/appIcon/settings.png';
 
@@ -36,6 +37,7 @@ const appCards: AppCard[] = [
   },
   { id: 'container', title: 'Container', iconSrc: ContainerIcon, path: '/container' },
   { id: 'iam', title: 'IAM', iconSrc: IAMIcon, path: '/iam' },
+  { id: 'security', title: 'Security', iconSrc: SecurityIcon, path: '/security' },
   {
     id: 'storage-system-admin',
     title: 'Storage - System Admin',

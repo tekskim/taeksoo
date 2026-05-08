@@ -22,7 +22,7 @@ import {
   IconActivity,
   IconServer2,
 } from '@tabler/icons-react';
-import { ChevronsLeftRightEllipsis, BrickWallFire } from 'lucide-react';
+import { ChevronsLeftRightEllipsis } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { IconRouterArrows } from '@/design-system/components/Icons/CustomIcons';
 import { AppSwitcher } from './AppSwitcher';
@@ -69,15 +69,6 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
     if (
       href === '/compute-admin/volume-types' &&
       location.pathname.startsWith('/compute-admin/qos-specs')
-    ) {
-      return true;
-    }
-    // Match child resources - NACL / firewall-related routes under Firewall
-    if (
-      href === '/compute-admin/firewall' &&
-      (location.pathname.startsWith('/compute-admin/firewalls') ||
-        location.pathname.startsWith('/compute-admin/firewall-policies') ||
-        location.pathname.startsWith('/compute-admin/firewall-rules'))
     ) {
       return true;
     }
@@ -229,12 +220,6 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               label="Load balancers"
               href="/compute-admin/load-balancers"
               active={isActive('/compute-admin/load-balancers')}
-            />
-            <MenuItem
-              icon={<BrickWallFire size={16} strokeWidth={1.5} />}
-              label="Firewall"
-              href="/compute-admin/firewall"
-              active={isActive('/compute-admin/firewall')}
             />
           </MenuSection>
 
