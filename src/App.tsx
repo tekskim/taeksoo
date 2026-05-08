@@ -503,6 +503,8 @@ import { MyTemplateDetailPage } from '@/pages/ai-platform/MyTemplateDetailPage';
 import { StoragePage as AIPlatformStoragePage } from '@/pages/ai-platform/StoragePage';
 import { VolumesPage as AIPlatformVolumesPage } from '@/pages/ai-platform/VolumesPage';
 import { ServerlessPage } from '@/pages/ai-platform/ServerlessPage';
+import { ServerlessCreateEndpointPage } from '@/pages/ai-platform/ServerlessCreateEndpointPage';
+import { ServerlessCreateVllmPage } from '@/pages/ai-platform/ServerlessCreateVllmPage';
 import { DevSpacePage } from '@/pages/ai-platform/DevSpacePage';
 import { PipelineBuilderPage } from '@/pages/ai-platform/PipelineBuilderPage';
 import { BenchmarksPage } from '@/pages/ai-platform/BenchmarksPage';
@@ -1109,6 +1111,8 @@ function AppRoutes() {
       <Route path="/ai-platform/storage" element={<AIPlatformStoragePage />} />
       <Route path="/ai-platform/volumes" element={<AIPlatformVolumesPage />} />
       <Route path="/ai-platform/serverless" element={<ServerlessPage />} />
+      <Route path="/ai-platform/serverless/create" element={<ServerlessCreateEndpointPage />} />
+      <Route path="/ai-platform/serverless/create/vllm" element={<ServerlessCreateVllmPage />} />
       <Route path="/ai-platform/text-generation" element={<TextGenerationPage />} />
       <Route path="/ai-platform/devspace" element={<DevSpacePage />} />
       <Route path="/ai-platform/pipeline-builder" element={<PipelineBuilderPage />} />

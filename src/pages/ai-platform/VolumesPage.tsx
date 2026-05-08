@@ -24,6 +24,7 @@ import {
   Tab,
   TabPanel,
   StatusIndicator,
+  MetricCard,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { useTabs } from '@/contexts/TabContext';
@@ -33,9 +34,6 @@ import {
   IconEye,
   IconEdit as IconPencil,
   IconShield,
-  IconPlayerPlay,
-  IconAlertTriangle,
-  IconCircleDot,
 } from '@tabler/icons-react';
 import {
   CreateVolumeDrawer,
@@ -528,32 +526,6 @@ function HeaderStorageCard({
   );
 }
 
-function InfoMetricCard({
-  label,
-  value,
-  indicatorBg,
-  icon,
-}: {
-  label: string;
-  value: number;
-  indicatorBg: string;
-  icon: ReactNode;
-}) {
-  return (
-    <div className="flex-1 min-w-0 flex items-center justify-between rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] px-4 py-3">
-      <VStack gap={1.5}>
-        <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      </VStack>
-      <div
-        className={`${indicatorBg} flex items-center justify-center rounded-full size-6 shrink-0`}
-      >
-        {icon}
-      </div>
-    </div>
-  );
-}
-
 function filterVolumesByName(list: VolumeItem[], q: string): VolumeItem[] {
   const trimmed = q.trim().toLowerCase();
   if (!trimmed) return list;
@@ -591,26 +563,11 @@ function VolumeListSection({
 
   return (
     <VStack gap={3} className="pt-4">
-      <div className="flex gap-2 w-full">
-        <InfoMetricCard
-          label="Running"
-          value={runningCount}
-          indicatorBg="bg-[#60a5fa]"
-          icon={<IconPlayerPlay size={16} className="text-white" />}
-        />
-        <InfoMetricCard
-          label="error"
-          value={errorCount}
-          indicatorBg="bg-[#f87171]"
-          icon={<IconAlertTriangle size={16} className="text-white" />}
-        />
-        <InfoMetricCard
-          label="In use"
-          value={inUseCount}
-          indicatorBg="bg-[var(--color-text-muted)]"
-          icon={<IconCircleDot size={16} className="text-white" />}
-        />
-      </div>
+      <MetricCard.Group>
+        <MetricCard title="Running" value={runningCount} />
+        <MetricCard title="error" value={errorCount} />
+        <MetricCard title="In use" value={inUseCount} />
+      </MetricCard.Group>
       {searchToolbar}
       {filteredVolumes.length === 0 ? (
         <EmptyState

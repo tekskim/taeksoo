@@ -41,20 +41,56 @@
 - 테이블 컬럼 (있는 경우)
 - 상태별 화면
 
-### Step 2: 기존 파일 확인
+### Step 2: 기존 동일 유형 페이지 비교 참조 (필수)
+
+**새 페이지를 구현하기 전에, 동일 도메인·동일 유형의 기존 페이지를 반드시 읽고 패턴을 추출해야 합니다.** 이 단계를 건너뛰면 contentClassName, TopBar actions, Button props 등이 기존 페이지와 불일치하여 일관성이 깨집니다.
+
+#### 2-1. 비교 대상 선정
+
+동일 도메인 내 **이미 구현된 페이지** 중 같은 유형(List/Detail/Create)의 페이지를 2~3개 선택합니다.
+
+```bash
+# 예: AI Platform 도메인에서 List 페이지를 만들 경우
+# → WorkloadsPage.tsx, ModelsPage.tsx, DatasetsPage.tsx 를 비교 대상으로 선정
+```
+
+#### 2-2. 비교 항목 체크리스트
+
+선택한 비교 대상 페이지에서 다음 항목의 **실제 코드**를 확인합니다:
+
+| #   | 비교 항목                           | 확인할 실제 코드                                                          |
+| --- | ----------------------------------- | ------------------------------------------------------------------------- |
+| 1   | `contentClassName`                  | 배경색 유무, padding 값 (`pt-4 px-8 pb-20` vs `pt-3 px-8 pb-20 bg-[...]`) |
+| 2   | `TopBar.actions`                    | 어떤 아이콘 버튼이 있는지 (Bell만? Search+Bell?)                          |
+| 3   | `PageHeader.actions`                | Button의 `variant`, `size`, `leftIcon` 유무, `gap` 값                     |
+| 4   | `Breadcrumb.items`                  | 단계 수, `href`/`onClick` 패턴                                            |
+| 5   | `Table` 스타일                      | `selectable`, `fixedColumns`, `columnMinWidths` 사용 여부                 |
+| 6   | `Pagination` props                  | `showSettings`, `totalItems`, `selectedCount` 유무                        |
+| 7   | `SearchInput` / `FilterSearchInput` | 어느 것을 사용하는지, placeholder 패턴                                    |
+| 8   | Toolbar 구조                        | `ListToolbar` 사용 여부 vs `HStack` 직접 배치                             |
+
+#### 2-3. 패턴 결정 규칙
+
+- **기존 페이지 2개 이상이 동일한 패턴** → 그 패턴을 따름
+- **기존 페이지마다 다른 패턴** → Figma 스펙을 우선하되, 가장 최근 구현된 페이지를 참조
+- **Figma에 명시적 지시가 있는 경우** → Figma 우선 (단, 기존 패턴과 다르면 사용자에게 확인)
+
+> **핵심 원칙**: Figma 디자인에 아이콘이 있다고 해서 무조건 넣지 않는다. 기존 동일 유형 페이지에 아이콘이 없으면 넣지 않는다. 디자인 일관성이 Figma 개별 프레임의 정확한 재현보다 우선한다.
+
+### Step 3: 기존 파일 확인
 
 대상 파일이 이미 존재하는지 확인합니다.
 
 - **기존 파일 있음**: 파일을 읽고, 스펙과 비교하여 수정 범위 결정
 - **기존 파일 없음**: 템플릿으로 신규 생성
 
-### Step 3: 페이지 코드 생성
+### Step 4: 페이지 코드 생성
 
 페이지 타입별 표준 템플릿을 따라 코드를 생성합니다.
 
-#### 3-1. 공통 Shell 구조
+#### 4-1. 공통 Shell 구조
 
-모든 AI Platform 페이지는 동일한 Shell 구조를 공유합니다:
+모든 AI Platform 페이지는 동일한 Shell 구조를 공유합니다. **아래 템플릿의 `contentClassName`, `TopBar.actions`, `PageHeader.actions`는 Step 2에서 확인한 기존 페이지 패턴을 따릅니다.**
 
 ```tsx
 import { useState, useEffect } from 'react';
@@ -64,7 +100,7 @@ import {
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconSearch } from '@tabler/icons-react';
+import { IconBell } from '@tabler/icons-react';
 
 export function {PageName}Page() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -96,18 +132,18 @@ export function {PageName}Page() {
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[/* 스펙의 breadcrumb */]} />}
           actions={
-            <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            /* Step 2에서 확인한 기존 패턴을 따름. 대부분의 AI Platform 페이지는 Bell 아이콘 단독 */
+            <button
+              type="button"
+              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              aria-label="Notifications"
+            >
+              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </button>
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName={/* Step 2에서 확인한 기존 패턴을 따름. 기본값: "pt-4 px-8 pb-20" */}
     >
       {/* Page Content — 타입별 패턴 */}
     </PageShell>
@@ -115,7 +151,11 @@ export function {PageName}Page() {
 }
 ```
 
-#### 3-2. List Page 패턴
+> **주의**: `contentClassName`에 `bg-[var(--color-surface-subtle)]`을 넣지 마세요. 기존 AI Platform List 페이지들(Workloads, Models, Datasets)은 배경색 없이 `"pt-4 px-8 pb-20"`을 사용합니다. 배경색이 필요한 경우는 Step 2에서 기존 동일 유형 페이지가 실제로 배경색을 사용하고 있는 경우에만 적용합니다.
+
+> **주의**: `PageHeader.actions`의 Button에 `leftIcon`을 넣지 마세요. 기존 AI Platform 페이지들은 텍스트만 있는 Button을 사용합니다. Figma에 아이콘이 보이더라도 기존 패턴과 일치시키는 것이 우선입니다.
+
+#### 4-2. List Page 패턴
 
 ```tsx
 // 상태
@@ -170,7 +210,7 @@ const mockData: {PageName}Item[] = [/* 15~20개 */];
 </VStack>
 ```
 
-#### 3-3. Detail Page 패턴
+#### 4-3. Detail Page 패턴
 
 ```tsx
 const [activeTab, setActiveTab] = useState('details');
@@ -196,7 +236,7 @@ const [activeTab, setActiveTab] = useState('details');
 </VStack>;
 ```
 
-#### 3-4. Create Page (Wizard) 패턴
+#### 4-4. Create Page (Wizard) 패턴
 
 ```tsx
 const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionState>>({
@@ -216,7 +256,7 @@ const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionS
 </VStack>;
 ```
 
-#### 3-5. Dashboard 패턴
+#### 4-5. Dashboard 패턴
 
 ```tsx
 <VStack gap={4}>
@@ -226,7 +266,7 @@ const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionS
 </VStack>
 ```
 
-### Step 4: 목 데이터 생성
+### Step 5: 목 데이터 생성
 
 스펙의 Mock Data Shape를 기반으로 현실적인 테스트 데이터를 생성합니다.
 
@@ -238,7 +278,7 @@ const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionS
 - 이름: 현실적인 리소스 이름 (예: `llama-3.1-70b-finetune`, `gpt-training-job-01`)
 - 날짜: 최근 날짜 (2024~2026)
 
-### Step 5: 라우트 등록 (신규 페이지)
+### Step 6: 라우트 등록 (신규 페이지)
 
 `src/App.tsx`에 라우트가 없는 경우 등록합니다.
 
@@ -256,7 +296,7 @@ import { NewFeaturePage } from './pages/ai-platform/NewFeaturePage';
 <Route path="/ai-platform/new-feature" element={<NewFeaturePage />} />;
 ```
 
-### Step 6: 빌드 검증
+### Step 7: 빌드 검증
 
 코드 작성 후 기본 검증을 수행합니다.
 
@@ -266,7 +306,7 @@ import { NewFeaturePage } from './pages/ai-platform/NewFeaturePage';
 
 에러가 있으면 즉시 수정합니다.
 
-### Step 7: 완료 보고
+### Step 8: 완료 보고
 
 ```markdown
 ## Page Applied: {PageName}
