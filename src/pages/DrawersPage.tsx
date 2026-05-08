@@ -250,6 +250,7 @@ import { AdminCreateRouterDrawer } from '@/components/AdminCreateRouterDrawer';
 import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDrawer';
 import { ManageAclRulesDrawer } from '@/components/ManageAclRulesDrawer';
 import { AdminTenantDrawer } from '@/components/AdminTenantDrawer';
+import { CreateFirewallDrawer } from '@/components/CreateFirewallDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers ---------------------------------------- */
@@ -1441,6 +1442,17 @@ const CONTAINER_RESOURCE_SEARCH_ITEMS: DrawerSearchItem[] = [
   },
 ];
 
+const SECURITY_FIREWALL_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create firewall',
+    description:
+      'Create a new firewall with tenant assignment, ingress/egress policies, and admin state settings.',
+    category: 'Firewall',
+  },
+];
+
+const SECURITY_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [...SECURITY_FIREWALL_ITEMS];
+
 const TABLE_SETTINGS_ITEMS: DrawerSearchItem[] = [
   {
     title: 'View preferences',
@@ -1481,6 +1493,7 @@ export function DrawersPage() {
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
+  const [isSecurityOpen, setIsSecurityOpen] = useState(false);
 
   // Drawer states
 
@@ -2706,6 +2719,44 @@ export function DrawersPage() {
                         description="Search and navigate Kubernetes resource types across clusters with categorized resource lists."
                         category="Search"
                         onOpen={() => openDrawerFn('resource-type-search')}
+                      />
+                    </FilteredGroup>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+
+            {/* Security App Drawers */}
+            <FilteredDisclosureSection allItems={SECURITY_DISCLOSURE_ALL_ITEMS}>
+              <Disclosure open={isSearching || isSecurityOpen} onChange={setIsSecurityOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isSearching || isSecurityOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Security{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (1 drawer)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup heading="Firewall actions" items={SECURITY_FIREWALL_ITEMS}>
+                      <DrawerCard
+                        title="Create firewall"
+                        description="Create a new firewall with tenant assignment, ingress/egress policies, and admin state settings."
+                        category="Firewall"
+                        onOpen={() => openDrawerFn('create-firewall')}
                       />
                     </FilteredGroup>
                   </VStack>
@@ -4116,6 +4167,17 @@ export function DrawersPage() {
         onClose={closeDrawer}
         onSelect={(categoryId, resourceId, resourceName) => {
           console.log('Resource selected:', { categoryId, resourceId, resourceName });
+        }}
+      />
+
+      {/* =============================================
+          SECURITY DRAWERS ============================================= */}
+
+      <CreateFirewallDrawer
+        isOpen={openDrawer === 'create-firewall'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create firewall:', data);
         }}
       />
 

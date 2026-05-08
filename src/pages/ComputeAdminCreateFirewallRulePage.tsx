@@ -21,11 +21,12 @@ import {
   RadioGroup,
   Select,
   FormField,
+  ProgressBar,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
-import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
+import { SecuritySidebar } from '@/components/SecuritySidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { IconEdit, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
@@ -96,26 +97,7 @@ function SummarySidebar({
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
           <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Quota</h5>
 
-          {/* Firewall Rules Quota */}
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex items-center justify-between w-full">
-              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                Firewall rules
-              </span>
-              <span className="text-body-md leading-4 text-[var(--color-text-default)]">2/10</span>
-            </div>
-            <div className="flex h-1 w-full items-start isolate pr-1">
-              <div
-                className="bg-[var(--color-state-success)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[3]"
-                style={{ width: '20%' }}
-              />
-              <div
-                className="bg-[var(--color-state-success-bg)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[2]"
-                style={{ width: '10%' }}
-              />
-              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-[var(--radius-lg)] -mr-1 z-[1]" />
-            </div>
-          </div>
+          <ProgressBar variant="quota" label="Firewall rules" value={2} newValue={1} max={10} />
         </div>
 
         {/* Action Buttons */}
@@ -231,7 +213,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/tenants/${row.id}`}
+            to={`/security/tenants/${row.id}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-body-md leading-4"
             onClick={(e) => e.stopPropagation()}
             target="_blank"
@@ -275,7 +257,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
 
   // Handle cancel
   const handleCancel = () => {
-    navigate('/compute-admin/firewall');
+    navigate('/security/firewalls');
   };
 
   // Handle create
@@ -294,7 +276,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
       destinationIp,
       destinationPort,
     });
-    navigate('/compute-admin/firewall');
+    navigate('/security/firewalls');
   };
 
   // Get selected tenant name
@@ -315,7 +297,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
 
   return (
     <PageShell
-      sidebar={<ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebar={<SecuritySidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -337,7 +319,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'NACL', href: '/compute-admin/firewall' },
+                { label: 'Firewalls', href: '/security/firewalls' },
                 { label: 'Create Firewall Rule' },
               ]}
             />
@@ -391,6 +373,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                               setRuleName(e.target.value);
                               setRuleNameError(null);
                             }}
+                            error={!!ruleNameError}
                             fullWidth
                           />
                         </FormField.Control>

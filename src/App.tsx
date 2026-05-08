@@ -152,7 +152,6 @@ import ComputeAdminPoolDetailPage from '@/pages/ComputeAdminPoolDetailPage';
 import ComputeAdminL7PolicyDetailPage from '@/pages/ComputeAdminL7PolicyDetailPage';
 import { ComputeAdminCertificatesPage } from '@/pages/ComputeAdminCertificatesPage';
 import ComputeAdminCertificateDetailPage from '@/pages/ComputeAdminCertificateDetailPage';
-import ComputeAdminFirewallsPage from '@/pages/ComputeAdminFirewallsPage';
 import ComputeAdminFirewallDetailPage from '@/pages/ComputeAdminFirewallDetailPage';
 import ComputeAdminFirewallPolicyDetailPage from '@/pages/ComputeAdminFirewallPolicyDetailPage';
 import ComputeAdminFirewallRuleDetailPage from '@/pages/ComputeAdminFirewallRuleDetailPage';
@@ -308,6 +307,11 @@ import CatalogInstallPage from '@/pages/CatalogInstallPage';
 import InstalledAppEditPage from '@/pages/InstalledAppEditPage';
 import InstalledOperatorsPage from '@/pages/InstalledOperatorsPage';
 import InstalledOperatorDetailPage from '@/pages/InstalledOperatorDetailPage';
+
+// Pages - Security
+import { FirewallsPage } from '@/pages/security/FirewallsPage';
+import { SecurityGroupsPage } from '@/pages/security/SecurityGroupsPage';
+import { NetworkPoliciesPage } from '@/pages/security/NetworkPoliciesPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -734,24 +738,6 @@ function AppRoutes() {
         path="/compute-admin/certificates/:id"
         element={<ComputeAdminCertificateDetailPage />}
       />
-      <Route path="/compute-admin/firewall" element={<ComputeAdminFirewallsPage />} />
-      <Route path="/compute-admin/firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
-      <Route
-        path="/compute-admin/firewall-policies/:id"
-        element={<ComputeAdminFirewallPolicyDetailPage />}
-      />
-      <Route
-        path="/compute-admin/firewall-rules/:id"
-        element={<ComputeAdminFirewallRuleDetailPage />}
-      />
-      <Route
-        path="/compute-admin/firewall/create-rule"
-        element={<ComputeAdminCreateFirewallRulePage />}
-      />
-      <Route
-        path="/compute-admin/firewall/create-rule-v2"
-        element={<ComputeAdminCreateFirewallRulePage />}
-      />
       <Route path="/compute-admin/tenants" element={<ComputeAdminTenantsPage />} />
       <Route path="/compute-admin/tenants/:id" element={<ComputeAdminTenantDetailPage />} />
       <Route
@@ -1049,6 +1035,26 @@ function AppRoutes() {
       <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
       <Route path="/container/*" element={<NotFoundPage />} />
+
+      {/* Security Routes */}
+      <Route path="/security" element={<FirewallsPage />} />
+      <Route path="/security/firewalls" element={<FirewallsPage />} />
+      <Route path="/security/firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
+      <Route
+        path="/security/firewall-policies/:id"
+        element={<ComputeAdminFirewallPolicyDetailPage />}
+      />
+      <Route path="/security/firewall-rules/:id" element={<ComputeAdminFirewallRuleDetailPage />} />
+      <Route
+        path="/security/firewalls/create-rule"
+        element={<ComputeAdminCreateFirewallRulePage />}
+      />
+      <Route
+        path="/security/firewalls/create-rule-v2"
+        element={<ComputeAdminCreateFirewallRulePage />}
+      />
+      <Route path="/security/security-groups" element={<SecurityGroupsPage />} />
+      <Route path="/security/network-policies" element={<NetworkPoliciesPage />} />
 
       {/* IAM Routes */}
       <Route path="/iam" element={<IAMHomePage />} />
