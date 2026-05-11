@@ -12,7 +12,6 @@ import {
   TabList,
   Tab,
   TabPanel,
-  InfoBox,
   ProgressBar,
   StatusIndicator,
   EmptyState,
@@ -103,7 +102,25 @@ const FILTER_FIELDS: FilterField[] = [
   },
 ];
 
-const CAPSULE_TABS = ['Feature Importance', 'Dependence', 'Local SHAP', 'Interaction', 'Drift'];
+const CAPSULE_TABS = ['Feature importance', 'Dependence', 'Local SHAP', 'Interaction', 'Drift'];
+
+const FEATURE_IMPORTANCE_DATA = [
+  { name: 'ExitRates', value: 0.6844 },
+  { name: 'ProductRelated_Duration', value: 0.26 },
+  { name: 'TrafficType', value: 0.1 },
+  { name: 'BounceRates', value: 0.05 },
+  { name: 'Region', value: 0.02 },
+  { name: 'Informational', value: 0.015 },
+  { name: 'OperatingSystems', value: 0.012 },
+  { name: 'Administrative_Duration', value: 0.01 },
+  { name: 'Month_May', value: 0.008 },
+  { name: 'Informational_Duration', value: 0.007 },
+  { name: 'PageValues', value: 0.005 },
+  { name: 'Month_Nov', value: 0.004 },
+  { name: 'Browser', value: 0.003 },
+  { name: 'Month_Feb', value: 0.002 },
+  { name: 'Month_Jul', value: 0.001 },
+];
 
 // --- Components ---
 
@@ -123,6 +140,46 @@ function StatCard({
         <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
       </div>
       <StatusIndicator status={status} layout="icon-only" />
+    </div>
+  );
+}
+
+function FeatureImportanceChart() {
+  const maxValue = FEATURE_IMPORTANCE_DATA[0].value;
+  return (
+    <div className="w-full rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden">
+      <div className="px-6 pt-5 pb-4">
+        <h4 className="text-heading-h6 text-[var(--color-text-default)]">Feature Importance</h4>
+      </div>
+      <div className="px-6 pb-5">
+        <div className="flex flex-col gap-1.5">
+          {FEATURE_IMPORTANCE_DATA.map((item) => (
+            <div key={item.name} className="flex items-center gap-3 h-[22px]">
+              <span className="text-body-md text-[var(--color-text-default)] w-[180px] text-right shrink-0 truncate">
+                {item.name}
+              </span>
+              <div className="flex-1 h-[14px] relative">
+                <div
+                  className="absolute top-0 left-0 h-full rounded-sm bg-[var(--color-action-primary)]"
+                  style={{ width: `${(item.value / maxValue) * 100}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-3 mt-3">
+          <div className="w-[180px] shrink-0" />
+          <div className="flex-1 flex justify-between">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">0</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">0.2</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">0.4</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">0.6</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              {maxValue.toFixed(16).replace(/0+$/, '')}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -316,18 +373,28 @@ export function TabularPage() {
         <span className="text-body-md text-[var(--color-text-subtle)]">Description</span>
       </VStack>
 
-      <InfoBox.Group>
-        <InfoBox label="Category" value="E-Commerce > Price Elasticity" />
-        <InfoBox label="Best Score" value="90.1%" />
-        <InfoBox label="Models Trained" value="4" />
-        <InfoBox label="Stability" value="0.01" />
-        <InfoBox label="Risk level" value="Low" />
-      </InfoBox.Group>
+      <div className="flex gap-2">
+        {[
+          { label: 'Category', value: 'E-Commerce > Price Elasticity' },
+          { label: 'Best Score', value: '90.1%' },
+          { label: 'Models Trained', value: '4' },
+          { label: 'Stability', value: '0.01' },
+          { label: 'Risk level', value: 'Low' },
+        ].map((item) => (
+          <div
+            key={item.label}
+            className="flex flex-1 flex-col gap-1.5 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] px-4 py-3"
+          >
+            <span className="text-label-sm text-[var(--color-text-subtle)]">{item.label}</span>
+            <span className="text-body-md text-[var(--color-text-default)]">{item.value}</span>
+          </div>
+        ))}
+      </div>
 
       <Tabs value={detailTab} onChange={setDetailTab} variant="underline" size="sm">
         <TabList>
           <Tab value="overview">Overview</Tab>
-          <Tab value="model-insights">Model Insights</Tab>
+          <Tab value="model-insights">Model insights</Tab>
           <Tab value="performance">Performance</Tab>
           <Tab value="risk">Risk & Quality</Tab>
         </TabList>
@@ -347,7 +414,7 @@ export function TabularPage() {
 
         <TabPanel value="model-insights" className="pt-0">
           <VStack gap={4} className="pt-4">
-            <div className="flex gap-2 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-1">
+            <div className="flex gap-2">
               {CAPSULE_TABS.map((t) => (
                 <button
                   key={t}
@@ -364,17 +431,13 @@ export function TabularPage() {
             </div>
             <VStack gap={1}>
               <span className="text-heading-h5 text-[var(--color-text-default)]">
-                Model Leaderboard
+                Model leaderboard
               </span>
               <span className="text-body-md text-[var(--color-text-subtle)]">
                 View SHAP-based feature importance.
               </span>
             </VStack>
-            <div className="w-full h-[400px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex items-center justify-center">
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Chart placeholder — {insightTab}
-              </span>
-            </div>
+            <FeatureImportanceChart />
           </VStack>
         </TabPanel>
 
