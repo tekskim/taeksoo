@@ -17,6 +17,7 @@ import {
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconAlertCircle } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -59,7 +60,7 @@ const defaultTenants: TenantItem[] = Array.from({ length: 115 }, (_, i) => ({
   id: `12345678`,
   name: 'tenant A',
   description: '-',
-  status: i === 4 ? 'error' : ('active' as TenantItem['status']),
+  status: i === 4 ? 'deactivated' : ('active' as TenantItem['status']),
   disabled: i === 4,
 }));
 
@@ -105,12 +106,7 @@ const getTenantColumns = (
     width: fixedColumns.status,
     align: 'center',
     sortable: true,
-    render: (_, row) =>
-      row.disabled ? (
-        <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
-      ) : (
-        <StatusIndicator layout="icon-only" status={row.status} size="sm" />
-      ),
+    render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} size="sm" />,
   },
   {
     key: 'name',
@@ -127,7 +123,12 @@ const getTenantColumns = (
             <IconAlertCircle size={14} className="shrink-0 text-[var(--color-state-danger)]" />
           )}
         </span>
-        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID: {row.id}</span>
+        <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+          <span className="truncate" title={row.id}>
+            ID : {row.id.slice(0, 8)}
+          </span>
+          <InlineCopyId value={row.id} />
+        </span>
       </div>
     ),
   },
@@ -266,7 +267,7 @@ export function CreateFirewallDrawer({
       title="Create firewall"
       width={540}
       footer={
-        <HStack gap={2} className="w-full">
+        <HStack gap={2} className="w-full max-w-[328px] mx-auto">
           <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
