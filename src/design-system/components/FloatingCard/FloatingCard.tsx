@@ -6,7 +6,6 @@ import {
   IconX,
   IconChevronRight,
   IconChevronDown,
-  IconTarget,
   IconAlertTriangle,
   IconCheck,
   IconProgress,
@@ -97,16 +96,23 @@ function StatusIcon({ status }: { status: SectionStatus }) {
     case 'processing':
       return (
         <div className="size-4 shrink-0 flex items-center justify-center">
-          <IconProgress size={20} stroke={1.5} className="text-[var(--color-text-muted)]" />
+          <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </div>
       );
     default:
       return (
         <div className="size-4 shrink-0 flex items-center justify-center">
-          <IconCircleDashed size={20} stroke={1.5} className="text-[var(--color-border-default)]" />
+          <IconCircleDashed size={16} stroke={1.5} className="text-[var(--color-border-default)]" />
         </div>
       );
   }
+}
+
+function deriveSectionStatus(items: SectionItem[]): SectionStatus {
+  if (items.length === 0) return 'default';
+  if (items.every((item) => item.status === 'success')) return 'success';
+  if (items.some((item) => item.status === 'warning')) return 'warning';
+  return 'processing';
 }
 
 /* ----------------------------------------
@@ -224,116 +230,99 @@ export function FloatingCard({
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
-          className="flex flex-col gap-4 shrink-0 m-4 rounded-md"
+          className="shrink-0 m-3 rounded-[var(--radius-lg)]"
           style={{
             maxHeight: '340px',
             minHeight: '160px',
-            padding: '16px',
             border: '1px solid var(--color-border-default)',
             background: 'var(--color-surface-subtle)',
           }}
         >
-          {/* Title - Always required */}
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] shrink-0">{title}</h2>
+          <div className="flex flex-col gap-4 pl-4 pr-3 py-4">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] shrink-0">{title}</h2>
 
-          {/* Summary Sections - Only render if sections exist */}
-          {sections && sections.length > 0 && (
-            <div className="flex flex-col gap-6 w-full">
-              {sections.map((section, sectionIndex) => {
-                const allSuccess =
-                  section.items.length > 0 &&
-                  section.items.every((item) => item.status === 'success');
-                const showIcon = section.showSuccessIcon && allSuccess;
+            {sections && sections.length > 0 && (
+              <div className="flex flex-col gap-4 w-full">
+                {sections.map((section, sectionIndex) => {
+                  const sectionStatus = deriveSectionStatus(section.items);
+                  const isCollapsible = section.collapsible ?? section.items.length > 0;
+                  const isExpanded =
+                    expandedSections[sectionIndex] ?? section.defaultExpanded ?? true;
+                  const showItems = isCollapsible ? isExpanded : true;
 
-                // If section has items, it should be collapsible and show toggle
-                const isCollapsible = section.collapsible ?? section.items.length > 0;
-                const isExpanded =
-                  expandedSections[sectionIndex] ?? section.defaultExpanded ?? true;
-
-                const showItems = isCollapsible ? isExpanded : true;
-
-                return (
-                  <div key={sectionIndex} className="flex flex-col gap-2 w-full">
-                    {/* Section Title (Tab Title) - Always show toggle if collapsible */}
-                    {isCollapsible ? (
-                      <button
-                        type="button"
-                        onClick={() => toggleSection(sectionIndex)}
-                        className="flex items-center justify-between w-full rounded px-2 -mx-2 py-1 transition-colors duration-[var(--duration-fast)] group cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                      >
-                        <div className="flex items-center gap-1">
-                          {isExpanded ? (
-                            <IconChevronDown
-                              size={16}
-                              stroke={1}
-                              className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors"
-                            />
-                          ) : (
-                            <IconChevronRight
-                              size={16}
-                              stroke={1}
-                              className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors"
-                            />
-                          )}
-                          <span className="text-label-md text-[var(--color-text-default)]">
+                  return (
+                    <div key={sectionIndex} className="flex flex-col gap-2 w-full">
+                      {isCollapsible ? (
+                        <button
+                          type="button"
+                          onClick={() => toggleSection(sectionIndex)}
+                          className="flex items-center justify-between w-full pr-2 transition-colors duration-[var(--duration-fast)] group cursor-pointer"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            {isExpanded ? (
+                              <IconChevronDown
+                                size={12}
+                                stroke={2}
+                                className="text-[var(--color-text-default)] shrink-0"
+                              />
+                            ) : (
+                              <IconChevronRight
+                                size={12}
+                                stroke={2}
+                                className="text-[var(--color-text-default)] shrink-0"
+                              />
+                            )}
+                            <span className="text-heading-h6 text-[var(--color-text-default)]">
+                              {section.tabTitle}
+                            </span>
+                          </div>
+                          <StatusIcon status={sectionStatus} />
+                        </button>
+                      ) : section.tabTitle ? (
+                        <div className="flex items-center justify-between w-full pr-2">
+                          <span className="text-heading-h6 text-[var(--color-text-default)]">
                             {section.tabTitle}
                           </span>
+                          <StatusIcon status={sectionStatus} />
                         </div>
-                        {showIcon && (
-                          <span className="text-[var(--color-state-success)]">
-                            <IconTarget size={12} stroke={1} />
-                          </span>
-                        )}
-                      </button>
-                    ) : section.tabTitle ? (
-                      <div className="flex items-center justify-between w-full">
-                        <span className="text-label-md text-[var(--color-text-default)]">
-                          {section.tabTitle}
-                        </span>
-                        {showIcon && (
-                          <span className="text-[var(--color-state-success)]">
-                            <IconTarget size={12} stroke={1} />
-                          </span>
-                        )}
-                      </div>
-                    ) : null}
+                      ) : null}
 
-                    {/* Section Items - shown when expanded (collapsible) or always (non-collapsible) */}
-                    {showItems && section.items.length > 0 && (
-                      <div className={`flex flex-col gap-0 w-full ${isCollapsible ? 'pl-4' : ''}`}>
-                        {section.items.map((item) => (
-                          <button
-                            key={item.id}
-                            type="button"
-                            className="flex items-center justify-between gap-2 w-full rounded px-2 py-1 transition-colors duration-[var(--duration-fast)] text-left group cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                            onClick={item.onClick}
-                            disabled={!item.onClick}
-                          >
-                            <span className="text-body-md text-[var(--color-text-default)] group-hover:text-[var(--color-text-default)] transition-colors">
-                              {item.title}
-                            </span>
-                            {item.status === 'writing' ? (
-                              <span className="text-body-sm text-[var(--color-text-subtle)] shrink-0">
-                                Writing...
+                      {showItems && section.items.length > 0 && (
+                        <div className="flex flex-col gap-0 w-full">
+                          {section.items.map((item) => (
+                            <button
+                              key={item.id}
+                              type="button"
+                              className="flex items-center justify-between gap-2 w-full px-2 py-1 transition-colors duration-[var(--duration-fast)] text-left group cursor-pointer hover:bg-[var(--color-surface-muted)] rounded"
+                              onClick={item.onClick}
+                              disabled={!item.onClick}
+                            >
+                              <span className="text-body-md text-[var(--color-text-default)] transition-colors">
+                                {item.title}
                               </span>
-                            ) : (
-                              <StatusIcon status={item.status} />
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                              {item.status === 'writing' ? (
+                                <span className="text-body-sm text-[var(--color-text-subtle)] shrink-0">
+                                  Writing...
+                                </span>
+                              ) : (
+                                <StatusIcon status={item.status} />
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </OverlayScrollbarsComponent>
 
         {/* Quota Section - Fixed with white background, separated area */}
         {quota.length > 0 && (
           <div
-            className="shrink-0 m-4 rounded-md"
+            className="shrink-0 m-3 rounded-[var(--radius-lg)]"
             style={{
               padding: '16px',
               border: '1px solid var(--color-border-default)',
@@ -386,7 +375,7 @@ export function FloatingCard({
 
         {/* Action Buttons */}
         {(onCancel || onAction) && (
-          <div className="px-3 pb-4 pt-0 flex flex-row gap-2 shrink-0 bg-[var(--color-surface-default)]">
+          <div className="px-3 pb-4 pt-3 flex flex-row gap-2 shrink-0 bg-[var(--color-surface-default)]">
             {onCancel && (
               <Button
                 variant="secondary"
