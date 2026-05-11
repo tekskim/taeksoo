@@ -71,14 +71,6 @@ import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconX,
-  IconClockHour4,
-  IconChartGridDots,
-  IconTopologyStar3,
-  IconServerCog,
-  IconHelp,
-  IconUsersGroup,
-  IconFolderOpen,
-  IconExternalLink,
   IconTemplate,
 } from '@tabler/icons-react';
 import { IconHardDriveFigma, IconPackagesFigma } from '@/design-system';
@@ -244,7 +236,7 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3 pb-6 sidebar-scroll [scrollbar-gutter:stable]">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3 pb-6 sidebar-scroll">
         <VStack gap={2} className="w-full min-w-0">
           <MenuItem
             icon={<IconLayoutDashboard size={16} stroke={1.5} />}
@@ -254,12 +246,6 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
           />
 
           <MenuSection title="Hub" defaultOpen={true}>
-            <MenuItem
-              icon={<IconPackagesFigma size={16} />}
-              label="Packages"
-              href="/ai-platform/packages"
-              active={isActive('/ai-platform/packages')}
-            />
             <MenuItem
               icon={<IconBrain size={16} stroke={1.5} />}
               label="Models"
@@ -272,20 +258,26 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
               href="/ai-platform/datasets"
               active={isActive('/ai-platform/datasets')}
             />
+            <MenuItem
+              icon={<IconPackagesFigma size={16} />}
+              label="Packages"
+              href="/ai-platform/packages"
+              active={isActive('/ai-platform/packages')}
+            />
           </MenuSection>
 
           <MenuSection title="Infrastructure" defaultOpen={true}>
-            <MenuItem
-              icon={<IconStack2 size={16} stroke={1.5} />}
-              label="Workloads"
-              href="/ai-platform/workloads"
-              active={isActive('/ai-platform/workloads')}
-            />
             <MenuItem
               icon={<IconTemplate size={16} stroke={1.5} />}
               label="My templates"
               href="/ai-platform/my-templates"
               active={isActive('/ai-platform/my-templates')}
+            />
+            <MenuItem
+              icon={<IconStack2 size={16} stroke={1.5} />}
+              label="Workloads"
+              href="/ai-platform/workloads"
+              active={isActive('/ai-platform/workloads')}
             />
             <MenuItem
               icon={<IconBox size={16} stroke={1.5} />}
@@ -303,6 +295,12 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
 
           <MenuSection title="ML Studio" defaultOpen={true}>
             <MenuItem
+              icon={<IconTerminal2 size={16} stroke={1.5} />}
+              label="DevSpace"
+              href="/ai-platform/devspace"
+              active={isActive('/ai-platform/devspace')}
+            />
+            <MenuItem
               icon={<IconFileTextSpark size={16} stroke={1.5} />}
               label="Text generation"
               href="/ai-platform/text-generation"
@@ -314,15 +312,6 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
               href="/ai-platform/tabular"
               active={isActive('/ai-platform/tabular')}
             />
-          </MenuSection>
-
-          <MenuSection title="MLOps" defaultOpen={true}>
-            <MenuItem
-              icon={<IconTerminal2 size={16} stroke={1.5} />}
-              label="DevSpace"
-              href="/ai-platform/devspace"
-              active={isActive('/ai-platform/devspace')}
-            />
             <MenuItem
               icon={<IconGitBranch size={16} stroke={1.5} />}
               label="Pipeline builder"
@@ -331,48 +320,9 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
             />
             <MenuItem
               icon={<IconActivity size={16} stroke={1.5} />}
-              label="Benchmark"
+              label="Benchmarks"
               href="/ai-platform/benchmarks"
               active={isActive('/ai-platform/benchmarks')}
-            />
-            <MenuItem
-              icon={<IconExternalLink size={16} stroke={1.5} />}
-              label="Kubeflow"
-              href="/ai-platform/kubeflow"
-              active={isActive('/ai-platform/kubeflow')}
-            />
-            <MenuItem
-              icon={<IconExternalLink size={16} stroke={1.5} />}
-              label="MLflow"
-              href="/ai-platform/mlflow"
-              active={isActive('/ai-platform/mlflow')}
-            />
-          </MenuSection>
-
-          <MenuSection title="Operations" defaultOpen={true}>
-            <MenuItem
-              icon={<IconClockHour4 size={16} stroke={1.5} />}
-              label="Kueue"
-              href="/ai-platform/kueue"
-              active={isActive('/ai-platform/kueue')}
-            />
-            <MenuItem
-              icon={<IconChartGridDots size={16} stroke={1.5} />}
-              label="Monitoring"
-              href="/ai-platform/monitoring"
-              active={isActive('/ai-platform/monitoring')}
-            />
-            <MenuItem
-              icon={<IconTopologyStar3 size={16} stroke={1.5} />}
-              label="Dependencies"
-              href="/ai-platform/dependencies"
-              active={isActive('/ai-platform/dependencies')}
-            />
-            <MenuItem
-              icon={<IconServerCog size={16} stroke={1.5} />}
-              label="Cluster management"
-              href="/ai-platform/system-admin"
-              active={isActive('/ai-platform/system-admin')}
             />
           </MenuSection>
 
@@ -382,27 +332,6 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
               label="Account"
               href="/ai-platform/settings"
               active={isActive('/ai-platform/settings')}
-            />
-            <MenuItem
-              icon={<IconHelp size={16} stroke={1.5} />}
-              label="FAQ"
-              href="/ai-platform/faq"
-              active={isActive('/ai-platform/faq')}
-            />
-          </MenuSection>
-
-          <MenuSection title="Admin management" defaultOpen={true}>
-            <MenuItem
-              icon={<IconUsersGroup size={16} stroke={1.5} />}
-              label="Groups"
-              href="/ai-platform/groups"
-              active={isActive('/ai-platform/groups')}
-            />
-            <MenuItem
-              icon={<IconFolderOpen size={16} stroke={1.5} />}
-              label="Projects"
-              href="/ai-platform/projects"
-              active={isActive('/ai-platform/projects')}
             />
           </MenuSection>
         </VStack>
