@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { VStack, TabBar, TopBar, Breadcrumb, PageShell } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell } from '@tabler/icons-react';
 import { WorkloadPodForm, type WorkloadPodFormValues } from '@/pages/ai-platform/WorkloadPodForm';
 
 const EDIT_POD_MOCK_BASE: Omit<WorkloadPodFormValues, 'envVars'> = {
@@ -100,15 +100,7 @@ export function EditPodPage() {
               ]}
             />
           }
-          actions={
-            <button
-              type="button"
-              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-              aria-label="Notifications"
-            >
-              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
-          }
+          actions={<AiPlatformTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"

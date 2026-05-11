@@ -27,14 +27,16 @@ export function PageHeader({
   return (
     <div
       data-figma-name="[TDS] Title"
-      className={`flex items-center justify-between w-full min-h-8 ${className}`.trim()}
+      className={`relative flex h-8 w-full min-w-0 items-center gap-[8px] ${className}`.trim()}
       {...rest}
     >
-      <div className="flex items-center gap-[8px]">
-        <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">{title}</h1>
+      <div className="flex min-h-0 min-w-0 flex-1 items-center gap-[8px]">
+        <h1 className="min-w-0 truncate text-heading-h5 leading-6 text-[var(--color-text-default)]">
+          {title}
+        </h1>
         {titleExtra}
       </div>
-      {actions && <div className="flex items-center gap-[8px]">{actions}</div>}
+      {actions && <div className="flex shrink-0 items-center gap-[8px]">{actions}</div>}
     </div>
   );
 }

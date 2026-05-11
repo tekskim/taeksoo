@@ -18,9 +18,9 @@ import {
 } from '@/design-system';
 import type { StatusType } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconLock,
   IconPlug,
   IconEdit,
@@ -263,15 +263,7 @@ export function WorkloadDetailPage() {
               ]}
             />
           }
-          actions={
-            <button
-              type="button"
-              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-              aria-label="Notifications"
-            >
-              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
-          }
+          actions={<AiPlatformTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"

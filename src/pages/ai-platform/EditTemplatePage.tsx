@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { VStack, TabBar, TopBar, Breadcrumb, PageShell } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell } from '@tabler/icons-react';
 import { MyTemplateForm, type MyTemplateFormValues } from './MyTemplateForm';
 
 const EDIT_TEMPLATE_MOCK_BASE: Omit<MyTemplateFormValues, 'envVars' | 'httpPorts'> = {
@@ -83,18 +83,10 @@ export function EditTemplatePage() {
               ]}
             />
           }
-          actions={
-            <button
-              type="button"
-              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-              aria-label="Notifications"
-            >
-              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
-          }
+          actions={<AiPlatformTopBarActions />}
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={4} className="w-full pb-20">
         <h1 className="text-heading-h5 text-[var(--color-text-default)]">Edit template</h1>

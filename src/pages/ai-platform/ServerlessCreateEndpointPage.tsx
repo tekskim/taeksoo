@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VStack, TabBar, TopBar, Breadcrumb, Button, PageShell } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconBrandDocker,
   IconBrandGithub,
   IconSparkles,
@@ -77,15 +77,7 @@ export function ServerlessCreateEndpointPage() {
               ]}
             />
           }
-          actions={
-            <button
-              type="button"
-              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-              aria-label="Notifications"
-            >
-              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
-          }
+          actions={<AiPlatformTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
@@ -113,7 +105,12 @@ export function ServerlessCreateEndpointPage() {
               <p className="text-body-md text-[var(--color-text-subtle)] text-center">
                 Deploy any docker image from a container registry
               </p>
-              <Button variant="primary" size="md" type="button">
+              <Button
+                variant="primary"
+                size="md"
+                type="button"
+                onClick={() => navigate('/ai-platform/serverless/create/docker')}
+              >
                 Select
               </Button>
             </div>

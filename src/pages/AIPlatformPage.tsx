@@ -79,8 +79,9 @@ import {
   IconUsersGroup,
   IconFolderOpen,
   IconExternalLink,
+  IconTemplate,
 } from '@tabler/icons-react';
-import { IconHardDriveFigma, IconPackagesFigma, IconFileFigma } from '@/design-system';
+import { IconHardDriveFigma, IconPackagesFigma } from '@/design-system';
 import { ArrowRightLeft } from 'lucide-react';
 
 /* ----------------------------------------
@@ -243,7 +244,7 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3 pb-6 sidebar-scroll">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3 pb-6 sidebar-scroll [scrollbar-gutter:stable]">
         <VStack gap={2} className="w-full min-w-0">
           <MenuItem
             icon={<IconLayoutDashboard size={16} stroke={1.5} />}
@@ -281,13 +282,13 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
               active={isActive('/ai-platform/workloads')}
             />
             <MenuItem
-              icon={<IconFileFigma size={16} />}
+              icon={<IconTemplate size={16} stroke={1.5} />}
               label="My templates"
               href="/ai-platform/my-templates"
               active={isActive('/ai-platform/my-templates')}
             />
             <MenuItem
-              icon={<IconDatabase size={16} stroke={1.5} />}
+              icon={<IconBox size={16} stroke={1.5} />}
               label="Volumes"
               href="/ai-platform/volumes"
               active={isActive('/ai-platform/volumes')}

@@ -16,8 +16,9 @@ import {
   SectionCard,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconTrash, IconRocket } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconRocket } from '@tabler/icons-react';
 
 const MOCK_TEMPLATE_DETAIL = {
   id: 'tpl-001',
@@ -116,18 +117,10 @@ export function MyTemplateDetailPage() {
               ]}
             />
           }
-          actions={
-            <button
-              type="button"
-              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-              aria-label="Notifications"
-            >
-              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
-          }
+          actions={<AiPlatformTopBarActions />}
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6} className="pb-20">
         <DetailHeader>
