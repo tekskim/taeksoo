@@ -24,7 +24,7 @@ import {
 import type { FilterField, AppliedFilter } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from '@/pages/ai-platform/AiPlatformTopBarActions';
-import { IconRefresh, IconTrash, IconTable, IconDotsVertical } from '@tabler/icons-react';
+import { IconTrash, IconTable, IconDotsVertical } from '@tabler/icons-react';
 
 // --- Types ---
 
@@ -118,10 +118,10 @@ function StatCard({
 }) {
   return (
     <div className="flex flex-1 items-center justify-between rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] px-4 py-3">
-      <VStack gap={1}>
+      <div className="flex flex-col gap-1.5">
         <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
         <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      </VStack>
+      </div>
       <StatusIndicator status={status} layout="icon-only" />
     </div>
   );
@@ -175,7 +175,7 @@ export function TabularPage() {
       sortable: true,
       render: (row: TabularExperiment) => (
         <button
-          className="text-[var(--color-action-primary)] text-label-md hover:underline text-left"
+          className="text-label-md text-[var(--color-action-primary)] hover:underline text-left"
           onClick={() => setSelectedExperiment(row)}
         >
           {row.name}
@@ -189,10 +189,10 @@ export function TabularPage() {
       header: 'Progress',
       render: (row: TabularExperiment) =>
         row.progress < 100 ? (
-          <VStack gap={1}>
+          <div className="flex flex-col gap-2">
             <span className="text-body-md text-[var(--color-text-default)]">{row.progress}%</span>
             <ProgressBar value={row.progress} className="w-full" />
-          </VStack>
+          </div>
         ) : (
           <span className="text-body-md text-[var(--color-text-default)]">100%</span>
         ),
@@ -235,8 +235,8 @@ export function TabularPage() {
       <PageHeader
         title="Tabular"
         actions={
-          <HStack gap={2}>
-            <Button variant="secondary" size="md" leftIcon={<IconRefresh size={12} />}>
+          <HStack gap={1}>
+            <Button variant="secondary" size="md">
               Refresh
             </Button>
             <Button variant="primary" size="md">
