@@ -365,108 +365,104 @@ export function TabularPage() {
   // --- Detail View ---
 
   const detailView = selectedExperiment && (
-    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] bg-[var(--color-surface-default)] pt-3 pb-4 px-4">
-      <VStack gap={4}>
-        <VStack gap={1}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-            {selectedExperiment.name}
-          </h2>
-          <span className="text-body-md text-[var(--color-text-subtle)]">Description</span>
-        </VStack>
-
-        <div className="flex gap-2">
-          {[
-            { label: 'Category', value: 'E-Commerce > Price Elasticity' },
-            { label: 'Best Score', value: '90.1%' },
-            { label: 'Models Trained', value: '4' },
-            { label: 'Stability', value: '0.01' },
-            { label: 'Risk level', value: 'Low' },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="flex flex-1 flex-col gap-1.5 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] px-4 py-3"
-            >
-              <span className="text-label-sm text-[var(--color-text-subtle)]">{item.label}</span>
-              <span className="text-body-md text-[var(--color-text-default)]">{item.value}</span>
-            </div>
-          ))}
-        </div>
+    <div className="flex flex-col gap-4 border border-[var(--color-border-default)] rounded-[var(--radius-lg)] bg-[var(--color-surface-default)] pt-3 pb-4 px-4">
+      <VStack gap={1}>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+          {selectedExperiment.name}
+        </h2>
+        <span className="text-body-md text-[var(--color-text-subtle)]">Description</span>
       </VStack>
 
-      <div className="flex flex-col gap-3 mt-4">
-        <Tabs value={detailTab} onChange={setDetailTab} variant="underline" size="sm">
-          <TabList>
-            <Tab value="overview">Overview</Tab>
-            <Tab value="model-insights">Model Insights</Tab>
-            <Tab value="performance">Performance</Tab>
-            <Tab value="risk">Risk & Quality</Tab>
-          </TabList>
-
-          <TabPanel value="overview" className="pt-0">
-            <VStack gap={3} className="pt-3">
-              <VStack gap={1}>
-                <span className="text-heading-h6 text-[var(--color-text-default)]">Overview</span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">
-                  Compare performance of trained models.
-                </span>
-              </VStack>
-              <Pagination currentPage={1} totalPages={1} onPageChange={() => {}} totalItems={2} />
-              <Table columns={detailColumns} data={MOCK_DETAIL_MODELS} rowKey="id" />
-            </VStack>
-          </TabPanel>
-
-          <TabPanel value="model-insights" className="pt-0">
-            <VStack gap={4} className="pt-3">
-              <div className="flex gap-2">
-                {CAPSULE_TABS.map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setInsightTab(t)}
-                    className={`px-2.5 py-1.5 rounded-[var(--radius-md)] text-label-lg transition-colors ${
-                      insightTab === t
-                        ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                        : 'text-[var(--color-text-default)]'
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-              <VStack gap={1}>
-                <span className="text-heading-h5 text-[var(--color-text-default)]">
-                  Model leaderboard
-                </span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">
-                  View SHAP-based feature importance.
-                </span>
-              </VStack>
-              <FeatureImportanceChart />
-            </VStack>
-          </TabPanel>
-
-          <TabPanel value="performance" className="pt-0">
-            <VStack gap={3} className="pt-3">
-              <EmptyState
-                variant="inline"
-                icon={<IconTable size={48} stroke={1} />}
-                title="Performance"
-                description="Performance metrics and charts will be displayed here."
-              />
-            </VStack>
-          </TabPanel>
-
-          <TabPanel value="risk" className="pt-0">
-            <VStack gap={3} className="pt-3">
-              <EmptyState
-                variant="inline"
-                icon={<IconTable size={48} stroke={1} />}
-                title="Risk & Quality"
-                description="Risk assessment and quality metrics will be displayed here."
-              />
-            </VStack>
-          </TabPanel>
-        </Tabs>
+      <div className="flex gap-2">
+        {[
+          { label: 'Category', value: 'E-Commerce > Price Elasticity' },
+          { label: 'Best Score', value: '90.1%' },
+          { label: 'Models Trained', value: '4' },
+          { label: 'Stability', value: '0.01' },
+          { label: 'Risk level', value: 'Low' },
+        ].map((item) => (
+          <div
+            key={item.label}
+            className="flex flex-1 flex-col gap-1.5 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] px-4 py-3"
+          >
+            <span className="text-label-sm text-[var(--color-text-subtle)]">{item.label}</span>
+            <span className="text-body-md text-[var(--color-text-default)]">{item.value}</span>
+          </div>
+        ))}
       </div>
+
+      <Tabs value={detailTab} onChange={setDetailTab} variant="underline" size="sm">
+        <TabList>
+          <Tab value="overview">Overview</Tab>
+          <Tab value="model-insights">Model Insights</Tab>
+          <Tab value="performance">Performance</Tab>
+          <Tab value="risk">Risk & Quality</Tab>
+        </TabList>
+
+        <TabPanel value="overview" className="pt-0">
+          <VStack gap={3} className="pt-3">
+            <VStack gap={1}>
+              <span className="text-heading-h6 text-[var(--color-text-default)]">Overview</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Compare performance of trained models.
+              </span>
+            </VStack>
+            <Pagination currentPage={1} totalPages={1} onPageChange={() => {}} totalItems={2} />
+            <Table columns={detailColumns} data={MOCK_DETAIL_MODELS} rowKey="id" />
+          </VStack>
+        </TabPanel>
+
+        <TabPanel value="model-insights" className="pt-0">
+          <VStack gap={4} className="pt-3">
+            <div className="flex gap-2">
+              {CAPSULE_TABS.map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setInsightTab(t)}
+                  className={`px-2.5 py-1.5 rounded-[var(--radius-md)] text-label-lg transition-colors ${
+                    insightTab === t
+                      ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-default)]'
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+            <VStack gap={1}>
+              <span className="text-heading-h5 text-[var(--color-text-default)]">
+                Model leaderboard
+              </span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                View SHAP-based feature importance.
+              </span>
+            </VStack>
+            <FeatureImportanceChart />
+          </VStack>
+        </TabPanel>
+
+        <TabPanel value="performance" className="pt-0">
+          <VStack gap={3} className="pt-3">
+            <EmptyState
+              variant="inline"
+              icon={<IconTable size={48} stroke={1} />}
+              title="Performance"
+              description="Performance metrics and charts will be displayed here."
+            />
+          </VStack>
+        </TabPanel>
+
+        <TabPanel value="risk" className="pt-0">
+          <VStack gap={3} className="pt-3">
+            <EmptyState
+              variant="inline"
+              icon={<IconTable size={48} stroke={1} />}
+              title="Risk & Quality"
+              description="Risk assessment and quality metrics will be displayed here."
+            />
+          </VStack>
+        </TabPanel>
+      </Tabs>
     </div>
   );
 
