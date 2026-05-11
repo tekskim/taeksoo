@@ -41,11 +41,22 @@ import {
   RadioGroup,
   fixedColumns,
   columnMinWidths,
+  FloatingCard,
 } from '@/design-system';
+import type { FloatingCardSection } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconRefresh, IconDotsVertical, IconFlask, IconPlus } from '@tabler/icons-react';
+import {
+  IconTrash,
+  IconRefresh,
+  IconDotsCircleHorizontal,
+  IconFlask,
+  IconPlus,
+  IconChevronDown,
+  IconChevronRight,
+  IconX,
+} from '@tabler/icons-react';
 
 /* ——— types ——— */
 
@@ -225,20 +236,21 @@ function statusBadgeLabel(s: ExperimentStatus): string {
 function formatListDate(iso: string) {
   if (iso === '—') return '—';
   const d = new Date(iso);
-  return d.toLocaleString(undefined, {
+  return d.toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
-    hour: '2-digit',
+    year: 'numeric',
+    hour: 'numeric',
     minute: '2-digit',
   });
 }
 
 function formatDetailStamp(iso: string) {
   const d = new Date(iso);
-  return d.toLocaleString(undefined, {
+  return d.toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
-    hour: '2-digit',
+    hour: 'numeric',
     minute: '2-digit',
   });
 }
@@ -406,6 +418,7 @@ export function TextGenerationPage() {
     b2: false,
     b2s1: false,
   });
+  const [monitoringExpanded, setMonitoringExpanded] = useState({ b1: true, b2: true, b3: false });
 
   const [templateDrawerOpen, setTemplateDrawerOpen] = useState(false);
   const [templateTab, setTemplateTab] = useState('all');
@@ -426,7 +439,7 @@ export function TextGenerationPage() {
   const [datasetTab, setDatasetTab] = useState('all');
   const [datasetSearch, setDatasetSearch] = useState('');
   const [datasetPage, setDatasetPage] = useState(1);
-  const [datasetId, setDatasetId] = useState<string | null>(null);
+  const [datasetIds, setDatasetIds] = useState<string[]>([]);
   const [trainingModel, setTrainingModel] = useState('full-ft');
   const [teacherId, setTeacherId] = useState<string | null>(null);
   const [teacherSearch, setTeacherSearch] = useState('');
@@ -454,9 +467,6 @@ export function TextGenerationPage() {
   const [numNodes, setNumNodes] = useState(1);
   const [precision, setPrecision] = useState('bf16');
   const [gradCkpt, setGradCkpt] = useState(true);
-
-  const [summaryConfigOpen, setSummaryConfigOpen] = useState(true);
-  const [summaryPublishOpen, setSummaryPublishOpen] = useState(true);
 
   const filteredExperiments = useMemo(() => {
     const q = listQuery.trim().toLowerCase();
@@ -554,7 +564,7 @@ export function TextGenerationPage() {
     !!baseModelId;
 
   const publishComplete =
-    !!publishMethod && !!datasetId && !!trainingModel && !!teacherId && maxTrainSteps > 0;
+    !!publishMethod && datasetIds.length > 0 && !!trainingModel && !!teacherId && maxTrainSteps > 0;
 
   const canCreate = configComplete && publishComplete && wstep === 'publish';
 
@@ -574,13 +584,13 @@ export function TextGenerationPage() {
   const openRowMenu = useCallback(
     (row: ExperimentRow): ContextMenuItem[] => [
       {
-        id: 'open',
-        label: 'View detail',
-        onClick: () => goDetail(row.id),
+        id: 'mlflow',
+        label: 'Go to MLflow',
+        onClick: () => {},
       },
       {
-        id: 'dup',
-        label: 'Duplicate',
+        id: 'cancel',
+        label: 'Cancel',
         onClick: () => {},
       },
       {
@@ -668,7 +678,7 @@ export function TextGenerationPage() {
             <Button
               variant="ghost"
               size="sm"
-              icon={<IconDotsVertical size={12} />}
+              icon={<IconDotsCircleHorizontal size={14} />}
               aria-label="Row actions"
             />
           </ContextMenu>
@@ -684,9 +694,6 @@ export function TextGenerationPage() {
     setTemplateDrawerOpen(false);
   };
 
-  const monitoringAnyChecked =
-    monitoringBlocks.b1s1 || monitoringBlocks.b1s2 || monitoringBlocks.b2s1 || monitoringBlocks.b2;
-
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   const listView = (
@@ -694,49 +701,17 @@ export function TextGenerationPage() {
       <PageHeader
         title="Text generation"
         actions={
-          <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />} onClick={goCreate}>
+          <Button variant="primary" size="md" onClick={goCreate}>
             New experiments
           </Button>
         }
       />
 
       <MetricCard.Group>
-        <MetricCard
-          title="Completed"
-          value={
-            <HStack gap={2} align="center">
-              <StatusIndicator status="active" layout="icon-only" size="sm" />
-              <span>5</span>
-            </HStack>
-          }
-        />
-        <MetricCard
-          title="Failed"
-          value={
-            <HStack gap={2} align="center">
-              <StatusIndicator status="error" layout="icon-only" size="sm" />
-              <span>0</span>
-            </HStack>
-          }
-        />
-        <MetricCard
-          title="Running"
-          value={
-            <HStack gap={2} align="center">
-              <StatusIndicator status="building" layout="icon-only" size="sm" />
-              <span>5</span>
-            </HStack>
-          }
-        />
-        <MetricCard
-          title="Pending"
-          value={
-            <HStack gap={2} align="center">
-              <StatusIndicator status="pending" layout="icon-only" size="sm" />
-              <span>5</span>
-            </HStack>
-          }
-        />
+        <MetricCard title="Completed" value="5" />
+        <MetricCard title="Failed" value="0" />
+        <MetricCard title="Running" value="5" />
+        <MetricCard title="Pending" value="5" />
       </MetricCard.Group>
 
       <HStack gap={2} align="center">
@@ -985,90 +960,214 @@ export function TextGenerationPage() {
 
           <TabPanel value="monitoring" className="pt-4">
             <VStack gap={3}>
-              <HStack justify="between" align="center" className="flex-wrap gap-2">
+              <HStack justify="between" align="center">
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Training Metrics Monitoring
+                  Training metrics monitoring
                 </h3>
-                <HStack gap={3} align="center">
+                <HStack gap={1} align="center">
                   <Checkbox
                     label="Auto Refresh (10s)"
                     checked={monitoringAuto}
                     onChange={(c) => setMonitoringAuto(c)}
                   />
-                  <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
+                  <Button variant="outline" size="sm">
                     Refresh
                   </Button>
                 </HStack>
               </HStack>
 
-              <div className="flex gap-4">
-                <div className="w-[312px] shrink-0 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-3">
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">
-                    Select Blocks
-                  </span>
-                  <VStack gap={2} className="mt-3">
-                    <Checkbox
-                      label="Block 1"
-                      checked={monitoringBlocks.b1}
-                      onChange={(c) =>
-                        setMonitoringBlocks((s) => ({
-                          ...s,
-                          b1: c,
-                          b1s1: c ? s.b1s1 : false,
-                          b1s2: c ? s.b1s2 : false,
-                        }))
-                      }
-                    />
-                    <div className="ml-4 pl-2 border-l border-[var(--color-border-subtle)]">
-                      <VStack gap={2}>
-                        <Checkbox
-                          label="Step 1 — train"
-                          checked={monitoringBlocks.b1s1}
-                          onChange={(c) =>
-                            setMonitoringBlocks((s) => ({ ...s, b1s1: c, b1: c || s.b1s2 }))
-                          }
-                        />
-                        <Checkbox
-                          label="Step 2 — eval"
-                          checked={monitoringBlocks.b1s2}
-                          onChange={(c) =>
-                            setMonitoringBlocks((s) => ({ ...s, b1s2: c, b1: c || s.b1s1 }))
-                          }
-                        />
-                      </VStack>
+              <div className="flex gap-6 min-h-[600px]">
+                <div className="w-[312px] shrink-0 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 pt-3 pb-4 self-stretch">
+                  <VStack gap={2}>
+                    <span className="text-heading-h5 text-[var(--color-text-default)]">
+                      Select blocks
+                    </span>
+                    <span className="text-body-md text-[var(--color-text-subtle)]">
+                      Select up to 10 blocks
+                    </span>
+                  </VStack>
+                  <VStack gap={3} className="mt-6">
+                    {/* Block 1 */}
+                    <div className="flex flex-col w-full">
+                      <div
+                        className={`flex items-center gap-1 ${monitoringExpanded.b1 ? 'rounded-t-[var(--radius-md)]' : 'rounded-[var(--radius-md)]'} border border-[var(--color-border-default)] px-3 py-2 min-h-[40px]`}
+                      >
+                        <VStack gap={0.5}>
+                          <HStack gap={1} align="center">
+                            <button
+                              type="button"
+                              className="flex items-center justify-center"
+                              onClick={() => setMonitoringExpanded((s) => ({ ...s, b1: !s.b1 }))}
+                            >
+                              {monitoringExpanded.b1 ? (
+                                <IconChevronDown
+                                  size={12}
+                                  className="text-[var(--color-text-default)]"
+                                />
+                              ) : (
+                                <IconChevronRight
+                                  size={12}
+                                  className="text-[var(--color-text-default)]"
+                                />
+                              )}
+                            </button>
+                            <Checkbox
+                              checked={monitoringBlocks.b1}
+                              onChange={(c) =>
+                                setMonitoringBlocks((s) => ({
+                                  ...s,
+                                  b1: c,
+                                  b1s1: c ? s.b1s1 : false,
+                                  b1s2: c ? s.b1s2 : false,
+                                }))
+                              }
+                            />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              Lable
+                            </span>
+                            <Badge variant="success" size="sm">
+                              Completed
+                            </Badge>
+                          </HStack>
+                          <span className="text-body-sm text-[var(--color-text-subtle)] ml-[36px]">
+                            Lable
+                          </span>
+                        </VStack>
+                      </div>
+                      {monitoringExpanded.b1 && (
+                        <div className="rounded-b-[var(--radius-md)] border-b border-l border-r border-[var(--color-border-default)] px-8 py-2">
+                          <HStack gap={1} align="center">
+                            <Checkbox
+                              checked={monitoringBlocks.b1s1}
+                              onChange={(c) =>
+                                setMonitoringBlocks((s) => ({ ...s, b1s1: c, b1: c || s.b1s2 }))
+                              }
+                            />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              Lable
+                            </span>
+                            <Badge variant="success" size="sm">
+                              Completed
+                            </Badge>
+                          </HStack>
+                        </div>
+                      )}
                     </div>
-                    <Checkbox
-                      label="Block 2"
-                      checked={monitoringBlocks.b2}
-                      onChange={(c) =>
-                        setMonitoringBlocks((s) => ({ ...s, b2: c, b2s1: c ? s.b2s1 : false }))
-                      }
-                    />
-                    <div className="ml-4 pl-2 border-l border-[var(--color-border-subtle)]">
-                      <Checkbox
-                        label="Step 1 — distill"
-                        checked={monitoringBlocks.b2s1}
-                        onChange={(c) => setMonitoringBlocks((s) => ({ ...s, b2s1: c, b2: c }))}
-                      />
+                    {/* Block 2 */}
+                    <div className="flex flex-col w-full">
+                      <div
+                        className={`flex items-center gap-1 ${monitoringExpanded.b2 ? 'rounded-t-[var(--radius-md)]' : 'rounded-[var(--radius-md)]'} border border-[var(--color-border-default)] px-3 py-2 min-h-[40px]`}
+                      >
+                        <VStack gap={0.5}>
+                          <HStack gap={1} align="center">
+                            <button
+                              type="button"
+                              className="flex items-center justify-center"
+                              onClick={() => setMonitoringExpanded((s) => ({ ...s, b2: !s.b2 }))}
+                            >
+                              {monitoringExpanded.b2 ? (
+                                <IconChevronDown
+                                  size={12}
+                                  className="text-[var(--color-text-default)]"
+                                />
+                              ) : (
+                                <IconChevronRight
+                                  size={12}
+                                  className="text-[var(--color-text-default)]"
+                                />
+                              )}
+                            </button>
+                            <Checkbox
+                              checked={monitoringBlocks.b2}
+                              onChange={(c) =>
+                                setMonitoringBlocks((s) => ({
+                                  ...s,
+                                  b2: c,
+                                  b2s1: c ? s.b2s1 : false,
+                                }))
+                              }
+                            />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              Lable
+                            </span>
+                            <Badge variant="success" size="sm">
+                              Completed
+                            </Badge>
+                          </HStack>
+                          <span className="text-body-sm text-[var(--color-text-subtle)] ml-[36px]">
+                            Lable
+                          </span>
+                        </VStack>
+                      </div>
+                      {monitoringExpanded.b2 && (
+                        <div className="rounded-b-[var(--radius-md)] border-b border-l border-r border-[var(--color-border-default)] px-8 py-2">
+                          <HStack gap={1} align="center">
+                            <Checkbox
+                              checked={monitoringBlocks.b2s1}
+                              onChange={(c) =>
+                                setMonitoringBlocks((s) => ({ ...s, b2s1: c, b2: c }))
+                              }
+                            />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              Lable
+                            </span>
+                            <Badge variant="success" size="sm">
+                              Completed
+                            </Badge>
+                          </HStack>
+                        </div>
+                      )}
+                    </div>
+                    {/* Block 3 */}
+                    <div className="flex flex-col w-full">
+                      <div
+                        className={`flex items-center gap-1 ${monitoringExpanded.b3 ? 'rounded-t-[var(--radius-md)]' : 'rounded-[var(--radius-md)]'} border border-[var(--color-border-default)] px-3 py-2 min-h-[40px]`}
+                      >
+                        <VStack gap={0.5}>
+                          <HStack gap={1} align="center">
+                            <button
+                              type="button"
+                              className="flex items-center justify-center"
+                              onClick={() => setMonitoringExpanded((s) => ({ ...s, b3: !s.b3 }))}
+                            >
+                              {monitoringExpanded.b3 ? (
+                                <IconChevronDown
+                                  size={12}
+                                  className="text-[var(--color-text-default)]"
+                                />
+                              ) : (
+                                <IconChevronRight
+                                  size={12}
+                                  className="text-[var(--color-text-default)]"
+                                />
+                              )}
+                            </button>
+                            <Checkbox checked={false} onChange={() => {}} />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              Lable
+                            </span>
+                            <Badge variant="success" size="sm">
+                              Completed
+                            </Badge>
+                          </HStack>
+                          <span className="text-body-sm text-[var(--color-text-subtle)] ml-[36px]">
+                            Lable
+                          </span>
+                        </VStack>
+                      </div>
                     </div>
                   </VStack>
                 </div>
 
-                <div className="min-h-[320px] flex-1 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
-                  {!monitoringAnyChecked ? (
-                    <EmptyState
-                      variant="inline"
-                      icon={<IconFlask size={40} stroke={1} />}
-                      title="Select blocks to view training metrics"
-                      description="Choose one or more blocks from the list to load charts."
-                    />
-                  ) : (
-                    <div className="flex h-full min-h-[300px] flex-col items-center justify-center gap-2 rounded-[var(--radius-md)] border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-6">
-                      <span className="text-body-md text-[var(--color-text-muted)]">
-                        Chart placeholder — Loss vs Step
-                      </span>
-                    </div>
-                  )}
+                <div className="flex-1 flex items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] self-stretch">
+                  <div className="flex flex-col items-center gap-2 text-center">
+                    <span className="text-[14px] font-medium leading-[20px] text-[var(--color-text-default)]">
+                      Select blocks to view training metrics
+                    </span>
+                    <span className="text-body-md text-[var(--color-text-default)] whitespace-pre-line">
+                      {`Expand experiments and select training blocks to visualize metrics\nsuch as loss and learning rate.\nYou can compare up to 10 blocks at once.`}
+                    </span>
+                  </div>
                 </div>
               </div>
             </VStack>
@@ -1080,12 +1179,16 @@ export function TextGenerationPage() {
   const configurationSection = (
     <VStack gap={4}>
       <SectionCard>
-        <SectionCard.Header title="Basic information" />
-        <SectionCard.Content>
-          <VStack gap={4}>
+        <SectionCard.Header
+          title="Basic information"
+          actions={
             <Button variant="primary" size="sm" onClick={() => setTemplateDrawerOpen(true)}>
               Select template
             </Button>
+          }
+        />
+        <SectionCard.Content>
+          <VStack gap={4}>
             <FormField label="Experiment name" required>
               <Input
                 placeholder="Enter a name for this experiment"
@@ -1116,23 +1219,9 @@ export function TextGenerationPage() {
               required
               description="Select the number of GPUs for training"
             >
-              <HStack gap={3} align="center" className="w-full max-w-[var(--slider-row-max-width)]">
-                <Slider
-                  min={0}
-                  max={5}
-                  step={1}
-                  value={totalGpus}
-                  onChange={setTotalGpus}
-                  className="flex-1"
-                />
-                <NumberInput
-                  min={0}
-                  max={5}
-                  step={1}
-                  value={totalGpus}
-                  onChange={setTotalGpus}
-                  width="xs"
-                />
+              <HStack gap={3} align="center">
+                <Slider min={0} max={5} step={1} value={totalGpus} onChange={setTotalGpus} />
+                <span className="text-body-md text-[var(--color-text-default)]">{totalGpus}/5</span>
               </HStack>
             </FormField>
             <FormField label="Base model" required description="Click to select a base model">
@@ -1187,7 +1276,7 @@ export function TextGenerationPage() {
   );
 
   const publishHyperparameters = (
-    <Disclosure defaultOpen>
+    <Disclosure>
       <Disclosure.Trigger>Hyperparameters settings</Disclosure.Trigger>
       <Disclosure.Panel>
         <VStack gap={4} className="mt-2">
@@ -1268,7 +1357,7 @@ export function TextGenerationPage() {
                   ]}
                   value={distStrategy}
                   onChange={setDistStrategy}
-                  fullWidth
+                  className="w-[328px]"
                 />
               </FormField>
             </VStack>
@@ -1292,7 +1381,7 @@ export function TextGenerationPage() {
                   ]}
                   value={lrScheduler}
                   onChange={setLrScheduler}
-                  fullWidth
+                  className="w-[328px]"
                 />
               </FormField>
               <FormField label="MLFlow Experiment Name" required>
@@ -1317,7 +1406,7 @@ export function TextGenerationPage() {
                   ]}
                   value={patience}
                   onChange={setPatience}
-                  fullWidth
+                  className="w-[328px]"
                 />
               </FormField>
               <FormField label="Threshold" required>
@@ -1331,7 +1420,7 @@ export function TextGenerationPage() {
                   ]}
                   value={evalMetric}
                   onChange={setEvalMetric}
-                  fullWidth
+                  className="w-[328px]"
                 />
               </FormField>
               <FormField label="Evaluation Dataset Path" required>
@@ -1365,7 +1454,7 @@ export function TextGenerationPage() {
                   ]}
                   value={precision}
                   onChange={setPrecision}
-                  fullWidth
+                  className="w-[328px]"
                 />
               </FormField>
               <FormField label="Gradient Checkpointing" spacing="loose">
@@ -1378,144 +1467,153 @@ export function TextGenerationPage() {
     </Disclosure>
   );
 
+  const [activeStep, setActiveStep] = useState(0);
+  const [pipelineSteps, setPipelineSteps] = useState(['Step 1', 'Step 2']);
+
   const publishSection = (
-    <VStack gap={4}>
-      <SectionCard>
-        <SectionCard.Header title="Training settings" />
-        <SectionCard.Content>
-          <VStack gap={4}>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Configure the training blocks for your fine-tuning pipeline. Each block will be
-              executed sequentially.
-            </p>
+    <VStack gap={6}>
+      <div className="rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 pt-3 pb-3">
+        <VStack gap={2}>
+          <h3 className="text-heading-h5 text-[var(--color-text-default)]">Training settings</h3>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Configure the training blocks for your fine-tuning pipeline. Each block will be executed
+            sequentially.
+          </p>
+        </VStack>
 
-            <div className="flex flex-col gap-4 lg:flex-row">
-              <div className="shrink-0 lg:w-[200px]">
-                <VStack gap={2}>
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">Pipeline</span>
-                  <HStack gap={2} className="flex-wrap">
-                    <Button variant="primary" size="sm">
-                      Step 1
-                    </Button>
-                    <Button variant="secondary" size="sm">
-                      Step 2
-                    </Button>
-                    <Button variant="outline" size="sm" leftIcon={<IconPlus size={12} />}>
-                      Add
-                    </Button>
-                  </HStack>
+        <div className="flex mt-6">
+          <div className="w-[80px] shrink-0 flex flex-col">
+            {pipelineSteps.map((step, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setActiveStep(i)}
+                className={`flex items-center justify-between min-w-[80px] p-2 text-label-md border-l border-[var(--color-border-default)] ${
+                  i === activeStep
+                    ? 'bg-[var(--color-surface-subtle)] border-t border-b rounded-tl-[var(--radius-sm)] text-[var(--color-action-primary)]'
+                    : 'border-b text-[var(--color-text-subtle)]'
+                } ${i === 0 && i !== activeStep ? 'rounded-tl-[var(--radius-sm)]' : ''} ${i === pipelineSteps.length - 1 && i !== activeStep ? 'rounded-bl-[var(--radius-sm)]' : ''}`}
+              >
+                <span>{step}</span>
+                <IconX size={12} className="shrink-0" />
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => setPipelineSteps((s) => [...s, `Step ${s.length + 1}`])}
+              className="flex items-center gap-1 pl-1 mt-2 text-label-md text-[var(--color-text-subtle)]"
+            >
+              <IconPlus size={12} />
+              <span>Add</span>
+            </button>
+          </div>
+
+          <div className="min-w-0 flex-1 rounded-r-[var(--radius-lg)] border border-[var(--color-border-default)] p-3">
+            <VStack gap={6}>
+              <FormField label="Method" required>
+                <Select
+                  options={METHOD_OPTIONS}
+                  value={publishMethod}
+                  onChange={setPublishMethod}
+                  className="w-[328px]"
+                />
+              </FormField>
+
+              <FormField label="Dataset" required>
+                <VStack gap={3}>
+                  <Tabs value={datasetTab} onChange={setDatasetTab} variant="underline" size="sm">
+                    <TabList>
+                      <Tab value="all">All</Tab>
+                      <Tab value="thaki">Thaki Datasets</Tab>
+                      <Tab value="custom">Custom Datasets</Tab>
+                      <Tab value="textgen">Text generation</Tab>
+                      <Tab value="tabular">Tabular</Tab>
+                    </TabList>
+                  </Tabs>
+                  <SearchInput
+                    placeholder="Find datasets"
+                    value={datasetSearch}
+                    onChange={(e) => setDatasetSearch(e.target.value)}
+                    size="sm"
+                    className="w-[312px]"
+                  />
+                  <Pagination
+                    currentPage={datasetPage}
+                    totalPages={Math.max(1, Math.ceil(filteredDatasets.length / 6))}
+                    onPageChange={setDatasetPage}
+                    totalItems={filteredDatasets.length}
+                  />
+                  <div className="grid grid-cols-3 gap-3">
+                    {pagedDatasets.map((d) => (
+                      <DatasetPickerCard
+                        key={d.id}
+                        item={d}
+                        selected={datasetIds.includes(d.id)}
+                        onSelect={() =>
+                          setDatasetIds((prev) =>
+                            prev.includes(d.id) ? prev.filter((id) => id !== d.id) : [...prev, d.id]
+                          )
+                        }
+                      />
+                    ))}
+                  </div>
                 </VStack>
-              </div>
+              </FormField>
 
-              <div className="min-w-0 flex-1 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] p-4">
-                <VStack gap={4}>
-                  <FormField label="Method" required>
-                    <Select
-                      options={METHOD_OPTIONS}
-                      value={publishMethod}
-                      onChange={setPublishMethod}
-                      fullWidth
-                    />
-                  </FormField>
+              <FormField label="Training model" required>
+                <Select
+                  options={trainingModelOptions}
+                  value={trainingModel}
+                  onChange={setTrainingModel}
+                  className="w-[328px]"
+                />
+              </FormField>
 
-                  <FormField label="Dataset" required>
-                    <VStack gap={3}>
-                      <Tabs
-                        value={datasetTab}
-                        onChange={setDatasetTab}
-                        variant="underline"
-                        size="sm"
-                      >
-                        <TabList>
-                          <Tab value="all">All</Tab>
-                          <Tab value="thaki">Thaki Datasets</Tab>
-                          <Tab value="custom">Custom Datasets</Tab>
-                          <Tab value="textgen">Text generation</Tab>
-                          <Tab value="tabular">Tabular</Tab>
-                        </TabList>
-                      </Tabs>
-                      <SearchInput
-                        placeholder="Find datasets"
-                        value={datasetSearch}
-                        onChange={(e) => setDatasetSearch(e.target.value)}
-                        size="sm"
-                        className="w-[312px]"
+              <FormField label="Teacher" required>
+                <VStack gap={3}>
+                  <SearchInput
+                    placeholder="Find models"
+                    value={teacherSearch}
+                    onChange={(e) => setTeacherSearch(e.target.value)}
+                    size="sm"
+                    className="w-[312px]"
+                  />
+                  <Pagination
+                    currentPage={teacherPage}
+                    totalPages={Math.max(1, Math.ceil(teacherModels.length / 6))}
+                    onPageChange={setTeacherPage}
+                    totalItems={teacherModels.length}
+                  />
+                  <Tabs
+                    value={teacherModelTab}
+                    onChange={setTeacherModelTab}
+                    variant="underline"
+                    size="sm"
+                  >
+                    <TabList>
+                      <Tab value="all">All</Tab>
+                      <Tab value="base">Base Models</Tab>
+                      <Tab value="ft">Fine-tuning Models</Tab>
+                    </TabList>
+                  </Tabs>
+                  <div className="grid grid-cols-3 gap-3">
+                    {pagedTeacherModels.map((m) => (
+                      <ModelPickerCard
+                        key={m.id}
+                        model={m}
+                        selected={teacherId === m.id}
+                        onSelect={() => setTeacherId(m.id)}
                       />
-                      <Pagination
-                        currentPage={datasetPage}
-                        totalPages={Math.max(1, Math.ceil(filteredDatasets.length / 6))}
-                        onPageChange={setDatasetPage}
-                        totalItems={filteredDatasets.length}
-                      />
-                      <div className="grid grid-cols-3 gap-3">
-                        {pagedDatasets.map((d) => (
-                          <DatasetPickerCard
-                            key={d.id}
-                            item={d}
-                            selected={datasetId === d.id}
-                            onSelect={() => setDatasetId(d.id)}
-                          />
-                        ))}
-                      </div>
-                    </VStack>
-                  </FormField>
-
-                  <FormField label="Training model" required>
-                    <Select
-                      options={trainingModelOptions}
-                      value={trainingModel}
-                      onChange={setTrainingModel}
-                      fullWidth
-                    />
-                  </FormField>
-
-                  <FormField label="Teacher" required>
-                    <VStack gap={3}>
-                      <SearchInput
-                        placeholder="Find models"
-                        value={teacherSearch}
-                        onChange={(e) => setTeacherSearch(e.target.value)}
-                        size="sm"
-                        className="w-[312px]"
-                      />
-                      <Pagination
-                        currentPage={teacherPage}
-                        totalPages={Math.max(1, Math.ceil(teacherModels.length / 6))}
-                        onPageChange={setTeacherPage}
-                        totalItems={teacherModels.length}
-                      />
-                      <Tabs
-                        value={teacherModelTab}
-                        onChange={setTeacherModelTab}
-                        variant="underline"
-                        size="sm"
-                      >
-                        <TabList>
-                          <Tab value="all">All</Tab>
-                          <Tab value="base">Base Models</Tab>
-                          <Tab value="ft">Fine-tuning Models</Tab>
-                        </TabList>
-                      </Tabs>
-                      <div className="grid grid-cols-3 gap-3">
-                        {pagedTeacherModels.map((m) => (
-                          <ModelPickerCard
-                            key={m.id}
-                            model={m}
-                            selected={teacherId === m.id}
-                            onSelect={() => setTeacherId(m.id)}
-                          />
-                        ))}
-                      </div>
-                    </VStack>
-                  </FormField>
-
-                  {publishHyperparameters}
+                    ))}
+                  </div>
                 </VStack>
-              </div>
-            </div>
-          </VStack>
-        </SectionCard.Content>
-      </SectionCard>
+              </FormField>
+
+              {publishHyperparameters}
+            </VStack>
+          </div>
+        </div>
+      </div>
 
       <HStack justify="end">
         <Button variant="primary" size="md" disabled={!publishComplete}>
@@ -1525,111 +1623,71 @@ export function TextGenerationPage() {
     </VStack>
   );
 
-  const summaryAside = (
-    <aside className="w-[300px] shrink-0 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-      <div className="border-b border-[var(--color-border-subtle)] p-4">
-        <span className="text-heading-h6 text-[var(--color-text-default)]">Summary</span>
-      </div>
-      <div className="max-h-[calc(100vh-220px)] overflow-y-auto p-4">
-        <VStack gap={3}>
-          <button
-            type="button"
-            className="flex w-full items-center justify-between text-left text-label-md text-[var(--color-text-default)]"
-            onClick={() => setSummaryConfigOpen((o) => !o)}
-          >
-            Configuration
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              {summaryConfigOpen ? '−' : '+'}
-            </span>
-          </button>
-          {summaryConfigOpen && (
-            <VStack gap={2} className="pl-2">
-              <HStack justify="between" align="center">
-                <span className="text-body-sm text-[var(--color-text-muted)]">
-                  Basic information
-                </span>
-                <StatusIndicator
-                  status={
-                    experimentName && experimentDesc && appliedTemplateId ? 'active' : 'pending'
-                  }
-                  layout="icon-only"
-                  size="sm"
-                />
-              </HStack>
-              <HStack justify="between" align="center">
-                <span className="text-body-sm text-[var(--color-text-muted)]">
-                  Model information
-                </span>
-                <StatusIndicator
-                  status={baseModelId ? 'active' : 'pending'}
-                  layout="icon-only"
-                  size="sm"
-                />
-              </HStack>
-            </VStack>
-          )}
+  const summarySections: FloatingCardSection[] = useMemo(
+    () => [
+      {
+        tabTitle: 'Configuration',
+        collapsible: true,
+        defaultExpanded: true,
+        items: [
+          {
+            id: 'basic',
+            title: 'Basic information',
+            status: experimentName && experimentDesc ? 'success' : 'processing',
+          },
+          {
+            id: 'model',
+            title: 'Model information',
+            status: baseModelId ? 'success' : 'processing',
+          },
+        ],
+      },
+      {
+        tabTitle: 'Publish',
+        collapsible: true,
+        defaultExpanded: false,
+        items: [
+          {
+            id: 'training',
+            title: 'Training settings',
+            status: publishComplete ? 'success' : 'processing',
+          },
+        ],
+      },
+    ],
+    [experimentName, experimentDesc, baseModelId, publishComplete]
+  );
 
-          <button
-            type="button"
-            className="flex w-full items-center justify-between text-left text-label-md text-[var(--color-text-default)]"
-            onClick={() => setSummaryPublishOpen((o) => !o)}
-          >
-            Publish
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              {summaryPublishOpen ? '−' : '+'}
-            </span>
-          </button>
-          {summaryPublishOpen && (
-            <VStack gap={2} className="pl-2">
-              <HStack justify="between" align="center">
-                <span className="text-body-sm text-[var(--color-text-muted)]">
-                  Training settings
-                </span>
-                <StatusIndicator
-                  status={publishComplete ? 'active' : 'pending'}
-                  layout="icon-only"
-                  size="sm"
-                />
-              </HStack>
-            </VStack>
-          )}
-        </VStack>
-      </div>
-      <div className="border-t border-[var(--color-border-subtle)] p-4">
-        <HStack gap={2} className="w-full">
-          <Button variant="secondary" size="md" className="flex-1" onClick={goList}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
-            className="flex-1"
-            disabled={!canCreate}
-            onClick={() => {
-              const id = `exp-${crypto.randomUUID().slice(0, 8)}`;
-              setExperiments((prev) => [
-                {
-                  id,
-                  status: 'pending',
-                  name: experimentName || 'new-experiment',
-                  method: publishMethod,
-                  steps: '0/1',
-                  owner: '00000000-0000-0000-0000-000000000001',
-                  duration: '—',
-                  createdAt: new Date().toISOString(),
-                  completedAt: '—',
-                  description: experimentDesc,
-                },
-                ...prev,
-              ]);
-              goList();
-            }}
-          >
-            Create
-          </Button>
-        </HStack>
-      </div>
-    </aside>
+  const summaryAside = (
+    <FloatingCard
+      title="Summary"
+      sections={summarySections}
+      cancelLabel="Cancel"
+      actionLabel="Create"
+      actionEnabled={canCreate}
+      onCancel={goList}
+      onAction={() => {
+        const id = `exp-${crypto.randomUUID().slice(0, 8)}`;
+        setExperiments((prev) => [
+          {
+            id,
+            status: 'pending',
+            name: experimentName || 'new-experiment',
+            method: publishMethod,
+            steps: '0/1',
+            owner: '00000000-0000-0000-0000-000000000001',
+            duration: '—',
+            createdAt: new Date().toISOString(),
+            completedAt: '—',
+            description: experimentDesc,
+          },
+          ...prev,
+        ]);
+        goList();
+      }}
+      portal={false}
+      width="312px"
+    />
   );
 
   const createView = (
