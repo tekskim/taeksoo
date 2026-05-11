@@ -251,6 +251,11 @@ import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDra
 import { ManageAclRulesDrawer } from '@/components/ManageAclRulesDrawer';
 import { AdminTenantDrawer } from '@/components/AdminTenantDrawer';
 import { CreateFirewallDrawer } from '@/components/CreateFirewallDrawer';
+import { EditFirewallDrawer, type FirewallInfo } from '@/components/EditFirewallDrawer';
+import {
+  ManageFirewallPortsDrawer,
+  type FirewallInfo as ManagePortsFirewallInfo,
+} from '@/components/ManageFirewallPortsDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers ---------------------------------------- */
@@ -538,6 +543,20 @@ const mockCreateQosExtraSpec: CreateQosExtraSpecInfo = {
 
 const mockFirewallPolicy: FirewallPolicyInfo = {
   id: 'policy-001',
+  name: 'name',
+};
+
+const mockEditFirewall: FirewallInfo = {
+  id: 'fw-001',
+  name: 'name',
+  description: '',
+  ingressPolicyId: '',
+  egressPolicyId: '',
+  adminStateUp: true,
+};
+
+const mockManagePortsFirewall: ManagePortsFirewallInfo = {
+  id: 'fw-001',
   name: 'name',
 };
 
@@ -1447,6 +1466,16 @@ const SECURITY_FIREWALL_ITEMS: DrawerSearchItem[] = [
     title: 'Create firewall',
     description:
       'Create a new firewall with tenant assignment, ingress/egress policies, and admin state settings.',
+    category: 'Firewall',
+  },
+  {
+    title: 'Edit firewall',
+    description: 'Edit firewall name, description, ingress/egress policies, and admin state.',
+    category: 'Firewall',
+  },
+  {
+    title: 'Manage ports',
+    description: 'Select ports from the list to associate with a firewall.',
     category: 'Firewall',
   },
 ];
@@ -2744,7 +2773,7 @@ export function DrawersPage() {
                         Drawers{' '}
                       </span>
                       <span className="text-body-md text-[var(--color-text-subtle)]">
-                        (1 drawer)
+                        (3 drawers)
                       </span>
                     </div>
                   </div>
@@ -2757,6 +2786,18 @@ export function DrawersPage() {
                         description="Create a new firewall with tenant assignment, ingress/egress policies, and admin state settings."
                         category="Firewall"
                         onOpen={() => openDrawerFn('create-firewall')}
+                      />
+                      <DrawerCard
+                        title="Edit firewall"
+                        description="Edit firewall name, description, ingress/egress policies, and admin state."
+                        category="Firewall"
+                        onOpen={() => openDrawerFn('edit-firewall')}
+                      />
+                      <DrawerCard
+                        title="Manage ports"
+                        description="Select ports from the list to associate with a firewall."
+                        category="Firewall"
+                        onOpen={() => openDrawerFn('manage-firewall-ports')}
                       />
                     </FilteredGroup>
                   </VStack>
@@ -4178,6 +4219,24 @@ export function DrawersPage() {
         onClose={closeDrawer}
         onSubmit={(data) => {
           console.log('Create firewall:', data);
+        }}
+      />
+
+      <EditFirewallDrawer
+        isOpen={openDrawer === 'edit-firewall'}
+        onClose={closeDrawer}
+        firewall={mockEditFirewall}
+        onSubmit={(data) => {
+          console.log('Edit firewall:', data);
+        }}
+      />
+
+      <ManageFirewallPortsDrawer
+        isOpen={openDrawer === 'manage-firewall-ports'}
+        onClose={closeDrawer}
+        firewall={mockManagePortsFirewall}
+        onSubmit={(selectedPortIds) => {
+          console.log('Manage firewall ports:', selectedPortIds);
         }}
       />
 
