@@ -121,7 +121,7 @@ export function SettingsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'Account' }]} />}
-          actions={<AiPlatformTopBarActions showSearch />}
+          actions={<AiPlatformTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"

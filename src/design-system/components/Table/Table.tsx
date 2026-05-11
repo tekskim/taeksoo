@@ -53,7 +53,7 @@ export interface TableProps<T = any> extends Omit<
   stickyHeader?: boolean;
   maxHeight?: string;
   onRowClick?: (row: T, rowIndex: number) => void;
-  emptyMessage?: string;
+  emptyMessage?: React.ReactNode;
   rowHeight?: string;
   /** Render expanded content below a row. Return null to collapse. */
   expandedContent?: (row: T, rowIndex: number) => React.ReactNode | null;

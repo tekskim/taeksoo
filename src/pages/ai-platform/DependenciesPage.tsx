@@ -221,7 +221,7 @@ export function DependenciesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'Operations' }, { label: 'Dependencies' }]} />}
-          actions={<AiPlatformTopBarActions showSearch />}
+          actions={<AiPlatformTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"

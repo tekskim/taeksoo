@@ -1415,7 +1415,7 @@ export function KueuePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'Operations' }, { label: 'Kueue' }]} />}
-          actions={<AiPlatformTopBarActions showSearch />}
+          actions={<AiPlatformTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"

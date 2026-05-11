@@ -12,13 +12,13 @@ import {
   SearchInput,
   Pagination,
   Badge,
-  EmptyState,
   ConfirmModal,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconPlus, IconInfoCircle, IconLock, IconTemplate } from '@tabler/icons-react';
+import { IconInfoCircle, IconLock } from '@tabler/icons-react';
+import { DataTestToolbar, multiplyData, type DataMode } from './shared';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -264,6 +264,7 @@ export function MyTemplatesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [templates, setTemplates] = useState<TemplateItem[]>(() => [...MOCK_TEMPLATES]);
+  const [dataMode, setDataMode] = useState<DataMode>('few');
 
   useEffect(() => {
     updateActiveTabLabel('My templates');
@@ -271,11 +272,17 @@ export function MyTemplatesPage() {
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
+  const sourceTemplates = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'many') return multiplyData(templates, 50);
+    return templates;
+  }, [dataMode, templates]);
+
   const filteredTemplates = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return templates;
-    return templates.filter((t) => t.name.toLowerCase().includes(q));
-  }, [templates, searchQuery]);
+    if (!q) return sourceTemplates;
+    return sourceTemplates.filter((t) => t.name.toLowerCase().includes(q));
+  }, [sourceTemplates, searchQuery]);
 
   const totalPages = Math.max(1, Math.ceil(filteredTemplates.length / ITEMS_PER_PAGE));
 
@@ -390,22 +397,14 @@ export function MyTemplatesPage() {
         />
 
         {filteredTemplates.length === 0 ? (
-          <EmptyState
-            variant="inline"
-            icon={<IconTemplate size={48} stroke={1} />}
-            title="No templates found"
-            description="Try a different search or create a new template."
-            action={
-              <Button
-                variant="primary"
-                size="md"
-                leftIcon={<IconPlus size={12} />}
-                onClick={() => navigate('/ai-platform/my-templates/create')}
-              >
-                Create template
-              </Button>
-            }
-          />
+          <div className="flex flex-col items-center justify-center gap-2 w-full py-[120px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              No templates registered
+            </span>
+            <span className="text-body-md text-[var(--color-text-default)] text-center">
+              Create a new template to start deploying workloads.
+            </span>
+          </div>
         ) : (
           <div className="grid grid-cols-3 gap-4 w-full">
             {paginatedTemplates.map((template) => (
@@ -433,6 +432,8 @@ export function MyTemplatesPage() {
         confirmText="Delete"
         confirmVariant="danger"
       />
+
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }

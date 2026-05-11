@@ -15,14 +15,14 @@ import {
   SearchInput,
   Pagination,
   Tooltip,
-  EmptyState,
   Drawer,
   InfoBox,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCube, IconInfoCircle } from '@tabler/icons-react';
+import { IconInfoCircle } from '@tabler/icons-react';
+import { DataTestToolbar, multiplyData, type DataMode } from './shared';
 
 /* ----------------------------------------
    Types
@@ -363,7 +363,7 @@ function ModelDetailDrawer({
   );
 }
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 16;
 
 export function ModelsPage() {
   const navigate = useNavigate();
@@ -374,6 +374,7 @@ export function ModelsPage() {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [detailModel, setDetailModel] = useState<ModelItem | null>(null);
+  const [dataMode, setDataMode] = useState<DataMode>('few');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -388,8 +389,14 @@ export function ModelsPage() {
     setCurrentPage(1);
   };
 
+  const sourceModels = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'many') return multiplyData(MOCK_MODELS, 60);
+    return MOCK_MODELS;
+  }, [dataMode]);
+
   const filteredModels = useMemo(() => {
-    return MOCK_MODELS.filter((model) => {
+    return sourceModels.filter((model) => {
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         if (
@@ -404,7 +411,7 @@ export function ModelsPage() {
       if (categoryFilter !== 'all' && model.category !== categoryFilter) return false;
       return true;
     });
-  }, [searchQuery, activeTab, categoryFilter]);
+  }, [sourceModels, searchQuery, activeTab, categoryFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredModels.length / ITEMS_PER_PAGE));
   const paginatedModels = filteredModels.slice(
@@ -503,11 +510,14 @@ export function ModelsPage() {
             ))}
           </div>
         ) : (
-          <EmptyState
-            icon={<IconCube size={48} stroke={1} />}
-            title="No models found"
-            description="Try adjusting your search or filter criteria."
-          />
+          <div className="flex flex-col items-center justify-center gap-2 w-full py-[120px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              No models registered
+            </span>
+            <span className="text-body-md text-[var(--color-text-default)] text-center">
+              Register or upload a model to start deploying and fine-tuning.
+            </span>
+          </div>
         )}
       </VStack>
 
@@ -516,6 +526,8 @@ export function ModelsPage() {
         isOpen={!!detailModel}
         onClose={() => setDetailModel(null)}
       />
+
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }

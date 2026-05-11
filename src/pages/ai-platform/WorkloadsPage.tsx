@@ -33,6 +33,7 @@ import {
   IconDotsCircleHorizontal,
   IconExternalLink,
 } from '@tabler/icons-react';
+import { DataTestToolbar, multiplyData, type DataMode } from './shared';
 import type { StatusType } from '@/design-system/components/StatusIndicator/StatusIndicator';
 
 interface WorkloadItem {
@@ -358,6 +359,7 @@ export function WorkloadsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [workloads, setWorkloads] = useState<WorkloadItem[]>(() => [...MOCK_DATA]);
+  const [dataMode, setDataMode] = useState<DataMode>('few');
   const [isLockOpen, setIsLockOpen] = useState(false);
   const [lockTarget, setLockTarget] = useState<WorkloadItem | null>(null);
   const [isLocked, setIsLocked] = useState(false);
@@ -370,9 +372,15 @@ export function WorkloadsPage() {
     return `https://${connectTarget.name}.ai-platform.thaki.cloud:${selectedPort}`;
   }, [connectTarget, selectedPort]);
 
+  const sourceWorkloads = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'many') return multiplyData(workloads, 60);
+    return workloads;
+  }, [dataMode, workloads]);
+
   const filteredData = useMemo(() => {
-    if (appliedFilters.length === 0) return workloads;
-    return workloads.filter((item) => {
+    if (appliedFilters.length === 0) return sourceWorkloads;
+    return sourceWorkloads.filter((item) => {
       return appliedFilters.every((filter) => {
         if (filter.fieldId === 'name') {
           return item.name.toLowerCase().includes(String(filter.value).toLowerCase());
@@ -386,7 +394,7 @@ export function WorkloadsPage() {
         return true;
       });
     });
-  }, [appliedFilters, workloads]);
+  }, [appliedFilters, sourceWorkloads]);
 
   const totalPages = Math.max(1, Math.ceil(filteredData.length / ITEMS_PER_PAGE));
   const paginatedData = useMemo(
@@ -701,7 +709,16 @@ export function WorkloadsPage() {
           selectable
           selectedKeys={selectedItems}
           onSelectionChange={setSelectedItems}
-          emptyMessage="No workloads found"
+          emptyMessage={
+            <div className="flex flex-col items-center gap-2 py-[88px]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                No workloads registered
+              </span>
+              <span className="text-body-md text-[var(--color-text-muted)]">
+                Deploy a workload to get started
+              </span>
+            </div>
+          }
         />
       </VStack>
 
@@ -783,6 +800,8 @@ export function WorkloadsPage() {
           </Disclosure>
         </VStack>
       </Drawer>
+
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }

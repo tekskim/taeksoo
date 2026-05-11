@@ -18,7 +18,6 @@ import {
   PageHeader,
   SearchInput,
   Pagination,
-  EmptyState,
   Tabs,
   TabList,
   Tab,
@@ -29,7 +28,8 @@ import {
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconDatabase, IconEye, IconEdit as IconPencil, IconShield } from '@tabler/icons-react';
+import { IconEye, IconEdit as IconPencil, IconShield } from '@tabler/icons-react';
+import { DataTestToolbar, multiplyData, type DataMode } from './shared';
 import {
   CreateVolumeDrawer,
   EditVolumeDrawer,
@@ -567,12 +567,14 @@ function VolumeListSection({
       </MetricCard.Group>
       {searchToolbar}
       {filteredVolumes.length === 0 ? (
-        <EmptyState
-          variant="inline"
-          icon={<IconDatabase size={48} stroke={1} />}
-          title="No volumes found"
-          description="Try adjusting your search."
-        />
+        <div className="flex flex-col items-center justify-center gap-2 w-full py-[120px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
+            No volumes registered
+          </span>
+          <span className="text-body-md text-[var(--color-text-default)] text-center">
+            Create a volume to start storing data.
+          </span>
+        </div>
       ) : (
         <div className="grid grid-cols-3 gap-4 w-full">
           {paginatedVolumes.map((v) => (
@@ -600,6 +602,7 @@ export function VolumesPage() {
   const [activeTab, setActiveTab] = useState<VolumeTab>('project-volumes');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [dataMode, setDataMode] = useState<DataMode>('few');
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -618,14 +621,26 @@ export function VolumesPage() {
     setCurrentPage(1);
   }, [activeTab]);
 
+  const sourceProjectVolumes = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'many') return multiplyData(MOCK_PROJECT_VOLUMES, 50);
+    return MOCK_PROJECT_VOLUMES;
+  }, [dataMode]);
+
+  const sourceMyVolumes = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'many') return multiplyData(MOCK_MY_STORAGE_VOLUMES, 50);
+    return MOCK_MY_STORAGE_VOLUMES;
+  }, [dataMode]);
+
   const filteredProjectVolumes = useMemo(
-    () => filterVolumesByName(MOCK_PROJECT_VOLUMES, searchQuery),
-    [searchQuery]
+    () => filterVolumesByName(sourceProjectVolumes, searchQuery),
+    [sourceProjectVolumes, searchQuery]
   );
 
   const filteredMyVolumes = useMemo(
-    () => filterVolumesByName(MOCK_MY_STORAGE_VOLUMES, searchQuery),
-    [searchQuery]
+    () => filterVolumesByName(sourceMyVolumes, searchQuery),
+    [sourceMyVolumes, searchQuery]
   );
 
   const projectVolumeTotalPages = Math.max(
@@ -861,12 +876,14 @@ export function VolumesPage() {
             <VStack gap={3} className="pt-4">
               {searchBlock}
               {filteredShares.length === 0 ? (
-                <EmptyState
-                  variant="inline"
-                  icon={<IconDatabase size={48} stroke={1} />}
-                  title="No shares found"
-                  description="Try adjusting your search."
-                />
+                <div className="flex flex-col items-center justify-center gap-2 w-full py-[120px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                  <span className="text-label-lg text-[var(--color-text-default)]">
+                    No shares found
+                  </span>
+                  <span className="text-body-md text-[var(--color-text-default)] text-center">
+                    Share a volume to collaborate with others.
+                  </span>
+                </div>
               ) : (
                 <div className="grid grid-cols-4 gap-4 w-full">
                   {paginatedShares.map((s) => (
@@ -881,12 +898,14 @@ export function VolumesPage() {
             <VStack gap={3} className="pt-4">
               {searchBlock}
               {filteredSharedVolumes.length === 0 ? (
-                <EmptyState
-                  variant="inline"
-                  icon={<IconDatabase size={48} stroke={1} />}
-                  title="No shared volumes"
-                  description="Try adjusting your search."
-                />
+                <div className="flex flex-col items-center justify-center gap-2 w-full py-[120px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                  <span className="text-label-lg text-[var(--color-text-default)]">
+                    No shared volumes
+                  </span>
+                  <span className="text-body-md text-[var(--color-text-default)] text-center">
+                    Volumes shared with you will appear here.
+                  </span>
+                </div>
               ) : (
                 <div className="grid grid-cols-3 gap-4 w-full">
                   {paginatedSharedVolumes.map((item) => (
@@ -958,6 +977,8 @@ export function VolumesPage() {
         }
       />
       <AddShareDrawer isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
+
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }

@@ -36,6 +36,7 @@ import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { IconTrash, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { DataTestToolbar, multiplyData, type DataMode } from './shared';
 
 const PAGE_SIZE = 10;
 
@@ -349,6 +350,7 @@ export function ServerlessPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [dataMode, setDataMode] = useState<DataMode>('few');
 
   const [selectedEndpoint, setSelectedEndpoint] = useState<ServerlessEndpoint | null>(null);
   const [internalUrlOpen, setInternalUrlOpen] = useState(false);
@@ -389,13 +391,19 @@ export function ServerlessPage() {
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
+  const sourceEndpoints = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'many') return multiplyData(MOCK_ENDPOINTS, 60);
+    return MOCK_ENDPOINTS;
+  }, [dataMode]);
+
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return MOCK_ENDPOINTS;
-    return MOCK_ENDPOINTS.filter(
+    if (!q) return sourceEndpoints;
+    return sourceEndpoints.filter(
       (row) => row.name.toLowerCase().includes(q) || row.description.toLowerCase().includes(q)
     );
-  }, [searchQuery]);
+  }, [searchQuery, sourceEndpoints]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
 
@@ -658,7 +666,16 @@ export function ServerlessPage() {
           selectable
           selectedKeys={selectedKeys}
           onSelectionChange={setSelectedKeys}
-          emptyMessage="No serverless endpoints found"
+          emptyMessage={
+            <div className="flex flex-col items-center gap-2 py-[88px]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                No endpoints found
+              </span>
+              <span className="text-body-md text-[var(--color-text-muted)]">
+                Create an endpoint to get started
+              </span>
+            </div>
+          }
         />
       </VStack>
 
@@ -897,6 +914,7 @@ export function ServerlessPage() {
           </Drawer>
         </>
       )}
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }

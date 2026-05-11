@@ -48,7 +48,7 @@ export function SystemAdminPage() {
           breadcrumb={
             <Breadcrumb items={[{ label: 'Operations' }, { label: 'System administration' }]} />
           }
-          actions={<AiPlatformTopBarActions showSearch />}
+          actions={<AiPlatformTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-subtle)]"
