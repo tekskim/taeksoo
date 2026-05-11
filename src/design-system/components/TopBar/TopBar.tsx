@@ -79,8 +79,8 @@ export const TopBar: React.FC<TopBarProps> = ({
     >
       {/* Left Section: Sidebar Toggle + Navigation */}
       <div className="flex items-center gap-[var(--topbar-section-gap)]">
-        {/* Sidebar Toggle - Always on the very left when shown */}
-        {(showSidebarToggle || showSidebarToggleAfterBreadcrumb) && (
+        {/* Sidebar toggle — reserve slot when handler exists so breadcrumb/actions do not shift */}
+        {(showSidebarToggle || showSidebarToggleAfterBreadcrumb) && onSidebarToggle ? (
           <button
             type="button"
             onClick={onSidebarToggle}
@@ -89,7 +89,9 @@ export const TopBar: React.FC<TopBarProps> = ({
           >
             <IconLayoutSidebar size={14} stroke={1.5} />
           </button>
-        )}
+        ) : onSidebarToggle ? (
+          <span className="inline-flex shrink-0 size-[var(--topbar-button-size)]" aria-hidden />
+        ) : null}
 
         {/* Navigation Buttons */}
         {showNavigation && (
@@ -122,7 +124,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* Right Section: Actions */}
-      <div className="flex items-center gap-[var(--topbar-action-gap)]">{actions}</div>
+      <div className="flex shrink-0 items-center gap-[var(--topbar-action-gap)]">{actions}</div>
     </header>
   );
 };

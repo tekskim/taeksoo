@@ -27,14 +27,9 @@ import {
   MetricCard,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconDatabase,
-  IconEye,
-  IconEdit as IconPencil,
-  IconShield,
-} from '@tabler/icons-react';
+import { IconDatabase, IconEye, IconEdit as IconPencil, IconShield } from '@tabler/icons-react';
 import {
   CreateVolumeDrawer,
   EditVolumeDrawer,
@@ -506,21 +501,23 @@ function HeaderStorageCard({
 }) {
   const percent = total > 0 ? Math.min((used / total) * 100, 100) : 0;
   return (
-    <div className="flex flex-col gap-2 justify-center rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] px-3 py-2 min-h-[40px]">
-      <HStack gap={3} align="center" className="w-full">
-        <span className="text-label-sm text-[var(--color-text-default)] whitespace-nowrap">
+    <div
+      className="flex w-[280px] shrink-0 flex-col justify-center gap-2 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] px-3 py-2 min-h-[40px] min-w-0"
+      title={`${title} — ${used} ${unit} / ${total} ${unit}`}
+    >
+      <HStack gap={3} align="center" className="min-w-0 w-full">
+        <span className="min-w-0 flex-1 truncate text-label-sm text-[var(--color-text-default)]">
           {title}
         </span>
-        <span className="text-label-sm text-[var(--color-text-subtle)] whitespace-nowrap">
+        <span className="shrink-0 text-label-sm text-[var(--color-text-subtle)] tabular-nums whitespace-nowrap">
           {used} {unit} / {total} {unit}
         </span>
       </HStack>
-      <div className="flex h-1 w-full items-start isolate">
+      <div className="flex h-1 w-full min-w-0 overflow-hidden rounded-full bg-[var(--color-border-default)]">
         <div
-          className="h-1 rounded-full bg-[var(--color-text-subtle)] -mr-1 z-[2] shrink-0"
+          className="h-full rounded-full bg-[var(--color-text-subtle)]"
           style={{ width: `${percent}%` }}
         />
-        <div className="flex-1 h-1 rounded-full bg-[var(--color-border-default)] z-[1]" />
       </div>
     </div>
   );
@@ -800,25 +797,17 @@ export function VolumesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'Infrastructure' }, { label: 'Volumes' }]} />}
-          actions={
-            <button
-              type="button"
-              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-              aria-label="Notifications"
-            >
-              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
-          }
+          actions={<AiPlatformTopBarActions />}
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={3} className="pb-20">
+      <VStack gap={3} className="overflow-x-visible overflow-y-visible">
         <PageHeader
           title="Volumes"
           actions={
-            <HStack gap={3} align="center">
-              <HStack gap={2} align="center">
+            <HStack gap={3} align="center" className="w-max shrink-0 flex-nowrap overflow-visible">
+              <HStack gap={2} align="center" className="w-max shrink-0 overflow-visible">
                 <HeaderStorageCard title="Storage Usage" used={20} total={500} />
                 <HeaderStorageCard title="Personal Storage / Custom" used={25} total={100} />
               </HStack>

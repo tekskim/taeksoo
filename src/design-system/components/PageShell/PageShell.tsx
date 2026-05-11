@@ -67,12 +67,14 @@ export function PageShell({
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
-          className="flex-1 min-w-0 overscroll-contain"
+          className="flex-1 min-w-0 overscroll-contain [scrollbar-gutter:stable]"
           style={{
             paddingBottom: bottomPanelPadding || '0',
           }}
         >
-          <div className={`bg-[var(--color-surface-default)] h-full ${contentClassName}`.trim()}>
+          <div
+            className={`min-w-0 bg-[var(--color-surface-default)] h-full ${contentClassName}`.trim()}
+          >
             {children}
           </div>
         </OverlayScrollbarsComponent>

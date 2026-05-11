@@ -144,26 +144,25 @@ const mockModels: ModelItem[] = [
 
 const MODELS_PAGE_SIZE = 8;
 
-export function ServerlessCreateVllmPage() {
+export function ServerlessEditVllmPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState('vllm-serverless-39120983');
   const [modelSearch, setModelSearch] = useState('');
   const [modelTab, setModelTab] = useState('all');
   const [modelPage, setModelPage] = useState(1);
-  const [selectedModelId, setSelectedModelId] = useState<string>('m-1');
+  const [selectedModelId, setSelectedModelId] = useState<string>('m-3');
   const [downloadHf, setDownloadHf] = useState(true);
-  const [gpuCount, setGpuCount] = useState(2);
-  const [gpuMemoryGib, setGpuMemoryGib] = useState(40);
+  const [gpuCount, setGpuCount] = useState(4);
+  const [gpuMemoryGib, setGpuMemoryGib] = useState(80);
   const [port, setPort] = useState(8000);
 
   useEffect(() => {
-    updateActiveTabLabel('Create endpoint');
+    updateActiveTabLabel('Edit');
   }, [updateActiveTabLabel]);
-
   useEffect(() => {
     setModelPage(1);
   }, [modelTab, modelSearch]);
@@ -186,7 +185,6 @@ export function ServerlessCreateVllmPage() {
   }, [modelTab, modelSearch]);
 
   const totalModelPages = Math.max(1, Math.ceil(filteredModels.length / MODELS_PAGE_SIZE));
-
   useEffect(() => {
     setModelPage((p) => Math.min(p, totalModelPages));
   }, [totalModelPages]);
@@ -198,7 +196,6 @@ export function ServerlessCreateVllmPage() {
 
   const selectedModel = mockModels.find((m) => m.id === selectedModelId);
   const summaryModelTitle = selectedModel?.title ?? '—';
-
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   const modelCardGrid = (
@@ -258,8 +255,7 @@ export function ServerlessCreateVllmPage() {
               items={[
                 { label: 'Infrastructure' },
                 { label: 'Serverless', href: '/ai-platform/serverless' },
-                { label: 'Create endpoint', href: '/ai-platform/serverless/create' },
-                { label: 'vLLM' },
+                { label: 'Edit' },
               ]}
             />
           }
@@ -270,10 +266,10 @@ export function ServerlessCreateVllmPage() {
     >
       <VStack gap={4} className="w-full">
         <VStack gap={2}>
-          <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create endpoint</h1>
+          <h1 className="text-heading-h4 text-[var(--color-text-default)]">Edit</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
-            Configure a vLLM serverless endpoint with model selection, Hugging Face download
-            options, and GPU resources.
+            Edit a vLLM serverless endpoint configuration with model selection, Hugging Face
+            download options, and GPU resources.
           </p>
         </VStack>
 
@@ -285,7 +281,6 @@ export function ServerlessCreateVllmPage() {
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Basic Information
                   </h2>
-
                   <FormField label="Name" required>
                     <Input
                       placeholder="e.g., vllm-serverless-39120983"
@@ -294,7 +289,6 @@ export function ServerlessCreateVllmPage() {
                       className="w-[328px]"
                     />
                   </FormField>
-
                   <FormField label="Model" required>
                     <VStack gap={4} className="w-full">
                       <SearchInput
@@ -317,7 +311,6 @@ export function ServerlessCreateVllmPage() {
                           <Tab value="base">Base model</Tab>
                           <Tab value="fine-tuned">Fine-tuned model</Tab>
                         </TabList>
-
                         <TabPanel value="all" className="pt-4">
                           {modelTab === 'all' ? modelCardGrid : null}
                         </TabPanel>
@@ -330,7 +323,6 @@ export function ServerlessCreateVllmPage() {
                       </Tabs>
                     </VStack>
                   </FormField>
-
                   <FormField
                     label="Download HuggingFace"
                     description="When off, use local model path from Finetune response to deploy without downloading."
@@ -344,13 +336,11 @@ export function ServerlessCreateVllmPage() {
                   </FormField>
                 </VStack>
               </div>
-
               <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                 <VStack gap={6}>
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Resource Configuration
                   </h2>
-
                   <FormField required>
                     <HStack justify="between" align="start" className="w-full">
                       <FormField.Label>GPU count</FormField.Label>
@@ -359,8 +349,7 @@ export function ServerlessCreateVllmPage() {
                       </span>
                     </HStack>
                     <FormField.Description>
-                      Choose how many GPUs to attach for inference. Increasing count improves
-                      throughput and allows larger batch sizes across replicas.
+                      Choose how many GPUs to attach for inference.
                     </FormField.Description>
                     <FormField.Control>
                       <HStack gap={3} align="center">
@@ -383,7 +372,6 @@ export function ServerlessCreateVllmPage() {
                       </HStack>
                     </FormField.Control>
                   </FormField>
-
                   <FormField required>
                     <HStack justify="between" align="start" className="w-full">
                       <FormField.Label>GPU memory</FormField.Label>
@@ -392,8 +380,7 @@ export function ServerlessCreateVllmPage() {
                       </span>
                     </HStack>
                     <FormField.Description>
-                      Reserve GPU VRAM aligned with weight size and KV cache. Higher values
-                      stabilize long-context runs and concurrent requests without OOM spikes.
+                      Reserve GPU VRAM aligned with weight size and KV cache.
                     </FormField.Description>
                     <FormField.Control>
                       <HStack gap={3} align="center">
@@ -417,7 +404,6 @@ export function ServerlessCreateVllmPage() {
                       </HStack>
                     </FormField.Control>
                   </FormField>
-
                   <FormField label="Port" description="Enter a port number" required>
                     <NumberInput
                       min={1}
@@ -432,7 +418,6 @@ export function ServerlessCreateVllmPage() {
               </div>
             </VStack>
           </div>
-
           <div className="w-[312px] shrink-0">
             <div className="sticky top-[80px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-3">
               <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
@@ -464,12 +449,12 @@ export function ServerlessCreateVllmPage() {
                   size="md"
                   className="flex-1"
                   type="button"
-                  onClick={() => navigate('/ai-platform/serverless/create')}
+                  onClick={() => navigate('/ai-platform/serverless')}
                 >
                   Cancel
                 </Button>
                 <Button variant="primary" size="md" className="flex-1" type="button">
-                  Create endpoint
+                  Save
                 </Button>
               </HStack>
             </div>
@@ -480,4 +465,4 @@ export function ServerlessCreateVllmPage() {
   );
 }
 
-export default ServerlessCreateVllmPage;
+export default ServerlessEditVllmPage;

@@ -16,8 +16,9 @@ import {
   ConfirmModal,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconPlus, IconInfoCircle, IconLock, IconTemplate } from '@tabler/icons-react';
+import { IconPlus, IconInfoCircle, IconLock, IconTemplate } from '@tabler/icons-react';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -351,20 +352,12 @@ export function MyTemplatesPage() {
           breadcrumb={
             <Breadcrumb items={[{ label: 'Infrastructure' }, { label: 'My templates' }]} />
           }
-          actions={
-            <button
-              type="button"
-              className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-              aria-label="Notifications"
-            >
-              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
-          }
+          actions={<AiPlatformTopBarActions />}
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={3} className="pb-20">
+      <VStack gap={3}>
         <PageHeader
           title="My templates"
           actions={

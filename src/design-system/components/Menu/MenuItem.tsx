@@ -37,33 +37,32 @@ export function MenuItem({
   disabled = false,
 }: MenuItemProps) {
   const baseStyles = [
-    'w-[175px]',
+    'w-full min-w-0',
     'px-[var(--menu-item-padding-x)]',
     'py-[var(--menu-item-padding-y)]',
     'rounded-[var(--menu-item-radius)]',
     'flex items-center',
     'gap-[var(--menu-item-gap)]',
-    'text-body-sm',
+    'text-body-sm font-medium',
     'transition-colors duration-[var(--duration-fast)]',
-    'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]',
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-border-focus)]',
   ].join(' ');
 
   const stateStyles = active
-    ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium'
+    ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)]'
     : disabled
-      ? 'text-[var(--color-text-disabled)] cursor-not-allowed'
-      : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] font-normal';
+      ? 'text-[var(--color-text-disabled)] cursor-not-allowed font-normal'
+      : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]';
+
+  const iconWrapClass = [
+    'inline-flex size-4 shrink-0 items-center justify-center',
+    active ? 'text-[var(--menu-item-active-text)]' : 'text-[var(--color-text-default)]',
+  ].join(' ');
 
   const content = (
     <>
-      {icon && (
-        <span
-          className={`shrink-0 ${active ? 'text-[var(--menu-item-active-text)]' : 'text-[var(--color-text-default)]'}`}
-        >
-          {icon}
-        </span>
-      )}
-      <span className="text-left truncate">{label}</span>
+      {icon && <span className={iconWrapClass}>{icon}</span>}
+      <span className="min-w-0 flex-1 text-left truncate">{label}</span>
       {badge && (
         <span className="px-1.5 py-0.5 text-body-xs font-medium bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] rounded">
           {badge}
