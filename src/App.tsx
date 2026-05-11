@@ -488,6 +488,7 @@ import { FigmaCloudBuilderPage } from '@/pages/figma/FigmaCloudBuilderPage';
 // Pages - AI Platform
 import { AIPlatformPage } from '@/pages/AIPlatformPage';
 import { TextGenerationPage } from '@/pages/ai-platform/TextGenerationPage';
+import { TabularPage } from '@/pages/ai-platform/TabularPage';
 import { ExplorePage } from '@/pages/ai-platform/ExplorePage';
 import { PackagesPage } from '@/pages/ai-platform/PackagesPage';
 import { ModelsPage } from '@/pages/ai-platform/ModelsPage';
@@ -1126,6 +1127,7 @@ function AppRoutes() {
         element={<ServerlessEditDockerImagePage />}
       />
       <Route path="/ai-platform/text-generation" element={<TextGenerationPage />} />
+      <Route path="/ai-platform/tabular" element={<TabularPage />} />
       <Route path="/ai-platform/devspace" element={<DevSpacePage />} />
       <Route path="/ai-platform/pipeline-builder" element={<PipelineBuilderPage />} />
       <Route path="/ai-platform/benchmarks" element={<BenchmarksPage />} />

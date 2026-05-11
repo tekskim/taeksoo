@@ -313,7 +313,6 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
               label="Tabular"
               href="/ai-platform/tabular"
               active={isActive('/ai-platform/tabular')}
-              disabled
             />
           </MenuSection>
 
