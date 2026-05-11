@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { IconFolder, IconDotsVertical } from '@tabler/icons-react';
+import { IconFolder, IconDotsVertical, IconCheck } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type Project } from '@/contexts/ProjectContext';
