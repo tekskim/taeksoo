@@ -67,13 +67,13 @@ export function PageShell({
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
-          className="flex-1 min-w-0 overscroll-contain [scrollbar-gutter:stable]"
+          className="flex-1 min-w-0 overscroll-contain"
           style={{
             paddingBottom: bottomPanelPadding || '0',
           }}
         >
           <div
-            className={`min-w-0 bg-[var(--color-surface-default)] h-full ${contentClassName}`.trim()}
+            className={`min-w-0 bg-[var(--color-surface-default)] min-h-full ${contentClassName}`.trim()}
           >
             {children}
           </div>
