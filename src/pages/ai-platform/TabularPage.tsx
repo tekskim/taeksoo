@@ -165,7 +165,7 @@ export function TabularPage() {
       header: 'Status',
       width: 59,
       align: 'center' as const,
-      render: (row: TabularExperiment) => (
+      render: (_value: unknown, row: TabularExperiment) => (
         <StatusIndicator status={row.status} layout="icon-only" />
       ),
     },
@@ -173,7 +173,7 @@ export function TabularPage() {
       key: 'name',
       header: 'Name',
       sortable: true,
-      render: (row: TabularExperiment) => (
+      render: (_value: unknown, row: TabularExperiment) => (
         <button
           className="text-label-md text-[var(--color-action-primary)] hover:underline text-left"
           onClick={() => setSelectedExperiment(row)}
@@ -187,7 +187,7 @@ export function TabularPage() {
     {
       key: 'progress',
       header: 'Progress',
-      render: (row: TabularExperiment) =>
+      render: (_value: unknown, row: TabularExperiment) =>
         row.progress < 100 ? (
           <div className="flex flex-col gap-2">
             <span className="text-body-md text-[var(--color-text-default)]">{row.progress}%</span>
@@ -202,7 +202,7 @@ export function TabularPage() {
       header: 'Action',
       width: 72,
       align: 'center' as const,
-      render: (row: TabularExperiment) => (
+      render: (_value: unknown, row: TabularExperiment) => (
         <ContextMenu
           items={[
             { id: 'view', label: 'View details', onClick: () => setSelectedExperiment(row) },
