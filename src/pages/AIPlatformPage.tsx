@@ -236,7 +236,7 @@ export function AIPlatformSidebar(_props?: { isOpen?: boolean; onToggle?: () => 
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3 pb-6 sidebar-scroll [scrollbar-gutter:stable]">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3 pb-6 sidebar-scroll">
         <VStack gap={2} className="w-full min-w-0">
           <MenuItem
             icon={<IconLayoutDashboard size={16} stroke={1.5} />}
