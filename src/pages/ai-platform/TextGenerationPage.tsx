@@ -1760,7 +1760,7 @@ export function TextGenerationPage() {
                 }
               />
             }
-            actions={<AiPlatformTopBarActions showSearch />}
+            actions={<AiPlatformTopBarActions />}
           />
         }
         contentClassName="pt-4 px-8 pb-20"

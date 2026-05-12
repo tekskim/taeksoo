@@ -14,11 +14,9 @@ html {
 
 html,
 body {
-  min-width: var(--layout-min-width);
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: hidden;
   height: 100%;
-  min-width: var(--layout-min-width);
 }
 
 /* ========================================
@@ -369,7 +367,7 @@ html.theme-transition *::after {
   --layout-min-width: 960px;
   --layout-sidebar-width: 200px;
   --layout-sidebar-width-collapsed: 40px;
-  --layout-content-min-width: 0px;
+  --layout-content-min-width: 760px;
 
   /* Common widths */
   --search-input-width: 280px;

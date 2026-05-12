@@ -1,19 +1,17 @@
-import { IconBell, IconSearch } from '@tabler/icons-react';
-import { TopBarAction } from '@/design-system';
+import { IconSun, IconMoon } from '@tabler/icons-react';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
-/**
- * Keeps the TopBar notification icon aligned when switching AI Platform routes:
- * two slots (search optional + bell) with a reserved spacer when search is hidden.
- */
-export function AiPlatformTopBarActions({ showSearch = false }: { showSearch?: boolean }) {
+export function AiPlatformTopBarActions() {
+  const { isDark, toggleDarkMode } = useDarkMode();
+
   return (
-    <>
-      {showSearch ? (
-        <TopBarAction icon={<IconSearch size={16} stroke={1.5} />} aria-label="Search" />
-      ) : (
-        <span className="inline-flex shrink-0 size-[var(--topbar-button-size)]" aria-hidden />
-      )}
-      <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-    </>
+    <button
+      type="button"
+      onClick={toggleDarkMode}
+      className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer bg-transparent border-none text-[var(--color-text-muted)]"
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {isDark ? <IconSun size={16} stroke={1.5} /> : <IconMoon size={16} stroke={1.5} />}
+    </button>
   );
 }

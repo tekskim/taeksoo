@@ -12,7 +12,6 @@ import {
   TabBar,
   TopBar,
   Breadcrumb,
-  EmptyState,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
@@ -20,6 +19,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 import aiPlatformLogoSrc from '@/assets/icons/ai-platform-logo.png';
 import { IconPackage } from '@tabler/icons-react';
+import { DataTestToolbar, type DataMode } from './shared';
 
 interface PackageBadge {
   label: string;
@@ -84,6 +84,8 @@ const COMMON_PACKAGES: PackageCardProps[] = [
   },
 ];
 
+const ITEMS_PER_PAGE = 16;
+
 export function PackagesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -99,12 +101,25 @@ export function PackagesPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [dataMode, setDataMode] = useState<DataMode>('few');
+
+  const manyThaki = useMemo(() => {
+    const base = THAKI_PACKAGES[0];
+    return Array.from({ length: 30 }, (_, i) => ({ ...base, title: `Thaki Package ${i + 1}` }));
+  }, []);
+  const manyCommon = useMemo(() => {
+    const base = COMMON_PACKAGES[0];
+    return Array.from({ length: 30 }, (_, i) => ({ ...base, title: `Common Package ${i + 1}` }));
+  }, []);
 
   const packages = useMemo(() => {
-    if (activeTab === 'thaki') return THAKI_PACKAGES;
-    if (activeTab === 'common') return COMMON_PACKAGES;
-    return [...THAKI_PACKAGES, ...COMMON_PACKAGES];
-  }, [activeTab]);
+    if (dataMode === 'empty') return [];
+    const thaki = dataMode === 'many' ? manyThaki : THAKI_PACKAGES;
+    const common = dataMode === 'many' ? manyCommon : COMMON_PACKAGES;
+    if (activeTab === 'thaki') return thaki;
+    if (activeTab === 'common') return common;
+    return [...thaki, ...common];
+  }, [activeTab, dataMode, manyThaki, manyCommon]);
 
   const filtered = useMemo(() => {
     if (!searchQuery) return packages;
@@ -163,30 +178,36 @@ export function PackagesPage() {
 
         <Pagination
           currentPage={currentPage}
-          totalPages={1}
+          totalPages={Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE))}
           onPageChange={setCurrentPage}
           totalItems={filtered.length}
         />
 
         {filtered.length === 0 ? (
-          <EmptyState
-            variant="inline"
-            icon={<IconPackage size={48} stroke={1} />}
-            title="No packages found"
-            description="Try adjusting your search or filter criteria."
-          />
+          <div className="flex flex-col items-center justify-center gap-2 w-full py-[120px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              No packages available
+            </span>
+            <span className="text-body-md text-[var(--color-text-default)] text-center">
+              Packages will appear here when available for deployment.
+            </span>
+          </div>
         ) : (
           <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] items-start gap-4">
-            {filtered.map((pkg, i) => (
-              <PackageCard
-                key={`${pkg.title}-${i}`}
-                {...pkg}
-                onDeploy={() => console.log('Deploy', pkg.title)}
-              />
-            ))}
+            {filtered
+              .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+              .map((pkg, i) => (
+                <PackageCard
+                  key={`${pkg.title}-${i}`}
+                  {...pkg}
+                  onDeploy={() => console.log('Deploy', pkg.title)}
+                />
+              ))}
           </div>
         )}
       </VStack>
+
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }

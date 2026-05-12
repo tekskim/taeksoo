@@ -16,7 +16,6 @@ import {
   SearchInput,
   Pagination,
   Tooltip,
-  EmptyState,
   Drawer,
   FormField,
   Input,
@@ -30,7 +29,8 @@ import type { TableColumn } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconInfoCircle, IconDownload, IconDatabase, IconUpload, IconX } from '@tabler/icons-react';
+import { IconInfoCircle, IconDownload, IconUpload, IconX } from '@tabler/icons-react';
+import { DataTestToolbar, type DataMode } from './shared';
 
 /* ----------------------------------------
    Types
@@ -677,6 +677,7 @@ export function DatasetsPage() {
   const [editTarget, setEditTarget] = useState<DatasetItem | null>(null);
 
   const [tableSelected, setTableSelected] = useState<string[]>([]);
+  const [dataMode, setDataMode] = useState<DataMode>('few');
 
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -687,8 +688,45 @@ export function DatasetsPage() {
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
+  const sourceDatasets = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'many') {
+      const adjectives = [
+        'bright',
+        'calm',
+        'dark',
+        'eager',
+        'fast',
+        'green',
+        'happy',
+        'icy',
+        'jolly',
+        'keen',
+      ];
+      const nouns = [
+        'forest',
+        'ocean',
+        'river',
+        'sunset',
+        'thunder',
+        'valley',
+        'wind',
+        'zenith',
+        'alpine',
+        'cosmos',
+      ];
+      return Array.from({ length: 50 }, (_, i) => {
+        const base = MOCK_DATASETS[i % MOCK_DATASETS.length];
+        const adj = adjectives[i % adjectives.length];
+        const noun = nouns[Math.floor(i / adjectives.length) % nouns.length];
+        return { ...base, id: `ds-many-${i}`, name: `${adj}-${noun}-${1000 + i}` };
+      });
+    }
+    return MOCK_DATASETS;
+  }, [dataMode]);
+
   const filtered = useMemo(() => {
-    return MOCK_DATASETS.filter((d) => {
+    return sourceDatasets.filter((d) => {
       if (listTab === 'thaki' && d.source !== 'thaki') return false;
       if (listTab === 'custom' && d.source !== 'custom') return false;
       if (capsule === 'text-generation' && d.category !== 'text-generation') return false;
@@ -701,7 +739,7 @@ export function DatasetsPage() {
       }
       return true;
     });
-  }, [listTab, capsule, searchQuery]);
+  }, [sourceDatasets, listTab, capsule, searchQuery]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const pageSlice = filtered.slice(
@@ -851,11 +889,14 @@ export function DatasetsPage() {
               ))}
             </div>
           ) : (
-            <EmptyState
-              icon={<IconDatabase size={48} stroke={1} />}
-              title="No datasets found"
-              description="Try adjusting your search, filters, or upload a new dataset."
-            />
+            <div className="flex flex-col items-center justify-center gap-2 w-full py-[120px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                No datasets registered
+              </span>
+              <span className="text-body-md text-[var(--color-text-default)] text-center">
+                Upload a dataset to start training models.
+              </span>
+            </div>
           )}
         </VStack>
       )}
@@ -1050,6 +1091,8 @@ export function DatasetsPage() {
           setEditTarget(null);
         }}
       />
+
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }

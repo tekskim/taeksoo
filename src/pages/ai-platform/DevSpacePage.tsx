@@ -238,7 +238,7 @@ export function DevSpacePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'MLOps' }, { label: 'DevSpace' }]} />}
-          actions={<AiPlatformTopBarActions showSearch />}
+          actions={<AiPlatformTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"

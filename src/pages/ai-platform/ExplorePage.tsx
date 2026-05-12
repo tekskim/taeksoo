@@ -266,7 +266,7 @@ export function ExplorePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={<Breadcrumb items={[{ label: 'Explore' }]} />}
-          actions={<AiPlatformTopBarActions showSearch />}
+          actions={<AiPlatformTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-subtle)]"
