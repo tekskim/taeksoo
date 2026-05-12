@@ -9,7 +9,6 @@ import {
   MenuSection,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Button,
   Table,
@@ -43,6 +42,7 @@ import {
 import { useTabs } from '@/contexts/TabContext';
 import { useProject } from '@/contexts/ProjectContext';
 import { ProjectSelector } from '@/components/ProjectSelector';
+import { AiPlatformTopBarActions } from './ai-platform/AiPlatformTopBarActions';
 import {
   IconLayoutDashboard,
   IconBrain,
@@ -56,8 +56,6 @@ import {
   IconActivity,
   IconSettings,
   IconLayoutSidebar,
-  IconBell,
-  IconHome,
   IconRefresh,
   IconPlayerPause,
   IconAlertCircle,
@@ -392,23 +390,7 @@ export function AIPlatformPageLayout({
     navigate('/');
   }, [navigate]);
 
-  const defaultTopBarActions = useMemo(
-    () => (
-      <>
-        <TopBarAction
-          icon={<IconHome size={16} stroke={1.5} />}
-          onClick={() => navigate('/')}
-          aria-label="Home"
-        />
-        <TopBarAction
-          icon={<IconBell size={16} stroke={1.5} />}
-          aria-label="Notifications"
-          badge={true}
-        />
-      </>
-    ),
-    [navigate]
-  );
+  const defaultTopBarActions = useMemo(() => <AiPlatformTopBarActions />, []);
 
   return (
     <PageShell

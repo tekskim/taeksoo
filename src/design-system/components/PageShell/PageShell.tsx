@@ -44,7 +44,7 @@ export function PageShell({
   return (
     <div
       data-figma-name="[TDS] AppLayout"
-      className={`fixed inset-0 bg-[var(--color-surface-subtle)] min-w-[var(--layout-min-width)] ${className}`.trim()}
+      className={`fixed inset-0 bg-[var(--color-surface-subtle)] ${className}`.trim()}
     >
       {/* Sidebar */}
       {sidebar}
@@ -63,7 +63,7 @@ export function PageShell({
         {/* Content Area */}
         <OverlayScrollbarsComponent
           options={{
-            overflow: { x: 'hidden', y: 'scroll' },
+            overflow: { x: 'scroll', y: 'scroll' },
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
@@ -73,7 +73,7 @@ export function PageShell({
           }}
         >
           <div
-            className={`min-w-0 bg-[var(--color-surface-default)] min-h-full ${contentClassName}`.trim()}
+            className={`w-fit min-w-[max(100%,var(--layout-content-min-width,760px))] bg-[var(--color-surface-default)] min-h-full ${contentClassName}`.trim()}
           >
             {children}
           </div>
