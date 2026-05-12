@@ -57,6 +57,7 @@ import {
   IconChevronRight,
   IconX,
 } from '@tabler/icons-react';
+import { DataTestToolbar, multiplyData, type DataMode } from './shared';
 
 /* ——— types ——— */
 
@@ -403,6 +404,7 @@ export function TextGenerationPage() {
   const panel = (searchParams.get('panel') || 'details') as 'details' | 'logs' | 'monitoring';
   const wstep = (searchParams.get('wstep') || 'configuration') as 'configuration' | 'publish';
 
+  const [dataMode, setDataMode] = useState<DataMode>('few');
   const [experiments, setExperiments] = useState<ExperimentRow[]>(INITIAL_EXPERIMENTS);
   const [listQuery, setListQuery] = useState('');
   const [listPage, setListPage] = useState(1);
@@ -468,10 +470,16 @@ export function TextGenerationPage() {
   const [precision, setPrecision] = useState('bf16');
   const [gradCkpt, setGradCkpt] = useState(true);
 
+  const sourceExperiments = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'few') return experiments;
+    return multiplyData(experiments, 60);
+  }, [dataMode, experiments]);
+
   const filteredExperiments = useMemo(() => {
     const q = listQuery.trim().toLowerCase();
-    if (!q) return experiments;
-    return experiments.filter(
+    if (!q) return sourceExperiments;
+    return sourceExperiments.filter(
       (e) => e.name.toLowerCase().includes(q) || e.id.toLowerCase().includes(q)
     );
   }, [experiments, listQuery]);
@@ -741,33 +749,24 @@ export function TextGenerationPage() {
         selectedCount={selectedKeys.length}
       />
 
-      {filteredExperiments.length === 0 ? (
-        <EmptyState
-          icon={<IconFlask size={48} stroke={1} />}
-          title="No experiments registered"
-          description="Create a new experiment to start training Text Generation models."
-          action={
-            <Button
-              variant="primary"
-              size="md"
-              leftIcon={<IconPlus size={12} />}
-              onClick={goCreate}
-            >
-              New experiments
-            </Button>
-          }
-        />
-      ) : (
-        <Table
-          columns={tableColumns}
-          data={pagedExperiments}
-          rowKey="id"
-          selectable
-          selectedKeys={selectedKeys}
-          onSelectionChange={setSelectedKeys}
-          emptyMessage="No experiments registered"
-        />
-      )}
+      <Table
+        columns={tableColumns}
+        data={pagedExperiments}
+        rowKey="id"
+        selectable
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+        emptyMessage={
+          <div className="flex flex-col items-center gap-2 py-[88px]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              No experiments registered
+            </span>
+            <span className="text-body-md text-[var(--color-text-muted)]">
+              Create a new experiment to start training Text Generation models
+            </span>
+          </div>
+        }
+      />
     </VStack>
   );
 
@@ -1768,6 +1767,7 @@ export function TextGenerationPage() {
         {view === 'list' && listView}
         {view === 'detail' && detailView}
         {view === 'create' && createView}
+        <DataTestToolbar mode={dataMode} onChange={setDataMode} />
       </PageShell>
 
       <Drawer

@@ -12,7 +12,6 @@ import {
   StatusIndicator,
   ContextMenu,
   SearchInput,
-  EmptyState,
   Drawer,
   FormField,
   Input,
@@ -23,12 +22,8 @@ import type { TableColumn } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconTrash,
-  IconCode,
-  IconExternalLink,
-  IconDotsCircleHorizontal,
-} from '@tabler/icons-react';
+import { IconTrash, IconExternalLink, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { DataTestToolbar, multiplyData, type DataMode } from './shared';
 import type { StatusType } from '@/design-system/components/StatusIndicator/StatusIndicator';
 
 interface DevSpaceItem {
@@ -97,6 +92,7 @@ export function DevSpacePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
+  const [dataMode, setDataMode] = useState<DataMode>('few');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [createDrawerOpen, setCreateDrawerOpen] = useState(false);
@@ -115,14 +111,20 @@ export function DevSpacePage() {
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
+  const sourceData = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'few') return MOCK_DATA;
+    return multiplyData(MOCK_DATA, 60);
+  }, [dataMode]);
+
   const filteredData = useMemo(() => {
-    if (!searchQuery) return MOCK_DATA;
-    return MOCK_DATA.filter(
+    if (!searchQuery) return sourceData;
+    return sourceData.filter(
       (item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.image.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [searchQuery, sourceData]);
 
   const runningCount = MOCK_DATA.filter((d) => d.status === 'active').length;
   const failedCount = MOCK_DATA.filter((d) => d.status === 'error').length;
@@ -283,23 +285,24 @@ export function DevSpacePage() {
           </Button>
         </HStack>
 
-        {filteredData.length === 0 ? (
-          <EmptyState
-            variant="inline"
-            icon={<IconCode size={48} stroke={1} />}
-            title="No DevSpaces"
-            description="Create your first DevSpace to start developing."
-          />
-        ) : (
-          <Table
-            columns={columns}
-            data={filteredData}
-            rowKey="id"
-            selectable
-            selectedKeys={selectedItems}
-            onSelectionChange={setSelectedItems}
-          />
-        )}
+        <Table
+          columns={columns}
+          data={filteredData}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedItems}
+          onSelectionChange={setSelectedItems}
+          emptyMessage={
+            <div className="flex flex-col items-center gap-2 py-[88px]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                No DevSpaces registered
+              </span>
+              <span className="text-body-md text-[var(--color-text-muted)]">
+                Create a DevSpace to start developing
+              </span>
+            </div>
+          }
+        />
       </VStack>
 
       <Drawer
@@ -391,6 +394,8 @@ export function DevSpacePage() {
           </VStack>
         </VStack>
       </Drawer>
+
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }

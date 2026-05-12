@@ -419,6 +419,65 @@ SectionCard (차트/테이블)
 
 **추출 필수 항목**: rounded, padding, gap, font-size, line-height, width, height, background-color
 
+## 서브에이전트 병렬 추출 전략
+
+### 개요
+
+여러 페이지의 디자인을 추출할 때, Figma API rate limit이 허용하는 범위 내에서 서브에이전트를 활용하여 추출 속도를 높입니다.
+
+### 병렬 추출 조건
+
+| 조건 | 추출 방식 |
+|---|---|
+| 추출 대상 1~2개 | 메인 에이전트가 순차 처리 |
+| 추출 대상 3개 이상 | 서브에이전트 병렬 (최대 3개 동시) |
+
+### 병렬 추출 실행 방법
+
+```
+
+메인 에이전트:
+
+1. figma-page-map.md에서 추출 대상 페이지 목록 정리
+2. 2~3개씩 배치로 나눔 (Figma API rate limit 고려)
+3. 각 배치를 generalPurpose 서브에이전트로 병렬 실행
+4. 결과 스펙 파일을 검증
+
+서브에이전트 (generalPurpose):
+
+- Figma MCP 도구로 get_design_context + get_screenshot 호출
+- Step 3~8 수행 (레이아웃 분석 → 컴포넌트 식별 → 스펙 생성)
+- 스펙 파일을 specs/pages/{PageName}-spec.md에 저장
+
+````
+
+### 서브에이전트 프롬프트 템플릿
+
+```markdown
+## 디자인 추출 대상
+- 페이지명: {PageName}
+- fileKey: {fileKey}
+- nodeId: {nodeId}
+- 페이지 타입: {List / Detail / Create / Main}
+
+## 작업 내용
+1. Figma MCP의 get_design_context로 디자인 추출
+2. get_screenshot으로 스크린샷 획득
+3. 레이아웃 구조 → TDS 컴포넌트 매핑
+4. 컴포넌트/간격/색상/타이포 정밀 식별
+5. 스펙 파일 생성: .cursor/skills/tds-page-sync/specs/pages/{PageName}-spec.md
+
+## 참조
+- 스펙 형식: tds-page-extract SKILL.md의 Step 8 참조
+- TDS 컴포넌트 매핑: tds-page-extract SKILL.md의 "TDS 컴포넌트 식별 규칙" 참조
+````
+
+### Rate Limit 고려
+
+- Figma API 호출 간격: 서브에이전트 간 자연스럽게 분산됨
+- 동시 서브에이전트: 최대 3개 (Figma API 부하 제한)
+- API 에러(429) 발생 시: 해당 페이지를 다음 배치로 이동
+
 ## 주의사항
 
 - Figma의 코드 출력은 **참조용**이지 그대로 사용하면 안 됨 → TDS 컴포넌트에 맞게 변환
@@ -427,4 +486,7 @@ SectionCard (차트/테이블)
 - 아이콘은 Figma SVG 원본 확인 후 Tabler Icons 매칭 (**이름만 보고 추측 금지**)
 - 색상이 디자인 토큰과 미세하게 다른 경우 가장 가까운 TDS 토큰 사용
 - 테이블 컬럼의 align은 TDS 규칙을 따름 (텍스트=left, 숫자/날짜=right, 상태/액션=center)
+
+```
+
 ```
