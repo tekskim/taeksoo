@@ -73,6 +73,7 @@ import {
 } from '@tabler/icons-react';
 import { IconHardDriveFigma, IconPackagesFigma } from '@/design-system';
 import { ArrowRightLeft } from 'lucide-react';
+import ReactECharts from 'echarts-for-react';
 
 /* ----------------------------------------
    AI Platform Logo Component
@@ -601,62 +602,53 @@ function useRouteConfig(): RouteConfig {
 
 const DASHBOARD_PROJECT = {
   name: 'proj-1',
+  group: 'Group A',
   id: '7284d9174e81431e93060a9bbcf2cdfd',
   description: "Development environment for the 'service' backend services.",
 };
 
 type GaugeTone = 'success' | 'warning' | 'danger';
 
-function StatusPctBadge({ pct, tone }: { pct: number; tone: GaugeTone }) {
-  const dotColor = tone === 'success' ? '#22C55E' : tone === 'warning' ? '#F97316' : '#EF4444';
-  const pillBg = tone === 'success' ? '#DCFCE7' : tone === 'warning' ? '#FFEDD5' : '#FEE2E2';
-
+function GaugeBadge({ pct, tone }: { pct: number; tone: GaugeTone }) {
+  const color = tone === 'success' ? '#22C55E' : tone === 'warning' ? '#F97316' : '#EF4444';
+  const bg = tone === 'success' ? '#DCFCE7' : tone === 'warning' ? '#FFEDD5' : '#FEE2E2';
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-[var(--radius-md)] px-1.5 py-0.5 font-medium"
-      style={{ backgroundColor: pillBg, color: dotColor }}
+      className="inline-flex items-center rounded-[var(--radius-md)] px-1.5 py-0.5 text-body-sm font-medium"
+      style={{ backgroundColor: bg, color }}
     >
-      <span
-        className="inline-block h-2 w-2 shrink-0 rounded-[5px]"
-        style={{ backgroundColor: dotColor }}
-        aria-hidden
-      />
-      <span className="text-body-sm">{pct}%</span>
+      {pct}%
     </span>
   );
 }
 
-function ResourceGaugeCell({
+function ResourceGaugeRow({
   title,
-  href,
-  pct,
   fraction,
+  unit,
+  pct,
   tone,
 }: {
   title: string;
-  href: string;
-  pct: number;
   fraction: string;
+  unit: string;
+  pct: number;
   tone: GaugeTone;
 }) {
-  const barColor = 'bg-[#475569]';
-
   return (
-    <div className="flex min-w-0 flex-col gap-3 rounded-[8px] bg-[#f9fafb] px-5 py-4">
+    <div className="flex flex-col gap-2 w-full">
       <div className="flex items-center justify-between">
-        <Link
-          to={href}
-          className="flex items-center gap-0 text-label-sm text-[var(--color-text-subtle)] hover:underline"
-        >
-          {title}
-          <IconChevronRight size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        </Link>
-        <StatusPctBadge pct={pct} tone={tone} />
+        <span className="text-label-sm text-[var(--color-text-subtle)]">{title}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            {fraction} {unit}
+          </span>
+          <GaugeBadge pct={pct} tone={tone} />
+        </div>
       </div>
-      <div className="h-1 w-full overflow-hidden rounded-[2px] bg-[var(--color-border-default)]">
-        <div className={`h-full rounded-[100px] ${barColor}`} style={{ width: `${pct}%` }} />
+      <div className="h-1 w-full overflow-hidden rounded-[2px] bg-[var(--color-border-subtle)]">
+        <div className="h-full rounded-[100px] bg-[#475569]" style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-label-sm text-[var(--color-text-subtle)]">{fraction}</span>
     </div>
   );
 }
@@ -666,25 +658,35 @@ function DashboardServiceTile({
   title,
   valueDisplay,
   href,
+  active,
 }: {
   icon: ReactNode;
   title: string;
   valueDisplay: string;
   href: string;
+  active?: boolean;
 }) {
   return (
     <Link
       to={href}
-      className="block rounded-[8px] border-2 border-transparent bg-[#f9fafb] px-4 py-3 transition-colors hover:border-[var(--color-action-primary)] hover:bg-[var(--color-surface-muted)]"
+      className={`block rounded-[8px] px-4 py-3 transition-colors ${
+        active
+          ? 'border-2 border-[var(--color-action-primary)] bg-[var(--color-surface-muted)]'
+          : 'border-2 border-transparent bg-[#f9fafb] hover:border-[var(--color-action-primary)] hover:bg-[var(--color-surface-muted)]'
+      }`}
     >
       <div className="flex min-w-0 items-center gap-1">
         <span className="shrink-0">{icon}</span>
-        <span className="flex min-w-0 items-center gap-0 text-label-sm text-[var(--color-text-subtle)]">
+        <span
+          className={`flex min-w-0 items-center gap-0 text-label-sm ${active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'}`}
+        >
           {title}
           <IconChevronRight
             size={16}
             stroke={1.5}
-            className="shrink-0 text-[var(--color-text-subtle)]"
+            className={
+              active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
+            }
           />
         </span>
       </div>
@@ -692,6 +694,118 @@ function DashboardServiceTile({
         {valueDisplay}
       </p>
     </Link>
+  );
+}
+
+function ExecutionStatusCard({
+  title,
+  completed,
+  running,
+  failed,
+  total,
+}: {
+  title: string;
+  completed: number;
+  running: number;
+  failed: number;
+  total: number;
+}) {
+  const completedPct = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const runningPct = total > 0 ? Math.round((running / total) * 100) : 0;
+  const failedPct = total > 0 ? Math.round((failed / total) * 100) : 0;
+  const hasData = total > 0;
+
+  const pieOption = hasData
+    ? {
+        tooltip: {
+          show: true,
+          trigger: 'item' as const,
+          backgroundColor: '#ffffff',
+          borderColor: '#e2e8f0',
+          borderWidth: 1,
+          borderRadius: 6,
+          padding: [8, 12],
+          textStyle: {
+            color: '#1e293b',
+            fontSize: 11,
+            fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+          },
+          formatter: (params: { name: string; value: number; percent: number; color: string }) =>
+            `<span style="display:inline-block;width:8px;height:8px;border-radius:9999px;background:${params.color};margin-right:6px;"></span>${params.name}<br/><span style="font-weight:500;margin-left:14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`,
+        },
+        animation: false,
+        series: [
+          {
+            type: 'pie',
+            radius: '100%',
+            center: ['50%', '50%'],
+            avoidLabelOverlap: true,
+            label: {
+              show: true,
+              position: 'inside',
+              formatter: (params: { percent: number }) =>
+                params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '',
+              fontSize: 9,
+              fontWeight: 600,
+              color: '#ffffff',
+              fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+            },
+            labelLine: { show: false },
+            emphasis: {
+              scale: true,
+              scaleSize: 3,
+              itemStyle: { shadowBlur: 8, shadowColor: 'rgba(0,0,0,0.15)' },
+            },
+            data: [
+              { value: completed, name: 'Completed', itemStyle: { color: '#22C55E' } },
+              { value: running, name: 'Running', itemStyle: { color: '#3B82F6' } },
+              { value: failed, name: 'Failed', itemStyle: { color: '#EF4444' } },
+            ],
+          },
+        ],
+      }
+    : null;
+
+  return (
+    <div className="flex-1 rounded-[8px] bg-[#f9fafb] p-4">
+      <span className="text-label-sm font-medium text-[var(--color-text-default)]">{title}</span>
+      <div className="mt-1 flex items-center justify-between h-[80px]">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-1">
+            <span className="inline-block size-[6px] rounded-full bg-[#22C55E]" />
+            <span className="text-body-sm text-[var(--color-text-subtle)]">Completed</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              {hasData ? `${completed} (${completedPct}%)` : '- (-%)'}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="inline-block size-[6px] rounded-full bg-[#3B82F6]" />
+            <span className="text-body-sm text-[var(--color-text-subtle)]">Running</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              {hasData ? `${running} (${runningPct}%)` : '- (-%)'}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="inline-block size-[6px] rounded-full bg-[#EF4444]" />
+            <span className="text-body-sm text-[var(--color-text-subtle)]">Failed</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              {hasData ? `${failed} (${failedPct}%)` : '- (-%)'}
+            </span>
+          </div>
+        </div>
+        {hasData && pieOption ? (
+          <ReactECharts
+            option={pieOption}
+            style={{ height: '64px', width: '64px' }}
+            opts={{ devicePixelRatio: window.devicePixelRatio }}
+          />
+        ) : (
+          <div className="relative size-[64px] rounded-full bg-[var(--color-border-default)] flex items-center justify-center">
+            <span className="text-body-sm font-medium text-[var(--color-text-subtle)]">N/A</span>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -712,20 +826,15 @@ function DashboardContent() {
     { name: 'test-t', category: 'serverless', status: 'pending', time: '22hours ago' },
   ];
 
-  const queueRunning = '{N}';
-  const queuePending = '{N}';
-  const kueueRunning = '{N}';
-  const kueuePending = '{N}';
-
   const copyProjectId = () => {
     void navigator.clipboard?.writeText(DASHBOARD_PROJECT.id);
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Top row: 4 cards */}
-      <div className="grid grid-cols-4 gap-4">
-        {/* PROJECT INFO — gray fill bg */}
+    <div className="flex flex-col gap-6">
+      {/* Top row: 3 cards */}
+      <div className="grid grid-cols-3 gap-6">
+        {/* PROJECT INFO */}
         <div className="flex min-w-0 flex-col justify-between rounded-[16px] border border-[var(--color-border-default)] bg-[#f9fafb] p-[25px]">
           <div className="flex flex-col gap-4">
             <p className="text-label-md font-medium text-[var(--color-text-muted)]">PROJECT INFO</p>
@@ -734,6 +843,12 @@ function DashboardContent() {
             </p>
           </div>
           <div className="flex flex-col gap-4 pt-6">
+            <div className="flex flex-col gap-1">
+              <span className="text-body-xs text-[var(--color-text-subtle)]">Group</span>
+              <span className="text-body-md text-[var(--color-text-default)]">
+                {DASHBOARD_PROJECT.group}
+              </span>
+            </div>
             <div className="flex flex-col gap-1">
               <span className="text-body-xs text-[var(--color-text-subtle)]">ID</span>
               <div className="flex items-center gap-1">
@@ -759,61 +874,40 @@ function DashboardContent() {
           </div>
         </div>
 
-        {/* QUEUE STATUS — white bg, inner cards gray fill */}
-        <div className="flex min-w-0 flex-col justify-between rounded-[16px] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-6">
-          <p className="text-label-md font-medium text-[var(--color-text-muted)]">QUEUE STATUS</p>
-          <div className="flex flex-col gap-2 pt-4">
-            <div className="flex h-[78px] items-center rounded-[8px] bg-[#f9fafb] px-4 py-3">
-              <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Title</span>
-                <span className="text-body-md text-[var(--color-text-default)]">{'{Value}'}</span>
-              </div>
-            </div>
-            <div className="rounded-[8px] bg-[#f9fafb] px-4 py-3">
-              <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Running Jobs</span>
-                <span className="text-heading-h4 text-[#16a34a]">{queueRunning}</span>
-              </div>
-            </div>
-            <div className="rounded-[8px] bg-[#f9fafb] px-4 py-3">
-              <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Pending Jobs</span>
-                <span className="text-heading-h4 text-[#ea580c]">{queuePending}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* KUEUE JOB STATUS — white bg, inner cards gray fill */}
+        {/* RESOURCES OVERVIEW */}
         <div className="flex min-w-0 flex-col justify-between rounded-[16px] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-6">
           <p className="text-label-md font-medium text-[var(--color-text-muted)]">
-            KUEUE JOB STATUS
+            RESOURCES OVERVIEW
           </p>
-          <div className="flex flex-col gap-2 pt-4">
-            <div className="flex h-[78px] items-center rounded-[8px] bg-[#f9fafb] px-4 py-3">
-              <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Queue</span>
-                <span className="text-body-md text-[var(--color-text-default)]">{'{Value}'}</span>
-              </div>
-            </div>
-            <div className="rounded-[8px] bg-[#f9fafb] px-4 py-3">
-              <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Running Jobs</span>
-                <span className="text-heading-h4 text-[#16a34a]">{kueueRunning}</span>
-              </div>
-            </div>
-            <div className="rounded-[8px] bg-[#f9fafb] px-4 py-3">
-              <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Pending Jobs</span>
-                <span className="text-heading-h4 text-[#ea580c]">{kueuePending}</span>
-              </div>
-            </div>
+          <div className="flex flex-col gap-[22px] pt-6">
+            <ResourceGaugeRow
+              title="CPU"
+              fraction="48 / 128"
+              unit="Cores"
+              pct={38}
+              tone="success"
+            />
+            <ResourceGaugeRow title="GPU" fraction="6 / 12" unit="GPUs" pct={50} tone="success" />
+            <ResourceGaugeRow
+              title="Active Nodes"
+              fraction="12 / 20"
+              unit="Nodes"
+              pct={60}
+              tone="warning"
+            />
+            <ResourceGaugeRow
+              title="Memory"
+              fraction="256 / 512"
+              unit="GB"
+              pct={50}
+              tone="danger"
+            />
           </div>
         </div>
 
-        {/* RECENT ACTIVITIES — white bg */}
+        {/* RECENT ACTIVITIES */}
         <div className="flex min-w-0 flex-col rounded-[16px] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-6">
-          <p className="text-label-sm font-medium text-[var(--color-text-muted)]">
+          <p className="text-label-md font-medium text-[var(--color-text-muted)]">
             RECENT ACTIVITIES
           </p>
           <div className="mt-6 flex flex-1 flex-col">
@@ -844,40 +938,20 @@ function DashboardContent() {
         </div>
       </div>
 
-      {/* RESOURCE OVERVIEW */}
+      {/* EXECUTION STATUS OVERVIEW */}
       <div className="rounded-[16px] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-6">
-        <p className="text-label-md font-medium uppercase text-[var(--color-text-muted)]">
-          RESOURCE OVERVIEW
+        <p className="text-label-md font-medium text-[var(--color-text-muted)]">
+          EXECUTION STATUS OVERVIEW
         </p>
-        <div className="mt-6 grid grid-cols-4 gap-4">
-          <ResourceGaugeCell
-            title="Active nodes"
-            href="/ai-platform/monitoring"
-            pct={91}
-            fraction="8/10"
-            tone="success"
+        <div className="mt-6 flex gap-3">
+          <ExecutionStatusCard
+            title="Text generation"
+            completed={15}
+            running={13}
+            failed={14}
+            total={42}
           />
-          <ResourceGaugeCell
-            title="CPU"
-            href="/ai-platform/monitoring"
-            pct={10}
-            fraction="4/10"
-            tone="success"
-          />
-          <ResourceGaugeCell
-            title="Memory GB"
-            href="/ai-platform/monitoring"
-            pct={50}
-            fraction="8/10"
-            tone="warning"
-          />
-          <ResourceGaugeCell
-            title="Active GPUs"
-            href="/ai-platform/monitoring"
-            pct={100}
-            fraction="4/10"
-            tone="danger"
-          />
+          <ExecutionStatusCard title="Tabular" completed={0} running={0} failed={0} total={0} />
         </div>
       </div>
 
@@ -1693,13 +1767,6 @@ function ModelsContent() {
 
   const getDetailRowMenuItems = (row: ModelVersionRow): ContextMenuItem[] => [
     {
-      id: 'activity',
-      label: 'Activity history',
-      onClick: () => {
-        setActivityDrawerOpen(true);
-      },
-    },
-    {
       id: 'alias',
       label: 'Assign alias',
       onClick: () => openAssignAlias(row),
@@ -1740,7 +1807,7 @@ function ModelsContent() {
       render: (_, row) => (
         <HStack gap={1} className="flex-wrap min-w-0">
           {row.aliases.map((a) => (
-            <Chip key={a} value={`@${a}`} />
+            <Badge key={a} theme="white" size="sm">{`@${a}`}</Badge>
           ))}
         </HStack>
       ),
@@ -1841,7 +1908,7 @@ function ModelsContent() {
       render: (_, row) => (
         <HStack gap={1} className="flex-wrap min-w-0">
           {row.aliases.map((a) => (
-            <Chip key={a} value={`@${a}`} />
+            <Badge key={a} theme="white" size="sm">{`@${a}`}</Badge>
           ))}
         </HStack>
       ),
@@ -1957,35 +2024,36 @@ function ModelsContent() {
   }
 
   return (
-    <VStack gap={6} className="w-full">
-      <PageHeader
-        title={category.categoryName}
-        actions={
-          <Button variant="secondary" size="md" onClick={() => setActivityDrawerOpen(true)}>
-            Activity history
-          </Button>
-        }
-      />
-
-      <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3">
-        <InfoBox label="Model type" value={category.source === 'LLM' ? 'LLM' : 'Tabular'} />
-        <InfoBox label="Last version" value={category.lastVersion} />
-        <InfoBox label="Aliases">
-          <HStack gap={1} className="flex-wrap">
-            {category.aliases.map((a) => (
-              <Badge key={a} theme="gray" size="sm" type="subtle">{`@${a}`}</Badge>
-            ))}
-          </HStack>
-        </InfoBox>
+    <VStack gap={4} className="w-full">
+      <div className="w-full rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 pt-3 pb-4">
+        <PageHeader
+          title={category.categoryName}
+          actions={
+            <Button variant="secondary" size="md" onClick={() => setActivityDrawerOpen(true)}>
+              Activity history
+            </Button>
+          }
+        />
+        <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3 mt-3">
+          <InfoBox label="Model type" value={category.source === 'LLM' ? 'LLM' : 'Tabular'} />
+          <InfoBox label="Last version" value={category.lastVersion} />
+          <InfoBox label="Aliases">
+            <HStack gap={1} className="flex-wrap">
+              {category.aliases.map((a) => (
+                <Badge key={a} theme="white" size="sm">{`@${a}`}</Badge>
+              ))}
+            </HStack>
+          </InfoBox>
+        </div>
       </div>
 
       <Tabs defaultValue="details" variant="underline" size="sm">
         <TabList>
           <Tab value="details">Details</Tab>
         </TabList>
-        <TabPanel value="details" className="pt-4">
-          <VStack gap={6} className="w-full">
-            <HStack gap={3} align="center" className="flex-wrap w-full">
+        <TabPanel value="details" className="pt-3">
+          <VStack gap={3} className="w-full">
+            <HStack gap={3} align="center" className="w-full">
               <SearchInput
                 placeholder="Find models with filter"
                 size="sm"
@@ -1993,11 +2061,7 @@ function ModelsContent() {
                 onChange={(e) => setDetailSearch(e.target.value)}
                 className="w-[312px]"
               />
-            </HStack>
-
-            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-            <HStack gap={2} align="center" justify="between" className="w-full flex-wrap">
+              <div className="w-px h-4 bg-[var(--color-border-default)]" />
               <Button variant="secondary" size="sm" disabled={detailSelectedKeys.length === 0}>
                 Delete
               </Button>
@@ -2139,7 +2203,7 @@ function ModelsContent() {
         }
       >
         <VStack gap={6} className="w-full">
-          <div className="rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] p-4 space-y-3">
+          <VStack gap={3} className="w-full">
             <InfoBox
               label="Model name"
               value={assignTargetVersion?.modelName ?? category.categoryName}
@@ -2147,12 +2211,12 @@ function ModelsContent() {
             <InfoBox label="Current aliases">
               <HStack gap={1} className="flex-wrap">
                 {(assignTargetVersion?.aliases ?? []).map((a) => (
-                  <Badge key={a} theme="gray" size="sm" type="subtle">{`@${a}`}</Badge>
+                  <Badge key={a} theme="white" size="sm">{`@${a}`}</Badge>
                 ))}
               </HStack>
             </InfoBox>
             <InfoBox label="Version" value={assignTargetVersion?.version ?? category.lastVersion} />
-          </div>
+          </VStack>
           <FormField
             label="Select alias"
             required
@@ -2213,24 +2277,13 @@ function ModelsContent() {
         }
       >
         <VStack gap={6} className="w-full">
-          <div className="space-y-3">
-            <div className="rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] p-4">
-              <VStack gap={1.5}>
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Model name</span>
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {manageAliasTarget?.modelName ?? category?.categoryName ?? ''}
-                </span>
-              </VStack>
-            </div>
-            <div className="rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] p-4">
-              <VStack gap={1.5}>
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Version</span>
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {manageAliasTarget?.version ?? ''}
-                </span>
-              </VStack>
-            </div>
-          </div>
+          <VStack gap={3} className="w-full">
+            <InfoBox
+              label="Model name"
+              value={manageAliasTarget?.modelName ?? category?.categoryName ?? ''}
+            />
+            <InfoBox label="Version" value={manageAliasTarget?.version ?? ''} />
+          </VStack>
 
           <VStack gap={2}>
             <span className="text-heading-h6 text-[var(--color-text-default)]">Alias</span>

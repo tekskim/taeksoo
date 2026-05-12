@@ -8,7 +8,6 @@ import {
   Button,
   PageShell,
   PageHeader,
-  EmptyState,
   Tabs,
   TabList,
   Tab,
@@ -31,13 +30,8 @@ import {
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
 import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconChartBar,
-  IconTrash,
-  IconDotsCircleHorizontal,
-  IconDownload,
-  IconCopy,
-} from '@tabler/icons-react';
+import { IconTrash, IconDotsCircleHorizontal, IconDownload, IconCopy } from '@tabler/icons-react';
+import { DataTestToolbar, multiplyData, type DataMode } from './shared';
 import ReactECharts from 'echarts-for-react';
 import { chartColors, primaryChartColors } from '@/pages/design-system-sections/ChartComponents';
 
@@ -167,12 +161,14 @@ const STATUS_MAP: Record<BenchmarkStatus, 'active' | 'error' | 'muted' | 'buildi
 function DashboardTab({ hasData }: { hasData: boolean }) {
   if (!hasData) {
     return (
-      <EmptyState
-        variant="card"
-        icon={<IconChartBar size={48} stroke={1} />}
-        title="No benchmark results yet"
-        description="Results will appear here when benchmarks are run."
-      />
+      <div className="flex flex-col items-center justify-center gap-2 w-full py-[120px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+        <span className="text-label-lg text-[var(--color-text-default)]">
+          No benchmark results yet
+        </span>
+        <span className="text-body-md text-[var(--color-text-muted)]">
+          Results will appear here when benchmarks are run
+        </span>
+      </div>
     );
   }
 
@@ -270,22 +266,24 @@ function RunTab({
   onNewBenchmark,
   onViewLog,
   onViewResult,
+  sourceData,
 }: {
   onNewBenchmark: () => void;
   onViewLog: (row: BenchmarkRow) => void;
   onViewResult: (row: BenchmarkRow) => void;
+  sourceData: BenchmarkRow[];
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredData = useMemo(() => {
-    if (!searchQuery.trim()) return MOCK_BENCHMARKS;
+    if (!searchQuery.trim()) return sourceData;
     const q = searchQuery.toLowerCase();
-    return MOCK_BENCHMARKS.filter(
+    return sourceData.filter(
       (b) => b.name.toLowerCase().includes(q) || b.model.toLowerCase().includes(q)
     );
-  }, [searchQuery]);
+  }, [searchQuery, sourceData]);
 
   const getRowActions = (row: BenchmarkRow): ContextMenuItem[] => [
     { id: 'view-result', label: 'View result', onClick: () => onViewResult(row) },
@@ -388,7 +386,16 @@ function RunTab({
         selectable
         selectedKeys={selectedItems}
         onSelectionChange={setSelectedItems}
-        emptyMessage="No benchmarks found"
+        emptyMessage={
+          <div className="flex flex-col items-center gap-2 py-[88px]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              No benchmarks registered
+            </span>
+            <span className="text-body-md text-[var(--color-text-muted)]">
+              Run a benchmark to compare model performance
+            </span>
+          </div>
+        }
       />
     </VStack>
   );
@@ -564,8 +571,14 @@ export function BenchmarksPage() {
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
+  const [dataMode, setDataMode] = useState<DataMode>('few');
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [hasData] = useState(true);
+  const hasData = dataMode !== 'empty';
+  const runSourceData = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    if (dataMode === 'few') return MOCK_BENCHMARKS;
+    return multiplyData(MOCK_BENCHMARKS, 60);
+  }, [dataMode]);
   const [newBenchmarkOpen, setNewBenchmarkOpen] = useState(false);
   const [liveLogOpen, setLiveLogOpen] = useState(false);
   const [viewResultOpen, setViewResultOpen] = useState(false);
@@ -628,6 +641,7 @@ export function BenchmarksPage() {
                 onNewBenchmark={() => setNewBenchmarkOpen(true)}
                 onViewLog={handleViewLog}
                 onViewResult={handleViewResult}
+                sourceData={runSourceData}
               />
             </div>
           </TabPanel>
@@ -643,6 +657,8 @@ export function BenchmarksPage() {
       />
 
       <ViewResultDrawer isOpen={viewResultOpen} onClose={() => setViewResultOpen(false)} />
+
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }
