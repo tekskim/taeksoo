@@ -487,7 +487,8 @@ export function WorkloadsPage() {
       {
         key: 'status',
         label: 'Status',
-        minWidth: '100px',
+        width: '86px',
+        align: 'center' as const,
         render: (_: unknown, row: WorkloadItem) => {
           const label =
             row.status === 'active'
@@ -545,8 +546,8 @@ export function WorkloadsPage() {
       },
       {
         key: 'utilization',
-        label: 'Utilization',
-        minWidth: '140px',
+        label: 'Compute',
+        minWidth: '180px',
         render: (_: unknown, row: WorkloadItem) => (
           <HStack gap={0}>
             <div className="flex-1 min-w-0">
@@ -561,11 +562,11 @@ export function WorkloadsPage() {
       {
         key: 'memory',
         label: 'Memory',
-        minWidth: '140px',
+        minWidth: '180px',
         render: (_: unknown, row: WorkloadItem) => (
           <HStack gap={0}>
             <div className="flex-1 min-w-0">
-              <DualCell top={row.memSystem} bottom="System" />
+              <DualCell top={row.memSystem} bottom="System RAM" />
             </div>
             <div className="flex-1 min-w-0">
               <DualCell top={row.memVram} bottom="vRAM" />
@@ -576,7 +577,7 @@ export function WorkloadsPage() {
       {
         key: 'disk',
         label: 'Disk',
-        minWidth: '160px',
+        minWidth: '180px',
         render: (_: unknown, row: WorkloadItem) => (
           <HStack gap={0}>
             <div className="flex-1 min-w-0">
@@ -591,7 +592,7 @@ export function WorkloadsPage() {
       {
         key: 'computeType',
         label: 'Compute type',
-        minWidth: '120px',
+        minWidth: '130px',
         render: (val: string) => (
           <span className="text-body-md text-[var(--color-text-default)]">{val}</span>
         ),
@@ -600,6 +601,7 @@ export function WorkloadsPage() {
         key: 'cost',
         label: 'Cost',
         minWidth: '100px',
+        align: 'right' as const,
         render: (val: string) => (
           <span className="text-body-md text-[var(--color-text-default)]">{val}</span>
         ),
