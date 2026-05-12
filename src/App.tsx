@@ -177,6 +177,9 @@ import { ChatPage } from '@/pages/ChatPage';
 import { ChatConversationPage } from '@/pages/ChatConversationPage';
 import { ChatSearchPage } from '@/pages/ChatSearchPage';
 import { StoragePage } from '@/pages/StoragePage';
+import { DatasourcePage } from '@/pages/DatasourcePage';
+import { DatasourceCreatePage } from '@/pages/ai-platform/DatasourceCreatePage';
+import { DatasourceConnectionsPage } from '@/pages/ai-platform/DatasourceConnectionsPage';
 import { MCPToolsPage } from '@/pages/MCPToolsPage';
 import { MCPToolDetailPage } from '@/pages/MCPToolDetailPage';
 import { CreateMCPTemplatePage } from '@/pages/CreateMCPTemplatePage';
@@ -551,6 +554,9 @@ function AppRoutes() {
       <Route path="/chat/search" element={<ChatSearchPage />} />
       <Route path="/chat/:id" element={<ChatConversationPage />} />
       <Route path="/agent/storage" element={<StoragePage />} />
+      <Route path="/agent/datasource" element={<DatasourcePage />} />
+      <Route path="/agent/datasource/connections" element={<DatasourceConnectionsPage />} />
+      <Route path="/agent/datasource/create" element={<DatasourceCreatePage />} />
       <Route path="/mcp-tools" element={<MCPToolsPage />} />
       <Route path="/mcp-tools/create" element={<CreateMCPTemplatePage />} />
       <Route path="/mcp-tools/create-v2" element={<CreateMCPTemplatePage />} />

@@ -144,6 +144,9 @@ function getLabelFromPath(path: string): string {
     '/agent/list': 'Agent',
     '/agent/create': 'Create agent',
     '/agent/storage': 'Data sources',
+    '/agent/datasource': 'Data sources',
+    '/agent/datasource/connections': 'Agent connections',
+    '/agent/datasource/create': 'Create data source',
     '/chat': 'Chat',
     '/mcp-tools': 'MCP Tools',
     '/storage': 'Dashboard',
@@ -183,6 +186,10 @@ function getLabelFromPath(path: string): string {
   // Check for exact match first
   if (pathLabelMap[path]) {
     return pathLabelMap[path];
+  }
+
+  if (/^\/agent\/datasource\/[^/]+\/edit$/.test(path)) {
+    return 'Edit data source';
   }
 
   // Detail page patterns - use simple ID, page component will update with entity name
