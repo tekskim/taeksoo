@@ -562,7 +562,7 @@ export function WorkloadsPage() {
       {
         key: 'memory',
         label: 'Memory',
-        minWidth: '180px',
+        minWidth: '220px',
         render: (_: unknown, row: WorkloadItem) => (
           <HStack gap={0}>
             <div className="flex-1 min-w-0">
@@ -577,7 +577,7 @@ export function WorkloadsPage() {
       {
         key: 'disk',
         label: 'Disk',
-        minWidth: '180px',
+        minWidth: '220px',
         render: (_: unknown, row: WorkloadItem) => (
           <HStack gap={0}>
             <div className="flex-1 min-w-0">
