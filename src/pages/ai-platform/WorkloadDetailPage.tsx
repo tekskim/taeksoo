@@ -15,6 +15,7 @@ import {
   TabPanel,
   SectionCard,
   CopyButton,
+  ContextMenu,
 } from '@/design-system';
 import type { StatusType } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
@@ -22,11 +23,11 @@ import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconLock,
-  IconPlug,
   IconEdit,
-  IconPlayerStop,
-  IconRefresh,
-  IconTrash,
+  IconTerminal2,
+  IconFileText,
+  IconPlug,
+  IconChevronDown,
 } from '@tabler/icons-react';
 
 interface ResourceSnapshot {
@@ -41,7 +42,12 @@ interface WorkloadDetail {
   id: string;
   name: string;
   label: string;
+  description: string;
   status: StatusType;
+  utilization: string;
+  memory: string;
+  disk: string;
+  computeType: string;
   cost: string;
   basic: {
     type: string;
@@ -67,7 +73,12 @@ const WORKLOAD_DETAILS: Record<string, WorkloadDetail> = {
     id: 'wl-001',
     name: 'llama3-70b-inference',
     label: 'prod-gpu-a100',
+    description: 'Pod name Description',
     status: 'active',
+    utilization: '90%',
+    memory: '58%',
+    disk: '16%',
+    computeType: '-',
     cost: '$ 0.1/hr',
     basic: {
       type: 'STDIO',
@@ -103,7 +114,12 @@ const WORKLOAD_DETAILS: Record<string, WorkloadDetail> = {
     id: 'wl-002',
     name: 'qwen3-finetune-v2',
     label: 'train-gpu-h100',
+    description: 'Fine-tuning Qwen3 model for production',
     status: 'active',
+    utilization: '78%',
+    memory: '85%',
+    disk: '42%',
+    computeType: '1 x H100',
     cost: '$ 2.5/hr',
     basic: {
       type: 'STDIO',
@@ -140,7 +156,12 @@ const WORKLOAD_DETAILS: Record<string, WorkloadDetail> = {
     id: 'wl-004',
     name: 'stable-diffusion-xl',
     label: 'gpu-render-01',
+    description: 'Stable Diffusion XL rendering service',
     status: 'error',
+    utilization: '0%',
+    memory: '0%',
+    disk: '25%',
+    computeType: '1 x A100',
     cost: '$ 1.2/hr',
     basic: {
       type: 'STDIO',
@@ -194,12 +215,8 @@ function statusLabel(status: StatusType): string {
 }
 
 function getWorkloadDetail(id: string | undefined): WorkloadDetail {
-  if (id && WORKLOAD_DETAILS[id]) {
-    return WORKLOAD_DETAILS[id];
-  }
-  if (!id) {
-    return DEFAULT_DETAIL;
-  }
+  if (id && WORKLOAD_DETAILS[id]) return WORKLOAD_DETAILS[id];
+  if (!id) return DEFAULT_DETAIL;
   return {
     ...DEFAULT_DETAIL,
     id,
@@ -270,28 +287,47 @@ export function WorkloadDetailPage() {
     >
       <VStack gap={6}>
         <DetailHeader>
-          <DetailHeader.Title>{detail.name}</DetailHeader.Title>
+          <DetailHeader.Title>
+            {detail.name}
+            <span className="block text-body-md font-normal text-[var(--color-text-subtle)] mt-0.5">
+              {detail.description}
+            </span>
+          </DetailHeader.Title>
           <DetailHeader.Actions>
-            <HStack gap={1} className="flex-wrap">
-              <Button variant="secondary" size="sm" leftIcon={<IconLock size={12} />}>
-                Lock pod
+            <Button variant="secondary" size="sm" leftIcon={<IconLock size={12} />}>
+              Lock Setting
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit pod
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
+              Terminal
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconFileText size={12} />}>
+              View Logs
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconPlug size={12} />}>
+              Connect
+            </Button>
+            <ContextMenu
+              items={[
+                { id: 'start', label: 'Start', onClick: () => {} },
+                { id: 'stop', label: 'Stop', onClick: () => {} },
+                { id: 'restart', label: 'Restart', onClick: () => {} },
+                {
+                  id: 'terminate',
+                  label: 'Terminate',
+                  status: 'danger',
+                  divider: true,
+                  onClick: () => {},
+                },
+              ]}
+              trigger="click"
+            >
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More Actions
               </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconPlug size={12} />}>
-                Connect
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                Edit pod
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
-                Stop
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
-                Restart
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                Delete
-              </Button>
-            </HStack>
+            </ContextMenu>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
@@ -299,7 +335,10 @@ export function WorkloadDetailPage() {
               value={statusLabel(detail.status)}
               status={detail.status}
             />
-            <DetailHeader.InfoCard label="ID" value={detail.label} copyable />
+            <DetailHeader.InfoCard label="Utilization" value={detail.utilization} />
+            <DetailHeader.InfoCard label="Memory" value={detail.memory} />
+            <DetailHeader.InfoCard label="Disk" value={detail.disk} />
+            <DetailHeader.InfoCard label="Compute type" value={detail.computeType} />
             <DetailHeader.InfoCard label="Cost" value={detail.cost} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
@@ -308,8 +347,6 @@ export function WorkloadDetailPage() {
           <TabList>
             <Tab value="details">Details</Tab>
             <Tab value="telemetry">Telemetry</Tab>
-            <Tab value="logs">Logs</Tab>
-            <Tab value="terminal">Terminal</Tab>
           </TabList>
 
           <TabPanel value="details" className="pt-0">
@@ -379,18 +416,6 @@ export function WorkloadDetailPage() {
           <TabPanel value="telemetry" className="pt-0">
             <p className="text-body-md text-[var(--color-text-subtle)] pt-4">
               Telemetry charts and metrics will appear here.
-            </p>
-          </TabPanel>
-
-          <TabPanel value="logs" className="pt-0">
-            <p className="text-body-md text-[var(--color-text-subtle)] pt-4">
-              Pod logs will appear here.
-            </p>
-          </TabPanel>
-
-          <TabPanel value="terminal" className="pt-0">
-            <p className="text-body-md text-[var(--color-text-subtle)] pt-4">
-              Terminal session will appear here.
             </p>
           </TabPanel>
         </Tabs>

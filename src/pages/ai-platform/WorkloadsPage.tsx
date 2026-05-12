@@ -11,7 +11,6 @@ import {
   PageHeader,
   Table,
   Pagination,
-  StatusIndicator,
   ContextMenu,
   ListToolbar,
   FilterSearchInput,
@@ -22,6 +21,7 @@ import {
   InlineMessage,
   Disclosure,
   FormField,
+  Badge,
 } from '@/design-system';
 import type { FilterField, AppliedFilter, TableColumn } from '@/design-system';
 import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
@@ -280,22 +280,13 @@ const MOCK_DATA: WorkloadItem[] = [
   },
 ];
 
-function SummaryCard({
-  label,
-  count,
-  status,
-}: {
-  label: string;
-  count: number;
-  status: StatusType;
-}) {
+function SummaryCard({ label, count }: { label: string; count: number; status: StatusType }) {
   return (
     <div className="flex flex-1 items-center justify-between min-w-0 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
       <VStack gap={1.5}>
         <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
         <span className="text-body-md text-[var(--color-text-default)]">{count}</span>
       </VStack>
-      <StatusIndicator status={status} layout="icon-only" />
     </div>
   );
 }
@@ -468,20 +459,27 @@ export function WorkloadsPage() {
 
   const getRowActions = useCallback(
     (row: WorkloadItem) => [
+      { id: 'lock', label: 'Lock setting', onClick: () => openLockDrawer(row) },
+      {
+        id: 'edit',
+        label: 'Edit pod',
+        onClick: () => navigate(`/ai-platform/workloads/${row.id}/edit`),
+      },
+      { id: 'terminal', label: 'Terminal', onClick: () => console.log('Terminal', row.id) },
+      { id: 'viewlog', label: 'View log', onClick: () => console.log('View log', row.id) },
+      { id: 'connect', label: 'Connect', onClick: () => openConnectDrawer(row) },
       { id: 'start', label: 'Start', onClick: () => console.log('Start', row.id) },
       { id: 'stop', label: 'Stop', onClick: () => console.log('Stop', row.id) },
       { id: 'restart', label: 'Restart', onClick: () => console.log('Restart', row.id) },
-      { id: 'connect', label: 'Connect', onClick: () => openConnectDrawer(row) },
-      { id: 'lock', label: 'Lock setting', onClick: () => openLockDrawer(row) },
       {
-        id: 'delete',
-        label: 'Delete',
+        id: 'terminate',
+        label: 'Terminate',
         status: 'danger' as const,
         divider: true,
-        onClick: () => console.log('Delete', row.id),
+        onClick: () => console.log('Terminate', row.id),
       },
     ],
-    [openConnectDrawer, openLockDrawer]
+    [openConnectDrawer, openLockDrawer, navigate]
   );
 
   const columns: TableColumn<WorkloadItem>[] = useMemo(
@@ -489,11 +487,22 @@ export function WorkloadsPage() {
       {
         key: 'status',
         label: 'Status',
-        width: '59px',
-        align: 'center' as const,
-        render: (_: unknown, row: WorkloadItem) => (
-          <StatusIndicator status={row.status} layout="icon-only" />
-        ),
+        minWidth: '100px',
+        render: (_: unknown, row: WorkloadItem) => {
+          const label =
+            row.status === 'active'
+              ? 'Running'
+              : row.status === 'error'
+                ? 'Failed'
+                : row.status === 'paused'
+                  ? 'Stopped'
+                  : 'Creating';
+          return (
+            <Badge theme="white" size="sm">
+              {label}
+            </Badge>
+          );
+        },
       },
       {
         key: 'name',
@@ -502,7 +511,10 @@ export function WorkloadsPage() {
         minWidth: '200px',
         render: (_: unknown, row: WorkloadItem) => (
           <VStack gap={0.5}>
-            <span className="text-body-md font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline">
+            <span
+              className="text-body-md font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline"
+              onClick={() => navigate(`/ai-platform/workloads/${row.id}`)}
+            >
               {row.name}
             </span>
             <HStack gap={1.5} align="center">
@@ -662,7 +674,7 @@ export function WorkloadsPage() {
         />
 
         <HStack gap={2}>
-          <SummaryCard label="Available" count={summaryStats.active} status="active" />
+          <SummaryCard label="Running" count={summaryStats.active} status="active" />
           <SummaryCard label="Failed" count={summaryStats.error} status="error" />
           <SummaryCard label="Stopped" count={summaryStats.paused} status="paused" />
           <SummaryCard label="Creating" count={summaryStats.building} status="building" />
