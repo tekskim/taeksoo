@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
-import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { IconChevronUp, IconChevronDown, IconSelector } from '@tabler/icons-react';
 import { Checkbox } from '../Checkbox';
 import { Radio } from '../Radio';
@@ -464,7 +464,7 @@ export function Table<T extends Record<string, any>>({
 
   const leftBodyRef = useRef<HTMLDivElement>(null);
   const rightBodyRef = useRef<HTMLDivElement>(null);
-  const scrollOsRef = useRef<OverlayScrollbarsComponentRef>(null);
+  const scrollOsRef = useRef<React.ElementRef<typeof OverlayScrollbarsComponent>>(null);
   const [hasHorizontalOverflow, setHasHorizontalOverflow] = useState(false);
   const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
 

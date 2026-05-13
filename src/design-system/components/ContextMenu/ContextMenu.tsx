@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -82,7 +82,7 @@ const ContextMenuItemComponent: React.FC<{
   const [submenuPosition, setSubmenuPosition] = useState({ x: 0, y: 0 });
   const [submenuDirection, setSubmenuDirection] = useState<'left' | 'right'>('right');
   const itemRef = useRef<HTMLDivElement>(null);
-  const submenuOsRef = useRef<OverlayScrollbarsComponentRef>(null);
+  const submenuOsRef = useRef<React.ElementRef<typeof OverlayScrollbarsComponent>>(null);
   const closeTimeoutRef = useRef<number | null>(null);
 
   // Adjust submenu position after it renders

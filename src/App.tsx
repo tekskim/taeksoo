@@ -312,9 +312,12 @@ import InstalledOperatorsPage from '@/pages/InstalledOperatorsPage';
 import InstalledOperatorDetailPage from '@/pages/InstalledOperatorDetailPage';
 
 // Pages - Security
-import { FirewallsPage } from '@/pages/security/FirewallsPage';
-import { SecurityGroupsPage } from '@/pages/security/SecurityGroupsPage';
-import { NetworkPoliciesPage } from '@/pages/security/NetworkPoliciesPage';
+import { FirewallsPage as SecurityFirewallsPage } from '@/pages/security/FirewallsPage';
+import { SecurityGroupsPage as SecuritySecurityGroupsPage } from '@/pages/security/SecurityGroupsPage';
+import { NetworkPoliciesPage as SecurityNetworkPoliciesPage } from '@/pages/security/NetworkPoliciesPage';
+import { SecurityCreateNetworkPolicyPage } from '@/pages/security/CreateNetworkPolicyPage';
+import { SecurityCreateNetworkPolicyYamlPage } from '@/pages/security/CreateNetworkPolicyYamlPage';
+import { SecurityGroupDetailPage as SecuritySecurityGroupDetailPage } from '@/pages/security/SecurityGroupDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -1049,8 +1052,8 @@ function AppRoutes() {
       <Route path="/container/*" element={<NotFoundPage />} />
 
       {/* Security Routes */}
-      <Route path="/security" element={<FirewallsPage />} />
-      <Route path="/security/firewalls" element={<FirewallsPage />} />
+      <Route path="/security" element={<SecurityFirewallsPage />} />
+      <Route path="/security/firewalls" element={<SecurityFirewallsPage />} />
       <Route path="/security/firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
       <Route
         path="/security/firewall-policies/:id"
@@ -1065,8 +1068,17 @@ function AppRoutes() {
         path="/security/firewalls/create-rule-v2"
         element={<ComputeAdminCreateFirewallRulePage />}
       />
-      <Route path="/security/security-groups" element={<SecurityGroupsPage />} />
-      <Route path="/security/network-policies" element={<NetworkPoliciesPage />} />
+      <Route path="/security/security-groups" element={<SecuritySecurityGroupsPage />} />
+      <Route path="/security/security-groups/:id" element={<SecuritySecurityGroupDetailPage />} />
+      <Route path="/security/network-policies" element={<SecurityNetworkPoliciesPage />} />
+      <Route
+        path="/security/network-policies/create"
+        element={<SecurityCreateNetworkPolicyPage />}
+      />
+      <Route
+        path="/security/network-policies/create-yaml"
+        element={<SecurityCreateNetworkPolicyYamlPage />}
+      />
 
       {/* IAM Routes */}
       <Route path="/iam" element={<IAMHomePage />} />
