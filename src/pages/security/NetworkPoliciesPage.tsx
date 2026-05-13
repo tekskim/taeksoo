@@ -56,7 +56,7 @@ const mockPolicies: NetworkPolicy[] = [
     namespace: 'production',
     status: 'active',
     podSelector: 'app=api',
-    createdAt: '2026-03-10 08:00:00',
+    createdAt: 'Mar 10 2026 08:00:00',
   },
   {
     id: 'np-002',
@@ -64,7 +64,7 @@ const mockPolicies: NetworkPolicy[] = [
     namespace: 'production',
     status: 'active',
     podSelector: 'app=api',
-    createdAt: '2026-03-11 10:00:00',
+    createdAt: 'Mar 11 2026 10:00:00',
   },
   {
     id: 'np-003',
@@ -72,7 +72,7 @@ const mockPolicies: NetworkPolicy[] = [
     namespace: 'production',
     status: 'active',
     podSelector: 'app=api',
-    createdAt: '2026-03-12 14:30:00',
+    createdAt: 'Mar 12 2026 14:30:00',
   },
   {
     id: 'np-004',
@@ -80,7 +80,7 @@ const mockPolicies: NetworkPolicy[] = [
     namespace: 'monitoring',
     status: 'active',
     podSelector: 'app=prometheus',
-    createdAt: '2026-03-13 09:15:00',
+    createdAt: 'Mar 13 2026 09:15:00',
   },
   {
     id: 'np-005',
@@ -88,7 +88,7 @@ const mockPolicies: NetworkPolicy[] = [
     namespace: 'staging',
     status: 'error',
     podSelector: 'env=staging',
-    createdAt: '2026-03-14 16:00:00',
+    createdAt: 'Mar 14 2026 16:00:00',
   },
 ];
 
@@ -187,14 +187,12 @@ export function NetworkPoliciesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      align: 'right',
     },
     {
       key: 'actions',
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
-      sticky: 'right',
       render: (_, row) => (
         <ContextMenu items={getRowActions(row)} trigger="click" align="right">
           <button
