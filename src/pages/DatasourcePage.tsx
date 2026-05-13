@@ -18,6 +18,7 @@ import {
   EmptyState,
   InfoBox,
   HStack,
+  MetricCard,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -30,12 +31,7 @@ import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconTrash,
-  IconPencil,
   IconDotsCircleHorizontal,
-  IconAlertTriangle,
-  IconRefresh,
-  IconLoader2,
-  IconTarget,
   IconBell,
   IconAlertCircle,
   IconDatabase,
@@ -45,61 +41,6 @@ import { useNavigate } from 'react-router-dom';
 import { DataTestToolbar, type DataMode, multiplyData } from '@/pages/ai-platform/shared';
 
 type DatasourceStatus = 'completed' | 'error' | 'processing' | 'pending' | 'draft' | 'deleting';
-
-interface StatusCardProps {
-  label: string;
-  count: number;
-  status: 'completed' | 'error' | 'processing' | 'pending' | 'draft';
-}
-
-function StatusSummaryCard({ label, count, status }: StatusCardProps) {
-  let bgColor = 'bg-[var(--color-surface-subtle)]';
-  let iconBg = 'bg-[var(--color-text-muted)]';
-
-  if (status === 'completed') {
-    bgColor = 'bg-[var(--color-state-success-bg)]';
-    iconBg = 'bg-[var(--color-state-success)]';
-  } else if (status === 'error') {
-    bgColor = 'bg-[var(--color-state-danger-bg)]';
-    iconBg = 'bg-[var(--color-state-danger)]';
-  } else if (status === 'processing') {
-    bgColor = 'bg-[var(--color-state-info-bg)]';
-    iconBg = 'bg-[var(--color-state-info)]';
-  }
-
-  const icon =
-    status === 'completed' ? (
-      <IconTarget size={16} stroke={1} className="text-[var(--color-text-on-primary)]" />
-    ) : status === 'error' ? (
-      <IconAlertTriangle size={16} stroke={1} className="text-[var(--color-text-on-primary)]" />
-    ) : status === 'processing' ? (
-      <IconLoader2
-        size={16}
-        stroke={1}
-        className="text-[var(--color-text-on-primary)] animate-spin"
-      />
-    ) : status === 'pending' ? (
-      <IconRefresh size={12} stroke={1} className="text-[var(--color-text-on-primary)]" />
-    ) : (
-      <IconPencil size={16} stroke={1} className="text-[var(--color-text-on-primary)]" />
-    );
-
-  return (
-    <div
-      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-[var(--radius-lg)] shrink-0`}
-    >
-      <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
-        <p className="text-label-sm text-[var(--color-text-subtle)]">{label}</p>
-        <p className="text-body-md text-[var(--color-text-default)]">{count}</p>
-      </div>
-      <div
-        className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}
-      >
-        {icon}
-      </div>
-    </div>
-  );
-}
 
 interface DatasourceRow {
   id: string;
@@ -330,10 +271,15 @@ export function DatasourcePage() {
       flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
-      render: (value: string) => (
-        <span className="truncate block" title={value}>
+      render: (value: string, row) => (
+        <button
+          type="button"
+          className="truncate block text-left text-[var(--color-action-primary)] hover:underline cursor-pointer w-full"
+          title={value}
+          onClick={() => navigate('/agent/datasource/connections')}
+        >
           {value}
-        </span>
+        </button>
       ),
     },
     {
@@ -507,17 +453,13 @@ export function DatasourcePage() {
           }
         />
 
-        <div className="flex gap-2 items-center relative shrink-0 w-full">
-          <StatusSummaryCard label="Completed" count={statusCounts.completed} status="completed" />
-          <StatusSummaryCard label="Error" count={statusCounts.error} status="error" />
-          <StatusSummaryCard
-            label="Processing"
-            count={statusCounts.processing}
-            status="processing"
-          />
-          <StatusSummaryCard label="Pending" count={statusCounts.pending} status="pending" />
-          <StatusSummaryCard label="Draft" count={statusCounts.draft} status="draft" />
-        </div>
+        <MetricCard.Group>
+          <MetricCard title="Completed" value={statusCounts.completed} />
+          <MetricCard title="Error" value={statusCounts.error} />
+          <MetricCard title="Processing" value={statusCounts.processing} />
+          <MetricCard title="Pending" value={statusCounts.pending} />
+          <MetricCard title="Draft" value={statusCounts.draft} />
+        </MetricCard.Group>
 
         <div className="flex flex-col gap-3 w-full">
           <ListToolbar
