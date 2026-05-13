@@ -1,10 +1,118 @@
 [
   {
     "id": "1",
+    "date": "2026-05-13",
+    "app": "enhance",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Replace StatusSummaryCard with TDS MetricCard on Datasource page",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "date": "2026-05-12",
+    "app": "feat",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Add Datasource menu pages for Agent Studio",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "date": "2026-05-12",
+    "app": "fix",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Increase Memory and Disk column minWidth to prevent text clipping",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Unify content area responsive policy and TopBar actions",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "date": "2026-05-12",
+    "app": "enhance",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Align Workloads table column sizes with Figma wireframe",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Refine Workloads page to match Figma wireframe",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Redesign AI Platform Dashboard and refine Models page",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Add dark mode toggle, data test toolbar, and empty states",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "date": "2026-05-11",
+    "app": "fix",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Remove scrollbar-gutter:stable from sidebar nav",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Add missing IconCheck import in ProjectSelector",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Simplify detail card structure to single gap-4 container",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Wrap Tabular detail in white card container per Figma",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Fix Table render signature (value, row) in TabularPage",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Align Tabular list page with Figma specs",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Unify AI Platform layout consistency across all routes",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "6",
     "date": "2026-05-11",
     "app": "enhance",
     "appColor": "from-gray-500 to-slate-500",
     "changes": [
+      {
+        "text": "Refactor sidebar and implement Settings/Account page",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Implement Kueue, Monitoring, and Dependencies pages",
+        "author": "mjhan-tk"
+      },
       {
         "text": "Implement Benchmarks page with Dashboard and Run tabs",
         "author": "mjhan-tk"
@@ -32,35 +140,7 @@
     ]
   },
   {
-    "id": "2",
-    "date": "2026-05-11",
-    "app": "fix",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Simplify detail card structure to single gap-4 container",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Wrap Tabular detail in white card container per Figma",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Fix Table render signature (value, row) in TabularPage",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Align Tabular list page with Figma specs",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Unify AI Platform layout consistency across all routes",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "3",
+    "id": "7",
     "date": "2026-05-11",
     "app": "feat",
     "appColor": "from-gray-500 to-slate-500",
@@ -76,7 +156,7 @@
     ]
   },
   {
-    "id": "4",
+    "id": "8",
     "date": "2026-05-08",
     "app": "feat",
     "appColor": "from-gray-500 to-slate-500",
@@ -88,7 +168,7 @@
     ]
   },
   {
-    "id": "5",
+    "id": "9",
     "date": "2026-05-07",
     "app": "fix",
     "appColor": "from-gray-500 to-slate-500",
@@ -112,7 +192,7 @@
     ]
   },
   {
-    "id": "6",
+    "id": "10",
     "date": "2026-05-07",
     "app": "chore",
     "appColor": "from-gray-500 to-slate-500",
@@ -124,7 +204,7 @@
     ]
   },
   {
-    "id": "7",
+    "id": "11",
     "date": "2026-05-07",
     "app": "feat",
     "appColor": "from-gray-500 to-slate-500",
@@ -144,7 +224,7 @@
     ]
   },
   {
-    "id": "8",
+    "id": "12",
     "date": "2026-05-07",
     "app": "enhance",
     "appColor": "from-gray-500 to-slate-500",
@@ -160,7 +240,7 @@
     ]
   },
   {
-    "id": "9",
+    "id": "13",
     "date": "2026-05-06",
     "app": "enhance",
     "appColor": "from-gray-500 to-slate-500",
@@ -176,7 +256,7 @@
     ]
   },
   {
-    "id": "10",
+    "id": "14",
     "date": "2026-05-06",
     "app": "chore",
     "appColor": "from-gray-500 to-slate-500",
@@ -192,7 +272,7 @@
     ]
   },
   {
-    "id": "11",
+    "id": "15",
     "date": "2026-05-06",
     "app": "feat",
     "appColor": "from-gray-500 to-slate-500",
@@ -204,7 +284,7 @@
     ]
   },
   {
-    "id": "12",
+    "id": "16",
     "date": "2026-04-28",
     "app": "enhance",
     "appColor": "from-gray-500 to-slate-500",
@@ -216,61 +296,17 @@
       {
         "text": "Improve AI Platform Models page and sidebar navigation",
         "author": "mjhan-tk"
-      },
-      {
-        "text": "Unify Agent sidebar to wide SNB layout",
-        "author": "mjhan-tk"
       }
     ]
   },
   {
-    "id": "13",
+    "id": "17",
     "date": "2026-04-28",
     "app": "docs",
     "appColor": "from-gray-500 to-slate-500",
     "changes": [
       {
         "text": "Update TDS design skills",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "14",
-    "date": "2026-04-28",
-    "app": "chore",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Rebuild docs assets",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Add Figma-to-TDS page reproduction skills and rules",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "15",
-    "date": "2026-04-28",
-    "app": "fix",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Fix PageShell content height and update tailwind config",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "16",
-    "date": "2026-04-28",
-    "app": "feat",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Add Chat page UI with conversation cases",
         "author": "mjhan-tk"
       }
     ]

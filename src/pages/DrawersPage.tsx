@@ -161,6 +161,9 @@ import { ChangeServerCertificateDrawer } from '@/components/ChangeServerCertific
 import { ChangeCACertificateDrawer } from '@/components/ChangeCACertificateDrawer';
 import { ManageSNICertificateDrawer } from '@/components/ManageSNICertificateDrawer';
 import { ManageExternalGatewayDrawer } from '@/components/ManageExternalGatewayDrawer';
+import { CreatePolicyDrawer } from '@/components/CreatePolicyDrawer';
+import { EditPolicyDrawer } from '@/components/EditPolicyDrawer';
+import { EditRuleDrawer } from '@/components/EditRuleDrawer';
 import { ConnectSubnetDrawer } from '@/components/ConnectSubnetDrawer';
 import { AssociateFIPtoPortDrawer } from '@/components/AssociateFIPtoPortDrawer';
 import { DisconnectSubnetDrawer } from '@/components/DisconnectSubnetDrawer';
@@ -251,6 +254,7 @@ import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDra
 import { ManageAclRulesDrawer } from '@/components/ManageAclRulesDrawer';
 import { AdminTenantDrawer } from '@/components/AdminTenantDrawer';
 import { CreateFirewallDrawer } from '@/components/CreateFirewallDrawer';
+import { SecurityCreateSGDrawer } from '@/components/SecurityCreateSGDrawer';
 import { EditFirewallDrawer, type FirewallInfo } from '@/components/EditFirewallDrawer';
 import {
   ManageFirewallPortsDrawer,
@@ -1480,7 +1484,38 @@ const SECURITY_FIREWALL_ITEMS: DrawerSearchItem[] = [
   },
 ];
 
-const SECURITY_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [...SECURITY_FIREWALL_ITEMS];
+const SECURITY_POLICY_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create policy',
+    description: 'Create a firewall policy with tenant assignment, shared and audited settings.',
+    category: 'Policy',
+  },
+  {
+    title: 'Edit policy',
+    description: 'Edit policy name, description, shared and audited settings.',
+    category: 'Policy',
+  },
+  {
+    title: 'Edit rule',
+    description:
+      'Edit firewall rule with protocol, action, source/destination CIDR and port settings.',
+    category: 'Rule',
+  },
+];
+
+const SECURITY_SG_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create security group',
+    description: 'Create a new security group with tenant assignment and quota management.',
+    category: 'Security Group',
+  },
+];
+
+const SECURITY_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [
+  ...SECURITY_FIREWALL_ITEMS,
+  ...SECURITY_POLICY_ITEMS,
+  ...SECURITY_SG_ITEMS,
+];
 
 const TABLE_SETTINGS_ITEMS: DrawerSearchItem[] = [
   {
@@ -2773,7 +2808,7 @@ export function DrawersPage() {
                         Drawers{' '}
                       </span>
                       <span className="text-body-md text-[var(--color-text-subtle)]">
-                        (3 drawers)
+                        (7 drawers)
                       </span>
                     </div>
                   </div>
@@ -2798,6 +2833,36 @@ export function DrawersPage() {
                         description="Select ports from the list to associate with a firewall."
                         category="Firewall"
                         onOpen={() => openDrawerFn('manage-firewall-ports')}
+                      />
+                    </FilteredGroup>
+
+                    <FilteredGroup heading="Policy & Rule actions" items={SECURITY_POLICY_ITEMS}>
+                      <DrawerCard
+                        title="Create policy"
+                        description="Create a firewall policy with tenant assignment, shared and audited settings."
+                        category="Policy"
+                        onOpen={() => openDrawerFn('create-policy')}
+                      />
+                      <DrawerCard
+                        title="Edit policy"
+                        description="Edit policy name, description, shared and audited settings."
+                        category="Policy"
+                        onOpen={() => openDrawerFn('edit-policy')}
+                      />
+                      <DrawerCard
+                        title="Edit rule"
+                        description="Edit firewall rule with protocol, action, source/destination CIDR and port settings."
+                        category="Rule"
+                        onOpen={() => openDrawerFn('edit-rule')}
+                      />
+                    </FilteredGroup>
+
+                    <FilteredGroup heading="Security Group actions" items={SECURITY_SG_ITEMS}>
+                      <DrawerCard
+                        title="Create security group"
+                        description="Create a new security group with tenant assignment and quota management."
+                        category="Security Group"
+                        onOpen={() => openDrawerFn('create-security-group')}
                       />
                     </FilteredGroup>
                   </VStack>
@@ -4237,6 +4302,56 @@ export function DrawersPage() {
         firewall={mockManagePortsFirewall}
         onSubmit={(selectedPortIds) => {
           console.log('Manage firewall ports:', selectedPortIds);
+        }}
+      />
+
+      <CreatePolicyDrawer
+        isOpen={openDrawer === 'create-policy'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create policy:', data);
+        }}
+      />
+
+      <EditPolicyDrawer
+        isOpen={openDrawer === 'edit-policy'}
+        onClose={closeDrawer}
+        policy={{
+          name: 'web-policy',
+          description: 'Web access policy',
+          shared: false,
+          audited: false,
+        }}
+        onSubmit={(data) => {
+          console.log('Edit policy:', data);
+        }}
+      />
+
+      <EditRuleDrawer
+        isOpen={openDrawer === 'edit-rule'}
+        onClose={closeDrawer}
+        rule={{
+          name: 'allow-http',
+          description: 'Allow HTTP traffic',
+          enabled: true,
+          shared: false,
+          protocol: 'TCP',
+          action: 'allow',
+          sourceCidr: '',
+          sourcePort: '',
+          destinationCidr: '',
+          destinationPort: '80',
+        }}
+        onSubmit={(data) => {
+          console.log('Edit rule:', data);
+        }}
+      />
+
+      <SecurityCreateSGDrawer
+        isOpen={openDrawer === 'create-security-group'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create security group:', data);
         }}
       />
 

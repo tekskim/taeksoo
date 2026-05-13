@@ -1,132 +1,358 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
   VStack,
-  PageShell,
-  PageHeader,
   TabBar,
   TopBar,
   Breadcrumb,
-  Table,
-  Pagination,
-  SearchInput,
-  Button,
-  Badge,
-  EmptyState,
-  type TableColumn,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  PageShell,
+  PageHeader,
+  fixedColumns,
   columnMinWidths,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { SecuritySidebar } from '@/components/SecuritySidebar';
-import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconPlus, IconDownload, IconRefresh, IconBuildingFortress } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
+import { useTabs } from '@/contexts/TabContext';
+import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
+import { Tooltip } from '@/design-system';
+import containerIcon from '@/assets/appIcon/container.png';
 
 interface SecurityGroup {
   id: string;
   name: string;
+  tenant: string;
+  tenantId: string;
   description: string;
-  inboundRules: number;
-  outboundRules: number;
-  associatedInstances: number;
+  ingressRules: number;
+  egressRules: number;
   createdAt: string;
+  origin?: 'container';
 }
 
 const mockSecurityGroups: SecurityGroup[] = [
   {
-    id: 'sg-001',
+    id: 'sg-a1b2c3d4',
     name: 'default',
+    tenant: 'tenant',
+    tenantId: '12345678',
     description: 'Default security group',
-    inboundRules: 3,
-    outboundRules: 1,
-    associatedInstances: 5,
-    createdAt: '2026-01-10 08:00:00',
+    ingressRules: 3,
+    egressRules: 1,
+    createdAt: 'Dec 25, 2025',
+    origin: 'container',
   },
   {
-    id: 'sg-002',
+    id: 'sg-e5f6g7h8',
     name: 'web-servers',
+    tenant: 'tenant',
+    tenantId: '12345678',
     description: 'Security group for web servers',
-    inboundRules: 4,
-    outboundRules: 2,
-    associatedInstances: 3,
-    createdAt: '2026-02-15 10:30:00',
+    ingressRules: 5,
+    egressRules: 2,
+    createdAt: 'Dec 25, 2025',
   },
   {
-    id: 'sg-003',
+    id: 'sg-i9j0k1l2',
     name: 'db-servers',
+    tenant: 'tenant',
+    tenantId: '12345678',
     description: 'Security group for database servers',
-    inboundRules: 2,
-    outboundRules: 1,
-    associatedInstances: 2,
-    createdAt: '2026-02-20 14:00:00',
+    ingressRules: 4,
+    egressRules: 3,
+    createdAt: 'Dec 25, 2025',
+    origin: 'container',
   },
   {
-    id: 'sg-004',
+    id: 'sg-m3n4o5p6',
     name: 'monitoring',
-    description: 'Security group for monitoring services',
-    inboundRules: 5,
-    outboundRules: 3,
-    associatedInstances: 1,
-    createdAt: '2026-03-01 09:15:00',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    description: 'Monitoring access group',
+    ingressRules: 6,
+    egressRules: 2,
+    createdAt: 'Dec 25, 2025',
   },
+  {
+    id: 'sg-q7r8s9t0',
+    name: 'cache-sg',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    description: 'Cache server access group',
+    ingressRules: 2,
+    egressRules: 1,
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: 'sg-u1v2w3x4',
+    name: 'app-sg',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    description: 'Application server security group',
+    ingressRules: 8,
+    egressRules: 4,
+    createdAt: 'Dec 25, 2025',
+    origin: 'container',
+  },
+  {
+    id: 'sg-y5z6a7b8',
+    name: 'lb-sg',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    description: 'Load balancer security group',
+    ingressRules: 5,
+    egressRules: 5,
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: 'sg-c9d0e1f2',
+    name: 'vpn-sg',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    description: 'VPN access group',
+    ingressRules: 10,
+    egressRules: 5,
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: 'sg-g3h4i5j6',
+    name: 'admin-sg',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    description: 'Admin access group',
+    ingressRules: 15,
+    egressRules: 8,
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: 'sg-k7l8m9n0',
+    name: 'test-sg',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    description: 'Test environment security group',
+    ingressRules: 1,
+    egressRules: 1,
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: 'sg-o1p2q3r4',
+    name: 'staging-sg',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    description: 'Staging environment group',
+    ingressRules: 5,
+    egressRules: 5,
+    createdAt: 'Dec 25, 2025',
+  },
+  {
+    id: 'sg-s5t6u7v8',
+    name: 'prod-sg',
+    tenant: 'tenant',
+    tenantId: '12345678',
+    description: 'Production security group',
+    ingressRules: 12,
+    egressRules: 6,
+    createdAt: 'Dec 25, 2025',
+  },
+];
+
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
 ];
 
 export function SecurityGroupsPage() {
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [securityGroups, setSecurityGroups] = useState(mockSecurityGroups);
   const rowsPerPage = 10;
 
-  const filteredData = mockSecurityGroups.filter(
-    (sg) =>
-      sg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sg.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [groupToDelete, setGroupToDelete] = useState<SecurityGroup | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
-  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+  useEffect(() => {
+    updateActiveTabLabel('Security Groups');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
+  const getContextMenuItems = (sg: SecurityGroup): ContextMenuItem[] => [
+    { id: 'create-rule', label: 'Create rule', onClick: () => {} },
+    { id: 'edit', label: 'Edit', onClick: () => {} },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      divider: true,
+      onClick: () => {
+        setGroupToDelete(sg);
+        setDeleteModalOpen(true);
+      },
+    },
+  ];
+
+  const filteredGroups = useMemo(() => {
+    if (appliedFilters.length === 0) return securityGroups;
+    return securityGroups.filter((sg) =>
+      appliedFilters.every((filter) => {
+        const value = String(sg[filter.fieldId as keyof SecurityGroup] || '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      })
+    );
+  }, [securityGroups, appliedFilters]);
+
+  const totalPages = Math.ceil(filteredGroups.length / rowsPerPage);
+
+  const paginatedGroups = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredGroups.slice(start, start + rowsPerPage);
+  }, [filteredGroups, currentPage, rowsPerPage]);
+
+  const handleDelete = () => {
+    if (groupToDelete) {
+      setSecurityGroups((prev) => prev.filter((sg) => sg.id !== groupToDelete.id));
+      setSelectedGroups((prev) => prev.filter((x) => x !== groupToDelete.id));
+    }
+    setDeleteModalOpen(false);
+    setGroupToDelete(null);
+  };
+
+  const handleBulkDelete = () => {
+    setSecurityGroups((prev) => prev.filter((sg) => !selectedGroups.includes(sg.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedGroups([]);
+  };
 
   const columns: TableColumn<SecurityGroup>[] = [
-    { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name, sortable: true },
-    { key: 'description', label: 'Description', flex: 2, minWidth: 200 },
     {
-      key: 'inboundRules',
-      label: 'Inbound rules',
+      key: 'name',
+      label: 'Name',
       flex: 1,
-      minWidth: 100,
-      align: 'right' as const,
-    },
-    {
-      key: 'outboundRules',
-      label: 'Outbound rules',
-      flex: 1,
-      minWidth: 100,
-      align: 'right' as const,
-    },
-    {
-      key: 'associatedInstances',
-      label: 'Instances',
-      flex: 1,
-      minWidth: 100,
-      align: 'right' as const,
+      minWidth: columnMinWidths.name,
+      sortable: true,
       render: (_, row) => (
-        <Badge theme="white" size="sm">
-          {row.associatedInstances}
-        </Badge>
+        <div className="flex items-center gap-2 min-w-0 w-full">
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+            <Link
+              to={`/security/security-groups/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID:{row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
+          </div>
+          {row.origin === 'container' && (
+            <Tooltip
+              content="This security group was created via the Container cluster."
+              position="top"
+            >
+              <div className="size-6 shrink-0 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
+                <img src={containerIcon} alt="Container" className="w-4 h-4" />
+              </div>
+            </Tooltip>
+          )}
+        </div>
       ),
     },
     {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      minWidth: 140,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <span className="text-body-md text-[var(--color-text-default)]">{row.tenant}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID: {row.tenantId}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
+      minWidth: 160,
+      sortable: true,
+      render: (value) => (
+        <span className="text-body-md text-[var(--color-text-default)]">{value || '-'}</span>
+      ),
+    },
+    {
+      key: 'ingressRules',
+      label: 'Ingress Rules',
+      flex: 1,
+      minWidth: 120,
+      sortable: true,
+    },
+    {
+      key: 'egressRules',
+      label: 'Egress Rules',
+      flex: 1,
+      minWidth: 120,
+      sortable: true,
+    },
+    {
       key: 'createdAt',
-      label: 'Created at',
+      label: 'Created At',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
-      align: 'right' as const,
+      sortable: true,
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: fixedColumns.actions,
+      align: 'center',
+      sticky: 'right',
+      render: (_, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
     },
   ];
 
@@ -158,70 +384,99 @@ export function SecurityGroupsPage() {
           }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
           title="Security Groups"
           actions={
-            <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
+            <Button variant="primary" size="md">
               Create Security Group
             </Button>
           }
         />
 
-        <div className="flex items-center gap-1">
-          <div className="w-[var(--search-input-width)]">
-            <SearchInput
-              placeholder="Search security groups by attributes"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onClear={() => setSearchQuery('')}
-              size="sm"
-              fullWidth
-            />
-          </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            icon={<IconDownload size={12} stroke={1.5} />}
-            aria-label="Download"
-          />
-          <Button
-            variant="secondary"
-            size="sm"
-            icon={<IconRefresh size={12} stroke={1.5} />}
-            aria-label="Refresh"
-          />
-        </div>
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search security groups by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedGroups.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
 
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
+          totalItems={filteredGroups.length}
+          selectedCount={selectedGroups.length}
           onPageChange={setCurrentPage}
-          totalItems={filteredData.length}
           showSettings
         />
 
-        {filteredData.length === 0 ? (
-          <EmptyState
-            icon={<IconBuildingFortress size={48} stroke={1} />}
-            title="No security groups found"
-            description="Create your first security group to manage instance access."
-            action={
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
-                Create Security Group
-              </Button>
-            }
-          />
-        ) : (
-          <Table<SecurityGroup>
-            columns={columns}
-            data={paginatedData}
-            rowKey="id"
-            emptyMessage="No security groups found"
-          />
-        )}
+        <Table<SecurityGroup>
+          columns={columns}
+          data={paginatedGroups}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedGroups}
+          onSelectionChange={setSelectedGroups}
+          emptyMessage="No security groups found"
+        />
       </VStack>
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setGroupToDelete(null);
+        }}
+        title="Delete security group"
+        description="Removing the selected security group is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={handleDelete}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected security groups"
+        description="Removing the selected security groups is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedGroups.length} security group(s)`}
+      />
     </PageShell>
   );
 }

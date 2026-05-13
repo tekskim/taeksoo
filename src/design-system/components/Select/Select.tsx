@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useCallback, useId, type ReactNode } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useId, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { OverlayScrollbarsComponent, OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { twMerge } from '../../utils/cn';
 import { IconChevronDown, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -86,7 +86,7 @@ export function Select({
 
   // Refs
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const listboxOsRef = useRef<OverlayScrollbarsComponentRef>(null);
+  const listboxOsRef = useRef<React.ElementRef<typeof OverlayScrollbarsComponent>>(null);
   const getListboxEl = useCallback(() => listboxOsRef.current?.getElement() ?? null, []);
   const containerRef = useRef<HTMLDivElement>(null);
 
