@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   TopBar,
   TopBarAction,
-  Breadcrumb,
   Button,
   Drawer,
   Input,
@@ -18,7 +17,7 @@ import {
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { ChatSidebar } from '@/components/ChatSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconSettings, IconStar, IconStarFilled } from '@tabler/icons-react';
+import { IconBell, IconStar, IconStarFilled } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Agent Card Component
@@ -402,23 +401,20 @@ export function ChatPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          canGoBack={false}
-          canGoForward={false}
-          onBack={() => {}}
-          onForward={() => {}}
-          breadcrumb={<Breadcrumb items={[{ label: 'Chat' }]} />}
+          showNavigation={false}
           actions={
-            <>
-              <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />
-            </>
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
           }
         />
       }
-      contentClassName="p-0"
+      contentClassName="p-0 !min-h-0 h-full"
     >
       {/* Sidebar and Content */}
-      <div className="flex flex-1 min-h-0 h-full">
+      <div className="flex h-full">
         {/* Chat Sidebar */}
         <ChatSidebar />
 
@@ -429,47 +425,62 @@ export function ChatPage() {
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
-          className="flex-1 flex flex-col gap-4 px-6 pt-4 pb-[120px] min-h-0"
+          className="flex-1 min-h-0"
         >
-          {/* Header */}
-          <div className="flex flex-col gap-2">
-            <h4 className="text-heading-h4 text-[var(--color-text-default)]">New Chat</h4>
-            <p className="text-label-md text-[var(--color-text-subtle)]">
-              Choose an agent and start a new chat.
-            </p>
-          </div>
+          <div className="flex flex-col gap-3 px-8 pt-4 pb-3">
+            {/* Header */}
+            <div className="flex flex-col gap-2">
+              <h4 className="text-heading-h4 text-[var(--color-text-default)]">New chat</h4>
+              <p className="text-body-md text-[var(--color-text-subtle)]">
+                Choose an agent and start a new chat.
+              </p>
+            </div>
 
-          {/* Filters */}
-          <div className="flex items-center">
-            <SearchInput
-              placeholder="Search agent by attributes"
-              size="sm"
-              className="w-[var(--search-input-width)]"
-            />
-          </div>
+            {/* Filters */}
+            <div className="flex items-center">
+              <SearchInput placeholder="Find agent with filters" size="sm" className="w-[280px]" />
+            </div>
 
-          {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            totalItems={agents.length}
-          />
+            {/* Content */}
+            {paginatedAgents.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-[240px] gap-2">
+                <p className="text-label-lg text-[var(--color-text-default)]">
+                  No Available Agents
+                </p>
+                <p className="text-body-md text-[var(--color-text-default)] text-center">
+                  Create a new agent or switch an existing agent to Active status.
+                </p>
+                <Button variant="primary" size="md" onClick={() => navigate('/ai-platform/agents')}>
+                  View Agents
+                </Button>
+              </div>
+            ) : (
+              <>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  totalItems={agents.length}
+                />
 
-          {/* Agent Cards Grid */}
-          <div className="grid grid-cols-3 gap-2">
-            {paginatedAgents.map((agent) => (
-              <AgentCard
-                key={agent.id}
-                title={agent.title}
-                description={agent.description}
-                modelName={agent.modelName}
-                isFavorite={agent.isFavorite}
-                isSelected={selectedAgentId === agent.id && isDrawerOpen}
-                onClick={() => handleAgentClick(agent.id)}
-                onFavoriteToggle={() => handleFavoriteToggle(agent.id)}
-              />
-            ))}
+                {/* Agent Cards Grid */}
+                <div className="grid grid-cols-3 gap-2">
+                  {paginatedAgents.map((agent) => (
+                    <AgentCard
+                      key={agent.id}
+                      title={agent.title}
+                      description={agent.description}
+                      modelName={agent.modelName}
+                      isFavorite={agent.isFavorite}
+                      isSelected={selectedAgentId === agent.id && isDrawerOpen}
+                      onClick={() => handleAgentClick(agent.id)}
+                      onFavoriteToggle={() => handleFavoriteToggle(agent.id)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </OverlayScrollbarsComponent>
       </div>
