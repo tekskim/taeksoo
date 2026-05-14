@@ -599,7 +599,9 @@ export function NetworkPolicyDetailPage() {
   ];
 
   const moreActions: ContextMenuItem[] = [
+    { id: 'edit-config', label: 'Edit config', onClick: () => {} },
     { id: 'edit-yaml', label: 'Edit YAML', onClick: () => {} },
+    { id: 'download-yaml', label: 'Download YAML', onClick: () => {} },
     {
       id: 'delete',
       label: 'Delete',
