@@ -431,6 +431,7 @@ export function TextGenerationPage() {
 
   const [experimentName, setExperimentName] = useState('');
   const [experimentDesc, setExperimentDesc] = useState('');
+  const [localQueue, setLocalQueue] = useState('');
   const [totalGpus, setTotalGpus] = useState(2);
   const [modelListTab, setModelListTab] = useState('all');
   const [modelSearch, setModelSearch] = useState('');
@@ -1194,6 +1195,19 @@ export function TextGenerationPage() {
                 value={experimentName}
                 onChange={(e) => setExperimentName(e.target.value)}
                 fullWidth
+              />
+            </FormField>
+            <FormField label="Local queue selection" required>
+              <Select
+                options={[
+                  { value: 'default', label: 'default' },
+                  { value: 'high-priority', label: 'high-priority' },
+                  { value: 'low-priority', label: 'low-priority' },
+                ]}
+                value={localQueue}
+                onChange={setLocalQueue}
+                placeholder="Selected local queue"
+                className="w-[328px]"
               />
             </FormField>
             <FormField label="Description" required>
