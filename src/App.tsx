@@ -524,6 +524,12 @@ import { MonitoringPage } from '@/pages/ai-platform/MonitoringPage';
 import { DependenciesPage } from '@/pages/ai-platform/DependenciesPage';
 import { SystemAdminPage } from '@/pages/ai-platform/SystemAdminPage';
 
+// Pages - Fabric / Serve / ML Studio / Run
+import FabricPage from '@/pages/fabric/FabricPage';
+import ServePage from '@/pages/serve/ServePage';
+import MLStudioPage from '@/pages/ml-studio/MLStudioPage';
+import RunPage from '@/pages/run/RunPage';
+
 const defaultTabs = [{ id: 'home', label: 'Home', path: '/compute', closable: true }];
 
 function AppRoutes() {
@@ -1146,6 +1152,22 @@ function AppRoutes() {
       <Route path="/ai-platform/dependencies" element={<DependenciesPage />} />
       <Route path="/ai-platform/system-admin" element={<SystemAdminPage />} />
       <Route path="/ai-platform/*" element={<AIPlatformPage />} />
+
+      {/* Fabric Routes */}
+      <Route path="/fabric" element={<FabricPage />} />
+      <Route path="/fabric/*" element={<FabricPage />} />
+
+      {/* Serve Routes */}
+      <Route path="/serve" element={<ServePage />} />
+      <Route path="/serve/*" element={<ServePage />} />
+
+      {/* ML Studio Routes */}
+      <Route path="/ml-studio" element={<MLStudioPage />} />
+      <Route path="/ml-studio/*" element={<MLStudioPage />} />
+
+      {/* Run Routes */}
+      <Route path="/run" element={<RunPage />} />
+      <Route path="/run/*" element={<RunPage />} />
 
       {/* Design System Routes (New Layout) */}
       <Route path="/design" element={<DesignSystemLayout />}>
