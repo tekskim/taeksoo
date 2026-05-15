@@ -2629,9 +2629,6 @@ export function DesktopPage() {
         </>
       )}
 
-      {/* Desktop Snackbar */}
-      <SnackbarContainer position="top-right" scope="global" className="!top-[60px]" />
-
       {/* App Windows */}
       <AnimatePresence>
         {!isSimulationMode &&
@@ -2664,6 +2661,9 @@ export function DesktopPage() {
             );
           })}
       </AnimatePresence>
+
+      {/* Desktop Snackbar — above app windows (z-[5000]) */}
+      <SnackbarContainer position="top-right" scope="global" className="!top-[60px] !z-[5000]" />
 
       {/* Main Page Navigation Button - Bottom Left */}
     </div>

@@ -53,6 +53,8 @@ export interface SnackbarData {
   onClick?: () => void;
   /** Called when snackbar is dismissed */
   onDismiss?: () => void;
+  /** @internal Set by store to trigger animated dismiss on FIFO overflow */
+  _dismissing?: boolean;
 }
 
 export interface SnackbarProps {
@@ -177,11 +179,21 @@ export function Snackbar({ snackbar, onDismiss, className = '' }: SnackbarProps)
     }
   }, []);
 
+  const dismissingRef = useRef(false);
+
   const handleDismiss = useCallback(() => {
+    if (dismissingRef.current) return;
+    dismissingRef.current = true;
     setIsExiting(true);
     onDismissCallbackRef.current?.();
     setTimeout(collapseAndRemove, 300);
   }, [collapseAndRemove]);
+
+  useEffect(() => {
+    if (snackbar._dismissing) {
+      handleDismiss();
+    }
+  }, [snackbar._dismissing, handleDismiss]);
 
   useEffect(() => {
     if (duration > 0 && !isDetailExpanded) {
@@ -376,7 +388,10 @@ export function SnackbarContainer({
 }: SnackbarContainerProps) {
   const { snackbars, dismiss } = useSnackbarStore();
 
-  const autoSnackbars = snackbars.filter((s) => !s.persistent).slice(0, maxAuto);
+  const allAuto = snackbars.filter((s) => !s.persistent);
+  const dismissingAuto = allAuto.filter((s) => s._dismissing);
+  const activeAuto = allAuto.filter((s) => !s._dismissing).slice(0, maxAuto);
+  const autoSnackbars = [...dismissingAuto, ...activeAuto];
   const persistentSnackbars = snackbars.filter((s) => s.persistent).slice(0, maxPersistent);
   const visibleSnackbars = [...persistentSnackbars, ...autoSnackbars];
 
@@ -431,7 +446,7 @@ const DISMISS_STAGGER = 400;
 
 function addSnackbar(snackbar: SnackbarData) {
   if (!snackbar.persistent) {
-    const existingAutoCount = snackbarStore.filter((s) => !s.persistent).length;
+    const existingAutoCount = snackbarStore.filter((s) => !s.persistent && !s._dismissing).length;
     const baseDuration = snackbar.duration ?? 3000;
     snackbar = { ...snackbar, duration: baseDuration + existingAutoCount * DISMISS_STAGGER };
   }
@@ -439,11 +454,13 @@ function addSnackbar(snackbar: SnackbarData) {
   snackbarStore = [...snackbarStore, snackbar];
 
   if (!snackbar.persistent) {
-    const autoSnackbars = snackbarStore.filter((s) => !s.persistent);
-    if (autoSnackbars.length > MAX_AUTO) {
-      const removeCount = autoSnackbars.length - MAX_AUTO;
-      const idsToRemove = new Set(autoSnackbars.slice(0, removeCount).map((s) => s.id));
-      snackbarStore = snackbarStore.filter((s) => !idsToRemove.has(s.id));
+    const activeAuto = snackbarStore.filter((s) => !s.persistent && !s._dismissing);
+    if (activeAuto.length > MAX_AUTO) {
+      const dismissCount = activeAuto.length - MAX_AUTO;
+      const idsToDismiss = new Set(activeAuto.slice(0, dismissCount).map((s) => s.id));
+      snackbarStore = snackbarStore.map((s) =>
+        idsToDismiss.has(s.id) ? { ...s, _dismissing: true } : s
+      );
     }
   }
 
