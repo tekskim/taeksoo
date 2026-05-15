@@ -1110,9 +1110,9 @@ html.theme-transition *::after {
   /* ========================================
      Desktop Shell Tokens (Light)
      ======================================== */
-  --desktop-bg: #eff1f3;
-  --desktop-wallpaper-opacity: 0.6;
-  --desktop-wallpaper-filter: invert(1) brightness(1.1);
+  --desktop-bg: #f1f3f5;
+  --desktop-wallpaper-opacity: 0.59;
+  --desktop-wallpaper-filter: invert(1) brightness(1.1) contrast(1.04);
   --desktop-text: #1e293b;
   --desktop-text-muted: rgba(30, 41, 59, 0.6);
   --desktop-glass-bg: rgba(255, 255, 255, 0.7);

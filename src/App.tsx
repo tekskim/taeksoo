@@ -5,7 +5,7 @@ import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
 import { ProjectProvider } from '@/contexts/ProjectContext';
-import { ToastProvider, ToastContainer } from '@/design-system';
+import { ToastProvider, SnackbarProvider } from '@/design-system';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Entry Page
@@ -1383,8 +1383,9 @@ function App() {
         <ProjectProvider>
           <SidebarProvider>
             <ToastProvider>
-              <AppWithTabs />
-              <ToastContainer position="bottom-right" />
+              <SnackbarProvider>
+                <AppWithTabs />
+              </SnackbarProvider>
             </ToastProvider>
           </SidebarProvider>
         </ProjectProvider>

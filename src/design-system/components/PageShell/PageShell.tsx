@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { ToastContainer } from '../Toast';
 
 /* ----------------------------------------
    PageShell Types
@@ -78,6 +79,8 @@ export function PageShell({
             {children}
           </div>
         </OverlayScrollbarsComponent>
+        {/* Toast */}
+        <ToastContainer position="bottom-right" scope="app" />
       </main>
 
       {/* Bottom Panel */}

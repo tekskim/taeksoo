@@ -28,6 +28,7 @@ import {
   Tab,
   Select,
   WindowControl,
+  SnackbarContainer,
 } from '@/design-system';
 import AppIconCompute from '@/assets/appIcon/compute.png';
 import AppIconIAM from '@/assets/appIcon/iam.png';
@@ -1863,7 +1864,7 @@ function GlobalNotificationCard({
         <div className="flex gap-2 items-start w-[256px]">
           <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
           <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
-            <div className="text-body-md text-[var(--color-text-default)]">
+            <div className="text-label-md text-[var(--color-text-default)]">
               {notification.statusIcon
                 ? (() => {
                     const msg = notification.message;
@@ -1893,7 +1894,7 @@ function GlobalNotificationCard({
             </div>
 
             {notification.project && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 {notification.project}
               </span>
             )}
@@ -1942,7 +1943,7 @@ function GlobalNotificationCard({
           </div>
         </div>
         <div className="flex flex-col items-end justify-end self-stretch shrink-0">
-          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {notification.time}
           </span>
         </div>
@@ -2261,6 +2262,124 @@ export function DesktopPage() {
       appIcon: AppIconStorage,
       isRead: false,
     },
+    {
+      id: '6',
+      message: 'Deployment "frontend-app" scaled to 5 replicas.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '08:12',
+      project: 'proj-1',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+    },
+    {
+      id: '7',
+      message: 'Security group "sg-prod" rule updated.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '07:58',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '8',
+      message: 'Node "worker-03" became NotReady.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '07:45',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'NODE_NOT_READY', message: 'Kubelet stopped posting node status.' },
+    },
+    {
+      id: '9',
+      message: 'Image "ubuntu-22.04" upload completed.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '07:30',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '10',
+      message: 'User "john.doe" password expired.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '07:15',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '11',
+      message: 'Bucket "logs-2026" created successfully.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '06:50',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '12',
+      message: 'Service "redis-cluster" endpoint changed.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '06:30',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+    },
+    {
+      id: '13',
+      message: 'Floating IP "203.0.113.5" associated to "web-01".',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '06:10',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '14',
+      message: 'Volume "db-storage" resize completed.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '05:45',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '15',
+      message: 'Role "cluster-admin" permissions modified.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: 'Yesterday',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
   ]);
   const [gnpActiveTab, setGnpActiveTab] = useState('all');
   const [gnpActiveApp, setGnpActiveApp] = useState('all');
@@ -2441,8 +2560,11 @@ export function DesktopPage() {
       {showNotifications && notificationButtonRef.current && (
         <>
           <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
-          <div className="fixed z-[6001] top-[52px] right-0" onClick={(e) => e.stopPropagation()}>
-            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+          <div
+            className="fixed z-[6001] top-[52px] right-0 bottom-0 flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden flex flex-col flex-1">
               <div className="relative pt-3 pb-0">
                 <button
                   type="button"
@@ -2490,8 +2612,7 @@ export function DesktopPage() {
                     scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
                   }}
                   defer={false}
-                  style={{ maxHeight: 420 }}
-                  className="px-3 py-2"
+                  className="px-3 py-2 flex-1"
                 >
                   <div className="flex flex-col gap-2">
                     {gnpFiltered.map((n) => (
@@ -2508,6 +2629,9 @@ export function DesktopPage() {
           </div>
         </>
       )}
+
+      {/* Desktop Snackbar */}
+      <SnackbarContainer position="top-right" scope="global" className="!top-[60px]" />
 
       {/* App Windows */}
       <AnimatePresence>

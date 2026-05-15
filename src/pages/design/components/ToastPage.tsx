@@ -2,7 +2,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { Toast, VStack } from '@/design-system';
+import { Toast, VStack, HStack, Button, useToast } from '@/design-system';
 
 const TOAST_GUIDELINES = `## Overview
 
@@ -53,8 +53,8 @@ Toast는 **Success**와 **Info**의 두 가지 변형만 사용한다.
 
 ### 1) 표시 위치
 
-- Toast는 **사용자의 시야에 들어오되 화면 작업을 방해하지 않는 위치**에 표시되어야 한다.
-- Toast는 **화면 하단 중앙**에 표시된다.
+- Toast는 **개별 앱(PageShell)의 main 영역 우측 하단**에 표시된다. (사이드바 제외)
+- 사용자의 시야에 들어오되 작업을 방해하지 않는 위치이다.
 
 ### 2) 동시 노출 규칙
 
@@ -63,7 +63,7 @@ Toast는 **Success**와 **Info**의 두 가지 변형만 사용한다.
 
 ### 3) 표시 시간
 
-- Toast는 **1초**간 표시된다.
+- Toast는 **2초**간 표시된다.
 - Toast는 자동으로 종료된다.
 
 ### 4) 종료 조건
@@ -72,6 +72,12 @@ Toast는 **Success**와 **Info**의 두 가지 변형만 사용한다.
   - 표시 시간이 만료된 경우
   - 새로운 Toast가 발생한 경우
 - **사용자가 직접 닫는 버튼은 제공하지 않는다.**
+
+### 5) 애니메이션
+
+- **진입**: 우측 밖에서 좌측으로 슬라이드 인 (300ms, ease-out)
+- **퇴장**: 좌측에서 우측 밖으로 슬라이드 아웃 (300ms, ease-out)
+- 페이드 인/아웃이 함께 적용된다.
 
 ---
 
@@ -87,6 +93,43 @@ Toast는 **Success**와 **Info**의 두 가지 변형만 사용한다.
 `;
 
 const NOOP = () => {};
+
+function ToastLiveDemo() {
+  const { success, error, warning, info } = useToast();
+
+  return (
+    <VStack gap={3}>
+      <VStack gap={1}>
+        <span className="text-label-md text-[var(--color-text-default)]">Live demo</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">
+          버튼을 클릭하면 앱 영역 우측 하단에 실제 토스트가 표시된다.
+        </span>
+      </VStack>
+      <HStack gap={2}>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => success('Instance created successfully.')}
+        >
+          Success
+        </Button>
+        <Button variant="danger" size="sm" onClick={() => error('Volume create failed.')}>
+          Error
+        </Button>
+        <Button variant="warning" size="sm" onClick={() => warning('Disk usage exceeded 90%.')}>
+          Warning
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => info('Deployment scaled to 3 replicas.')}
+        >
+          Info
+        </Button>
+      </HStack>
+    </VStack>
+  );
+}
 
 export function ToastPage() {
   return (
@@ -121,6 +164,7 @@ export function ToastPage() {
       }
       examples={
         <VStack gap={8}>
+          <ToastLiveDemo />
           <VStack gap={3}>
             <VStack gap={1}>
               <span className="text-label-md text-[var(--color-text-default)]">Default</span>
