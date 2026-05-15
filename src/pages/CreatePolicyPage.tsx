@@ -714,12 +714,40 @@ function PolicyEditorSection({
     }
   };
 
-  const toggleAllActions = (permissionId: string) => {
+  const toggleAllActions = (permissionId: string, scopedActions?: string[]) => {
     const permission = permissions.find((p) => p.id === permissionId);
     if (!permission) return;
 
-    const newValue = !permission.allActions;
     const appActions = getActionsForApp(permission.application);
+
+    if (scopedActions) {
+      const allCurrentlySelected = scopedActions.every((a) => permission.detailedActions[a]);
+      const newValue = !allCurrentlySelected;
+
+      const newDetailedActions = { ...permission.detailedActions };
+      scopedActions.forEach((action) => {
+        newDetailedActions[action] = newValue;
+      });
+
+      const newActions = { ...permission.actions };
+      (Object.keys(appActions) as ActionCategory[]).forEach((cat) => {
+        newActions[cat] = (appActions[cat] || []).every((a) => newDetailedActions[a]);
+      });
+      const allSelected = Object.values(newActions).every((v) => v);
+
+      updatePermission(permissionId, {
+        allActions: allSelected,
+        detailedActions: newDetailedActions,
+        actions: newActions,
+      });
+
+      if (actionErrors[permissionId] && Object.values(newDetailedActions).some((v) => v)) {
+        setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+      }
+      return;
+    }
+
+    const newValue = !permission.allActions;
     const newDetailedActions: Record<string, boolean> = {};
     Object.values(appActions)
       .flat()
@@ -774,21 +802,27 @@ function PolicyEditorSection({
     }
   };
 
-  const toggleCategoryActions = (permissionId: string, category: ActionCategory) => {
+  const toggleCategoryActions = (
+    permissionId: string,
+    category: ActionCategory,
+    scopedActions?: string[]
+  ) => {
     const permission = permissions.find((p) => p.id === permissionId);
     if (!permission) return;
 
     const appActions = getActionsForApp(permission.application);
-    const categoryActions = appActions[category] || [];
-    const allCurrentlySelected = categoryActions.every((a) => permission.detailedActions[a]);
+    const targetActions = scopedActions ?? appActions[category] ?? [];
+    const allCurrentlySelected = targetActions.every((a) => permission.detailedActions[a]);
     const newValue = !allCurrentlySelected;
 
     const newDetailedActions = { ...permission.detailedActions };
-    categoryActions.forEach((action) => {
+    targetActions.forEach((action) => {
       newDetailedActions[action] = newValue;
     });
 
-    const newActions = { ...permission.actions, [category]: newValue };
+    const categoryActions = appActions[category] || [];
+    const fullCategorySelected = categoryActions.every((a) => newDetailedActions[a]);
+    const newActions = { ...permission.actions, [category]: fullCategorySelected };
     const allSelected = Object.values(newActions).every((v) => v);
 
     updatePermission(permissionId, {
@@ -941,6 +975,17 @@ function PolicyEditorSection({
                         (() => {
                           const appActions = getActionsForApp(permission.application);
                           const permSearchQuery = searchQueries[permission.id] ?? '';
+                          const allVisibleActions = permSearchQuery
+                            ? Object.values(appActions)
+                                .flat()
+                                .filter((a) =>
+                                  a.toLowerCase().includes(permSearchQuery.toLowerCase())
+                                )
+                            : null;
+                          const allVisibleSelected = allVisibleActions
+                            ? allVisibleActions.length > 0 &&
+                              allVisibleActions.every((a) => permission.detailedActions[a])
+                            : permission.allActions;
                           return (
                             <VStack gap={3}>
                               <div className="flex items-center gap-2">
@@ -962,8 +1007,13 @@ function PolicyEditorSection({
                                 <div className="h-4 w-px bg-[var(--color-border-default)]" />
                                 <label className="flex items-center gap-1.5 cursor-pointer">
                                   <Checkbox
-                                    checked={permission.allActions}
-                                    onChange={() => toggleAllActions(permission.id)}
+                                    checked={allVisibleSelected}
+                                    onChange={() =>
+                                      toggleAllActions(
+                                        permission.id,
+                                        allVisibleActions ?? undefined
+                                      )
+                                    }
                                   />
                                   <span className="text-body-md text-[var(--color-text-default)]">
                                     All actions
@@ -990,12 +1040,12 @@ function PolicyEditorSection({
                                       : categoryActions;
                                     if (permSearchQuery && filteredActions.length === 0)
                                       return null;
-                                    const selectedCount = categoryActions.filter(
+                                    const selectedCount = filteredActions.filter(
                                       (a) => permission.detailedActions[a]
                                     ).length;
-                                    const allCategorySelected = categoryActions.every(
-                                      (a) => permission.detailedActions[a]
-                                    );
+                                    const allFilteredSelected =
+                                      filteredActions.length > 0 &&
+                                      filteredActions.every((a) => permission.detailedActions[a]);
 
                                     return (
                                       <Disclosure
@@ -1005,14 +1055,18 @@ function PolicyEditorSection({
                                         <Disclosure.Trigger className="text-label-md">
                                           <span className="flex items-center gap-1.5">
                                             <Checkbox
-                                              checked={allCategorySelected}
+                                              checked={allFilteredSelected}
                                               onChange={(e) => {
                                                 e.stopPropagation();
-                                                toggleCategoryActions(permission.id, category);
+                                                toggleCategoryActions(
+                                                  permission.id,
+                                                  category,
+                                                  permSearchQuery ? filteredActions : undefined
+                                                );
                                               }}
                                             />
                                             <span className="text-label-md text-[var(--color-text-default)] capitalize">
-                                              {category} ({selectedCount}/{categoryActions.length})
+                                              {category} ({selectedCount}/{filteredActions.length})
                                             </span>
                                           </span>
                                         </Disclosure.Trigger>
