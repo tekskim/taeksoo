@@ -2379,6 +2379,186 @@ export function DesktopPage() {
       appIcon: AppIconIAM,
       isRead: true,
     },
+    {
+      id: '16',
+      message: 'Network "internal-net" subnet added.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: 'Yesterday',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '17',
+      message: 'Pod "worker-batch-07" OOMKilled.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: 'Yesterday',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 137, message: 'Container exceeded memory limit of 512Mi.' },
+    },
+    {
+      id: '18',
+      message: 'Object "report-2026.pdf" uploaded to bucket "docs".',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: 'Yesterday',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '19',
+      message: 'MFA enabled for user "admin@thaki.io".',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: 'Yesterday',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '20',
+      message: 'Instance "db-primary" migrated to host "hv-12".',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: 'Yesterday',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '21',
+      message: 'CronJob "daily-cleanup" execution failed.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '2 days ago',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'JOB_FAILED', message: 'Deadline exceeded after 3600s.' },
+    },
+    {
+      id: '22',
+      message: 'Snapshot "db-snap-weekly" completed.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '2 days ago',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '23',
+      message: 'Keypair "deploy-key-02" imported.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '2 days ago',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '24',
+      message: 'Ingress "api-gateway" TLS cert renewed.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '2 days ago',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+    },
+    {
+      id: '25',
+      message: 'Policy "password-policy" updated.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '2 days ago',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '26',
+      message: 'Instance "cache-01" shelved offloaded.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '3 days ago',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '27',
+      message: 'StatefulSet "postgres" rollback triggered.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '3 days ago',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'ROLLBACK', message: 'Rollback to revision 4 due to failed health check.' },
+    },
+    {
+      id: '28',
+      message: 'Bucket "archives" lifecycle policy applied.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '3 days ago',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '29',
+      message: 'Service account "ci-deployer" token rotated.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '3 days ago',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '30',
+      message: 'Instance "ml-worker-gpu" resize completed.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '3 days ago',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
   ]);
   const [gnpActiveTab, setGnpActiveTab] = useState('all');
   const [gnpActiveApp, setGnpActiveApp] = useState('all');

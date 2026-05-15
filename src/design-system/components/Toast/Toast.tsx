@@ -268,7 +268,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
           )}
 
           {/* Message */}
-          <p className="text-body-md text-[var(--color-text-muted)]">{toast.message}</p>
+          <p className="text-label-md text-[var(--color-text-default)]">{toast.message}</p>
 
           {/* Project Badge */}
           {toast.project && (
@@ -494,7 +494,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const toast = useCallback(
     (options: Omit<ToastData, 'id'>) => {
       const id = generateId();
-      addToast({ ...options, id, timestamp: options.timestamp ?? new Date() });
+      addToast({ ...options, id });
       return id;
     },
     [generateId]

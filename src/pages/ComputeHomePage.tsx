@@ -15,6 +15,7 @@ import {
   type TableColumn,
 } from '@/design-system';
 import { IconBread, IconMessage } from '@tabler/icons-react';
+import AppIconCompute from '@/assets/appIcon/compute.png';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -359,6 +360,7 @@ export function ComputeHomePage() {
                 onClick={() =>
                   snackbar.success('Volume "backup-01" snapshot successfully created', {
                     partition: 'proj-1',
+                    appIcon: AppIconCompute,
                   })
                 }
               />
