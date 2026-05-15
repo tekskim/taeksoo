@@ -12,7 +12,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { EntryPage } from '@/pages/EntryPage';
 
 // Pages - Settings
-import { SettingsPageWrapper } from '@/pages/SettingsPageWrapper';
+
 import SettingsGeneralPage from '@/pages/SettingsGeneralPage';
 import SettingsAccountPage from '@/pages/SettingsAccountPage';
 import SettingsNotificationsPage from '@/pages/SettingsNotificationsPage';
@@ -548,7 +548,7 @@ function AppRoutes() {
       <Route path="/" element={<EntryPage />} />
 
       {/* Settings & Mail Template Routes */}
-      <Route path="/settings" element={<SettingsPageWrapper />} />
+      <Route path="/settings" element={<Navigate to="/settings/general" replace />} />
       <Route path="/settings/general" element={<SettingsGeneralPage />} />
       <Route path="/settings/account" element={<SettingsAccountPage />} />
       <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />

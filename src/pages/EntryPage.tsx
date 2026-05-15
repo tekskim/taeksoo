@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
+import { ThakiLogoAnimated } from '@/components/ThakiLogoAnimated';
 import { IconMoon, IconSun } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
@@ -102,11 +101,7 @@ export function EntryPage() {
       <header className="w-full bg-[var(--color-surface-default)]">
         <div className="w-full px-10 h-[60px] flex items-center justify-between relative">
           <div className="flex items-center">
-            <img
-              src={isDark ? ThakiLogoDark : ThakiLogoLight}
-              alt="THAKI Cloud"
-              className="h-[18px]"
-            />
+            <ThakiLogoAnimated isDark={isDark} className="h-[18px]" />
           </div>
 
           <nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 text-body-md text-[var(--color-text-muted)]">
