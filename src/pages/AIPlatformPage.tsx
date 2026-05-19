@@ -610,12 +610,15 @@ const DASHBOARD_PROJECT = {
 type GaugeTone = 'success' | 'warning' | 'danger';
 
 function GaugeBadge({ pct, tone }: { pct: number; tone: GaugeTone }) {
-  const color = tone === 'success' ? '#22C55E' : tone === 'warning' ? '#F97316' : '#EF4444';
-  const bg = tone === 'success' ? '#DCFCE7' : tone === 'warning' ? '#FFEDD5' : '#FEE2E2';
+  const toneClass =
+    tone === 'success'
+      ? 'bg-[var(--color-state-success-bg)] text-[var(--color-state-success)]'
+      : tone === 'warning'
+        ? 'bg-[var(--color-state-warning-bg)] text-[var(--color-state-warning)]'
+        : 'bg-[var(--color-state-danger-bg)] text-[var(--color-state-danger)]';
   return (
     <span
-      className="inline-flex items-center rounded-[var(--radius-md)] px-1.5 py-0.5 text-body-sm font-medium"
-      style={{ backgroundColor: bg, color }}
+      className={`inline-flex items-center rounded-[var(--radius-md)] px-1.5 py-0.5 text-body-sm font-medium ${toneClass}`}
     >
       {pct}%
     </span>
@@ -647,7 +650,10 @@ function ResourceGaugeRow({
         </div>
       </div>
       <div className="h-1 w-full overflow-hidden rounded-[2px] bg-[var(--color-border-subtle)]">
-        <div className="h-full rounded-[100px] bg-[#475569]" style={{ width: `${pct}%` }} />
+        <div
+          className="h-full rounded-[100px] bg-[var(--color-text-muted)]"
+          style={{ width: `${pct}%` }}
+        />
       </div>
     </div>
   );
@@ -672,7 +678,7 @@ function DashboardServiceTile({
       className={`block rounded-[8px] px-4 py-3 transition-colors ${
         active
           ? 'border-2 border-[var(--color-action-primary)] bg-[var(--color-surface-muted)]'
-          : 'border-2 border-transparent bg-[#f9fafb] hover:border-[var(--color-action-primary)] hover:bg-[var(--color-surface-muted)]'
+          : 'border-2 border-transparent bg-[var(--color-surface-subtle)] hover:border-[var(--color-action-primary)] hover:bg-[var(--color-surface-muted)]'
       }`}
     >
       <div className="flex min-w-0 items-center gap-1">
@@ -720,13 +726,13 @@ function ExecutionStatusCard({
         tooltip: {
           show: true,
           trigger: 'item' as const,
-          backgroundColor: '#ffffff',
-          borderColor: '#e2e8f0',
+          backgroundColor: 'var(--color-surface-default)',
+          borderColor: 'var(--color-border-default)',
           borderWidth: 1,
           borderRadius: 6,
           padding: [8, 12],
           textStyle: {
-            color: '#1e293b',
+            color: 'var(--color-text-default)',
             fontSize: 11,
             fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
           },
@@ -767,7 +773,7 @@ function ExecutionStatusCard({
     : null;
 
   return (
-    <div className="flex-1 rounded-[8px] bg-[#f9fafb] p-4">
+    <div className="flex-1 rounded-[8px] bg-[var(--color-surface-subtle)] p-4">
       <span className="text-label-sm font-medium text-[var(--color-text-default)]">{title}</span>
       <div className="mt-1 flex items-center justify-between h-[80px]">
         <div className="flex flex-col gap-2">
@@ -835,7 +841,7 @@ function DashboardContent() {
       {/* Top row: 3 cards */}
       <div className="grid grid-cols-3 gap-6">
         {/* PROJECT INFO */}
-        <div className="flex min-w-0 flex-col justify-between rounded-[16px] border border-[var(--color-border-default)] bg-[#f9fafb] p-[25px]">
+        <div className="flex min-w-0 flex-col justify-between rounded-[16px] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-[25px]">
           <div className="flex flex-col gap-4">
             <p className="text-label-md font-medium text-[var(--color-text-muted)]">PROJECT INFO</p>
             <p className="text-heading-h2 text-[var(--color-text-default)]">
