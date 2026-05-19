@@ -143,6 +143,12 @@ function playAlarmPulse(ctx: AudioContext) {
 
 function playSirenUrgentSquare(ctx: AudioContext) {
   const t = ctx.currentTime;
+  const cycles = 5;
+  const cycleDur = 0.44;
+  const totalSweep = cycles * cycleDur;
+  const fadeOut = 0.15;
+  const totalDur = totalSweep + fadeOut;
+
   const master = ctx.createGain();
   master.gain.value = 0.25;
   master.connect(ctx.destination);
@@ -150,17 +156,17 @@ function playSirenUrgentSquare(ctx: AudioContext) {
   const g = ctx.createGain();
   g.gain.setValueAtTime(0, t);
   g.gain.linearRampToValueAtTime(0.7, t + 0.05);
-  g.gain.setValueAtTime(0.7, t + 2.2);
-  g.gain.linearRampToValueAtTime(0, t + 2.5);
+  g.gain.setValueAtTime(0.7, t + totalSweep);
+  g.gain.exponentialRampToValueAtTime(0.001, t + totalDur);
   g.connect(master);
 
   const osc = ctx.createOscillator();
   osc.type = 'square';
   osc.frequency.setValueAtTime(450, t);
-  for (let i = 0; i < 5; i++) {
-    const base = t + i * 0.44;
-    osc.frequency.linearRampToValueAtTime(900, base + 0.22);
-    osc.frequency.linearRampToValueAtTime(450, base + 0.44);
+  for (let i = 0; i < cycles; i++) {
+    const base = t + i * cycleDur;
+    osc.frequency.linearRampToValueAtTime(900, base + cycleDur * 0.5);
+    osc.frequency.linearRampToValueAtTime(450, base + cycleDur);
   }
 
   const lpf = ctx.createBiquadFilter();
@@ -170,7 +176,7 @@ function playSirenUrgentSquare(ctx: AudioContext) {
   osc.connect(lpf);
   lpf.connect(g);
   osc.start(t);
-  osc.stop(t + 2.5);
+  osc.stop(t + totalDur);
 }
 
 /* ------------------------------------------------------------------ */
