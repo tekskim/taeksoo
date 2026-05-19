@@ -486,6 +486,7 @@ import { TopologyPopoversPage } from '@/pages/TopologyPopoversPage';
 import { CreatePagesDirectoryPage } from '@/pages/CreatePagesDirectoryPage';
 import { DetailPagesDirectoryPage } from '@/pages/DetailPagesDirectoryPage';
 import { FormPatternsPage } from '@/pages/FormPatternsPage';
+import { NotificationSoundDraftsPage } from '@/pages/lab/NotificationSoundDraftsPage';
 import { SystemErrorPagesPage } from '@/pages/SystemErrorPagesPage';
 
 // Pages - Figma Capture
@@ -1343,6 +1344,7 @@ function AppRoutes() {
         <Route path="create-pages" element={<CreatePagesDirectoryPage />} />
         <Route path="create-pages-2" element={<DetailPagesDirectoryPage />} />
         <Route path="form-patterns" element={<FormPatternsPage />} />
+        <Route path="notification-sounds" element={<NotificationSoundDraftsPage />} />
       </Route>
       <Route path="/lab/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
 
