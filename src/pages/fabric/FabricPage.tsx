@@ -22,15 +22,15 @@ import {
   IconList,
   IconStack2,
   IconChartBar,
-  IconCalendarEvent,
+  IconCalendarTime,
   IconBell,
-  IconClipboardList,
-  IconFileText,
-  IconServer,
-  IconTrendingUp,
-  IconNetwork,
+  IconListSearch,
+  IconFileDescription,
+  IconServer2,
+  IconChartLine,
+  IconTopologyStar3,
   IconSettings,
-  IconPackage,
+  IconGitBranch,
   IconFolder,
   IconHammer,
 } from '@tabler/icons-react';
@@ -81,7 +81,7 @@ function FabricSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }
               active={isActive('/fabric/kueue-analytics')}
             />
             <MenuItem
-              icon={<IconCalendarEvent size={16} stroke={1.5} />}
+              icon={<IconCalendarTime size={16} stroke={1.5} />}
               label="Kueue Scheduler"
               href="/fabric/kueue-scheduler"
               active={isActive('/fabric/kueue-scheduler')}
@@ -93,13 +93,13 @@ function FabricSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }
               active={isActive('/fabric/kueue-alert')}
             />
             <MenuItem
-              icon={<IconClipboardList size={16} stroke={1.5} />}
+              icon={<IconListSearch size={16} stroke={1.5} />}
               label="Resource Inventory"
               href="/fabric/resource-inventory"
               active={isActive('/fabric/resource-inventory')}
             />
             <MenuItem
-              icon={<IconFileText size={16} stroke={1.5} />}
+              icon={<IconFileDescription size={16} stroke={1.5} />}
               label="Audit Log"
               href="/fabric/audit-log"
               active={isActive('/fabric/audit-log')}
@@ -108,13 +108,13 @@ function FabricSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }
 
           <MenuSection title="Monitoring" defaultOpen={true}>
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
+              icon={<IconServer2 size={16} stroke={1.5} />}
               label="Nodes"
               href="/fabric/nodes"
               active={isActive('/fabric/nodes')}
             />
             <MenuItem
-              icon={<IconTrendingUp size={16} stroke={1.5} />}
+              icon={<IconChartLine size={16} stroke={1.5} />}
               label="Usage Trend"
               href="/fabric/usage-trend"
               active={isActive('/fabric/usage-trend')}
@@ -123,7 +123,7 @@ function FabricSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }
 
           <MenuSection title="Cluster Managements" defaultOpen={true}>
             <MenuItem
-              icon={<IconNetwork size={16} stroke={1.5} />}
+              icon={<IconTopologyStar3 size={16} stroke={1.5} />}
               label="Connected Clusters"
               href="/fabric/connected-clusters"
               active={isActive('/fabric/connected-clusters')}
@@ -141,7 +141,7 @@ function FabricSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }
 
           <MenuSection title="Admin Managements" defaultOpen={true}>
             <MenuItem
-              icon={<IconPackage size={16} stroke={1.5} />}
+              icon={<IconGitBranch size={16} stroke={1.5} />}
               label="Dependencies"
               href="/fabric/dependencies"
               active={isActive('/fabric/dependencies')}
