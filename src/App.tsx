@@ -5,14 +5,14 @@ import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
 import { ProjectProvider } from '@/contexts/ProjectContext';
-import { ToastProvider, ToastContainer } from '@/design-system';
+import { ToastProvider, SnackbarProvider } from '@/design-system';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Entry Page
 import { EntryPage } from '@/pages/EntryPage';
 
 // Pages - Settings
-import { SettingsPageWrapper } from '@/pages/SettingsPageWrapper';
+
 import SettingsGeneralPage from '@/pages/SettingsGeneralPage';
 import SettingsAccountPage from '@/pages/SettingsAccountPage';
 import SettingsNotificationsPage from '@/pages/SettingsNotificationsPage';
@@ -152,7 +152,6 @@ import ComputeAdminPoolDetailPage from '@/pages/ComputeAdminPoolDetailPage';
 import ComputeAdminL7PolicyDetailPage from '@/pages/ComputeAdminL7PolicyDetailPage';
 import { ComputeAdminCertificatesPage } from '@/pages/ComputeAdminCertificatesPage';
 import ComputeAdminCertificateDetailPage from '@/pages/ComputeAdminCertificateDetailPage';
-import ComputeAdminFirewallsPage from '@/pages/ComputeAdminFirewallsPage';
 import ComputeAdminFirewallDetailPage from '@/pages/ComputeAdminFirewallDetailPage';
 import ComputeAdminFirewallPolicyDetailPage from '@/pages/ComputeAdminFirewallPolicyDetailPage';
 import ComputeAdminFirewallRuleDetailPage from '@/pages/ComputeAdminFirewallRuleDetailPage';
@@ -311,6 +310,14 @@ import CatalogInstallPage from '@/pages/CatalogInstallPage';
 import InstalledAppEditPage from '@/pages/InstalledAppEditPage';
 import InstalledOperatorsPage from '@/pages/InstalledOperatorsPage';
 import InstalledOperatorDetailPage from '@/pages/InstalledOperatorDetailPage';
+
+// Pages - Security
+import { FirewallsPage as SecurityFirewallsPage } from '@/pages/security/FirewallsPage';
+import { SecurityGroupsPage as SecuritySecurityGroupsPage } from '@/pages/security/SecurityGroupsPage';
+import { NetworkPoliciesPage as SecurityNetworkPoliciesPage } from '@/pages/security/NetworkPoliciesPage';
+import { SecurityCreateNetworkPolicyPage } from '@/pages/security/CreateNetworkPolicyPage';
+import { SecurityCreateNetworkPolicyYamlPage } from '@/pages/security/CreateNetworkPolicyYamlPage';
+import { SecurityGroupDetailPage as SecuritySecurityGroupDetailPage } from '@/pages/security/SecurityGroupDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -479,6 +486,7 @@ import { TopologyPopoversPage } from '@/pages/TopologyPopoversPage';
 import { CreatePagesDirectoryPage } from '@/pages/CreatePagesDirectoryPage';
 import { DetailPagesDirectoryPage } from '@/pages/DetailPagesDirectoryPage';
 import { FormPatternsPage } from '@/pages/FormPatternsPage';
+import { NotificationSoundDraftsPage } from '@/pages/lab/NotificationSoundDraftsPage';
 import { SystemErrorPagesPage } from '@/pages/SystemErrorPagesPage';
 
 // Pages - Figma Capture
@@ -541,7 +549,7 @@ function AppRoutes() {
       <Route path="/" element={<EntryPage />} />
 
       {/* Settings & Mail Template Routes */}
-      <Route path="/settings" element={<SettingsPageWrapper />} />
+      <Route path="/settings" element={<Navigate to="/settings/general" replace />} />
       <Route path="/settings/general" element={<SettingsGeneralPage />} />
       <Route path="/settings/account" element={<SettingsAccountPage />} />
       <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
@@ -751,24 +759,6 @@ function AppRoutes() {
       <Route
         path="/compute-admin/certificates/:id"
         element={<ComputeAdminCertificateDetailPage />}
-      />
-      <Route path="/compute-admin/firewall" element={<ComputeAdminFirewallsPage />} />
-      <Route path="/compute-admin/firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
-      <Route
-        path="/compute-admin/firewall-policies/:id"
-        element={<ComputeAdminFirewallPolicyDetailPage />}
-      />
-      <Route
-        path="/compute-admin/firewall-rules/:id"
-        element={<ComputeAdminFirewallRuleDetailPage />}
-      />
-      <Route
-        path="/compute-admin/firewall/create-rule"
-        element={<ComputeAdminCreateFirewallRulePage />}
-      />
-      <Route
-        path="/compute-admin/firewall/create-rule-v2"
-        element={<ComputeAdminCreateFirewallRulePage />}
       />
       <Route path="/compute-admin/tenants" element={<ComputeAdminTenantsPage />} />
       <Route path="/compute-admin/tenants/:id" element={<ComputeAdminTenantDetailPage />} />
@@ -1068,6 +1058,35 @@ function AppRoutes() {
       <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
       <Route path="/container/*" element={<NotFoundPage />} />
 
+      {/* Security Routes */}
+      <Route path="/security" element={<SecurityFirewallsPage />} />
+      <Route path="/security/firewalls" element={<SecurityFirewallsPage />} />
+      <Route path="/security/firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
+      <Route
+        path="/security/firewall-policies/:id"
+        element={<ComputeAdminFirewallPolicyDetailPage />}
+      />
+      <Route path="/security/firewall-rules/:id" element={<ComputeAdminFirewallRuleDetailPage />} />
+      <Route
+        path="/security/firewalls/create-rule"
+        element={<ComputeAdminCreateFirewallRulePage />}
+      />
+      <Route
+        path="/security/firewalls/create-rule-v2"
+        element={<ComputeAdminCreateFirewallRulePage />}
+      />
+      <Route path="/security/security-groups" element={<SecuritySecurityGroupsPage />} />
+      <Route path="/security/security-groups/:id" element={<SecuritySecurityGroupDetailPage />} />
+      <Route path="/security/network-policies" element={<SecurityNetworkPoliciesPage />} />
+      <Route
+        path="/security/network-policies/create"
+        element={<SecurityCreateNetworkPolicyPage />}
+      />
+      <Route
+        path="/security/network-policies/create-yaml"
+        element={<SecurityCreateNetworkPolicyYamlPage />}
+      />
+
       {/* IAM Routes */}
       <Route path="/iam" element={<IAMHomePage />} />
       <Route path="/iam/users" element={<IAMUsersPage />} />
@@ -1325,6 +1344,7 @@ function AppRoutes() {
         <Route path="create-pages" element={<CreatePagesDirectoryPage />} />
         <Route path="create-pages-2" element={<DetailPagesDirectoryPage />} />
         <Route path="form-patterns" element={<FormPatternsPage />} />
+        <Route path="notification-sounds" element={<NotificationSoundDraftsPage />} />
       </Route>
       <Route path="/lab/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
 
@@ -1365,8 +1385,9 @@ function App() {
         <ProjectProvider>
           <SidebarProvider>
             <ToastProvider>
-              <AppWithTabs />
-              <ToastContainer position="bottom-right" />
+              <SnackbarProvider>
+                <AppWithTabs />
+              </SnackbarProvider>
             </ToastProvider>
           </SidebarProvider>
         </ProjectProvider>

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -10,13 +10,19 @@ import {
   TabList,
   Tab,
   TabPanel,
+  Table,
+  SearchInput,
+  Pagination,
   DetailHeader,
   SectionCard,
   PageShell,
+  type TableColumn,
 } from '@/design-system';
-import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
+import { SecuritySidebar } from '@/components/SecuritySidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash } from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconDownload } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -98,6 +104,24 @@ const mockRulesMap: Record<string, FirewallRuleDetail> = {
   },
 };
 
+interface Policy {
+  id: string;
+  name: string;
+  tenant: string;
+  tenantId: string;
+  shared: boolean;
+  audited: boolean;
+}
+
+const mockPolicies: Policy[] = Array.from({ length: 115 }, (_, i) => ({
+  id: `policy-${String(i + 1).padStart(3, '0')}`,
+  name: 'policy',
+  tenant: 'tenant',
+  tenantId: `tenant-${String((i % 3) + 1).padStart(3, '0')}`,
+  shared: i % 3 === 0,
+  audited: i % 2 === 0,
+}));
+
 const defaultRuleDetail: FirewallRuleDetail = {
   id: 'unknown',
   name: 'Unknown Rule',
@@ -123,11 +147,16 @@ const defaultRuleDetail: FirewallRuleDetail = {
 export default function ComputeAdminFirewallRuleDetailPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  // Policies state
+  const [policySearchTerm, setPolicySearchTerm] = useState('');
+  const [policyCurrentPage, setPolicyCurrentPage] = useState(1);
+  const policiesPerPage = 10;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -150,14 +179,83 @@ export default function ComputeAdminFirewallRuleDetailPage() {
     closable: tab.closable,
   }));
 
+  // Filtered policies
+  const filteredPolicies = useMemo(() => {
+    if (!policySearchTerm) return mockPolicies;
+    const query = policySearchTerm.toLowerCase();
+    return mockPolicies.filter(
+      (p) =>
+        p.name.toLowerCase().includes(query) ||
+        p.id.toLowerCase().includes(query) ||
+        p.tenant.toLowerCase().includes(query)
+    );
+  }, [policySearchTerm]);
+
+  const totalPolicyPages = Math.ceil(filteredPolicies.length / policiesPerPage);
+  const paginatedPolicies = useMemo(() => {
+    const start = (policyCurrentPage - 1) * policiesPerPage;
+    return filteredPolicies.slice(start, start + policiesPerPage);
+  }, [filteredPolicies, policyCurrentPage]);
+
+  // Policy columns
+  const policyColumns: TableColumn<Policy>[] = [
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <Link
+            to={`/security/firewall-policies/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <span className="text-[var(--color-text-default)]">{row.tenant}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'shared',
+      label: 'Shared',
+      flex: 1,
+      render: (_, row) => (row.shared ? 'Yes' : 'No'),
+    },
+    {
+      key: 'audited',
+      label: 'Audited',
+      flex: 1,
+      render: (_, row) => (row.audited ? 'Yes' : 'No'),
+    },
+  ];
+
   return (
     <PageShell
-      sidebar={
-        <ComputeAdminSidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen((prev) => !prev)}
-        />
-      }
+      sidebar={<SecuritySidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -174,24 +272,26 @@ export default function ComputeAdminFirewallRuleDetailPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[{ label: 'NACL', href: '/compute-admin/firewall' }, { label: rule.name }]}
+              items={[{ label: 'Firewalls', href: '/security/firewalls' }, { label: rule.name }]}
             />
           }
         />
       }
-      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{rule.name}</DetailHeader.Title>
           <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>
@@ -209,12 +309,12 @@ export default function ComputeAdminFirewallRuleDetailPage() {
           <Tabs value={activeTab} onChange={setActiveTab}>
             <TabList>
               <Tab value="details">Details</Tab>
+              <Tab value="policies">Policies</Tab>
             </TabList>
 
             {/* Details Tab */}
             <TabPanel value="details" className="pt-6">
               <VStack gap={6}>
-                {/* Basic Information */}
                 <SectionCard>
                   <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
@@ -233,28 +333,40 @@ export default function ComputeAdminFirewallRuleDetailPage() {
                     <SectionCard.DataRow label="Shared" value={rule.shared ? 'Yes' : 'No'} />
                   </SectionCard.Content>
                 </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                {/* Firewall Policy */}
-                <SectionCard>
-                  <SectionCard.Header title="Firewall policy" />
-                  <SectionCard.Content>
-                    <SectionCard.DataRow
-                      label="Firewall policy"
-                      value={
-                        rule.firewallPolicyId ? (
-                          <Link
-                            to={`/compute-admin/firewall-policies/${rule.firewallPolicyId}`}
-                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
-                          >
-                            {rule.firewallPolicy}
-                          </Link>
-                        ) : (
-                          '-'
-                        )
-                      }
+            {/* Policies Tab */}
+            <TabPanel value="policies" className="pt-6">
+              <VStack gap={3}>
+                <div className="flex items-center gap-1">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={policySearchTerm}
+                      onChange={(e) => {
+                        setPolicySearchTerm(e.target.value);
+                        setPolicyCurrentPage(1);
+                      }}
+                      placeholder="Search policies by attributes"
                     />
-                  </SectionCard.Content>
-                </SectionCard>
+                  </div>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                    aria-label="Download"
+                  >
+                    <IconDownload size={12} stroke={1.5} />
+                  </button>
+                </div>
+
+                <Pagination
+                  currentPage={policyCurrentPage}
+                  totalPages={totalPolicyPages}
+                  onPageChange={setPolicyCurrentPage}
+                  totalItems={filteredPolicies.length}
+                />
+
+                <Table columns={policyColumns} data={paginatedPolicies} rowKey="id" />
               </VStack>
             </TabPanel>
           </Tabs>

@@ -71,7 +71,7 @@ function StaticPanelCard({
           {appIcon && <img src={appIcon} alt="" className="size-5 shrink-0 object-contain" />}
           <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
             <div className="flex flex-col">
-              <span className="text-body-md text-[var(--color-text-default)]">
+              <span className="text-label-md text-[var(--color-text-default)]">
                 {statusIcon
                   ? (() => {
                       const lastSpace = message.lastIndexOf(' ');
@@ -101,7 +101,7 @@ function StaticPanelCard({
             </div>
 
             {partition && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">{partition}</span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">{partition}</span>
             )}
 
             {hasDetail && (
@@ -139,7 +139,7 @@ function StaticPanelCard({
           </div>
         </div>
         <div className="flex flex-col items-end justify-end self-stretch shrink-0">
-          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {time}
           </span>
         </div>
@@ -383,7 +383,7 @@ function GlobalPanelDemo() {
         </Button>
       </div>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+        <div className="w-[346px] h-[600px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden flex flex-col">
           {/* Tabs header */}
           <div className="relative pt-3 pb-0">
             <button
@@ -434,8 +434,7 @@ function GlobalPanelDemo() {
                 scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
               }}
               defer={false}
-              style={{ maxHeight: 420 }}
-              className="px-3 py-2"
+              className="px-3 py-2 flex-1"
             >
               <div className="flex flex-col gap-2">
                 {filteredNotifications.map((n) => (
@@ -488,7 +487,7 @@ function InteractiveNotificationCard({
           <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
           <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
             <div className="flex flex-col">
-              <span className="text-body-md text-[var(--color-text-default)]">
+              <span className="text-label-md text-[var(--color-text-default)]">
                 {notification.statusIcon
                   ? (() => {
                       const msg = notification.message;
@@ -519,7 +518,7 @@ function InteractiveNotificationCard({
             </div>
 
             {notification.partition && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 {notification.partition}
               </span>
             )}
@@ -568,7 +567,7 @@ function InteractiveNotificationCard({
           </div>
         </div>
         <div className="flex flex-col items-end justify-end self-stretch shrink-0">
-          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {notification.time}
           </span>
         </div>
@@ -987,6 +986,27 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 
 - EN (UI): \`No unread notifications.\`
 - KO (참고): 읽지 않은 알림이 없습니다.
+
+---
+
+## Layout
+
+### 높이 정책
+
+- 패널은 부모 컨테이너의 **세로 전체를 채운다** (\`flex-col\` + \`flex-1\`).
+- 스크롤 영역에 \`maxHeight\` 사용 금지 — \`flex-1\`로 남은 공간을 자동으로 채운다.
+- 데스크탑: \`top-[52px] right-0 bottom-0\` 고정 위치, 세로 풀 사이즈.
+- 스크롤: \`OverlayScrollbarsComponent\` 사용 (\`autoHide: 'scroll'\`).
+
+### 타이포그래피
+
+| 요소 | 클래스 | 크기 / 굵기 |
+| --- | --- | --- |
+| 메시지 텍스트 | \`text-label-md\` | 12px / medium (500) |
+| Project / Partition | \`text-body-sm\` | 11px / regular (400) |
+| 시간 | \`text-body-sm\` | 11px / regular (400) |
+| 에러 코드 | \`text-label-md\` | 12px / medium (500) |
+| 에러 상세 메시지 | \`text-body-md\` | 12px / regular (400) |
 
 ---
 

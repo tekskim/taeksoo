@@ -45,16 +45,20 @@ function StaticNotificationCard({
             <div className="flex flex-col">
               {statusInline ? (
                 <div className="flex items-center gap-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">{message}</span>
+                  <span className="text-label-md text-[var(--color-text-default)]">{message}</span>
                   {statusIcon}
                 </div>
               ) : (
                 <>
-                  <span className="text-body-md text-[var(--color-text-default)]">{message}</span>
+                  <span className="text-label-md text-[var(--color-text-default)]">{message}</span>
                   {statusIcon && <div className="flex items-center gap-1">{statusIcon}</div>}
                 </>
               )}
             </div>
+
+            {partition && (
+              <span className="text-body-sm text-[var(--color-text-subtle)]">{partition}</span>
+            )}
 
             {hasDetail && (
               <div className="flex flex-col gap-2 rounded-[var(--radius-sm)]">
@@ -88,14 +92,10 @@ function StaticNotificationCard({
                 )}
               </div>
             )}
-
-            {partition && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">{partition}</span>
-            )}
           </div>
         </div>
         <div className="flex flex-col items-end justify-end self-stretch shrink-0">
-          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {time}
           </span>
         </div>
@@ -316,20 +316,28 @@ Snackbar의 동시 노출 개수는 **알림 유형에 따라 다르게 적용�
 
 | 유형 | 동시 노출 규칙 |
 | --- | --- |
-| Auto-dismiss Snackbar | 1개 |
+| Auto-dismiss Snackbar | 최대 3개 |
 | Persistent Snackbar | 최대 3개 |
 
-- 자동 종료형은 동시에 1개만 표시한다.
+- 자동 종료형은 최대 3개까지 동시에 표시한다.
 - 고정형 Snackbar는 여러 개 표시 가능하다.
-- 최대 개수 초과 시 대기열에 저장한다.
-- Snackbar는 **최신 알림이 위에 표시한다.**
+- 최대 개수 초과 시 **FIFO(First In, First Out)** 방식으로 가장 오래된 스낵바를 자동 제거하고 새 스낵바를 표시한다.
+- Snackbar는 **최신 알림이 아래에 표시한다.**
 
 ### 3) 표시 시간 규칙
 
-- **Auto-dismiss Snackbar(자동 종료형) 스낵바는 메시지 유형에 따라 종료 시간이 달라질 수 있다.**
-  - 노출 시간 범위: 1~3초
+- **Auto-dismiss Snackbar(자동 종료형)의 기본 표시 시간은 3초이다.**
+- 여러 개가 동시에 쌓인 경우, 순차적으로 자연스럽게 사라지도록 **400ms 간격의 stagger**가 자동 적용된다.
+  - 1번째: 3000ms, 2번째: 3400ms, 3번째: 3800ms
 - Hover 시 자동 종료가 일시정지된다.
 - Hover 해제 시 남은 시간이 다시 진행된다.
+
+### 3-1) Dismiss 애니메이션
+
+스낵바가 사라질 때 **2단계 애니메이션**이 적용된다.
+
+1. **슬라이드 아웃** (300ms): 카드가 우측으로 밀리며 페이드아웃
+2. **높이 축소** (200ms): 빈 공간이 부드럽게 접히며 나머지 스낵바가 자연스럽게 위로 이동
 
 ### 4) Persistent Snackbar
 

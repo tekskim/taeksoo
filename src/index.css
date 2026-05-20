@@ -426,9 +426,9 @@ html.theme-transition *::after {
   --color-state-info-text: var(--color-blue-800);
 
   /* State - Success (Vivid) */
-  --color-state-success: var(--color-emerald-500);
-  --color-state-success-bg: var(--color-emerald-50);
-  --color-state-success-text: var(--color-emerald-600);
+  --color-state-success: var(--color-green-500);
+  --color-state-success-bg: var(--color-green-50);
+  --color-state-success-text: var(--color-green-600);
 
   /* State - Warning (Vivid) */
   --color-state-warning: var(--color-orange-500);
@@ -443,7 +443,7 @@ html.theme-transition *::after {
   --color-state-danger-text: var(--color-red-600);
 
   /* Extended Text Colors */
-  --color-text-success: var(--color-emerald-600);
+  --color-text-success: var(--color-green-600);
   --color-text-warning: var(--color-orange-600);
   --color-text-danger: var(--color-red-600);
 
@@ -454,11 +454,11 @@ html.theme-transition *::after {
   --color-border-muted: var(--color-slate-100);
 
   /* Status Colors (for dashboard) */
-  --color-status-success: var(--color-emerald-500);
+  --color-status-success: var(--color-green-500);
   --color-status-warning: var(--color-orange-500);
   --color-status-error: var(--color-red-500);
   --color-status-idle: var(--color-slate-400);
-  --color-status-success-subtle: var(--color-emerald-50);
+  --color-status-success-subtle: var(--color-green-50);
   --color-status-warning-subtle: var(--color-orange-50);
   --color-status-error-subtle: var(--color-red-50);
 
@@ -574,7 +574,7 @@ html.theme-transition *::after {
   --badge-subtle-blue-text: var(--color-state-info-text);
   --badge-subtle-red-bg: var(--color-red-100);
   --badge-subtle-red-text: var(--color-state-danger-text);
-  --badge-subtle-green-bg: var(--color-emerald-100);
+  --badge-subtle-green-bg: var(--color-green-100);
   --badge-subtle-green-text: var(--color-state-success-text);
   --badge-subtle-yellow-bg: var(--color-orange-100);
   --badge-subtle-yellow-text: var(--color-state-warning-text);
@@ -800,8 +800,8 @@ html.theme-transition *::after {
   --inline-message-text: var(--color-text-default);
 
   /* InlineMessage - Success */
-  --inline-message-success-bg: var(--color-emerald-50);
-  --inline-message-success-icon: var(--color-emerald-600);
+  --inline-message-success-bg: var(--color-green-50);
+  --inline-message-success-icon: var(--color-green-600);
 
   /* InlineMessage - Warning */
   --inline-message-warning-bg: var(--color-orange-50);
@@ -1004,7 +1004,7 @@ html.theme-transition *::after {
   --status-text: var(--color-text-inverse);
 
   /* Status colors - Using 400 for colors, 500 for muted */
-  --status-success-bg: var(--color-emerald-400);
+  --status-success-bg: var(--color-green-400);
   --status-danger-bg: var(--color-red-400);
   --status-info-bg: var(--color-blue-400);
   --status-warning-bg: var(--color-orange-400);
@@ -1110,9 +1110,9 @@ html.theme-transition *::after {
   /* ========================================
      Desktop Shell Tokens (Light)
      ======================================== */
-  --desktop-bg: #eff1f3;
-  --desktop-wallpaper-opacity: 0.6;
-  --desktop-wallpaper-filter: invert(1) brightness(1.1);
+  --desktop-bg: #f1f3f5;
+  --desktop-wallpaper-opacity: 0.59;
+  --desktop-wallpaper-filter: invert(1) brightness(1.1) contrast(1.04);
   --desktop-text: #1e293b;
   --desktop-text-muted: rgba(30, 41, 59, 0.6);
   --desktop-glass-bg: rgba(255, 255, 255, 0.7);
@@ -1207,7 +1207,7 @@ html.theme-transition *::after {
   --color-status-warning: var(--semantic-color-state-warning);
   --color-status-error: var(--semantic-color-state-danger);
   --color-status-idle: var(--color-slate-500);
-  --color-status-success-subtle: rgba(16, 185, 129, 0.15);
+  --color-status-success-subtle: rgba(34, 197, 94, 0.15);
   --color-status-warning-subtle: rgba(249, 115, 22, 0.15);
   --color-status-error-subtle: rgba(239, 68, 68, 0.15);
 
@@ -1216,7 +1216,7 @@ html.theme-transition *::after {
   --badge-subtle-blue-text: #93c5fd;
   --badge-subtle-red-bg: rgba(239, 68, 68, 0.2);
   --badge-subtle-red-text: #fca5a5;
-  --badge-subtle-green-bg: rgba(16, 185, 129, 0.2);
+  --badge-subtle-green-bg: rgba(34, 197, 94, 0.2);
   --badge-subtle-green-text: #6ee7b7;
   --badge-subtle-yellow-bg: rgba(249, 115, 22, 0.2);
   --badge-subtle-yellow-text: #fdba74;
@@ -1249,7 +1249,7 @@ html.theme-transition *::after {
   --checkbox-icon-disabled: var(--semantic-color-text-disabled);
 
   /* InlineMessage (Dark Mode - specific overrides) */
-  --inline-message-success-bg: rgba(16, 185, 129, 0.12);
+  --inline-message-success-bg: rgba(34, 197, 94, 0.12);
   --inline-message-success-icon: var(--semantic-color-state-success);
   --inline-message-warning-bg: rgba(249, 115, 22, 0.12);
   --inline-message-warning-icon: var(--semantic-color-state-warning);

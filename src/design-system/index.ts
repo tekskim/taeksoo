@@ -35,6 +35,7 @@ export * from './components/TabBar';
 export * from './components/Table';
 export * from './components/InlineMessage';
 export * from './components/Toast';
+export * from './components/Snackbar';
 export * from './components/Disclosure';
 export * from './components/Accordion';
 export * from './components/Badge';

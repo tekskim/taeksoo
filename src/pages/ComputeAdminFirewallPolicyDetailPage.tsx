@@ -17,9 +17,10 @@ import {
   PageShell,
   type TableColumn,
 } from '@/design-system';
-import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
+import { SecuritySidebar } from '@/components/SecuritySidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconSettings, IconEdit } from '@tabler/icons-react';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
@@ -115,7 +116,7 @@ const mockRules: FirewallRule[] = Array.from({ length: 115 }, (_, i) => ({
 export default function ComputeAdminFirewallPolicyDetailPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'rules';
@@ -176,7 +177,7 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/firewall-rules/${row.id}`}
+            to={`/security/firewall-rules/${row.id}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -199,7 +200,7 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/tenants/${row.tenantId}`}
+            to={`/security/tenants/${row.tenantId}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -256,12 +257,7 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
 
   return (
     <PageShell
-      sidebar={
-        <ComputeAdminSidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen((prev) => !prev)}
-        />
-      }
+      sidebar={<SecuritySidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -278,24 +274,29 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[{ label: 'NACL', href: '/compute-admin/firewall' }, { label: policy.name }]}
+              items={[{ label: 'Firewalls', href: '/security/firewalls' }, { label: policy.name }]}
             />
           }
         />
       }
-      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{policy.name}</DetailHeader.Title>
           <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+              Manage rules
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>

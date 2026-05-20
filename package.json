@@ -111,6 +111,7 @@
     "@storybook/addon-themes": "^10.1.11",
     "@storybook/addon-vitest": "^10.1.11",
     "@storybook/react-vite": "^10.1.11",
+    "@swc/core": "^1.15.33",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -118,6 +119,7 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.7.0",
+    "@vitejs/plugin-react-swc": "^4.3.0",
     "@vitest/browser-playwright": "^4.0.17",
     "@vitest/coverage-v8": "^4.0.17",
     "autoprefixer": "^10.4.21",
@@ -148,5 +150,10 @@
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^4.0.17",
     "vitest-axe": "^0.1.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@swc/core"
+    ]
   }
 }

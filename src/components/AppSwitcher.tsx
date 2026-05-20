@@ -12,6 +12,7 @@ import AgentOpsIcon from '@/assets/appIcon/agentops.png';
 import StorageIcon from '@/assets/appIcon/storage.png';
 import StorageAdminIcon from '@/assets/appIcon/storageadmin.png';
 import IAMIcon from '@/assets/appIcon/iam.png';
+import SecurityIcon from '@/assets/appIcon/security.png';
 import SettingsIcon from '@/assets/appIcon/settings.png';
 import AdminCenterIcon from '@/assets/appIcon/admincenter.png';
 
@@ -33,6 +34,7 @@ interface AppItem {
 // Order matters for path matching - more specific paths should come first
 const apps: AppItem[] = [
   { id: 'iam', title: 'IAM', icon: IAMIcon, path: '/iam' },
+  { id: 'security', title: 'Security', icon: SecurityIcon, path: '/security' },
   { id: 'compute-admin', title: 'Compute Admin', icon: ComputeAdminIcon, path: '/compute-admin' },
   { id: 'compute', title: 'Compute', icon: ComputeIcon, path: '/compute' },
   { id: 'storage-admin', title: 'Storage Admin', icon: StorageAdminIcon, path: '/storage-admin' },

@@ -63,7 +63,7 @@ const sections: CreatePageSection[] = [
       { label: 'Create Image (Admin)', path: '/compute-admin/images/create' },
       { label: 'Create Flavor (Admin)', path: '/compute-admin/flavors/create' },
       { label: 'Create Network (Admin)', path: '/compute-admin/networks/create' },
-      { label: 'Create Firewall Rule (Admin)', path: '/compute-admin/firewall/create-rule' },
+      { label: 'Create Firewall Rule (Security)', path: '/security/firewalls/create-rule' },
     ],
   },
   {

@@ -176,7 +176,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
-          style={{ maxHeight: 400 }}
+          className="flex-1"
           className="p-2"
         >
           <div className="flex flex-col gap-2">
@@ -262,7 +262,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         {/* Content */}
         <div className="flex-1 min-w-0">
           {/* Message */}
-          <p className="text-body-md text-[var(--color-text-default)] mb-2 pr-6">
+          <p className="text-label-md text-[var(--color-text-default)] mb-2 pr-6">
             {notification.message}
           </p>
 
@@ -280,7 +280,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           </div>
 
           {/* Time */}
-          <span className="text-body-md text-[var(--color-text-muted)]">{notification.time}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">{notification.time}</span>
         </div>
       </div>
 

@@ -161,6 +161,9 @@ import { ChangeServerCertificateDrawer } from '@/components/ChangeServerCertific
 import { ChangeCACertificateDrawer } from '@/components/ChangeCACertificateDrawer';
 import { ManageSNICertificateDrawer } from '@/components/ManageSNICertificateDrawer';
 import { ManageExternalGatewayDrawer } from '@/components/ManageExternalGatewayDrawer';
+import { CreatePolicyDrawer } from '@/components/CreatePolicyDrawer';
+import { EditPolicyDrawer } from '@/components/EditPolicyDrawer';
+import { EditRuleDrawer } from '@/components/EditRuleDrawer';
 import { ConnectSubnetDrawer } from '@/components/ConnectSubnetDrawer';
 import { AssociateFIPtoPortDrawer } from '@/components/AssociateFIPtoPortDrawer';
 import { DisconnectSubnetDrawer } from '@/components/DisconnectSubnetDrawer';
@@ -250,6 +253,13 @@ import { AdminCreateRouterDrawer } from '@/components/AdminCreateRouterDrawer';
 import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDrawer';
 import { ManageAclRulesDrawer } from '@/components/ManageAclRulesDrawer';
 import { AdminTenantDrawer } from '@/components/AdminTenantDrawer';
+import { CreateFirewallDrawer } from '@/components/CreateFirewallDrawer';
+import { SecurityCreateSGDrawer } from '@/components/SecurityCreateSGDrawer';
+import { EditFirewallDrawer, type FirewallInfo } from '@/components/EditFirewallDrawer';
+import {
+  ManageFirewallPortsDrawer,
+  type FirewallInfo as ManagePortsFirewallInfo,
+} from '@/components/ManageFirewallPortsDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers ---------------------------------------- */
@@ -537,6 +547,20 @@ const mockCreateQosExtraSpec: CreateQosExtraSpecInfo = {
 
 const mockFirewallPolicy: FirewallPolicyInfo = {
   id: 'policy-001',
+  name: 'name',
+};
+
+const mockEditFirewall: FirewallInfo = {
+  id: 'fw-001',
+  name: 'name',
+  description: '',
+  ingressPolicyId: '',
+  egressPolicyId: '',
+  adminStateUp: true,
+};
+
+const mockManagePortsFirewall: ManagePortsFirewallInfo = {
+  id: 'fw-001',
   name: 'name',
 };
 
@@ -1441,6 +1465,58 @@ const CONTAINER_RESOURCE_SEARCH_ITEMS: DrawerSearchItem[] = [
   },
 ];
 
+const SECURITY_FIREWALL_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create firewall',
+    description:
+      'Create a new firewall with tenant assignment, ingress/egress policies, and admin state settings.',
+    category: 'Firewall',
+  },
+  {
+    title: 'Edit firewall',
+    description: 'Edit firewall name, description, ingress/egress policies, and admin state.',
+    category: 'Firewall',
+  },
+  {
+    title: 'Manage ports',
+    description: 'Select ports from the list to associate with a firewall.',
+    category: 'Firewall',
+  },
+];
+
+const SECURITY_POLICY_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create policy',
+    description: 'Create a firewall policy with tenant assignment, shared and audited settings.',
+    category: 'Policy',
+  },
+  {
+    title: 'Edit policy',
+    description: 'Edit policy name, description, shared and audited settings.',
+    category: 'Policy',
+  },
+  {
+    title: 'Edit rule',
+    description:
+      'Edit firewall rule with protocol, action, source/destination CIDR and port settings.',
+    category: 'Rule',
+  },
+];
+
+const SECURITY_SG_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create security group',
+    description: 'Create a new security group with tenant assignment and quota management.',
+    category: 'Security Group',
+  },
+];
+
+const SECURITY_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [
+  ...SECURITY_FIREWALL_ITEMS,
+  ...SECURITY_POLICY_ITEMS,
+  ...SECURITY_SG_ITEMS,
+];
+
 const TABLE_SETTINGS_ITEMS: DrawerSearchItem[] = [
   {
     title: 'View preferences',
@@ -1481,6 +1557,7 @@ export function DrawersPage() {
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
+  const [isSecurityOpen, setIsSecurityOpen] = useState(false);
 
   // Drawer states
 
@@ -2706,6 +2783,86 @@ export function DrawersPage() {
                         description="Search and navigate Kubernetes resource types across clusters with categorized resource lists."
                         category="Search"
                         onOpen={() => openDrawerFn('resource-type-search')}
+                      />
+                    </FilteredGroup>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+
+            {/* Security App Drawers */}
+            <FilteredDisclosureSection allItems={SECURITY_DISCLOSURE_ALL_ITEMS}>
+              <Disclosure open={isSearching || isSecurityOpen} onChange={setIsSecurityOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isSearching || isSecurityOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Security{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (7 drawers)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup heading="Firewall actions" items={SECURITY_FIREWALL_ITEMS}>
+                      <DrawerCard
+                        title="Create firewall"
+                        description="Create a new firewall with tenant assignment, ingress/egress policies, and admin state settings."
+                        category="Firewall"
+                        onOpen={() => openDrawerFn('create-firewall')}
+                      />
+                      <DrawerCard
+                        title="Edit firewall"
+                        description="Edit firewall name, description, ingress/egress policies, and admin state."
+                        category="Firewall"
+                        onOpen={() => openDrawerFn('edit-firewall')}
+                      />
+                      <DrawerCard
+                        title="Manage ports"
+                        description="Select ports from the list to associate with a firewall."
+                        category="Firewall"
+                        onOpen={() => openDrawerFn('manage-firewall-ports')}
+                      />
+                    </FilteredGroup>
+
+                    <FilteredGroup heading="Policy & Rule actions" items={SECURITY_POLICY_ITEMS}>
+                      <DrawerCard
+                        title="Create policy"
+                        description="Create a firewall policy with tenant assignment, shared and audited settings."
+                        category="Policy"
+                        onOpen={() => openDrawerFn('create-policy')}
+                      />
+                      <DrawerCard
+                        title="Edit policy"
+                        description="Edit policy name, description, shared and audited settings."
+                        category="Policy"
+                        onOpen={() => openDrawerFn('edit-policy')}
+                      />
+                      <DrawerCard
+                        title="Edit rule"
+                        description="Edit firewall rule with protocol, action, source/destination CIDR and port settings."
+                        category="Rule"
+                        onOpen={() => openDrawerFn('edit-rule')}
+                      />
+                    </FilteredGroup>
+
+                    <FilteredGroup heading="Security Group actions" items={SECURITY_SG_ITEMS}>
+                      <DrawerCard
+                        title="Create security group"
+                        description="Create a new security group with tenant assignment and quota management."
+                        category="Security Group"
+                        onOpen={() => openDrawerFn('create-security-group')}
                       />
                     </FilteredGroup>
                   </VStack>
@@ -4116,6 +4273,85 @@ export function DrawersPage() {
         onClose={closeDrawer}
         onSelect={(categoryId, resourceId, resourceName) => {
           console.log('Resource selected:', { categoryId, resourceId, resourceName });
+        }}
+      />
+
+      {/* =============================================
+          SECURITY DRAWERS ============================================= */}
+
+      <CreateFirewallDrawer
+        isOpen={openDrawer === 'create-firewall'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create firewall:', data);
+        }}
+      />
+
+      <EditFirewallDrawer
+        isOpen={openDrawer === 'edit-firewall'}
+        onClose={closeDrawer}
+        firewall={mockEditFirewall}
+        onSubmit={(data) => {
+          console.log('Edit firewall:', data);
+        }}
+      />
+
+      <ManageFirewallPortsDrawer
+        isOpen={openDrawer === 'manage-firewall-ports'}
+        onClose={closeDrawer}
+        firewall={mockManagePortsFirewall}
+        onSubmit={(selectedPortIds) => {
+          console.log('Manage firewall ports:', selectedPortIds);
+        }}
+      />
+
+      <CreatePolicyDrawer
+        isOpen={openDrawer === 'create-policy'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create policy:', data);
+        }}
+      />
+
+      <EditPolicyDrawer
+        isOpen={openDrawer === 'edit-policy'}
+        onClose={closeDrawer}
+        policy={{
+          name: 'web-policy',
+          description: 'Web access policy',
+          shared: false,
+          audited: false,
+        }}
+        onSubmit={(data) => {
+          console.log('Edit policy:', data);
+        }}
+      />
+
+      <EditRuleDrawer
+        isOpen={openDrawer === 'edit-rule'}
+        onClose={closeDrawer}
+        rule={{
+          name: 'allow-http',
+          description: 'Allow HTTP traffic',
+          enabled: true,
+          shared: false,
+          protocol: 'TCP',
+          action: 'allow',
+          sourceCidr: '',
+          sourcePort: '',
+          destinationCidr: '',
+          destinationPort: '80',
+        }}
+        onSubmit={(data) => {
+          console.log('Edit rule:', data);
+        }}
+      />
+
+      <SecurityCreateSGDrawer
+        isOpen={openDrawer === 'create-security-group'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create security group:', data);
         }}
       />
 

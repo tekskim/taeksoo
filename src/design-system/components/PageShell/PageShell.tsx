@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { ToastContainer } from '../Toast';
 
 /* ----------------------------------------
    PageShell Types
@@ -63,7 +64,7 @@ export function PageShell({
         {/* Content Area */}
         <OverlayScrollbarsComponent
           options={{
-            overflow: { x: 'scroll', y: 'scroll' },
+            overflow: { x: 'hidden', y: 'scroll' },
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
@@ -73,11 +74,13 @@ export function PageShell({
           }}
         >
           <div
-            className={`w-fit min-w-[max(100%,var(--layout-content-min-width,760px))] bg-[var(--color-surface-default)] min-h-full ${contentClassName}`.trim()}
+            className={`w-full min-w-0 bg-[var(--color-surface-default)] min-h-full ${contentClassName}`.trim()}
           >
             {children}
           </div>
         </OverlayScrollbarsComponent>
+        {/* Toast */}
+        <ToastContainer position="bottom-right" scope="app" />
       </main>
 
       {/* Bottom Panel */}

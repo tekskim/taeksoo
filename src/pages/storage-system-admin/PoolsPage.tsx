@@ -354,17 +354,13 @@ export function PoolsPage() {
                 onClick={() => console.log('Download clicked')}
               />
             </Tooltip>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-px h-4 bg-[var(--color-border-default)]" />
             <Button
               variant="secondary"
               size="sm"
-              leftIcon={<IconRefresh size={12} stroke={1.5} />}
+              icon={<IconRefresh size={12} stroke={1.5} />}
+              aria-label="Refresh"
               onClick={() => console.log('Refresh clicked')}
-            >
-              Refresh
-            </Button>
+            />
           </div>
         </div>
 

@@ -28,6 +28,7 @@ import {
   Tab,
   Select,
   WindowControl,
+  SnackbarContainer,
 } from '@/design-system';
 import AppIconCompute from '@/assets/appIcon/compute.png';
 import AppIconIAM from '@/assets/appIcon/iam.png';
@@ -45,8 +46,6 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import { DesktopWindowProvider } from '@/contexts/DesktopWindowContext';
 import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import DesktopBg from '@/assets/bg-01.jpg';
 import { computeRoutes } from '@/routes/compute.routes';
 import { storageRoutes } from '@/routes/storage.routes';
@@ -83,6 +82,7 @@ import imgComputeAdmin from '@/assets/appIcon/computeadmin.png';
 import imgCloud from '@/assets/appIcon/cloudbuilder.png';
 import imgAdminCenter from '@/assets/appIcon/admincenter.png';
 import imgAIPlatformAdmin from '@/assets/appIcon/aiplatformadmin.png';
+import { ThakiLogoAnimated } from '@/components/ThakiLogoAnimated';
 
 // App Icons
 import appIconAIChat from '@/assets/appIcon/chat.png';
@@ -128,8 +128,9 @@ function getInitialIconLayout(): DesktopIconItem[] {
   const icons = [
     { id: 'iam', icon: imgIam, label: 'IAM' },
     { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
+    { id: 'compute', icon: imgCompute, label: 'Compute' },
     { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
-    { id: 'settings', icon: imgSettings, label: 'Settings' },
+    { id: 'container', icon: imgContainer, label: 'Container' },
     { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
     { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
     { id: 'settings', icon: imgSettings, label: 'Settings' },
@@ -794,7 +795,7 @@ function DesktopTopBar({
     >
       {/* Left Section - Logo + Dock Icons */}
       <div className="flex items-center gap-1.5 h-full">
-        <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-5 mr-3" />
+        <ThakiLogoAnimated isDark={isDark} className="h-5 mr-3" />
         <button
           onClick={onLaunchpadToggle}
           className="flex items-center justify-center w-7 h-7 rounded-md text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] transition-colors"
@@ -1059,7 +1060,7 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
       {isOpen && (
         <>
           <motion.div
-            className="fixed inset-0 z-[6000] bg-black/50 backdrop-blur-xl"
+            className="fixed inset-0 z-[6000] bg-black/70 backdrop-blur-xl"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -1862,7 +1863,7 @@ function GlobalNotificationCard({
         <div className="flex gap-2 items-start w-[256px]">
           <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
           <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
-            <div className="text-body-md text-[var(--color-text-default)]">
+            <div className="text-label-md text-[var(--color-text-default)]">
               {notification.statusIcon
                 ? (() => {
                     const msg = notification.message;
@@ -1892,7 +1893,7 @@ function GlobalNotificationCard({
             </div>
 
             {notification.project && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 {notification.project}
               </span>
             )}
@@ -1941,7 +1942,7 @@ function GlobalNotificationCard({
           </div>
         </div>
         <div className="flex flex-col items-end justify-end self-stretch shrink-0">
-          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {notification.time}
           </span>
         </div>
@@ -2035,10 +2036,7 @@ export function DesktopPage() {
     },
     'cloud-builder': { name: 'Cloud Builder', icon: imgCloud, initialPath: '/cloudbuilder' },
   };
-  // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Studio, Settings는 Pin만 되어있음
-  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(
-    new Set(['ai-platform', 'agent', 'settings'])
-  );
+  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set());
   const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([
     'compute',
     'storage',
@@ -2047,6 +2045,14 @@ export function DesktopPage() {
     'agent',
     'settings',
   ]);
+
+  const visibleDockApps = useMemo(() => {
+    const pinned = dockAppOrder.filter((appId) => pinnedApps.has(appId));
+    const unpinned = dockAppOrder.filter(
+      (appId) => !pinnedApps.has(appId) && windows.some((w) => w.appId === appId)
+    );
+    return [...pinned, ...unpinned];
+  }, [dockAppOrder, pinnedApps, windows]);
 
   // Window management functions
   const CASCADE_OFFSET = 30;
@@ -2255,6 +2261,304 @@ export function DesktopPage() {
       appIcon: AppIconStorage,
       isRead: false,
     },
+    {
+      id: '6',
+      message: 'Deployment "frontend-app" scaled to 5 replicas.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '08:12',
+      project: 'proj-1',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+    },
+    {
+      id: '7',
+      message: 'Security group "sg-prod" rule updated.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '07:58',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '8',
+      message: 'Node "worker-03" became NotReady.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '07:45',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'NODE_NOT_READY', message: 'Kubelet stopped posting node status.' },
+    },
+    {
+      id: '9',
+      message: 'Image "ubuntu-22.04" upload completed.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '07:30',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '10',
+      message: 'User "john.doe" password expired.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '07:15',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '11',
+      message: 'Bucket "logs-2026" created successfully.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '06:50',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '12',
+      message: 'Service "redis-cluster" endpoint changed.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '06:30',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+    },
+    {
+      id: '13',
+      message: 'Floating IP "203.0.113.5" associated to "web-01".',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '06:10',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '14',
+      message: 'Volume "db-storage" resize completed.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '05:45',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '15',
+      message: 'Role "cluster-admin" permissions modified.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: 'Yesterday',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '16',
+      message: 'Network "internal-net" subnet added.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: 'Yesterday',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '17',
+      message: 'Pod "worker-batch-07" OOMKilled.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: 'Yesterday',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 137, message: 'Container exceeded memory limit of 512Mi.' },
+    },
+    {
+      id: '18',
+      message: 'Object "report-2026.pdf" uploaded to bucket "docs".',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: 'Yesterday',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '19',
+      message: 'MFA enabled for user "admin@thaki.io".',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: 'Yesterday',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '20',
+      message: 'Instance "db-primary" migrated to host "hv-12".',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: 'Yesterday',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '21',
+      message: 'CronJob "daily-cleanup" execution failed.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '2 days ago',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'JOB_FAILED', message: 'Deadline exceeded after 3600s.' },
+    },
+    {
+      id: '22',
+      message: 'Snapshot "db-snap-weekly" completed.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '2 days ago',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '23',
+      message: 'Keypair "deploy-key-02" imported.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '2 days ago',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '24',
+      message: 'Ingress "api-gateway" TLS cert renewed.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '2 days ago',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+    },
+    {
+      id: '25',
+      message: 'Policy "password-policy" updated.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '2 days ago',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '26',
+      message: 'Instance "cache-01" shelved offloaded.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '3 days ago',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '27',
+      message: 'StatefulSet "postgres" rollback triggered.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '3 days ago',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'ROLLBACK', message: 'Rollback to revision 4 due to failed health check.' },
+    },
+    {
+      id: '28',
+      message: 'Bucket "archives" lifecycle policy applied.',
+      statusIcon: (
+        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+      ),
+      time: '3 days ago',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '29',
+      message: 'Service account "ci-deployer" token rotated.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '3 days ago',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '30',
+      message: 'Instance "ml-worker-gpu" resize completed.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '3 days ago',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
   ]);
   const [gnpActiveTab, setGnpActiveTab] = useState('all');
   const [gnpActiveApp, setGnpActiveApp] = useState('all');
@@ -2435,8 +2739,11 @@ export function DesktopPage() {
       {showNotifications && notificationButtonRef.current && (
         <>
           <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
-          <div className="fixed z-[6001] top-[52px] right-0" onClick={(e) => e.stopPropagation()}>
-            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+          <div
+            className="fixed z-[6001] top-[52px] right-0 bottom-0 flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden flex flex-col flex-1">
               <div className="relative pt-3 pb-0">
                 <button
                   type="button"
@@ -2484,8 +2791,7 @@ export function DesktopPage() {
                     scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
                   }}
                   defer={false}
-                  style={{ maxHeight: 420 }}
-                  className="px-3 py-2"
+                  className="px-3 py-2 flex-1"
                 >
                   <div className="flex flex-col gap-2">
                     {gnpFiltered.map((n) => (
@@ -2535,6 +2841,9 @@ export function DesktopPage() {
             );
           })}
       </AnimatePresence>
+
+      {/* Desktop Snackbar — above app windows (z-[5000]) */}
+      <SnackbarContainer position="top-right" scope="global" className="!top-[60px] !z-[5000]" />
 
       {/* Main Page Navigation Button - Bottom Left */}
     </div>

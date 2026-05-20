@@ -264,6 +264,7 @@ export function PhysicalDisksPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
   const [loading, setLoading] = useState(true);
+  const [selectedDisks, setSelectedDisks] = useState<string[]>([]);
 
   // Identify drawer state
   const [isIdentifyDrawerOpen, setIsIdentifyDrawerOpen] = useState(false);
@@ -489,42 +490,38 @@ export function PhysicalDisksPage() {
           showDivider={false}
           primaryActions={
             <ListToolbar.Actions>
-              <div className="flex items-center gap-1">
-                <SearchInput
-                  placeholder="Search physical disks by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                />
+              <SearchInput
+                placeholder="Search physical disks by attributes"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery('')}
+                size="sm"
+                className="w-[var(--search-input-width)]"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} stroke={1.5} />}
+                aria-label="Download"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconRefresh size={12} stroke={1.5} />}
+                aria-label="Refresh"
+                onClick={() => console.log('Refresh clicked')}
+              />
+              <div className="flex items-center gap-2 ml-1">
+                <div className="w-px h-4 bg-[var(--color-border-default)]" />
                 <Button
-                  variant="secondary"
+                  variant="muted"
                   size="sm"
-                  icon={<IconDownload size={12} stroke={1.5} />}
-                  aria-label="Download"
-                />
-                <div className="flex items-center gap-2 ml-1">
-                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconRefresh size={12} stroke={1.5} />}
-                      onClick={() => console.log('Refresh clicked')}
-                    >
-                      Refresh
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} stroke={1.5} />}
-                      onClick={() => console.log('Delete clicked')}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </div>
+                  leftIcon={<IconTrash size={12} stroke={1.5} />}
+                  disabled={selectedDisks.length === 0}
+                  onClick={() => console.log('Delete clicked')}
+                >
+                  Delete
+                </Button>
               </div>
             </ListToolbar.Actions>
           }
@@ -545,6 +542,9 @@ export function PhysicalDisksPage() {
           columns={columns}
           data={paginatedDisks}
           getRowId={(row) => row.id}
+          selectable
+          selectedKeys={selectedDisks}
+          onSelectionChange={setSelectedDisks}
           emptyMessage="No physical disks found"
           loading={loading}
         />

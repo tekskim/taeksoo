@@ -133,8 +133,8 @@ interface EventRow {
    ---------------------------------------- */
 
 const mockNodeData: Record<string, NodeData> = {
-  'node-control-plane-01': {
-    name: 'node-control-plane-01',
+  'master-control-plane-high-availability-node-01': {
+    name: 'master-control-plane-high-availability-node-01',
     status: 'Active',
     internalIp: '172.16.0.237',
     kubernetesVersion: 'v1.34',

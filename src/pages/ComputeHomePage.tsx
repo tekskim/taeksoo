@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import {
   TabBar,
   TopBar,
+  TopBarAction,
   Breadcrumb,
   PageShell,
   Badge,
@@ -9,8 +10,12 @@ import {
   Table,
   STATUS_THRESHOLDS,
   CopyButton,
+  useToast,
+  useSnackbar,
   type TableColumn,
 } from '@/design-system';
+import { IconBread, IconMessage } from '@tabler/icons-react';
+import AppIconCompute from '@/assets/appIcon/compute.png';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -205,6 +210,8 @@ export function ComputeHomePage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
   const navigate = useNavigate();
+  const toast = useToast();
+  const snackbar = useSnackbar();
 
   useEffect(() => {
     updateActiveTabLabel('Dashboard');
@@ -340,6 +347,25 @@ export function ComputeHomePage() {
           onForward={() => navigate(1)}
           canGoBack={false}
           breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
+          actions={
+            <>
+              <TopBarAction
+                icon={<IconBread size={16} stroke={1.5} />}
+                aria-label="Toast test"
+                onClick={() => toast.success('Instance "web-01" created successfully.')}
+              />
+              <TopBarAction
+                icon={<IconMessage size={16} stroke={1.5} />}
+                aria-label="Snackbar test"
+                onClick={() =>
+                  snackbar.success('Volume "backup-01" snapshot successfully created', {
+                    partition: 'proj-1',
+                    appIcon: AppIconCompute,
+                  })
+                }
+              />
+            </>
+          }
         />
       }
       contentClassName="px-8 py-6"
@@ -364,8 +390,10 @@ export function ComputeHomePage() {
             </div>
             <div>
               <div className="text-body-xs text-[var(--color-text-muted)] mb-1">ID</div>
-              <div className="flex items-center gap-1">
-                <span className="text-body-md text-[var(--color-text-default)]">{projectId}</span>
+              <div className="flex items-center gap-1 min-w-0">
+                <span className="text-body-md text-[var(--color-text-default)] truncate">
+                  {projectId}
+                </span>
                 <CopyButton value={projectId} size="sm" iconOnly tooltip="Copy ID" />
               </div>
             </div>

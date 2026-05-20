@@ -15,6 +15,7 @@ import {
   Radio,
   ChainedSelect,
   type ChainedSelectSegment,
+  Disclosure,
   FormField,
   InlineMessage,
   PageShell,
@@ -24,13 +25,7 @@ import {
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconCirclePlus,
-  IconChevronDown,
-  IconChevronRight,
-  IconX,
-} from '@tabler/icons-react';
+import { IconEdit, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -330,63 +325,229 @@ interface Permission {
 }
 
 /* ----------------------------------------
-   Compute Actions Data
+   App-specific Target & Action Data
    ---------------------------------------- */
 
-const COMPUTE_ACTIONS = {
-  read: [
-    'ReadInstance',
-    'ReadImage',
-    'ReadVolume',
-    'ReadInstancesnapshot',
-    'ReadKeypair',
-    'ReadServergroup',
-    'ReadNetwork',
-    'ReadSecuritygroup',
-    'ReadTopology',
-    'ReadDashboard',
-    'ReadFlavor',
-    'ReadQuota',
-  ],
-  list: [
-    'ListInstance',
-    'ListImage',
-    'ListVolume',
-    'ListKeypair',
-    'ListNetwork',
-    'ListSecuritygroup',
-    'ListTopology',
-  ],
-  write: [
-    'WriteInstance',
-    'WriteImage',
-    'WriteVolume',
-    'WriteInstancesnapshot',
-    'WriteKeypair',
-    'WriteServergroup',
-    'WriteNetwork',
-    'WriteSecuritygroup',
-  ],
-  delete: [
-    'DeleteInstance',
-    'DeleteImage',
-    'DeleteVolume',
-    'DeleteInstancesnapshot',
-    'DeleteKeypair',
-    'DeleteNetwork',
-  ],
-  admin: [
-    'AdminInstance',
-    'AdminImage',
-    'AdminVolume',
-    'AdminKeypair',
-    'AdminNetwork',
-    'AdminSecuritygroup',
-    'AdminTopology',
-    'AdminDashboard',
-    'AdminQuota',
-  ],
+type ActionCategory = 'read' | 'list' | 'write' | 'delete' | 'admin';
+type ActionMap = Record<ActionCategory, string[]>;
+
+interface AppConfig {
+  hasPartition: boolean;
+  resourceTypes: string[];
+  actions: ActionMap;
+}
+
+const APP_CONFIGS: Record<string, AppConfig> = {
+  compute: {
+    hasPartition: true,
+    resourceTypes: [
+      'instance',
+      'image',
+      'volume',
+      'instancesnapshot',
+      'keypair',
+      'servergroup',
+      'network',
+      'securitygroup',
+      'topology',
+      'dashboard',
+      'flavor',
+      'quota',
+    ],
+    actions: {
+      read: [
+        'ReadInstance',
+        'ReadImage',
+        'ReadVolume',
+        'ReadInstancesnapshot',
+        'ReadKeypair',
+        'ReadServergroup',
+        'ReadNetwork',
+        'ReadSecuritygroup',
+        'ReadTopology',
+        'ReadDashboard',
+        'ReadFlavor',
+        'ReadQuota',
+      ],
+      list: [
+        'ListInstance',
+        'ListImage',
+        'ListVolume',
+        'ListKeypair',
+        'ListNetwork',
+        'ListSecuritygroup',
+        'ListTopology',
+      ],
+      write: [
+        'WriteInstance',
+        'WriteImage',
+        'WriteVolume',
+        'WriteInstancesnapshot',
+        'WriteKeypair',
+        'WriteServergroup',
+        'WriteNetwork',
+        'WriteSecuritygroup',
+      ],
+      delete: [
+        'DeleteInstance',
+        'DeleteImage',
+        'DeleteVolume',
+        'DeleteInstancesnapshot',
+        'DeleteKeypair',
+        'DeleteNetwork',
+      ],
+      admin: [
+        'AdminInstance',
+        'AdminImage',
+        'AdminVolume',
+        'AdminKeypair',
+        'AdminNetwork',
+        'AdminSecuritygroup',
+        'AdminTopology',
+        'AdminDashboard',
+        'AdminQuota',
+      ],
+    },
+  },
+  container: {
+    hasPartition: true,
+    resourceTypes: [
+      'namespace',
+      'pod',
+      'service',
+      'deployment',
+      'statefulset',
+      'daemonset',
+      'configmap',
+      'secret',
+      'ingress',
+      'persistentvolumeclaim',
+    ],
+    actions: {
+      read: [
+        'ReadNamespace',
+        'ReadPod',
+        'ReadService',
+        'ReadDeployment',
+        'ReadStatefulset',
+        'ReadDaemonset',
+        'ReadConfigmap',
+        'ReadSecret',
+        'ReadIngress',
+        'ReadPersistentvolumeclaim',
+      ],
+      list: [
+        'ListNamespace',
+        'ListPod',
+        'ListService',
+        'ListDeployment',
+        'ListStatefulset',
+        'ListDaemonset',
+        'ListConfigmap',
+        'ListSecret',
+        'ListIngress',
+      ],
+      write: [
+        'WriteNamespace',
+        'WritePod',
+        'WriteService',
+        'WriteDeployment',
+        'WriteStatefulset',
+        'WriteDaemonset',
+        'WriteConfigmap',
+        'WriteSecret',
+        'WriteIngress',
+      ],
+      delete: [
+        'DeleteNamespace',
+        'DeletePod',
+        'DeleteService',
+        'DeleteDeployment',
+        'DeleteStatefulset',
+        'DeleteDaemonset',
+        'DeleteConfigmap',
+        'DeleteSecret',
+      ],
+      admin: ['AdminNamespace', 'AdminPod', 'AdminService', 'AdminDeployment', 'AdminCluster'],
+    },
+  },
+  storage: {
+    hasPartition: false,
+    resourceTypes: ['bucket', 'object', 'policy'],
+    actions: {
+      read: ['ReadBucket', 'ReadObject', 'ReadPolicy'],
+      list: ['ListBucket', 'ListObject'],
+      write: ['WriteBucket', 'WriteObject', 'WritePolicy'],
+      delete: ['DeleteBucket', 'DeleteObject'],
+      admin: ['AdminBucket', 'AdminPolicy'],
+    },
+  },
+  iam: {
+    hasPartition: false,
+    resourceTypes: ['user', 'group', 'role', 'policy', 'session'],
+    actions: {
+      read: ['ReadUser', 'ReadGroup', 'ReadRole', 'ReadPolicy', 'ReadSession'],
+      list: ['ListUser', 'ListGroup', 'ListRole', 'ListPolicy', 'ListSession'],
+      write: ['WriteUser', 'WriteGroup', 'WriteRole', 'WritePolicy'],
+      delete: ['DeleteUser', 'DeleteGroup', 'DeleteRole', 'DeletePolicy', 'DeleteSession'],
+      admin: ['AdminUser', 'AdminGroup', 'AdminRole', 'AdminPolicy'],
+    },
+  },
 };
+
+const APP_OPTIONS = [
+  { value: '*', label: '*' },
+  ...Object.keys(APP_CONFIGS).map((app) => ({ value: app, label: app })),
+];
+
+function getActionsForApp(app: string): ActionMap {
+  if (app === '*' || !app) {
+    const merged: ActionMap = { read: [], list: [], write: [], delete: [], admin: [] };
+    Object.values(APP_CONFIGS).forEach((config) => {
+      (Object.keys(config.actions) as ActionCategory[]).forEach((cat) => {
+        config.actions[cat].forEach((a) => {
+          if (!merged[cat].includes(a)) merged[cat].push(a);
+        });
+      });
+    });
+    return merged;
+  }
+  return APP_CONFIGS[app]?.actions ?? { read: [], list: [], write: [], delete: [], admin: [] };
+}
+
+function getTargetSegments(permission: Permission): ChainedSelectSegment[] {
+  const appConfig = APP_CONFIGS[permission.application];
+
+  const partitionOptions: { value: string; label: string }[] = [{ value: '*', label: '*' }];
+  if (appConfig?.hasPartition) {
+    partitionOptions.push(
+      { value: 'project-01', label: 'project-01' },
+      { value: 'project-02', label: 'project-02' }
+    );
+  }
+
+  const resourceOptions: { value: string; label: string }[] = [{ value: '*', label: '*' }];
+  if (appConfig) {
+    appConfig.resourceTypes.forEach((rt) => resourceOptions.push({ value: rt, label: rt }));
+  }
+
+  return [
+    { key: 'application', label: 'Application', options: APP_OPTIONS },
+    {
+      key: 'partition',
+      label: 'Partition',
+      options: !appConfig
+        ? [{ value: '*', label: '*' }]
+        : appConfig.hasPartition
+          ? partitionOptions
+          : [{ value: '-', label: '-' }],
+    },
+    { key: 'resource', label: 'Resource type', options: resourceOptions },
+    { key: 'resourceId', label: 'Resource ID', options: [{ value: '*', label: '*' }] },
+  ];
+}
+
+const MAX_PERMISSIONS = 50;
 
 /* ----------------------------------------
    PolicyEditorSection Component
@@ -404,33 +565,6 @@ interface PolicyEditorSectionProps {
   onEditCancel: () => void;
   onEditDone: () => void;
 }
-
-const targetSegments: ChainedSelectSegment[] = [
-  {
-    key: 'application',
-    label: 'Application',
-    options: [
-      { value: '*all', label: '*all' },
-      { value: 'compute', label: 'compute' },
-      { value: 'container', label: 'container' },
-    ],
-  },
-  {
-    key: 'partition',
-    label: 'Partition',
-    options: [{ value: '*all', label: '*all' }],
-  },
-  {
-    key: 'resource',
-    label: 'Resource',
-    options: [{ value: '*all', label: '*all' }],
-  },
-  {
-    key: 'resourceId',
-    label: 'Resource ID',
-    options: [{ value: '*all', label: '*all' }],
-  },
-];
 
 const createEmptyPermission = (): Permission => ({
   id: `permission-${Date.now()}`,
@@ -463,20 +597,10 @@ function PolicyEditorSection({
   onEditCancel,
   onEditDone,
 }: PolicyEditorSectionProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [conditionsExpanded, setConditionsExpanded] = useState(isV2 ?? false);
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    read: true,
-    list: false,
-    write: false,
-    delete: false,
-    admin: false,
-  });
+  const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
   const [targetErrors, setTargetErrors] = useState<Record<string, boolean>>({});
-  const [invalidTargetErrors, setInvalidTargetErrors] = useState<Record<string, boolean>>({});
   const [actionErrors, setActionErrors] = useState<Record<string, boolean>>({});
 
-  // Check if a permission has partial fill (some fields filled, but not all)
   const hasPartialFill = (permission: Permission): boolean => {
     const fields = [
       permission.application.trim(),
@@ -488,7 +612,6 @@ function PolicyEditorSection({
     return filledCount > 0 && filledCount < 4;
   };
 
-  // Check if all fields are filled
   const hasAllFieldsFilled = (permission: Permission): boolean => {
     return (
       permission.application.trim().length > 0 &&
@@ -498,26 +621,12 @@ function PolicyEditorSection({
     );
   };
 
-  // Validate if the target combination is valid for Thaki Cloud system
-  // TODO: Add actual validation logic based on system requirements
-  const isInvalidTargetCombination = (permission: Permission): boolean => {
-    if (!hasAllFieldsFilled(permission)) return false;
-    // Placeholder: Add validation rules here
-    // For example, check against valid application/partition/resource combinations
-    return invalidTargetErrors[permission.id] || false;
-  };
-
   const validateTargetFields = (): boolean => {
     const errors: Record<string, boolean> = {};
     let hasErrors = false;
 
     permissions.forEach((permission) => {
-      const isTargetEmpty =
-        !permission.application.trim() &&
-        !permission.partition.trim() &&
-        !permission.resource.trim() &&
-        !permission.resourceId.trim();
-      if (isTargetEmpty) {
+      if (!hasAllFieldsFilled(permission)) {
         errors[permission.id] = true;
         hasErrors = true;
       }
@@ -527,13 +636,10 @@ function PolicyEditorSection({
     return !hasErrors;
   };
 
-  // Check if at least one action is selected for a permission
   const hasAnyActionSelected = (permission: Permission): boolean => {
-    // For compute with all fields filled, check detailed actions
-    if (shouldShowDetailedActions(permission)) {
+    if (hasAllFieldsFilled(permission)) {
       return Object.values(permission.detailedActions).some((v) => v);
     }
-    // For other cases, check basic actions
     return Object.values(permission.actions).some((v) => v);
   };
 
@@ -608,21 +714,46 @@ function PolicyEditorSection({
     }
   };
 
-  const toggleAllActions = (permissionId: string) => {
+  const toggleAllActions = (permissionId: string, scopedActions?: string[]) => {
     const permission = permissions.find((p) => p.id === permissionId);
     if (!permission) return;
 
-    const newValue = !permission.allActions;
+    const appActions = getActionsForApp(permission.application);
 
-    // Also toggle all detailed actions if compute
-    const newDetailedActions: Record<string, boolean> = {};
-    if (permission.application.toLowerCase() === 'compute') {
-      Object.values(COMPUTE_ACTIONS)
-        .flat()
-        .forEach((action) => {
-          newDetailedActions[action] = newValue;
-        });
+    if (scopedActions) {
+      const allCurrentlySelected = scopedActions.every((a) => permission.detailedActions[a]);
+      const newValue = !allCurrentlySelected;
+
+      const newDetailedActions = { ...permission.detailedActions };
+      scopedActions.forEach((action) => {
+        newDetailedActions[action] = newValue;
+      });
+
+      const newActions = { ...permission.actions };
+      (Object.keys(appActions) as ActionCategory[]).forEach((cat) => {
+        newActions[cat] = (appActions[cat] || []).every((a) => newDetailedActions[a]);
+      });
+      const allSelected = Object.values(newActions).every((v) => v);
+
+      updatePermission(permissionId, {
+        allActions: allSelected,
+        detailedActions: newDetailedActions,
+        actions: newActions,
+      });
+
+      if (actionErrors[permissionId] && Object.values(newDetailedActions).some((v) => v)) {
+        setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
+      }
+      return;
     }
+
+    const newValue = !permission.allActions;
+    const newDetailedActions: Record<string, boolean> = {};
+    Object.values(appActions)
+      .flat()
+      .forEach((action) => {
+        newDetailedActions[action] = newValue;
+      });
 
     updatePermission(permissionId, {
       allActions: newValue,
@@ -636,13 +767,11 @@ function PolicyEditorSection({
       },
     });
 
-    // Clear action error if any action is now selected
     if (actionErrors[permissionId] && newValue) {
       setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
     }
   };
 
-  // Toggle a single detailed action
   const toggleDetailedAction = (permissionId: string, actionName: string) => {
     const permission = permissions.find((p) => p.id === permissionId);
     if (!permission) return;
@@ -652,11 +781,11 @@ function PolicyEditorSection({
       [actionName]: !permission.detailedActions[actionName],
     };
 
-    // Update category action based on detailed actions
+    const appActions = getActionsForApp(permission.application);
     const category = actionName
       .replace(/^(Read|List|Write|Delete|Admin).*/, '$1')
-      .toLowerCase() as keyof Permission['actions'];
-    const categoryActions = COMPUTE_ACTIONS[category as keyof typeof COMPUTE_ACTIONS] || [];
+      .toLowerCase() as ActionCategory;
+    const categoryActions = appActions[category] || [];
     const allCategorySelected = categoryActions.every((a) => newDetailedActions[a]);
 
     const newActions = { ...permission.actions, [category]: allCategorySelected };
@@ -668,27 +797,32 @@ function PolicyEditorSection({
       allActions: allSelected,
     });
 
-    // Clear action error if any action is now selected
     if (actionErrors[permissionId] && Object.values(newDetailedActions).some((v) => v)) {
       setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
     }
   };
 
-  // Toggle all actions in a category (Read, List, Write, Delete, Admin)
-  const toggleCategoryActions = (permissionId: string, category: keyof Permission['actions']) => {
+  const toggleCategoryActions = (
+    permissionId: string,
+    category: ActionCategory,
+    scopedActions?: string[]
+  ) => {
     const permission = permissions.find((p) => p.id === permissionId);
     if (!permission) return;
 
-    const categoryActions = COMPUTE_ACTIONS[category as keyof typeof COMPUTE_ACTIONS] || [];
-    const allCurrentlySelected = categoryActions.every((a) => permission.detailedActions[a]);
+    const appActions = getActionsForApp(permission.application);
+    const targetActions = scopedActions ?? appActions[category] ?? [];
+    const allCurrentlySelected = targetActions.every((a) => permission.detailedActions[a]);
     const newValue = !allCurrentlySelected;
 
     const newDetailedActions = { ...permission.detailedActions };
-    categoryActions.forEach((action) => {
+    targetActions.forEach((action) => {
       newDetailedActions[action] = newValue;
     });
 
-    const newActions = { ...permission.actions, [category]: newValue };
+    const categoryActions = appActions[category] || [];
+    const fullCategorySelected = categoryActions.every((a) => newDetailedActions[a]);
+    const newActions = { ...permission.actions, [category]: fullCategorySelected };
     const allSelected = Object.values(newActions).every((v) => v);
 
     updatePermission(permissionId, {
@@ -697,15 +831,9 @@ function PolicyEditorSection({
       allActions: allSelected,
     });
 
-    // Clear action error if any action is now selected
     if (actionErrors[permissionId] && Object.values(newDetailedActions).some((v) => v)) {
       setActionErrors((prev) => ({ ...prev, [permissionId]: false }));
     }
-  };
-
-  // Check if application is compute AND all fields are filled
-  const shouldShowDetailedActions = (permission: Permission) => {
-    return permission.application.toLowerCase() === 'compute' && hasAllFieldsFilled(permission);
   };
 
   return (
@@ -727,8 +855,8 @@ function PolicyEditorSection({
         }
       />
       <span className="-mt-3 text-body-md text-[var(--color-text-subtle)]">
-        Each permission defines a set of permissions. Choose an effect, specify the target resource,
-        then select the allowed or denied actions. At least one permission is required.
+        Define the target resource (TRN) first, then select the allowed or denied actions for that
+        resource. At least one permission is required.
       </span>
       <SectionCard.Content showDividers={false}>
         {/* Divider */}
@@ -740,7 +868,7 @@ function PolicyEditorSection({
               {permissions.map((permission, index) => (
                 <div
                   key={permission.id}
-                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-5 w-full"
                 >
                   <VStack gap={4}>
                     <div className="flex items-center justify-between w-full">
@@ -763,7 +891,7 @@ function PolicyEditorSection({
                     <div className="flex flex-col gap-2 w-full">
                       <span className="text-label-sm text-[var(--color-text-default)]">Target</span>
                       <ChainedSelect
-                        segments={targetSegments}
+                        segments={getTargetSegments(permission)}
                         values={{
                           application: permission.application,
                           partition: permission.partition,
@@ -771,42 +899,48 @@ function PolicyEditorSection({
                           resourceId: permission.resourceId,
                         }}
                         onChange={(vals) => {
-                          updatePermission(permission.id, {
-                            application: vals.application ?? '',
-                            partition: vals.partition ?? '',
+                          const app = vals.application ?? '';
+                          const appChanged = app !== permission.application;
+                          const appConfig = APP_CONFIGS[app];
+                          const autoPartition =
+                            appConfig && !appConfig.hasPartition ? '-' : (vals.partition ?? '');
+                          const autoResourceId =
+                            (vals.resourceId ?? '') ||
+                            (app && autoPartition && (vals.resource ?? '') ? '*' : '');
+                          const updates: Partial<Permission> = {
+                            application: app,
+                            partition: autoPartition,
                             resource: vals.resource ?? '',
-                            resourceId: vals.resourceId ?? '',
-                          });
+                            resourceId: autoResourceId,
+                          };
+                          if (appChanged) {
+                            updates.detailedActions = {};
+                            updates.allActions = false;
+                            updates.actions = {
+                              read: false,
+                              list: false,
+                              write: false,
+                              delete: false,
+                              admin: false,
+                            };
+                          }
+                          updatePermission(permission.id, updates);
                           if (targetErrors[permission.id]) {
                             setTargetErrors((prev) => ({ ...prev, [permission.id]: false }));
                           }
                         }}
+                        fullWidth
                         className={
-                          targetErrors[permission.id] ||
-                          hasPartialFill(permission) ||
-                          isInvalidTargetCombination(permission)
+                          targetErrors[permission.id] || hasPartialFill(permission)
                             ? '[&>div]:border-[var(--color-state-danger)]'
                             : ''
                         }
                       />
-                      {targetErrors[permission.id] && (
+                      {(targetErrors[permission.id] || hasPartialFill(permission)) && (
                         <span className="text-body-sm text-[var(--color-state-danger)]">
-                          All Target fields must contain a valid value or a wildcard (∗).
+                          Complete all segments to define the resource target.
                         </span>
                       )}
-                      {!targetErrors[permission.id] && hasPartialFill(permission) && (
-                        <span className="text-body-sm text-[var(--color-state-danger)]">
-                          All Target fields must contain a valid value or a wildcard (∗).
-                        </span>
-                      )}
-                      {!targetErrors[permission.id] &&
-                        !hasPartialFill(permission) &&
-                        isInvalidTargetCombination(permission) && (
-                          <span className="text-body-sm text-[var(--color-state-danger)]">
-                            The entered Target combination is invalid for the Thaki Cloud system
-                            structure. Please verify fields.
-                          </span>
-                        )}
                     </div>
 
                     {/* Effect */}
@@ -837,136 +971,138 @@ function PolicyEditorSection({
                         <span className="text-[var(--color-state-danger)]">*</span>
                       </div>
 
-                      {index === 0 ||
-                      hasAllFieldsFilled(permission) ||
-                      (index > 0 &&
-                        hasAllFieldsFilled(permissions[index - 1]) &&
-                        hasAnyActionSelected(permissions[index - 1])) ? (
-                        <>
-                          {/* Search and All Actions */}
-                          <div className="flex items-center gap-2">
-                            <SearchInput
-                              placeholder="Search actions"
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
-                              onClear={() => setSearchQuery('')}
-                              size="sm"
-                              className="w-[280px]"
-                            />
-                            <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                            <label className="flex items-center gap-1.5 cursor-pointer">
-                              <Checkbox
-                                checked={permission.allActions}
-                                onChange={() => toggleAllActions(permission.id)}
-                              />
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                All actions
-                              </span>
-                            </label>
-                          </div>
+                      {hasAllFieldsFilled(permission) ? (
+                        (() => {
+                          const appActions = getActionsForApp(permission.application);
+                          const permSearchQuery = searchQueries[permission.id] ?? '';
+                          const allVisibleActions = permSearchQuery
+                            ? Object.values(appActions)
+                                .flat()
+                                .filter((a) =>
+                                  a.toLowerCase().includes(permSearchQuery.toLowerCase())
+                                )
+                            : null;
+                          const allVisibleSelected = allVisibleActions
+                            ? allVisibleActions.length > 0 &&
+                              allVisibleActions.every((a) => permission.detailedActions[a])
+                            : permission.allActions;
+                          return (
+                            <VStack gap={3}>
+                              <div className="flex items-center gap-2">
+                                <SearchInput
+                                  placeholder="Search actions"
+                                  value={permSearchQuery}
+                                  onChange={(e) =>
+                                    setSearchQueries((prev) => ({
+                                      ...prev,
+                                      [permission.id]: e.target.value,
+                                    }))
+                                  }
+                                  onClear={() =>
+                                    setSearchQueries((prev) => ({ ...prev, [permission.id]: '' }))
+                                  }
+                                  size="sm"
+                                  className="w-[280px]"
+                                />
+                                <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                                <label className="flex items-center gap-1.5 cursor-pointer">
+                                  <Checkbox
+                                    checked={allVisibleSelected}
+                                    onChange={() =>
+                                      toggleAllActions(
+                                        permission.id,
+                                        allVisibleActions ?? undefined
+                                      )
+                                    }
+                                  />
+                                  <span className="text-body-md text-[var(--color-text-default)]">
+                                    All actions
+                                  </span>
+                                </label>
+                              </div>
 
-                          {/* Action Error Message */}
-                          {actionErrors[permission.id] && (
-                            <span className="text-body-sm text-[var(--color-state-danger)]">
-                              At least one action must be selected.
-                            </span>
-                          )}
+                              {actionErrors[permission.id] && (
+                                <span className="text-body-sm text-[var(--color-state-danger)]">
+                                  At least one action must be selected.
+                                </span>
+                              )}
 
-                          {/* Action Category Disclosures */}
-                          <VStack gap={3}>
-                            {(['read', 'list', 'write', 'delete', 'admin'] as const).map(
-                              (category) => {
-                                const categoryActions = COMPUTE_ACTIONS[category];
-                                const filteredActions = searchQuery
-                                  ? categoryActions.filter((a) =>
-                                      a.toLowerCase().includes(searchQuery.toLowerCase())
-                                    )
-                                  : categoryActions;
-                                const selectedCount = categoryActions.filter(
-                                  (a) => permission.detailedActions[a]
-                                ).length;
-                                const allCategorySelected = categoryActions.every(
-                                  (a) => permission.detailedActions[a]
-                                );
-                                const isExpanded = expandedCategories[category];
+                              <VStack gap={3}>
+                                {(['read', 'list', 'write', 'delete', 'admin'] as const).map(
+                                  (category) => {
+                                    const categoryActions = appActions[category];
+                                    if (!categoryActions || categoryActions.length === 0)
+                                      return null;
+                                    const filteredActions = permSearchQuery
+                                      ? categoryActions.filter((a) =>
+                                          a.toLowerCase().includes(permSearchQuery.toLowerCase())
+                                        )
+                                      : categoryActions;
+                                    if (permSearchQuery && filteredActions.length === 0)
+                                      return null;
+                                    const selectedCount = filteredActions.filter(
+                                      (a) => permission.detailedActions[a]
+                                    ).length;
+                                    const allFilteredSelected =
+                                      filteredActions.length > 0 &&
+                                      filteredActions.every((a) => permission.detailedActions[a]);
 
-                                return (
-                                  <div key={category} className="flex flex-col gap-2 w-full">
-                                    {/* Category Header */}
-                                    <div className="flex items-center gap-1.5">
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          setExpandedCategories((prev) => ({
-                                            ...prev,
-                                            [category]: !prev[category],
-                                          }))
-                                        }
-                                        className="flex items-center justify-center w-3 h-3"
+                                    return (
+                                      <Disclosure
+                                        key={category}
+                                        open={permSearchQuery ? true : undefined}
                                       >
-                                        {isExpanded ? (
-                                          <IconChevronDown
-                                            size={12}
-                                            className="text-[var(--color-text-default)]"
-                                          />
-                                        ) : (
-                                          <IconChevronRight
-                                            size={12}
-                                            className="text-[var(--color-text-default)]"
-                                          />
-                                        )}
-                                      </button>
-                                      <Checkbox
-                                        checked={allCategorySelected}
-                                        onChange={() =>
-                                          toggleCategoryActions(permission.id, category)
-                                        }
-                                      />
-                                      <span className="text-label-md text-[var(--color-text-default)] capitalize">
-                                        {category} ({selectedCount}/{categoryActions.length})
-                                      </span>
-                                    </div>
-
-                                    {/* Expanded Actions Grid */}
-                                    {isExpanded && (
-                                      <div className="grid grid-cols-3 gap-2 w-full">
-                                        {filteredActions.map((actionName) => {
-                                          const isSelected = permission.detailedActions[actionName];
-                                          return (
-                                            <label
-                                              key={actionName}
-                                              className={`bg-[var(--color-surface-default)] border rounded-[var(--radius-md)] p-2 flex items-center gap-1.5 cursor-pointer min-w-[80px] ${
-                                                isSelected
-                                                  ? 'border-[var(--color-action-primary)]'
-                                                  : 'border-[var(--color-border-strong)]'
-                                              }`}
-                                            >
-                                              <Checkbox
-                                                checked={isSelected}
-                                                onChange={() =>
-                                                  toggleDetailedAction(permission.id, actionName)
-                                                }
-                                              />
-                                              <span
-                                                className="text-label-md text-[var(--color-text-default)] truncate min-w-0"
-                                                title={actionName}
+                                        <Disclosure.Trigger className="text-label-md">
+                                          <span className="flex items-center gap-1.5">
+                                            <Checkbox
+                                              checked={allFilteredSelected}
+                                              onChange={(e) => {
+                                                e.stopPropagation();
+                                                toggleCategoryActions(
+                                                  permission.id,
+                                                  category,
+                                                  permSearchQuery ? filteredActions : undefined
+                                                );
+                                              }}
+                                            />
+                                            <span className="text-label-md text-[var(--color-text-default)] capitalize">
+                                              {category} ({selectedCount}/{filteredActions.length})
+                                            </span>
+                                          </span>
+                                        </Disclosure.Trigger>
+                                        <Disclosure.Panel className="pl-[calc(var(--disclosure-icon-size)+var(--disclosure-gap))] pt-2">
+                                          <VStack gap={2}>
+                                            {filteredActions.map((actionName) => (
+                                              <label
+                                                key={actionName}
+                                                className="flex items-center gap-1.5 cursor-pointer"
                                               >
-                                                {actionName}
-                                              </span>
-                                            </label>
-                                          );
-                                        })}
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              }
-                            )}
-                          </VStack>
-                        </>
+                                                <Checkbox
+                                                  checked={
+                                                    permission.detailedActions[actionName] ?? false
+                                                  }
+                                                  onChange={() =>
+                                                    toggleDetailedAction(permission.id, actionName)
+                                                  }
+                                                />
+                                                <span className="text-body-md text-[var(--color-text-default)]">
+                                                  {actionName}
+                                                </span>
+                                              </label>
+                                            ))}
+                                          </VStack>
+                                        </Disclosure.Panel>
+                                      </Disclosure>
+                                    );
+                                  }
+                                )}
+                              </VStack>
+                            </VStack>
+                          );
+                        })()
                       ) : (
                         <InlineMessage variant="info">
-                          Fill in the Target fields to view available actions.
+                          Complete the target fields above to browse available actions.
                         </InlineMessage>
                       )}
                     </div>
@@ -975,15 +1111,19 @@ function PolicyEditorSection({
               ))}
 
               {/* Add Permission Button */}
-              <div className="w-fit">
+              <div className="flex items-center gap-2">
                 <Button
                   variant="secondary"
                   size="sm"
                   leftIcon={<IconCirclePlus size={12} />}
                   onClick={addPermission}
+                  disabled={permissions.length >= MAX_PERMISSIONS}
                 >
                   Add Permission
                 </Button>
+                <span className="text-body-sm text-[var(--color-text-muted)]">
+                  {permissions.length} / {MAX_PERMISSIONS}
+                </span>
               </div>
             </VStack>
           </div>
@@ -1045,27 +1185,7 @@ export default function CreatePolicyPage() {
 
   // Form state - Permissions
   const [permissions, setPermissions] = useState<Permission[]>(
-    isV2
-      ? [
-          {
-            id: 'default-1',
-            application: '',
-            partition: '',
-            resource: '',
-            resourceId: '',
-            actions: {
-              read: false,
-              list: false,
-              write: false,
-              delete: false,
-              admin: false,
-            },
-            detailedActions: {},
-            allActions: false,
-            mfaRequired: false,
-          },
-        ]
-      : []
+    isV2 ? [createEmptyPermission()] : []
   );
   const [permissionsError, setPermissionsError] = useState<string | null>(null);
 
@@ -1321,10 +1441,11 @@ export default function CreatePolicyPage() {
                       permission.resource || '*',
                       permission.resourceId || '*',
                     ].join(':');
+                    const appActions = getActionsForApp(permission.application);
                     const selectedCategories = (
                       ['read', 'list', 'write', 'delete', 'admin'] as const
                     ).filter((cat) => {
-                      const actions = COMPUTE_ACTIONS[cat];
+                      const actions = appActions[cat];
                       return actions.some((a) => permission.detailedActions[a]);
                     });
 
