@@ -1,6 +1,6 @@
 import { VStack, MenuItem } from '@/design-system';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
-import { IconSettings, IconUser, IconBell, IconInfoCircle } from '@tabler/icons-react';
+import { IconSettings, IconBell, IconInfoCircle } from '@tabler/icons-react';
 import { useLocation } from 'react-router-dom';
 import { AppSwitcher } from './AppSwitcher';
 
@@ -51,12 +51,6 @@ export function SettingsSidebar({ isOpen = true, onToggle }: SettingsSidebarProp
             label="General"
             href="/settings/general"
             active={isActive('/settings/general')}
-          />
-          <MenuItem
-            icon={<IconUser size={16} stroke={1.5} />}
-            label="Account"
-            href="/settings/account"
-            active={isActive('/settings/account')}
           />
           <MenuItem
             icon={<IconBell size={16} stroke={1.5} />}

@@ -11,11 +11,9 @@ import {
   STATUS_THRESHOLDS,
   CopyButton,
   useToast,
-  useSnackbar,
   type TableColumn,
 } from '@/design-system';
-import { IconBread, IconMessage } from '@tabler/icons-react';
-import AppIconCompute from '@/assets/appIcon/compute.png';
+import { IconBread } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -211,7 +209,6 @@ export function ComputeHomePage() {
     useTabs();
   const navigate = useNavigate();
   const toast = useToast();
-  const snackbar = useSnackbar();
 
   useEffect(() => {
     updateActiveTabLabel('Dashboard');
@@ -353,16 +350,6 @@ export function ComputeHomePage() {
                 icon={<IconBread size={16} stroke={1.5} />}
                 aria-label="Toast test"
                 onClick={() => toast.success('Instance "web-01" created successfully.')}
-              />
-              <TopBarAction
-                icon={<IconMessage size={16} stroke={1.5} />}
-                aria-label="Snackbar test"
-                onClick={() =>
-                  snackbar.success('Volume "backup-01" snapshot successfully created', {
-                    partition: 'proj-1',
-                    appIcon: AppIconCompute,
-                  })
-                }
               />
             </>
           }

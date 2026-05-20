@@ -14,7 +14,6 @@ import { EntryPage } from '@/pages/EntryPage';
 // Pages - Settings
 
 import SettingsGeneralPage from '@/pages/SettingsGeneralPage';
-import SettingsAccountPage from '@/pages/SettingsAccountPage';
 import SettingsNotificationsPage from '@/pages/SettingsNotificationsPage';
 import SettingsInformationPage from '@/pages/SettingsInformationPage';
 
@@ -551,7 +550,6 @@ function AppRoutes() {
       {/* Settings & Mail Template Routes */}
       <Route path="/settings" element={<Navigate to="/settings/general" replace />} />
       <Route path="/settings/general" element={<SettingsGeneralPage />} />
-      <Route path="/settings/account" element={<SettingsAccountPage />} />
       <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
       <Route path="/settings/information" element={<SettingsInformationPage />} />
       <Route path="/mail-template" element={<MailTemplatePage />} />

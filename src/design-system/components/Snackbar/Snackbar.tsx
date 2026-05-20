@@ -9,20 +9,16 @@ import {
   type ReactNode,
 } from 'react';
 import { twMerge } from '../../utils/cn';
-import {
-  IconCircleCheck,
-  IconAlertTriangle,
-  IconInfoCircle,
-  IconX,
-  IconChevronUp,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { IconX, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
+import { Badge } from '../Badge';
+import type { BadgeTheme } from '../Badge/Badge';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-export type SnackbarType = 'success' | 'error' | 'info';
+/** Alert App: critical | warning, Other App: success | failed */
+export type SnackbarType = 'critical' | 'warning' | 'success' | 'failed';
 
 export type SnackbarPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 
@@ -80,11 +76,20 @@ export interface SnackbarContextValue {
     message: string,
     options?: Partial<Omit<SnackbarData, 'id' | 'type' | 'message'>>
   ) => string;
-  error: (
+  failed: (
     message: string,
     options?: Partial<Omit<SnackbarData, 'id' | 'type' | 'message'>>
   ) => string;
-  info: (
+  critical: (
+    message: string,
+    options?: Partial<Omit<SnackbarData, 'id' | 'type' | 'message'>>
+  ) => string;
+  warning: (
+    message: string,
+    options?: Partial<Omit<SnackbarData, 'id' | 'type' | 'message'>>
+  ) => string;
+  /** @deprecated Use `failed()` instead */
+  error: (
     message: string,
     options?: Partial<Omit<SnackbarData, 'id' | 'type' | 'message'>>
   ) => string;
@@ -93,13 +98,14 @@ export interface SnackbarContextValue {
 }
 
 /* ----------------------------------------
-   Status Icons
+   Status Badge Map
    ---------------------------------------- */
 
-const typeIcons: Record<SnackbarType, ReactNode> = {
-  success: <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />,
-  error: <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />,
-  info: <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />,
+const snackbarTypeBadgeMap: Record<SnackbarType, { label: string; theme: BadgeTheme }> = {
+  critical: { label: 'Critical', theme: 'red' },
+  warning: { label: 'Warning', theme: 'yellow' },
+  success: { label: 'Success', theme: 'green' },
+  failed: { label: 'Failed', theme: 'red' },
 };
 
 /* ----------------------------------------
@@ -151,6 +157,7 @@ export function Snackbar({ snackbar, onDismiss, className = '' }: SnackbarProps)
   const isPersistent = snackbar.persistent ?? false;
   const duration = isPersistent ? 0 : (snackbar.duration ?? 3000);
   const hasDetail = snackbar.detail && (snackbar.detail.code || snackbar.detail.message);
+  const showDetail = hasDetail && (snackbar.type === 'failed' || snackbar.type === 'critical');
 
   useEffect(() => {
     requestAnimationFrame(() => setIsEntered(true));
@@ -242,9 +249,14 @@ export function Snackbar({ snackbar, onDismiss, className = '' }: SnackbarProps)
     handleDismiss();
   };
 
-  const statusIcon = typeIcons[snackbar.type];
-  const msg = snackbar.message;
-  const lastSpace = msg.lastIndexOf(' ');
+  const isAlert = snackbar.type === 'critical' || snackbar.type === 'warning';
+  const badgeInfo = snackbarTypeBadgeMap[snackbar.type];
+
+  const cardBg = isAlert
+    ? snackbar.type === 'critical'
+      ? 'rounded-[var(--radius-lg)] bg-[var(--inline-message-error-bg)] flex flex-col py-3 w-[320px] shadow-lg'
+      : 'rounded-[var(--radius-lg)] bg-[var(--color-state-warning-bg)] flex flex-col py-3 w-[320px] shadow-lg'
+    : 'rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3 w-[320px] shadow-lg';
 
   return (
     <div ref={wrapperRef}>
@@ -252,7 +264,7 @@ export function Snackbar({ snackbar, onDismiss, className = '' }: SnackbarProps)
         data-figma-name="[TDS] Snackbar"
         role="alert"
         className={twMerge(
-          'relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col gap-3 py-3 w-[320px] shadow-lg',
+          cardBg,
           'transition-all duration-300 ease-out',
           isExiting
             ? 'opacity-0 translate-x-full'
@@ -276,42 +288,31 @@ export function Snackbar({ snackbar, onDismiss, className = '' }: SnackbarProps)
             {snackbar.appIcon && (
               <img src={snackbar.appIcon} alt="" className="size-5 shrink-0 object-contain" />
             )}
-            <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
-              {/* Message + inline status icon */}
-              <div className="flex flex-col">
-                <span className="text-label-md text-[var(--color-text-default)]">
-                  {lastSpace === -1 ? (
-                    <span className="whitespace-nowrap">
-                      {msg}
-                      <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
-                        {statusIcon}
-                      </span>
-                    </span>
-                  ) : (
-                    <>
-                      {msg.slice(0, lastSpace)}{' '}
-                      <span className="whitespace-nowrap">
-                        {msg.slice(lastSpace + 1)}
-                        <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
-                          {statusIcon}
-                        </span>
-                      </span>
-                    </>
-                  )}
-                </span>
+            <div className="flex flex-col gap-1.5 flex-1 min-w-[1px]">
+              <span className="text-label-md text-[var(--color-text-default)]">
+                {snackbar.message}
+              </span>
+
+              <div className="flex items-center gap-1.5 min-w-0">
+                <Badge theme={badgeInfo.theme} size="sm" className="shrink-0">
+                  {badgeInfo.label}
+                </Badge>
+                {snackbar.partition && (
+                  <Badge
+                    theme="white"
+                    size="sm"
+                    className="overflow-hidden min-w-0"
+                    title={snackbar.partition}
+                  >
+                    <span className="block truncate">{snackbar.partition}</span>
+                  </Badge>
+                )}
               </div>
 
-              {/* Partition */}
-              {snackbar.partition && (
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                  {snackbar.partition}
-                </span>
-              )}
-
-              {/* View detail toggle (error type) */}
-              {hasDetail && (
+              {/* View detail toggle (failed/critical type only) */}
+              {showDetail && (
                 <div
-                  className="flex flex-col gap-2 rounded-[var(--radius-sm)]"
+                  className="flex flex-col gap-2 rounded-[var(--radius-sm)] mt-1"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
@@ -510,16 +511,30 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
     [show]
   );
 
-  const error = useCallback(
+  const failed = useCallback(
     (message: string, options?: Partial<Omit<SnackbarData, 'id' | 'type' | 'message'>>) => {
-      return show({ type: 'error', message, persistent: true, ...options });
+      return show({ type: 'failed', message, persistent: true, ...options });
     },
     [show]
   );
 
-  const info = useCallback(
+  const critical = useCallback(
     (message: string, options?: Partial<Omit<SnackbarData, 'id' | 'type' | 'message'>>) => {
-      return show({ type: 'info', message, ...options });
+      return show({ type: 'critical', message, persistent: true, ...options });
+    },
+    [show]
+  );
+
+  const warning = useCallback(
+    (message: string, options?: Partial<Omit<SnackbarData, 'id' | 'type' | 'message'>>) => {
+      return show({ type: 'warning', message, ...options });
+    },
+    [show]
+  );
+
+  const error = useCallback(
+    (message: string, options?: Partial<Omit<SnackbarData, 'id' | 'type' | 'message'>>) => {
+      return show({ type: 'failed', message, persistent: true, ...options });
     },
     [show]
   );
@@ -532,7 +547,16 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
     clearAllSnackbars();
   }, []);
 
-  const value: SnackbarContextValue = { show, success, error, info, dismiss, dismissAll };
+  const value: SnackbarContextValue = {
+    show,
+    success,
+    failed,
+    critical,
+    warning,
+    error,
+    dismiss,
+    dismissAll,
+  };
 
   return <SnackbarContext.Provider value={value}>{children}</SnackbarContext.Provider>;
 }

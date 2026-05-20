@@ -83,9 +83,6 @@ export default function SettingsGeneralPage() {
         {/* Header */}
         <div>
           <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">General</h1>
-          <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
-            Configure your display and localization preferences.
-          </p>
         </div>
 
         {/* Settings Card */}

@@ -3,7 +3,6 @@ import {
   Breadcrumb,
   VStack,
   SectionCard,
-  Select,
   Toggle,
   Radio,
   RadioGroup,
@@ -95,9 +94,6 @@ export default function SettingsNotificationsPage() {
           <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
             Notifications
           </h1>
-          <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
-            Configure how you receive notifications.
-          </p>
         </div>
 
         {/* Notification Preferences */}
@@ -111,45 +107,15 @@ export default function SettingsNotificationsPage() {
               </span>
 
               <div className="pl-2">
-                <FormField label="What to Notify" spacing="loose">
-                  <RadioGroup
-                    value={globalWhatToNotify}
-                    onChange={(val) => {
-                      setGlobalWhatToNotify(val);
-                      success('Notification preference updated.');
-                    }}
-                  >
-                    <Radio value="all" label="All" />
-                    <Radio value="errors" label="Errors only" />
-                    <Radio value="off" label="Off" />
-                  </RadioGroup>
-                </FormField>
-              </div>
-
-              <div className={`pl-2 ${globalWhatToNotify === 'off' ? 'opacity-50' : ''}`}>
-                <FormField label="Duration">
-                  <Select
-                    value={globalDuration}
-                    onChange={(val) => {
-                      setGlobalDuration(val);
-                      success('Duration updated.');
-                    }}
-                    options={durationOptions}
-                    width="sm"
-                    disabled={globalWhatToNotify === 'off'}
-                  />
-                </FormField>
-              </div>
-
-              <div className={`pl-2 ${globalWhatToNotify === 'off' ? 'opacity-50' : ''}`}>
-                <FormField label="Sound" spacing="loose">
+                <FormField label="Notifications" spacing="loose">
                   <Toggle
                     checked={globalSound}
                     onChange={(e) => {
                       setGlobalSound(e.target.checked);
-                      success(e.target.checked ? 'Sound enabled.' : 'Sound disabled.');
+                      success(
+                        e.target.checked ? 'Notifications enabled.' : 'Notifications disabled.'
+                      );
                     }}
-                    disabled={globalWhatToNotify === 'off'}
                   />
                 </FormField>
               </div>
@@ -181,22 +147,6 @@ export default function SettingsNotificationsPage() {
                         <Radio value="off" label="Off" />
                       </RadioGroup>
                     </FormField>
-
-                    <div
-                      className={
-                        serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''
-                      }
-                    >
-                      <FormField label="Duration">
-                        <Select
-                          value={serviceNotifications[key].duration}
-                          onChange={(value) => updateServiceNotification(key, 'duration', value)}
-                          options={durationOptions}
-                          width="sm"
-                          disabled={serviceNotifications[key].whatToNotify === 'off'}
-                        />
-                      </FormField>
-                    </div>
 
                     <div
                       className={
