@@ -14,18 +14,7 @@ import {
 } from '@/design-system';
 import { AppSwitcher } from '@/components/AppSwitcher';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconLayoutDashboard,
-  IconRocket,
-  IconServer,
-  IconList,
-  IconChartBar,
-  IconFileText,
-  IconSettings,
-  IconFolder,
-  IconPackage,
-  IconNetwork,
-} from '@tabler/icons-react';
+import { IconCube } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Sidebar
@@ -47,7 +36,7 @@ function ServeSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void })
       <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3 pb-6 sidebar-scroll">
         <VStack gap={2} className="w-full min-w-0">
           <MenuItem
-            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+            icon={<IconCube size={16} stroke={1.5} />}
             label="Dashboard"
             href="/serve"
             active={isActive('/serve') && location.pathname === '/serve'}
@@ -55,19 +44,19 @@ function ServeSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void })
 
           <MenuSection title="Deployments" defaultOpen={true}>
             <MenuItem
-              icon={<IconRocket size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Endpoints"
               href="/serve/endpoints"
               active={isActive('/serve/endpoints')}
             />
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Services"
               href="/serve/services"
               active={isActive('/serve/services')}
             />
             <MenuItem
-              icon={<IconList size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Revisions"
               href="/serve/revisions"
               active={isActive('/serve/revisions')}
@@ -76,13 +65,13 @@ function ServeSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void })
 
           <MenuSection title="Monitoring" defaultOpen={true}>
             <MenuItem
-              icon={<IconChartBar size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Metrics"
               href="/serve/metrics"
               active={isActive('/serve/metrics')}
             />
             <MenuItem
-              icon={<IconFileText size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Logs"
               href="/serve/logs"
               active={isActive('/serve/logs')}
@@ -91,7 +80,7 @@ function ServeSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void })
 
           <MenuSection title="Infrastructure" defaultOpen={true}>
             <MenuItem
-              icon={<IconNetwork size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Clusters"
               href="/serve/clusters"
               active={isActive('/serve/clusters')}
@@ -100,19 +89,19 @@ function ServeSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void })
 
           <MenuSection title="Admin" defaultOpen={true}>
             <MenuItem
-              icon={<IconPackage size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Dependencies"
               href="/serve/dependencies"
               active={isActive('/serve/dependencies')}
             />
             <MenuItem
-              icon={<IconFolder size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Projects"
               href="/serve/projects"
               active={isActive('/serve/projects')}
             />
             <MenuItem
-              icon={<IconSettings size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Settings"
               href="/serve/settings"
               active={isActive('/serve/settings')}

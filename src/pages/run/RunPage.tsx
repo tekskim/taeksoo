@@ -14,18 +14,7 @@ import {
 } from '@/design-system';
 import { AppSwitcher } from '@/components/AppSwitcher';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconLayoutDashboard,
-  IconPlayerPlay,
-  IconList,
-  IconHistory,
-  IconChartBar,
-  IconFileText,
-  IconStack2,
-  IconSettings,
-  IconFolder,
-  IconPackage,
-} from '@tabler/icons-react';
+import { IconCube } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Sidebar
@@ -47,7 +36,7 @@ function RunSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }) {
       <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3 pb-6 sidebar-scroll">
         <VStack gap={2} className="w-full min-w-0">
           <MenuItem
-            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+            icon={<IconCube size={16} stroke={1.5} />}
             label="Dashboard"
             href="/run"
             active={isActive('/run') && location.pathname === '/run'}
@@ -55,19 +44,19 @@ function RunSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }) {
 
           <MenuSection title="Jobs" defaultOpen={true}>
             <MenuItem
-              icon={<IconPlayerPlay size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Active Runs"
               href="/run/active"
               active={isActive('/run/active')}
             />
             <MenuItem
-              icon={<IconList size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="All Runs"
               href="/run/all"
               active={isActive('/run/all')}
             />
             <MenuItem
-              icon={<IconHistory size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="History"
               href="/run/history"
               active={isActive('/run/history')}
@@ -76,7 +65,7 @@ function RunSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }) {
 
           <MenuSection title="Queues" defaultOpen={true}>
             <MenuItem
-              icon={<IconStack2 size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Queue Management"
               href="/run/queues"
               active={isActive('/run/queues')}
@@ -85,13 +74,13 @@ function RunSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }) {
 
           <MenuSection title="Monitoring" defaultOpen={true}>
             <MenuItem
-              icon={<IconChartBar size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Metrics"
               href="/run/metrics"
               active={isActive('/run/metrics')}
             />
             <MenuItem
-              icon={<IconFileText size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Logs"
               href="/run/logs"
               active={isActive('/run/logs')}
@@ -100,19 +89,19 @@ function RunSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void }) {
 
           <MenuSection title="Admin" defaultOpen={true}>
             <MenuItem
-              icon={<IconPackage size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Dependencies"
               href="/run/dependencies"
               active={isActive('/run/dependencies')}
             />
             <MenuItem
-              icon={<IconFolder size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Projects"
               href="/run/projects"
               active={isActive('/run/projects')}
             />
             <MenuItem
-              icon={<IconSettings size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Settings"
               href="/run/settings"
               active={isActive('/run/settings')}

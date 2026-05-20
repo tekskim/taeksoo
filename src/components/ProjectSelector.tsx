@@ -253,14 +253,49 @@ export function ProjectSelector({
                         </div>
 
                         {/* Row 2: description */}
-                        <p className="text-body-sm text-[var(--color-text-default)]">
-                          {project.description}
-                        </p>
+                        <button
+                          type="button"
+                          className="text-left"
+                          onClick={() => handleProjectClick(project)}
+                          disabled={isDisabled}
+                        >
+                          {project.name}
+                        </button>
+                        {isSelected && !isDisabled && (
+                          <IconCheck
+                            size={20}
+                            className="text-[var(--color-action-primary)]"
+                            stroke={1}
+                          />
+                        )}
+                        {isDisabled && (
+                          <span className="text-body-sm text-[var(--color-status-error)]">
+                            Disabled
+                          </span>
+                        )}
+                      </div>
 
-                        {/* Row 3: ID */}
-                        <span className="text-[11px] leading-4 text-[var(--color-text-muted)]">
-                          ID: {project.id}
-                        </span>
+                      {/* Description */}
+                      <p
+                        className={`text-body-sm leading-4 ${
+                          isDisabled
+                            ? 'text-[var(--color-text-muted)]'
+                            : 'text-[var(--color-text-subtle)]'
+                        }`}
+                      >
+                        {project.description}
+                      </p>
+
+                      {/* Footer */}
+                      <div
+                        className={`flex items-center justify-between text-body-xs ${
+                          isDisabled
+                            ? 'text-[var(--color-text-muted)]'
+                            : 'text-[var(--color-text-subtle)]'
+                        }`}
+                      >
+                        <span>ID: {project.id}</span>
+                        <span>{project.createdAt}</span>
                       </div>
                     </div>
                   );

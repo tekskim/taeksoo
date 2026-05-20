@@ -14,18 +14,7 @@ import {
 } from '@/design-system';
 import { AppSwitcher } from '@/components/AppSwitcher';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconLayoutDashboard,
-  IconTerminal2,
-  IconBrain,
-  IconTable,
-  IconGitBranch,
-  IconActivity,
-  IconDatabase,
-  IconBox,
-  IconSettings,
-  IconFolder,
-} from '@tabler/icons-react';
+import { IconCube } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Sidebar
@@ -47,7 +36,7 @@ function MLStudioSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void
       <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3 pb-6 sidebar-scroll">
         <VStack gap={2} className="w-full min-w-0">
           <MenuItem
-            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+            icon={<IconCube size={16} stroke={1.5} />}
             label="Dashboard"
             href="/ml-studio"
             active={isActive('/ml-studio') && location.pathname === '/ml-studio'}
@@ -55,13 +44,13 @@ function MLStudioSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void
 
           <MenuSection title="Workspace" defaultOpen={true}>
             <MenuItem
-              icon={<IconTerminal2 size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="DevSpace"
               href="/ml-studio/devspace"
               active={isActive('/ml-studio/devspace')}
             />
             <MenuItem
-              icon={<IconGitBranch size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Pipelines"
               href="/ml-studio/pipelines"
               active={isActive('/ml-studio/pipelines')}
@@ -70,19 +59,19 @@ function MLStudioSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void
 
           <MenuSection title="Training" defaultOpen={true}>
             <MenuItem
-              icon={<IconBrain size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Experiments"
               href="/ml-studio/experiments"
               active={isActive('/ml-studio/experiments')}
             />
             <MenuItem
-              icon={<IconActivity size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Benchmarks"
               href="/ml-studio/benchmarks"
               active={isActive('/ml-studio/benchmarks')}
             />
             <MenuItem
-              icon={<IconTable size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Tabular"
               href="/ml-studio/tabular"
               active={isActive('/ml-studio/tabular')}
@@ -91,19 +80,19 @@ function MLStudioSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void
 
           <MenuSection title="Assets" defaultOpen={true}>
             <MenuItem
-              icon={<IconBrain size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Models"
               href="/ml-studio/models"
               active={isActive('/ml-studio/models')}
             />
             <MenuItem
-              icon={<IconDatabase size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Datasets"
               href="/ml-studio/datasets"
               active={isActive('/ml-studio/datasets')}
             />
             <MenuItem
-              icon={<IconBox size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Volumes"
               href="/ml-studio/volumes"
               active={isActive('/ml-studio/volumes')}
@@ -112,13 +101,13 @@ function MLStudioSidebar({ onToggle }: { isOpen?: boolean; onToggle?: () => void
 
           <MenuSection title="Admin" defaultOpen={true}>
             <MenuItem
-              icon={<IconFolder size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Projects"
               href="/ml-studio/projects"
               active={isActive('/ml-studio/projects')}
             />
             <MenuItem
-              icon={<IconSettings size={16} stroke={1.5} />}
+              icon={<IconCube size={16} stroke={1.5} />}
               label="Settings"
               href="/ml-studio/settings"
               active={isActive('/ml-studio/settings')}
