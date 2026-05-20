@@ -160,6 +160,7 @@ import {
   IconTerminal2,
   IconActivity,
   IconChartBar,
+  IconChartLine,
   IconGauge,
   IconDeviceDesktop,
   IconDeviceDesktopAnalytics,
@@ -1195,6 +1196,12 @@ const iconCategories: IconCategoryData[] = [
         name: 'IconChartBar',
         label: 'Bar Chart',
         usage: 'Chart 관련 페이지, navigationData',
+      },
+      {
+        icon: IconChartLine,
+        name: 'IconChartLine',
+        label: 'Line Chart',
+        usage: 'Fabric Usage Trend, 시계열 트렌드 표시',
       },
       {
         icon: IconChartPie3,
