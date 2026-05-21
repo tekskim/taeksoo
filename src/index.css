@@ -657,7 +657,7 @@ html.theme-transition *::after {
      Component - ContextMenu
      ---------------------------------------- */
   --context-menu-min-width: 80px;
-  --context-menu-padding-x: var(--spacing-3);
+  --context-menu-padding-x: var(--spacing-2-5);
   --context-menu-padding-y: var(--spacing-1-5);
   --context-menu-radius: var(--radius-md);
   --context-menu-hover-bg: var(--color-slate-100);

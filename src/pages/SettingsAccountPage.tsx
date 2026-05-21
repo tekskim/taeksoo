@@ -124,7 +124,7 @@ export default function SettingsAccountPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={false}
-          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'Account' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Account' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"

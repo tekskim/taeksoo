@@ -30,7 +30,7 @@ export default function SettingsInformationPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={false}
-          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'Information' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Information' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"

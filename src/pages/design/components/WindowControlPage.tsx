@@ -1,7 +1,24 @@
+import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { WindowControl, WindowControls, VStack } from '@/design-system';
+
+function InteractiveTitleBar() {
+  const [maximized, setMaximized] = useState(false);
+  return (
+    <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
+      <span className="text-body-md font-medium text-[var(--color-text-default)]">
+        Application Title
+      </span>
+      <WindowControls
+        showSplit
+        isMaximized={maximized}
+        onMaximize={() => setMaximized((v) => !v)}
+      />
+    </div>
+  );
+}
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -351,13 +368,10 @@ export function WindowControlPage() {
       whenToUse={['Desktop UI 내에서 앱이 "독립 창" 형태로 동작하는 경우(멀티 윈도우 포함)']}
       whenNotToUse={['OS 네이티브 창을 그대로 사용하는 경우(이 문서는 불필요)']}
       preview={
-        <ComponentPreview code={`<WindowControls showSplit />`}>
-          <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
-            <span className="text-body-md font-medium text-[var(--color-text-default)]">
-              Application Title
-            </span>
-            <WindowControls showSplit />
-          </div>
+        <ComponentPreview
+          code={`<WindowControls showSplit isMaximized={maximized} onMaximize={() => setMaximized(v => !v)} />`}
+        >
+          <InteractiveTitleBar />
         </ComponentPreview>
       }
       examples={
@@ -406,7 +420,11 @@ export function WindowControlPage() {
                 3개 버튼이 gap: 4px 간격으로 그룹 배치. Title Bar 우측에 위치.
               </span>
             </VStack>
-            <WindowControls />
+            <WindowControls
+              showSplit
+              onSnapLeft={() => alert('Snap Left')}
+              onSnapRight={() => alert('Snap Right')}
+            />
           </VStack>
 
           <VStack gap={3}>
@@ -422,7 +440,11 @@ export function WindowControlPage() {
               <span className="text-body-md font-medium text-[var(--color-text-default)]">
                 Application Title
               </span>
-              <WindowControls />
+              <WindowControls
+                showSplit
+                onSnapLeft={() => alert('Snap Left')}
+                onSnapRight={() => alert('Snap Right')}
+              />
             </div>
           </VStack>
 
@@ -439,7 +461,12 @@ export function WindowControlPage() {
               <span className="text-body-md font-medium text-[var(--color-text-default)]">
                 Application Title
               </span>
-              <WindowControls isMaximized />
+              <WindowControls
+                isMaximized
+                showSplit
+                onSnapLeft={() => alert('Snap Left')}
+                onSnapRight={() => alert('Snap Right')}
+              />
             </div>
           </VStack>
 

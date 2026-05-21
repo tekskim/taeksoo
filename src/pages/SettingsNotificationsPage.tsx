@@ -83,7 +83,7 @@ export default function SettingsNotificationsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={false}
-          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'Notifications' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Notifications' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"

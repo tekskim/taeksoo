@@ -59,6 +59,222 @@ const TYPE_CONFIG: Record<
 
 const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '1.5.0',
+    date: '2026-05-21',
+    summary:
+      'Desktop UX 대폭 강화 — 알림 시스템 개편, 사이드바 호버 리빌, 사운드 랩, AI Platform·Security·IAM 앱 확장',
+    entries: [
+      // New
+      {
+        type: 'new',
+        date: '2026-05-21',
+        description:
+          'Notification Sound Lab 페이지 — Web Audio API 기반 알림음 합성·재생·다운로드, 사운드 매칭 정책 테이블',
+        link: '/lab/notification-sounds',
+      },
+      {
+        type: 'new',
+        date: '2026-05-20',
+        component: 'Snackbar',
+        description:
+          'DS Snackbar 컴포넌트 신규 추가 — FIFO 자동 dismiss, z-index 관리, alert/notification 배지 디자인',
+        link: '/design/components/snackbar',
+      },
+      {
+        type: 'new',
+        date: '2026-05-19',
+        description:
+          '사이드바 호버 리빌 — 사이드바 숨김 상태에서 왼쪽 가장자리 호버 시 슬라이드인 애니메이션',
+      },
+      {
+        type: 'new',
+        date: '2026-05-18',
+        description: 'Launchpad 검색 기능 추가 — Desktop Top Bar 앱 런처에 검색바 탑재',
+      },
+      {
+        type: 'new',
+        date: '2026-04-20',
+        description:
+          'AI Platform 앱 대규모 확장 — Fabric, Serve, ML Studio, Run, Datasource, Serverless, DevSpace, Pipeline Builder, Benchmarks, Kueue, Monitoring 페이지',
+      },
+      {
+        type: 'new',
+        date: '2026-04-15',
+        description:
+          'Security 앱 — Firewall 리스트/디테일/Create Drawer, Network Policy 페이지, Edit/Manage Ports Drawer',
+      },
+      {
+        type: 'new',
+        date: '2026-04-10',
+        description:
+          'IAM 확장 — Service Accounts, Create API Key Drawer, Grant Access/Manage Policies/Edit Role Drawer, Revoke 모달',
+      },
+      {
+        type: 'new',
+        date: '2026-04-08',
+        component: 'ChainedSelect',
+        description: '신규 컴포넌트 — IAM Policy 페이지용 연쇄 셀렉트',
+      },
+      {
+        type: 'new',
+        date: '2026-04-05',
+        description: 'Storage 앱 역할 기반 분리 — Domain Admin, Member 별도 사이드바 및 페이지',
+      },
+      {
+        type: 'new',
+        date: '2026-04-02',
+        description:
+          'Container Catalog — Installed Operators, CatalogCard DS 컴포넌트, Install Wizard',
+      },
+      {
+        type: 'new',
+        date: '2026-03-30',
+        description:
+          'Desktop 카테고리 DS 문서 — App Launcher, Window Split, App Window Animation 페이지',
+        link: '/design/desktop/app-launcher',
+      },
+      {
+        type: 'new',
+        date: '2026-03-28',
+        description: 'Alerts 앱 아이콘 추가, KMS/Security/Logs/Audit 앱 아이콘',
+      },
+
+      // Updated
+      {
+        type: 'updated',
+        date: '2026-05-21',
+        description:
+          'Notification Center 전면 개편 — Alert/Notification 카테고리 분리, 아이콘→배지 상태 전환, 고정 알림, 타임스탬프 정책',
+      },
+      {
+        type: 'updated',
+        date: '2026-05-21',
+        description:
+          'Settings 앱 간소화 — Account 메뉴 제거, TopBar 제거, Information 페이지 합침, Sound→Notifications 라벨 변경',
+      },
+      {
+        type: 'updated',
+        date: '2026-05-21',
+        component: 'WindowControl',
+        description: 'Preview 인터랙티브 Maximize/Restore 토글, 모든 예시에 Split 버튼 포함',
+        link: '/design/components/window-control',
+      },
+      {
+        type: 'updated',
+        date: '2026-05-21',
+        component: 'ProjectSelector',
+        description:
+          '트리거 높이 28px 고정, TenantCell 구조 정리 (중복 이름·IconCheck 제거), 간격 8px 통일',
+        link: '/design/components/project-selector',
+      },
+      {
+        type: 'updated',
+        date: '2026-04-25',
+        description:
+          'Desktop 윈도우 시스템 — 엣지 스냅, Cascade 배치, Dock 로직, TopBar auto-hide, 창 애니메이션',
+      },
+      {
+        type: 'updated',
+        date: '2026-04-20',
+        description:
+          'AI Platform Dashboard 리디자인, Models/Workloads/Text Generation/Tabular 페이지 Figma 정렬',
+      },
+      {
+        type: 'updated',
+        date: '2026-04-15',
+        description:
+          'UX Audit 전체 앱 대상 Round 5~15 — 100+ 항목 기능 버그 수정, 접근성 강화, DS 토큰 일관성',
+      },
+      {
+        type: 'updated',
+        date: '2026-04-10',
+        description: 'OverlayScrollbars 전역 도입 — 커스텀 스크롤바 CSS를 OverlayScrollbars로 통합',
+      },
+      {
+        type: 'updated',
+        date: '2026-04-05',
+        component: 'Tooltip',
+        description: 'min-width 제거, 텍스트 좌측 정렬, 문자 제한 가이드라인 추가',
+        link: '/design/components/tooltip',
+      },
+      {
+        type: 'updated',
+        date: '2026-04-02',
+        component: 'Popover',
+        description: '문서 페이지 추가 — topology node types, Badge Tooltip preview 이동',
+        link: '/design/components/popover',
+      },
+      {
+        type: 'updated',
+        date: '2026-03-30',
+        description:
+          'Sign out 모달 추가, 글로벌 알림 패널 unread 배경, OverlayScrollbars 알림 패널 적용',
+      },
+      {
+        type: 'updated',
+        date: '2026-03-28',
+        description:
+          'Create 페이지 표준화 — default states, 간격 통일, conditional sections, status icons',
+      },
+
+      // Fixed
+      {
+        type: 'updated',
+        date: '2026-05-21',
+        component: 'Badge',
+        description: 'variant "danger"는 미존재 — 모든 사용처를 "error"로 수정',
+      },
+      {
+        type: 'fixed',
+        date: '2026-05-20',
+        description: 'Snackbar 닫기 버튼 배경/보더 제거, FIFO dismiss 애니메이션 수정',
+      },
+      {
+        type: 'fixed',
+        date: '2026-04-20',
+        description: 'AI Platform Dashboard 다크모드 하드코딩 색상 수정',
+      },
+      {
+        type: 'fixed',
+        date: '2026-04-15',
+        description: 'PageShell 페이지 레벨 가로 스크롤 제거, 콘텐츠 영역 높이 수정',
+      },
+      {
+        type: 'fixed',
+        date: '2026-04-10',
+        description: 'Table sticky 컬럼 그림자, 오버플로우 감지, 행 hover/selection 동기화',
+      },
+      {
+        type: 'fixed',
+        date: '2026-04-05',
+        description:
+          'Select 컴포넌트 OverlayScrollbars ref 호환성, Tabs scrollIntoView jsdom 호환성',
+      },
+      {
+        type: 'fixed',
+        date: '2026-03-30',
+        description: '바탕화면 아이콘 우클릭 후 드래그 따라오는 버그 수정',
+      },
+
+      // Removed
+      {
+        type: 'removed',
+        date: '2026-05-21',
+        description: 'Settings Account 페이지 및 라우트 삭제',
+      },
+      {
+        type: 'removed',
+        date: '2026-04-15',
+        description: 'thaki-shared 삭제, Drawer 리네이밍',
+      },
+      {
+        type: 'removed',
+        date: '2026-04-10',
+        description: 'Badge solid type 제거',
+      },
+    ],
+  },
+  {
     version: '1.3.0',
     date: '2026-03-26',
     summary:

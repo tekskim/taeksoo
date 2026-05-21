@@ -74,7 +74,7 @@ export default function SettingsGeneralPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={false}
-          breadcrumb={<Breadcrumb items={[{ label: 'Settings' }, { label: 'General' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'General' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"

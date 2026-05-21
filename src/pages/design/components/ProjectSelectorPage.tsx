@@ -257,10 +257,19 @@ function TenantCell({
             )}
           </div>
         </div>
-        <p className="text-body-sm text-[var(--color-text-default)]">{project.description}</p>
-        <span className="text-[11px] leading-4 text-[var(--color-text-muted)]">
-          ID: {project.id}
-        </span>
+      </div>
+
+      <p
+        className={`text-body-sm leading-4 mt-2 ${isDisabled ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-subtle)]'}`}
+      >
+        {project.description}
+      </p>
+
+      <div
+        className={`flex items-center justify-between text-body-xs mt-2 ${isDisabled ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-subtle)]'}`}
+      >
+        <span>ID: {project.id}</span>
+        <span>{project.createdAt}</span>
       </div>
     </div>
   );

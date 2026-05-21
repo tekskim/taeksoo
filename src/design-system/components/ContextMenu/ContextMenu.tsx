@@ -371,6 +371,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         let newX: number;
         if (align === 'right') {
           newX = position.x + triggerWidth - rect.width;
+          if (newX < position.x) newX = position.x;
         } else {
           newX = position.x;
         }
@@ -484,6 +485,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         left: adjustedPosition?.x ?? position.x,
         top: adjustedPosition?.y ?? position.y,
         opacity: adjustedPosition ? 1 : 0,
+        minWidth: triggerWidth > 0 ? triggerWidth : undefined,
       }}
       tabIndex={-1}
     >

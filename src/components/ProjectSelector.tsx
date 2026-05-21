@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { IconFolder, IconDotsVertical, IconCheck } from '@tabler/icons-react';
+import { IconFolder, IconDotsVertical } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type Project } from '@/contexts/ProjectContext';
@@ -115,7 +115,7 @@ export function ProjectSelector({
       ? 'px-2.5 py-1 h-[var(--topbar-button-size)] rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between gap-2'
       : variant === 'sidebar-icon'
         ? 'size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center shrink-0'
-        : 'w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between';
+        : 'w-full h-7 px-2.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between';
 
   const buttonElement = (
     <button
@@ -252,50 +252,28 @@ export function ProjectSelector({
                           </div>
                         </div>
 
-                        {/* Row 2: description */}
-                        <button
-                          type="button"
-                          className="text-left"
-                          onClick={() => handleProjectClick(project)}
-                          disabled={isDisabled}
+                        {/* Description */}
+                        <p
+                          className={`text-body-sm leading-4 ${
+                            isDisabled
+                              ? 'text-[var(--color-text-muted)]'
+                              : 'text-[var(--color-text-subtle)]'
+                          }`}
                         >
-                          {project.name}
-                        </button>
-                        {isSelected && !isDisabled && (
-                          <IconCheck
-                            size={20}
-                            className="text-[var(--color-action-primary)]"
-                            stroke={1}
-                          />
-                        )}
-                        {isDisabled && (
-                          <span className="text-body-sm text-[var(--color-status-error)]">
-                            Disabled
-                          </span>
-                        )}
-                      </div>
+                          {project.description}
+                        </p>
 
-                      {/* Description */}
-                      <p
-                        className={`text-body-sm leading-4 ${
-                          isDisabled
-                            ? 'text-[var(--color-text-muted)]'
-                            : 'text-[var(--color-text-subtle)]'
-                        }`}
-                      >
-                        {project.description}
-                      </p>
-
-                      {/* Footer */}
-                      <div
-                        className={`flex items-center justify-between text-body-xs ${
-                          isDisabled
-                            ? 'text-[var(--color-text-muted)]'
-                            : 'text-[var(--color-text-subtle)]'
-                        }`}
-                      >
-                        <span>ID: {project.id}</span>
-                        <span>{project.createdAt}</span>
+                        {/* Footer */}
+                        <div
+                          className={`flex items-center justify-between text-body-xs ${
+                            isDisabled
+                              ? 'text-[var(--color-text-muted)]'
+                              : 'text-[var(--color-text-subtle)]'
+                          }`}
+                        >
+                          <span>ID: {project.id}</span>
+                          <span>{project.createdAt}</span>
+                        </div>
                       </div>
                     </div>
                   );
