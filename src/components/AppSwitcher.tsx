@@ -9,6 +9,10 @@ import ContainerIcon from '@/assets/appIcon/container.png';
 import CloudBuilderIcon from '@/assets/appIcon/cloudbuilder.png';
 import AIPlatformIcon from '@/assets/appIcon/aiplatform.png';
 import AgentOpsIcon from '@/assets/appIcon/agentops.png';
+import ServeIcon from '@/assets/appIcon/metis-serve.png';
+import MLStudioIcon from '@/assets/appIcon/metis-ml-studio.png';
+import RunIcon from '@/assets/appIcon/metis-run.png';
+import FabricIcon from '@/assets/appIcon/metis-fabric.png';
 import StorageIcon from '@/assets/appIcon/storage.png';
 import StorageAdminIcon from '@/assets/appIcon/storageadmin.png';
 import IAMIcon from '@/assets/appIcon/iam.png';
@@ -54,10 +58,10 @@ const apps: AppItem[] = [
   { id: 'container', title: 'Container', icon: ContainerIcon, path: '/container' },
   { id: 'ai-platform', title: 'AI Platform', icon: AIPlatformIcon, path: '/ai-platform' },
   { id: 'agent-ops', title: 'Agent Studio', icon: AgentOpsIcon, path: '/agent' },
-  { id: 'serve', title: 'Serve', icon: AIPlatformIcon, path: '/serve' },
-  { id: 'ml-studio', title: 'ML Studio', icon: AIPlatformIcon, path: '/ml-studio' },
-  { id: 'run', title: 'Run', icon: AIPlatformIcon, path: '/run' },
-  { id: 'fabric', title: 'Fabric', icon: AIPlatformIcon, path: '/fabric' },
+  { id: 'serve', title: 'Serve', icon: ServeIcon, path: '/serve' },
+  { id: 'ml-studio', title: 'ML Studio', icon: MLStudioIcon, path: '/ml-studio' },
+  { id: 'run', title: 'Run', icon: RunIcon, path: '/run' },
+  { id: 'fabric', title: 'Fabric', icon: FabricIcon, path: '/fabric' },
   { id: 'settings', title: 'Settings', icon: SettingsIcon, path: '/settings' },
   { id: 'cloud-builder', title: 'Cloud Builder', icon: CloudBuilderIcon, path: '/cloudbuilder' },
   { id: 'admin-center', title: 'Admin Center', icon: AdminCenterIcon, path: '/admin-center' },

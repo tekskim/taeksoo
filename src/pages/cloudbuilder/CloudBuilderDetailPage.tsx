@@ -168,7 +168,7 @@ export function CloudBuilderDetailPage() {
   );
 
   useEffect(() => {
-    const name = row?.name ?? row?.hostname;
+    const name = row?.name ?? row?.hostname ?? (row as any)?.serial;
     if (name) updateActiveTabLabel(String(name));
   }, [row, updateActiveTabLabel]);
 

@@ -11,6 +11,10 @@ import ContainerIcon from '@/assets/appIcon/container.png';
 import CloudBuilderIcon from '@/assets/appIcon/cloudbuilder.png';
 import AIPlatformIcon from '@/assets/appIcon/aiplatform.png';
 import AIAgentIcon from '@/assets/appIcon/agentops.png';
+import ServeIcon from '@/assets/appIcon/metis-serve.png';
+import MLStudioIcon from '@/assets/appIcon/metis-ml-studio.png';
+import RunIcon from '@/assets/appIcon/metis-run.png';
+import FabricIcon from '@/assets/appIcon/metis-fabric.png';
 import StorageIcon from '@/assets/appIcon/storage.png';
 import StorageAdminIcon from '@/assets/appIcon/storageadmin.png';
 import IAMIcon from '@/assets/appIcon/iam.png';
@@ -62,10 +66,10 @@ const appCards: AppCard[] = [
 const aiCards: AppCard[] = [
   { id: 'ai-platform', title: 'AI Platform', iconSrc: AIPlatformIcon, path: '/ai-platform' },
   { id: 'agent-ops', title: 'Agent Ops', iconSrc: AIAgentIcon, path: '/agent' },
-  { id: 'serve', title: 'Serve', iconSrc: AIPlatformIcon, path: '/serve' },
-  { id: 'ml-studio', title: 'ML Studio', iconSrc: AIPlatformIcon, path: '/ml-studio' },
-  { id: 'run', title: 'Run', iconSrc: AIPlatformIcon, path: '/run' },
-  { id: 'fabric', title: 'Fabric', iconSrc: AIPlatformIcon, path: '/fabric' },
+  { id: 'serve', title: 'Serve', iconSrc: ServeIcon, path: '/serve' },
+  { id: 'ml-studio', title: 'ML Studio', iconSrc: MLStudioIcon, path: '/ml-studio' },
+  { id: 'run', title: 'Run', iconSrc: RunIcon, path: '/run' },
+  { id: 'fabric', title: 'Fabric', iconSrc: FabricIcon, path: '/fabric' },
 ];
 
 function AppCardItem({ card, onNavigate }: { card: AppCard; onNavigate: (path: string) => void }) {

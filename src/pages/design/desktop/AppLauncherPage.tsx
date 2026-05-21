@@ -112,21 +112,43 @@ function AppLauncherExamples() {
 
       {/* Grid */}
       <VStack gap={4}>
-        <SectionTitle>App Grid</SectionTitle>
+        <SectionTitle>App Grid with Search</SectionTitle>
         <Prose>
           <p>
-            Launchpad가 열리면 <code>appConfigs</code>에 등록된 모든 앱이 5열 그리드로 표시됩니다.
-            앱 아이콘(64×64)과 이름으로 구성되며, 이름에 <code>" - "</code>가 포함된 경우 줄바꿈
-            처리합니다.
+            Launchpad가 열리면 상단에 검색바가 표시되고, 그 아래에 <code>appConfigs</code>에 등록된
+            모든 앱이 7열 그리드로 표시됩니다. 검색어를 입력하면 앱 이름으로 실시간 필터링됩니다.
           </p>
         </Prose>
-        <ComponentPreview title="Launchpad Grid (Mock)">
-          <div className="bg-gray-900/95 rounded-2xl p-10">
+        <ComponentPreview title="Launchpad — Search + Grid (Mock)">
+          <div className="bg-gray-900/95 rounded-2xl p-10 flex flex-col items-center gap-8">
+            <div className="relative w-[320px]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search apps..."
+                readOnly
+                className="w-full h-9 pl-9 pr-3 rounded-lg bg-white/10 border border-white/15 text-white text-body-md placeholder:text-white/40 outline-none cursor-default"
+              />
+            </div>
             <div className="grid grid-cols-5 gap-6">
               {mockApps.map((app) => (
                 <button
                   key={app.id}
-                  className="flex flex-col items-center gap-2.5 w-32 cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
+                  className="flex flex-col items-center gap-2.5 w-[100px] cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
                 >
                   <img src={app.icon} alt={app.name} className="w-16 h-16 object-cover" />
                   <span className="text-label-md text-white text-center leading-tight whitespace-pre-line">
@@ -166,20 +188,32 @@ function AppLauncherGuidelines() {
               <Td>2</Td>
               <Td>
                 런처는 <strong>전체 앱 카탈로그</strong>에 접근할 수 있어야 하며, macOS{' '}
-                <strong>Launchpad</strong>와 유사한{' '}
-                <strong>그리드/리스트 등 오버레이 또는 패널</strong> 형태를 취한다(시각·레이아웃은
-                디자인 스펙).
+                <strong>Launchpad</strong>와 유사한 <strong>풀스크린 오버레이 그리드</strong> 형태를
+                취한다.
               </Td>
             </tr>
             <tr>
               <Td>3</Td>
+              <Td>
+                상단에 <strong>검색바</strong>를 제공하여 앱 이름으로 실시간 필터링할 수 있다. 패널
+                오픈 시 검색바에 <strong>자동 포커스</strong>된다.
+              </Td>
+            </tr>
+            <tr>
+              <Td>4</Td>
               <Td>
                 앱을 선택하면 해당 앱을 <strong>실행</strong>하거나, 이미 열려 있으면{' '}
                 <strong>포커스 전환</strong>한다(기존 Desktop 창 관리 규칙과 정합).
               </Td>
             </tr>
             <tr>
-              <Td>4</Td>
+              <Td>5</Td>
+              <Td>
+                검색 결과가 없으면 <strong>&quot;No apps found&quot;</strong> 메시지를 표시한다.
+              </Td>
+            </tr>
+            <tr>
+              <Td>6</Td>
               <Td>
                 <strong>역할별 필터:</strong> 노출되는 앱 목록은{' '}
                 <strong>도메인 사용자(관리자)·시스템 관리자</strong>에 따라 달라질 수 있다.
@@ -211,21 +245,37 @@ function AppLauncherGuidelines() {
             </tr>
             <tr>
               <Td>2</Td>
-              <Td>App grid</Td>
+              <Td>Search bar</Td>
               <Td>
-                5열 그리드 (<code>grid-cols-5</code>), <code>gap-6</code> (24px), 중앙 정렬
+                너비 320px, 높이 36px (<code>h-9</code>). <code>IconSearch</code> (16px) 좌측 배치.{' '}
+                <code>bg-white/10</code> 배경, <code>border-white/15</code>. 포커스 시{' '}
+                <code>bg-white/15</code> + <code>border-white/25</code>. 오픈 시 자동 포커스.
               </Td>
             </tr>
             <tr>
               <Td>3</Td>
-              <Td>App item</Td>
+              <Td>App grid</Td>
               <Td>
-                아이콘(64×64) + 앱 이름. 너비 <code>w-32</code> (128px), 호버 시{' '}
-                <code>bg-white/10</code>
+                7열 그리드 (<code>grid-cols-7</code>), <code>gap-6</code> (24px), 중앙 정렬
               </Td>
             </tr>
             <tr>
               <Td>4</Td>
+              <Td>App item</Td>
+              <Td>
+                아이콘(64×64) + 앱 이름. 너비 100px, 호버 시 <code>bg-white/10</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>5</Td>
+              <Td>Empty state</Td>
+              <Td>
+                검색 결과 없을 시 &quot;No apps found&quot; 메시지. <code>text-white/50</code>,
+                <code>py-10</code>.
+              </Td>
+            </tr>
+            <tr>
+              <Td>6</Td>
               <Td>App name</Td>
               <Td>
                 <code>text-label-md</code>, 흰색, 중앙정렬. <code>" - "</code> 포함 시 줄바꿈 (
@@ -252,6 +302,10 @@ function AppLauncherGuidelines() {
               <Td>Launchpad 토글 (열기/닫기)</Td>
             </tr>
             <tr>
+              <Td>검색 입력</Td>
+              <Td>앱 이름으로 실시간 필터링 (대소문자 무시). 검색어가 비면 전체 앱 표시.</Td>
+            </tr>
+            <tr>
               <Td>앱 아이콘 클릭</Td>
               <Td>
                 <code>focusApp(appId)</code> 호출 후 패널 닫기. 기존 창이 있으면 포커스, 없으면 새
@@ -265,6 +319,12 @@ function AppLauncherGuidelines() {
             <tr>
               <Td>ESC 키</Td>
               <Td>패널 닫기</Td>
+            </tr>
+            <tr>
+              <Td>패널 닫힘</Td>
+              <Td>
+                검색어 초기화 (<code>setSearchQuery(&apos;&apos;)</code>)
+              </Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -321,9 +381,31 @@ function AppLauncherGuidelines() {
               </Td>
             </tr>
             <tr>
+              <Td>Search bar width</Td>
+              <Td>320px</Td>
+            </tr>
+            <tr>
+              <Td>Search bar height</Td>
+              <Td>
+                36px (<code>h-9</code>)
+              </Td>
+            </tr>
+            <tr>
+              <Td>Search bar background</Td>
+              <Td>
+                <code>bg-white/10</code> → focus: <code>bg-white/15</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>Search icon</Td>
+              <Td>
+                <code>IconSearch</code>, 16px, stroke 1.5, <code>text-white/50</code>
+              </Td>
+            </tr>
+            <tr>
               <Td>Backdrop background</Td>
               <Td>
-                <code>bg-black/50</code> + <code>backdrop-blur-xl</code>
+                <code>bg-black/70</code> + <code>backdrop-blur-xl</code>
               </Td>
             </tr>
             <tr>
@@ -336,7 +418,7 @@ function AppLauncherGuidelines() {
             </tr>
             <tr>
               <Td>Grid columns</Td>
-              <Td>5</Td>
+              <Td>7</Td>
             </tr>
             <tr>
               <Td>Grid gap</Td>
@@ -352,9 +434,7 @@ function AppLauncherGuidelines() {
             </tr>
             <tr>
               <Td>App item width</Td>
-              <Td>
-                128px (<code>w-32</code>)
-              </Td>
+              <Td>100px</Td>
             </tr>
             <tr>
               <Td>App icon size</Td>

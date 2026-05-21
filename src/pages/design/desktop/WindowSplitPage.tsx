@@ -143,6 +143,53 @@ function WindowSplitExamples() {
         </ComponentPreview>
       </VStack>
 
+      {/* Keyboard Shortcuts */}
+      <VStack gap={4}>
+        <SectionTitle>Keyboard Shortcuts</SectionTitle>
+        <Prose>
+          <p>
+            활성 윈도우에 대해 키보드 단축키로 즉시 스냅할 수 있습니다. 단축키는 해당 윈도우가
+            포커스된 상태에서만 작동합니다.
+          </p>
+        </Prose>
+        <ComponentPreview title="Snap Shortcuts">
+          <div className="flex gap-8">
+            <div className="flex flex-col items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <kbd className="inline-flex items-center justify-center min-w-[28px] h-7 px-2 rounded-md bg-[var(--color-surface-muted)] border border-[var(--color-border-strong)] text-body-sm font-mono text-[var(--color-text-default)] shadow-sm">
+                  ⌥
+                </kbd>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">+</span>
+                <kbd className="inline-flex items-center justify-center min-w-[28px] h-7 px-2 rounded-md bg-[var(--color-surface-muted)] border border-[var(--color-border-strong)] text-body-sm font-mono text-[var(--color-text-default)] shadow-sm">
+                  ⇧
+                </kbd>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">+</span>
+                <kbd className="inline-flex items-center justify-center min-w-[28px] h-7 px-2 rounded-md bg-[var(--color-surface-muted)] border border-[var(--color-border-strong)] text-body-sm font-mono text-[var(--color-text-default)] shadow-sm">
+                  ←
+                </kbd>
+              </div>
+              <span className="text-body-sm text-[var(--color-text-muted)]">Left Half</span>
+            </div>
+            <div className="flex flex-col items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <kbd className="inline-flex items-center justify-center min-w-[28px] h-7 px-2 rounded-md bg-[var(--color-surface-muted)] border border-[var(--color-border-strong)] text-body-sm font-mono text-[var(--color-text-default)] shadow-sm">
+                  ⌥
+                </kbd>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">+</span>
+                <kbd className="inline-flex items-center justify-center min-w-[28px] h-7 px-2 rounded-md bg-[var(--color-surface-muted)] border border-[var(--color-border-strong)] text-body-sm font-mono text-[var(--color-text-default)] shadow-sm">
+                  ⇧
+                </kbd>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">+</span>
+                <kbd className="inline-flex items-center justify-center min-w-[28px] h-7 px-2 rounded-md bg-[var(--color-surface-muted)] border border-[var(--color-border-strong)] text-body-sm font-mono text-[var(--color-text-default)] shadow-sm">
+                  →
+                </kbd>
+              </div>
+              <span className="text-body-sm text-[var(--color-text-muted)]">Right Half</span>
+            </div>
+          </div>
+        </ComponentPreview>
+      </VStack>
+
       {/* Split Button */}
       <VStack gap={4}>
         <SectionTitle>Split Button (Window Control)</SectionTitle>
@@ -356,6 +403,34 @@ function WindowSplitGuidelines() {
             <tr>
               <Td>스냅 상태에서 리사이즈 시작</Td>
               <Td>스냅 해제, 이전 크기로 복원 후 리사이즈 진행</Td>
+            </tr>
+            <tr>
+              <Td>
+                <kbd className="px-1.5 py-0.5 rounded bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono">
+                  ⌥
+                </kbd>{' '}
+                <kbd className="px-1.5 py-0.5 rounded bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono">
+                  ⇧
+                </kbd>{' '}
+                <kbd className="px-1.5 py-0.5 rounded bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono">
+                  ←
+                </kbd>
+              </Td>
+              <Td>활성 윈도우를 좌측 절반으로 즉시 스냅</Td>
+            </tr>
+            <tr>
+              <Td>
+                <kbd className="px-1.5 py-0.5 rounded bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono">
+                  ⌥
+                </kbd>{' '}
+                <kbd className="px-1.5 py-0.5 rounded bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono">
+                  ⇧
+                </kbd>{' '}
+                <kbd className="px-1.5 py-0.5 rounded bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono">
+                  →
+                </kbd>
+              </Td>
+              <Td>활성 윈도우를 우측 절반으로 즉시 스냅</Td>
             </tr>
           </tbody>
         </TableWrapper>

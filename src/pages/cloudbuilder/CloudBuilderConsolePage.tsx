@@ -200,6 +200,7 @@ export function CloudBuilderConsolePage() {
     closeTab,
     addNewTab,
     moveTab,
+    updateActiveTabLabel,
   } = useTabs();
 
   const [isFigmaCapture] = useState(
@@ -209,6 +210,10 @@ export function CloudBuilderConsolePage() {
   // /cloudbuilder 또는 /cloudbuilder/:slug
   const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'servers';
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
+
+  useEffect(() => {
+    updateActiveTabLabel(config.title);
+  }, [config.title, updateActiveTabLabel]);
 
   const breadcrumbItems = [{ label: config.title }];
 
