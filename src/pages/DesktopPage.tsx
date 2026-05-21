@@ -185,7 +185,7 @@ const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(functi
           />
         )}
       </div>
-      <span className="text-label-md text-[var(--desktop-text)] text-center whitespace-nowrap px-2 py-0.5 rounded transition-colors duration-150 group-hover:bg-[var(--desktop-icon-hover)] group-active:bg-[var(--desktop-icon-active)]">
+      <span className="text-label-md text-[var(--desktop-text)] text-center max-w-[120px] px-2 py-0.5 rounded transition-colors duration-150 group-hover:bg-[var(--desktop-icon-hover)] group-active:bg-[var(--desktop-icon-active)]">
         {label}
       </span>
     </button>
@@ -244,7 +244,7 @@ function DragGhost({ icon, label, x, y }: DragGhostProps) {
           draggable={false}
         />
       </div>
-      <span className="text-label-md text-[var(--desktop-text)] text-center whitespace-nowrap px-2 py-0.5 rounded bg-[var(--desktop-icon-active)]">
+      <span className="text-label-md text-[var(--desktop-text)] text-center max-w-[120px] px-2 py-0.5 rounded bg-[var(--desktop-icon-active)]">
         {label}
       </span>
     </div>
