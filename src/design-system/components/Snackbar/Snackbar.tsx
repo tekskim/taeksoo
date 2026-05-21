@@ -366,7 +366,7 @@ export function Snackbar({ snackbar, onDismiss, className = '' }: SnackbarProps)
         <button
           type="button"
           onClick={handleCloseClick}
-          className="absolute top-[7px] right-[7px] size-4 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors"
+          className="absolute top-[7px] right-[7px] size-4 flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
           aria-label="Close"
         >
           <IconX size={12} stroke={1.5} />

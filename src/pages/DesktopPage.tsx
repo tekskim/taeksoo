@@ -12,6 +12,7 @@ import {
   IconSquare,
   IconSquares,
   IconX,
+  IconBell,
 } from '@tabler/icons-react';
 import {
   Icons,
@@ -2979,9 +2980,10 @@ export function DesktopPage() {
           snackbarIndexRef.current++;
           snackbar.show(mock);
         }}
-        className="fixed bottom-6 right-6 z-[9999] h-10 px-4 rounded-full bg-[var(--color-action-primary)] text-white text-label-md shadow-lg hover:bg-[var(--color-action-primary-hover)] transition-colors"
+        className="fixed bottom-6 left-6 z-[9999] size-10 flex items-center justify-center rounded-full bg-[var(--color-action-primary)] text-white shadow-lg hover:bg-[var(--color-action-primary-hover)] transition-colors"
+        aria-label="Test Snackbar"
       >
-        Test Snackbar
+        <IconBell size={18} stroke={1.5} />
       </button>
 
       {/* Main Page Navigation Button - Bottom Left */}

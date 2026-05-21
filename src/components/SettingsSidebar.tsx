@@ -11,9 +11,10 @@ import { AppSwitcher } from './AppSwitcher';
 interface SettingsSidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  forceVisible?: boolean;
 }
 
-export function SettingsSidebar({ isOpen = true, onToggle }: SettingsSidebarProps) {
+export function SettingsSidebar({ isOpen = true, onToggle, forceVisible }: SettingsSidebarProps) {
   const location = useLocation();
 
   const isActive = (href: string) => {
@@ -29,7 +30,7 @@ export function SettingsSidebar({ isOpen = true, onToggle }: SettingsSidebarProp
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">

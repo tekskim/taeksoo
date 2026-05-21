@@ -26,9 +26,10 @@ import { AppSwitcher } from './AppSwitcher';
 interface IAMSidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  forceVisible?: boolean;
 }
 
-export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
+export function IAMSidebar({ isOpen = true, onToggle, forceVisible }: IAMSidebarProps) {
   const location = useLocation();
 
   // Check if current path matches href
@@ -44,7 +45,7 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">

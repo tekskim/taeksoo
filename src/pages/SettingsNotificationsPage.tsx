@@ -136,7 +136,7 @@ export default function SettingsNotificationsPage() {
                   <Disclosure.Trigger className="w-full py-3 px-4 bg-[var(--color-surface-subtle)]">
                     <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
                   </Disclosure.Trigger>
-                  <Disclosure.Panel className="space-y-3 px-4 py-3 border-t border-[var(--color-border-default)]">
+                  <Disclosure.Panel className="space-y-6 px-4 py-3 border-t border-[var(--color-border-default)]">
                     <FormField label="What to Notify" spacing="loose">
                       <RadioGroup
                         value={serviceNotifications[key].whatToNotify}

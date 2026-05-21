@@ -41,9 +41,10 @@ interface SidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
   currentAppId?: string;
+  forceVisible?: boolean;
 }
 
-export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps) {
+export function Sidebar({ isOpen = true, onToggle, currentAppId, forceVisible }: SidebarProps) {
   const { projects, selectedProjectId, setSelectedProjectId, primaryProjectId, setPrimaryProject } =
     useProject();
   const location = useLocation();
@@ -103,7 +104,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
