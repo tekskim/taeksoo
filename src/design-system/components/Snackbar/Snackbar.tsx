@@ -254,8 +254,8 @@ export function Snackbar({ snackbar, onDismiss, className = '' }: SnackbarProps)
 
   const cardBg = isAlert
     ? snackbar.type === 'critical'
-      ? 'rounded-[var(--radius-lg)] bg-[var(--inline-message-error-bg)] flex flex-col py-3 w-[320px] shadow-lg'
-      : 'rounded-[var(--radius-lg)] bg-[var(--color-state-warning-bg)] flex flex-col py-3 w-[320px] shadow-lg'
+      ? 'rounded-[var(--radius-lg)] border border-[var(--notification-critical-border)] bg-[var(--notification-critical-bg)] flex flex-col py-3 w-[320px] shadow-lg'
+      : 'rounded-[var(--radius-lg)] border border-[var(--notification-warning-border)] bg-[var(--notification-warning-bg)] flex flex-col py-3 w-[320px] shadow-lg'
     : 'rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3 w-[320px] shadow-lg';
 
   return (

@@ -1927,8 +1927,8 @@ function GlobalNotificationCard({
       className={`relative rounded-[var(--radius-lg)] flex flex-col py-3 ${
         isAlertSection
           ? notification.type === 'critical'
-            ? 'bg-[var(--inline-message-error-bg)]'
-            : 'bg-[var(--color-state-warning-bg)]'
+            ? 'border border-[var(--notification-critical-border)] bg-[var(--notification-critical-bg)]'
+            : 'border border-[var(--notification-warning-border)] bg-[var(--notification-warning-bg)]'
           : isUnread
             ? 'border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]'
             : 'border border-[var(--color-border-default)] bg-[var(--color-surface-default)]'

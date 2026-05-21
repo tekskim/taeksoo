@@ -811,6 +811,12 @@ html.theme-transition *::after {
   --inline-message-error-bg: var(--color-red-50);
   --inline-message-error-icon: var(--color-red-600);
 
+  /* Notification alert backgrounds (stronger than inline-message for visibility) */
+  --notification-critical-bg: var(--color-red-50);
+  --notification-critical-border: var(--color-red-200);
+  --notification-warning-bg: var(--color-orange-50);
+  --notification-warning-border: var(--color-orange-200);
+
   /* InlineMessage - Info */
   --inline-message-info-bg: var(--color-blue-50);
   --inline-message-info-icon: var(--color-blue-600);
@@ -1255,6 +1261,10 @@ html.theme-transition *::after {
   --inline-message-warning-icon: var(--semantic-color-state-warning);
   --inline-message-error-bg: rgba(239, 68, 68, 0.12);
   --inline-message-error-icon: var(--semantic-color-state-danger);
+  --notification-critical-bg: rgba(239, 68, 68, 0.25);
+  --notification-critical-border: rgba(239, 68, 68, 0.35);
+  --notification-warning-bg: rgba(249, 115, 22, 0.18);
+  --notification-warning-border: rgba(249, 115, 22, 0.3);
   --inline-message-info-bg: rgba(59, 130, 246, 0.12);
   --inline-message-info-icon: var(--semantic-color-state-info);
 
