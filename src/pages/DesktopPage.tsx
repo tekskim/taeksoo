@@ -145,8 +145,7 @@ function getInitialIconLayout(): DesktopIconItem[] {
     { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
     { id: 'settings', icon: imgSettings, label: 'Settings' },
   ];
-  const dockHeight = 64;
-  const availableH = window.innerHeight - GRID.PAD_TOP - dockHeight;
+  const availableH = window.innerHeight - GRID.PAD_TOP;
   const maxRows = Math.max(1, Math.floor(availableH / GRID.CELL_H));
   return icons.map((item, i) => ({
     ...item,
@@ -276,10 +275,9 @@ function useDesktopIconDrag(
   const getGridBounds = useCallback(() => {
     if (!containerRef.current) return { maxCols: 10, maxRows: 8 };
     const rect = containerRef.current.getBoundingClientRect();
-    const bottomPad = 64;
     return {
       maxCols: Math.max(1, Math.floor((rect.width - GRID.PAD_X) / GRID.CELL_W)),
-      maxRows: Math.max(1, Math.floor((rect.height - GRID.PAD_TOP - bottomPad) / GRID.CELL_H)),
+      maxRows: Math.max(1, Math.floor((rect.height - GRID.PAD_TOP) / GRID.CELL_H)),
     };
   }, [containerRef]);
 
@@ -2144,12 +2142,8 @@ export function DesktopPage() {
       rafId = requestAnimationFrame(() => {
         if (!desktopGridRef.current) return;
         const rect = desktopGridRef.current.getBoundingClientRect();
-        const bottomPad = 64;
         const maxCols = Math.max(1, Math.floor((rect.width - GRID.PAD_X) / GRID.CELL_W));
-        const maxRows = Math.max(
-          1,
-          Math.floor((rect.height - GRID.PAD_TOP - bottomPad) / GRID.CELL_H)
-        );
+        const maxRows = Math.max(1, Math.floor((rect.height - GRID.PAD_TOP) / GRID.CELL_H));
 
         setDesktopIcons((prev) => {
           const hasOutOfBounds = prev.some((icon) => icon.col >= maxCols || icon.row >= maxRows);

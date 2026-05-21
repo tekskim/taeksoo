@@ -13,39 +13,127 @@ function Prose({ children }: { children: React.ReactNode }) {
   );
 }
 
+function GridConstantsTable() {
+  const rows = [
+    ['CELL_W', '128px', '그리드 셀 가로 폭. 아이콘 간 가로 간격(step)을 결정합니다.'],
+    ['CELL_H', '120px', '그리드 셀 세로 높이. 아이콘 간 세로 간격(step)을 결정합니다.'],
+    ['PAD_X', '44px', '화면 왼쪽 가장자리에서 첫 번째 열까지의 수평 여백.'],
+    ['PAD_TOP', '76px', 'TopBar 높이(52px) + 상단 여백(24px). 첫 번째 행의 시작 위치.'],
+    ['ICON_W', '80px', '아이콘 버튼의 너비 (w-20). 셀 내부에서 중앙 정렬됩니다.'],
+    ['DRAG_THRESHOLD', '5px', '클릭과 드래그를 구분하는 최소 이동 거리.'],
+  ];
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-[length:var(--font-size-12)]">
+        <thead>
+          <tr className="border-b border-[var(--color-border-default)]">
+            <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+              상수
+            </th>
+            <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+              값
+            </th>
+            <th className="text-left py-2.5 font-medium text-[var(--color-text-subtle)]">설명</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(([name, value, desc], i) => (
+            <tr key={i} className="border-b border-[var(--color-border-subtle)]">
+              <td className="py-2.5 pr-4 font-mono text-[var(--color-text-default)]">{name}</td>
+              <td className="py-2.5 pr-4 font-mono text-[var(--color-action-primary)]">{value}</td>
+              <td className="py-2.5 text-[var(--color-text-muted)]">{desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function DesktopGridGuidelines() {
   return (
     <VStack gap={10}>
+      {/* 1. 그리드 방식 */}
       <VStack gap={4}>
         <SectionTitle>그리드 방식</SectionTitle>
         <Prose>
           <p>
-            절대 좌표 기반 그리드 스냅 시스템을 사용합니다. 아이콘 위치는 논리적 그리드 좌표(col,
-            row)로 관리되며, <code>gridToPixel()</code>을 통해 렌더링 시 절대 픽셀 좌표로
-            변환됩니다.
+            <strong>절대 좌표 기반 그리드 스냅 시스템</strong>을 사용합니다. 아이콘 위치는 논리적
+            그리드 좌표(<code>col</code>, <code>row</code>)로 관리되며, 렌더링 시{' '}
+            <code>gridToPixel(col, row)</code> 함수를 통해 절대 픽셀 좌표로 변환됩니다.
+          </p>
+          <p>
+            CSS Grid(<code>auto-fill</code>) 대신 절대 좌표를 사용하는 이유는 드래그 앤 드롭으로
+            아이콘을 자유롭게 배치할 수 있는 데스크탑 시뮬레이터 UX를 구현하기 위함입니다.
           </p>
         </Prose>
       </VStack>
 
       <div className="w-full h-px bg-[var(--color-border-default)]" />
 
+      {/* 2. 그리드 상수 */}
+      <VStack gap={4}>
+        <SectionTitle>그리드 상수</SectionTitle>
+        <Prose>
+          <p>
+            모든 그리드 설정은 <code>GRID</code> 상수 객체에 정의되어 있습니다. 아이콘의 실제 렌더링
+            위치는 아래 공식으로 계산됩니다:
+          </p>
+        </Prose>
+        <pre className="text-[length:var(--font-size-11)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] text-[var(--color-text-muted)] overflow-x-auto">
+          {`x = PAD_X + col × CELL_W    →  44 + col × 128
+y = PAD_TOP + row × CELL_H  →  76 + row × 120`}
+        </pre>
+        <GridConstantsTable />
+        <Prose>
+          <p>
+            아이콘 간 실제 여백: 가로 <strong>48px</strong> (CELL_W 128 - ICON_W 80), 세로 약{' '}
+            <strong>36px</strong> (CELL_H 120 - 아이콘 높이 ~84px).
+          </p>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* 3. 아이콘 구조 */}
+      <VStack gap={4}>
+        <SectionTitle>아이콘 구조</SectionTitle>
+        <Prose>
+          <p>각 아이콘은 다음 데이터로 관리됩니다:</p>
+        </Prose>
+        <pre className="text-[length:var(--font-size-11)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] text-[var(--color-text-muted)] overflow-x-auto">
+          {`interface DesktopIconItem {
+  id: string;      // 고유 식별자 (예: 'compute', 'iam')
+  icon: string;    // 앱 아이콘 이미지 경로
+  label: string;   // 아이콘 하단 라벨 텍스트
+  col: number;     // 그리드 열 좌표 (0부터 시작)
+  row: number;     // 그리드 행 좌표 (0부터 시작)
+}`}
+        </pre>
+        <Prose>
+          <p>
+            렌더링 구조: <code>{'<button>'}</code> (80px 너비) 안에 64×64 아이콘 이미지 + 4px 간격 +
+            라벨 텍스트(<code>text-label-md</code>)로 구성됩니다.
+          </p>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* 4. 배치 규칙 */}
       <VStack gap={4}>
         <SectionTitle>배치 규칙</SectionTitle>
         <Prose>
-          <ul className="list-disc pl-5 space-y-1">
+          <ul className="list-disc pl-5 space-y-2">
             <li>
-              <strong>Flow</strong>: column-first (위→아래, 왼쪽→오른쪽) — macOS 데스크톱 컨벤션
+              <strong>초기 배치 (Column-first)</strong>: 세로 방향으로 먼저 채운 후 다음 열로
+              이동합니다 (macOS 데스크톱 컨벤션). 예를 들어 maxRows가 5이면, 첫 5개 아이콘은 col=0의
+              row 0~4에 배치되고, 6번째 아이콘부터 col=1에 배치됩니다.
             </li>
             <li>
-              <strong>Alignment</strong>: top-left (content-start)
-            </li>
-            <li>
-              <strong>Drag &amp; Drop</strong>: 아이콘을 드래그하여 그리드 위치를 자유롭게 변경
-              가능. 5px 임계값 이후 드래그 시작.
-            </li>
-            <li>
-              <strong>Resize Reflow</strong>: 뷰포트 축소 시 범위 밖 아이콘이 빈 그리드 위치로 자동
-              재배치 (requestAnimationFrame 기반 실시간 반영)
+              <strong>Alignment</strong>: top-left (content-start). 화면 좌상단에서 아이콘이
+              시작됩니다.
             </li>
           </ul>
         </Prose>
@@ -53,19 +141,134 @@ function DesktopGridGuidelines() {
 
       <div className="w-full h-px bg-[var(--color-border-default)]" />
 
+      {/* 5. 드래그 앤 드롭 */}
+      <VStack gap={4}>
+        <SectionTitle>드래그 앤 드롭</SectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              마우스 다운 후 <strong>5px 이상 이동</strong>하면 드래그가 시작됩니다
+              (DRAG_THRESHOLD). 이하는 클릭으로 처리됩니다.
+            </li>
+            <li>
+              드래그 중 아이콘은 반투명(<code>opacity-50</code>)으로 표시되며 마우스를 따라
+              이동합니다.
+            </li>
+            <li>
+              마우스를 놓으면 <code>pixelToGrid()</code>로 가장 가까운 그리드 셀을 계산하고, 해당
+              셀이 비어있으면 해당 위치에 스냅됩니다. 이미 다른 아이콘이 있으면 원래 위치로
+              돌아갑니다.
+            </li>
+            <li>
+              드롭 위치는 현재 뷰포트 기준 <code>getGridBounds()</code>로 계산된 maxCols/maxRows
+              범위 내로 제한됩니다.
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* 6. 리사이즈 리플로우 */}
+      <VStack gap={4}>
+        <SectionTitle>리사이즈 리플로우</SectionTitle>
+        <Prose>
+          <p>
+            브라우저 창 크기를 줄이면 일부 아이콘이 뷰포트 밖으로 벗어날 수 있습니다. 이를 방지하기
+            위해 <code>window.resize</code> 이벤트를 감지하여 실시간으로 아이콘을 재배치합니다.
+          </p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              <strong>실시간 반영</strong>: <code>requestAnimationFrame</code> 기반으로 리사이즈
+              중에도 매 프레임 즉시 재배치됩니다 (debounce 없음).
+            </li>
+            <li>
+              <strong>범위 계산</strong>: <code>maxCols = floor((width - PAD_X) / CELL_W)</code>,
+              <code>maxRows = floor((height - PAD_TOP) / CELL_H)</code>
+            </li>
+            <li>
+              <strong>재배치 전략</strong>: 범위 내 아이콘은 위치를 유지하고, 범위 밖 아이콘만 빈
+              셀로 이동합니다. 빈 셀 탐색은 column-first (col 0→N, row 0→N) 순서입니다.
+            </li>
+            <li>
+              <strong>극단적 축소</strong>: 빈 셀이 부족할 경우 아이콘은 원래 위치를 유지합니다
+              (graceful degradation).
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* 7. 뷰포트 수용량 */}
+      <VStack gap={4}>
+        <SectionTitle>뷰포트별 수용량</SectionTitle>
+        <Prose>
+          <p>아래는 주요 해상도에서의 최대 열/행 수와 수용 가능한 아이콘 개수입니다.</p>
+        </Prose>
+        <div className="overflow-x-auto">
+          <table className="w-full text-[length:var(--font-size-12)]">
+            <thead>
+              <tr className="border-b border-[var(--color-border-default)]">
+                <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  해상도
+                </th>
+                <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  최대 열
+                </th>
+                <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  최대 행
+                </th>
+                <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  최대 아이콘
+                </th>
+                <th className="text-left py-2.5 font-medium text-[var(--color-text-subtle)]">
+                  8개 배치
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {(
+                [
+                  ['1024 × 768', '7', '5', '35', '2열 (5+3)'],
+                  ['1280 × 800', '9', '6', '54', '2열 (6+2)'],
+                  ['1440 × 900', '10', '6', '60', '2열 (6+2)'],
+                  ['1920 × 1080', '14', '8', '112', '1열 (8)'],
+                  ['2560 × 1440', '19', '11', '209', '1열 (8)'],
+                ] as const
+              ).map(([res, cols, rows, max, layout], i) => (
+                <tr key={i} className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2.5 pr-4 font-mono text-[var(--color-text-default)]">{res}</td>
+                  <td className="py-2.5 pr-4 font-mono text-[var(--color-action-primary)]">
+                    {cols}
+                  </td>
+                  <td className="py-2.5 pr-4 font-mono text-[var(--color-action-primary)]">
+                    {rows}
+                  </td>
+                  <td className="py-2.5 pr-4 text-[var(--color-text-default)]">{max}</td>
+                  <td className="py-2.5 text-[var(--color-text-muted)]">{layout}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* Summary Info Box */}
       <div className="p-4 bg-[var(--color-state-info-bg)] rounded-[var(--radius-md)]">
         <div className="text-[length:var(--font-size-12)] text-[var(--color-state-info)]">
-          <strong>Desktop Grid Guidelines:</strong>
+          <strong>요약:</strong>
           <ul className="mt-2 space-y-1 list-disc list-inside">
-            <li>아이콘은 논리적 좌표(col, row)로 관리되며 절대 좌표로 렌더링됩니다.</li>
-            <li>셀 크기는 128×120px (CELL_W×CELL_H). 아이콘 영역은 80px (w-20).</li>
-            <li>초기 배치는 column-first: 세로 방향으로 채운 후 다음 열로 이동합니다.</li>
+            <li>절대 좌표 기반 그리드 스냅 — 드래그 앤 드롭 자유 배치 지원</li>
             <li>
-              드래그 앤 드롭으로 그리드 위치를 변경할 수 있으며, 드롭 시 가장 가까운 빈 셀에
-              스냅됩니다.
+              논리 좌표(col, row) → 픽셀 좌표 변환: <code>PAD_X + col × CELL_W</code>,{' '}
+              <code>PAD_TOP + row × CELL_H</code>
             </li>
-            <li>브라우저 리사이즈 시 범위 밖 아이콘이 실시간으로 빈 위치에 재배치됩니다.</li>
-            <li>하단 64px은 Dock 영역으로 예약됩니다.</li>
+            <li>초기 배치: column-first (세로 우선, macOS 컨벤션)</li>
+            <li>리사이즈 리플로우: requestAnimationFrame 기반 실시간 재배치</li>
+            <li>Dock은 TopBar 내부에 위치하므로 하단 예약 영역 없음</li>
           </ul>
         </div>
       </div>
@@ -181,7 +384,7 @@ export function DesktopGridPage() {
               </table>
             </div>
             <p className="text-body-sm text-[var(--color-text-subtle)]">
-              maxCols = floor((width - PAD_X) / CELL_W), maxRows = floor((height - PAD_TOP - 64) /
+              maxCols = floor((width - PAD_X) / CELL_W), maxRows = floor((height - PAD_TOP) /
               CELL_H). Resize reflow relocates out-of-bounds icons to empty cells.
             </p>
           </VStack>
@@ -282,7 +485,7 @@ function getGridBounds(container: HTMLElement) {
   const rect = container.getBoundingClientRect();
   return {
     maxCols: Math.max(1, Math.floor((rect.width - GRID.PAD_X) / GRID.CELL_W)),
-    maxRows: Math.max(1, Math.floor((rect.height - GRID.PAD_TOP - 64) / GRID.CELL_H)),
+    maxRows: Math.max(1, Math.floor((rect.height - GRID.PAD_TOP) / GRID.CELL_H)),
   };
 }
 
