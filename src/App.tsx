@@ -316,6 +316,7 @@ import { SecurityGroupsPage as SecuritySecurityGroupsPage } from '@/pages/securi
 import { NetworkPoliciesPage as SecurityNetworkPoliciesPage } from '@/pages/security/NetworkPoliciesPage';
 import { SecurityCreateNetworkPolicyPage } from '@/pages/security/CreateNetworkPolicyPage';
 import { SecurityCreateNetworkPolicyYamlPage } from '@/pages/security/CreateNetworkPolicyYamlPage';
+import { NetworkPolicyDetailPage as SecurityNetworkPolicyDetailPage } from '@/pages/security/NetworkPolicyDetailPage';
 import { SecurityGroupDetailPage as SecuritySecurityGroupDetailPage } from '@/pages/security/SecurityGroupDetailPage';
 
 // Pages - IAM
@@ -1084,6 +1085,7 @@ function AppRoutes() {
         path="/security/network-policies/create-yaml"
         element={<SecurityCreateNetworkPolicyYamlPage />}
       />
+      <Route path="/security/network-policies/:id" element={<SecurityNetworkPolicyDetailPage />} />
 
       {/* IAM Routes */}
       <Route path="/iam" element={<IAMHomePage />} />

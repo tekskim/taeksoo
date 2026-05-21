@@ -343,6 +343,7 @@ export const TabBar: React.FC<TabBarProps> = ({
             }, 20);
           }
         }}
+        role="tablist"
         className="
           flex-1
           flex items-end
@@ -392,7 +393,27 @@ export const TabBar: React.FC<TabBarProps> = ({
             <div
               key={tab.id}
               data-tab-id={tab.id}
+              role="tab"
+              tabIndex={0}
+              aria-selected={isActive}
               onClick={() => handleTabClick(tab.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleTabClick(tab.id);
+                } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                  e.preventDefault();
+                  const currentIndex = tabs.findIndex((t) => t.id === tab.id);
+                  const nextIndex =
+                    e.key === 'ArrowRight'
+                      ? (currentIndex + 1) % tabs.length
+                      : (currentIndex - 1 + tabs.length) % tabs.length;
+                  const nextTab = e.currentTarget.parentElement?.querySelector(
+                    `[data-tab-id="${tabs[nextIndex].id}"]`
+                  ) as HTMLElement | null;
+                  nextTab?.focus();
+                }
+              }}
               onMouseEnter={(e) => handleTabMouseEnter(e, tab.id, tabLabel)}
               onMouseLeave={handleTabMouseLeave}
               draggable={!!onTabReorder && !isAnimating}
@@ -411,6 +432,8 @@ export const TabBar: React.FC<TabBarProps> = ({
                 relative
                 flex items-center
                 h-full
+                outline-none
+                focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-inset focus-visible:z-10
                 ${isClosingMode && !isAnimating ? 'shrink-0 min-w-0' : isAnimating ? 'w-[var(--tabbar-tab-max-width)] shrink min-w-0' : 'w-[var(--tabbar-tab-max-width)] shrink min-w-[var(--tabbar-tab-min-width)]'}
                 pl-[var(--tabbar-tab-padding-x)] pr-[var(--tabbar-tab-padding-r)]
                 gap-[var(--tabbar-tab-gap)]

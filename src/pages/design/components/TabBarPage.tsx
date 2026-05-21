@@ -116,6 +116,15 @@ function TabBarDemo() {
     initialActiveTab: 'rc-1',
   });
 
+  const focusDemo = useTabBar({
+    initialTabs: [
+      { id: 'focus-1', label: 'Dashboard', closable: true },
+      { id: 'focus-2', label: 'Instances', closable: true },
+      { id: 'focus-3', label: 'Volumes', closable: true },
+    ],
+    initialActiveTab: 'focus-1',
+  });
+
   const handleAddTab = () => {
     const counter = tabCounterRef.current;
     addTab({
@@ -221,6 +230,28 @@ function TabBarDemo() {
             ) : (
               <>× 버튼을 연속으로 클릭해보세요. 마우스를 움직이지 않아도 됩니다.</>
             )}
+          </div>
+        </div>
+      </VStack>
+
+      <VStack gap={3}>
+        <VStack gap={1}>
+          <Label>Focus State (Keyboard Navigation)</Label>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            Tab 키로 탭 간 이동 시 focus ring이 표시된다. 아래 TabBar를 클릭한 뒤 Tab / Shift+Tab
+            키로 탭을 이동해보세요. Enter 또는 Space 키로 탭을 활성화할 수 있다.
+          </span>
+        </VStack>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
+          <TabBar
+            tabs={focusDemo.tabs}
+            activeTab={focusDemo.activeTab}
+            onTabChange={focusDemo.selectTab}
+            onTabClose={focusDemo.closeTab}
+            showAddButton={false}
+          />
+          <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-body-md">
+            Active: {focusDemo.tabs.find((t) => t.id === focusDemo.activeTab)?.label || '—'}
           </div>
         </div>
       </VStack>
