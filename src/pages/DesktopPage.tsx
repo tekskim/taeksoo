@@ -117,6 +117,14 @@ function gridToPixel(col: number, row: number) {
   };
 }
 
+function debounce<T extends (...args: never[]) => void>(fn: T, ms: number) {
+  let timer: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), ms);
+  };
+}
+
 function pixelToGrid(px: number, py: number, maxCols: number, maxRows: number) {
   const col = Math.round((px - GRID.PAD_X) / GRID.CELL_W);
   const row = Math.round((py - GRID.PAD_TOP) / GRID.CELL_H);
@@ -2128,6 +2136,53 @@ export function DesktopPage() {
     setDesktopIcons,
     desktopGridRef
   );
+
+  useEffect(() => {
+    let rafId = 0;
+    const handleResize = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        if (!desktopGridRef.current) return;
+        const rect = desktopGridRef.current.getBoundingClientRect();
+        const bottomPad = 64;
+        const maxCols = Math.max(1, Math.floor((rect.width - GRID.PAD_X) / GRID.CELL_W));
+        const maxRows = Math.max(
+          1,
+          Math.floor((rect.height - GRID.PAD_TOP - bottomPad) / GRID.CELL_H)
+        );
+
+        setDesktopIcons((prev) => {
+          const hasOutOfBounds = prev.some((icon) => icon.col >= maxCols || icon.row >= maxRows);
+          if (!hasOutOfBounds) return prev;
+
+          const inBounds = prev.filter((icon) => icon.col < maxCols && icon.row < maxRows);
+          const outOfBounds = prev.filter((icon) => icon.col >= maxCols || icon.row >= maxRows);
+
+          const occupied = new Set(inBounds.map((i) => `${i.col},${i.row}`));
+          const relocated = outOfBounds.map((icon) => {
+            for (let c = 0; c < maxCols; c++) {
+              for (let r = 0; r < maxRows; r++) {
+                const key = `${c},${r}`;
+                if (!occupied.has(key)) {
+                  occupied.add(key);
+                  return { ...icon, col: c, row: r };
+                }
+              }
+            }
+            return icon;
+          });
+
+          return [...inBounds, ...relocated];
+        });
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   // Window Management System
   // Dock menu 시뮬레이션 모드 - 실제 앱 실행 없이 인터랙션만 테스트

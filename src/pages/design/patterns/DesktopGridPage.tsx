@@ -5,10 +5,6 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
 }
 
-function SubSectionTitle({ children }: { children: React.ReactNode }) {
-  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
-}
-
 function Prose({ children }: { children: React.ReactNode }) {
   return (
     <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
@@ -24,8 +20,9 @@ function DesktopGridGuidelines() {
         <SectionTitle>그리드 방식</SectionTitle>
         <Prose>
           <p>
-            CSS Grid의 repeat(auto-fill, 80px)를 사용하여 뷰포트 너비에 따라 아이콘이 자동으로
-            재배열됩니다. 아이콘 추가/삭제 시 레이아웃 변경이 필요 없습니다.
+            절대 좌표 기반 그리드 스냅 시스템을 사용합니다. 아이콘 위치는 논리적 그리드 좌표(col,
+            row)로 관리되며, <code>gridToPixel()</code>을 통해 렌더링 시 절대 픽셀 좌표로
+            변환됩니다.
           </p>
         </Prose>
       </VStack>
@@ -37,13 +34,18 @@ function DesktopGridGuidelines() {
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>Flow</strong>: row (왼쪽→오른쪽, 위→아래) — OS 데스크톱 컨벤션
+              <strong>Flow</strong>: column-first (위→아래, 왼쪽→오른쪽) — macOS 데스크톱 컨벤션
             </li>
             <li>
               <strong>Alignment</strong>: top-left (content-start)
             </li>
             <li>
-              <strong>Wrap</strong>: 뷰포트 부족 시 자동으로 다음 행으로 이동
+              <strong>Drag &amp; Drop</strong>: 아이콘을 드래그하여 그리드 위치를 자유롭게 변경
+              가능. 5px 임계값 이후 드래그 시작.
+            </li>
+            <li>
+              <strong>Resize Reflow</strong>: 뷰포트 축소 시 범위 밖 아이콘이 빈 그리드 위치로 자동
+              재배치 (requestAnimationFrame 기반 실시간 반영)
             </li>
           </ul>
         </Prose>
@@ -55,14 +57,15 @@ function DesktopGridGuidelines() {
         <div className="text-[length:var(--font-size-12)] text-[var(--color-state-info)]">
           <strong>Desktop Grid Guidelines:</strong>
           <ul className="mt-2 space-y-1 list-disc list-inside">
-            <li>auto-fill로 뷰포트에 맞게 컬럼 수가 자동 결정됩니다.</li>
-            <li>아이콘 셀은 80px 고정 (w-20). 64px 아이콘 이미지가 중앙 정렬됩니다.</li>
+            <li>아이콘은 논리적 좌표(col, row)로 관리되며 절대 좌표로 렌더링됩니다.</li>
+            <li>셀 크기는 128×120px (CELL_W×CELL_H). 아이콘 영역은 80px (w-20).</li>
+            <li>초기 배치는 column-first: 세로 방향으로 채운 후 다음 열로 이동합니다.</li>
             <li>
-              1280px+ 에서 현재 8개 아이콘이 모두 한 줄에 들어갑니다. 1024px에서는 마지막 아이콘이
-              두 번째 줄로 이동합니다.
+              드래그 앤 드롭으로 그리드 위치를 변경할 수 있으며, 드롭 시 가장 가까운 빈 셀에
+              스냅됩니다.
             </li>
-            <li>앱 아이콘 추가 시 레이아웃 변경 없이 자동 reflow됩니다.</li>
-            <li>하단 64px은 "Go to main page" 네비게이션 링크 영역으로 예약됩니다.</li>
+            <li>브라우저 리사이즈 시 범위 밖 아이콘이 실시간으로 빈 위치에 재배치됩니다.</li>
+            <li>하단 64px은 Dock 영역으로 예약됩니다.</li>
           </ul>
         </div>
       </div>
@@ -74,7 +77,7 @@ export function DesktopGridPage() {
   return (
     <ComponentPageTemplate
       title="Desktop Icon Grid"
-      description="Responsive grid layout for desktop page icons. Auto-reflows based on viewport width."
+      description="Absolute-positioned grid snap system for desktop icons with drag-and-drop and responsive reflow."
       guidelines={<DesktopGridGuidelines />}
       examples={
         <VStack gap={8}>
@@ -101,14 +104,20 @@ export function DesktopGridPage() {
                 <tbody>
                   {(
                     [
-                      ['Cell size', '80 × ~100px', 'Icon 64px + gap 4px + label (~16px)'],
-                      ['Column gap', '48px (gap-x-12)', 'Horizontal space between icons'],
-                      ['Row gap', '32px (gap-y-8)', 'Vertical space between rows'],
-                      ['Padding', '44px L/R (px-11)', 'Horizontal inset from screen edge'],
-                      ['Top offset', '76px', '52px (TopBar height) + 24px spacing'],
-                      ['Bottom reserve', '64px (bottom-16)', 'Space for navigation link area'],
-                      ['Flow', 'row (left→right, top→bottom)', 'CSS Grid auto-fill'],
-                      ['Alignment', 'top-left (content-start)', 'OS desktop convention'],
+                      ['CELL_W', '128px', 'Grid cell width (horizontal step)'],
+                      ['CELL_H', '120px', 'Grid cell height (vertical step)'],
+                      ['PAD_X', '44px', 'Horizontal inset from screen left edge'],
+                      ['PAD_TOP', '76px', '52px (TopBar) + 24px spacing'],
+                      ['ICON_W', '80px', 'Icon button width (w-20)'],
+                      ['Bottom reserve', '64px', 'Dock area height'],
+                      ['DRAG_THRESHOLD', '5px', 'Minimum distance before drag starts'],
+                      ['Flow', 'column-first', 'Top→bottom, then left→right (macOS style)'],
+                      ['Positioning', 'absolute + fixed grid', 'gridToPixel(col, row) → left/top'],
+                      [
+                        'Resize reflow',
+                        'requestAnimationFrame',
+                        'Real-time reflow — out-of-bounds icons relocated instantly',
+                      ],
                     ] as const
                   ).map(([prop, value, desc], i) => (
                     <tr key={i} className="border-b border-[var(--color-border-subtle)]">
@@ -139,10 +148,10 @@ export function DesktopGridPage() {
                       Viewport
                     </th>
                     <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">
-                      Available Width
+                      Max Columns
                     </th>
                     <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">
-                      Max Columns
+                      Max Rows (768px height)
                     </th>
                     <th className="text-left py-3 font-medium text-[var(--color-text-subtle)]">
                       8 Icons Layout
@@ -152,19 +161,19 @@ export function DesktopGridPage() {
                 <tbody>
                   {(
                     [
-                      ['1024px', '936px', '7', '7 + 1 (2 rows)'],
-                      ['1280px', '1192px', '9', '1 row'],
-                      ['1440px', '1352px', '10', '1 row'],
-                      ['1920px', '1832px', '14', '1 row'],
-                      ['2560px', '2472px', '19', '1 row'],
+                      ['1024px', '7', '5', '2 cols × 4 rows + 1 col'],
+                      ['1280px', '9', '5', '2 cols × 4 rows'],
+                      ['1440px', '10', '5', '2 cols × 4 rows'],
+                      ['1920px', '14', '5', '2 cols × 4 rows'],
+                      ['2560px', '19', '5', '2 cols × 4 rows'],
                     ] as const
-                  ).map(([vp, avail, cols, layout], i) => (
+                  ).map(([vp, cols, rows, layout], i) => (
                     <tr key={i} className="border-b border-[var(--color-border-subtle)]">
                       <td className="py-3 pr-4 font-mono text-[var(--color-text-default)]">{vp}</td>
                       <td className="py-3 pr-4 font-mono text-[var(--color-action-primary)]">
-                        {avail}
+                        {cols}
                       </td>
-                      <td className="py-3 pr-4 text-[var(--color-text-default)]">{cols}</td>
+                      <td className="py-3 pr-4 text-[var(--color-text-default)]">{rows}</td>
                       <td className="py-3 text-[var(--color-text-muted)]">{layout}</td>
                     </tr>
                   ))}
@@ -172,8 +181,8 @@ export function DesktopGridPage() {
               </table>
             </div>
             <p className="text-body-sm text-[var(--color-text-subtle)]">
-              Column count = floor((viewport - 88px padding) / (80px cell + 48px gap)). Icons
-              auto-wrap to next row when columns are insufficient.
+              maxCols = floor((width - PAD_X) / CELL_W), maxRows = floor((height - PAD_TOP - 64) /
+              CELL_H). Resize reflow relocates out-of-bounds icons to empty cells.
             </p>
           </VStack>
 
@@ -201,27 +210,29 @@ export function DesktopGridPage() {
                   </div>
                 </div>
               </div>
-              {/* Desktop area */}
-              <div className="bg-[#0f0f1a] px-4 pt-3 pb-4">
-                <div
-                  className="grid gap-x-6 gap-y-3 items-start content-start"
-                  style={{ gridTemplateColumns: 'repeat(auto-fill, 40px)' }}
-                >
-                  {[
-                    'IAM',
-                    'Compute',
-                    'Storage',
-                    'Container',
-                    'AI',
-                    'Agent',
-                    'Settings',
-                    'Admin',
-                  ].map((name) => (
-                    <div key={name} className="flex flex-col items-center gap-0.5">
-                      <div className="w-6 h-6 rounded-[4px] bg-white/10 border border-white/15" />
-                      <span className="text-[7px] text-white/60 whitespace-nowrap">{name}</span>
-                    </div>
-                  ))}
+              {/* Desktop area — column-first layout */}
+              <div className="bg-[#0f0f1a] px-4 pt-3 pb-4 relative" style={{ minHeight: 160 }}>
+                {[
+                  { label: 'IAM', col: 0, row: 0 },
+                  { label: 'AI', col: 0, row: 1 },
+                  { label: 'Compute', col: 0, row: 2 },
+                  { label: 'Agent', col: 1, row: 0 },
+                  { label: 'Container', col: 1, row: 1 },
+                  { label: 'Admin', col: 1, row: 2 },
+                  { label: 'Storage', col: 2, row: 0 },
+                  { label: 'Settings', col: 2, row: 1 },
+                ].map(({ label, col, row }) => (
+                  <div
+                    key={label}
+                    className="absolute flex flex-col items-center gap-0.5"
+                    style={{ left: 16 + col * 56, top: 8 + row * 44 }}
+                  >
+                    <div className="w-6 h-6 rounded-[4px] bg-white/10 border border-white/15" />
+                    <span className="text-[7px] text-white/60 whitespace-nowrap">{label}</span>
+                  </div>
+                ))}
+                <div className="absolute right-3 top-2 text-[6px] text-white/30 font-mono">
+                  col-first flow ↓→
                 </div>
               </div>
               {/* Dimensions footer */}
@@ -233,12 +244,12 @@ export function DesktopGridPage() {
                 </div>
                 <div className="flex-1 py-2 text-center">
                   <span className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-muted)]">
-                    grid-template-columns: repeat(auto-fill, 80px) · gap: 48px 32px
+                    absolute positioning · gridToPixel(col, row) → left / top
                   </span>
                 </div>
                 <div className="py-2 px-3 text-center border-l border-[var(--color-border-default)]">
                   <span className="text-[length:var(--font-size-10)] font-mono text-[var(--color-action-primary)]">
-                    44px
+                    128px
                   </span>
                 </div>
               </div>
@@ -248,25 +259,59 @@ export function DesktopGridPage() {
       }
       tokens={
         <pre className="text-[length:var(--font-size-11)] p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto text-[var(--color-text-muted)]">
-          {`/* Desktop Icon Grid Container */
-<div
-  className="absolute top-[76px] left-0 right-0 bottom-16
-             px-11 grid gap-x-12 gap-y-8
-             content-start items-start"
-  style={{ gridTemplateColumns: 'repeat(auto-fill, 80px)' }}
->
-  <DesktopIcon icon={...} label="IAM" />
-  <DesktopIcon icon={...} label="Compute" />
-  {/* ... more icons auto-wrap to next row */}
-</div>
+          {`/* Grid Constants */
+const GRID = {
+  CELL_W: 128,   // horizontal step
+  CELL_H: 120,   // vertical step
+  PAD_X: 44,     // left inset
+  PAD_TOP: 76,   // top inset (52px TopBar + 24px)
+  ICON_W: 80,    // icon button width
+  DRAG_THRESHOLD: 5,
+};
 
-/* DesktopIcon — fixed 80px cell */
-<button className="flex flex-col items-center gap-1 w-20">
-  <div className="w-20 h-20 flex items-center justify-center">
-    <img className="w-16 h-16 object-cover" />
-  </div>
+/* Logical → Pixel conversion */
+function gridToPixel(col: number, row: number) {
+  return {
+    x: GRID.PAD_X + col * GRID.CELL_W,
+    y: GRID.PAD_TOP + row * GRID.CELL_H,
+  };
+}
+
+/* Grid bounds from container */
+function getGridBounds(container: HTMLElement) {
+  const rect = container.getBoundingClientRect();
+  return {
+    maxCols: Math.max(1, Math.floor((rect.width - GRID.PAD_X) / GRID.CELL_W)),
+    maxRows: Math.max(1, Math.floor((rect.height - GRID.PAD_TOP - 64) / GRID.CELL_H)),
+  };
+}
+
+/* Desktop Icon — absolute positioned */
+<button
+  className="absolute flex flex-col items-center gap-1 w-20"
+  style={{ left: pos.x, top: pos.y }}
+>
+  <img className="w-16 h-16 object-cover" />
   <span className="text-label-md text-white">{label}</span>
-</button>`}
+</button>
+
+/* Resize reflow — requestAnimationFrame */
+useEffect(() => {
+  let rafId = 0;
+  const handleResize = () => {
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => {
+      const { maxCols, maxRows } = getGridBounds(container);
+      // Relocate out-of-bounds icons to empty cells
+      // Column-first scan: col 0→N, row 0→N
+    });
+  };
+  window.addEventListener('resize', handleResize);
+  return () => {
+    window.removeEventListener('resize', handleResize);
+    cancelAnimationFrame(rafId);
+  };
+}, []);`}
         </pre>
       }
       relatedLinks={[
