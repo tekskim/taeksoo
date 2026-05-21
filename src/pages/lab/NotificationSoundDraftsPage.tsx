@@ -1,20 +1,55 @@
 import { useState, useRef, useCallback } from 'react';
 import { VStack, HStack, Badge, Tabs, TabList, Tab, TabPanel } from '@/design-system';
-import { IconPlayerPlay, IconPlayerStop, IconVolume } from '@tabler/icons-react';
+import { IconPlayerPlay, IconPlayerStop, IconVolume, IconDownload } from '@tabler/icons-react';
 import { normalSoundDefs, emergencySoundDefs } from './notificationSoundSynth';
 import type { SoundDefinition } from './notificationSoundSynth';
+
+function renderToWav(sound: SoundDefinition, durationSec: number): Promise<Blob> {
+  const sampleRate = 44100;
+  const length = sampleRate * durationSec;
+  const offline = new OfflineAudioContext(1, length, sampleRate);
+  sound.play(offline as unknown as AudioContext);
+  return offline.startRendering().then((buffer) => {
+    const pcm = buffer.getChannelData(0);
+    const wavBuffer = new ArrayBuffer(44 + pcm.length * 2);
+    const view = new DataView(wavBuffer);
+    const writeStr = (offset: number, str: string) => {
+      for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+    };
+    writeStr(0, 'RIFF');
+    view.setUint32(4, 36 + pcm.length * 2, true);
+    writeStr(8, 'WAVE');
+    writeStr(12, 'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * 2, true);
+    view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true);
+    writeStr(36, 'data');
+    view.setUint32(40, pcm.length * 2, true);
+    for (let i = 0; i < pcm.length; i++) {
+      const s = Math.max(-1, Math.min(1, pcm[i]));
+      view.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+    }
+    return new Blob([wavBuffer], { type: 'audio/wav' });
+  });
+}
 
 function SoundCard({
   sound,
   index,
   isPlaying,
   onPlay,
+  onDownload,
   variant,
 }: {
   sound: SoundDefinition;
   index: number;
   isPlaying: boolean;
   onPlay: () => void;
+  onDownload: () => void;
   variant: 'normal' | 'emergency';
 }) {
   const borderColor = isPlaying
@@ -65,6 +100,15 @@ function SoundCard({
         </HStack>
         <span className="text-body-sm text-[var(--color-text-subtle)]">{sound.description}</span>
       </div>
+
+      <button
+        type="button"
+        onClick={onDownload}
+        className="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-[var(--color-surface-muted)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
+        aria-label={`Download ${sound.name}`}
+      >
+        <IconDownload size={14} />
+      </button>
     </div>
   );
 }
@@ -97,6 +141,18 @@ export function NotificationSoundDraftsPage() {
     [getCtx]
   );
 
+  const downloadSound = useCallback((sound: SoundDefinition) => {
+    const duration = sound.id.startsWith('emergency') ? 4 : 2;
+    renderToWav(sound, duration).then((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${sound.id}.wav`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }, []);
+
   const renderSoundList = (sounds: SoundDefinition[], variant: 'normal' | 'emergency') => (
     <VStack gap={2}>
       {sounds.map((sound, i) => (
@@ -107,6 +163,7 @@ export function NotificationSoundDraftsPage() {
           variant={variant}
           isPlaying={playingId === sound.id}
           onPlay={() => playSound(sound)}
+          onDownload={() => downloadSound(sound)}
         />
       ))}
     </VStack>
@@ -153,6 +210,148 @@ export function NotificationSoundDraftsPage() {
         </VStack>
       </div>
 
+      {/* Sound Matching Policy */}
+      <VStack gap={3}>
+        <span className="text-label-md text-[var(--color-text-default)]">
+          메시지 유형별 사운드 매칭
+        </span>
+        <div className="rounded-[var(--radius-lg)] border border-[var(--color-border-default)] overflow-hidden">
+          <table className="w-full text-body-md">
+            <thead>
+              <tr className="bg-[var(--color-surface-subtle)]">
+                <th className="text-left text-label-sm text-[var(--color-text-subtle)] px-4 py-2.5 font-medium">
+                  메시지 유형
+                </th>
+                <th className="text-left text-label-sm text-[var(--color-text-subtle)] px-4 py-2.5 font-medium">
+                  사운드
+                </th>
+                <th className="text-left text-label-sm text-[var(--color-text-subtle)] px-4 py-2.5 font-medium">
+                  카테고리
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t border-[var(--color-border-default)]">
+                <td className="px-4 py-2.5 text-[var(--color-text-default)]">
+                  <HStack gap={1.5} align="center">
+                    <Badge variant="error" size="sm">
+                      Critical
+                    </Badge>
+                    <span>Alert앱 Critical 알림</span>
+                  </HStack>
+                </td>
+                <td className="px-4 py-2.5 text-[var(--color-text-default)] font-medium">
+                  Urgent Square
+                </td>
+                <td className="px-4 py-2.5">
+                  <Badge variant="error" size="sm">
+                    Emergency
+                  </Badge>
+                </td>
+              </tr>
+              <tr className="border-t border-[var(--color-border-default)]">
+                <td className="px-4 py-2.5 text-[var(--color-text-default)]">
+                  <HStack gap={1.5} align="center">
+                    <Badge variant="warning" size="sm">
+                      Warning
+                    </Badge>
+                    <span>Alert앱 Warning 알림</span>
+                  </HStack>
+                </td>
+                <td className="px-4 py-2.5 text-[var(--color-text-default)] font-medium">
+                  Alarm Pulse
+                </td>
+                <td className="px-4 py-2.5">
+                  <Badge variant="error" size="sm">
+                    Emergency
+                  </Badge>
+                </td>
+              </tr>
+              <tr className="border-t border-[var(--color-border-default)]">
+                <td className="px-4 py-2.5 text-[var(--color-text-default)]">
+                  <HStack gap={1.5} align="center">
+                    <Badge variant="success" size="sm">
+                      Success
+                    </Badge>
+                    <span>비동기 액션 Success 알림</span>
+                  </HStack>
+                </td>
+                <td className="px-4 py-2.5 text-[var(--color-text-default)] font-medium">
+                  Tri-tone
+                </td>
+                <td className="px-4 py-2.5">
+                  <Badge variant="info" size="sm">
+                    Normal
+                  </Badge>
+                </td>
+              </tr>
+              <tr className="border-t border-[var(--color-border-default)]">
+                <td className="px-4 py-2.5 text-[var(--color-text-default)]">
+                  <HStack gap={1.5} align="center">
+                    <Badge variant="error" size="sm">
+                      Failed
+                    </Badge>
+                    <span>비동기 액션 Failed 알림</span>
+                  </HStack>
+                </td>
+                <td className="px-4 py-2.5 text-[var(--color-text-default)] font-medium">
+                  Descending Duo
+                </td>
+                <td className="px-4 py-2.5">
+                  <Badge variant="info" size="sm">
+                    Normal
+                  </Badge>
+                </td>
+              </tr>
+              <tr className="border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                <td
+                  colSpan={3}
+                  className="px-4 py-1.5 text-label-sm text-[var(--color-text-subtle)]"
+                >
+                  또는 (대안 세트)
+                </td>
+              </tr>
+              <tr className="border-t border-[var(--color-border-default)]">
+                <td className="px-4 py-2.5 text-[var(--color-text-default)]">
+                  <HStack gap={1.5} align="center">
+                    <Badge variant="success" size="sm">
+                      Success
+                    </Badge>
+                    <span>비동기 액션 Success 알림</span>
+                  </HStack>
+                </td>
+                <td className="px-4 py-2.5 text-[var(--color-text-default)] font-medium">
+                  Triple Chime
+                </td>
+                <td className="px-4 py-2.5">
+                  <Badge variant="info" size="sm">
+                    Normal
+                  </Badge>
+                </td>
+              </tr>
+              <tr className="border-t border-[var(--color-border-default)]">
+                <td className="px-4 py-2.5 text-[var(--color-text-default)]">
+                  <HStack gap={1.5} align="center">
+                    <Badge variant="error" size="sm">
+                      Failed
+                    </Badge>
+                    <span>비동기 액션 Failed 알림</span>
+                  </HStack>
+                </td>
+                <td className="px-4 py-2.5 text-[var(--color-text-default)] font-medium">
+                  Broken Chime
+                </td>
+                <td className="px-4 py-2.5">
+                  <Badge variant="info" size="sm">
+                    Normal
+                  </Badge>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </VStack>
+
       <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
         <TabList>
           <Tab value="normal">
@@ -166,7 +365,7 @@ export function NotificationSoundDraftsPage() {
           <Tab value="emergency">
             <HStack gap={1.5} align="center">
               <span>Emergency</span>
-              <Badge variant="danger" size="sm">
+              <Badge variant="error" size="sm">
                 {emergencySoundDefs.length}
               </Badge>
             </HStack>

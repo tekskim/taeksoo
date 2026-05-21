@@ -119,7 +119,7 @@ function playAlarmPulse(ctx: AudioContext) {
   master.gain.value = 0.28;
   master.connect(ctx.destination);
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 6; i++) {
     const start = t + i * 0.3;
     const g = ctx.createGain();
     g.gain.setValueAtTime(0, start);
@@ -180,6 +180,37 @@ function playSirenUrgentSquare(ctx: AudioContext) {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Failed Action Sounds — 비동기 액션 실패 알림                          */
+/*  Tri-Tone ↔ Descending Duo, Triple Chime ↔ Broken Chime 매칭       */
+/* ------------------------------------------------------------------ */
+
+function playDescendingDuo(ctx: AudioContext) {
+  const t = ctx.currentTime;
+  const master = ctx.createGain();
+  master.gain.value = 0.3;
+  master.connect(ctx.destination);
+
+  [880, 587.33].forEach((freq, i) => {
+    const start = t + i * 0.12;
+    const g = envelope(ctx, master, 0.7, 0.01, 0.25, start);
+    createOsc(ctx, 'sine', freq, g, start, start + 0.3);
+  });
+}
+
+function playBrokenChime(ctx: AudioContext) {
+  const t = ctx.currentTime;
+  const master = ctx.createGain();
+  master.gain.value = 0.25;
+  master.connect(ctx.destination);
+
+  const g1 = envelope(ctx, master, 0.6, 0.01, 0.2, t);
+  createOsc(ctx, 'sine', C5, g1, t, t + 0.25);
+
+  const g2 = envelope(ctx, master, 0.6, 0.01, 0.3, t + 0.12);
+  createOsc(ctx, 'sine', noteFreq(-2), g2, t + 0.12, t + 0.45);
+}
+
+/* ------------------------------------------------------------------ */
 /*  Exports                                                           */
 /* ------------------------------------------------------------------ */
 
@@ -187,20 +218,26 @@ export const normalSoundDefs: SoundDefinition[] = [
   {
     id: 'normal-01-tri-tone',
     name: 'Tri-Tone',
-    description: 'iMessage 스타일 — 3음 상승 유리음',
+    description: 'iMessage 스타일 — 3음 상승 유리음 (Success용)',
     play: playTriTone,
   },
   {
-    id: 'normal-02-triple-chime',
+    id: 'normal-02-descending-duo',
+    name: 'Descending Duo',
+    description: '2음 하강 — A5→D5 사인파 (Failed용, Tri-Tone 매칭)',
+    play: playDescendingDuo,
+  },
+  {
+    id: 'normal-03-triple-chime',
     name: 'Triple Chime',
-    description: '3음 아르페지오 (C5-E5-G5)',
+    description: '3음 아르페지오 C5-E5-G5 (Success용)',
     play: playTripleChime,
   },
   {
-    id: 'normal-03-double-tap',
-    name: 'Double Tap',
-    description: '더블 탭 — 가벼운 두 번 터치',
-    play: playDoubleTap,
+    id: 'normal-04-broken-chime',
+    name: 'Broken Chime',
+    description: '깨진 차임 — C5→Bb4 반음 하강 (Failed용, Triple Chime 매칭)',
+    play: playBrokenChime,
   },
 ];
 
@@ -208,7 +245,7 @@ export const emergencySoundDefs: SoundDefinition[] = [
   {
     id: 'emergency-01-alarm-pulse',
     name: 'Alarm Pulse',
-    description: '균일 펄스 경보 — 사각파 520Hz 8회 반복',
+    description: '균일 펄스 경보 — 사각파 520Hz 6회 반복',
     play: playAlarmPulse,
   },
   {

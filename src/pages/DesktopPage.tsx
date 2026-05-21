@@ -2480,7 +2480,7 @@ export function DesktopPage() {
       id: '15',
       type: 'success',
       message: 'Role "cluster-admin" permissions modified.',
-      time: 'Yesterday',
+      time: 'May 20',
       app: 'IAM',
       appIcon: AppIconIAM,
       isRead: true,
@@ -2489,7 +2489,7 @@ export function DesktopPage() {
       id: '16',
       type: 'success',
       message: 'Network "internal-net" subnet added.',
-      time: 'Yesterday',
+      time: 'May 20',
       project: 'proj-1',
       app: 'Compute',
       appIcon: AppIconCompute,
@@ -2499,7 +2499,7 @@ export function DesktopPage() {
       id: '17',
       type: 'failed',
       message: 'Pod "worker-batch-07" OOMKilled.',
-      time: 'Yesterday',
+      time: 'May 20',
       project: 'default',
       app: 'Container',
       appIcon: AppIconContainer,
@@ -2510,7 +2510,7 @@ export function DesktopPage() {
       id: '18',
       type: 'success',
       message: 'Object "report-2026.pdf" uploaded to bucket "docs".',
-      time: 'Yesterday',
+      time: 'May 20',
       project: 'proj-2',
       app: 'Storage',
       appIcon: AppIconStorage,
@@ -2520,7 +2520,7 @@ export function DesktopPage() {
       id: '19',
       type: 'success',
       message: 'MFA enabled for user "admin@thaki.io".',
-      time: 'Yesterday',
+      time: 'May 20',
       app: 'IAM',
       appIcon: AppIconIAM,
       isRead: true,
@@ -2529,7 +2529,7 @@ export function DesktopPage() {
       id: '20',
       type: 'success',
       message: 'Instance "db-primary" migrated to host "hv-12".',
-      time: 'Yesterday',
+      time: 'May 20',
       project: 'proj-1',
       app: 'Compute',
       appIcon: AppIconCompute,
@@ -2539,7 +2539,7 @@ export function DesktopPage() {
       id: '21',
       type: 'failed',
       message: 'CronJob "daily-cleanup" execution failed.',
-      time: '2 days ago',
+      time: 'May 19',
       project: 'default',
       app: 'Container',
       appIcon: AppIconContainer,
@@ -2550,7 +2550,7 @@ export function DesktopPage() {
       id: '22',
       type: 'success',
       message: 'Snapshot "db-snap-weekly" completed.',
-      time: '2 days ago',
+      time: 'May 19',
       project: 'proj-1',
       app: 'Storage',
       appIcon: AppIconStorage,
@@ -2560,7 +2560,7 @@ export function DesktopPage() {
       id: '23',
       type: 'success',
       message: 'Keypair "deploy-key-02" imported.',
-      time: '2 days ago',
+      time: 'May 19',
       project: 'proj-2',
       app: 'Compute',
       appIcon: AppIconCompute,
@@ -2570,7 +2570,7 @@ export function DesktopPage() {
       id: '24',
       type: 'warning',
       message: 'Memory usage on pod "cache-redis" reached 80%.',
-      time: '2 days ago',
+      time: 'May 19',
       app: 'Alerts',
       appIcon: AppIconAlerts,
       isRead: true,
@@ -2579,7 +2579,7 @@ export function DesktopPage() {
       id: '25',
       type: 'warning',
       message: 'Pod restart count exceeded threshold on "scheduler-01".',
-      time: '2 days ago',
+      time: 'May 19',
       app: 'Alerts',
       appIcon: AppIconAlerts,
       isRead: true,
@@ -2588,7 +2588,7 @@ export function DesktopPage() {
       id: '26',
       type: 'success',
       message: 'Instance "cache-01" shelved offloaded.',
-      time: '3 days ago',
+      time: 'May 18',
       project: 'proj-1',
       app: 'Compute',
       appIcon: AppIconCompute,
@@ -2598,7 +2598,7 @@ export function DesktopPage() {
       id: '27',
       type: 'failed',
       message: 'StatefulSet "postgres" rollback triggered.',
-      time: '3 days ago',
+      time: 'May 18',
       project: 'default',
       app: 'Container',
       appIcon: AppIconContainer,
@@ -2609,7 +2609,7 @@ export function DesktopPage() {
       id: '28',
       type: 'success',
       message: 'Bucket "archives" lifecycle policy applied.',
-      time: '3 days ago',
+      time: 'May 18',
       project: 'proj-2',
       app: 'Storage',
       appIcon: AppIconStorage,
@@ -2619,7 +2619,7 @@ export function DesktopPage() {
       id: '29',
       type: 'success',
       message: 'Service account "ci-deployer" token rotated.',
-      time: '3 days ago',
+      time: 'May 18',
       app: 'IAM',
       appIcon: AppIconIAM,
       isRead: true,
@@ -2628,7 +2628,7 @@ export function DesktopPage() {
       id: '30',
       type: 'success',
       message: 'Instance "ml-worker-gpu" resize completed.',
-      time: '3 days ago',
+      time: 'May 18',
       project: 'proj-1',
       app: 'Compute',
       appIcon: AppIconCompute,
@@ -2886,10 +2886,7 @@ export function DesktopPage() {
                       <div className="pb-2">
                         <div className="flex items-center gap-1 px-1 pb-1.5">
                           <span className="text-label-sm text-[var(--color-text-muted)]">
-                            Alert
-                          </span>
-                          <span className="text-label-sm text-[var(--color-text-subtle)]">
-                            {gnpAlertNotifications.length}
+                            Alert ({gnpAlertNotifications.length})
                           </span>
                         </div>
                         <div className="flex flex-col gap-2">
@@ -2911,10 +2908,7 @@ export function DesktopPage() {
                       <>
                         <div className="flex items-center gap-1 px-1 pb-1.5 pt-1">
                           <span className="text-label-sm text-[var(--color-text-muted)]">
-                            Notification
-                          </span>
-                          <span className="text-label-sm text-[var(--color-text-subtle)]">
-                            {gnpFiltered.length}
+                            Notification ({gnpFiltered.length})
                           </span>
                         </div>
                         <div className="flex flex-col gap-2">

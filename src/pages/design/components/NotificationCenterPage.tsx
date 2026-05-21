@@ -274,7 +274,7 @@ const initialNotifications: NotificationItem[] = [
     id: '5',
     type: 'warning',
     message: 'Certificate for "api.thaki.io" expires in 7 days.',
-    time: 'Yesterday',
+    time: 'May 20',
     isRead: true,
   },
 ];
@@ -423,7 +423,7 @@ export function NotificationCenterPage() {
                 <StaticNotificationCard
                   type="success"
                   message="System maintenance scheduled for tomorrow."
-                  time="Yesterday"
+                  time="May 20"
                   isRead
                 />
               </VStack>
