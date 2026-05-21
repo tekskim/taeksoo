@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
+import { ThakiLogoAnimated } from '@/components/ThakiLogoAnimated';
 import { IconMoon, IconSun } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
@@ -58,9 +57,35 @@ const appCards: AppCard[] = [
   },
   { id: 'settings', title: 'Settings', iconSrc: SettingsIcon, path: '/settings' },
   { id: 'cloud-builder', title: 'Cloud Builder', iconSrc: CloudBuilderIcon, path: '/cloudbuilder' },
+];
+
+const aiCards: AppCard[] = [
   { id: 'ai-platform', title: 'AI Platform', iconSrc: AIPlatformIcon, path: '/ai-platform' },
   { id: 'agent-ops', title: 'Agent Ops', iconSrc: AIAgentIcon, path: '/agent' },
+  { id: 'serve', title: 'Serve', iconSrc: AIPlatformIcon, path: '/serve' },
+  { id: 'ml-studio', title: 'ML Studio', iconSrc: AIPlatformIcon, path: '/ml-studio' },
+  { id: 'run', title: 'Run', iconSrc: AIPlatformIcon, path: '/run' },
+  { id: 'fabric', title: 'Fabric', iconSrc: AIPlatformIcon, path: '/fabric' },
 ];
+
+function AppCardItem({ card, onNavigate }: { card: AppCard; onNavigate: (path: string) => void }) {
+  return (
+    <div className="flex flex-col">
+      <button
+        type="button"
+        onClick={() => onNavigate(card.path)}
+        className="group w-full aspect-[4/3] bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] flex items-center justify-center cursor-pointer border-none p-0 transition-all duration-200 hover:shadow-lg hover:brightness-[0.97]"
+      >
+        <img
+          src={card.iconSrc}
+          alt={card.title}
+          className="w-[96px] h-[96px] transition-transform duration-200 group-hover:scale-110"
+        />
+      </button>
+      <span className="mt-2.5 text-body-md text-[var(--color-text-default)]">{card.title}</span>
+    </div>
+  );
+}
 
 export function EntryPage() {
   const navigate = useNavigate();
@@ -76,11 +101,7 @@ export function EntryPage() {
       <header className="w-full bg-[var(--color-surface-default)]">
         <div className="w-full px-10 h-[60px] flex items-center justify-between relative">
           <div className="flex items-center">
-            <img
-              src={isDark ? ThakiLogoDark : ThakiLogoLight}
-              alt="THAKI Cloud"
-              className="h-[18px]"
-            />
+            <ThakiLogoAnimated isDark={isDark} className="h-[18px]" />
           </div>
 
           <nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 text-body-md text-[var(--color-text-muted)]">
@@ -112,29 +133,28 @@ export function EntryPage() {
         </div>
       </header>
 
-      {/* Main — 3-column grid with generous whitespace */}
+      {/* Main — grouped card grids */}
       <main className="flex-1">
-        <div className="w-full px-10 pt-8 pb-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {appCards.map((card) => (
-              <div key={card.id} className="flex flex-col">
-                <button
-                  type="button"
-                  onClick={() => navigate(card.path)}
-                  className="group w-full aspect-[4/3] bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] flex items-center justify-center cursor-pointer border-none p-0 transition-all duration-200 hover:shadow-lg hover:brightness-[0.97]"
-                >
-                  <img
-                    src={card.iconSrc}
-                    alt={card.title}
-                    className="w-[96px] h-[96px] transition-transform duration-200 group-hover:scale-110"
-                  />
-                </button>
-                <span className="mt-2.5 text-body-md text-[var(--color-text-default)]">
-                  {card.title}
-                </span>
-              </div>
-            ))}
-          </div>
+        <div className="w-full px-10 pt-8 pb-16 flex flex-col gap-10">
+          {/* Cloud Services */}
+          <section>
+            <h2 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">Cloud</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {appCards.map((card) => (
+                <AppCardItem key={card.id} card={card} onNavigate={navigate} />
+              ))}
+            </div>
+          </section>
+
+          {/* AI Products */}
+          <section>
+            <h2 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">AI</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {aiCards.map((card) => (
+                <AppCardItem key={card.id} card={card} onNavigate={navigate} />
+              ))}
+            </div>
+          </section>
         </div>
       </main>
 

@@ -89,6 +89,8 @@ export interface ToastContainerProps {
   maxToasts?: number;
   /** Custom className for container */
   className?: string;
+  /** 'global' = fixed (전체 화면 기준), 'app' = absolute (부모 기준) */
+  scope?: 'global' | 'app';
 }
 
 export interface ToastContextValue {
@@ -177,19 +179,23 @@ function formatTime(date: Date): string {
    ---------------------------------------- */
 
 export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
+  const [isEntered, setIsEntered] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const [isDetailExpanded, setIsDetailExpanded] = useState(false);
   const timerRef = useRef<number | null>(null);
-  const duration = toast.duration ?? 5000;
-  const dismissible = toast.dismissible ?? true;
+  const duration = toast.duration ?? 2000;
+  const dismissible = toast.dismissible ?? false;
   const timestamp = toast.timestamp;
+
+  useEffect(() => {
+    requestAnimationFrame(() => setIsEntered(true));
+  }, []);
 
   const handleDismiss = useCallback(() => {
     setIsExiting(true);
-    // Wait for animation to complete before removing
     setTimeout(() => {
       onDismiss(toast.id);
-    }, 200);
+    }, 300);
   }, [onDismiss, toast.id]);
 
   useEffect(() => {
@@ -240,9 +246,13 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
         'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
         'shadow-lg',
-        // Animation
-        'transition-all duration-200 ease-out',
-        isExiting ? 'opacity-0 translate-x-2' : 'opacity-100 translate-x-0 animate-toast-in',
+        // Animation — slide in from right, slide out to right
+        'transition-all duration-300 ease-out',
+        isExiting
+          ? 'opacity-0 translate-x-full'
+          : isEntered
+            ? 'opacity-100 translate-x-0'
+            : 'opacity-0 translate-x-full',
         className
       )}
       onMouseEnter={handleMouseEnter}
@@ -258,7 +268,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
           )}
 
           {/* Message */}
-          <p className="text-body-md text-[var(--color-text-muted)]">{toast.message}</p>
+          <p className="text-label-md text-[var(--color-text-default)]">{toast.message}</p>
 
           {/* Project Badge */}
           {toast.project && (
@@ -393,17 +403,19 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
 
 export function ToastContainer({
   position = 'top-right',
-  maxToasts = 5,
+  maxToasts = 1,
   className = '',
+  scope = 'global',
 }: ToastContainerProps) {
   const { toasts, dismiss } = useToastStore();
   const visibleToasts = toasts.slice(0, maxToasts);
   const isBottom = position.includes('bottom');
+  const positionType = scope === 'app' ? 'absolute' : 'fixed';
 
   return (
     <div
       className={twMerge(
-        'fixed z-[var(--z-toast)]',
+        `${positionType} z-[var(--z-toast)]`,
         'flex flex-col gap-[var(--primitive-spacing-2)]',
         positionStyles[position],
         isBottom && 'flex-col-reverse',
@@ -441,7 +453,7 @@ function getSnapshot() {
 }
 
 function addToast(toast: ToastData) {
-  toastStore = [toast, ...toastStore];
+  toastStore = [toast];
   emitChange();
 }
 
@@ -482,7 +494,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const toast = useCallback(
     (options: Omit<ToastData, 'id'>) => {
       const id = generateId();
-      addToast({ ...options, id, timestamp: options.timestamp ?? new Date() });
+      addToast({ ...options, id });
       return id;
     },
     [generateId]

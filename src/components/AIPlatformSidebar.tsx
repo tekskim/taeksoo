@@ -39,9 +39,14 @@ import { AppSwitcher } from './AppSwitcher';
 interface AIPlatformSidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  forceVisible?: boolean;
 }
 
-export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebarProps) {
+export function AIPlatformSidebar({
+  isOpen = true,
+  onToggle,
+  forceVisible,
+}: AIPlatformSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -52,7 +57,7 @@ export function AIPlatformSidebar({ isOpen = true, onToggle }: AIPlatformSidebar
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">

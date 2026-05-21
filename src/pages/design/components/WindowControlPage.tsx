@@ -351,12 +351,12 @@ export function WindowControlPage() {
       whenToUse={['Desktop UI 내에서 앱이 "독립 창" 형태로 동작하는 경우(멀티 윈도우 포함)']}
       whenNotToUse={['OS 네이티브 창을 그대로 사용하는 경우(이 문서는 불필요)']}
       preview={
-        <ComponentPreview code={`<WindowControls />`}>
+        <ComponentPreview code={`<WindowControls showSplit />`}>
           <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
             <span className="text-body-md font-medium text-[var(--color-text-default)]">
               Application Title
             </span>
-            <WindowControls />
+            <WindowControls showSplit />
           </div>
         </ComponentPreview>
       }

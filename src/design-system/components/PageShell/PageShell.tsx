@@ -1,5 +1,16 @@
-import type { ReactNode } from 'react';
+import {
+  type ReactNode,
+  type ReactElement,
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  isValidElement,
+  cloneElement,
+} from 'react';
+import { useLocation } from 'react-router-dom';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { ToastContainer } from '../Toast';
 
 /* ----------------------------------------
    PageShell Types
@@ -41,6 +52,35 @@ export function PageShell({
   bottomPanelPadding,
   className = '',
 }: PageShellProps) {
+  const location = useLocation();
+  const isSidebarHidden = sidebarWidth === 0;
+  const [hoverOpen, setHoverOpen] = useState(false);
+  const enterDelayRef = useRef<number>();
+
+  const handleTriggerEnter = useCallback(() => {
+    enterDelayRef.current = window.setTimeout(() => setHoverOpen(true), 80);
+  }, []);
+
+  const handleTriggerLeave = useCallback(() => {
+    clearTimeout(enterDelayRef.current);
+  }, []);
+
+  const handleOverlayLeave = useCallback(() => {
+    setHoverOpen(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isSidebarHidden) setHoverOpen(false);
+  }, [isSidebarHidden]);
+
+  useEffect(() => {
+    setHoverOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    return () => clearTimeout(enterDelayRef.current);
+  }, []);
+
   return (
     <div
       data-figma-name="[TDS] AppLayout"
@@ -48,6 +88,34 @@ export function PageShell({
     >
       {/* Sidebar */}
       {sidebar}
+
+      {/* Hover trigger zone + overlay sidebar */}
+      {isSidebarHidden && isValidElement(sidebar) && (
+        <>
+          {/* Invisible trigger strip along left edge */}
+          {!hoverOpen && (
+            <div
+              className="fixed left-0 top-0 w-2 h-screen z-50"
+              onMouseEnter={handleTriggerEnter}
+              onMouseLeave={handleTriggerLeave}
+            />
+          )}
+
+          {/* Overlay sidebar — always mounted, controlled by translateX */}
+          <div
+            className={`fixed left-0 top-0 w-[200px] h-screen z-50 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              hoverOpen
+                ? 'translate-x-0 shadow-2xl pointer-events-auto'
+                : '-translate-x-full shadow-none pointer-events-none'
+            }`}
+            onMouseLeave={handleOverlayLeave}
+          >
+            {cloneElement(sidebar as ReactElement<{ forceVisible?: boolean }>, {
+              forceVisible: true,
+            })}
+          </div>
+        </>
+      )}
 
       {/* Main Content */}
       <main
@@ -63,7 +131,7 @@ export function PageShell({
         {/* Content Area */}
         <OverlayScrollbarsComponent
           options={{
-            overflow: { x: 'scroll', y: 'scroll' },
+            overflow: { x: 'hidden', y: 'scroll' },
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
@@ -73,11 +141,13 @@ export function PageShell({
           }}
         >
           <div
-            className={`w-fit min-w-[max(100%,var(--layout-content-min-width,760px))] bg-[var(--color-surface-default)] min-h-full ${contentClassName}`.trim()}
+            className={`w-full min-w-0 bg-[var(--color-surface-default)] min-h-full ${contentClassName}`.trim()}
           >
             {children}
           </div>
         </OverlayScrollbarsComponent>
+        {/* Toast */}
+        <ToastContainer position="bottom-right" scope="app" />
       </main>
 
       {/* Bottom Panel */}

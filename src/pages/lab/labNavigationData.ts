@@ -12,6 +12,7 @@ import {
   IconForms,
   IconTemplate,
   IconBrandStorybook,
+  IconVolume,
 } from '@tabler/icons-react';
 import type { NavItem, NavGroup } from '../design/_shared/navigationData';
 
@@ -57,6 +58,13 @@ const prototypeItems: NavItem[] = [
     label: 'AI Workspace Setup',
     icon: IconStack2,
     path: '/lab/prototype/ai-workspace',
+  },
+  {
+    id: 'notification-sounds',
+    label: 'Notification Sounds',
+    icon: IconVolume,
+    path: '/lab/notification-sounds',
+    lastUpdated: '2026-05-19 13:00:00',
   },
 ];
 
@@ -140,6 +148,7 @@ export const labPageLastUpdated: Record<string, string> = {
   '/lab/todo': '2026-03-11 12:00:00',
   '/lab/shared-components': '2026-03-18 12:00:00',
   '/lab/test/nested-box': '2026-03-05 01:30:00',
+  '/lab/notification-sounds': '2026-05-19 13:00:00',
 };
 
 export function isLabRecentlyUpdated(path: string, withinDays = 3): boolean {

@@ -4,37 +4,43 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { VStack, Button, Tabs, TabList, Tab, Select } from '@/design-system';
-import {
-  IconCircleCheck,
-  IconAlertTriangle,
-  IconInfoCircle,
-  IconChevronUp,
-  IconChevronDown,
-  IconCheckbox,
-  IconRefresh,
-} from '@tabler/icons-react';
+import { VStack, Button, Tabs, TabList, Tab, Select, Badge } from '@/design-system';
+import { IconChevronUp, IconChevronDown, IconCheckbox, IconRefresh } from '@tabler/icons-react';
 import AppIconCompute from '@/assets/appIcon/compute.png';
 import AppIconIAM from '@/assets/appIcon/iam.png';
 import AppIconContainer from '@/assets/appIcon/container.png';
 import AppIconStorage from '@/assets/appIcon/storage.png';
+import AppIconAlerts from '@/assets/appIcon/alerts.png';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
+type PanelNotifType = 'critical' | 'warning' | 'success' | 'failed';
+
 interface PanelNotification {
   id: string;
+  type: PanelNotifType;
   message: string;
-  statusIcon?: React.ReactNode;
   time: string;
   partition?: string;
   app: string;
   appIcon: string;
   isRead?: boolean;
+  isResolved?: boolean;
   detail?: { code?: string | number; message?: string };
   href?: string;
 }
+
+const panelTypeBadgeMap: Record<
+  PanelNotifType,
+  { label: string; theme: 'red' | 'yellow' | 'green' }
+> = {
+  critical: { label: 'Critical', theme: 'red' },
+  warning: { label: 'Warning', theme: 'yellow' },
+  success: { label: 'Success', theme: 'green' },
+  failed: { label: 'Failed', theme: 'red' },
+};
 
 /* ----------------------------------------
    StaticPanelCard
@@ -43,7 +49,7 @@ interface PanelNotification {
 function StaticPanelCard({
   appIcon,
   message,
-  statusIcon,
+  type = 'success',
   time,
   partition,
   isRead = true,
@@ -53,7 +59,7 @@ function StaticPanelCard({
 }: {
   appIcon?: string;
   message: string;
-  statusIcon?: React.ReactNode;
+  type?: PanelNotifType;
   time: string;
   partition?: string;
   isRead?: boolean;
@@ -65,47 +71,32 @@ function StaticPanelCard({
   const isUnread = !isRead;
 
   return (
-    <div className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3">
+    <div className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3 overflow-hidden">
       <div className="flex items-start justify-between px-3">
-        <div className="flex gap-2 items-start w-[256px]">
+        <div className="flex gap-2 items-start w-[256px] min-w-0">
           {appIcon && <img src={appIcon} alt="" className="size-5 shrink-0 object-contain" />}
-          <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
-            <div className="flex flex-col">
-              <span className="text-body-md text-[var(--color-text-default)]">
-                {statusIcon
-                  ? (() => {
-                      const lastSpace = message.lastIndexOf(' ');
-                      if (lastSpace === -1)
-                        return (
-                          <span className="whitespace-nowrap">
-                            {message}
-                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
-                              {statusIcon}
-                            </span>
-                          </span>
-                        );
-                      return (
-                        <>
-                          {message.slice(0, lastSpace)}{' '}
-                          <span className="whitespace-nowrap">
-                            {message.slice(lastSpace + 1)}
-                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
-                              {statusIcon}
-                            </span>
-                          </span>
-                        </>
-                      );
-                    })()
-                  : message}
-              </span>
+          <div className="flex flex-col gap-1.5 flex-1 min-w-[1px]">
+            <span className="text-label-md text-[var(--color-text-default)]">{message}</span>
+
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Badge theme={panelTypeBadgeMap[type].theme} size="sm" className="shrink-0">
+                {panelTypeBadgeMap[type].label}
+              </Badge>
+
+              {partition && (
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="overflow-hidden min-w-0"
+                  title={partition}
+                >
+                  <span className="block truncate">{partition}</span>
+                </Badge>
+              )}
             </div>
 
-            {partition && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">{partition}</span>
-            )}
-
             {hasDetail && (
-              <div className="flex flex-col gap-2 rounded-[var(--radius-sm)]">
+              <div className="flex flex-col gap-2 rounded-[var(--radius-sm)] mt-1">
                 <button type="button" className="group flex items-center gap-1">
                   <span className="text-body-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] whitespace-nowrap">
                     View detail
@@ -139,7 +130,7 @@ function StaticPanelCard({
           </div>
         </div>
         <div className="flex flex-col items-end justify-end self-stretch shrink-0">
-          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {time}
           </span>
         </div>
@@ -195,7 +186,7 @@ function GlobalPanelPreview() {
               <StaticPanelCard
                 appIcon={AppIconCompute}
                 message={`Volume "backup-01" snapshot\nsuccessfully created`}
-                statusIcon={successIcon}
+                type="success"
                 time="10:23"
                 partition="proj-1"
                 isRead={false}
@@ -203,7 +194,7 @@ function GlobalPanelPreview() {
               <StaticPanelCard
                 appIcon={AppIconCompute}
                 message={`Volume "backup-01" create failed.`}
-                statusIcon={errorIcon}
+                type="failed"
                 time="09:30"
                 partition="proj-2"
                 isRead={false}
@@ -216,7 +207,7 @@ function GlobalPanelPreview() {
               <StaticPanelCard
                 appIcon={AppIconContainer}
                 message={`Deployment "api-gateway" scaled to 3 replicas.`}
-                statusIcon={infoIcon}
+                type="success"
                 time="08:45"
                 partition="default"
                 isRead={false}
@@ -233,21 +224,24 @@ function GlobalPanelPreview() {
    GlobalPanelDemo (interactive)
    ---------------------------------------- */
 
-const successIcon = (
-  <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
-);
-const errorIcon = (
-  <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
-);
-const infoIcon = (
-  <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
-);
-
 const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   {
+    id: 'c1',
+    type: 'critical',
+    message: 'Pod "api-gateway" crash loop detected.',
+    time: '09:55',
+    partition: 'default',
+    app: 'Alerts',
+    appIcon: AppIconAlerts,
+    isRead: false,
+    isResolved: false,
+    href: '/container/pods',
+    detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
+  },
+  {
     id: '1',
+    type: 'success',
     message: 'Volume "backup-01" snapshot\nsuccessfully created',
-    statusIcon: successIcon,
     time: '10:23',
     partition: 'proj-1',
     app: 'Compute',
@@ -257,8 +251,8 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '2',
+    type: 'failed',
     message: 'Volume "data-vol-02" create failed.',
-    statusIcon: errorIcon,
     time: '09:30',
     partition: 'proj-2',
     app: 'Compute',
@@ -272,8 +266,8 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '3',
+    type: 'success',
     message: 'API key "prod-key-01" has been rotated.',
-    statusIcon: infoIcon,
     time: '10:10',
     partition: 'proj-1',
     app: 'IAM',
@@ -283,19 +277,18 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '4',
-    message: 'Deployment "api-gateway" scaled to 3 replicas.',
-    statusIcon: infoIcon,
+    type: 'warning',
+    message: 'CPU usage exceeded 90% on node "worker-05".',
     time: '08:45',
-    partition: 'default',
-    app: 'Container',
-    appIcon: AppIconContainer,
+    app: 'Alerts',
+    appIcon: AppIconAlerts,
     isRead: true,
     href: '/container/deployments',
   },
   {
     id: '5',
+    type: 'success',
     message: 'Instance "web-01" snapshot done.',
-    statusIcon: successIcon,
     time: '08:30',
     partition: 'proj-1',
     app: 'Compute',
@@ -304,21 +297,9 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
     href: '/compute/instances',
   },
   {
-    id: '6',
-    message: 'Pod "api-gateway" crash loop.',
-    statusIcon: errorIcon,
-    time: '09:55',
-    partition: 'default',
-    app: 'Container',
-    appIcon: AppIconContainer,
-    isRead: false,
-    href: '/container/pods',
-    detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
-  },
-  {
     id: '7',
+    type: 'success',
     message: 'Storage pool "pool-01" health check passed.',
-    statusIcon: successIcon,
     time: '08:15',
     partition: 'proj-1',
     app: 'Storage',
@@ -332,6 +313,7 @@ const appIcon = (src: string) => <img src={src} alt="" className="size-4 object-
 
 const APP_OPTIONS = [
   { value: 'all', label: 'All apps' },
+  { value: 'Alerts', label: 'Alerts', icon: appIcon(AppIconAlerts) },
   { value: 'Compute', label: 'Compute', icon: appIcon(AppIconCompute) },
   { value: 'IAM', label: 'IAM', icon: appIcon(AppIconIAM) },
   { value: 'Container', label: 'Container', icon: appIcon(AppIconContainer) },
@@ -343,13 +325,18 @@ function GlobalPanelDemo() {
   const [activeTab, setActiveTab] = useState('all');
   const [activeApp, setActiveApp] = useState('all');
 
-  const filteredNotifications = notifications.filter((n) => {
+  const isAlertType = (n: PanelNotification) =>
+    (n.type === 'critical' || n.type === 'warning') && !n.isResolved;
+  const alertNotifications = notifications.filter(isAlertType);
+  const regularNotifications = notifications.filter((n) => !isAlertType(n));
+
+  const filteredNotifications = regularNotifications.filter((n) => {
     if (activeTab === 'unread' && n.isRead) return false;
     if (activeApp !== 'all' && n.app !== activeApp) return false;
     return true;
   });
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const unreadCount = regularNotifications.filter((n) => !n.isRead).length;
 
   const availableAppOptions = APP_OPTIONS.filter(
     (opt) => opt.value === 'all' || notifications.some((n) => n.app === opt.value)
@@ -361,6 +348,12 @@ function GlobalPanelDemo() {
 
   const handleMarkAllAsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  const handleResolve = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isResolved: true, isRead: true } : n))
+    );
   };
 
   const handleReset = () => {
@@ -383,7 +376,7 @@ function GlobalPanelDemo() {
         </Button>
       </div>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+        <div className="w-[346px] h-[600px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden flex flex-col">
           {/* Tabs header */}
           <div className="relative pt-3 pb-0">
             <button
@@ -423,8 +416,47 @@ function GlobalPanelDemo() {
             />
           </div>
 
-          {filteredNotifications.length === 0 ? (
+          {/* Alert Section */}
+          {alertNotifications.length > 0 && (
+            <div className="px-3 pt-2 shrink-0">
+              <div className="flex items-center gap-1 px-1 pb-1.5">
+                <span className="text-label-sm text-[var(--color-text-muted)]">Alert</span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  {alertNotifications.length}
+                </span>
+              </div>
+              <div className="flex flex-col gap-2">
+                {alertNotifications.map((n) => (
+                  <InteractiveNotificationCard
+                    key={n.id}
+                    notification={n}
+                    onMarkAsRead={() => handleMarkAsRead(n.id)}
+                    onResolve={() => handleResolve(n.id)}
+                    isAlertSection
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Notification category label */}
+          {filteredNotifications.length > 0 && (
+            <div className="px-4 pt-3 pb-0 shrink-0">
+              <div className="flex items-center gap-1">
+                <span className="text-label-sm text-[var(--color-text-muted)]">Notification</span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  {filteredNotifications.length}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {filteredNotifications.length === 0 && alertNotifications.length === 0 ? (
             <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
+              No notifications
+            </div>
+          ) : filteredNotifications.length === 0 ? (
+            <div className="flex items-center justify-center h-[60px] text-[var(--color-text-muted)] text-body-md">
               No notifications
             </div>
           ) : (
@@ -434,8 +466,7 @@ function GlobalPanelDemo() {
                 scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
               }}
               defer={false}
-              style={{ maxHeight: 420 }}
-              className="px-3 py-2"
+              className="px-3 py-2 flex-1"
             >
               <div className="flex flex-col gap-2">
                 {filteredNotifications.map((n) => (
@@ -457,15 +488,20 @@ function GlobalPanelDemo() {
 function InteractiveNotificationCard({
   notification,
   onMarkAsRead,
+  onResolve,
+  isAlertSection,
 }: {
   notification: PanelNotification;
   onMarkAsRead: () => void;
+  onResolve?: () => void;
+  isAlertSection?: boolean;
 }) {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const hasDetail =
     notification.detail && (notification.detail.code || notification.detail.message);
+  const showDetail = hasDetail && notification.type === 'failed';
   const isUnread = !notification.isRead;
 
   const handleBodyClick = () => {
@@ -476,7 +512,13 @@ function InteractiveNotificationCard({
 
   return (
     <div
-      className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3"
+      className={`relative rounded-[var(--radius-lg)] flex flex-col py-3 ${
+        isAlertSection
+          ? notification.type === 'critical'
+            ? 'bg-[var(--inline-message-error-bg)]'
+            : 'bg-[var(--color-state-warning-bg)]'
+          : 'border border-[var(--color-border-default)] bg-[var(--color-surface-default)]'
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -484,49 +526,36 @@ function InteractiveNotificationCard({
         className={`flex items-start justify-between px-3${notification.href ? ' cursor-pointer' : ''}`}
         onClick={handleBodyClick}
       >
-        <div className="flex gap-2 items-start w-[256px]">
+        <div className={`flex gap-2 items-start ${isAlertSection ? 'flex-1' : 'w-[256px]'}`}>
           <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
-          <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
-            <div className="flex flex-col">
-              <span className="text-body-md text-[var(--color-text-default)]">
-                {notification.statusIcon
-                  ? (() => {
-                      const msg = notification.message;
-                      const lastSpace = msg.lastIndexOf(' ');
-                      if (lastSpace === -1)
-                        return (
-                          <span className="whitespace-nowrap">
-                            {msg}
-                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
-                              {notification.statusIcon}
-                            </span>
-                          </span>
-                        );
-                      return (
-                        <>
-                          {msg.slice(0, lastSpace)}{' '}
-                          <span className="whitespace-nowrap">
-                            {msg.slice(lastSpace + 1)}
-                            <span className="inline-flex items-center align-[-3px] ml-1 gap-1">
-                              {notification.statusIcon}
-                            </span>
-                          </span>
-                        </>
-                      );
-                    })()
-                  : notification.message}
-              </span>
+          <div className="flex flex-col gap-1.5 flex-1 min-w-[1px]">
+            <span className="text-label-md text-[var(--color-text-default)]">
+              {notification.message}
+            </span>
+
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Badge
+                theme={panelTypeBadgeMap[notification.type].theme}
+                size="sm"
+                className="shrink-0"
+              >
+                {panelTypeBadgeMap[notification.type].label}
+              </Badge>
+              {notification.partition && (
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="overflow-hidden min-w-0"
+                  title={notification.partition}
+                >
+                  <span className="block truncate">{notification.partition}</span>
+                </Badge>
+              )}
             </div>
 
-            {notification.partition && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">
-                {notification.partition}
-              </span>
-            )}
-
-            {hasDetail && (
+            {showDetail && (
               <div
-                className="flex flex-col gap-2 rounded-[var(--radius-sm)]"
+                className="flex flex-col gap-2 rounded-[var(--radius-sm)] mt-1"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -568,17 +597,17 @@ function InteractiveNotificationCard({
           </div>
         </div>
         <div className="flex flex-col items-end justify-end self-stretch shrink-0">
-          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {notification.time}
           </span>
         </div>
       </div>
 
-      {isUnread && !isHovered && (
+      {isUnread && !isAlertSection && !isHovered && (
         <div className="absolute top-3 right-3 size-1.5 rounded-full bg-[var(--color-action-primary)]" />
       )}
 
-      {isUnread && isHovered && (
+      {isUnread && !isAlertSection && isHovered && (
         <button
           type="button"
           onClick={(e) => {
@@ -607,43 +636,43 @@ function PanelCardStates() {
         Notification card states
       </span>
       <p className="text-body-sm text-[var(--color-text-subtle)]">
-        10 visual states of a notification card: info / success / error types, read/unread, hover
-        mark-as-read, detail collapsed/expanded.
+        10 visual states of a notification card: success / failed / warning types, read/unread,
+        hover mark-as-read, detail collapsed/expanded.
       </p>
       <div className="grid grid-cols-[320px_320px] gap-6">
-        {/* Row 1: Info */}
+        {/* Row 1: Success */}
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Info — Default</span>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Success — Default</span>
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Deployment "api-gateway" scaled to 3 replicas.`}
-            statusIcon={infoIcon}
+            type="success"
             time="10:33"
             partition={PARTITION}
           />
         </VStack>
 
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Info — Unread</span>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Success — Unread</span>
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Deployment "api-gateway" scaled to 3 replicas.`}
-            statusIcon={infoIcon}
+            type="success"
             time="10:33"
             partition={PARTITION}
             isRead={false}
           />
         </VStack>
 
-        {/* Row 2: Info hover */}
+        {/* Row 2: Success hover */}
         <VStack gap={2}>
           <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Info — Hover (mark as read)
+            Success — Hover (mark as read)
           </span>
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Deployment "api-gateway" scaled to 3 replicas.`}
-            statusIcon={infoIcon}
+            type="success"
             time="10:33"
             partition={PARTITION}
             isRead={false}
@@ -656,7 +685,7 @@ function PanelCardStates() {
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Volume "backup-01" snapshot\nsuccessfully created`}
-            statusIcon={successIcon}
+            type="success"
             time="10:33"
             partition={PARTITION}
           />
@@ -668,7 +697,7 @@ function PanelCardStates() {
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Volume "backup-01" snapshot\nsuccessfully created`}
-            statusIcon={successIcon}
+            type="success"
             time="10:33"
             partition={PARTITION}
           />
@@ -681,7 +710,7 @@ function PanelCardStates() {
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Volume "backup-01" snapshot\nsuccessfully created`}
-            statusIcon={successIcon}
+            type="success"
             time="10:33"
             partition={PARTITION}
             isRead={false}
@@ -697,7 +726,7 @@ function PanelCardStates() {
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Volume "backup-01" create failed.`}
-            statusIcon={errorIcon}
+            type="failed"
             time="10:33"
             partition={PARTITION}
             isRead={false}
@@ -715,7 +744,7 @@ function PanelCardStates() {
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Volume "backup-01" create failed.`}
-            statusIcon={errorIcon}
+            type="failed"
             time="10:33"
             partition={PARTITION}
             detail={{
@@ -733,7 +762,7 @@ function PanelCardStates() {
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Volume "backup-01" create failed.`}
-            statusIcon={errorIcon}
+            type="failed"
             time="10:33"
             partition={PARTITION}
             isRead={false}
@@ -752,7 +781,7 @@ function PanelCardStates() {
           <StaticPanelCard
             appIcon={AppIconCompute}
             message={`Volume "backup-01" create failed.`}
-            statusIcon={errorIcon}
+            type="failed"
             time="10:33"
             partition={PARTITION}
             detail={{
@@ -867,6 +896,7 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 | Mark all as read | 전체 읽음 처리 |
 | Notification list | 알림 목록 |
 | Notification item | 개별 알림 |
+| Critical Alert Section | Critical 알림 고정 영역 |
 
 ### 1) Notification Icon
 
@@ -905,16 +935,43 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 | Read button | 개별 읽음 처리 |
 | View details | 실패 상세 정보 |
 
+### 5) Critical Alert Section
+
+- Alert App의 **Critical 알림만** 표시하는 별도 고정 영역이다.
+- 일반 알림 목록과 섹션을 구분하여 **항상 최상단에 위치**한다.
+- 탭(All / Unread) 필터와 **무관하게 항상 노출**된다.
+- Alert App에서 해결 처리 시 고정 영역에서 제거되고, 일반 알림 목록으로 이동한다.
+
 ---
 
 ## Behavior
 
-### 1) 기록 규칙
+### 1) 메시지 유형 분류
+
+알림 메시지는 **앱 유형에 따라** 다르게 분류된다.
+
+| 앱 유형 | 메시지 유형 | 설명 |
+| --- | --- | --- |
+| Alert App | Critical | 즉시 대응이 필요한 심각한 장애 |
+| Alert App | Warning | 주의가 필요한 상태 변화 |
+| 그 외 App | Success | 작업 성공 |
+| 그 외 App | Failed | 작업 실패 |
+
+### 2) Critical Alert 동작 규칙
+
+- Critical 알림은 알림센터 최상단 **고정 영역(Critical Alert Section)**에 표시된다.
+- 탭 필터(All / Unread)와 무관하게 항상 노출된다.
+- Alert App에서 해결(resolve) 처리 시:
+  - 고정 영역에서 제거된다.
+  - 일반 알림 목록의 시간순 위치로 이동한다.
+- 해결되지 않은 Critical 알림은 수동으로 읽음 처리하거나 닫을 수 없다.
+
+### 3) 기록 규칙
 
 - 스낵바 알림은 항상 알림 센터에 기록된다.
 - 토스트, 인라인, Validation 메시지는 알림센터에 기록되지 않는다.
 
-### 2) 스낵바 관계
+### 4) 스낵바 관계
 
 - 스낵바로 노출되는 메시지는 모두 알림센터에 기록된다.
 - 스낵바에서 동작에 따라 알림센터에서 읽음 처리에 영향을 준다.
@@ -926,7 +983,7 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 | Snackbar 자동 종료 | ✖ |
 | View details | ✖ |
 
-### 3) Global Notification Panel
+### 5) Global Notification Panel
 
 - Global Panel은 **안읽은 알림 집계 뷰**이다.
 
@@ -944,7 +1001,7 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 | 개별 읽음 | 알림 제거 |
 | 전체 읽음 | 목록 초기화 |
 
-### 4) Snackbar Suppression Rule
+### 6) Snackbar Suppression Rule
 
 - 앱 내의 알림센터 또는 글로벌 알림 패널이 열려 있을 경우 스낵바가 노출되지 않는다.
 
@@ -955,7 +1012,7 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 
 - 이 경우 알림은 스낵바 노출 없이 바로 알림센터와 글로벌 알림 패널 목록에 기록된다.
 
-### 5) 읽음 처리 기준
+### 7) 읽음 처리 기준
 
 - 알림 메시지가 읽음 처리가 되는 기준은 다음과 같다.
 
@@ -969,12 +1026,12 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 - 읽음 처리 후에는 해당 알림 메시지가 글로벌 알림 패널에서 제거된다.
 - 모두 읽음 처리가 되었을 경우 알림센터와 글로벌 알림 패널의 아이콘에 Badge가 제거된다.
 
-### 6) 알림 보관 정책
+### 8) 알림 보관 정책
 
 - 알림은 사용자가 삭제할 수 없다.
 - 알림은 72시간 보관 이후 자동으로 삭제된다.
 
-### 7) Empty state
+### 9) Empty state
 
 목록이 비어 있을 때 표시하는 문구는 **탭별**로 고정한다.
 
@@ -987,6 +1044,27 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 
 - EN (UI): \`No unread notifications.\`
 - KO (참고): 읽지 않은 알림이 없습니다.
+
+---
+
+## Layout
+
+### 높이 정책
+
+- 패널은 부모 컨테이너의 **세로 전체를 채운다** (\`flex-col\` + \`flex-1\`).
+- 스크롤 영역에 \`maxHeight\` 사용 금지 — \`flex-1\`로 남은 공간을 자동으로 채운다.
+- 데스크탑: \`top-[52px] right-0 bottom-0\` 고정 위치, 세로 풀 사이즈.
+- 스크롤: \`OverlayScrollbarsComponent\` 사용 (\`autoHide: 'scroll'\`).
+
+### 타이포그래피
+
+| 요소 | 클래스 | 크기 / 굵기 |
+| --- | --- | --- |
+| 메시지 텍스트 | \`text-label-md\` | 12px / medium (500) |
+| Project / Partition | \`text-body-sm\` | 11px / regular (400) |
+| 시간 | \`text-body-sm\` | 11px / regular (400) |
+| 에러 코드 | \`text-label-md\` | 12px / medium (500) |
+| 에러 상세 메시지 | \`text-body-md\` | 12px / regular (400) |
 
 ---
 

@@ -490,8 +490,12 @@ function ToastDemoInner() {
       >
         Warning
       </Button>
-      <Button variant="secondary" size="sm" onClick={() => toast.info('새 버전이 출시되었습니다.')}>
-        Info
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => toast.warning('새 버전이 출시되었습니다.')}
+      >
+        Warning
       </Button>
     </div>
   );

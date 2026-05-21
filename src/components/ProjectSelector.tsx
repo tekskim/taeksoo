@@ -209,6 +209,7 @@ export function ProjectSelector({
                   return (
                     <div
                       key={project.id}
+                      onClick={() => handleProjectClick(project)}
                       className={`
                         w-full text-left pl-3 pr-2 py-2 rounded-lg border transition-colors
                         ${isSelected ? 'border-[var(--color-action-primary)] bg-[var(--color-surface-subtle)]' : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'}
@@ -216,18 +217,11 @@ export function ProjectSelector({
                       `}
                     >
                       <div className="flex flex-col gap-2">
-                        {/* Row 1: tenant name + dots menu */}
+                        {/* Row 1: tenant name + primary badge + dots menu */}
                         <div className="flex items-center justify-between gap-2">
-                          <button
-                            type="button"
-                            className="flex-1 text-left min-w-0"
-                            onClick={() => handleProjectClick(project)}
-                            disabled={isDisabled}
-                          >
-                            <span className="text-label-md text-[var(--color-text-default)]">
-                              {project.name}
-                            </span>
-                          </button>
+                          <span className="text-label-md text-[var(--color-text-default)]">
+                            {project.name}
+                          </span>
                           <div className="flex items-center gap-1 shrink-0">
                             {isPrimary && (
                               <Badge theme="white" size="sm">
@@ -269,13 +263,13 @@ export function ProjectSelector({
                         </button>
                         {isSelected && !isDisabled && (
                           <IconCheck
-                            size={16}
+                            size={20}
                             className="text-[var(--color-action-primary)]"
-                            stroke={1.5}
+                            stroke={1}
                           />
                         )}
                         {isDisabled && (
-                          <span className="text-body-sm text-[var(--color-state-danger)]">
+                          <span className="text-body-sm text-[var(--color-status-error)]">
                             Disabled
                           </span>
                         )}
@@ -293,22 +287,15 @@ export function ProjectSelector({
                       </p>
 
                       {/* Footer */}
-                      <div className="flex items-center justify-between">
-                        {project.group && (
-                          <span className="inline-flex items-center rounded-[6px] bg-[#f3f4f6] px-1.5 py-0.5 text-label-sm text-[var(--color-text-muted)]">
-                            {project.group}
-                          </span>
-                        )}
-                        {!project.group && <span />}
-                        <span
-                          className={`text-body-xs ${
-                            isDisabled
-                              ? 'text-[var(--color-text-muted)]'
-                              : 'text-[var(--color-text-subtle)]'
-                          }`}
-                        >
-                          {project.createdAt}
-                        </span>
+                      <div
+                        className={`flex items-center justify-between text-body-xs ${
+                          isDisabled
+                            ? 'text-[var(--color-text-muted)]'
+                            : 'text-[var(--color-text-subtle)]'
+                        }`}
+                      >
+                        <span>ID: {project.id}</span>
+                        <span>{project.createdAt}</span>
                       </div>
                     </div>
                   );

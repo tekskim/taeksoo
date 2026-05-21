@@ -5,16 +5,15 @@ import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
 import { ProjectProvider } from '@/contexts/ProjectContext';
-import { ToastProvider, ToastContainer } from '@/design-system';
+import { ToastProvider, SnackbarProvider } from '@/design-system';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Entry Page
 import { EntryPage } from '@/pages/EntryPage';
 
 // Pages - Settings
-import { SettingsPageWrapper } from '@/pages/SettingsPageWrapper';
+
 import SettingsGeneralPage from '@/pages/SettingsGeneralPage';
-import SettingsAccountPage from '@/pages/SettingsAccountPage';
 import SettingsNotificationsPage from '@/pages/SettingsNotificationsPage';
 import SettingsInformationPage from '@/pages/SettingsInformationPage';
 
@@ -487,6 +486,7 @@ import { TopologyPopoversPage } from '@/pages/TopologyPopoversPage';
 import { CreatePagesDirectoryPage } from '@/pages/CreatePagesDirectoryPage';
 import { DetailPagesDirectoryPage } from '@/pages/DetailPagesDirectoryPage';
 import { FormPatternsPage } from '@/pages/FormPatternsPage';
+import { NotificationSoundDraftsPage } from '@/pages/lab/NotificationSoundDraftsPage';
 import { SystemErrorPagesPage } from '@/pages/SystemErrorPagesPage';
 
 // Pages - Figma Capture
@@ -532,6 +532,12 @@ import { MonitoringPage } from '@/pages/ai-platform/MonitoringPage';
 import { DependenciesPage } from '@/pages/ai-platform/DependenciesPage';
 import { SystemAdminPage } from '@/pages/ai-platform/SystemAdminPage';
 
+// Pages - Fabric / Serve / ML Studio / Run
+import FabricPage from '@/pages/fabric/FabricPage';
+import ServePage from '@/pages/serve/ServePage';
+import MLStudioPage from '@/pages/ml-studio/MLStudioPage';
+import RunPage from '@/pages/run/RunPage';
+
 const defaultTabs = [{ id: 'home', label: 'Home', path: '/compute', closable: true }];
 
 function AppRoutes() {
@@ -543,9 +549,8 @@ function AppRoutes() {
       <Route path="/" element={<EntryPage />} />
 
       {/* Settings & Mail Template Routes */}
-      <Route path="/settings" element={<SettingsPageWrapper />} />
+      <Route path="/settings" element={<Navigate to="/settings/general" replace />} />
       <Route path="/settings/general" element={<SettingsGeneralPage />} />
-      <Route path="/settings/account" element={<SettingsAccountPage />} />
       <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
       <Route path="/settings/information" element={<SettingsInformationPage />} />
       <Route path="/mail-template" element={<MailTemplatePage />} />
@@ -1167,6 +1172,22 @@ function AppRoutes() {
       <Route path="/ai-platform/system-admin" element={<SystemAdminPage />} />
       <Route path="/ai-platform/*" element={<AIPlatformPage />} />
 
+      {/* Fabric Routes */}
+      <Route path="/fabric" element={<FabricPage />} />
+      <Route path="/fabric/*" element={<FabricPage />} />
+
+      {/* Serve Routes */}
+      <Route path="/serve" element={<ServePage />} />
+      <Route path="/serve/*" element={<ServePage />} />
+
+      {/* ML Studio Routes */}
+      <Route path="/ml-studio" element={<MLStudioPage />} />
+      <Route path="/ml-studio/*" element={<MLStudioPage />} />
+
+      {/* Run Routes */}
+      <Route path="/run" element={<RunPage />} />
+      <Route path="/run/*" element={<RunPage />} />
+
       {/* Design System Routes (New Layout) */}
       <Route path="/design" element={<DesignSystemLayout />}>
         <Route index element={<DesignOverviewPage />} />
@@ -1323,6 +1344,7 @@ function AppRoutes() {
         <Route path="create-pages" element={<CreatePagesDirectoryPage />} />
         <Route path="create-pages-2" element={<DetailPagesDirectoryPage />} />
         <Route path="form-patterns" element={<FormPatternsPage />} />
+        <Route path="notification-sounds" element={<NotificationSoundDraftsPage />} />
       </Route>
       <Route path="/lab/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
 
@@ -1363,8 +1385,9 @@ function App() {
         <ProjectProvider>
           <SidebarProvider>
             <ToastProvider>
-              <AppWithTabs />
-              <ToastContainer position="bottom-right" />
+              <SnackbarProvider>
+                <AppWithTabs />
+              </SnackbarProvider>
             </ToastProvider>
           </SidebarProvider>
         </ProjectProvider>

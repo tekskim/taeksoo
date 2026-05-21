@@ -3,17 +3,16 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
 import {
   IconCheck,
-  IconCircleCheck,
-  IconAlertTriangle,
-  IconInfoCircle,
   IconCheckbox,
   IconChevronUp,
   IconChevronDown,
   IconGridDots,
+  IconSearch,
   IconMinus,
   IconSquare,
   IconSquares,
   IconX,
+  IconBell,
 } from '@tabler/icons-react';
 import {
   Icons,
@@ -28,11 +27,16 @@ import {
   Tab,
   Select,
   WindowControl,
+  SnackbarContainer,
+  Badge,
+  InfoBox,
+  useSnackbar,
 } from '@/design-system';
 import AppIconCompute from '@/assets/appIcon/compute.png';
 import AppIconIAM from '@/assets/appIcon/iam.png';
 import AppIconContainer from '@/assets/appIcon/container.png';
 import AppIconStorage from '@/assets/appIcon/storage.png';
+import AppIconAlerts from '@/assets/appIcon/alerts.png';
 import { motion, Reorder, AnimatePresence } from 'framer-motion';
 import {
   MemoryRouter,
@@ -45,8 +49,6 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import { DesktopWindowProvider } from '@/contexts/DesktopWindowContext';
 import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import DesktopBg from '@/assets/bg-01.jpg';
 import { computeRoutes } from '@/routes/compute.routes';
 import { storageRoutes } from '@/routes/storage.routes';
@@ -66,7 +68,6 @@ import { StorageMemberHomePage } from './StorageMemberHomePage';
 import { HomePage } from './HomePage';
 import { AIPlatformPage } from './AIPlatformPage';
 import SettingsGeneralPage from './SettingsGeneralPage';
-import SettingsAccountPage from './SettingsAccountPage';
 import SettingsNotificationsPage from './SettingsNotificationsPage';
 import SettingsInformationPage from './SettingsInformationPage';
 
@@ -83,6 +84,7 @@ import imgComputeAdmin from '@/assets/appIcon/computeadmin.png';
 import imgCloud from '@/assets/appIcon/cloudbuilder.png';
 import imgAdminCenter from '@/assets/appIcon/admincenter.png';
 import imgAIPlatformAdmin from '@/assets/appIcon/aiplatformadmin.png';
+import { ThakiLogoAnimated } from '@/components/ThakiLogoAnimated';
 
 // App Icons
 import appIconAIChat from '@/assets/appIcon/chat.png';
@@ -607,6 +609,7 @@ function DesktopTopBar({
     }
     return 'en';
   });
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
   const [showLanguageConfirmModal, setShowLanguageConfirmModal] = useState(false);
   const [pendingLanguage, setPendingLanguage] = useState<string | null>(null);
 
@@ -795,7 +798,7 @@ function DesktopTopBar({
     >
       {/* Left Section - Logo + Dock Icons */}
       <div className="flex items-center gap-1.5 h-full">
-        <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-5 mr-3" />
+        <ThakiLogoAnimated isDark={isDark} className="h-5 mr-3" />
         <button
           onClick={onLaunchpadToggle}
           className="flex items-center justify-center w-7 h-7 rounded-md text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] transition-colors"
@@ -838,11 +841,8 @@ function DesktopTopBar({
               },
               {
                 id: 'sign-out',
-                label: 'Logout',
-                onClick: () => {
-                  // TODO: Implement logout and redirect to login page
-                  // For now, do nothing as login page doesn't exist yet
-                },
+                label: 'Sign out',
+                onClick: () => setShowSignOutModal(true),
               },
             ]}
             trigger="click"
@@ -900,6 +900,24 @@ function DesktopTopBar({
           </Button>
           <Button variant="primary" onClick={confirmLanguageChange}>
             Apply
+          </Button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSignOutModal}
+        onClose={() => setShowSignOutModal(false)}
+        title="Sign out"
+        size="sm"
+      >
+        <InfoBox label="Username" value="thaki.kim@example.com" />
+
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={() => setShowSignOutModal(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={() => setShowSignOutModal(false)} className="flex-1">
+            Sign out
           </Button>
         </div>
       </Modal>
@@ -1041,12 +1059,19 @@ interface LaunchpadPanelProps {
 }
 
 function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPanelProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      setSearchQuery('');
+      return;
+    }
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
+    requestAnimationFrame(() => searchInputRef.current?.focus());
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
@@ -1054,6 +1079,10 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
     AppId,
     { name: string; icon: string; initialPath: string },
   ][];
+
+  const filteredApps = searchQuery
+    ? apps.filter(([, config]) => config.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : apps;
 
   return (
     <AnimatePresence>
@@ -1069,27 +1098,49 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
           />
           <div className="fixed inset-0 z-[6001] flex items-center justify-center pointer-events-none">
             <motion.div
-              className="pointer-events-auto grid grid-cols-5 gap-6 p-10"
+              className="pointer-events-auto flex flex-col items-center gap-8 p-10"
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
             >
-              {apps.map(([appId, config]) => (
-                <button
-                  key={appId}
-                  className="flex flex-col items-center gap-2.5 w-32 cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
-                  onClick={() => {
-                    onOpenApp(appId);
-                    onClose();
-                  }}
-                >
-                  <img src={config.icon} alt={config.name} className="w-16 h-16 object-cover" />
-                  <span className="text-label-md text-white text-center leading-tight whitespace-pre-line">
-                    {config.name.replace(' - ', '\n')}
-                  </span>
-                </button>
-              ))}
+              <div className="relative w-[320px]">
+                <IconSearch
+                  size={16}
+                  stroke={1.5}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50"
+                />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search apps..."
+                  className="w-full h-9 pl-9 pr-3 rounded-lg bg-white/10 border border-white/15 text-white text-body-md placeholder:text-white/40 outline-none focus:bg-white/15 focus:border-white/25 transition-colors"
+                />
+              </div>
+
+              {filteredApps.length === 0 ? (
+                <div className="text-body-md text-white/50 py-10">No apps found</div>
+              ) : (
+                <div className="grid grid-cols-7 gap-6">
+                  {filteredApps.map(([appId, config]) => (
+                    <button
+                      key={appId}
+                      className="flex flex-col items-center gap-2.5 w-[100px] cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
+                      onClick={() => {
+                        onOpenApp(appId);
+                        onClose();
+                      }}
+                    >
+                      <img src={config.icon} alt={config.name} className="w-16 h-16 object-cover" />
+                      <span className="text-label-md text-white text-center leading-tight whitespace-pre-line">
+                        {config.name.replace(' - ', '\n')}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </motion.div>
           </div>
         </>
@@ -1229,7 +1280,6 @@ function AppRoutes({ appId }: { appId: AppId }) {
         <Routes>
           <Route path="/settings" element={<SettingsGeneralPage />} />
           <Route path="/settings/general" element={<SettingsGeneralPage />} />
-          <Route path="/settings/account" element={<SettingsAccountPage />} />
           <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
           <Route path="/settings/information" element={<SettingsInformationPage />} />
           <Route path="/settings/*" element={<SettingsGeneralPage />} />
@@ -1823,34 +1873,60 @@ function PageWindow({
   );
 }
 
+type GlobalNotifType = 'critical' | 'warning' | 'success' | 'failed';
+
 interface GlobalNotif {
   id: string;
+  type: GlobalNotifType;
   message: string;
-  statusIcon?: React.ReactNode;
   time: string;
   project?: string;
   app: string;
   appIcon: string;
   isRead?: boolean;
+  isResolved?: boolean;
   detail?: { code?: string | number; message?: string };
 }
+
+const gnpTypeBadgeMap: Record<
+  GlobalNotifType,
+  { label: string; theme: 'red' | 'yellow' | 'green' }
+> = {
+  critical: { label: 'Critical', theme: 'red' },
+  warning: { label: 'Warning', theme: 'yellow' },
+  success: { label: 'Success', theme: 'green' },
+  failed: { label: 'Failed', theme: 'red' },
+};
 
 function GlobalNotificationCard({
   notification,
   onMarkAsRead,
+  onResolve,
+  isAlertSection,
 }: {
   notification: GlobalNotif;
   onMarkAsRead: () => void;
+  onResolve?: () => void;
+  isAlertSection?: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const hasDetail =
     notification.detail && (notification.detail.code || notification.detail.message);
+  const showDetail = hasDetail && notification.type === 'failed';
   const isUnread = !notification.isRead;
 
   return (
     <div
-      className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3"
+      className={`relative rounded-[var(--radius-lg)] flex flex-col py-3 ${
+        isAlertSection
+          ? notification.type === 'critical'
+            ? 'bg-[var(--inline-message-error-bg)]'
+            : 'bg-[var(--color-state-warning-bg)]'
+          : isUnread
+            ? 'border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]'
+            : 'border border-[var(--color-border-default)] bg-[var(--color-surface-default)]'
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -1860,47 +1936,36 @@ function GlobalNotificationCard({
         }}
         className="flex items-start justify-between px-3 cursor-pointer"
       >
-        <div className="flex gap-2 items-start w-[256px]">
+        <div className={`flex gap-2 items-start ${isAlertSection ? 'flex-1' : 'w-[256px]'}`}>
           <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
-          <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
-            <div className="text-body-md text-[var(--color-text-default)]">
-              {notification.statusIcon
-                ? (() => {
-                    const msg = notification.message;
-                    const lastSpace = msg.lastIndexOf(' ');
-                    if (lastSpace === -1)
-                      return (
-                        <span className="whitespace-nowrap">
-                          {msg}
-                          <span className="inline-flex items-center align-[-3px] ml-1">
-                            {notification.statusIcon}
-                          </span>
-                        </span>
-                      );
-                    return (
-                      <>
-                        {msg.slice(0, lastSpace)}{' '}
-                        <span className="whitespace-nowrap">
-                          {msg.slice(lastSpace + 1)}
-                          <span className="inline-flex items-center align-[-3px] ml-1">
-                            {notification.statusIcon}
-                          </span>
-                        </span>
-                      </>
-                    );
-                  })()
-                : notification.message}
+          <div className="flex flex-col gap-1.5 flex-1 min-w-[1px]">
+            <div className="text-label-md text-[var(--color-text-default)]">
+              {notification.message}
             </div>
 
-            {notification.project && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">
-                {notification.project}
-              </span>
-            )}
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Badge
+                theme={gnpTypeBadgeMap[notification.type].theme}
+                size="sm"
+                className="shrink-0"
+              >
+                {gnpTypeBadgeMap[notification.type].label}
+              </Badge>
+              {notification.project && (
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="overflow-hidden min-w-0"
+                  title={notification.project}
+                >
+                  <span className="block truncate">{notification.project}</span>
+                </Badge>
+              )}
+            </div>
 
-            {hasDetail && (
+            {showDetail && (
               <div
-                className="flex flex-col gap-2 rounded-[var(--radius-sm)]"
+                className="flex flex-col gap-2 rounded-[var(--radius-sm)] mt-1"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -1942,17 +2007,17 @@ function GlobalNotificationCard({
           </div>
         </div>
         <div className="flex flex-col items-end justify-end self-stretch shrink-0">
-          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {notification.time}
           </span>
         </div>
       </div>
 
-      {isUnread && !isHovered && (
+      {isUnread && !isAlertSection && !isHovered && (
         <div className="absolute top-3 right-3 size-1.5 rounded-full bg-[var(--color-action-primary)]" />
       )}
 
-      {isUnread && isHovered && (
+      {isUnread && !isAlertSection && isHovered && (
         <button
           type="button"
           onClick={(e) => {
@@ -1969,7 +2034,77 @@ function GlobalNotificationCard({
   );
 }
 
+const SNACKBAR_MOCKS = [
+  {
+    type: 'success' as const,
+    message: 'Instance "web-01" created successfully.',
+    partition: 'proj-1',
+    appIcon: AppIconCompute,
+  },
+  {
+    type: 'success' as const,
+    message: 'Volume "backup-01" snapshot successfully created.',
+    partition: 'proj-2',
+    appIcon: AppIconStorage,
+  },
+  {
+    type: 'failed' as const,
+    message: 'Volume "data-vol-02" create failed.',
+    partition: 'proj-1',
+    appIcon: AppIconCompute,
+    detail: {
+      code: 400,
+      message: "Flavor's disk is smaller than the minimum size specified in image metadata.",
+    },
+  },
+  {
+    type: 'critical' as const,
+    message: 'Pod "api-gateway" crash loop detected.',
+    partition: 'default',
+    appIcon: AppIconAlerts,
+    detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
+  },
+  {
+    type: 'warning' as const,
+    message: 'CPU usage exceeded 90% on node "worker-05".',
+    appIcon: AppIconAlerts,
+  },
+  {
+    type: 'failed' as const,
+    message: 'Security group "sg-prod" rule update failed.',
+    partition: 'proj-3',
+    appIcon: AppIconCompute,
+    detail: { code: 409, message: 'Conflicting rules detected in the security group.' },
+  },
+  {
+    type: 'success' as const,
+    message: 'API key "prod-key-01" has been rotated.',
+    partition: 'proj-1',
+    appIcon: AppIconIAM,
+  },
+  {
+    type: 'warning' as const,
+    message: 'Disk usage exceeded 85% on volume "data-vol-01".',
+    partition: 'proj-2',
+    appIcon: AppIconAlerts,
+  },
+  {
+    type: 'success' as const,
+    message: 'Container "nginx-proxy" deployed to cluster.',
+    partition: 'default',
+    appIcon: AppIconContainer,
+  },
+  {
+    type: 'critical' as const,
+    message: 'Node "worker-03" is NotReady.',
+    appIcon: AppIconAlerts,
+    detail: { code: 'NODE_NOT_READY', message: 'Kubelet stopped posting node status.' },
+  },
+];
+
 export function DesktopPage() {
+  const snackbar = useSnackbar();
+  const snackbarIndexRef = useRef(0);
   const [showChatbot, setShowChatbot] = useState(false);
   const [showAdminCenter, setShowAdminCenter] = useState(false);
   const [showLaunchpad, setShowLaunchpad] = useState(false);
@@ -2195,13 +2330,11 @@ export function DesktopPage() {
   }, []);
 
   // Global notification panel data
-  const [globalNotifications, setGlobalNotifications] = useState([
+  const [globalNotifications, setGlobalNotifications] = useState<GlobalNotif[]>([
     {
       id: '1',
+      type: 'success',
       message: 'Instance "web-01" created.',
-      statusIcon: (
-        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
-      ),
       time: '10:23',
       project: 'proj-1',
       app: 'Compute',
@@ -2211,10 +2344,8 @@ export function DesktopPage() {
     },
     {
       id: '2',
+      type: 'failed',
       message: 'Volume "data-vol-02" create failed.',
-      statusIcon: (
-        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
-      ),
       time: '09:30',
       project: 'proj-2',
       app: 'Compute',
@@ -2227,10 +2358,8 @@ export function DesktopPage() {
     },
     {
       id: '3',
+      type: 'success',
       message: 'API key "prod-key-01" has been rotated.',
-      statusIcon: (
-        <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
-      ),
       time: '08:45',
       app: 'IAM',
       appIcon: AppIconIAM,
@@ -2238,28 +2367,272 @@ export function DesktopPage() {
     },
     {
       id: '4',
-      message: 'Pod "api-gateway" crash loop.',
-      statusIcon: (
-        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
-      ),
+      type: 'critical',
+      message: 'Pod "api-gateway" crash loop detected.',
       time: '09:55',
       project: 'default',
-      app: 'Container',
-      appIcon: AppIconContainer,
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
       isRead: false,
+      isResolved: false,
       detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
     },
     {
       id: '5',
+      type: 'success',
       message: 'Volume "backup-01" snapshot done.',
-      statusIcon: (
-        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
-      ),
       time: '10:10',
       project: 'proj-1',
       app: 'Storage',
       appIcon: AppIconStorage,
       isRead: false,
+    },
+    {
+      id: '6',
+      type: 'success',
+      message: 'Deployment "frontend-app" scaled to 5 replicas.',
+      time: '08:12',
+      project: 'proj-1',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+    },
+    {
+      id: '7',
+      type: 'success',
+      message: 'Security group "sg-prod" rule updated.',
+      time: '07:58',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '8',
+      type: 'critical',
+      message: 'Node "worker-03" became NotReady.',
+      time: '07:45',
+      project: 'default',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: false,
+      isResolved: false,
+      detail: { code: 'NODE_NOT_READY', message: 'Kubelet stopped posting node status.' },
+    },
+    {
+      id: '9',
+      type: 'success',
+      message: 'Image "ubuntu-22.04" upload completed.',
+      time: '07:30',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '10',
+      type: 'warning',
+      message: 'CPU usage exceeded 90% on node "worker-05".',
+      time: '07:15',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: true,
+    },
+    {
+      id: '11',
+      type: 'success',
+      message: 'Bucket "logs-2026" created successfully.',
+      time: '06:50',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '12',
+      type: 'warning',
+      message: 'Disk usage on volume "data-vol-01" reached 75%.',
+      time: '06:30',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: true,
+    },
+    {
+      id: '13',
+      type: 'success',
+      message: 'Floating IP "203.0.113.5" associated to "web-01".',
+      time: '06:10',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '14',
+      type: 'success',
+      message: 'Volume "db-storage" resize completed.',
+      time: '05:45',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '15',
+      type: 'success',
+      message: 'Role "cluster-admin" permissions modified.',
+      time: 'May 20',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '16',
+      type: 'success',
+      message: 'Network "internal-net" subnet added.',
+      time: 'May 20',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '17',
+      type: 'failed',
+      message: 'Pod "worker-batch-07" OOMKilled.',
+      time: 'May 20',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 137, message: 'Container exceeded memory limit of 512Mi.' },
+    },
+    {
+      id: '18',
+      type: 'success',
+      message: 'Object "report-2026.pdf" uploaded to bucket "docs".',
+      time: 'May 20',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '19',
+      type: 'success',
+      message: 'MFA enabled for user "admin@thaki.io".',
+      time: 'May 20',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '20',
+      type: 'success',
+      message: 'Instance "db-primary" migrated to host "hv-12".',
+      time: 'May 20',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '21',
+      type: 'failed',
+      message: 'CronJob "daily-cleanup" execution failed.',
+      time: 'May 19',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'JOB_FAILED', message: 'Deadline exceeded after 3600s.' },
+    },
+    {
+      id: '22',
+      type: 'success',
+      message: 'Snapshot "db-snap-weekly" completed.',
+      time: 'May 19',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '23',
+      type: 'success',
+      message: 'Keypair "deploy-key-02" imported.',
+      time: 'May 19',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '24',
+      type: 'warning',
+      message: 'Memory usage on pod "cache-redis" reached 80%.',
+      time: 'May 19',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: true,
+    },
+    {
+      id: '25',
+      type: 'warning',
+      message: 'Pod restart count exceeded threshold on "scheduler-01".',
+      time: 'May 19',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: true,
+    },
+    {
+      id: '26',
+      type: 'success',
+      message: 'Instance "cache-01" shelved offloaded.',
+      time: 'May 18',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '27',
+      type: 'failed',
+      message: 'StatefulSet "postgres" rollback triggered.',
+      time: 'May 18',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'ROLLBACK', message: 'Rollback to revision 4 due to failed health check.' },
+    },
+    {
+      id: '28',
+      type: 'success',
+      message: 'Bucket "archives" lifecycle policy applied.',
+      time: 'May 18',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '29',
+      type: 'success',
+      message: 'Service account "ci-deployer" token rotated.',
+      time: 'May 18',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '30',
+      type: 'success',
+      message: 'Instance "ml-worker-gpu" resize completed.',
+      time: 'May 18',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
     },
   ]);
   const [gnpActiveTab, setGnpActiveTab] = useState('all');
@@ -2268,18 +2641,24 @@ export function DesktopPage() {
   const gnpAppIcon = (src: string) => <img src={src} alt="" className="size-4 object-cover" />;
   const gnpAppOptions = [
     { value: 'all', label: 'All apps' },
+    { value: 'Alerts', label: 'Alerts', icon: gnpAppIcon(AppIconAlerts) },
     { value: 'Compute', label: 'Compute', icon: gnpAppIcon(AppIconCompute) },
     { value: 'IAM', label: 'IAM', icon: gnpAppIcon(AppIconIAM) },
     { value: 'Container', label: 'Container', icon: gnpAppIcon(AppIconContainer) },
     { value: 'Storage', label: 'Storage', icon: gnpAppIcon(AppIconStorage) },
   ].filter((opt) => opt.value === 'all' || globalNotifications.some((n) => n.app === opt.value));
 
-  const gnpFiltered = globalNotifications.filter((n) => {
+  const isGnpAlert = (n: GlobalNotif) =>
+    (n.type === 'critical' || n.type === 'warning') && !n.isResolved;
+  const gnpAlertNotifications = globalNotifications.filter(isGnpAlert);
+  const gnpRegular = globalNotifications.filter((n) => !isGnpAlert(n));
+
+  const gnpFiltered = gnpRegular.filter((n) => {
     if (gnpActiveTab === 'unread' && n.isRead) return false;
     if (gnpActiveApp !== 'all' && n.app !== gnpActiveApp) return false;
     return true;
   });
-  const gnpUnreadCount = globalNotifications.filter((n) => !n.isRead).length;
+  const gnpUnreadCount = gnpRegular.filter((n) => !n.isRead).length;
 
   const handleGnpMarkAsRead = (id: string) => {
     setGlobalNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
@@ -2287,6 +2666,12 @@ export function DesktopPage() {
 
   const handleGnpMarkAllAsRead = () => {
     setGlobalNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  const handleGnpResolve = (id: string) => {
+    setGlobalNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isResolved: true, isRead: true } : n))
+    );
   };
 
   // 데스크탑 배경 클릭 시 모든 윈도우 포커스 해제
@@ -2441,8 +2826,11 @@ export function DesktopPage() {
       {showNotifications && notificationButtonRef.current && (
         <>
           <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
-          <div className="fixed z-[6001] top-[52px] right-0" onClick={(e) => e.stopPropagation()}>
-            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+          <div
+            className="fixed z-[6001] top-[52px] right-0 bottom-0 flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden flex flex-col flex-1">
               <div className="relative pt-3 pb-0">
                 <button
                   type="button"
@@ -2479,7 +2867,7 @@ export function DesktopPage() {
                 />
               </div>
 
-              {gnpFiltered.length === 0 ? (
+              {gnpFiltered.length === 0 && gnpAlertNotifications.length === 0 ? (
                 <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
                   No notifications
                 </div>
@@ -2490,17 +2878,50 @@ export function DesktopPage() {
                     scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
                   }}
                   defer={false}
-                  style={{ maxHeight: 420 }}
-                  className="px-3 py-2"
+                  className="flex-1"
                 >
-                  <div className="flex flex-col gap-2">
-                    {gnpFiltered.map((n) => (
-                      <GlobalNotificationCard
-                        key={n.id}
-                        notification={n}
-                        onMarkAsRead={() => handleGnpMarkAsRead(n.id)}
-                      />
-                    ))}
+                  <div className="flex flex-col gap-0 px-3 py-2">
+                    {/* Alert Section */}
+                    {gnpAlertNotifications.length > 0 && (
+                      <div className="pb-2">
+                        <div className="flex items-center gap-1 px-1 pb-1.5">
+                          <span className="text-label-sm text-[var(--color-text-muted)]">
+                            Alert ({gnpAlertNotifications.length})
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          {gnpAlertNotifications.map((n) => (
+                            <GlobalNotificationCard
+                              key={n.id}
+                              notification={n}
+                              onMarkAsRead={() => handleGnpMarkAsRead(n.id)}
+                              onResolve={() => handleGnpResolve(n.id)}
+                              isAlertSection
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Notification Section */}
+                    {gnpFiltered.length > 0 && (
+                      <>
+                        <div className="flex items-center gap-1 px-1 pb-1.5 pt-1">
+                          <span className="text-label-sm text-[var(--color-text-muted)]">
+                            Notification ({gnpFiltered.length})
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          {gnpFiltered.map((n) => (
+                            <GlobalNotificationCard
+                              key={n.id}
+                              notification={n}
+                              onMarkAsRead={() => handleGnpMarkAsRead(n.id)}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </OverlayScrollbarsComponent>
               )}
@@ -2541,6 +2962,23 @@ export function DesktopPage() {
             );
           })}
       </AnimatePresence>
+
+      {/* Desktop Snackbar — above app windows (z-[5000]) */}
+      <SnackbarContainer position="top-right" scope="global" className="!top-[60px] !z-[5000]" />
+
+      {/* Snackbar Test Button */}
+      <button
+        type="button"
+        onClick={() => {
+          const mock = SNACKBAR_MOCKS[snackbarIndexRef.current % SNACKBAR_MOCKS.length];
+          snackbarIndexRef.current++;
+          snackbar.show(mock);
+        }}
+        className="fixed bottom-6 left-6 z-[9999] size-10 flex items-center justify-center rounded-full bg-[var(--color-action-primary)] text-white shadow-lg hover:bg-[var(--color-action-primary-hover)] transition-colors"
+        aria-label="Test Snackbar"
+      >
+        <IconBell size={18} stroke={1.5} />
+      </button>
 
       {/* Main Page Navigation Button - Bottom Left */}
     </div>

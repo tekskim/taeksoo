@@ -1,6 +1,6 @@
 import { VStack, MenuItem } from '@/design-system';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
-import { IconSettings, IconUser, IconBell, IconInfoCircle } from '@tabler/icons-react';
+import { IconSettings, IconBell, IconInfoCircle } from '@tabler/icons-react';
 import { useLocation } from 'react-router-dom';
 import { AppSwitcher } from './AppSwitcher';
 
@@ -11,9 +11,10 @@ import { AppSwitcher } from './AppSwitcher';
 interface SettingsSidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  forceVisible?: boolean;
 }
 
-export function SettingsSidebar({ isOpen = true, onToggle }: SettingsSidebarProps) {
+export function SettingsSidebar({ isOpen = true, onToggle, forceVisible }: SettingsSidebarProps) {
   const location = useLocation();
 
   const isActive = (href: string) => {
@@ -29,7 +30,7 @@ export function SettingsSidebar({ isOpen = true, onToggle }: SettingsSidebarProp
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
@@ -51,12 +52,6 @@ export function SettingsSidebar({ isOpen = true, onToggle }: SettingsSidebarProp
             label="General"
             href="/settings/general"
             active={isActive('/settings/general')}
-          />
-          <MenuItem
-            icon={<IconUser size={16} stroke={1.5} />}
-            label="Account"
-            href="/settings/account"
-            active={isActive('/settings/account')}
           />
           <MenuItem
             icon={<IconBell size={16} stroke={1.5} />}

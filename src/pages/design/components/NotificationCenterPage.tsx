@@ -7,7 +7,7 @@ import type { NotificationItem } from '@/design-system';
 import {
   IconCircleCheck,
   IconAlertTriangle,
-  IconInfoCircle,
+  IconExclamationCircle,
   IconRefresh,
   IconChevronUp,
   IconChevronDown,
@@ -25,43 +25,50 @@ function StaticNotificationCard({
   isRead,
   detail,
   isExpanded,
+  isAlert,
 }: {
-  type: 'success' | 'error' | 'info';
+  type: 'critical' | 'warning' | 'success' | 'failed';
   message: string;
   time: string;
   project?: string;
   isRead: boolean;
   detail?: { code?: string | number; message?: string };
   isExpanded?: boolean;
+  isAlert?: boolean;
 }) {
-  const iconMap = {
-    success: (
-      <IconCircleCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />
-    ),
-    error: (
-      <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
-    ),
-    info: <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-state-info)]" />,
+  const badgeMap: Record<string, { label: string; theme: 'red' | 'yellow' | 'green' }> = {
+    critical: { label: 'Critical', theme: 'red' },
+    warning: { label: 'Warning', theme: 'yellow' },
+    success: { label: 'Success', theme: 'green' },
+    failed: { label: 'Failed', theme: 'red' },
   };
   const hasDetail = detail && (detail.code || detail.message);
 
   return (
     <div
-      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] overflow-hidden ${
-        !isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'
+      className={`rounded-[var(--radius-lg)] overflow-hidden ${
+        isAlert
+          ? type === 'critical'
+            ? 'bg-[var(--inline-message-error-bg)]'
+            : 'bg-[var(--color-state-warning-bg)]'
+          : `border border-[var(--color-border-default)] ${!isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'}`
       }`}
     >
       <div className="flex gap-3 p-3">
-        <div className="shrink-0 pt-0.5">{iconMap[type]}</div>
         <div className="flex-1 min-w-0">
           <div className="flex gap-2 items-start">
-            <div className="flex-1 min-w-0 flex flex-col items-start gap-2">
-              <p className="text-body-md text-[var(--color-text-muted)]">{message}</p>
-              {project && (
-                <Badge theme="white" size="sm">
-                  {project}
+            <div className="flex-1 min-w-0 flex flex-col items-start gap-1.5">
+              <p className="text-label-md text-[var(--color-text-default)]">{message}</p>
+              <div className="flex items-center gap-1.5">
+                <Badge theme={badgeMap[type].theme} size="sm">
+                  {badgeMap[type].label}
                 </Badge>
-              )}
+                {project && (
+                  <Badge theme="white" size="sm">
+                    {project}
+                  </Badge>
+                )}
+              </div>
             </div>
             <div className="shrink-0 flex flex-col items-end gap-1">
               {!isRead && <div className="size-2 rounded-full bg-[var(--color-action-primary)]" />}
@@ -124,7 +131,7 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 | --- | --- |
 | Notification icon | 알림센터 열기 |
 | Unread badge | 안읽은 알림 표시 |
-| Tabs | 알림 필터 (All/Unread/Error) |
+| Tabs | 알림 필터 (All/Unread) |
 | Mark all as read | 전체 읽음 처리 |
 | Notification list | 알림 목록 |
 | Notification item | 개별 알림 |
@@ -134,7 +141,7 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 - Unread badge와 함께 표시
 
 ### Tabs
-- All: 모든 알림, Unread: 읽지 않은 알림, Error: 실패 알림
+- All: 모든 알림, Unread: 읽지 않은 알림
 - 정렬은 최신순
 
 ### Mark all as read
@@ -146,7 +153,7 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 
 | 구성요소 | 설명 |
 | --- | --- |
-| Type icon | 알림 유형 (success / error / info) |
+| Type icon | 알림 유형 (critical / warning / success / failed) |
 | Message | 알림 메시지 |
 | Timestamp | 발생 시각 |
 | Partition info | 프로젝트/네임스페이스 등 |
@@ -217,6 +224,16 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 
 const initialNotifications: NotificationItem[] = [
   {
+    id: 'c1',
+    type: 'critical',
+    message: 'Node "worker-03" became NotReady.',
+    time: '10:30',
+    project: 'default',
+    isRead: false,
+    isResolved: false,
+    detail: { code: 'NODE_NOT_READY', message: 'Kubelet stopped posting node status.' },
+  },
+  {
     id: '1',
     type: 'success',
     message: 'Instance "web-server-01" created successfully.',
@@ -235,7 +252,7 @@ const initialNotifications: NotificationItem[] = [
   },
   {
     id: '3',
-    type: 'error',
+    type: 'failed',
     message: 'Failed to create volume "data-vol-02".',
     time: '09:30',
     project: 'Proj2',
@@ -247,18 +264,17 @@ const initialNotifications: NotificationItem[] = [
   },
   {
     id: '4',
-    type: 'info',
+    type: 'success',
     message: 'Instance "db-server" disk auto-expand completed.',
     time: '09:15',
     project: 'Proj1',
     isRead: true,
-    detail: { code: 'DISK_EXPAND', message: 'Disk expanded from 100GB to 200GB.' },
   },
   {
     id: '5',
-    type: 'info',
-    message: 'System maintenance scheduled for tomorrow.',
-    time: 'Yesterday',
+    type: 'warning',
+    message: 'Certificate for "api.thaki.io" expires in 7 days.',
+    time: 'May 20',
     isRead: true,
   },
 ];
@@ -273,6 +289,12 @@ export function NotificationCenterPage() {
 
   const handleMarkAllAsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  const handleResolveCritical = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isResolved: true, isRead: true } : n))
+    );
   };
 
   const handleReset = () => {
@@ -300,6 +322,7 @@ export function NotificationCenterPage() {
             notifications={notifications}
             onMarkAsRead={handleMarkAsRead}
             onMarkAllAsRead={handleMarkAllAsRead}
+            onResolveCritical={handleResolveCritical}
             onNotificationClick={(n) => setSelectedId(n.id)}
             selectedId={selectedId}
           />
@@ -324,6 +347,7 @@ export function NotificationCenterPage() {
                 notifications={notifications}
                 onMarkAsRead={handleMarkAsRead}
                 onMarkAllAsRead={handleMarkAllAsRead}
+                onResolveCritical={handleResolveCritical}
                 onNotificationClick={(n) => setSelectedId(n.id)}
                 selectedId={selectedId}
               />
@@ -334,7 +358,32 @@ export function NotificationCenterPage() {
             <span className="text-label-md text-[var(--color-text-default)]">
               Notification types
             </span>
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
+              Alert App: Critical, Warning / Other App: Success, Failed
+            </p>
             <div className="grid grid-cols-4 gap-4">
+              <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+                <div className="flex items-center gap-2 mb-2">
+                  <IconExclamationCircle
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[var(--color-state-danger)]"
+                  />
+                  <span className="text-label-md text-[var(--color-text-default)]">Critical</span>
+                </div>
+                <p className="text-body-sm text-[var(--color-text-muted)]">Alert App critical</p>
+              </div>
+              <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+                <div className="flex items-center gap-2 mb-2">
+                  <IconAlertTriangle
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[var(--color-state-warning)]"
+                  />
+                  <span className="text-label-md text-[var(--color-text-default)]">Warning</span>
+                </div>
+                <p className="text-body-sm text-[var(--color-text-muted)]">Alert App warning</p>
+              </div>
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
                   <IconCircleCheck
@@ -353,20 +402,9 @@ export function NotificationCenterPage() {
                     strokeWidth={1.5}
                     className="text-[var(--color-state-danger)]"
                   />
-                  <span className="text-label-md text-[var(--color-text-default)]">Error</span>
+                  <span className="text-label-md text-[var(--color-text-default)]">Failed</span>
                 </div>
                 <p className="text-body-sm text-[var(--color-text-muted)]">Operation failed</p>
-              </div>
-              <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <div className="flex items-center gap-2 mb-2">
-                  <IconInfoCircle
-                    size={16}
-                    strokeWidth={1.5}
-                    className="text-[var(--color-state-info)]"
-                  />
-                  <span className="text-label-md text-[var(--color-text-default)]">Info</span>
-                </div>
-                <p className="text-body-sm text-[var(--color-text-muted)]">General information</p>
               </div>
             </div>
           </VStack>
@@ -383,9 +421,9 @@ export function NotificationCenterPage() {
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Read</span>
                 <StaticNotificationCard
-                  type="info"
+                  type="success"
                   message="System maintenance scheduled for tomorrow."
-                  time="Yesterday"
+                  time="May 20"
                   isRead
                 />
               </VStack>
@@ -406,7 +444,7 @@ export function NotificationCenterPage() {
                   Read + Detail (collapsed)
                 </span>
                 <StaticNotificationCard
-                  type="info"
+                  type="success"
                   message='Instance "db-server" disk auto-expand completed.'
                   time="09:15"
                   project="Proj1"
@@ -420,7 +458,7 @@ export function NotificationCenterPage() {
                   Unread + Detail (collapsed)
                 </span>
                 <StaticNotificationCard
-                  type="error"
+                  type="failed"
                   message='Failed to create volume "data-vol-02".'
                   time="09:30"
                   project="Proj2"
@@ -435,28 +473,28 @@ export function NotificationCenterPage() {
 
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
-                  Read + Detail (expanded)
+                  Critical Alert (danger border)
                 </span>
                 <StaticNotificationCard
-                  type="success"
-                  message='Instance "web-server-01" created successfully.'
-                  time="10:23"
-                  project="Proj1"
-                  isRead
+                  type="critical"
+                  message='Node "worker-03" became NotReady.'
+                  time="10:30"
+                  project="default"
+                  isRead={false}
+                  isAlert
                   detail={{
-                    code: 200,
-                    message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+                    code: 'NODE_NOT_READY',
+                    message: 'Kubelet stopped posting node status.',
                   }}
-                  isExpanded
                 />
               </VStack>
 
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
-                  Unread + Detail (expanded)
+                  Failed + Detail (expanded)
                 </span>
                 <StaticNotificationCard
-                  type="error"
+                  type="failed"
                   message='Failed to create volume "data-vol-02".'
                   time="09:30"
                   project="Proj2"

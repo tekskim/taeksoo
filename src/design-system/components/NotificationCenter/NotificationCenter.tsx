@@ -1,21 +1,16 @@
 import React, { useState } from 'react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
-import {
-  IconCircleCheck,
-  IconAlertTriangle,
-  IconInfoCircle,
-  IconCheckbox,
-  IconChevronUp,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { IconCheckbox, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 import { Tabs, TabList, Tab } from '../Tabs';
-import { Chip } from '../Chip';
+import { Badge } from '../Badge';
+import type { BadgeTheme } from '../Badge/Badge';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-export type NotificationType = 'success' | 'error' | 'info';
+/** Alert App: critical | warning, Other App: success | failed */
+export type NotificationType = 'critical' | 'warning' | 'success' | 'failed';
 
 export interface NotificationDetail {
   /** Error/Response code */
@@ -39,6 +34,8 @@ export interface NotificationItem {
   isRead?: boolean;
   /** Detail information (expandable) */
   detail?: NotificationDetail;
+  /** For critical alerts: whether it has been resolved (moves from Critical Alert Section to regular list) */
+  isResolved?: boolean;
 }
 
 export interface NotificationCenterProps {
@@ -50,6 +47,8 @@ export interface NotificationCenterProps {
   onMarkAllAsRead?: () => void;
   /** Callback when notification is clicked */
   onNotificationClick?: (notification: NotificationItem) => void;
+  /** Callback when a critical alert is resolved */
+  onResolveCritical?: (id: string) => void;
   /** Currently selected notification id */
   selectedId?: string;
   /** Callback when panel is closed */
@@ -67,22 +66,26 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
   onMarkAsRead,
   onMarkAllAsRead,
   onNotificationClick,
+  onResolveCritical,
   selectedId,
   onClose,
   className = '',
 }) => {
   const [activeTab, setActiveTab] = useState('all');
 
-  // Filter notifications based on active tab
-  const filteredNotifications = notifications.filter((notification) => {
+  const isAlertType = (n: NotificationItem) =>
+    (n.type === 'critical' || n.type === 'warning') && !n.isResolved;
+
+  const alertNotifications = notifications.filter(isAlertType);
+  const regularNotifications = notifications.filter((n) => !isAlertType(n));
+
+  const filteredRegular = regularNotifications.filter((notification) => {
     if (activeTab === 'all') return true;
     if (activeTab === 'unread') return !notification.isRead;
-    if (activeTab === 'error') return notification.type === 'error';
     return true;
   });
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
-  const errorCount = notifications.filter((n) => n.type === 'error').length;
+  const unreadCount = regularNotifications.filter((n) => !n.isRead).length;
 
   return (
     <div
@@ -94,12 +97,12 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         border border-[var(--color-border-default)]
         shadow-lg
         overflow-hidden
+        flex flex-col
         ${className}
       `}
     >
       {/* Header with Tabs */}
-      <div className="relative pt-3 pb-0">
-        {/* Mark all as read button - positioned top right, vertically centered */}
+      <div className="relative pt-3 pb-0 shrink-0">
         <button
           type="button"
           onClick={onMarkAllAsRead}
@@ -117,7 +120,6 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           aria-label="Mark all as read"
         >
           <IconCheckbox size={16} stroke={1.5} />
-          {/* Tooltip */}
           <span
             className="
             absolute top-full right-0 mt-1
@@ -138,7 +140,6 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           </span>
         </button>
 
-        {/* Tabs - full width */}
         <Tabs
           value={activeTab}
           onChange={setActiveTab}
@@ -154,18 +155,11 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                 <span className="ml-1 text-[var(--color-text-muted)]">({unreadCount})</span>
               )}
             </Tab>
-            <Tab value="error">
-              Error
-              {errorCount > 0 && (
-                <span className="ml-1 text-[var(--color-text-muted)]">({errorCount})</span>
-              )}
-            </Tab>
           </TabList>
         </Tabs>
       </div>
 
-      {/* Notifications List */}
-      {filteredNotifications.length === 0 ? (
+      {filteredRegular.length === 0 && alertNotifications.length === 0 ? (
         <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
           No notifications
         </div>
@@ -176,19 +170,55 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
           }}
           defer={false}
-          style={{ maxHeight: 400 }}
-          className="p-2"
+          className="flex-1"
         >
-          <div className="flex flex-col gap-2">
-            {filteredNotifications.map((notification) => (
-              <NotificationCard
-                key={notification.id}
-                notification={notification}
-                isSelected={notification.id === selectedId}
-                onMarkAsRead={onMarkAsRead}
-                onClick={onNotificationClick}
-              />
-            ))}
+          <div className="flex flex-col gap-0 p-2">
+            {/* Alert Section */}
+            {alertNotifications.length > 0 && (
+              <div className="pb-2">
+                <div className="flex items-center gap-1 px-1 pb-1.5">
+                  <span className="text-label-sm text-[var(--color-text-muted)]">Alert</span>
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                    {alertNotifications.length}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {alertNotifications.map((notification) => (
+                    <NotificationCard
+                      key={notification.id}
+                      notification={notification}
+                      isSelected={notification.id === selectedId}
+                      onMarkAsRead={onMarkAsRead}
+                      onClick={onNotificationClick}
+                      isAlertSection
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Notification Section */}
+            {filteredRegular.length > 0 && (
+              <>
+                <div className="flex items-center gap-1 px-1 pb-1.5 pt-1">
+                  <span className="text-label-sm text-[var(--color-text-muted)]">Notification</span>
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                    {filteredRegular.length}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {filteredRegular.map((notification) => (
+                    <NotificationCard
+                      key={notification.id}
+                      notification={notification}
+                      isSelected={notification.id === selectedId}
+                      onMarkAsRead={onMarkAsRead}
+                      onClick={onNotificationClick}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </OverlayScrollbarsComponent>
       )}
@@ -205,34 +235,29 @@ interface NotificationCardProps {
   isSelected?: boolean;
   onMarkAsRead?: (id: string) => void;
   onClick?: (notification: NotificationItem) => void;
+  isAlertSection?: boolean;
 }
+
+const typeBadgeMap: Record<NotificationType, { label: string; theme: BadgeTheme }> = {
+  critical: { label: 'Critical', theme: 'red' },
+  warning: { label: 'Warning', theme: 'yellow' },
+  success: { label: 'Success', theme: 'green' },
+  failed: { label: 'Failed', theme: 'red' },
+};
 
 const NotificationCard: React.FC<NotificationCardProps> = ({
   notification,
   isSelected,
   onMarkAsRead,
   onClick,
+  isAlertSection,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const getIcon = (type: NotificationType) => {
-    switch (type) {
-      case 'success':
-        return (
-          <IconCircleCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />
-        );
-      case 'error':
-        return (
-          <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
-        );
-      case 'info':
-      default:
-        return <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-state-info)]" />;
-    }
-  };
-
   const hasDetail =
     notification.detail && (notification.detail.code || notification.detail.message);
+
+  const showViewDetail = hasDetail && notification.type === 'failed';
 
   return (
     <div
@@ -240,10 +265,14 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
       className={`
         relative
         rounded-lg
-        border
         transition-all
-        border-[var(--color-border-default)] hover:border-[var(--color-border-strong)]
-        ${!notification.isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'}
+        ${
+          isAlertSection
+            ? notification.type === 'critical'
+              ? 'bg-[var(--inline-message-error-bg)]'
+              : 'bg-[var(--color-state-warning-bg)]'
+            : `border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] ${!notification.isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'}`
+        }
       `}
     >
       {/* Main Content */}
@@ -256,79 +285,83 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         }}
         className="flex gap-3 p-3 cursor-pointer"
       >
-        {/* Icon */}
-        <div className="shrink-0 pt-0.5">{getIcon(notification.type)}</div>
-
         {/* Content */}
         <div className="flex-1 min-w-0">
-          {/* Message */}
-          <p className="text-body-md text-[var(--color-text-default)] mb-2 pr-6">
+          <p className="text-label-md text-[var(--color-text-default)] mb-1 pr-6">
             {notification.message}
           </p>
 
-          {/* Project Tag */}
-          {notification.project && <Chip value={notification.project} variant="default" />}
+          <div className="flex items-center gap-1.5 mb-1 min-w-0">
+            <Badge theme={typeBadgeMap[notification.type].theme} size="sm" className="shrink-0">
+              {typeBadgeMap[notification.type].label}
+            </Badge>
+            {notification.project && (
+              <Badge
+                theme="white"
+                size="sm"
+                className="overflow-hidden min-w-0"
+                title={notification.project}
+              >
+                <span className="block truncate">{notification.project}</span>
+              </Badge>
+            )}
+          </div>
         </div>
 
         {/* Right side - Unread indicator & Time */}
         <div className="shrink-0 flex flex-col items-end gap-1">
-          {/* Unread dot indicator */}
           <div className="size-6 flex items-center justify-center">
-            {!notification.isRead && (
+            {!notification.isRead && !isAlertSection && (
               <div className="size-2 rounded-full bg-[var(--color-action-primary)]" />
             )}
           </div>
-
-          {/* Time */}
-          <span className="text-body-md text-[var(--color-text-muted)]">{notification.time}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">{notification.time}</span>
         </div>
       </div>
 
       {/* View Detail Toggle */}
-      {hasDetail && (
-        <>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpanded(!isExpanded);
-            }}
-            className="
-              flex items-center justify-end gap-1
-              w-full px-3 py-2
-              text-body-sm
-              text-[var(--color-text-muted)]
-              hover:text-[var(--color-text-default)]
-              border-t border-[var(--color-border-subtle)]
-              transition-colors
-            "
-          >
-            <span>View detail</span>
-            {isExpanded ? (
-              <IconChevronUp size={14} stroke={1.5} />
-            ) : (
-              <IconChevronDown size={14} stroke={1.5} />
-            )}
-          </button>
-
-          {/* Detail Content */}
-          {isExpanded && (
-            <div className="px-3 pb-3">
-              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-md">
-                {notification.detail?.code && (
-                  <p className="text-label-md text-[var(--color-text-default)] mb-1">
-                    code: {notification.detail.code}
-                  </p>
-                )}
-                {notification.detail?.message && (
-                  <p className="text-body-md text-[var(--color-text-muted)]">
-                    {notification.detail.message}
-                  </p>
-                )}
-              </div>
-            </div>
+      {showViewDetail && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsExpanded(!isExpanded);
+          }}
+          className="
+            flex items-center justify-end gap-1
+            w-full px-3 py-2
+            text-body-sm
+            text-[var(--color-text-muted)]
+            hover:text-[var(--color-text-default)]
+            border-t border-[var(--color-border-subtle)]
+            transition-colors
+          "
+        >
+          <span>View detail</span>
+          {isExpanded ? (
+            <IconChevronUp size={14} stroke={1.5} />
+          ) : (
+            <IconChevronDown size={14} stroke={1.5} />
           )}
-        </>
+        </button>
+      )}
+
+      {/* Detail Content */}
+      {showViewDetail && isExpanded && (
+        <div className="px-3 pb-3">
+          <div className="p-3 bg-[var(--color-surface-subtle)] rounded-md">
+            {notification.detail?.code && (
+              <p className="text-label-md text-[var(--color-text-default)] mb-1">
+                code: {notification.detail.code}
+              </p>
+            )}
+            {notification.detail?.message && (
+              <p className="text-body-md text-[var(--color-text-muted)]">
+                {notification.detail.message}
+              </p>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

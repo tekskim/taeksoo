@@ -7,9 +7,10 @@ import { AppSwitcher } from './AppSwitcher';
 interface SecuritySidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  forceVisible?: boolean;
 }
 
-export function SecuritySidebar({ isOpen = true, onToggle }: SecuritySidebarProps) {
+export function SecuritySidebar({ isOpen = true, onToggle, forceVisible }: SecuritySidebarProps) {
   const location = useLocation();
 
   const isActive = (href: string) => {
@@ -25,7 +26,7 @@ export function SecuritySidebar({ isOpen = true, onToggle }: SecuritySidebarProp
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">

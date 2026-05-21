@@ -15,39 +15,26 @@ const meta: Meta<typeof NotificationCenter> = {
 알림 목록을 표시하는 알림 센터 패널입니다.
 
 ### 특징
-- 탭 필터링 (All, Unread, Error)
+- 탭 필터링 (All, Unread)
+- Critical Alert Section (상단 고정, danger border)
 - 읽음/안읽음 상태 관리
-- 알림 상세 정보 확장
-- 프로젝트 태그 표시
+- 알림 상세 정보 확장 (failed, critical만)
 
 ### NotificationItem 구조
 \`\`\`ts
 interface NotificationItem {
   id: string;
-  type: 'success' | 'error' | 'info';
+  type: 'critical' | 'warning' | 'success' | 'failed';
   message: string;
   time: string;
   project?: string;
   isRead?: boolean;
+  isResolved?: boolean;
   detail?: {
     code?: string | number;
     message?: string;
   };
 }
-\`\`\`
-
-### 사용 시기
-- 헤더 알림 드롭다운
-- 알림 패널
-- 시스템 이벤트 로그
-
-### 예시
-\`\`\`tsx
-<NotificationCenter
-  notifications={notifications}
-  onMarkAsRead={(id) => markAsRead(id)}
-  onMarkAllAsRead={() => markAllAsRead()}
-/>
 \`\`\`
         `,
       },
@@ -60,18 +47,28 @@ type Story = StoryObj<typeof NotificationCenter>;
 
 const sampleNotifications: NotificationItem[] = [
   {
+    id: 'c1',
+    type: 'critical',
+    message: 'Node "worker-03" became NotReady.',
+    time: '09:58',
+    project: 'default',
+    isRead: false,
+    isResolved: false,
+    detail: { code: 'NODE_NOT_READY', message: 'Kubelet stopped posting node status.' },
+  },
+  {
     id: '1',
     type: 'success',
     message: 'Instance "web-server-01" has been successfully created.',
-    time: '2 min ago',
+    time: '09:55',
     project: 'Production',
     isRead: false,
   },
   {
     id: '2',
-    type: 'error',
+    type: 'failed',
     message: 'Failed to connect to database server.',
-    time: '15 min ago',
+    time: '09:42',
     project: 'Backend',
     isRead: false,
     detail: {
@@ -82,42 +79,41 @@ const sampleNotifications: NotificationItem[] = [
   },
   {
     id: '3',
-    type: 'info',
+    type: 'success',
     message: 'Scheduled maintenance completed successfully.',
-    time: '1 hour ago',
+    time: '08:30',
     project: 'Storage',
     isRead: true,
   },
   {
     id: '4',
-    type: 'info',
-    message: 'Scheduled maintenance will occur at 2:00 AM UTC.',
-    time: '3 hours ago',
+    type: 'warning',
+    message: 'Certificate expires in 7 days.',
+    time: 'May 20',
     isRead: true,
   },
   {
     id: '5',
     type: 'success',
     message: 'Backup completed successfully.',
-    time: '5 hours ago',
+    time: 'May 20',
     project: 'Database',
     isRead: true,
   },
 ];
 
-// Default
 export const Default: Story = {
   render: () => (
     <NotificationCenter
       notifications={sampleNotifications}
       onMarkAsRead={(id) => console.log('Mark as read:', id)}
       onMarkAllAsRead={() => console.log('Mark all as read')}
+      onResolveCritical={(id) => console.log('Resolve critical:', id)}
       onNotificationClick={(n) => console.log('Clicked:', n)}
     />
   ),
 };
 
-// Interactive
 export const Interactive: Story = {
   render: function InteractiveStory() {
     const [notifications, setNotifications] = useState<NotificationItem[]>(sampleNotifications);
@@ -130,18 +126,24 @@ export const Interactive: Story = {
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     };
 
+    const handleResolve = (id: string) => {
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isResolved: true, isRead: true } : n))
+      );
+    };
+
     return (
       <NotificationCenter
         notifications={notifications}
         onMarkAsRead={handleMarkAsRead}
         onMarkAllAsRead={handleMarkAllAsRead}
+        onResolveCritical={handleResolve}
         onNotificationClick={(n) => console.log('Clicked:', n)}
       />
     );
   },
 };
 
-// Empty State
 export const EmptyState: Story = {
   render: () => (
     <NotificationCenter
@@ -152,27 +154,25 @@ export const EmptyState: Story = {
   ),
 };
 
-// All Read
 export const AllRead: Story = {
   render: () => (
     <NotificationCenter
-      notifications={sampleNotifications.map((n) => ({ ...n, isRead: true }))}
+      notifications={sampleNotifications.map((n) => ({ ...n, isRead: true, isResolved: true }))}
       onMarkAsRead={(id) => console.log('Mark as read:', id)}
       onMarkAllAsRead={() => console.log('Mark all as read')}
     />
   ),
 };
 
-// Only Errors
-export const OnlyErrors: Story = {
+export const OnlyFailures: Story = {
   render: () => (
     <NotificationCenter
       notifications={[
         {
           id: '1',
-          type: 'error',
+          type: 'failed',
           message: 'Database connection failed',
-          time: '5 min ago',
+          time: '09:52',
           project: 'Backend',
           isRead: false,
           detail: {
@@ -182,21 +182,18 @@ export const OnlyErrors: Story = {
         },
         {
           id: '2',
-          type: 'error',
+          type: 'failed',
           message: 'API rate limit exceeded',
-          time: '10 min ago',
+          time: '09:47',
           project: 'API Gateway',
           isRead: false,
-          detail: {
-            code: 429,
-            message: 'Too many requests. Please try again later.',
-          },
+          detail: { code: 429, message: 'Too many requests. Please try again later.' },
         },
         {
           id: '3',
-          type: 'error',
+          type: 'failed',
           message: 'SSL certificate expired',
-          time: '1 hour ago',
+          time: '08:30',
           project: 'Security',
           isRead: true,
         },
@@ -207,57 +204,81 @@ export const OnlyErrors: Story = {
   ),
 };
 
-// With Details
-export const WithDetails: Story = {
-  render: () => (
-    <NotificationCenter
-      notifications={[
-        {
-          id: '1',
-          type: 'error',
-          message: 'Deployment failed for service "api-gateway"',
-          time: '2 min ago',
-          project: 'Production',
-          isRead: false,
-          detail: {
-            code: 'DEPLOY_FAILED',
-            message:
-              'Container failed health check after 3 attempts. Last error: Connection timeout to upstream service.',
-          },
-        },
-        {
-          id: '2',
-          type: 'info',
-          message: 'Auto-scaling triggered for service "web-frontend"',
-          time: '15 min ago',
-          project: 'Monitoring',
-          isRead: false,
-          detail: {
-            code: 'SCALE_UP',
-            message: 'Scaled from 2 to 4 replicas due to high CPU utilization (85%).',
-          },
-        },
-      ]}
-      onMarkAsRead={(id) => console.log('Mark as read:', id)}
-      onMarkAllAsRead={() => console.log('Mark all as read')}
-    />
-  ),
+export const WithCriticalAlerts: Story = {
+  render: function CriticalAlertStory() {
+    const [notifications, setNotifications] = useState<NotificationItem[]>([
+      {
+        id: 'c1',
+        type: 'critical',
+        message: 'Node "worker-03" became NotReady.',
+        time: '09:58',
+        project: 'default',
+        isRead: false,
+        isResolved: false,
+        detail: { code: 'NODE_NOT_READY', message: 'Kubelet stopped posting node status.' },
+      },
+      {
+        id: 'c2',
+        type: 'critical',
+        message: 'Pod "api-gateway" crash loop detected.',
+        time: '09:55',
+        project: 'prod',
+        isRead: false,
+        isResolved: false,
+        detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
+      },
+      {
+        id: '1',
+        type: 'success',
+        message: 'Deployment completed.',
+        time: '09:48',
+        isRead: true,
+      },
+      {
+        id: '2',
+        type: 'failed',
+        message: 'Volume creation failed.',
+        time: '09:38',
+        project: 'Backend',
+        isRead: false,
+        detail: { code: 400, message: 'Insufficient storage quota.' },
+      },
+    ]);
+
+    return (
+      <NotificationCenter
+        notifications={notifications}
+        onMarkAsRead={(id) =>
+          setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)))
+        }
+        onMarkAllAsRead={() =>
+          setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))
+        }
+        onResolveCritical={(id) =>
+          setNotifications((prev) =>
+            prev.map((n) => (n.id === id ? { ...n, isResolved: true, isRead: true } : n))
+          )
+        }
+      />
+    );
+  },
 };
 
-// Many Notifications
 export const ManyNotifications: Story = {
   render: () => (
     <NotificationCenter
       notifications={Array.from({ length: 20 }, (_, i) => ({
         id: String(i + 1),
-        type: (['success', 'error', 'info'] as const)[i % 3],
+        type: (['success', 'failed', 'warning', 'critical'] as const)[i % 4],
         message: `Notification message ${i + 1}`,
-        time: `${i + 1} min ago`,
+        time: `${String(9 - Math.floor(i / 6)).padStart(2, '0')}:${String(59 - ((i * 3) % 60)).padStart(2, '0')}`,
         project: `Project ${(i % 3) + 1}`,
         isRead: i > 5,
+        isResolved: i > 3,
       }))}
       onMarkAsRead={(id) => console.log('Mark as read:', id)}
       onMarkAllAsRead={() => console.log('Mark all as read')}
+      onResolveCritical={(id) => console.log('Resolve:', id)}
     />
   ),
 };

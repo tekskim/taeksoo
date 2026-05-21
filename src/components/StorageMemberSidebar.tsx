@@ -11,9 +11,14 @@ import { AppSwitcher } from './AppSwitcher';
 interface StorageMemberSidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  forceVisible?: boolean;
 }
 
-export function StorageMemberSidebar({ isOpen = true, onToggle }: StorageMemberSidebarProps) {
+export function StorageMemberSidebar({
+  isOpen = true,
+  onToggle,
+  forceVisible,
+}: StorageMemberSidebarProps) {
   const location = useLocation();
 
   const isActive = (href: string) => {
@@ -26,7 +31,7 @@ export function StorageMemberSidebar({ isOpen = true, onToggle }: StorageMemberS
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">

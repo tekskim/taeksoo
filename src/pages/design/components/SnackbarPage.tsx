@@ -1,25 +1,29 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { VStack } from '@/design-system';
-import {
-  IconInfoCircle,
-  IconAlertTriangle,
-  IconX,
-  IconChevronUp,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { VStack, Badge } from '@/design-system';
+import type { BadgeTheme } from '@/design-system/components/Badge/Badge';
+import { IconX, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 import AppIconCompute from '@/assets/appIcon/compute.png';
+import AppIconAlerts from '@/assets/appIcon/alerts.png';
+
+type SnackbarType = 'critical' | 'warning' | 'success' | 'failed';
+
+const snackbarTypeBadgeMap: Record<SnackbarType, { label: string; theme: BadgeTheme }> = {
+  critical: { label: 'Critical', theme: 'red' },
+  warning: { label: 'Warning', theme: 'yellow' },
+  success: { label: 'Success', theme: 'green' },
+  failed: { label: 'Failed', theme: 'red' },
+};
 
 /* ----------------------------------------
    Static Card Component
    ---------------------------------------- */
 
-function StaticNotificationCard({
+function StaticSnackbarCard({
   appIcon,
   message,
-  statusIcon,
-  statusInline,
+  type = 'success',
   time,
   partition,
   detail,
@@ -27,37 +31,48 @@ function StaticNotificationCard({
 }: {
   appIcon?: string;
   message: string;
-  statusIcon?: React.ReactNode;
-  statusInline?: boolean;
+  type?: SnackbarType;
   time: string;
   partition?: string;
   detail?: { code?: string | number; message?: string };
   isExpanded?: boolean;
 }) {
   const hasDetail = detail && (detail.code || detail.message);
+  const isAlert = type === 'critical' || type === 'warning';
+  const badgeInfo = snackbarTypeBadgeMap[type];
+
+  const cardBg = isAlert
+    ? type === 'critical'
+      ? 'bg-[var(--inline-message-error-bg)]'
+      : 'bg-[var(--color-state-warning-bg)]'
+    : 'border border-[var(--color-border-default)] bg-[var(--color-surface-default)]';
 
   return (
-    <div className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col gap-3 py-3">
+    <div className={`relative rounded-[var(--radius-lg)] ${cardBg} flex flex-col py-3`}>
       <div className="flex items-start justify-between px-3">
-        <div className="flex gap-2 items-start w-[256px]">
+        <div className="flex gap-2 items-start w-[256px] min-w-0">
           {appIcon && <img src={appIcon} alt="" className="size-5 shrink-0 object-contain" />}
-          <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
-            <div className="flex flex-col">
-              {statusInline ? (
-                <div className="flex items-center gap-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">{message}</span>
-                  {statusIcon}
-                </div>
-              ) : (
-                <>
-                  <span className="text-body-md text-[var(--color-text-default)]">{message}</span>
-                  {statusIcon && <div className="flex items-center gap-1">{statusIcon}</div>}
-                </>
+          <div className="flex flex-col gap-1.5 flex-1 min-w-[1px]">
+            <span className="text-label-md text-[var(--color-text-default)]">{message}</span>
+
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Badge theme={badgeInfo.theme} size="sm" className="shrink-0">
+                {badgeInfo.label}
+              </Badge>
+              {partition && (
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="overflow-hidden min-w-0"
+                  title={partition}
+                >
+                  <span className="block truncate">{partition}</span>
+                </Badge>
               )}
             </div>
 
             {hasDetail && (
-              <div className="flex flex-col gap-2 rounded-[var(--radius-sm)]">
+              <div className="flex flex-col gap-2 rounded-[var(--radius-sm)] mt-1">
                 <button type="button" className="group flex items-center gap-1">
                   <span className="text-body-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] whitespace-nowrap">
                     View detail
@@ -79,23 +94,19 @@ function StaticNotificationCard({
 
                 {isExpanded && (
                   <>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     <div className="flex flex-col gap-1 text-body-sm text-[var(--color-text-muted)]">
                       {detail.code !== undefined && <p>code: {detail.code}</p>}
                       {detail.message && <p>{detail.message}</p>}
                     </div>
-                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                   </>
                 )}
               </div>
             )}
-
-            {partition && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">{partition}</span>
-            )}
           </div>
         </div>
         <div className="flex flex-col items-end justify-end self-stretch shrink-0">
-          <span className="text-body-xs text-[var(--color-text-subtle)] whitespace-nowrap">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {time}
           </span>
         </div>
@@ -103,7 +114,7 @@ function StaticNotificationCard({
 
       <button
         type="button"
-        className="absolute top-[7px] right-[7px] size-4 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors"
+        className="absolute top-[7px] right-[7px] size-4 flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
       >
         <IconX size={12} stroke={1.5} />
       </button>
@@ -117,77 +128,112 @@ function StaticNotificationCard({
 
 function NotificationCardStates() {
   return (
-    <VStack gap={3}>
-      <span className="text-label-md text-[var(--color-text-default)]">
-        Notification card states
-      </span>
-      <p className="text-body-sm text-[var(--color-text-subtle)]">
-        Snackbar 카드의 3가지 상태: 기본, View detail 접힘, View detail 펼침.
-      </p>
-      <VStack gap={6} className="max-w-[320px]">
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Simple</span>
-          <StaticNotificationCard
-            appIcon={AppIconCompute}
-            message={`Volume "backup-01" snapshot `}
-            statusIcon={
-              <>
-                <span className="text-body-md text-[var(--color-text-default)]">infomation</span>
-                <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
-              </>
-            }
-            time="10:33"
-            partition="ultra-resilient-cloud-native-infrastructure-management-platform"
-          />
+    <VStack gap={8}>
+      <VStack gap={3}>
+        <span className="text-label-md text-[var(--color-text-default)]">Message types</span>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
+          Alert App: Critical, Warning / Other App: Success, Failed
+        </p>
+        <VStack gap={4} className="max-w-[320px]">
+          <VStack gap={2}>
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              Critical (Alert App)
+            </span>
+            <StaticSnackbarCard
+              appIcon={AppIconAlerts}
+              message={`Pod "api-gateway" crash loop detected.`}
+              type="critical"
+              time="09:55"
+              partition="default"
+              detail={{
+                code: 'ERR_CRASH_LOOP',
+                message: 'Container exited with code 137 (OOMKilled).',
+              }}
+            />
+          </VStack>
+          <VStack gap={2}>
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              Warning (Alert App)
+            </span>
+            <StaticSnackbarCard
+              appIcon={AppIconAlerts}
+              message={`CPU usage exceeded 90% on node "worker-05".`}
+              type="warning"
+              time="07:15"
+            />
+          </VStack>
+          <VStack gap={2}>
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              Success (Other App)
+            </span>
+            <StaticSnackbarCard
+              appIcon={AppIconCompute}
+              message={`Instance "web-01" created.`}
+              type="success"
+              time="10:23"
+              partition="proj-1"
+            />
+          </VStack>
+          <VStack gap={2}>
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              Failed (Other App)
+            </span>
+            <StaticSnackbarCard
+              appIcon={AppIconCompute}
+              message={`Volume "data-vol-02" create failed.`}
+              type="failed"
+              time="09:30"
+              partition="proj-2"
+              detail={{
+                code: 400,
+                message:
+                  "Flavor's disk is smaller than the minimum size specified in image metadata.",
+              }}
+            />
+          </VStack>
         </VStack>
+      </VStack>
 
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            With detail (collapsed)
-          </span>
-          <StaticNotificationCard
-            appIcon={AppIconCompute}
-            message={`Volume "backup-01" create failed.`}
-            statusIcon={
-              <IconAlertTriangle
-                size={14}
-                stroke={1.5}
-                className="text-[var(--color-state-danger)]"
-              />
-            }
-            statusInline
-            time="10:33"
-            partition="ultra-resilient-cloud-native-infrastructure-management-platform"
-            detail={{
-              code: 200,
-              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
-            }}
-          />
-        </VStack>
+      <VStack gap={3}>
+        <span className="text-label-md text-[var(--color-text-default)]">Card states</span>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">View detail 접힘/펼침 상태.</p>
+        <VStack gap={6} className="max-w-[320px]">
+          <VStack gap={2}>
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              With detail (collapsed)
+            </span>
+            <StaticSnackbarCard
+              appIcon={AppIconCompute}
+              message={`Volume "backup-01" create failed.`}
+              type="failed"
+              time="10:33"
+              partition="proj-2"
+              detail={{
+                code: 400,
+                message:
+                  "Flavor's disk is smaller than the minimum size specified in image metadata.",
+              }}
+            />
+          </VStack>
 
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            With detail (expanded)
-          </span>
-          <StaticNotificationCard
-            appIcon={AppIconCompute}
-            message={`Volume "backup-01" create failed.`}
-            statusIcon={
-              <IconAlertTriangle
-                size={14}
-                stroke={1.5}
-                className="text-[var(--color-state-danger)]"
-              />
-            }
-            statusInline
-            time="10:33"
-            partition="ultra-resilient-cloud-native-infrastructure-management-platform"
-            detail={{
-              code: 200,
-              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
-            }}
-            isExpanded
-          />
+          <VStack gap={2}>
+            <span className="text-label-sm text-[var(--color-text-subtle)]">
+              With detail (expanded)
+            </span>
+            <StaticSnackbarCard
+              appIcon={AppIconCompute}
+              message={`Volume "backup-01" create failed.`}
+              type="failed"
+              time="10:33"
+              partition="proj-2"
+              detail={{
+                code: 400,
+                message:
+                  "Flavor's disk is smaller than the minimum size specified in image metadata.",
+              }}
+              isExpanded
+            />
+          </VStack>
         </VStack>
       </VStack>
     </VStack>
@@ -220,7 +266,7 @@ Snackbar는 단순한 일시적 피드백이 아니라, **알림센터에 기록
 
 | 요소 | 설명 |
 | --- | --- |
-| Type Icon | 알림 유형에 맞는 아이콘 |
+| Status Badge | 알림 유형에 맞는 Badge |
 | Message Content | 리소스와 액션 결과를 설명하는 본문 |
 | Partition Info (optional) | 테넌트, 클러스터, 네임스페이스 등 상위 분류 정보 |
 | Timestamp | 메시지 발생 시각 |
@@ -229,9 +275,17 @@ Snackbar는 단순한 일시적 피드백이 아니라, **알림센터에 기록
 | Close Button | 스낵바 UI 닫기 |
 | Click Area | 리소스 상세/리스트 화면 이동 영역 |
 
-### Type Icon
-- 요청 / 성공 / 실패 유형에 따라 아이콘을 다르게 사용한다.
-- 텍스트만으로 유형을 전달하지 않고 시각적 구분을 함께 제공한다.
+### Status Badge
+- 메시지 유형에 따라 Badge를 다르게 사용한다.
+
+| 앱 유형 | 메시지 유형 | Badge theme | 카드 배경색 |
+| --- | --- | --- | --- |
+| Alert App | Critical | red | inline-message-error-bg |
+| Alert App | Warning | yellow | color-state-warning-bg |
+| 그 외 App | Success | green | 기본 (흰색) |
+| 그 외 App | Failed | red | 기본 (흰색) |
+
+- 텍스트만으로 유형을 전달하지 않고 Badge와 배경색으로 시각적 구분을 함께 제공한다.
 
 ### Message Content
 - 어떤 리소스에 대해 어떤 액션이 어떤 결과가 되었는지를 **단일 문장**으로 전달한다.
@@ -253,7 +307,7 @@ Snackbar는 단순한 일시적 피드백이 아니라, **알림센터에 기록
 - 앱 내부에서 노출되는 경우에는 표시하지 않는다.
 
 ### View Details Button
-- **Failure 유형에서만 제공한다.**
+- **Failed 또는 Critical 유형에서만 제공한다.**
 - 클릭 시 상세 정보 영역을 확장/축소한다.
 - 확장 상태에서는 Snackbar가 **Pinned 상태**이다.
 
@@ -316,20 +370,28 @@ Snackbar의 동시 노출 개수는 **알림 유형에 따라 다르게 적용�
 
 | 유형 | 동시 노출 규칙 |
 | --- | --- |
-| Auto-dismiss Snackbar | 1개 |
+| Auto-dismiss Snackbar | 최대 3개 |
 | Persistent Snackbar | 최대 3개 |
 
-- 자동 종료형은 동시에 1개만 표시한다.
+- 자동 종료형은 최대 3개까지 동시에 표시한다.
 - 고정형 Snackbar는 여러 개 표시 가능하다.
-- 최대 개수 초과 시 대기열에 저장한다.
-- Snackbar는 **최신 알림이 위에 표시한다.**
+- 최대 개수 초과 시 **FIFO(First In, First Out)** 방식으로 가장 오래된 스낵바를 자동 제거하고 새 스낵바를 표시한다.
+- Snackbar는 **최신 알림이 아래에 표시한다.**
 
 ### 3) 표시 시간 규칙
 
-- **Auto-dismiss Snackbar(자동 종료형) 스낵바는 메시지 유형에 따라 종료 시간이 달라질 수 있다.**
-  - 노출 시간 범위: 1~3초
+- **Auto-dismiss Snackbar(자동 종료형)의 기본 표시 시간은 3초이다.**
+- 여러 개가 동시에 쌓인 경우, 순차적으로 자연스럽게 사라지도록 **400ms 간격의 stagger**가 자동 적용된다.
+  - 1번째: 3000ms, 2번째: 3400ms, 3번째: 3800ms
 - Hover 시 자동 종료가 일시정지된다.
 - Hover 해제 시 남은 시간이 다시 진행된다.
+
+### 3-1) Dismiss 애니메이션
+
+스낵바가 사라질 때 **2단계 애니메이션**이 적용된다.
+
+1. **슬라이드 아웃** (300ms): 카드가 우측으로 밀리며 페이드아웃
+2. **높이 축소** (200ms): 빈 공간이 부드럽게 접히며 나머지 스낵바가 자연스럽게 위로 이동
 
 ### 4) Persistent Snackbar
 

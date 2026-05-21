@@ -104,6 +104,8 @@ export const computeRoutes = (
     <Route path="/compute/firewalls/:id" element={<FirewallDetailPage />} />
     <Route path="/compute/firewall-policies/:id" element={<FirewallPolicyDetailPage />} />
     <Route path="/compute/firewall-rules/:id" element={<FirewallRuleDetailPage />} />
+    <Route path="/compute/firewall/create" element={<CreateFirewallRulePage />} />
+    <Route path="/compute/firewall/create-policy" element={<CreateFirewallRulePage />} />
     <Route path="/compute/firewall/create-rule" element={<CreateFirewallRulePage />} />
     <Route path="/compute/topology" element={<TopologyD3Page />} />
     <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
