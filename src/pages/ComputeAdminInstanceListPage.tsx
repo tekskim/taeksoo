@@ -47,7 +47,7 @@ import {
   IconPower,
   IconExclamationCircle,
 } from '@tabler/icons-react';
-import containerIcon from '@/assets/appIcon/container.png';
+import containerIcon from '@/assets/appIcon/container.webp';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   CreateInstanceSnapshotDrawer,

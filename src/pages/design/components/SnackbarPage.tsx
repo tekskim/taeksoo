@@ -4,8 +4,8 @@ import { NotionRenderer } from '../_shared/NotionRenderer';
 import { VStack, Badge } from '@/design-system';
 import type { BadgeTheme } from '@/design-system/components/Badge/Badge';
 import { IconX, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
-import AppIconCompute from '@/assets/appIcon/compute.png';
-import AppIconAlerts from '@/assets/appIcon/alerts.png';
+import AppIconCompute from '@/assets/appIcon/compute.webp';
+import AppIconAlerts from '@/assets/appIcon/alerts.webp';
 
 type SnackbarType = 'critical' | 'warning' | 'success' | 'failed';
 

@@ -3,21 +3,21 @@ import { IconLayoutSidebar } from '@tabler/icons-react';
 import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 // App icons
-import ComputeIcon from '@/assets/appIcon/compute.png';
-import ComputeAdminIcon from '@/assets/appIcon/computeadmin.png';
-import ContainerIcon from '@/assets/appIcon/container.png';
-import CloudBuilderIcon from '@/assets/appIcon/cloudbuilder.png';
+import ComputeIcon from '@/assets/appIcon/compute.webp';
+import ComputeAdminIcon from '@/assets/appIcon/computeadmin.webp';
+import ContainerIcon from '@/assets/appIcon/container.webp';
+import CloudBuilderIcon from '@/assets/appIcon/cloudbuilder.webp';
 import AIPlatformIcon from '@/assets/appIcon/aiplatform.png';
-import AgentOpsIcon from '@/assets/appIcon/agentops.png';
-import ServeIcon from '@/assets/appIcon/metis-serve.png';
-import MLStudioIcon from '@/assets/appIcon/metis-ml-studio.png';
-import RunIcon from '@/assets/appIcon/metis-run.png';
-import FabricIcon from '@/assets/appIcon/metis-fabric.png';
-import StorageIcon from '@/assets/appIcon/storage.png';
-import StorageAdminIcon from '@/assets/appIcon/storageadmin.png';
-import IAMIcon from '@/assets/appIcon/iam.png';
-import SecurityIcon from '@/assets/appIcon/security.png';
-import SettingsIcon from '@/assets/appIcon/settings.png';
+import AgentOpsIcon from '@/assets/appIcon/agentops.webp';
+import ServeIcon from '@/assets/appIcon/metis-serve.webp';
+import MLStudioIcon from '@/assets/appIcon/metis-ml-studio.webp';
+import RunIcon from '@/assets/appIcon/metis-run.webp';
+import FabricIcon from '@/assets/appIcon/metis-fabric.webp';
+import StorageIcon from '@/assets/appIcon/storage.webp';
+import StorageAdminIcon from '@/assets/appIcon/storageadmin.webp';
+import IAMIcon from '@/assets/appIcon/iam.webp';
+import SecurityIcon from '@/assets/appIcon/security.webp';
+import SettingsIcon from '@/assets/appIcon/settings.webp';
 import AdminCenterIcon from '@/assets/appIcon/admincenter.png';
 
 /* ----------------------------------------

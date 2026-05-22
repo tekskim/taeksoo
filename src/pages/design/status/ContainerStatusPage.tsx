@@ -1,6 +1,6 @@
 import { Badge, VStack, HStack } from '@/design-system';
 import { Link, useLocation } from 'react-router-dom';
-import AppIconContainer from '@/assets/appIcon/container.png';
+import AppIconContainer from '@/assets/appIcon/container.webp';
 import { PrevNextNav } from '../_shared/PrevNextNav';
 import { pageLastUpdated } from '../_shared/navigationData';
 

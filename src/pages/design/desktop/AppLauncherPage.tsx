@@ -2,15 +2,15 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { VStack } from '@/design-system';
 
-import imgCompute from '@/assets/appIcon/compute.png';
-import imgStorage from '@/assets/appIcon/storage.png';
-import imgStorageAdmin from '@/assets/appIcon/storageadmin.png';
-import imgContainer from '@/assets/appIcon/container.png';
-import imgAgent from '@/assets/appIcon/agentops.png';
+import imgCompute from '@/assets/appIcon/compute.webp';
+import imgStorage from '@/assets/appIcon/storage.webp';
+import imgStorageAdmin from '@/assets/appIcon/storageadmin.webp';
+import imgContainer from '@/assets/appIcon/container.webp';
+import imgAgent from '@/assets/appIcon/agentops.webp';
 import imgAi from '@/assets/appIcon/aiplatform.png';
-import imgIam from '@/assets/appIcon/iam.png';
-import imgSettings from '@/assets/appIcon/settings.png';
-import imgCloud from '@/assets/appIcon/cloudbuilder.png';
+import imgIam from '@/assets/appIcon/iam.webp';
+import imgSettings from '@/assets/appIcon/settings.webp';
+import imgCloud from '@/assets/appIcon/cloudbuilder.webp';
 
 const mockApps = [
   { id: 'compute', name: 'Compute', icon: imgCompute },

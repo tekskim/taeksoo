@@ -31,7 +31,7 @@ import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
 import { IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
-import containerIcon from '@/assets/appIcon/container.png';
+import containerIcon from '@/assets/appIcon/container.webp';
 
 /* ----------------------------------------
    Types

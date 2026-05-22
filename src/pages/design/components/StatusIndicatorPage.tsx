@@ -5,12 +5,12 @@ import { Label } from '../../design-system-sections/HelperComponents';
 import { Badge, HStack, StatusIndicator, VStack } from '@/design-system';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import AppIconCompute from '@/assets/appIcon/compute.png';
-import AppIconComputeAdmin from '@/assets/appIcon/computeadmin.png';
-import AppIconContainer from '@/assets/appIcon/container.png';
-import AppIconStorage from '@/assets/appIcon/storage.png';
-import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.png';
-import AppIconIAM from '@/assets/appIcon/iam.png';
+import AppIconCompute from '@/assets/appIcon/compute.webp';
+import AppIconComputeAdmin from '@/assets/appIcon/computeadmin.webp';
+import AppIconContainer from '@/assets/appIcon/container.webp';
+import AppIconStorage from '@/assets/appIcon/storage.webp';
+import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.webp';
+import AppIconIAM from '@/assets/appIcon/iam.webp';
 
 const APP_STATUS_LINKS = [
   { label: 'Compute', icon: AppIconCompute, path: '/design/status/compute' },

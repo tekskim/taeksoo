@@ -32,11 +32,11 @@ import {
   InfoBox,
   useSnackbar,
 } from '@/design-system';
-import AppIconCompute from '@/assets/appIcon/compute.png';
-import AppIconIAM from '@/assets/appIcon/iam.png';
-import AppIconContainer from '@/assets/appIcon/container.png';
-import AppIconStorage from '@/assets/appIcon/storage.png';
-import AppIconAlerts from '@/assets/appIcon/alerts.png';
+import AppIconCompute from '@/assets/appIcon/compute.webp';
+import AppIconIAM from '@/assets/appIcon/iam.webp';
+import AppIconContainer from '@/assets/appIcon/container.webp';
+import AppIconStorage from '@/assets/appIcon/storage.webp';
+import AppIconAlerts from '@/assets/appIcon/alerts.webp';
 import { motion, Reorder, AnimatePresence } from 'framer-motion';
 import {
   MemoryRouter,
@@ -72,23 +72,23 @@ import SettingsNotificationsPage from './SettingsNotificationsPage';
 import SettingsInformationPage from './SettingsInformationPage';
 
 // App Icon Images
-import imgIam from '@/assets/appIcon/iam.png';
-import imgCompute from '@/assets/appIcon/compute.png';
-import imgStorage from '@/assets/appIcon/storage.png';
-import imgContainer from '@/assets/appIcon/container.png';
+import imgIam from '@/assets/appIcon/iam.webp';
+import imgCompute from '@/assets/appIcon/compute.webp';
+import imgStorage from '@/assets/appIcon/storage.webp';
+import imgContainer from '@/assets/appIcon/container.webp';
 import imgAi from '@/assets/appIcon/aiplatform.png';
-import imgAgent from '@/assets/appIcon/agentops.png';
-import imgSettings from '@/assets/appIcon/settings.png';
-import imgStorageAdmin from '@/assets/appIcon/storageadmin.png';
-import imgComputeAdmin from '@/assets/appIcon/computeadmin.png';
-import imgCloud from '@/assets/appIcon/cloudbuilder.png';
+import imgAgent from '@/assets/appIcon/agentops.webp';
+import imgSettings from '@/assets/appIcon/settings.webp';
+import imgStorageAdmin from '@/assets/appIcon/storageadmin.webp';
+import imgComputeAdmin from '@/assets/appIcon/computeadmin.webp';
+import imgCloud from '@/assets/appIcon/cloudbuilder.webp';
 import imgAdminCenter from '@/assets/appIcon/admincenter.png';
 import imgAIPlatformAdmin from '@/assets/appIcon/aiplatformadmin.png';
 import { ThakiLogoAnimated } from '@/components/ThakiLogoAnimated';
 
 // App Icons
-import appIconAIChat from '@/assets/appIcon/chat.png';
-import appIconAIChatDark from '@/assets/appIcon/chat-dark.png';
+import appIconAIChat from '@/assets/appIcon/chat.webp';
+import appIconAIChatDark from '@/assets/appIcon/chat-dark.webp';
 
 /* ----------------------------------------
    Desktop Icon Grid System
