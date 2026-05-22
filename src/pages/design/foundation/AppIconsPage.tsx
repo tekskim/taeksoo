@@ -3,6 +3,7 @@ import { IconDownload } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 import { PrevNextNav } from '../_shared/PrevNextNav';
 import { pageLastUpdated } from '../_shared/navigationData';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 // Signium (Foundation)
 import AppIconAlerts from '@/assets/appIcon/alerts.png';
@@ -13,6 +14,7 @@ import AppIconLogs from '@/assets/appIcon/logs.png';
 import AppIconSecurity from '@/assets/appIcon/security.png';
 import AppIconSettings from '@/assets/appIcon/settings.png';
 import AppIconChat from '@/assets/appIcon/chat.png';
+import AppIconChatDark from '@/assets/appIcon/chat-dark.png';
 
 // Aegis
 import AppIconAegisContainer from '@/assets/appIcon/container.png';
@@ -33,12 +35,16 @@ import AppIconMetisRunAdmin from '@/assets/appIcon/metis-run-admin.png';
 import AppIconMetisServe from '@/assets/appIcon/metis-serve.png';
 import AppIconMetisServeAdmin from '@/assets/appIcon/metis-serve-admin.png';
 import AppIconMetisFabric from '@/assets/appIcon/metis-fabric.png';
+import AppIconMetisBuilder from '@/assets/appIcon/metis-builder.png';
 
 // Praxis
 import AppIconPraxisAgentStudio from '@/assets/appIcon/agentops.png';
+import AppIconPraxisBuilder from '@/assets/appIcon/praxis-builder.png';
 
 interface AppIcon {
   src?: string;
+  darkSrc?: string;
+  file?: string;
   name: string;
   composite?: boolean;
 }
@@ -52,50 +58,61 @@ const ICON_SECTIONS: AppIconSection[] = [
   {
     title: 'Signium (Foundation)',
     icons: [
-      { src: AppIconAlerts, name: 'Alerts' },
-      { src: AppIconAudit, name: 'Audit' },
-      { src: AppIconIAM, name: 'IAM' },
-      { src: AppIconKMS, name: 'KMS' },
-      { src: AppIconLogs, name: 'Logs' },
-      { src: AppIconSecurity, name: 'Security' },
-      { src: AppIconSettings, name: 'Settings' },
+      { src: AppIconAlerts, file: 'alerts.png', name: 'Alerts' },
+      { src: AppIconAudit, file: 'audit.png', name: 'Audit' },
+      { src: AppIconIAM, file: 'iam.png', name: 'IAM' },
+      { src: AppIconKMS, file: 'kms.png', name: 'KMS' },
+      { src: AppIconLogs, file: 'logs.png', name: 'Logs' },
+      { src: AppIconSecurity, file: 'security.png', name: 'Security' },
+      { src: AppIconSettings, file: 'settings.png', name: 'Settings' },
       { name: 'Admin Center', composite: true },
-      { src: AppIconChat, name: 'Thaki Cloud Assistant' },
+      { src: AppIconChat, file: 'chat.png', name: 'Thaki Cloud Assistant' },
+      { src: AppIconChatDark, file: 'chat-dark.png', name: 'Thaki Cloud Assistant (Dark)' },
     ],
   },
   {
     title: 'Aegis',
     icons: [
-      { src: AppIconAegisContainer, name: 'Aegis Container' },
-      { src: AppIconAegisCompute, name: 'Aegis Compute' },
-      { src: AppIconAegisComputeAdmin, name: 'Aegis Compute' },
-      { src: AppIconAegisStorage, name: 'Aegis Storage' },
-      { src: AppIconAegisStorageAdmin, name: 'Aegis Storage' },
-      { src: AppIconAegisBuilder, name: 'Aegis Builder' },
+      { src: AppIconAegisContainer, file: 'container.png', name: 'Aegis Container' },
+      { src: AppIconAegisCompute, file: 'compute.png', name: 'Aegis Compute' },
+      { src: AppIconAegisComputeAdmin, file: 'computeadmin.png', name: 'Aegis Compute Admin' },
+      { src: AppIconAegisStorage, file: 'storage.png', name: 'Aegis Storage' },
+      { src: AppIconAegisStorageAdmin, file: 'storageadmin.png', name: 'Aegis Storage Admin' },
+      { src: AppIconAegisBuilder, file: 'cloudbuilder.png', name: 'Aegis Builder' },
     ],
   },
   {
     title: 'Metis',
     icons: [
-      { src: AppIconMetisContainer, name: 'Metis Container' },
-      { src: AppIconMetisHub, name: 'Metis Hub' },
-      { src: AppIconMetisHubAdmin, name: 'Metis Hub' },
-      { src: AppIconMetisMLStudio, name: 'Metis ML Studio' },
-      { src: AppIconMetisMLStudioAdmin, name: 'Metis ML Studio' },
-      { src: AppIconMetisRun, name: 'Metis Run' },
-      { src: AppIconMetisRunAdmin, name: 'Metis Run' },
-      { src: AppIconMetisServe, name: 'Metis Serve' },
-      { src: AppIconMetisServeAdmin, name: 'Metis Serve' },
-      { src: AppIconMetisFabric, name: 'Metis Fabric' },
+      { src: AppIconMetisContainer, file: 'metis-container.png', name: 'Metis Container' },
+      { src: AppIconMetisHub, file: 'metis-hub.png', name: 'Metis Hub' },
+      { src: AppIconMetisHubAdmin, file: 'metis-hub-admin.png', name: 'Metis Hub Admin' },
+      { src: AppIconMetisMLStudio, file: 'metis-ml-studio.png', name: 'Metis ML Studio' },
+      {
+        src: AppIconMetisMLStudioAdmin,
+        file: 'metis-ml-studio-admin.png',
+        name: 'Metis ML Studio Admin',
+      },
+      { src: AppIconMetisRun, file: 'metis-run.png', name: 'Metis Run' },
+      { src: AppIconMetisRunAdmin, file: 'metis-run-admin.png', name: 'Metis Run Admin' },
+      { src: AppIconMetisServe, file: 'metis-serve.png', name: 'Metis Serve' },
+      { src: AppIconMetisServeAdmin, file: 'metis-serve-admin.png', name: 'Metis Serve Admin' },
+      { src: AppIconMetisFabric, file: 'metis-fabric.png', name: 'Metis Fabric' },
+      { src: AppIconMetisBuilder, file: 'metis-builder.png', name: 'Metis Builder' },
     ],
   },
   {
     title: 'Praxis',
-    icons: [{ src: AppIconPraxisAgentStudio, name: 'Praxis Agent Studio' }],
+    icons: [
+      { src: AppIconPraxisAgentStudio, file: 'agentops.png', name: 'Praxis Agent Studio' },
+      { src: AppIconPraxisBuilder, file: 'praxis-builder.png', name: 'Praxis Builder' },
+    ],
   },
 ];
 
-function IconCard({ src, name, composite }: AppIcon) {
+const BASE_PATH = import.meta.env.BASE_URL;
+
+function IconCard({ src, darkSrc, file, name, composite, isDark }: AppIcon & { isDark: boolean }) {
   if (composite) {
     return (
       <div className="flex flex-col items-center gap-2">
@@ -118,15 +135,17 @@ function IconCard({ src, name, composite }: AppIcon) {
     );
   }
 
-  const fileName = name.toLowerCase().replace(/\s+/g, '-') + '.png';
+  const resolvedSrc = isDark && darkSrc ? darkSrc : src;
+  const downloadName = name.toLowerCase().replace(/\s+/g, '-') + '.png';
+  const downloadHref = file ? `${BASE_PATH}appicons/${file}` : resolvedSrc;
 
   return (
     <div className="flex flex-col items-center gap-2 group">
       <div className="relative w-16 h-16 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex items-center justify-center overflow-hidden">
-        <img src={src} alt={name} className="w-16 h-16 object-contain" />
+        <img src={resolvedSrc} alt={name} className="w-16 h-16 object-contain" />
         <a
-          href={src}
-          download={fileName}
+          href={downloadHref}
+          download={downloadName}
           className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-150 rounded-xl"
           title={`Download ${name}`}
         >
@@ -140,6 +159,7 @@ function IconCard({ src, name, composite }: AppIcon) {
 
 export function AppIconsPage() {
   const location = useLocation();
+  const { isDark } = useDarkMode();
   const lastUpdated = pageLastUpdated[location.pathname];
 
   const formattedDate = lastUpdated
@@ -190,7 +210,7 @@ export function AppIconsPage() {
               <h3 className="text-heading-h5 text-[var(--color-text-default)]">{section.title}</h3>
               <div className="flex flex-wrap gap-6">
                 {section.icons.map((icon, index) => (
-                  <IconCard key={`${icon.name}-${index}`} {...icon} />
+                  <IconCard key={`${icon.name}-${index}`} {...icon} isDark={isDark} />
                 ))}
               </div>
             </VStack>
