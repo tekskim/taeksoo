@@ -1065,6 +1065,13 @@ const LAUNCHPAD = {
   MAX_COLS: 7,
 } as const;
 
+const ADMIN_APP_IDS: Set<AppId> = new Set([
+  'storage',
+  'storage-domain-admin',
+  'compute-admin',
+  'cloud-builder',
+]);
+
 interface LaunchpadPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -1119,6 +1126,30 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
     ? apps.filter(([, config]) => config.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : apps;
 
+  const generalApps = filteredApps.filter(([id]) => !ADMIN_APP_IDS.has(id));
+  const adminApps = filteredApps.filter(([id]) => ADMIN_APP_IDS.has(id));
+
+  const gridStyle = { gridTemplateColumns: `repeat(${cols}, ${LAUNCHPAD.CELL_W}px)` };
+
+  const renderAppButton = ([appId, config]: [
+    AppId,
+    { name: string; icon: string; initialPath: string },
+  ]) => (
+    <button
+      key={appId}
+      className="flex flex-col items-center gap-2.5 w-[100px] cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
+      onClick={() => {
+        onOpenApp(appId);
+        onClose();
+      }}
+    >
+      <img src={config.icon} alt={config.name} className="w-16 h-16 object-cover" />
+      <span className="text-label-md text-white text-center leading-tight whitespace-pre-line">
+        {config.name.replace(' - ', '\n')}
+      </span>
+    </button>
+  );
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -1166,29 +1197,24 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
                   {filteredApps.length === 0 ? (
                     <div className="text-body-md text-white/50 py-10">No apps found</div>
                   ) : (
-                    <div
-                      className="grid gap-6"
-                      style={{ gridTemplateColumns: `repeat(${cols}, ${LAUNCHPAD.CELL_W}px)` }}
-                    >
-                      {filteredApps.map(([appId, config]) => (
-                        <button
-                          key={appId}
-                          className="flex flex-col items-center gap-2.5 w-[100px] cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
-                          onClick={() => {
-                            onOpenApp(appId);
-                            onClose();
-                          }}
-                        >
-                          <img
-                            src={config.icon}
-                            alt={config.name}
-                            className="w-16 h-16 object-cover"
-                          />
-                          <span className="text-label-md text-white text-center leading-tight whitespace-pre-line">
-                            {config.name.replace(' - ', '\n')}
-                          </span>
-                        </button>
-                      ))}
+                    <div className="flex flex-col gap-8">
+                      {generalApps.length > 0 && (
+                        <div className="grid gap-6" style={gridStyle}>
+                          {generalApps.map(renderAppButton)}
+                        </div>
+                      )}
+
+                      {adminApps.length > 0 && (
+                        <div className="flex flex-col gap-6">
+                          <div className="flex flex-col gap-2">
+                            <span className="text-label-sm text-white/40">Admin center</span>
+                            <div className="h-px w-full bg-white/15" />
+                          </div>
+                          <div className="grid gap-6" style={gridStyle}>
+                            {adminApps.map(renderAppButton)}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
