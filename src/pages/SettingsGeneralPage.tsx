@@ -116,21 +116,6 @@ export default function SettingsGeneralPage() {
 
             <VStack gap={4}>
               <FormField
-                label="Time Zone"
-                description="Select your time zone. This affects timestamps globally."
-              >
-                <Select
-                  value={timezone}
-                  onChange={(val) => {
-                    setTimezone(val);
-                    success('Time zone updated successfully.');
-                  }}
-                  options={timezoneOptions}
-                  width="md"
-                  disabled={useLocationTimezone}
-                />
-              </FormField>
-              <FormField
                 label="Set current time zone"
                 helperText="Automatically set time zone based on your location"
                 spacing="loose"
@@ -155,6 +140,21 @@ export default function SettingsGeneralPage() {
                         : 'Location-based time zone disabled.'
                     );
                   }}
+                />
+              </FormField>
+              <FormField
+                label="Time Zone"
+                description="Select your time zone. This affects timestamps globally."
+              >
+                <Select
+                  value={timezone}
+                  onChange={(val) => {
+                    setTimezone(val);
+                    success('Time zone updated successfully.');
+                  }}
+                  options={timezoneOptions}
+                  width="md"
+                  disabled={useLocationTimezone}
                 />
               </FormField>
             </VStack>
