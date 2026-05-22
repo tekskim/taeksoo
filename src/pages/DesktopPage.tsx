@@ -88,6 +88,7 @@ import { ThakiLogoAnimated } from '@/components/ThakiLogoAnimated';
 
 // App Icons
 import appIconAIChat from '@/assets/appIcon/chat.png';
+import appIconAIChatDark from '@/assets/appIcon/chat-dark.png';
 
 /* ----------------------------------------
    Desktop Icon Grid System
@@ -881,7 +882,11 @@ function DesktopTopBar({
             title="AI Chatbot"
             aria-label="AI Chatbot"
           >
-            <img src={appIconAIChat} alt="AI Chatbot" className="w-8 h-8 object-contain" />
+            <img
+              src={isDark ? appIconAIChatDark : appIconAIChat}
+              alt="AI Chatbot"
+              className="w-8 h-8 object-contain"
+            />
           </button>
         </div>
       </div>
