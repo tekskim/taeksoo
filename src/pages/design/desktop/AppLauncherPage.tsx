@@ -215,6 +215,14 @@ function AppLauncherGuidelines() {
             <tr>
               <Td>6</Td>
               <Td>
+                <strong>반응형 그리드:</strong> 뷰포트 너비에 따라 열 수가 4~7열로 동적 조정된다.
+                콘텐츠가 넘칠 경우 오버레이 스크롤바로 세로 스크롤을 제공한다. 검색바는 항상 상단에
+                고정된다.
+              </Td>
+            </tr>
+            <tr>
+              <Td>7</Td>
+              <Td>
                 <strong>역할별 필터:</strong> 노출되는 앱 목록은{' '}
                 <strong>도메인 사용자(관리자)·시스템 관리자</strong>에 따라 달라질 수 있다.
               </Td>
@@ -256,7 +264,8 @@ function AppLauncherGuidelines() {
               <Td>3</Td>
               <Td>App grid</Td>
               <Td>
-                7열 그리드 (<code>grid-cols-7</code>), <code>gap-6</code> (24px), 중앙 정렬
+                반응형 CSS Grid (4~7열). 뷰포트 너비에 따라 동적 열 수 조정. <code>gap-6</code>{' '}
+                (24px), 수평 중앙 정렬.
               </Td>
             </tr>
             <tr>
@@ -319,6 +328,13 @@ function AppLauncherGuidelines() {
             <tr>
               <Td>ESC 키</Td>
               <Td>패널 닫기</Td>
+            </tr>
+            <tr>
+              <Td>브라우저 리사이즈</Td>
+              <Td>
+                <code>requestAnimationFrame</code> 기반으로 열 수 실시간 재계산.{' '}
+                <code>cols = clamp(maxFit, 4, 7)</code>.
+              </Td>
             </tr>
             <tr>
               <Td>패널 닫힘</Td>
@@ -391,6 +407,12 @@ function AppLauncherGuidelines() {
               </Td>
             </tr>
             <tr>
+              <Td>Search bar position</Td>
+              <Td>
+                상단 고정 (<code>shrink-0</code>). 하단 앱 그리드만 독립 스크롤.
+              </Td>
+            </tr>
+            <tr>
               <Td>Search bar background</Td>
               <Td>
                 <code>bg-white/10</code> → focus: <code>bg-white/15</code>
@@ -417,8 +439,26 @@ function AppLauncherGuidelines() {
               <Td>6001</Td>
             </tr>
             <tr>
+              <Td>Panel alignment</Td>
+              <Td>
+                상단 정렬 (<code>items-start justify-center</code>)
+              </Td>
+            </tr>
+            <tr>
+              <Td>Panel max height</Td>
+              <Td>
+                <code>max-h-[calc(100vh-80px)]</code> — 상하 40px 여유
+              </Td>
+            </tr>
+            <tr>
               <Td>Grid columns</Td>
-              <Td>7</Td>
+              <Td>
+                4~7열 (반응형). <code>gridTemplateColumns: repeat(cols, 100px)</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>Grid min/max cols</Td>
+              <Td>MIN_COLS: 4, MAX_COLS: 7</Td>
             </tr>
             <tr>
               <Td>Grid gap</Td>
@@ -429,7 +469,19 @@ function AppLauncherGuidelines() {
             <tr>
               <Td>Grid padding</Td>
               <Td>
-                40px (<code>p-10</code>)
+                40px (<code>pt-10 px-10</code>)
+              </Td>
+            </tr>
+            <tr>
+              <Td>Grid resize</Td>
+              <Td>
+                <code>requestAnimationFrame</code> 기반. 뷰포트 너비로 열 수 실시간 계산.
+              </Td>
+            </tr>
+            <tr>
+              <Td>Scrollbar</Td>
+              <Td>
+                <code>OverlayScrollbarsComponent</code>. autoHide: move, delay: 800ms.
               </Td>
             </tr>
             <tr>

@@ -174,8 +174,8 @@ y = PAD_TOP + row × CELL_H  →  76 + row × 120`}
         <SectionTitle>리사이즈 리플로우</SectionTitle>
         <Prose>
           <p>
-            브라우저 창 크기를 줄이면 일부 아이콘이 뷰포트 밖으로 벗어날 수 있습니다. 이를 방지하기
-            위해 <code>window.resize</code> 이벤트를 감지하여 실시간으로 아이콘을 재배치합니다.
+            브라우저 창 크기가 변경되면 아이콘을 자동으로 재배치합니다. <code>window.resize</code>{' '}
+            이벤트를 감지하여 실시간으로 전체 아이콘을 column-first 순서로 재정렬합니다.
           </p>
           <ul className="list-disc pl-5 space-y-2">
             <li>
@@ -183,16 +183,14 @@ y = PAD_TOP + row × CELL_H  →  76 + row × 120`}
               중에도 매 프레임 즉시 재배치됩니다 (debounce 없음).
             </li>
             <li>
-              <strong>범위 계산</strong>: <code>maxCols = floor((width - PAD_X) / CELL_W)</code>,
+              <strong>범위 계산</strong>: <code>maxCols = floor((width - PAD_X) / CELL_W)</code>,{' '}
               <code>maxRows = floor((height - PAD_TOP) / CELL_H)</code>
             </li>
             <li>
-              <strong>재배치 전략</strong>: 범위 내 아이콘은 위치를 유지하고, 범위 밖 아이콘만 빈
-              셀로 이동합니다. 빈 셀 탐색은 column-first (col 0→N, row 0→N) 순서입니다.
-            </li>
-            <li>
-              <strong>극단적 축소</strong>: 빈 셀이 부족할 경우 아이콘은 원래 위치를 유지합니다
-              (graceful degradation).
+              <strong>자동 정렬</strong>: 창이 줄어들 때뿐만 아니라 커질 때도 전체 아이콘을
+              column-first 순서로 재배치합니다. 초기 배치와 동일한{' '}
+              <code>col = floor(i / maxRows)</code>, <code>row = i % maxRows</code> 공식을
+              사용합니다.
             </li>
           </ul>
         </Prose>
@@ -256,6 +254,131 @@ y = PAD_TOP + row × CELL_H  →  76 + row × 120`}
 
       <div className="w-full h-px bg-[var(--color-border-default)]" />
 
+      {/* 8. 앱 런처 (Launchpad) 반응형 그리드 */}
+      <VStack gap={4}>
+        <SectionTitle>앱 런처 (Launchpad) 반응형 그리드</SectionTitle>
+        <Prose>
+          <p>
+            앱 런처(Launchpad)는 CSS Grid 기반의 반응형 레이아웃을 사용합니다. 뷰포트 너비에 따라 열
+            수가 동적으로 조정되며, 콘텐츠가 넘칠 때 세로 스크롤이 가능합니다.
+          </p>
+        </Prose>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-[length:var(--font-size-12)]">
+            <thead>
+              <tr className="border-b border-[var(--color-border-default)]">
+                <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  상수
+                </th>
+                <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  값
+                </th>
+                <th className="text-left py-2.5 font-medium text-[var(--color-text-subtle)]">
+                  설명
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {(
+                [
+                  ['CELL_W', '100px', '앱 버튼 너비 (w-[100px])'],
+                  ['GAP', '24px', '그리드 갭 (gap-6)'],
+                  ['PAD_X', '40px', '좌우 패딩 (p-10)'],
+                  ['MIN_COLS', '4', '최소 열 수'],
+                  ['MAX_COLS', '7', '최대 열 수'],
+                ] as const
+              ).map(([name, value, desc], i) => (
+                <tr key={i} className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2.5 pr-4 font-mono text-[var(--color-text-default)]">{name}</td>
+                  <td className="py-2.5 pr-4 font-mono text-[var(--color-action-primary)]">
+                    {value}
+                  </td>
+                  <td className="py-2.5 text-[var(--color-text-muted)]">{desc}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <Prose>
+          <p>
+            <strong>열 수 계산 공식:</strong>
+          </p>
+        </Prose>
+        <pre className="text-[length:var(--font-size-11)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] text-[var(--color-text-muted)] overflow-x-auto">
+          {`available = window.innerWidth - PAD_X × 2
+maxFit = floor((available + GAP) / (CELL_W + GAP))
+cols = clamp(maxFit, MIN_COLS, MAX_COLS)`}
+        </pre>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-[length:var(--font-size-12)]">
+            <thead>
+              <tr className="border-b border-[var(--color-border-default)]">
+                <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  뷰포트 너비
+                </th>
+                <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  가용 너비
+                </th>
+                <th className="text-left py-2.5 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  적용 열 수
+                </th>
+                <th className="text-left py-2.5 font-medium text-[var(--color-text-subtle)]">
+                  비고
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {(
+                [
+                  ['1440px+', '1360px', '7', 'MAX'],
+                  ['1024px', '944px', '7', ''],
+                  ['924px', '844px', '6', ''],
+                  ['800px', '720px', '5', ''],
+                  ['600px', '520px', '4', 'MIN'],
+                  ['500px 이하', '420px', '4', 'MIN, 가로 스크롤'],
+                ] as const
+              ).map(([vp, avail, cols, note], i) => (
+                <tr key={i} className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2.5 pr-4 font-mono text-[var(--color-text-default)]">{vp}</td>
+                  <td className="py-2.5 pr-4 font-mono text-[var(--color-text-muted)]">{avail}</td>
+                  <td className="py-2.5 pr-4 font-mono text-[var(--color-action-primary)]">
+                    {cols}
+                  </td>
+                  <td className="py-2.5 text-[var(--color-text-subtle)]">{note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <Prose>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              <strong>반응형 열 수</strong>: <code>requestAnimationFrame</code> 기반 resize 리스너로
+              실시간 열 수 조정. <code>gridTemplateColumns: repeat(cols, 100px)</code>
+              인라인 스타일로 적용.
+            </li>
+            <li>
+              <strong>레이아웃 분리</strong>: 검색바는 상단 고정(<code>shrink-0</code>), 앱 그리드
+              영역만 독립적으로 스크롤. <code>max-h-[calc(100vh-80px)]</code>로 뷰포트 높이 제한.
+            </li>
+            <li>
+              <strong>오버레이 스크롤바</strong>: <code>OverlayScrollbarsComponent</code>를 사용하여
+              콘텐츠 위에 겹쳐 표시. 스크롤 시에만 나타나고 800ms 후 자동 숨김.
+            </li>
+            <li>
+              <strong>상단 정렬</strong>: 앱 런처 전체가 화면 상단에 정렬됩니다 (
+              <code>items-start</code>).
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
       {/* Summary Info Box */}
       <div className="p-4 bg-[var(--color-state-info-bg)] rounded-[var(--radius-md)]">
         <div className="text-[length:var(--font-size-12)] text-[var(--color-state-info)]">
@@ -267,8 +390,9 @@ y = PAD_TOP + row × CELL_H  →  76 + row × 120`}
               <code>PAD_TOP + row × CELL_H</code>
             </li>
             <li>초기 배치: column-first (세로 우선, macOS 컨벤션)</li>
-            <li>리사이즈 리플로우: requestAnimationFrame 기반 실시간 재배치</li>
+            <li>리사이즈 리플로우: requestAnimationFrame 기반 실시간 자동 정렬 (축소/확대 모두)</li>
             <li>Dock은 TopBar 내부에 위치하므로 하단 예약 영역 없음</li>
+            <li>앱 런처: 반응형 CSS Grid (4~7열) + 검색바 고정 + 오버레이 스크롤바</li>
           </ul>
         </div>
       </div>
@@ -312,14 +436,13 @@ export function DesktopGridPage() {
                       ['PAD_X', '44px', 'Horizontal inset from screen left edge'],
                       ['PAD_TOP', '76px', '52px (TopBar) + 24px spacing'],
                       ['ICON_W', '80px', 'Icon button width (w-20)'],
-                      ['Bottom reserve', '64px', 'Dock area height'],
                       ['DRAG_THRESHOLD', '5px', 'Minimum distance before drag starts'],
                       ['Flow', 'column-first', 'Top→bottom, then left→right (macOS style)'],
                       ['Positioning', 'absolute + fixed grid', 'gridToPixel(col, row) → left/top'],
                       [
                         'Resize reflow',
                         'requestAnimationFrame',
-                        'Real-time reflow — out-of-bounds icons relocated instantly',
+                        'Real-time auto-sort — all icons re-laid column-first on any resize',
                       ],
                     ] as const
                   ).map(([prop, value, desc], i) => (
@@ -387,6 +510,60 @@ export function DesktopGridPage() {
               maxCols = floor((width - PAD_X) / CELL_W), maxRows = floor((height - PAD_TOP) /
               CELL_H). Resize reflow relocates out-of-bounds icons to empty cells.
             </p>
+          </VStack>
+
+          {/* App Launcher (Launchpad) Grid */}
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              App Launcher (Launchpad) grid
+            </span>
+            <div className="overflow-x-auto">
+              <table className="w-full text-[length:var(--font-size-12)]">
+                <thead>
+                  <tr className="border-b border-[var(--color-border-default)]">
+                    <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">
+                      Property
+                    </th>
+                    <th className="text-left py-3 pr-4 font-medium text-[var(--color-text-subtle)]">
+                      Value
+                    </th>
+                    <th className="text-left py-3 font-medium text-[var(--color-text-subtle)]">
+                      Description
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(
+                    [
+                      ['CELL_W', '100px', 'App button width'],
+                      ['GAP', '24px', 'Grid gap (gap-6)'],
+                      ['PAD_X', '40px', 'Horizontal padding (p-10)'],
+                      ['MIN_COLS', '4', 'Minimum columns'],
+                      ['MAX_COLS', '7', 'Maximum columns'],
+                      ['Grid type', 'CSS Grid', 'gridTemplateColumns: repeat(cols, 100px)'],
+                      [
+                        'Resize',
+                        'requestAnimationFrame',
+                        'Dynamic column count on viewport resize',
+                      ],
+                      ['Scroll', 'overlay scrollbar', 'OverlayScrollbarsComponent, autoHide: move'],
+                      ['Search bar', 'fixed (shrink-0)', 'Pinned above scrollable grid area'],
+                      ['Alignment', 'top-center', 'items-start justify-center'],
+                    ] as const
+                  ).map(([prop, value, desc], i) => (
+                    <tr key={i} className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-3 pr-4 font-mono text-[var(--color-text-default)]">
+                        {prop}
+                      </td>
+                      <td className="py-3 pr-4 font-mono text-[var(--color-action-primary)]">
+                        {value}
+                      </td>
+                      <td className="py-3 text-[var(--color-text-muted)]">{desc}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </VStack>
 
           {/* Visual Diagram */}
@@ -499,14 +676,18 @@ function getGridBounds(container: HTMLElement) {
 </button>
 
 /* Resize reflow — requestAnimationFrame */
+/* Auto-sorts ALL icons column-first on any resize (shrink & grow) */
 useEffect(() => {
   let rafId = 0;
   const handleResize = () => {
     cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(() => {
-      const { maxCols, maxRows } = getGridBounds(container);
-      // Relocate out-of-bounds icons to empty cells
-      // Column-first scan: col 0→N, row 0→N
+      const { maxRows } = getGridBounds(container);
+      setIcons(prev => prev.map((icon, i) => ({
+        ...icon,
+        col: Math.floor(i / maxRows),
+        row: i % maxRows,
+      })));
     });
   };
   window.addEventListener('resize', handleResize);
@@ -514,7 +695,37 @@ useEffect(() => {
     window.removeEventListener('resize', handleResize);
     cancelAnimationFrame(rafId);
   };
-}, []);`}
+}, []);
+
+/* ----------------------------------------
+   App Launcher (Launchpad) — Responsive CSS Grid
+   ---------------------------------------- */
+
+const LAUNCHPAD = {
+  CELL_W: 100,   // app button width
+  GAP: 24,       // gap-6
+  PAD_X: 40,     // horizontal padding (p-10)
+  MIN_COLS: 4,   // minimum columns
+  MAX_COLS: 7,   // maximum columns
+};
+
+/* Dynamic column count */
+const available = window.innerWidth - LAUNCHPAD.PAD_X * 2;
+const maxFit = Math.floor((available + LAUNCHPAD.GAP) / (LAUNCHPAD.CELL_W + LAUNCHPAD.GAP));
+const cols = Math.max(LAUNCHPAD.MIN_COLS, Math.min(LAUNCHPAD.MAX_COLS, maxFit));
+
+/* Grid with dynamic columns */
+<div className="grid gap-6"
+  style={{ gridTemplateColumns: \`repeat(\${cols}, 100px)\` }} />
+
+/* Search bar fixed + grid scrollable */
+<motion.div className="flex flex-col items-center max-h-[calc(100vh-80px)]">
+  <div className="shrink-0">{/* Search bar */}</div>
+  <OverlayScrollbarsComponent className="min-h-0"
+    options={{ scrollbars: { autoHide: 'move', autoHideDelay: 800 } }}>
+    {/* App grid */}
+  </OverlayScrollbarsComponent>
+</motion.div>`}
         </pre>
       }
       relatedLinks={[

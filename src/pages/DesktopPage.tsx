@@ -1057,6 +1057,14 @@ function AdminCenterPanel({ isOpen, onClose, onOpenApp }: AdminPanelProps) {
    Launchpad Panel (All Apps Launcher)
    ---------------------------------------- */
 
+const LAUNCHPAD = {
+  CELL_W: 100,
+  GAP: 24,
+  PAD_X: 40,
+  MIN_COLS: 4,
+  MAX_COLS: 7,
+} as const;
+
 interface LaunchpadPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -1067,6 +1075,7 @@ interface LaunchpadPanelProps {
 function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPanelProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [cols, setCols] = useState(LAUNCHPAD.MAX_COLS);
 
   useEffect(() => {
     if (!isOpen) {
@@ -1080,6 +1089,26 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
     requestAnimationFrame(() => searchInputRef.current?.focus());
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    const computeCols = () => {
+      const available = window.innerWidth - LAUNCHPAD.PAD_X * 2;
+      const maxFit = Math.floor((available + LAUNCHPAD.GAP) / (LAUNCHPAD.CELL_W + LAUNCHPAD.GAP));
+      setCols(Math.max(LAUNCHPAD.MIN_COLS, Math.min(LAUNCHPAD.MAX_COLS, maxFit)));
+    };
+    computeCols();
+
+    let rafId = 0;
+    const handleResize = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(computeCols);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   const apps = Object.entries(appConfigs) as [
     AppId,
@@ -1102,15 +1131,15 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
           />
-          <div className="fixed inset-0 z-[6001] flex items-center justify-center pointer-events-none">
+          <div className="fixed inset-0 z-[6001] flex items-start justify-center pointer-events-none">
             <motion.div
-              className="pointer-events-auto flex flex-col items-center gap-8 p-10"
+              className="pointer-events-auto flex flex-col items-center max-h-[calc(100vh-80px)] pt-10 px-10"
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
             >
-              <div className="relative w-[320px]">
+              <div className="relative w-[320px] shrink-0 mb-8">
                 <IconSearch
                   size={16}
                   stroke={1.5}
@@ -1126,27 +1155,44 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
                 />
               </div>
 
-              {filteredApps.length === 0 ? (
-                <div className="text-body-md text-white/50 py-10">No apps found</div>
-              ) : (
-                <div className="grid grid-cols-7 gap-6">
-                  {filteredApps.map(([appId, config]) => (
-                    <button
-                      key={appId}
-                      className="flex flex-col items-center gap-2.5 w-[100px] cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
-                      onClick={() => {
-                        onOpenApp(appId);
-                        onClose();
-                      }}
+              <OverlayScrollbarsComponent
+                className="min-h-0"
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'move', autoHideDelay: 800 },
+                }}
+              >
+                <div className="pb-10">
+                  {filteredApps.length === 0 ? (
+                    <div className="text-body-md text-white/50 py-10">No apps found</div>
+                  ) : (
+                    <div
+                      className="grid gap-6"
+                      style={{ gridTemplateColumns: `repeat(${cols}, ${LAUNCHPAD.CELL_W}px)` }}
                     >
-                      <img src={config.icon} alt={config.name} className="w-16 h-16 object-cover" />
-                      <span className="text-label-md text-white text-center leading-tight whitespace-pre-line">
-                        {config.name.replace(' - ', '\n')}
-                      </span>
-                    </button>
-                  ))}
+                      {filteredApps.map(([appId, config]) => (
+                        <button
+                          key={appId}
+                          className="flex flex-col items-center gap-2.5 w-[100px] cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
+                          onClick={() => {
+                            onOpenApp(appId);
+                            onClose();
+                          }}
+                        >
+                          <img
+                            src={config.icon}
+                            alt={config.name}
+                            className="w-16 h-16 object-cover"
+                          />
+                          <span className="text-label-md text-white text-center leading-tight whitespace-pre-line">
+                            {config.name.replace(' - ', '\n')}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
+              </OverlayScrollbarsComponent>
             </motion.div>
           </div>
         </>
@@ -2146,27 +2192,11 @@ export function DesktopPage() {
         const maxRows = Math.max(1, Math.floor((rect.height - GRID.PAD_TOP) / GRID.CELL_H));
 
         setDesktopIcons((prev) => {
-          const hasOutOfBounds = prev.some((icon) => icon.col >= maxCols || icon.row >= maxRows);
-          if (!hasOutOfBounds) return prev;
-
-          const inBounds = prev.filter((icon) => icon.col < maxCols && icon.row < maxRows);
-          const outOfBounds = prev.filter((icon) => icon.col >= maxCols || icon.row >= maxRows);
-
-          const occupied = new Set(inBounds.map((i) => `${i.col},${i.row}`));
-          const relocated = outOfBounds.map((icon) => {
-            for (let c = 0; c < maxCols; c++) {
-              for (let r = 0; r < maxRows; r++) {
-                const key = `${c},${r}`;
-                if (!occupied.has(key)) {
-                  occupied.add(key);
-                  return { ...icon, col: c, row: r };
-                }
-              }
-            }
-            return icon;
-          });
-
-          return [...inBounds, ...relocated];
+          return prev.map((icon, i) => ({
+            ...icon,
+            col: Math.floor(i / maxRows),
+            row: i % maxRows,
+          }));
         });
       });
     };
