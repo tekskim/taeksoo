@@ -26,16 +26,16 @@ import {
 
 // App icons
 import AppIconAdminCenter from '@/assets/appIcon/admincenter.png';
-import AppIconAgentOps from '@/assets/appIcon/agentops.png';
+import AppIconAgentOps from '@/assets/appIcon/agentops.webp';
 import AppIconAIPlatform from '@/assets/appIcon/aiplatform.png';
-import AppIconCloudBuilder from '@/assets/appIcon/cloudbuilder.png';
-import AppIconCompute from '@/assets/appIcon/compute.png';
-import AppIconComputeAdmin from '@/assets/appIcon/computeadmin.png';
-import AppIconContainer from '@/assets/appIcon/container.png';
-import AppIconIAM from '@/assets/appIcon/iam.png';
-import AppIconSettings from '@/assets/appIcon/settings.png';
-import AppIconStorage from '@/assets/appIcon/storage.png';
-import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.png';
+import AppIconCloudBuilder from '@/assets/appIcon/cloudbuilder.webp';
+import AppIconCompute from '@/assets/appIcon/compute.webp';
+import AppIconComputeAdmin from '@/assets/appIcon/computeadmin.webp';
+import AppIconContainer from '@/assets/appIcon/container.webp';
+import AppIconIAM from '@/assets/appIcon/iam.webp';
+import AppIconSettings from '@/assets/appIcon/settings.webp';
+import AppIconStorage from '@/assets/appIcon/storage.webp';
+import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.webp';
 import {
   Button,
   Input,

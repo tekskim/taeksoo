@@ -27,7 +27,7 @@ import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons
 import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
 import { Tooltip } from '@/design-system';
-import containerIcon from '@/assets/appIcon/container.png';
+import containerIcon from '@/assets/appIcon/container.webp';
 
 interface SecurityGroup {
   id: string;

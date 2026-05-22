@@ -1,6 +1,6 @@
 import { StatusIndicator, VStack, HStack } from '@/design-system';
 import { Link, useLocation } from 'react-router-dom';
-import AppIconIAM from '@/assets/appIcon/iam.png';
+import AppIconIAM from '@/assets/appIcon/iam.webp';
 import { PrevNextNav } from '../_shared/PrevNextNav';
 import { pageLastUpdated } from '../_shared/navigationData';
 

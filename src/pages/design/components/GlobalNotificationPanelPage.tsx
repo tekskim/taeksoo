@@ -6,11 +6,11 @@ import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { VStack, Button, Tabs, TabList, Tab, Select, Badge } from '@/design-system';
 import { IconChevronUp, IconChevronDown, IconCheckbox, IconRefresh } from '@tabler/icons-react';
-import AppIconCompute from '@/assets/appIcon/compute.png';
-import AppIconIAM from '@/assets/appIcon/iam.png';
-import AppIconContainer from '@/assets/appIcon/container.png';
-import AppIconStorage from '@/assets/appIcon/storage.png';
-import AppIconAlerts from '@/assets/appIcon/alerts.png';
+import AppIconCompute from '@/assets/appIcon/compute.webp';
+import AppIconIAM from '@/assets/appIcon/iam.webp';
+import AppIconContainer from '@/assets/appIcon/container.webp';
+import AppIconStorage from '@/assets/appIcon/storage.webp';
+import AppIconAlerts from '@/assets/appIcon/alerts.webp';
 
 /* ----------------------------------------
    Types

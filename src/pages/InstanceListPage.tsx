@@ -95,7 +95,7 @@ import {
 } from '@/components/RescueInstanceDrawer';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import containerIcon from '@/assets/appIcon/container.png';
+import containerIcon from '@/assets/appIcon/container.webp';
 
 /* ----------------------------------------
    Types

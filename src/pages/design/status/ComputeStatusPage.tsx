@@ -1,6 +1,6 @@
 import { StatusIndicator, VStack, HStack } from '@/design-system';
 import { Link, useLocation } from 'react-router-dom';
-import AppIconCompute from '@/assets/appIcon/compute.png';
+import AppIconCompute from '@/assets/appIcon/compute.webp';
 import { PrevNextNav } from '../_shared/PrevNextNav';
 import { pageLastUpdated } from '../_shared/navigationData';
 

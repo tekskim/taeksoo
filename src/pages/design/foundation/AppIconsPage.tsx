@@ -7,40 +7,40 @@ import { pageLastUpdated } from '../_shared/navigationData';
 import { useDarkMode } from '@/hooks/useDarkMode';
 
 // Signium (Foundation)
-import AppIconAlerts from '@/assets/appIcon/alerts.png';
-import AppIconAudit from '@/assets/appIcon/audit.png';
-import AppIconIAM from '@/assets/appIcon/iam.png';
-import AppIconKMS from '@/assets/appIcon/kms.png';
-import AppIconLogs from '@/assets/appIcon/logs.png';
-import AppIconSecurity from '@/assets/appIcon/security.png';
-import AppIconSettings from '@/assets/appIcon/settings.png';
-import AppIconChat from '@/assets/appIcon/chat.png';
-import AppIconChatDark from '@/assets/appIcon/chat-dark.png';
+import AppIconAlerts from '@/assets/appIcon/alerts.webp';
+import AppIconAudit from '@/assets/appIcon/audit.webp';
+import AppIconIAM from '@/assets/appIcon/iam.webp';
+import AppIconKMS from '@/assets/appIcon/kms.webp';
+import AppIconLogs from '@/assets/appIcon/logs.webp';
+import AppIconSecurity from '@/assets/appIcon/security.webp';
+import AppIconSettings from '@/assets/appIcon/settings.webp';
+import AppIconChat from '@/assets/appIcon/chat.webp';
+import AppIconChatDark from '@/assets/appIcon/chat-dark.webp';
 
 // Aegis
-import AppIconAegisContainer from '@/assets/appIcon/container.png';
-import AppIconAegisCompute from '@/assets/appIcon/compute.png';
-import AppIconAegisComputeAdmin from '@/assets/appIcon/computeadmin.png';
-import AppIconAegisStorage from '@/assets/appIcon/storage.png';
-import AppIconAegisStorageAdmin from '@/assets/appIcon/storageadmin.png';
-import AppIconAegisBuilder from '@/assets/appIcon/cloudbuilder.png';
+import AppIconAegisContainer from '@/assets/appIcon/container.webp';
+import AppIconAegisCompute from '@/assets/appIcon/compute.webp';
+import AppIconAegisComputeAdmin from '@/assets/appIcon/computeadmin.webp';
+import AppIconAegisStorage from '@/assets/appIcon/storage.webp';
+import AppIconAegisStorageAdmin from '@/assets/appIcon/storageadmin.webp';
+import AppIconAegisBuilder from '@/assets/appIcon/cloudbuilder.webp';
 
 // Metis
-import AppIconMetisContainer from '@/assets/appIcon/metis-container.png';
-import AppIconMetisHub from '@/assets/appIcon/metis-hub.png';
-import AppIconMetisHubAdmin from '@/assets/appIcon/metis-hub-admin.png';
-import AppIconMetisMLStudio from '@/assets/appIcon/metis-ml-studio.png';
-import AppIconMetisMLStudioAdmin from '@/assets/appIcon/metis-ml-studio-admin.png';
-import AppIconMetisRun from '@/assets/appIcon/metis-run.png';
-import AppIconMetisRunAdmin from '@/assets/appIcon/metis-run-admin.png';
-import AppIconMetisServe from '@/assets/appIcon/metis-serve.png';
-import AppIconMetisServeAdmin from '@/assets/appIcon/metis-serve-admin.png';
-import AppIconMetisFabric from '@/assets/appIcon/metis-fabric.png';
-import AppIconMetisBuilder from '@/assets/appIcon/metis-builder.png';
+import AppIconMetisContainer from '@/assets/appIcon/metis-container.webp';
+import AppIconMetisHub from '@/assets/appIcon/metis-hub.webp';
+import AppIconMetisHubAdmin from '@/assets/appIcon/metis-hub-admin.webp';
+import AppIconMetisMLStudio from '@/assets/appIcon/metis-ml-studio.webp';
+import AppIconMetisMLStudioAdmin from '@/assets/appIcon/metis-ml-studio-admin.webp';
+import AppIconMetisRun from '@/assets/appIcon/metis-run.webp';
+import AppIconMetisRunAdmin from '@/assets/appIcon/metis-run-admin.webp';
+import AppIconMetisServe from '@/assets/appIcon/metis-serve.webp';
+import AppIconMetisServeAdmin from '@/assets/appIcon/metis-serve-admin.webp';
+import AppIconMetisFabric from '@/assets/appIcon/metis-fabric.webp';
+import AppIconMetisBuilder from '@/assets/appIcon/metis-builder.webp';
 
 // Praxis
-import AppIconPraxisAgentStudio from '@/assets/appIcon/agentops.png';
-import AppIconPraxisBuilder from '@/assets/appIcon/praxis-builder.png';
+import AppIconPraxisAgentStudio from '@/assets/appIcon/agentops.webp';
+import AppIconPraxisBuilder from '@/assets/appIcon/praxis-builder.webp';
 
 interface AppIcon {
   src?: string;
@@ -59,54 +59,54 @@ const ICON_SECTIONS: AppIconSection[] = [
   {
     title: 'Signium (Foundation)',
     icons: [
-      { src: AppIconAlerts, file: 'alerts.png', name: 'Alerts' },
-      { src: AppIconAudit, file: 'audit.png', name: 'Audit' },
-      { src: AppIconIAM, file: 'iam.png', name: 'IAM' },
-      { src: AppIconKMS, file: 'kms.png', name: 'KMS' },
-      { src: AppIconLogs, file: 'logs.png', name: 'Logs' },
-      { src: AppIconSecurity, file: 'security.png', name: 'Security' },
-      { src: AppIconSettings, file: 'settings.png', name: 'Settings' },
+      { src: AppIconAlerts, file: 'alerts.webp', name: 'Alerts' },
+      { src: AppIconAudit, file: 'audit.webp', name: 'Audit' },
+      { src: AppIconIAM, file: 'iam.webp', name: 'IAM' },
+      { src: AppIconKMS, file: 'kms.webp', name: 'KMS' },
+      { src: AppIconLogs, file: 'logs.webp', name: 'Logs' },
+      { src: AppIconSecurity, file: 'security.webp', name: 'Security' },
+      { src: AppIconSettings, file: 'settings.webp', name: 'Settings' },
       { name: 'Admin Center', composite: true },
-      { src: AppIconChat, file: 'chat.png', name: 'Thaki Cloud Assistant' },
-      { src: AppIconChatDark, file: 'chat-dark.png', name: 'Thaki Cloud Assistant (Dark)' },
+      { src: AppIconChat, file: 'chat.webp', name: 'Thaki Cloud Assistant' },
+      { src: AppIconChatDark, file: 'chat-dark.webp', name: 'Thaki Cloud Assistant (Dark)' },
     ],
   },
   {
     title: 'Aegis',
     icons: [
-      { src: AppIconAegisContainer, file: 'container.png', name: 'Aegis Container' },
-      { src: AppIconAegisCompute, file: 'compute.png', name: 'Aegis Compute' },
-      { src: AppIconAegisComputeAdmin, file: 'computeadmin.png', name: 'Aegis Compute Admin' },
-      { src: AppIconAegisStorage, file: 'storage.png', name: 'Aegis Storage' },
-      { src: AppIconAegisStorageAdmin, file: 'storageadmin.png', name: 'Aegis Storage Admin' },
-      { src: AppIconAegisBuilder, file: 'cloudbuilder.png', name: 'Aegis Builder' },
+      { src: AppIconAegisContainer, file: 'container.webp', name: 'Aegis Container' },
+      { src: AppIconAegisCompute, file: 'compute.webp', name: 'Aegis Compute' },
+      { src: AppIconAegisComputeAdmin, file: 'computeadmin.webp', name: 'Aegis Compute Admin' },
+      { src: AppIconAegisStorage, file: 'storage.webp', name: 'Aegis Storage' },
+      { src: AppIconAegisStorageAdmin, file: 'storageadmin.webp', name: 'Aegis Storage Admin' },
+      { src: AppIconAegisBuilder, file: 'cloudbuilder.webp', name: 'Aegis Builder' },
     ],
   },
   {
     title: 'Metis',
     icons: [
-      { src: AppIconMetisContainer, file: 'metis-container.png', name: 'Metis Container' },
-      { src: AppIconMetisHub, file: 'metis-hub.png', name: 'Metis Hub' },
-      { src: AppIconMetisHubAdmin, file: 'metis-hub-admin.png', name: 'Metis Hub Admin' },
-      { src: AppIconMetisMLStudio, file: 'metis-ml-studio.png', name: 'Metis ML Studio' },
+      { src: AppIconMetisContainer, file: 'metis-container.webp', name: 'Metis Container' },
+      { src: AppIconMetisHub, file: 'metis-hub.webp', name: 'Metis Hub' },
+      { src: AppIconMetisHubAdmin, file: 'metis-hub-admin.webp', name: 'Metis Hub Admin' },
+      { src: AppIconMetisMLStudio, file: 'metis-ml-studio.webp', name: 'Metis ML Studio' },
       {
         src: AppIconMetisMLStudioAdmin,
-        file: 'metis-ml-studio-admin.png',
+        file: 'metis-ml-studio-admin.webp',
         name: 'Metis ML Studio Admin',
       },
-      { src: AppIconMetisRun, file: 'metis-run.png', name: 'Metis Run' },
-      { src: AppIconMetisRunAdmin, file: 'metis-run-admin.png', name: 'Metis Run Admin' },
-      { src: AppIconMetisServe, file: 'metis-serve.png', name: 'Metis Serve' },
-      { src: AppIconMetisServeAdmin, file: 'metis-serve-admin.png', name: 'Metis Serve Admin' },
-      { src: AppIconMetisFabric, file: 'metis-fabric.png', name: 'Metis Fabric' },
-      { src: AppIconMetisBuilder, file: 'metis-builder.png', name: 'Metis Builder' },
+      { src: AppIconMetisRun, file: 'metis-run.webp', name: 'Metis Run' },
+      { src: AppIconMetisRunAdmin, file: 'metis-run-admin.webp', name: 'Metis Run Admin' },
+      { src: AppIconMetisServe, file: 'metis-serve.webp', name: 'Metis Serve' },
+      { src: AppIconMetisServeAdmin, file: 'metis-serve-admin.webp', name: 'Metis Serve Admin' },
+      { src: AppIconMetisFabric, file: 'metis-fabric.webp', name: 'Metis Fabric' },
+      { src: AppIconMetisBuilder, file: 'metis-builder.webp', name: 'Metis Builder' },
     ],
   },
   {
     title: 'Praxis',
     icons: [
-      { src: AppIconPraxisAgentStudio, file: 'agentops.png', name: 'Praxis Agent Studio' },
-      { src: AppIconPraxisBuilder, file: 'praxis-builder.png', name: 'Praxis Builder' },
+      { src: AppIconPraxisAgentStudio, file: 'agentops.webp', name: 'Praxis Agent Studio' },
+      { src: AppIconPraxisBuilder, file: 'praxis-builder.webp', name: 'Praxis Builder' },
     ],
   },
 ];
@@ -137,7 +137,7 @@ function IconCard({ src, darkSrc, file, name, composite, isDark }: AppIcon & { i
   }
 
   const resolvedSrc = isDark && darkSrc ? darkSrc : src;
-  const downloadName = name.toLowerCase().replace(/\s+/g, '-') + '.png';
+  const downloadName = name.toLowerCase().replace(/\s+/g, '-') + '.webp';
   const downloadHref = file ? `${BASE_PATH}appicons/${file}` : resolvedSrc;
 
   return (
@@ -179,7 +179,7 @@ export function AppIconsPage() {
           .map((icon) => ({
             file: icon.file!,
             folder: section.title.replace(/\s*\(.*\)/, ''),
-            name: icon.name.toLowerCase().replace(/\s+/g, '-') + '.png',
+            name: icon.name.toLowerCase().replace(/\s+/g, '-') + '.webp',
           }))
       );
 

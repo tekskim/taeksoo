@@ -478,6 +478,7 @@ import { ChartTooltipPage } from '@/pages/design/charts/ChartTooltipPage';
 
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
+import { SystemModePage } from '@/pages/SystemModePage';
 
 // Pages - Developer Resources
 import { SidebarIconsPage } from '@/pages/SidebarIconsPage';
@@ -1350,6 +1351,7 @@ function AppRoutes() {
 
       {/* Desktop Routes */}
       <Route path="/desktop" element={<DesktopPage />} />
+      <Route path="/system-mode" element={<SystemModePage />} />
 
       {/* Developer Resources */}
       <Route path="/table-style-guide" element={<TableStyleGuidePage />} />

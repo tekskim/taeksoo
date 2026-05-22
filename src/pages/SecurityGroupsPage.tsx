@@ -30,7 +30,7 @@ import { CreateSecurityGroupDrawer } from '@/components/CreateSecurityGroupDrawe
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
-import containerIcon from '@/assets/appIcon/container.png';
+import containerIcon from '@/assets/appIcon/container.webp';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
