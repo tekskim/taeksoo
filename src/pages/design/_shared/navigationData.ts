@@ -579,7 +579,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/foundation/shadows': '2026-02-25 14:00:00',
   '/design/foundation/transitions': '2026-02-25 14:00:00',
   '/design/foundation/icons': '2026-02-25 14:00:00',
-  '/design/foundation/app-icons': '2026-03-01 10:30:00',
+  '/design/foundation/app-icons': '2026-05-22 13:40:00',
   '/design/policies/ux-writing': '2026-03-05 13:00:00',
   '/design/policies/accessibility': '2026-02-25 14:00:00',
   '/design/policies/error-alert': '2026-03-09 10:30:00',

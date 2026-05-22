@@ -1,4 +1,5 @@
-import { VStack } from '@/design-system';
+import { useState, useCallback } from 'react';
+import { VStack, Button } from '@/design-system';
 import { IconDownload } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 import { PrevNextNav } from '../_shared/PrevNextNav';
@@ -161,6 +162,42 @@ export function AppIconsPage() {
   const location = useLocation();
   const { isDark } = useDarkMode();
   const lastUpdated = pageLastUpdated[location.pathname];
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadAll = useCallback(async () => {
+    setIsDownloading(true);
+    try {
+      const [{ default: JSZip }, { saveAs }] = await Promise.all([
+        import('jszip'),
+        import('file-saver'),
+      ]);
+
+      const zip = new JSZip();
+      const allIcons = ICON_SECTIONS.flatMap((section) =>
+        section.icons
+          .filter((icon) => icon.file && !icon.composite)
+          .map((icon) => ({
+            file: icon.file!,
+            folder: section.title.replace(/\s*\(.*\)/, ''),
+            name: icon.name.toLowerCase().replace(/\s+/g, '-') + '.png',
+          }))
+      );
+
+      await Promise.all(
+        allIcons.map(async ({ file, folder, name }) => {
+          const url = `${BASE_PATH}appicons/${file}`;
+          const response = await fetch(url);
+          const blob = await response.blob();
+          zip.file(`${folder}/${name}`, blob);
+        })
+      );
+
+      const content = await zip.generateAsync({ type: 'blob' });
+      saveAs(content, 'thaki-app-icons.zip');
+    } finally {
+      setIsDownloading(false);
+    }
+  }, []);
 
   const formattedDate = lastUpdated
     ? (() => {
@@ -194,11 +231,22 @@ export function AppIconsPage() {
               Application icons for THAKI Cloud services — Size 64×64
             </p>
           </div>
-          {formattedDate && (
-            <span className="text-body-sm text-[var(--color-text-subtle)] shrink-0">
-              Updated {formattedDate}
-            </span>
-          )}
+          <div className="flex items-center gap-4 shrink-0">
+            {formattedDate && (
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                Updated {formattedDate}
+              </span>
+            )}
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconDownload size={12} />}
+              onClick={handleDownloadAll}
+              disabled={isDownloading}
+            >
+              {isDownloading ? 'Downloading...' : 'Download All'}
+            </Button>
+          </div>
         </div>
 
         <div className="w-full h-px bg-[var(--color-border-default)]" />
