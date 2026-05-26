@@ -50,6 +50,7 @@ import { DesktopWindowProvider } from '@/contexts/DesktopWindowContext';
 import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import DesktopBgDark from '@/assets/bg-dark-new.jpg';
+import DesktopBgLight from '@/assets/bg-light.jpg';
 import { storageRoutes } from '@/routes/storage.routes';
 import { iamRoutes } from '@/routes/iam.routes';
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
@@ -2690,12 +2691,12 @@ export function SystemModePage() {
       onClick={handleDesktopClick}
     >
       <img
-        src={DesktopBgDark}
+        src={isDark ? DesktopBgDark : DesktopBgLight}
         alt=""
         className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
         style={{
-          opacity: isDark ? 'var(--desktop-wallpaper-opacity)' : '0.1',
-          filter: isDark ? 'brightness(3.5)' : 'brightness(8) saturate(0) invert(1) contrast(0.3)',
+          opacity: 'var(--desktop-wallpaper-opacity)',
+          filter: isDark ? 'brightness(2.0)' : 'none',
         }}
       />
       {/* Top Bar */}
