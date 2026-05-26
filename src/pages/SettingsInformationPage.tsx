@@ -55,20 +55,24 @@ export default function SettingsInformationPage() {
               </div>
             </div>
 
-            <SectionCard.DataRow label="Terms">
-              <div className="flex flex-col gap-2">
-                <a
-                  href="https://thaki.cloud/terms"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 min-w-0 text-body-md text-[var(--color-action-primary)] hover:underline w-fit"
-                >
-                  Terms of Service <IconExternalLink size={12} stroke={1.5} />
-                </a>
-              </div>
-            </SectionCard.DataRow>
+            <div className="flex flex-col gap-3">
+              <label className="font-medium text-[var(--color-text-default)] text-label-lg">
+                Terms
+              </label>
+              <a
+                href="https://thaki.cloud/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 min-w-0 text-body-md text-[var(--color-action-primary)] hover:underline w-fit"
+              >
+                Terms of Service <IconExternalLink size={12} stroke={1.5} />
+              </a>
+            </div>
 
-            <SectionCard.DataRow label="Support">
+            <div className="flex flex-col gap-3">
+              <label className="font-medium text-[var(--color-text-default)] text-label-lg">
+                Support
+              </label>
               <div className="flex flex-col gap-2">
                 <a
                   href="https://thaki.cloud"
@@ -87,7 +91,7 @@ export default function SettingsInformationPage() {
                   User Guide <IconExternalLink size={12} stroke={1.5} />
                 </a>
               </div>
-            </SectionCard.DataRow>
+            </div>
           </SectionCard.Content>
         </SectionCard>
       </VStack>
