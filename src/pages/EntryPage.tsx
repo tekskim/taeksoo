@@ -19,7 +19,7 @@ import StorageIcon from '@/assets/appIcon/storage.webp';
 import StorageAdminIcon from '@/assets/appIcon/storageadmin.webp';
 import IAMIcon from '@/assets/appIcon/iam.webp';
 import SecurityIcon from '@/assets/appIcon/security.webp';
-import DesktopIcon from '@/assets/appIcon/desktop.png';
+import AdminCenterIcon from '@/assets/appIcon/admincenter.png';
 import SettingsIcon from '@/assets/appIcon/settings.webp';
 
 interface AppCard {
@@ -30,8 +30,8 @@ interface AppCard {
 }
 
 const appCards: AppCard[] = [
-  { id: 'desktop', title: 'Desktop', iconSrc: DesktopIcon, path: '/desktop' },
-  { id: 'system-mode', title: 'System Mode', iconSrc: DesktopIcon, path: '/system-mode' },
+  { id: 'desktop', title: 'Desktop', iconSrc: AdminCenterIcon, path: '/desktop' },
+  { id: 'system-mode', title: 'System Mode', iconSrc: AdminCenterIcon, path: '/system-mode' },
   { id: 'compute', title: 'Compute', iconSrc: ComputeIcon, path: '/compute' },
   {
     id: 'compute-admin',
