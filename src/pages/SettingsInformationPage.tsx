@@ -44,11 +44,15 @@ export default function SettingsInformationPage() {
         </div>
 
         <SectionCard>
-          <SectionCard.Header title="Version" />
           <SectionCard.Content>
-            <div className="flex gap-4">
-              <DetailHeader.InfoCard label="Product name" value="Thaki Cloud Suite" />
-              <DetailHeader.InfoCard label="Version" value="0.7.0" />
+            <div className="flex flex-col gap-3">
+              <label className="font-medium text-[var(--color-text-default)] text-label-lg">
+                Version
+              </label>
+              <div className="flex gap-4">
+                <DetailHeader.InfoCard label="Product name" value="Thaki Cloud Suite" />
+                <DetailHeader.InfoCard label="Version" value="0.7.0" />
+              </div>
             </div>
 
             <SectionCard.DataRow label="Terms">
@@ -80,7 +84,7 @@ export default function SettingsInformationPage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 min-w-0 text-body-md text-[var(--color-action-primary)] hover:underline w-fit"
                 >
-                  Support Center <IconExternalLink size={12} stroke={1.5} />
+                  User Guide <IconExternalLink size={12} stroke={1.5} />
                 </a>
               </div>
             </SectionCard.DataRow>
