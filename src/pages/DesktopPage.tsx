@@ -100,7 +100,6 @@ const GRID = {
   PAD_X: 44,
   PAD_TOP: 76,
   ICON_W: 80,
-  DRAG_THRESHOLD: 5,
 } as const;
 
 interface DesktopIconItem {
@@ -118,37 +117,21 @@ function gridToPixel(col: number, row: number) {
   };
 }
 
-function debounce<T extends (...args: never[]) => void>(fn: T, ms: number) {
-  let timer: ReturnType<typeof setTimeout>;
-  return (...args: Parameters<T>) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), ms);
-  };
-}
-
-function pixelToGrid(px: number, py: number, maxCols: number, maxRows: number) {
-  const col = Math.round((px - GRID.PAD_X) / GRID.CELL_W);
-  const row = Math.round((py - GRID.PAD_TOP) / GRID.CELL_H);
-  return {
-    col: Math.max(0, Math.min(col, maxCols - 1)),
-    row: Math.max(0, Math.min(row, maxRows - 1)),
-  };
-}
+const DESKTOP_ICONS_META = [
+  { id: 'iam', icon: imgIam, label: 'IAM' },
+  { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
+  { id: 'compute', icon: imgCompute, label: 'Compute' },
+  { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
+  { id: 'container', icon: imgContainer, label: 'Container' },
+  { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
+  { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
+  { id: 'settings', icon: imgSettings, label: 'Settings' },
+];
 
 function getInitialIconLayout(): DesktopIconItem[] {
-  const icons = [
-    { id: 'iam', icon: imgIam, label: 'IAM' },
-    { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
-    { id: 'compute', icon: imgCompute, label: 'Compute' },
-    { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
-    { id: 'container', icon: imgContainer, label: 'Container' },
-    { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
-    { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
-    { id: 'settings', icon: imgSettings, label: 'Settings' },
-  ];
   const availableH = window.innerHeight - GRID.PAD_TOP;
   const maxRows = Math.max(1, Math.floor(availableH / GRID.CELL_H));
-  return icons.map((item, i) => ({
+  return DESKTOP_ICONS_META.map((item, i) => ({
     ...item,
     col: Math.floor(i / maxRows),
     row: i % maxRows,
@@ -160,27 +143,21 @@ interface DesktopIconProps {
   label: string;
   iconSlot?: React.ReactNode;
   onClick?: () => void;
-  onMouseDown?: (e: React.MouseEvent) => void;
   style?: React.CSSProperties;
-  isDragging?: boolean;
   ref?: React.Ref<HTMLButtonElement>;
 }
 
 const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(function DesktopIcon(
-  { icon, label, iconSlot, onClick, onMouseDown, style, isDragging },
+  { icon, label, iconSlot, onClick, style },
   ref
 ) {
   return (
     <button
       ref={ref}
       type="button"
-      className={`
-          absolute flex flex-col items-center gap-1 w-20 bg-transparent border-none p-0 select-none group
-          ${isDragging ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}
-        `}
+      className="absolute flex flex-col items-center gap-1 w-20 bg-transparent border-none p-0 select-none cursor-pointer group"
       style={style}
-      onClick={isDragging ? undefined : onClick}
-      onMouseDown={onMouseDown}
+      onClick={onClick}
       aria-label={label}
     >
       <div className="w-[72px] h-[72px] flex items-center justify-center rounded-lg transition-colors duration-150 group-hover:bg-[var(--desktop-icon-hover)] group-active:bg-[var(--desktop-icon-active)]">
@@ -229,121 +206,6 @@ function AdminCenterCompositeIcon() {
       />
     </div>
   );
-}
-
-interface DragGhostProps {
-  icon: string;
-  label: string;
-  x: number;
-  y: number;
-}
-
-function DragGhost({ icon, label, x, y }: DragGhostProps) {
-  return (
-    <div
-      className="fixed z-[9999] flex flex-col items-center gap-1 w-20 pointer-events-none opacity-80"
-      style={{ left: x - GRID.ICON_W / 2, top: y - 40 }}
-    >
-      <div className="w-[72px] h-[72px] flex items-center justify-center rounded-lg bg-[var(--desktop-icon-active)]">
-        <img
-          src={icon}
-          alt={label}
-          className="w-16 h-16 object-cover object-center"
-          draggable={false}
-        />
-      </div>
-      <span className="text-label-md text-[var(--desktop-text)] text-center max-w-[120px] px-2 py-0.5 rounded bg-[var(--desktop-icon-active)]">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-function useDesktopIconDrag(
-  icons: DesktopIconItem[],
-  setIcons: React.Dispatch<React.SetStateAction<DesktopIconItem[]>>,
-  containerRef: React.RefObject<HTMLDivElement | null>
-) {
-  const [dragState, setDragState] = useState<{
-    iconId: string;
-    startX: number;
-    startY: number;
-    currentX: number;
-    currentY: number;
-    isDragging: boolean;
-  } | null>(null);
-
-  const getGridBounds = useCallback(() => {
-    if (!containerRef.current) return { maxCols: 10, maxRows: 8 };
-    const rect = containerRef.current.getBoundingClientRect();
-    return {
-      maxCols: Math.max(1, Math.floor((rect.width - GRID.PAD_X) / GRID.CELL_W)),
-      maxRows: Math.max(1, Math.floor((rect.height - GRID.PAD_TOP) / GRID.CELL_H)),
-    };
-  }, [containerRef]);
-
-  const handleMouseDown = useCallback((iconId: string, e: React.MouseEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    setDragState({
-      iconId,
-      startX: e.clientX,
-      startY: e.clientY,
-      currentX: e.clientX,
-      currentY: e.clientY,
-      isDragging: false,
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!dragState) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const dx = e.clientX - dragState.startX;
-      const dy = e.clientY - dragState.startY;
-      const moved = Math.abs(dx) > GRID.DRAG_THRESHOLD || Math.abs(dy) > GRID.DRAG_THRESHOLD;
-
-      setDragState((prev) =>
-        prev
-          ? {
-              ...prev,
-              currentX: e.clientX,
-              currentY: e.clientY,
-              isDragging: moved || prev.isDragging,
-            }
-          : null
-      );
-    };
-
-    const handleMouseUp = (e: MouseEvent) => {
-      if (dragState.isDragging && containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const { maxCols, maxRows } = getGridBounds();
-        const target = pixelToGrid(e.clientX - rect.left, e.clientY - rect.top, maxCols, maxRows);
-
-        const occupied = icons.find(
-          (ic) => ic.id !== dragState.iconId && ic.col === target.col && ic.row === target.row
-        );
-        if (!occupied) {
-          setIcons((prev) =>
-            prev.map((ic) =>
-              ic.id === dragState.iconId ? { ...ic, col: target.col, row: target.row } : ic
-            )
-          );
-        }
-      }
-      setDragState(null);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [dragState, icons, setIcons, containerRef, getGridBounds]);
-
-  return { dragState, handleMouseDown };
 }
 
 /* ----------------------------------------
@@ -2206,29 +2068,20 @@ export function DesktopPage() {
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
   const desktopGridRef = useRef<HTMLDivElement>(null);
   const [desktopIcons, setDesktopIcons] = useState<DesktopIconItem[]>(getInitialIconLayout);
-  const { dragState, handleMouseDown } = useDesktopIconDrag(
-    desktopIcons,
-    setDesktopIcons,
-    desktopGridRef
-  );
 
   useEffect(() => {
     let rafId = 0;
     const handleResize = () => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        if (!desktopGridRef.current) return;
-        const rect = desktopGridRef.current.getBoundingClientRect();
-        const maxCols = Math.max(1, Math.floor((rect.width - GRID.PAD_X) / GRID.CELL_W));
-        const maxRows = Math.max(1, Math.floor((rect.height - GRID.PAD_TOP) / GRID.CELL_H));
-
-        setDesktopIcons((prev) => {
-          return prev.map((icon, i) => ({
-            ...icon,
+        const maxRows = Math.max(1, Math.floor((window.innerHeight - GRID.PAD_TOP) / GRID.CELL_H));
+        setDesktopIcons((prev) =>
+          prev.map((ic, i) => ({
+            ...ic,
             col: Math.floor(i / maxRows),
             row: i % maxRows,
-          }));
-        });
+          }))
+        );
       });
     };
 
@@ -2873,7 +2726,6 @@ export function DesktopPage() {
       <div ref={desktopGridRef} className="absolute inset-0" onClick={handleDesktopClick}>
         {desktopIcons.map((item) => {
           const pos = gridToPixel(item.col, item.row);
-          const beingDragged = dragState?.isDragging && dragState.iconId === item.id;
 
           const handleClick = () => {
             if (item.id === 'admin-center') {
@@ -2889,28 +2741,16 @@ export function DesktopPage() {
               icon={item.icon}
               label={item.label}
               iconSlot={item.id === 'admin-center' ? <AdminCenterCompositeIcon /> : undefined}
-              isDragging={beingDragged}
-              style={{ left: pos.x, top: pos.y }}
+              style={{
+                left: pos.x,
+                top: pos.y,
+                transition: 'left 200ms ease-out, top 200ms ease-out',
+              }}
               onClick={handleClick}
-              onMouseDown={(e) => handleMouseDown(item.id, e)}
               ref={item.id === 'admin-center' ? adminCenterIconRef : undefined}
             />
           );
         })}
-
-        {dragState?.isDragging &&
-          (() => {
-            const dragged = desktopIcons.find((ic) => ic.id === dragState.iconId);
-            if (!dragged) return null;
-            return (
-              <DragGhost
-                icon={dragged.icon}
-                label={dragged.label}
-                x={dragState.currentX}
-                y={dragState.currentY}
-              />
-            );
-          })()}
       </div>
 
       {/* Admin center Panel */}

@@ -20,7 +20,6 @@ function GridConstantsTable() {
     ['PAD_X', '44px', '화면 왼쪽 가장자리에서 첫 번째 열까지의 수평 여백.'],
     ['PAD_TOP', '76px', 'TopBar 높이(52px) + 상단 여백(24px). 첫 번째 행의 시작 위치.'],
     ['ICON_W', '80px', '아이콘 버튼의 너비 (w-20). 셀 내부에서 중앙 정렬됩니다.'],
-    ['DRAG_THRESHOLD', '5px', '클릭과 드래그를 구분하는 최소 이동 거리.'],
   ];
 
   return (
@@ -59,13 +58,14 @@ function DesktopGridGuidelines() {
         <SectionTitle>그리드 방식</SectionTitle>
         <Prose>
           <p>
-            <strong>절대 좌표 기반 그리드 스냅 시스템</strong>을 사용합니다. 아이콘 위치는 논리적
+            <strong>절대 좌표 기반 고정 그리드 시스템</strong>을 사용합니다. 아이콘 위치는 논리적
             그리드 좌표(<code>col</code>, <code>row</code>)로 관리되며, 렌더링 시{' '}
             <code>gridToPixel(col, row)</code> 함수를 통해 절대 픽셀 좌표로 변환됩니다.
           </p>
           <p>
-            CSS Grid(<code>auto-fill</code>) 대신 절대 좌표를 사용하는 이유는 드래그 앤 드롭으로
-            아이콘을 자유롭게 배치할 수 있는 데스크탑 시뮬레이터 UX를 구현하기 위함입니다.
+            아이콘은 항상 <strong>column-first 순서</strong>(세로 우선, macOS 컨벤션)로 자동
+            배치됩니다. 드래그 앤 드롭은 지원하지 않으며, 사용자가 아이콘 위치를 수동으로 변경할 수
+            없습니다.
           </p>
         </Prose>
       </VStack>
@@ -141,27 +141,22 @@ y = PAD_TOP + row × CELL_H  →  76 + row × 120`}
 
       <div className="w-full h-px bg-[var(--color-border-default)]" />
 
-      {/* 5. 드래그 앤 드롭 */}
+      {/* 5. 자동 Compact */}
       <VStack gap={4}>
-        <SectionTitle>드래그 앤 드롭</SectionTitle>
+        <SectionTitle>자동 Compact</SectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-2">
             <li>
-              마우스 다운 후 <strong>5px 이상 이동</strong>하면 드래그가 시작됩니다
-              (DRAG_THRESHOLD). 이하는 클릭으로 처리됩니다.
+              드래그 앤 드롭은 <strong>지원하지 않습니다</strong>. 아이콘은 항상 column-first 순서로
+              자동 배치됩니다.
             </li>
             <li>
-              드래그 중 아이콘은 반투명(<code>opacity-50</code>)으로 표시되며 마우스를 따라
-              이동합니다.
+              앱이 추가/제거되면 전체 아이콘이 column-first 순서로 자동 재배열(compact)됩니다. 빈
+              셀이 남지 않습니다.
             </li>
             <li>
-              마우스를 놓으면 <code>pixelToGrid()</code>로 가장 가까운 그리드 셀을 계산하고, 해당
-              셀이 비어있으면 해당 위치에 스냅됩니다. 이미 다른 아이콘이 있으면 원래 위치로
-              돌아갑니다.
-            </li>
-            <li>
-              드롭 위치는 현재 뷰포트 기준 <code>getGridBounds()</code>로 계산된 maxCols/maxRows
-              범위 내로 제한됩니다.
+              아이콘 위치는 영속적으로 저장되지 않습니다. 페이지 로드 시 항상{' '}
+              <code>DESKTOP_ICONS_META</code> 배열 순서대로 column-first 배치됩니다.
             </li>
           </ul>
         </Prose>
@@ -174,23 +169,21 @@ y = PAD_TOP + row × CELL_H  →  76 + row × 120`}
         <SectionTitle>리사이즈 리플로우</SectionTitle>
         <Prose>
           <p>
-            브라우저 창 크기가 변경되면 아이콘을 자동으로 재배치합니다. <code>window.resize</code>{' '}
-            이벤트를 감지하여 실시간으로 전체 아이콘을 column-first 순서로 재정렬합니다.
+            브라우저 창 크기가 변경되면 전체 아이콘을 column-first 순서로 재배치합니다.{' '}
+            <code>window.resize</code> 이벤트를 <code>requestAnimationFrame</code>으로 처리합니다.
           </p>
           <ul className="list-disc pl-5 space-y-2">
             <li>
-              <strong>실시간 반영</strong>: <code>requestAnimationFrame</code> 기반으로 리사이즈
-              중에도 매 프레임 즉시 재배치됩니다 (debounce 없음).
+              <strong>전체 리플로우</strong>: 창이 줄어들 때뿐만 아니라 커질 때도 전체 아이콘을
+              column-first 순서로 재배치합니다. 드래그가 없으므로 보존할 커스텀 배치가 없습니다.
             </li>
             <li>
-              <strong>범위 계산</strong>: <code>maxCols = floor((width - PAD_X) / CELL_W)</code>,{' '}
-              <code>maxRows = floor((height - PAD_TOP) / CELL_H)</code>
+              <strong>행 수 계산</strong>: <code>maxRows = floor((height - PAD_TOP) / CELL_H)</code>{' '}
+              (뷰포트 기준). <code>col = floor(i / maxRows)</code>, <code>row = i % maxRows</code>.
             </li>
             <li>
-              <strong>자동 정렬</strong>: 창이 줄어들 때뿐만 아니라 커질 때도 전체 아이콘을
-              column-first 순서로 재배치합니다. 초기 배치와 동일한{' '}
-              <code>col = floor(i / maxRows)</code>, <code>row = i % maxRows</code> 공식을
-              사용합니다.
+              <strong>CSS transition</strong>: 리플로우 시 아이콘이 부드럽게 이동합니다 (
+              <code>left/top 200ms ease-out</code>).
             </li>
           </ul>
         </Prose>
@@ -384,14 +377,15 @@ cols = clamp(maxFit, MIN_COLS, MAX_COLS)`}
         <div className="text-[length:var(--font-size-12)] text-[var(--color-state-info)]">
           <strong>요약:</strong>
           <ul className="mt-2 space-y-1 list-disc list-inside">
-            <li>절대 좌표 기반 그리드 스냅 — 드래그 앤 드롭 자유 배치 지원</li>
+            <li>절대 좌표 기반 고정 그리드 — 드래그 앤 드롭 미지원</li>
             <li>
               논리 좌표(col, row) → 픽셀 좌표 변환: <code>PAD_X + col × CELL_W</code>,{' '}
               <code>PAD_TOP + row × CELL_H</code>
             </li>
-            <li>초기 배치: column-first (세로 우선, macOS 컨벤션)</li>
-            <li>리사이즈 리플로우: requestAnimationFrame 기반 실시간 자동 정렬 (축소/확대 모두)</li>
-            <li>Dock은 TopBar 내부에 위치하므로 하단 예약 영역 없음</li>
+            <li>배치: column-first (세로 우선, macOS 컨벤션) — 항상 자동 배치</li>
+            <li>앱 추가/제거 시 자동 compact (빈 셀 없음)</li>
+            <li>리사이즈 리플로우: 전체 아이콘 column-first 재배치 + CSS transition</li>
+            <li>상태 영속성 없음 — 페이지 로드 시 항상 초기 배치</li>
             <li>앱 런처: 반응형 CSS Grid (4~7열) + 검색바 고정 + 오버레이 스크롤바</li>
           </ul>
         </div>
@@ -404,7 +398,7 @@ export function DesktopGridPage() {
   return (
     <ComponentPageTemplate
       title="Desktop Icon Grid"
-      description="Absolute-positioned grid snap system for desktop icons with drag-and-drop and responsive reflow."
+      description="Absolute-positioned fixed grid system for desktop icons with column-first auto-layout and responsive reflow."
       guidelines={<DesktopGridGuidelines />}
       examples={
         <VStack gap={8}>
@@ -436,13 +430,17 @@ export function DesktopGridPage() {
                       ['PAD_X', '44px', 'Horizontal inset from screen left edge'],
                       ['PAD_TOP', '76px', '52px (TopBar) + 24px spacing'],
                       ['ICON_W', '80px', 'Icon button width (w-20)'],
-                      ['DRAG_THRESHOLD', '5px', 'Minimum distance before drag starts'],
                       ['Flow', 'column-first', 'Top→bottom, then left→right (macOS style)'],
                       ['Positioning', 'absolute + fixed grid', 'gridToPixel(col, row) → left/top'],
                       [
+                        'Drag & drop',
+                        'Not supported',
+                        'Icons are auto-placed, no manual reordering',
+                      ],
+                      [
                         'Resize reflow',
                         'requestAnimationFrame',
-                        'Real-time auto-sort — all icons re-laid column-first on any resize',
+                        'All icons re-laid column-first on any resize + CSS transition',
                       ],
                     ] as const
                   ).map(([prop, value, desc], i) => (
@@ -507,8 +505,8 @@ export function DesktopGridPage() {
               </table>
             </div>
             <p className="text-body-sm text-[var(--color-text-subtle)]">
-              maxCols = floor((width - PAD_X) / CELL_W), maxRows = floor((height - PAD_TOP) /
-              CELL_H). Resize reflow relocates out-of-bounds icons to empty cells.
+              maxRows = floor((height - PAD_TOP) / CELL_H). Resize reflow re-lays all icons
+              column-first with CSS transition animation.
             </p>
           </VStack>
 
@@ -646,7 +644,6 @@ const GRID = {
   PAD_X: 44,     // left inset
   PAD_TOP: 76,   // top inset (52px TopBar + 24px)
   ICON_W: 80,    // icon button width
-  DRAG_THRESHOLD: 5,
 };
 
 /* Logical → Pixel conversion */
@@ -657,32 +654,39 @@ function gridToPixel(col: number, row: number) {
   };
 }
 
-/* Grid bounds from container */
-function getGridBounds(container: HTMLElement) {
-  const rect = container.getBoundingClientRect();
-  return {
-    maxCols: Math.max(1, Math.floor((rect.width - GRID.PAD_X) / GRID.CELL_W)),
-    maxRows: Math.max(1, Math.floor((rect.height - GRID.PAD_TOP) / GRID.CELL_H)),
-  };
+/* Initial layout — always column-first */
+function getInitialIconLayout(): DesktopIconItem[] {
+  const maxRows = Math.max(1, Math.floor(
+    (window.innerHeight - GRID.PAD_TOP) / GRID.CELL_H
+  ));
+  return DESKTOP_ICONS_META.map((item, i) => ({
+    ...item,
+    col: Math.floor(i / maxRows),
+    row: i % maxRows,
+  }));
 }
 
-/* Desktop Icon — absolute positioned */
+/* Desktop Icon — absolute positioned with transition */
 <button
-  className="absolute flex flex-col items-center gap-1 w-20"
-  style={{ left: pos.x, top: pos.y }}
+  className="absolute flex flex-col items-center gap-1 w-20 cursor-pointer"
+  style={{
+    left: pos.x,
+    top: pos.y,
+    transition: 'left 200ms ease-out, top 200ms ease-out',
+  }}
 >
   <img className="w-16 h-16 object-cover" />
   <span className="text-label-md text-white">{label}</span>
 </button>
 
-/* Resize reflow — requestAnimationFrame */
-/* Auto-sorts ALL icons column-first on any resize (shrink & grow) */
+/* Resize reflow — re-lay all icons column-first */
 useEffect(() => {
   let rafId = 0;
   const handleResize = () => {
     cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(() => {
-      const { maxRows } = getGridBounds(container);
+      const maxRows = Math.max(1, Math.floor(
+        (window.innerHeight - GRID.PAD_TOP) / GRID.CELL_H));
       setIcons(prev => prev.map((icon, i) => ({
         ...icon,
         col: Math.floor(i / maxRows),
