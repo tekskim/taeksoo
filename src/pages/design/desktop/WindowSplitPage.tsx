@@ -247,7 +247,7 @@ function WindowSplitGuidelines() {
                     된다.
                   </li>
                   <li>
-                    스냅 감지 영역은 화면 가장자리에서 <strong>8px 이내</strong>(
+                    스냅 감지 영역은 화면 가장자리에서 <strong>20px 이내</strong>(
                     <code>SNAP_EDGE_THRESHOLD</code>)이다.
                   </li>
                   <li>
@@ -333,7 +333,7 @@ function WindowSplitGuidelines() {
             <tr>
               <Td>1</Td>
               <Td>Snap edge zone</Td>
-              <Td>화면 좌/우 가장자리 8px 영역. 마우스가 진입하면 프리뷰 표시.</Td>
+              <Td>화면 좌/우 가장자리 20px 영역. 마우스가 진입하면 프리뷰 표시.</Td>
             </tr>
             <tr>
               <Td>2</Td>
@@ -449,7 +449,7 @@ function WindowSplitGuidelines() {
           <tbody>
             <tr>
               <Td>Snap edge threshold</Td>
-              <Td>8px</Td>
+              <Td>20px</Td>
             </tr>
             <tr>
               <Td>Drag threshold</Td>

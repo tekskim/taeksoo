@@ -1270,7 +1270,7 @@ interface PageWindowProps {
 const TOP_BAR_HEIGHT = 52;
 const MIN_WINDOW_WIDTH = 520;
 const MIN_WINDOW_HEIGHT = 300;
-const SNAP_EDGE_THRESHOLD = 8;
+const SNAP_EDGE_THRESHOLD = 20;
 type SnapZone = 'left' | 'right' | null;
 
 function PageWindow({
