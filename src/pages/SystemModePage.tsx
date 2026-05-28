@@ -128,7 +128,6 @@ function getInitialIconLayout(): DesktopIconItem[] {
     { id: 'logs', icon: imgLogs, label: 'Log' },
     { id: 'alerts', icon: imgAlerts, label: 'Alert' },
     { id: 'audit', icon: imgAudit, label: 'Audit' },
-    { id: 'security', icon: imgSecurity, label: 'Security' },
     { id: 'kms', icon: imgKms, label: 'KMS' },
     { id: 'settings', icon: imgSettings, label: 'Settings' },
     { id: 'storage', icon: imgStorageAdmin, label: 'Aegis Storage' },
@@ -1179,16 +1178,7 @@ function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPan
    Window Management Types
    ---------------------------------------- */
 
-type AppId =
-  | 'iam'
-  | 'logs'
-  | 'alerts'
-  | 'audit'
-  | 'security'
-  | 'kms'
-  | 'settings'
-  | 'storage'
-  | 'cloud-builder';
+type AppId = 'iam' | 'logs' | 'alerts' | 'audit' | 'kms' | 'settings' | 'storage' | 'cloud-builder';
 
 interface WindowState {
   id: string;
@@ -1280,7 +1270,6 @@ function AppRoutes({ appId }: { appId: AppId }) {
     case 'logs':
     case 'alerts':
     case 'audit':
-    case 'security':
     case 'kms':
       return null;
     default:
@@ -2165,7 +2154,6 @@ export function SystemModePage() {
     logs: { name: 'Log', icon: imgLogs, initialPath: '/logs' },
     alerts: { name: 'Alert', icon: imgAlerts, initialPath: '/alerts' },
     audit: { name: 'Audit', icon: imgAudit, initialPath: '/audit' },
-    security: { name: 'Security', icon: imgSecurity, initialPath: '/security' },
     kms: { name: 'KMS', icon: imgKms, initialPath: '/kms' },
     settings: { name: 'Settings', icon: imgSettings, initialPath: '/settings' },
     storage: { name: 'Storage - System Admin', icon: imgStorageAdmin, initialPath: '/storage' },
@@ -2174,7 +2162,6 @@ export function SystemModePage() {
   const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set());
   const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([
     'iam',
-    'security',
     'kms',
     'settings',
     'storage',
