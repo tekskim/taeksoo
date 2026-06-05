@@ -11,6 +11,13 @@ import {
   Button,
   Modal,
   InfoBox,
+  Table,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  type TableColumn,
+  columnMinWidths,
 } from '@/design-system';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -19,6 +26,18 @@ import { useTabs } from '@/contexts/TabContext';
 import { IconEdit, IconTrash, IconCopy, IconDownload } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 import { installedAppsMock } from '@/pages/apps/appsMockData';
+import type { InstalledAppResource } from '@/pages/apps/appsTypes';
+
+/* ----------------------------------------
+   Types (local — for resource table rows)
+   ---------------------------------------- */
+
+interface ResourceRow {
+  id: string;
+  kind: string;
+  name: string;
+  namespace: string;
+}
 
 /* ----------------------------------------
    Component
@@ -30,10 +49,45 @@ export default function InstalledAppDetailPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const [activeTab, setActiveTab] = useState('details');
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const app = installedAppsMock.find((a) => a.id === appId);
+  const resources: ResourceRow[] = (app?.resources ?? []).map(
+    (r: InstalledAppResource, i: number) => ({
+      id: `${r.kind}-${r.name}-${i}`,
+      kind: r.kind,
+      name: r.name,
+      namespace: r.namespace ?? app?.namespace ?? '',
+    })
+  );
   const valuesYaml = app?.valuesYaml ?? '';
+
+  const resourceColumns: TableColumn<ResourceRow>[] = [
+    {
+      key: 'kind',
+      label: 'Kind',
+      flex: 1,
+      minWidth: 180,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 2,
+      minWidth: columnMinWidths.name,
+      render: (value) => (
+        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'namespace',
+      label: 'Namespace',
+      flex: 1,
+      minWidth: columnMinWidths.namespace,
+    },
+  ];
 
   if (!app) return null;
 
@@ -112,63 +166,76 @@ export default function InstalledAppDetailPage() {
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
-        {/* values.yaml — read-only */}
-        <div className="flex flex-col gap-3 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
-          <div className="flex items-center justify-between">
-            <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-              values.yaml
-            </span>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<IconCopy size={12} />}
-                onClick={() => navigator.clipboard.writeText(valuesYaml)}
-              >
-                Copy
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<IconDownload size={12} />}
-                onClick={() => {
-                  const blob = new Blob([valuesYaml], { type: 'text/yaml' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = `${app.releaseName}-values.yaml`;
-                  a.click();
-                  URL.revokeObjectURL(url);
-                }}
-              >
-                Download
-              </Button>
-            </div>
-          </div>
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="details">Details</Tab>
+            <Tab value="values">Values</Tab>
+          </TabList>
 
-          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
-            <OverlayScrollbarsComponent
-              options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
-              defer={false}
-              className="bg-[var(--color-surface-default)] max-h-[560px]"
-            >
-              <table className="w-full border-collapse">
-                <tbody>
-                  {valuesYaml.split('\n').map((line, i) => (
-                    <tr key={i} className="leading-[20px]">
-                      <td className="px-3 py-0 text-right select-none text-body-sm text-[var(--color-text-disabled)] font-mono w-[1%] whitespace-nowrap align-top">
-                        {i + 1}
-                      </td>
-                      <td className="px-3 py-0 text-body-sm text-[var(--color-text-default)] font-mono whitespace-pre">
-                        {line || '\u00A0'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </OverlayScrollbarsComponent>
-          </div>
-        </div>
+          <TabPanel value="details" className="pt-0">
+            <VStack gap={0} className="pt-4">
+              <Table<ResourceRow>
+                columns={resourceColumns}
+                data={resources}
+                rowKey="id"
+                emptyMessage="No resources found"
+              />
+            </VStack>
+          </TabPanel>
+
+          <TabPanel value="values" className="pt-0">
+            <VStack gap={3} className="pt-4">
+              <div className="flex items-center justify-end gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCopy size={12} />}
+                  onClick={() => navigator.clipboard.writeText(valuesYaml)}
+                >
+                  Copy
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconDownload size={12} />}
+                  onClick={() => {
+                    const blob = new Blob([valuesYaml], { type: 'text/yaml' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${app.releaseName}-values.yaml`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                >
+                  Download
+                </Button>
+              </div>
+              <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-surface-default)] max-h-[560px]"
+                >
+                  <table className="w-full border-collapse">
+                    <tbody>
+                      {valuesYaml.split('\n').map((line, i) => (
+                        <tr key={i} className="leading-[20px]">
+                          <td className="px-3 py-0 text-right select-none text-body-sm text-[var(--color-text-disabled)] font-mono w-[1%] whitespace-nowrap align-top">
+                            {i + 1}
+                          </td>
+                          <td className="px-3 py-0 text-body-sm text-[var(--color-text-default)] font-mono whitespace-pre">
+                            {line || '\u00A0'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </OverlayScrollbarsComponent>
+              </div>
+            </VStack>
+          </TabPanel>
+        </Tabs>
       </VStack>
 
       <Modal
