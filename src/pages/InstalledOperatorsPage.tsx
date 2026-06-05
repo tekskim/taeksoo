@@ -11,7 +11,6 @@ import {
   SearchInput,
   ListToolbar,
   ContextMenu,
-  Tooltip,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -19,136 +18,62 @@ import {
 } from '@/design-system';
 import { IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
-import postgresqlLogo from '@/assets/catalog/postgresql.svg';
-import kafkaLogo from '@/assets/catalog/kafka.svg';
-import milvusLogo from '@/assets/catalog/milvus.svg';
-import nginxLogo from '@/assets/catalog/nginx.svg';
-import valkeyLogo from '@/assets/catalog/valkey.svg';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { getContainerStatusTheme } from './containerStatusUtils';
-
-interface InstalledOperator {
-  id: string;
-  name: string;
-  iconSrc: string;
-  version: string;
-  namespace: string;
-  status: string;
-  statusMessage?: string;
-  managedResources: number;
-  lastUpdated: string;
-}
-
-const installedOperators: InstalledOperator[] = [
-  {
-    id: '1',
-    name: 'CNPG operator',
-    iconSrc: postgresqlLogo,
-    version: 'v1.29.0',
-    namespace: 'Cluster',
-    status: 'Deployed',
-    managedResources: 3,
-    lastUpdated: 'Mar 15, 2026',
-  },
-  {
-    id: '2',
-    name: 'Strimzi Kafka operator',
-    iconSrc: kafkaLogo,
-    version: 'v0.44.0',
-    namespace: 'Cluster',
-    status: 'Pending',
-    managedResources: 5,
-    lastUpdated: 'Mar 10, 2026',
-  },
-  {
-    id: '3',
-    name: 'Milvus operator',
-    iconSrc: milvusLogo,
-    version: 'v1.1.2',
-    namespace: 'Cluster',
-    status: 'Deployed',
-    managedResources: 2,
-    lastUpdated: 'Feb 28, 2026',
-  },
-  {
-    id: '4',
-    name: 'NGINX Ingress operator',
-    iconSrc: nginxLogo,
-    version: 'v3.4.0',
-    namespace: 'Namespace',
-    status: 'Deployed',
-    managedResources: 1,
-    lastUpdated: 'Feb 20, 2026',
-  },
-  {
-    id: '5',
-    name: 'Valkey operator',
-    iconSrc: valkeyLogo,
-    version: 'v0.8.1',
-    namespace: 'Cluster',
-    status: 'Failed',
-    statusMessage:
-      'PersistentVolumeClaim "data-postgresql-0" failed to bind: no matching StorageClass found.',
-    managedResources: 0,
-    lastUpdated: 'Apr 01, 2026',
-  },
-];
+import { installedOperatorsMock } from '@/pages/apps/appsMockData';
+import type { InstalledOperator } from '@/pages/apps/appsTypes';
 
 const operatorColumns: TableColumn<InstalledOperator>[] = [
   {
     key: 'status',
-    header: 'Status',
+    label: 'Status',
     width: fixedColumns.statusLabel,
-    render: (_, row) => {
-      const badge = (
-        <Badge theme={getContainerStatusTheme(row.status)} type="subtle" size="sm">
-          {row.status}
-        </Badge>
-      );
-      if (row.statusMessage) {
-        return <Tooltip content={row.statusMessage}>{badge}</Tooltip>;
-      }
-      return badge;
-    },
+    render: (_, row) => (
+      <Badge theme={getContainerStatusTheme(row.status)} type="subtle" size="sm">
+        {row.status}
+      </Badge>
+    ),
   },
   {
-    key: 'name',
-    header: 'Operator name',
+    key: 'displayName',
+    label: 'Operator name',
     minWidth: columnMinWidths.name,
     render: (_, row) => (
       <div className="flex items-center gap-2 min-w-0">
-        <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-[4px] border border-[var(--color-border-default)]">
-          <img src={row.iconSrc} alt={row.name} className="w-4 h-4" />
-        </div>
+        {row.logoUrl && (
+          <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-[4px] border border-[var(--color-border-default)]">
+            <img src={row.logoUrl} alt={row.displayName} className="w-4 h-4" />
+          </div>
+        )}
         <Link
           to={`/container/installed-operators/${row.id}`}
           className="text-[var(--color-action-primary)] font-medium hover:underline truncate min-w-0"
         >
-          {row.name}
+          {row.displayName}
         </Link>
       </div>
     ),
   },
   {
     key: 'namespace',
-    header: 'Scope',
+    label: 'Namespace',
     minWidth: columnMinWidths.namespace,
   },
   {
     key: 'version',
-    header: 'Version',
+    label: 'Version',
     minWidth: 100,
   },
   {
-    key: 'lastUpdated',
-    header: 'Installed at',
+    key: 'installedAt',
+    label: 'Installed at',
     minWidth: columnMinWidths.createdAt,
   },
   {
     key: 'actions',
-    header: 'Action',
+    label: 'Action',
     width: fixedColumns.actions,
     align: 'center' as const,
     sticky: 'right' as const,
@@ -192,8 +117,10 @@ export default function InstalledOperatorsPage() {
     updateActiveTabLabel('Installed operators');
   }, [updateActiveTabLabel]);
 
-  const filteredOperators = installedOperators.filter((op) =>
-    op.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredOperators = installedOperatorsMock.filter(
+    (op) =>
+      op.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      op.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
