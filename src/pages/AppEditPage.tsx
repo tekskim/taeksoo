@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -153,7 +153,10 @@ function EditSummarySidebar({
 export function AppEditPage() {
   const { appId } = useParams<{ appId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
+  // Container 경로면 ContainerSidebar, 그 외(standalone app-catalog)는 AppCatalogSidebar
+  const isContainerPath = location.pathname.startsWith('/container/');
   const captureMode = searchParams.get('captureMode') === 'true';
   const captureTab = searchParams.get('captureTab') as EditTab | null;
 
@@ -261,11 +264,12 @@ export function AppEditPage() {
     navigate(`/container/installed-apps/${appId}`);
   };
 
-  const sidebarNode = isStandalone ? (
-    <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-  ) : (
-    <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-  );
+  const sidebarNode =
+    isContainerPath || !isStandalone ? (
+      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    ) : (
+      <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    );
 
   if (!app || !chart) {
     return (

@@ -25,92 +25,8 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
-
-function IconButton({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <button
-      className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-      aria-label={label}
-    >
-      <span className="text-[var(--color-text-muted)]">{icon}</span>
-    </button>
-  );
-}
-
-/* ----------------------------------------
-   Types
-   ---------------------------------------- */
-
-interface InstalledApp {
-  id: string;
-  name: string;
-  version: string;
-  namespace: string;
-  status: string;
-  chartName: string;
-  lastDeployed: string;
-}
-
-/* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
-
-const installedApps: InstalledApp[] = [
-  {
-    id: '1',
-    name: 'postgresql-1',
-    version: 'v16.2',
-    namespace: 'default',
-    status: 'Deployed',
-    chartName: 'postgresql',
-    lastDeployed: 'Mar 01, 2026',
-  },
-  {
-    id: '2',
-    name: 'kafka',
-    version: 'v08.33',
-    namespace: 'data',
-    status: 'Deployed',
-    chartName: 'kafka',
-    lastDeployed: 'Mar 10, 2026',
-  },
-  {
-    id: '3',
-    name: 'valkey',
-    version: 'v80.2',
-    namespace: 'cache',
-    status: 'Deployed',
-    chartName: 'valkey',
-    lastDeployed: 'Mar 06, 2026',
-  },
-  {
-    id: '4',
-    name: 'nginx-1',
-    version: 'v4.05',
-    namespace: 'ingress-nginx',
-    status: 'Deployed',
-    chartName: 'nginx',
-    lastDeployed: 'Mar 08, 2026',
-  },
-  {
-    id: '5',
-    name: 'milvus',
-    version: 'v4.27',
-    namespace: 'ai',
-    status: 'Pending',
-    chartName: 'milvus',
-    lastDeployed: 'Mar 12, 2026',
-  },
-  {
-    id: '6',
-    name: 'postgresql-1',
-    version: 'v16.30',
-    namespace: 'ai',
-    status: 'Failed',
-    chartName: 'postgresql',
-    lastDeployed: 'Mar 12, 2026',
-  },
-];
+import { installedAppsMock } from '@/pages/apps/appsMockData';
+import type { InstalledApp } from '@/pages/apps/appsTypes';
 
 /* ----------------------------------------
    Component
@@ -125,11 +41,11 @@ export default function InstalledAppsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<InstalledApp | null>(null);
 
-  const filteredApps = installedApps.filter(
+  const filteredApps = installedAppsMock.filter(
     (app) =>
       !searchQuery ||
+      app.releaseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      app.chartName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       app.namespace.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -160,7 +76,7 @@ export default function InstalledAppsPage() {
       ),
     },
     {
-      key: 'name',
+      key: 'releaseName',
       label: 'App name',
       minWidth: columnMinWidths.name,
       render: (value, row) => (
@@ -173,7 +89,7 @@ export default function InstalledAppsPage() {
       ),
     },
     { key: 'namespace', label: 'Namespace', minWidth: columnMinWidths.namespace },
-    { key: 'chartName', label: 'Chart name', minWidth: '140px' },
+    { key: 'name', label: 'Chart name', minWidth: '140px' },
     {
       key: 'version',
       label: 'Version',
@@ -278,7 +194,7 @@ export default function InstalledAppsPage() {
       >
         <InfoBox
           label="App / Namespace"
-          value={deleteTarget ? `${deleteTarget.name} / ${deleteTarget.namespace}` : ''}
+          value={deleteTarget ? `${deleteTarget.releaseName} / ${deleteTarget.namespace}` : ''}
         />
         <div className="flex gap-2 w-full">
           <Button variant="secondary" onClick={() => setDeleteTarget(null)} className="flex-1">
