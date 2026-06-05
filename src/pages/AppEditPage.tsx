@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useCallback } from 'react';
+import { diffLines } from 'diff';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -12,27 +13,122 @@ import {
   Input,
   Select,
   SectionCard,
+  WizardSummary,
+  PreSection,
   DoneSection,
   DoneSectionRow,
-  InlineMessage,
-  ConfirmModal,
   Tabs,
   TabList,
   Tab,
   TabPanel,
-  Badge,
+  InlineMessage,
+  StatusIndicator,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
-import { WizardSectionStatusIcon } from '@/design-system/components/Wizard/WizardSection';
+import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
-import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
-import { IconBell, IconChevronLeft } from '@tabler/icons-react';
-import { catalogCharts, installedAppsMock, clusterOptions } from '@/pages/apps/appsMockData';
-import { ModeSelectTable } from '@/pages/apps/ModeSelectTable';
+import { IconBell, IconCopy } from '@tabler/icons-react';
+import { catalogCharts, installedAppsMock } from '@/pages/apps/appsMockData';
+import type { InstalledAppStatus, RequiredOptionType } from '@/pages/apps/appsTypes';
 
-type EditTab = 'basic' | 'values';
+const STORAGECLASS_OPTIONS = [
+  { value: '', label: 'Select StorageClass' },
+  { value: 'standard', label: 'standard' },
+  { value: 'fast', label: 'fast' },
+  { value: 'longhorn', label: 'longhorn' },
+];
+
+const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error'> = {
+  Deployed: 'active',
+  Pending: 'building',
+  Failed: 'error',
+};
+
+type SectionStep = 'version' | 'configuration';
+
+const SECTION_LABELS: Record<SectionStep, string> = {
+  version: 'Version',
+  configuration: 'Configuration',
+};
+
+const SECTION_ORDER: SectionStep[] = ['version', 'configuration'];
+
+/* ----------------------------------------
+   YAML ↔ Options 실시간 동기화 헬퍼
+   dot-notation path 기준으로 2-space YAML 값을 읽고 씁니다.
+   ---------------------------------------- */
+
+function getYamlValue(yaml: string, dotPath: string): string {
+  const parts = dotPath.split('.');
+  const lines = yaml.split('\n');
+  let searchStart = 0;
+
+  for (let depth = 0; depth < parts.length; depth++) {
+    const key = parts[depth];
+    const isLast = depth === parts.length - 1;
+    const expectedIndent = depth * 2;
+    let found = false;
+
+    for (let i = searchStart; i < lines.length; i++) {
+      const line = lines[i];
+      const lineIndent = (line.match(/^( *)/) ?? ['', ''])[1].length;
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      if (lineIndent < expectedIndent) break;
+      if (lineIndent !== expectedIndent) continue;
+
+      if (trimmed.startsWith(key + ':')) {
+        if (isLast) {
+          return trimmed
+            .slice(key.length + 1)
+            .trim()
+            .replace(/^["']|["']$/g, '');
+        } else {
+          searchStart = i + 1;
+          found = true;
+          break;
+        }
+      }
+    }
+    if (!found && !isLast) return '';
+  }
+  return '';
+}
+
+function setYamlValue(yaml: string, dotPath: string, value: string): string {
+  const parts = dotPath.split('.');
+  const lines = yaml.split('\n');
+  let searchStart = 0;
+
+  for (let depth = 0; depth < parts.length; depth++) {
+    const key = parts[depth];
+    const isLast = depth === parts.length - 1;
+    const expectedIndent = depth * 2;
+
+    for (let i = searchStart; i < lines.length; i++) {
+      const line = lines[i];
+      const lineIndent = (line.match(/^( *)/) ?? ['', ''])[1].length;
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      if (lineIndent < expectedIndent) break;
+      if (lineIndent !== expectedIndent) continue;
+
+      if (trimmed.startsWith(key + ':')) {
+        if (isLast) {
+          const spaces = ' '.repeat(expectedIndent);
+          const formatted =
+            value === '' ? '""' : /[\s:{}\[\],&*#?|<>=!%@`]/.test(value) ? `"${value}"` : value;
+          lines[i] = `${spaces}${key}: ${formatted}`;
+          return lines.join('\n');
+        } else {
+          searchStart = i + 1;
+          break;
+        }
+      }
+    }
+  }
+  return yaml;
+}
 
 function toTitleCase(s: string): string {
   return s
@@ -43,238 +139,591 @@ function toTitleCase(s: string): string {
 }
 
 /* ----------------------------------------
-   YamlEditor — 라인 번호 있는 YAML 편집기
+   UnitInput — Input with unit label to the right
    ---------------------------------------- */
-function YamlEditor({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const lines = value.split('\n');
 
+function UnitInput({
+  value,
+  onChange,
+  unit,
+  placeholder,
+  disabled,
+  type = 'text',
+}: {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  unit: string;
+  placeholder?: string;
+  disabled?: boolean;
+  type?: 'text' | 'number';
+}) {
   return (
-    <div
-      className="flex font-mono text-[13px] rounded-md border border-[var(--color-border-default)] overflow-hidden"
-      style={{ minHeight: '420px', background: 'var(--color-surface-default)' }}
-    >
-      {/* Line numbers */}
-      <div
-        className="select-none text-right pr-3 pl-3 pt-3 pb-3"
-        style={{
-          minWidth: '44px',
-          background: 'var(--color-surface-subtle)',
-          borderRight: '1px solid var(--color-border-subtle)',
-          color: 'var(--color-text-muted)',
-          lineHeight: '20px',
-          userSelect: 'none',
-        }}
-      >
-        {lines.map((_, i) => (
-          <div key={i}>{i + 1}</div>
-        ))}
-      </div>
-      {/* Textarea */}
-      <textarea
-        className="flex-1 resize-none outline-none p-3"
-        style={{
-          background: 'transparent',
-          color: 'var(--color-text-default)',
-          lineHeight: '20px',
-          tabSize: 2,
-          fontFamily: 'inherit',
-        }}
-        spellCheck={false}
+    <div className="flex items-center gap-2 w-full">
+      <Input
+        type={type}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        rows={Math.max(lines.length + 2, 20)}
+        onChange={onChange}
+        placeholder={placeholder}
+        disabled={disabled}
+        className="flex-1"
       />
+      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] shrink-0">
+        {unit}
+      </span>
     </div>
   );
 }
 
 /* ----------------------------------------
-   EditSummarySidebar
+   YAML Editor with line numbers
    ---------------------------------------- */
-function EditSummarySidebar({
-  basicDone,
-  yamlReady,
-  onCancel,
-  onApply,
-  submitting,
-}: {
-  basicDone: boolean;
-  yamlReady: boolean;
-  onCancel: () => void;
-  onApply: () => void;
-  submitting: boolean;
-}) {
-  const items: { key: string; label: string; status: WizardSectionState }[] = [
-    { key: 'basic', label: 'Basic Information', status: basicDone ? 'done' : 'active' },
-    { key: 'values', label: 'Values', status: 'done' },
-  ];
+
+function YamlEditor({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const lineNumbersRef = useRef<HTMLDivElement>(null);
+  const lines = value.split('\n');
+
+  const handleScroll = useCallback(() => {
+    if (textareaRef.current && lineNumbersRef.current) {
+      lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
+    }
+  }, []);
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      /* ignore */
+    }
+  }, [value]);
 
   return (
-    <div className="w-[280px] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-3">
-          <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
-          <div className="flex flex-col">
-            {items.map((item) => (
-              <div key={item.key} className="flex items-center justify-between py-1.5">
-                <span className="text-body-md text-[var(--color-text-default)]">{item.label}</span>
-                <WizardSectionStatusIcon status={item.status} />
-              </div>
+    <div className="flex flex-col gap-2 w-full min-h-0 flex-1">
+      <HStack justify="end" gap={2}>
+        <Button
+          variant="secondary"
+          size="sm"
+          leftIcon={<IconCopy size={12} stroke={1.5} />}
+          onClick={handleCopy}
+        >
+          Copy
+        </Button>
+      </HStack>
+      <div className="flex-1 flex min-h-[360px] border border-[var(--color-border-default)] rounded-[4px] bg-[var(--color-base-white)] overflow-hidden">
+        <div
+          ref={lineNumbersRef}
+          className="w-[44px] flex-shrink-0 overflow-y-scroll py-2 pr-2 select-none text-right bg-[var(--color-surface-default)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="font-mono text-body-md leading-[18px] text-[var(--color-text-subtle)]">
+            {lines.map((_, i) => (
+              <div key={i + 1}>{i + 1}</div>
             ))}
           </div>
         </div>
-
-        <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="flex-[0.3]">
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={onApply}
-            disabled={!yamlReady || submitting}
-            className="flex-[0.7]"
-          >
-            {submitting ? 'Applying...' : 'Apply'}
-          </Button>
-        </HStack>
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onScroll={handleScroll}
+            className="w-full h-full py-2 px-2.5 font-mono text-body-md leading-[18px] text-[var(--color-text-default)] bg-transparent border-none outline-none resize-none overflow-auto"
+            spellCheck={false}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+          />
+        </div>
       </div>
     </div>
   );
 }
 
 /* ----------------------------------------
-   Apps > Edit Page (FR-024)
-   Flow: Basic Information tab → Values (YAML Editor) tab → Apply
-   - App Name, Namespace, Version: read-only
-   - Mode 변경 시 YAML 전체 교체 (append 아님)
-   - Failed 상태에서도 사용 가능
+   Diff Viewer — Unified / Split
+   ---------------------------------------- */
+
+type DiffViewMode = 'unified' | 'split';
+
+function getLines(value: string): string[] {
+  return (value.endsWith('\n') ? value.slice(0, -1) : value).split('\n');
+}
+
+function DiffViewer({ oldYaml, newYaml }: { oldYaml: string; newYaml: string }) {
+  const [viewMode, setViewMode] = useState<DiffViewMode>('unified');
+  const changes = diffLines(oldYaml || '', newYaml || '');
+  const hasChanges = changes.some((c) => c.added || c.removed);
+
+  return (
+    <div className="flex flex-col gap-3 w-full">
+      <HStack justify="between" align="center">
+        <span className="text-[11px] text-[var(--color-text-subtle)]">
+          {hasChanges
+            ? 'Showing differences from current values'
+            : 'No changes from current values'}
+        </span>
+        <HStack gap={1}>
+          <button
+            onClick={() => setViewMode('unified')}
+            className={`px-3 py-1 text-[11px] rounded-l border border-[var(--color-border-default)] transition-colors ${
+              viewMode === 'unified'
+                ? 'bg-[var(--color-action-primary)] text-white border-[var(--color-action-primary)]'
+                : 'bg-[var(--color-surface-default)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-muted)]'
+            }`}
+          >
+            Unified
+          </button>
+          <button
+            onClick={() => setViewMode('split')}
+            className={`px-3 py-1 text-[11px] rounded-r border border-l-0 border-[var(--color-border-default)] transition-colors ${
+              viewMode === 'split'
+                ? 'bg-[var(--color-action-primary)] text-white border-[var(--color-action-primary)]'
+                : 'bg-[var(--color-surface-default)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-muted)]'
+            }`}
+          >
+            Split
+          </button>
+        </HStack>
+      </HStack>
+      <div className="border border-[var(--color-border-default)] rounded-[4px] overflow-hidden bg-white">
+        {!hasChanges ? (
+          <div className="py-10 text-center text-[12px] text-[var(--color-text-subtle)]">
+            No changes — values match the current configuration.
+          </div>
+        ) : viewMode === 'unified' ? (
+          <DiffUnified changes={changes} />
+        ) : (
+          <DiffSplit changes={changes} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function DiffUnified({ changes }: { changes: ReturnType<typeof diffLines> }) {
+  let leftNum = 0,
+    rightNum = 0;
+  const rows: {
+    type: 'added' | 'removed' | 'unchanged';
+    content: string;
+    left: number | null;
+    right: number | null;
+  }[] = [];
+
+  for (const change of changes) {
+    for (const line of getLines(change.value)) {
+      if (change.removed) {
+        rows.push({ type: 'removed', content: line, left: ++leftNum, right: null });
+      } else if (change.added) {
+        rows.push({ type: 'added', content: line, left: null, right: ++rightNum });
+      } else {
+        rows.push({ type: 'unchanged', content: line, left: ++leftNum, right: ++rightNum });
+      }
+    }
+  }
+
+  return (
+    <div className="overflow-auto max-h-[420px] font-mono text-[11px] leading-[18px]">
+      {rows.map((row, i) => (
+        <div
+          key={i}
+          className={`flex min-w-0 ${row.type === 'added' ? 'bg-[#f0fff4]' : row.type === 'removed' ? 'bg-[#fff5f5]' : ''}`}
+        >
+          <span className="w-[36px] shrink-0 text-right pr-2 select-none text-[var(--color-text-subtle)] border-r border-[var(--color-border-subtle)]">
+            {row.left ?? ''}
+          </span>
+          <span className="w-[36px] shrink-0 text-right pr-2 select-none text-[var(--color-text-subtle)] border-r border-[var(--color-border-subtle)]">
+            {row.right ?? ''}
+          </span>
+          <span
+            className={`w-[20px] shrink-0 text-center select-none ${row.type === 'added' ? 'text-[#48bb78]' : row.type === 'removed' ? 'text-[#fc8181]' : 'text-[var(--color-text-subtle)]'}`}
+          >
+            {row.type === 'added' ? '+' : row.type === 'removed' ? '-' : ' '}
+          </span>
+          <span
+            className={`flex-1 px-2 whitespace-pre overflow-hidden ${row.type === 'added' ? 'text-[#276749]' : row.type === 'removed' ? 'text-[#c53030]' : 'text-[var(--color-text-default)]'}`}
+          >
+            {row.content}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DiffSplit({ changes }: { changes: ReturnType<typeof diffLines> }) {
+  const rows: {
+    leftType: 'removed' | 'unchanged' | null;
+    leftContent: string | null;
+    leftNum: number | null;
+    rightType: 'added' | 'unchanged' | null;
+    rightContent: string | null;
+    rightNum: number | null;
+  }[] = [];
+  let leftNum = 0,
+    rightNum = 0;
+  let i = 0;
+
+  while (i < changes.length) {
+    const change = changes[i];
+    if (change.removed && i + 1 < changes.length && changes[i + 1].added) {
+      const removedLines = getLines(change.value);
+      const addedLines = getLines(changes[i + 1].value);
+      const maxLen = Math.max(removedLines.length, addedLines.length);
+      for (let j = 0; j < maxLen; j++) {
+        rows.push({
+          leftType: j < removedLines.length ? 'removed' : null,
+          leftContent: j < removedLines.length ? removedLines[j] : null,
+          leftNum: j < removedLines.length ? ++leftNum : null,
+          rightType: j < addedLines.length ? 'added' : null,
+          rightContent: j < addedLines.length ? addedLines[j] : null,
+          rightNum: j < addedLines.length ? ++rightNum : null,
+        });
+      }
+      i += 2;
+    } else if (change.removed) {
+      for (const line of getLines(change.value)) {
+        rows.push({
+          leftType: 'removed',
+          leftContent: line,
+          leftNum: ++leftNum,
+          rightType: null,
+          rightContent: null,
+          rightNum: null,
+        });
+      }
+      i++;
+    } else if (change.added) {
+      for (const line of getLines(change.value)) {
+        rows.push({
+          leftType: null,
+          leftContent: null,
+          leftNum: null,
+          rightType: 'added',
+          rightContent: line,
+          rightNum: ++rightNum,
+        });
+      }
+      i++;
+    } else {
+      for (const line of getLines(change.value)) {
+        rows.push({
+          leftType: 'unchanged',
+          leftContent: line,
+          leftNum: ++leftNum,
+          rightType: 'unchanged',
+          rightContent: line,
+          rightNum: ++rightNum,
+        });
+      }
+      i++;
+    }
+  }
+
+  return (
+    <div className="overflow-auto max-h-[420px] font-mono text-[11px] leading-[18px]">
+      {rows.map((row, i) => (
+        <div key={i} className="flex min-w-0 divide-x divide-[var(--color-border-subtle)]">
+          <div
+            className={`flex flex-1 min-w-0 ${row.leftType === 'removed' ? 'bg-[#fff5f5]' : ''}`}
+          >
+            <span className="w-[36px] shrink-0 text-right pr-2 select-none text-[var(--color-text-subtle)] border-r border-[var(--color-border-subtle)]">
+              {row.leftNum ?? ''}
+            </span>
+            <span
+              className={`w-[14px] shrink-0 text-center select-none ${row.leftType === 'removed' ? 'text-[#fc8181]' : 'text-[var(--color-text-subtle)]'}`}
+            >
+              {row.leftType === 'removed' ? '-' : ' '}
+            </span>
+            <span
+              className={`flex-1 px-2 whitespace-pre overflow-hidden ${row.leftType === 'removed' ? 'text-[#c53030]' : 'text-[var(--color-text-default)]'}`}
+            >
+              {row.leftContent ?? ''}
+            </span>
+          </div>
+          <div className={`flex flex-1 min-w-0 ${row.rightType === 'added' ? 'bg-[#f0fff4]' : ''}`}>
+            <span className="w-[36px] shrink-0 text-right pr-2 select-none text-[var(--color-text-subtle)] border-r border-[var(--color-border-subtle)]">
+              {row.rightNum ?? ''}
+            </span>
+            <span
+              className={`w-[14px] shrink-0 text-center select-none ${row.rightType === 'added' ? 'text-[#48bb78]' : 'text-[var(--color-text-subtle)]'}`}
+            >
+              {row.rightType === 'added' ? '+' : ' '}
+            </span>
+            <span
+              className={`flex-1 px-2 whitespace-pre overflow-hidden ${row.rightType === 'added' ? 'text-[#276749]' : 'text-[var(--color-text-default)]'}`}
+            >
+              {row.rightContent ?? ''}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Required Options Form
+   ---------------------------------------- */
+
+function OptionsFormField({
+  opt,
+  value,
+  onChange,
+}: {
+  opt: { key: string; label: string; type?: RequiredOptionType; unit?: string };
+  value: string;
+  onChange: (key: string, val: string) => void;
+}) {
+  return (
+    <FormField required>
+      <FormField.Label>{opt.label}</FormField.Label>
+      <FormField.Control>
+        {opt.type === 'password' ? (
+          <Input
+            type="password"
+            value={value}
+            onChange={(e) => onChange(opt.key, e.target.value)}
+            fullWidth
+            placeholder="••••••••"
+          />
+        ) : opt.type === 'int' ? (
+          <Input
+            type="number"
+            value={value}
+            onChange={(e) => onChange(opt.key, e.target.value)}
+            fullWidth
+            placeholder="e.g. 3"
+          />
+        ) : opt.type === 'storageclass' ? (
+          <Select
+            options={STORAGECLASS_OPTIONS}
+            value={value}
+            onChange={(v) => onChange(opt.key, v ?? '')}
+            fullWidth
+          />
+        ) : opt.unit ? (
+          <UnitInput
+            value={value}
+            onChange={(e) => onChange(opt.key, e.target.value)}
+            unit={opt.unit}
+            placeholder="e.g. 8"
+            type="number"
+          />
+        ) : (
+          <Input
+            value={value}
+            onChange={(e) => onChange(opt.key, e.target.value)}
+            fullWidth
+            placeholder={`Enter ${opt.label}`}
+          />
+        )}
+      </FormField.Control>
+    </FormField>
+  );
+}
+
+function OptionsForm({
+  opts,
+  values,
+  onChange,
+}: {
+  opts: { key: string; label: string; type?: RequiredOptionType; group?: string; unit?: string }[];
+  values: Record<string, string>;
+  onChange: (key: string, val: string) => void;
+}) {
+  if (opts.length === 0) {
+    return (
+      <InlineMessage variant="info">
+        This chart has no configurable options. You can edit values directly in the YAML tab.
+      </InlineMessage>
+    );
+  }
+
+  const hasGroups = opts.some((o) => o.group);
+
+  if (!hasGroups) {
+    return (
+      <VStack gap={4}>
+        {opts.map((opt) => (
+          <OptionsFormField
+            key={opt.key}
+            opt={opt}
+            value={values[opt.key] ?? ''}
+            onChange={onChange}
+          />
+        ))}
+      </VStack>
+    );
+  }
+
+  // Group-aware rendering: show group header when group changes
+  const elements: React.ReactNode[] = [];
+  let lastGroup: string | undefined = undefined;
+
+  opts.forEach((opt) => {
+    if (opt.group && opt.group !== lastGroup) {
+      elements.push(
+        <div key={`group-${opt.group}`} className="pt-2 first:pt-0">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--color-text-subtle)]">
+            {opt.group}
+          </span>
+          <div className="w-full h-px bg-[var(--color-border-subtle)] mt-1 mb-3" />
+        </div>
+      );
+      lastGroup = opt.group;
+    }
+    elements.push(
+      <OptionsFormField key={opt.key} opt={opt} value={values[opt.key] ?? ''} onChange={onChange} />
+    );
+  });
+
+  return <VStack gap={4}>{elements}</VStack>;
+}
+
+/* ----------------------------------------
+   Summary Sidebar
+   ---------------------------------------- */
+
+function SummarySidebar({
+  app,
+  sectionStatus,
+  isUpgrade,
+  onCancel,
+  onSubmit,
+  submitting,
+}: {
+  app: { name: string; namespace: string; status: InstalledAppStatus };
+  sectionStatus: Record<SectionStep, WizardSectionState>;
+  isUpgrade: boolean;
+  onCancel: () => void;
+  onSubmit: () => void;
+  submitting: boolean;
+}) {
+  const items: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
+    key,
+    label: SECTION_LABELS[key],
+    status: sectionStatus[key],
+  }));
+
+  const isDisabled = sectionStatus.configuration !== 'done' || submitting;
+
+  return (
+    <div className="w-[280px] shrink-0 sticky top-4 self-start flex flex-col gap-4">
+      {/* App info card */}
+      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-2">
+        <span className="text-[length:var(--font-size-12)] font-semibold text-[var(--color-text-default)]">
+          {toTitleCase(app.name)}
+        </span>
+        <div className="flex items-center gap-2">
+          <StatusIndicator status={statusMap[app.status]} label={app.status} layout="default" />
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <span className="text-[11px] text-[var(--color-text-subtle)]">Namespace</span>
+          <span className="text-[12px] text-[var(--color-text-default)]">{app.namespace}</span>
+        </div>
+      </div>
+      <WizardSummary items={items} />
+      <HStack gap={2}>
+        <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={onSubmit} disabled={isDisabled} className="flex-1">
+          {submitting ? (isUpgrade ? 'Upgrading...' : 'Saving...') : isUpgrade ? 'Upgrade' : 'Save'}
+        </Button>
+      </HStack>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Apps > Edit / Upgrade Page (FR-014 ~ FR-017)
+   Wizard Flow: Version → Configuration → Save / Upgrade
+   Namespace는 변경 불가 (표시만)
    ---------------------------------------- */
 
 export function AppEditPage() {
   const { appId } = useParams<{ appId: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-  // Container 경로면 ContainerSidebar, 그 외(standalone app-catalog)는 AppCatalogSidebar
-  const isContainerPath = location.pathname.startsWith('/container/');
-  const captureMode = searchParams.get('captureMode') === 'true';
-  const captureTab = searchParams.get('captureTab') as EditTab | null;
-
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const { isStandalone } = useAppCatalogMode();
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
   const app = installedAppsMock.find((a) => a.id === appId);
   const chart = app ? catalogCharts.find((c) => c.name === app.name) : undefined;
+  const opts = chart?.requiredOptions ?? [];
 
-  // captureMode: full-page scroll 허용
-  useEffect(() => {
-    if (!captureMode) return;
-    const h = document.documentElement;
-    const b = document.body;
-    h.style.overflow = 'auto';
-    h.style.height = 'auto';
-    b.style.overflow = 'auto';
-    b.style.height = 'auto';
-    return () => {
-      h.style.overflow = '';
-      h.style.height = '';
-      b.style.overflow = '';
-      b.style.height = '';
-    };
-  }, [captureMode]);
+  const versions = chart?.availableVersions ?? (chart ? [chart.version] : []);
+  // Only allow current version or higher (FR-015: 하위 버전 선택 불가)
+  const allowedVersions = versions.filter((v) => !app?.version || v >= app.version);
+  const versionOptions = allowedVersions.map((v) => ({
+    value: v,
+    label: v === app?.version ? `${v} (current)` : v,
+  }));
 
-  const [activeTab, setActiveTab] = useState<EditTab>(captureTab ?? 'basic');
-  const [basicDone, setBasicDone] = useState(captureTab === 'values');
-
-  // Mode selection — pre-select current app mode if available
-  const [selectedMode, setSelectedMode] = useState(() => chart?.deployModes?.[0]?.value ?? '');
-
-  // Build YAML from current app values + mode override
-  // Edit: pre-fill from installed app's current values.yaml, not chart defaults
-  const buildYaml = useCallback(
-    (mode: string) => {
-      if (!chart) return '';
-      const base = app?.valuesYaml ?? chart.defaultValuesYaml ?? '';
-      const modeOverride = mode ? chart.modeYamlOverrides?.[mode] : undefined;
-      // Mode change replaces entire YAML with mode template (FR-011b policy)
-      return modeOverride ?? base;
-    },
-    [chart, app]
-  );
-
-  const [yamlContent, setYamlContent] = useState(() => {
-    if (captureTab === 'values' && chart && app) {
-      return buildYaml(app.mode ?? chart.deployModes?.[0]?.value ?? '');
-    }
-    return '';
+  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
+    version: 'active',
+    configuration: 'pre',
   });
-  const [yamlEdited, setYamlEdited] = useState(false);
-  const [showPreviousWarning, setShowPreviousWarning] = useState(false);
-  const [showResetModal, setShowResetModal] = useState(false);
+
+  const [version, setVersion] = useState(app?.version ?? allowedVersions[0] ?? '');
+  const [activeTab, setActiveTab] = useState<'options' | 'yaml' | 'compare'>('options');
+
+  // Initialize option values from existing YAML
+  const initialOptionValues = React.useMemo(() => {
+    const vals: Record<string, string> = {};
+    for (const opt of opts) {
+      vals[opt.key] = getYamlValue(app?.valuesYaml ?? '', opt.key);
+    }
+    return vals;
+  }, []);
+
+  const [optionValues, setOptionValues] = useState<Record<string, string>>(initialOptionValues);
+  const [yamlContent, setYamlContent] = useState(app?.valuesYaml ?? '');
   const [submitting, setSubmitting] = useState(false);
 
-  const handleGoToYaml = () => {
-    const yaml = buildYaml(selectedMode);
-    setYamlContent(yaml);
-    setYamlEdited(false);
-    setBasicDone(true);
-    setActiveTab('values');
-  };
+  const setStep = (updates: Partial<Record<SectionStep, WizardSectionState>>) =>
+    setSectionStatus((prev) => ({ ...prev, ...updates }));
 
-  const handleTabChange = (value: string) => {
-    if (activeTab === 'values' && value === 'basic' && yamlEdited) {
-      setShowPreviousWarning(true);
-    } else {
-      setActiveTab(value as EditTab);
-    }
-  };
+  const isUpgrade = version !== app?.version;
+  const isConfigDone =
+    opts.length === 0 || opts.every((o) => (optionValues[o.key] ?? '').trim() !== '');
+  const originalYaml = app?.valuesYaml ?? '';
+  const hasYamlChanges = yamlContent !== originalYaml;
 
-  const handlePreviousFromYaml = () => {
-    if (yamlEdited) {
-      setShowPreviousWarning(true);
-    } else {
-      setActiveTab('basic');
-    }
-  };
+  // Edit Options → YAML 실시간 반영
+  const handleOptionChange = useCallback((key: string, val: string) => {
+    setOptionValues((prev) => ({ ...prev, [key]: val }));
+    setYamlContent((prevYaml) => setYamlValue(prevYaml, key, val));
+  }, []);
 
-  const handleConfirmPrevious = () => {
-    setShowPreviousWarning(false);
-    setActiveTab('basic');
-    setBasicDone(false);
-    setYamlEdited(false);
-  };
+  // Edit YAML → Options 실시간 반영
+  const handleYamlChange = useCallback(
+    (newYaml: string) => {
+      setYamlContent(newYaml);
+      setOptionValues(() => {
+        const newVals: Record<string, string> = {};
+        for (const opt of opts) {
+          newVals[opt.key] = getYamlValue(newYaml, opt.key);
+        }
+        return newVals;
+      });
+    },
+    [opts]
+  );
 
-  const handleConfirmReset = () => {
-    setYamlContent(buildYaml(selectedMode));
-    setYamlEdited(false);
-    setShowResetModal(false);
-  };
-
-  const handleYamlChange = (v: string) => {
-    setYamlContent(v);
-    setYamlEdited(true);
-  };
-
-  const handleApply = async () => {
+  const handleSubmit = async () => {
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
     navigate(`/container/installed-apps/${appId}`);
   };
 
-  const sidebarNode =
-    isContainerPath || !isStandalone ? (
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-    ) : (
-      <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-    );
-
-  if (!app || !chart) {
+  if (!app) {
     return (
       <PageShell
-        sidebar={sidebarNode}
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
         sidebarWidth={sidebarWidth}
         contentClassName="pt-4 px-8 pb-6"
       >
@@ -292,11 +741,11 @@ export function AppEditPage() {
     );
   }
 
-  const appTitle = toTitleCase(app.releaseName);
-
   return (
     <PageShell
-      sidebar={sidebarNode}
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -319,13 +768,10 @@ export function AppEditPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/apps/catalog' },
+                { label: 'Apps', href: '/container/catalog' },
                 { label: 'Installed Apps', href: '/container/installed-apps' },
-                {
-                  label: appTitle,
-                  href: `/container/installed-apps/${appId}`,
-                },
-                { label: 'Edit and Apply' },
+                { label: toTitleCase(app.name), href: `/container/installed-apps/${appId}` },
+                { label: 'Edit / Upgrade' },
               ]}
             />
           }
@@ -349,238 +795,164 @@ export function AppEditPage() {
               fontWeight: 'var(--font-weight-semibold)',
             }}
           >
-            Edit and Apply — {appTitle}
+            {isUpgrade ? 'Upgrade' : 'Edit'} {toTitleCase(app.name)}
           </h1>
-          <p className="text-body-md text-[var(--color-text-subtle)]">{chart.description}</p>
+          <p className="text-body-md text-[var(--color-text-subtle)]">{chart?.description}</p>
         </div>
 
-        {/* Two-column layout: Tabs (left) + Summary sidebar (right) */}
+        {/* Two-column layout */}
         <HStack gap={6} align="start" className="w-full">
-          {/* Left: Tabs + tab content */}
-          <div className="flex-1 min-w-0">
-            <Tabs value={activeTab} onChange={handleTabChange} variant="underline" size="sm">
-              <TabList>
-                <Tab value="basic">Basic Information</Tab>
-                <Tab value="values" disabled={!basicDone}>
-                  Values
-                </Tab>
-              </TabList>
-
-              {/* ── Tab 1: Basic Information ── */}
-              <TabPanel value="basic">
-                <VStack gap={4} className="pt-4">
-                  <SectionCard isActive>
-                    <SectionCard.Header title="Basic Information" showDivider />
-                    <SectionCard.Content gap={6} showDividers={false}>
-                      {/* Cluster — read-only */}
-                      <FormField>
-                        <FormField.Label>Cluster</FormField.Label>
-                        <FormField.Control>
-                          <Select
-                            options={clusterOptions}
-                            value="cluster-1"
-                            onChange={() => {}}
-                            fullWidth
-                            disabled
-                          />
-                        </FormField.Control>
-                      </FormField>
-
-                      {/* Namespace — read-only */}
-                      {chart.appType !== 'Operator' && (
-                        <FormField>
-                          <FormField.Label>Namespace</FormField.Label>
-                          <FormField.Control>
-                            <Input value={app.namespace} disabled fullWidth />
-                          </FormField.Control>
-                          <FormField.HelperText>Namespace cannot be changed.</FormField.HelperText>
-                        </FormField>
+          {/* Left: Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* ── Section 1: Version ── */}
+            {sectionStatus.version === 'active' && (
+              <SectionCard isActive>
+                <SectionCard.Header title={SECTION_LABELS.version} showDivider />
+                <SectionCard.Content gap={6}>
+                  {/* Namespace: 변경 불가 (FR-014) */}
+                  <FormField>
+                    <FormField.Label>Namespace</FormField.Label>
+                    <FormField.Control>
+                      <Input value={app.namespace} disabled fullWidth />
+                    </FormField.Control>
+                  </FormField>
+                  {/* Version selector (FR-015: 하위 버전 선택 불가) */}
+                  <FormField required>
+                    <FormField.Label>
+                      Chart version
+                      {isUpgrade && (
+                        <span className="ml-2 text-[11px] text-[var(--color-action-primary)] font-medium">
+                          Upgrade available
+                        </span>
                       )}
-
-                      {/* App Name — read-only */}
-                      <FormField>
-                        <FormField.Label>App name</FormField.Label>
-                        <FormField.Control>
-                          <Input value={app.releaseName} disabled fullWidth />
-                        </FormField.Control>
-                        <FormField.HelperText>App name cannot be changed.</FormField.HelperText>
-                      </FormField>
-
-                      {/* Chart Version — read-only */}
-                      <FormField>
-                        <FormField.Label>Chart version</FormField.Label>
-                        <FormField.Control>
-                          <Input value={app.version} disabled fullWidth />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          Version upgrade is not supported in v1.0.
-                        </FormField.HelperText>
-                      </FormField>
-
-                      {/* Mode Template — editable if app has deploy modes */}
-                      {chart.deployModes && chart.deployModes.length > 0 && (
-                        <FormField>
-                          <FormField.Label>Mode Template</FormField.Label>
-                          <FormField.Description>
-                            Changing the mode template will replace the entire YAML with the new
-                            mode template in the next step.
-                          </FormField.Description>
-                          <FormField.Control>
-                            <ModeSelectTable
-                              modes={chart.deployModes}
-                              value={selectedMode}
-                              onChange={setSelectedMode}
-                            />
-                          </FormField.Control>
-                        </FormField>
-                      )}
-
-                      <div className="flex justify-end pt-1">
-                        <Button variant="primary" onClick={handleGoToYaml}>
-                          Next
-                        </Button>
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Done state — shown after Next is clicked and user returns */}
-                  {basicDone && (
-                    <DoneSection
-                      title="Basic Information"
-                      onEdit={() => {
-                        setBasicDone(false);
-                        setActiveTab('basic');
-                      }}
-                    >
-                      <DoneSectionRow
-                        label="Cluster"
-                        value={
-                          clusterOptions.find((c) => c.value === 'cluster-1')?.label ?? 'cluster-1'
-                        }
+                    </FormField.Label>
+                    <FormField.Control>
+                      <Select
+                        options={versionOptions}
+                        value={version}
+                        onChange={(v) => setVersion(v ?? '')}
+                        fullWidth
                       />
-                      {chart.appType !== 'Operator' && (
-                        <DoneSectionRow label="Namespace" value={app.namespace} />
-                      )}
-                      <DoneSectionRow label="App name" value={app.releaseName} />
-                      <DoneSectionRow label="Chart version" value={app.version} />
-                      {selectedMode && (
-                        <DoneSectionRow
-                          label="Mode"
-                          value={
-                            chart.deployModes?.find((m) => m.value === selectedMode)?.label ??
-                            selectedMode
-                          }
-                        />
-                      )}
-                    </DoneSection>
-                  )}
-                </VStack>
-              </TabPanel>
-
-              {/* ── Tab 2: Values (YAML Editor) ── */}
-              <TabPanel value="values">
-                <VStack gap={6} className="pt-4">
-                  {/* Info banner */}
-                  <InlineMessage variant="info">
-                    The values.yaml below is pre-filled with the currently applied configuration.
-                    Edit directly and click Apply to deploy changes to the cluster.
-                  </InlineMessage>
-
-                  {/* YAML Editor card */}
-                  <div
-                    className="rounded-lg p-4"
-                    style={{
-                      background: 'var(--color-surface-default)',
-                      border: '1px solid var(--color-border-default)',
-                    }}
-                  >
-                    <div className="mb-3 flex items-center justify-between gap-3">
-                      <span
-                        className="font-semibold shrink-0"
-                        style={{
-                          fontSize: 'var(--font-size-13)',
-                          color: 'var(--color-text-subtle)',
-                        }}
-                      >
-                        values.yaml
-                      </span>
-
-                      <div className="flex items-center gap-2 flex-wrap justify-end">
-                        {selectedMode && (
-                          <span
-                            className="text-[12px]"
-                            style={{ color: 'var(--color-text-subtle)' }}
-                          >
-                            Mode Template:{' '}
-                            <strong style={{ color: 'var(--color-text-default)' }}>
-                              {chart.deployModes?.find((m) => m.value === selectedMode)?.template ??
-                                selectedMode}
-                            </strong>
-                          </span>
-                        )}
-                        {yamlEdited && (
-                          <Badge theme="gray" type="subtle">
-                            Modified
-                          </Badge>
-                        )}
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          onClick={() => setShowResetModal(true)}
-                        >
-                          Reset to current
-                        </Button>
-                      </div>
-                    </div>
-                    <YamlEditor value={yamlContent} onChange={handleYamlChange} />
-                  </div>
-
-                  {/* Previous button */}
-                  <div className="flex justify-start pt-1">
-                    <Button variant="secondary" onClick={handlePreviousFromYaml}>
-                      <IconChevronLeft size={16} className="mr-1" />
-                      Previous
+                    </FormField.Control>
+                    <FormField.HelperText>Lower versions cannot be selected.</FormField.HelperText>
+                  </FormField>
+                  <div className="flex justify-end">
+                    <Button
+                      variant="primary"
+                      onClick={() => setStep({ version: 'done', configuration: 'active' })}
+                      disabled={!version}
+                    >
+                      Next
                     </Button>
                   </div>
-                </VStack>
-              </TabPanel>
-            </Tabs>
-          </div>
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+            {sectionStatus.version === 'done' && (
+              <DoneSection
+                title={SECTION_LABELS.version}
+                onEdit={() => setStep({ version: 'active', configuration: 'pre' })}
+              >
+                <DoneSectionRow label="Namespace" value={app.namespace} />
+                <DoneSectionRow
+                  label="Version"
+                  value={isUpgrade ? `${version} ↑ Upgrade` : version}
+                />
+              </DoneSection>
+            )}
+
+            {/* ── Section 2: Configuration (Edit Options / Edit YAML / Compare Changes) ── */}
+            {sectionStatus.configuration === 'pre' && (
+              <PreSection title={SECTION_LABELS.configuration} />
+            )}
+            {sectionStatus.configuration === 'active' && (
+              <SectionCard isActive>
+                <SectionCard.Header title={SECTION_LABELS.configuration} showDivider />
+                <SectionCard.Content gap={4}>
+                  <Tabs
+                    value={activeTab}
+                    onChange={(v) => setActiveTab(v as 'options' | 'yaml' | 'compare')}
+                    variant="underline"
+                    size="sm"
+                  >
+                    <TabList>
+                      <Tab value="options">Edit Options</Tab>
+                      <Tab value="yaml">Edit YAML</Tab>
+                      <Tab value="compare" disabled={!hasYamlChanges}>
+                        Compare Changes
+                        {hasYamlChanges && (
+                          <span className="ml-1.5 inline-flex items-center justify-center w-1.5 h-1.5 rounded-full bg-[var(--color-action-primary)]" />
+                        )}
+                      </Tab>
+                    </TabList>
+                    <TabPanel value="options">
+                      <div className="pt-4">
+                        <OptionsForm
+                          opts={opts}
+                          values={optionValues}
+                          onChange={handleOptionChange}
+                        />
+                      </div>
+                    </TabPanel>
+                    <TabPanel value="yaml">
+                      <div className="pt-4 flex flex-col min-h-0">
+                        <YamlEditor value={yamlContent} onChange={handleYamlChange} />
+                      </div>
+                    </TabPanel>
+                    <TabPanel value="compare">
+                      <div className="pt-4">
+                        <DiffViewer oldYaml={originalYaml} newYaml={yamlContent} />
+                      </div>
+                    </TabPanel>
+                  </Tabs>
+                  <div className="flex justify-end pt-2">
+                    <Button
+                      variant="primary"
+                      onClick={() => setStep({ configuration: 'done' })}
+                      disabled={!isConfigDone}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+            {sectionStatus.configuration === 'done' && (
+              <DoneSection
+                title={SECTION_LABELS.configuration}
+                onEdit={() => setStep({ configuration: 'active' })}
+              >
+                {opts.length > 0 ? (
+                  opts
+                    .slice(0, 3)
+                    .map((opt) => (
+                      <DoneSectionRow
+                        key={opt.key}
+                        label={opt.label}
+                        value={opt.type === 'password' ? '••••••••' : optionValues[opt.key] || '—'}
+                      />
+                    ))
+                ) : (
+                  <DoneSectionRow label="YAML" value="Custom configuration" />
+                )}
+                {opts.length > 3 && (
+                  <DoneSectionRow label="" value={`+${opts.length - 3} more fields configured`} />
+                )}
+              </DoneSection>
+            )}
+          </VStack>
 
           {/* Right: Summary Sidebar */}
-          <EditSummarySidebar
-            basicDone={basicDone}
-            yamlReady={!!yamlContent}
+          <SummarySidebar
+            app={app}
+            sectionStatus={sectionStatus}
+            isUpgrade={isUpgrade}
             onCancel={() => navigate(`/container/installed-apps/${appId}`)}
-            onApply={handleApply}
+            onSubmit={handleSubmit}
             submitting={submitting}
           />
         </HStack>
       </VStack>
-
-      {/* Previous Warning Modal (FR-011b) */}
-      <ConfirmModal
-        isOpen={showPreviousWarning}
-        onClose={() => setShowPreviousWarning(false)}
-        onConfirm={handleConfirmPrevious}
-        title="YAML 수정사항이 초기화됩니다."
-        description="Going back will discard all changes you've made to the YAML. Continue?"
-        confirmText="Reset"
-        cancelText="Cancel"
-        confirmVariant="danger"
-      />
-
-      {/* Reset to current Modal */}
-      <ConfirmModal
-        isOpen={showResetModal}
-        onClose={() => setShowResetModal(false)}
-        onConfirm={handleConfirmReset}
-        title="Reset to current values"
-        description="This will discard all your edits and restore the currently applied configuration. Continue?"
-        confirmText="Reset"
-        cancelText="Cancel"
-        confirmVariant="danger"
-      />
     </PageShell>
   );
 }

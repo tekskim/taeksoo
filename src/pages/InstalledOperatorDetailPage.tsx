@@ -103,7 +103,7 @@ export default function InstalledOperatorDetailPage() {
       ),
     },
     {
-      key: 'releaseName',
+      key: 'name',
       label: 'App name',
       flex: 2,
       minWidth: columnMinWidths.name,
@@ -112,12 +112,6 @@ export default function InstalledOperatorDetailPage() {
           {value}
         </span>
       ),
-    },
-    {
-      key: 'name',
-      label: 'Chart name',
-      flex: 2,
-      minWidth: columnMinWidths.name,
     },
     {
       key: 'namespace',

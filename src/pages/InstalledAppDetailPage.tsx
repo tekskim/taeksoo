@@ -1,95 +1,168 @@
-import { useState } from 'react';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { useState, useRef, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   VStack,
+  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
-  PageShell,
-  DetailHeader,
-  Badge,
-  Button,
-  Modal,
-  InfoBox,
   Table,
   Tabs,
   TabList,
   Tab,
   TabPanel,
+  Button,
+  PageShell,
+  DetailHeader,
+  StatusIndicator,
   type TableColumn,
-  columnMinWidths,
 } from '@/design-system';
-import { useParams, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
-import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconCopy, IconDownload } from '@tabler/icons-react';
-import { getContainerStatusTheme } from './containerStatusUtils';
+import { IconBell, IconDownload, IconEdit, IconTrash, IconCopy } from '@tabler/icons-react';
+import type { InstalledAppStatus } from '@/pages/apps/appsTypes';
 import { installedAppsMock } from '@/pages/apps/appsMockData';
-import type { InstalledAppResource } from '@/pages/apps/appsTypes';
 
-/* ----------------------------------------
-   Types (local — for resource table rows)
-   ---------------------------------------- */
+/* Read-only YAML viewer: same look as Edit YAML pages (line numbers + content), no edit/save */
+function YamlViewer({
+  value,
+  onCopy,
+  onDownload,
+}: {
+  value: string;
+  onCopy: () => void;
+  onDownload: () => void;
+}) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const lineNumbersRef = useRef<HTMLDivElement>(null);
+  const lines = value.split('\n');
+  const lineCount = lines.length;
 
-interface ResourceRow {
-  id: string;
-  kind: string;
-  name: string;
-  namespace: string;
+  const handleScroll = useCallback(() => {
+    if (scrollContainerRef.current && lineNumbersRef.current) {
+      lineNumbersRef.current.scrollTop = scrollContainerRef.current.scrollTop;
+    }
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-2 w-full min-h-0 flex-1">
+      <HStack justify="end" gap={2}>
+        <Button
+          variant="secondary"
+          size="sm"
+          leftIcon={<IconCopy size={12} stroke={1.5} />}
+          onClick={onCopy}
+        >
+          Copy
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          leftIcon={<IconDownload size={12} stroke={1.5} />}
+          onClick={onDownload}
+        >
+          Download
+        </Button>
+      </HStack>
+      <div className="flex-1 flex min-h-[320px] border border-[var(--color-border-default)] rounded-[4px] bg-[var(--color-base-white)] overflow-hidden relative">
+        <div
+          ref={lineNumbersRef}
+          className="w-[44px] flex-shrink-0 overflow-y-scroll py-2 pr-2 select-none text-right bg-[var(--color-surface-default)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="font-mono text-body-md leading-[18px] text-[var(--color-text-subtle)]">
+            {Array.from({ length: lineCount }, (_, i) => (
+              <div key={i + 1}>{i + 1}</div>
+            ))}
+          </div>
+        </div>
+        <div
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="flex-1 min-w-0 overflow-auto"
+        >
+          <pre className="w-full min-h-full py-2 px-2.5 font-mono text-body-md leading-[18px] text-[var(--color-text-default)] bg-transparent whitespace-pre select-text">
+            {value}
+          </pre>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-/* ----------------------------------------
-   Component
-   ---------------------------------------- */
+const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error'> = {
+  Deployed: 'active',
+  Pending: 'building',
+  Failed: 'error',
+};
 
-export default function InstalledAppDetailPage() {
+function toTitleCase(s: string): string {
+  return s
+    .replace(/-/g, ' ')
+    .split(' ')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+}
+
+export function InstalledAppDetailPage() {
   const { appId } = useParams<{ appId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const [activeTab, setActiveTab] = useState('details');
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const sidebarWidth = sidebarOpen ? 240 : 40;
 
   const app = installedAppsMock.find((a) => a.id === appId);
-  const resources: ResourceRow[] = (app?.resources ?? []).map(
-    (r: InstalledAppResource, i: number) => ({
-      id: `${r.kind}-${r.name}-${i}`,
-      kind: r.kind,
-      name: r.name,
-      namespace: r.namespace ?? app?.namespace ?? '',
-    })
-  );
-  const valuesYaml = app?.valuesYaml ?? '';
 
-  const resourceColumns: TableColumn<ResourceRow>[] = [
-    {
-      key: 'kind',
-      label: 'Kind',
-      flex: 1,
-      minWidth: 180,
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 2,
-      minWidth: columnMinWidths.name,
-      render: (value) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
-          {value}
-        </span>
-      ),
-    },
-    {
-      key: 'namespace',
-      label: 'Namespace',
-      flex: 1,
-      minWidth: columnMinWidths.namespace,
-    },
+  const downloadValuesYaml = () => {
+    if (!app) return;
+    const content = app.valuesYaml ?? '# No values';
+    const blob = new Blob([content], { type: 'text/yaml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${app.name}-values.yaml`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const copyValuesYaml = useCallback(async () => {
+    if (!app) return;
+    try {
+      await navigator.clipboard.writeText(app.valuesYaml ?? '# No values');
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  }, [app]);
+
+  const resourceColumns: TableColumn<{ kind: string; name: string; namespace?: string }>[] = [
+    { key: 'kind', label: 'Kind', width: '200px' },
+    { key: 'name', label: 'Name', flex: 1 },
+    { key: 'namespace', label: 'Namespace', width: '140px' },
   ];
 
-  if (!app) return null;
+  if (!app) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        contentClassName="pt-4 px-8 pb-6"
+      >
+        <VStack gap={4}>
+          <p className="text-body-md text-[var(--color-text-muted)]">App not found.</p>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => navigate('/container/installed-apps')}
+          >
+            Back to Installed Apps
+          </Button>
+        </VStack>
+      </PageShell>
+    );
+  }
+
+  const isPending = app.status === 'Pending';
 
   return (
     <PageShell
@@ -111,158 +184,110 @@ export default function InstalledAppDetailPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation={true}
-          onBack={() => navigate(-1)}
-          onForward={() => navigate(1)}
+          showNavigation
+          onBack={() => navigate('/container/installed-apps')}
+          onForward={() => {}}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Installed apps', href: '/container/installed-apps' },
-                { label: app.releaseName },
+                { label: 'clusterName', href: '/container' },
+                { label: 'Apps', href: '/container/catalog' },
+                { label: 'Installed Apps', href: '/container/installed-apps' },
+                { label: toTitleCase(app.name) },
               ]}
             />
           }
-          actions={<ContainerTopBarActions />}
+          actions={
+            <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </button>
+          }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
         <DetailHeader>
-          <DetailHeader.Title>{app.releaseName}</DetailHeader.Title>
-
-          <DetailHeader.Actions>
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<IconEdit size={12} />}
-              onClick={() => navigate(`/container/installed-apps/${appId}/edit`)}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<IconTrash size={12} />}
-              onClick={() => setIsDeleteOpen(true)}
-            >
-              Delete
-            </Button>
-          </DetailHeader.Actions>
-
+          <HStack justify="between" align="start" className="w-full flex-wrap gap-2">
+            <DetailHeader.Title>{toTitleCase(app.name)}</DetailHeader.Title>
+            <DetailHeader.Actions>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconEdit size={14} stroke={1.5} />}
+                disabled={isPending}
+                onClick={() => navigate(`/container/installed-apps/${app.id}/edit`)}
+              >
+                Edit / Upgrade
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconTrash size={14} stroke={1.5} />}
+                disabled={isPending}
+              >
+                Delete
+              </Button>
+            </DetailHeader.Actions>
+          </HStack>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
               value={
-                <Badge theme={getContainerStatusTheme(app.status)} type="subtle" size="sm">
-                  {app.status}
-                </Badge>
+                <StatusIndicator
+                  status={statusMap[app.status]}
+                  label={app.status}
+                  layout="default"
+                />
               }
             />
-            <DetailHeader.InfoCard label="App name" value={app.releaseName} />
-            <DetailHeader.InfoCard label="Chart name" value={app.name} />
+            <DetailHeader.InfoCard label="App name" value={toTitleCase(app.name)} />
             <DetailHeader.InfoCard label="Version" value={app.version} />
             <DetailHeader.InfoCard label="Namespace" value={app.namespace} />
-            <DetailHeader.InfoCard label="Last deployed" value={app.lastDeployed} />
+            <DetailHeader.InfoCard label="Chart" value={app.chart ?? '—'} />
+            <DetailHeader.InfoCard
+              label="Last deployed"
+              value={app.lastDeployed ?? app.installedAt ?? '—'}
+            />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+        <Tabs defaultValue="resources" variant="underline" size="sm">
           <TabList>
-            <Tab value="details">Details</Tab>
-            <Tab value="values">Values</Tab>
+            <Tab value="resources">Resources</Tab>
+            <Tab value="values">Values.yaml</Tab>
           </TabList>
-
-          <TabPanel value="details" className="pt-0">
-            <VStack gap={0} className="pt-4">
-              <Table<ResourceRow>
-                columns={resourceColumns}
-                data={resources}
-                rowKey="id"
-                emptyMessage="No resources found"
-              />
+          <TabPanel value="resources">
+            <VStack gap={3} className="pt-3">
+              {(app.resources ?? []).length === 0 ? (
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  No resources. This release has not created any Kubernetes resources yet.
+                </p>
+              ) : (
+                <Table
+                  columns={resourceColumns}
+                  data={(app.resources ?? []).map((r, i) => ({
+                    ...r,
+                    id: `${r.kind}-${r.name}-${i}`,
+                  }))}
+                  rowKey="id"
+                />
+              )}
             </VStack>
           </TabPanel>
-
-          <TabPanel value="values" className="pt-0">
-            <VStack gap={3} className="pt-4">
-              <div className="flex items-center justify-end gap-2">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconCopy size={12} />}
-                  onClick={() => navigator.clipboard.writeText(valuesYaml)}
-                >
-                  Copy
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconDownload size={12} />}
-                  onClick={() => {
-                    const blob = new Blob([valuesYaml], { type: 'text/yaml' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${app.releaseName}-values.yaml`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                  }}
-                >
-                  Download
-                </Button>
-              </div>
-              <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
-                <OverlayScrollbarsComponent
-                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
-                  defer={false}
-                  className="bg-[var(--color-surface-default)] max-h-[560px]"
-                >
-                  <table className="w-full border-collapse">
-                    <tbody>
-                      {valuesYaml.split('\n').map((line, i) => (
-                        <tr key={i} className="leading-[20px]">
-                          <td className="px-3 py-0 text-right select-none text-body-sm text-[var(--color-text-disabled)] font-mono w-[1%] whitespace-nowrap align-top">
-                            {i + 1}
-                          </td>
-                          <td className="px-3 py-0 text-body-sm text-[var(--color-text-default)] font-mono whitespace-pre">
-                            {line || '\u00A0'}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </OverlayScrollbarsComponent>
-              </div>
-            </VStack>
+          <TabPanel value="values">
+            <div className="pt-3 flex flex-col min-h-0 flex-1">
+              <YamlViewer
+                value={app.valuesYaml ?? '# No values'}
+                onCopy={copyValuesYaml}
+                onDownload={downloadValuesYaml}
+              />
+            </div>
           </TabPanel>
         </Tabs>
       </VStack>
-
-      <Modal
-        isOpen={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
-        title="Delete App"
-        description="This will remove the Helm release and all associated Kubernetes resources. This action cannot be undone."
-        size="sm"
-      >
-        <InfoBox label="App / Namespace" value={`${app.releaseName} / ${app.namespace}`} />
-        <div className="flex gap-2 w-full">
-          <Button variant="secondary" onClick={() => setIsDeleteOpen(false)} className="flex-1">
-            Cancel
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              console.log('Delete', app.id);
-              setIsDeleteOpen(false);
-              navigate('/container/installed-apps');
-            }}
-            className="flex-1"
-          >
-            Delete
-          </Button>
-        </div>
-      </Modal>
     </PageShell>
   );
 }
+
+export default InstalledAppDetailPage;
