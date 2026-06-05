@@ -258,7 +258,7 @@ export function AppEditPage() {
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
-    navigate(`/container/apps/installed-apps/${appId}`);
+    navigate(`/container/installed-apps/${appId}`);
   };
 
   const sidebarNode = isStandalone ? (
@@ -279,7 +279,7 @@ export function AppEditPage() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/container/apps/installed-apps')}
+            onClick={() => navigate('/container/installed-apps')}
           >
             Back to Installed Apps
           </Button>
@@ -309,17 +309,17 @@ export function AppEditPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation
-          onBack={() => navigate(`/container/apps/installed-apps/${appId}`)}
+          onBack={() => navigate(`/container/installed-apps/${appId}`)}
           onForward={() => {}}
           breadcrumb={
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Apps', href: '/container/apps/catalog' },
-                { label: 'Installed Apps', href: '/container/apps/installed-apps' },
+                { label: 'Installed Apps', href: '/container/installed-apps' },
                 {
                   label: appTitle,
-                  href: `/container/apps/installed-apps/${appId}`,
+                  href: `/container/installed-apps/${appId}`,
                 },
                 { label: 'Edit and Apply' },
               ]}
@@ -547,7 +547,7 @@ export function AppEditPage() {
           <EditSummarySidebar
             basicDone={basicDone}
             yamlReady={!!yamlContent}
-            onCancel={() => navigate(`/container/apps/installed-apps/${appId}`)}
+            onCancel={() => navigate(`/container/installed-apps/${appId}`)}
             onApply={handleApply}
             submitting={submitting}
           />

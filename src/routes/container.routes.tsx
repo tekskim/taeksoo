@@ -122,6 +122,7 @@ const InstalledAppsPage = lazy(() => import('@/pages/InstalledAppsPage'));
 const InstalledAppDetailPage = lazy(() => import('@/pages/InstalledAppDetailPage'));
 const AppInstallPage = lazy(() => import('@/pages/AppInstallPage'));
 const InstalledAppEditPage = lazy(() => import('@/pages/InstalledAppEditPage'));
+const AppEditPage = lazy(() => import('@/pages/AppEditPage'));
 const InstalledOperatorsPage = lazy(() => import('@/pages/InstalledOperatorsPage'));
 const InstalledOperatorDetailPage = lazy(() => import('@/pages/InstalledOperatorDetailPage'));
 
@@ -330,7 +331,7 @@ export const containerRoutes = (
     <Route path="/container/catalog/:chartName/install" element={<AppInstallPage />} />
     <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
     <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
-    <Route path="/container/installed-apps/:appId/edit" element={<InstalledAppEditPage />} />
+    <Route path="/container/installed-apps/:appId/edit" element={<AppEditPage />} />
     <Route path="/container/installed-operators" element={<InstalledOperatorsPage />} />
     <Route
       path="/container/installed-operators/:operatorId"

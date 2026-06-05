@@ -365,11 +365,13 @@ export function AppInstallPage() {
     setYamlEdited(true);
   };
 
-  const sidebarNode = isStandalone ? (
-    <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-  ) : (
-    <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-  );
+  // 경로 기반으로 사이드바 결정: Container catalog 경로이면 ContainerSidebar 우선
+  const sidebarNode =
+    isContainerCatalog || !isStandalone ? (
+      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    ) : (
+      <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    );
 
   if (!chart) {
     return (
