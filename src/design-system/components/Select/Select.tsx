@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback, useId, type ReactNode } from 'react';
+import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { createPortal } from 'react-dom';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { twMerge } from '../../utils/cn';
 import { IconChevronDown, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -12,8 +11,6 @@ export interface SelectOption {
   value: string;
   label: string;
   disabled?: boolean;
-  /** Optional icon rendered before the label */
-  icon?: ReactNode;
 }
 
 export interface SelectProps {
@@ -76,7 +73,6 @@ export function Select({
   const id = useId();
   const triggerId = `select-trigger-${id}`;
   const listboxId = `select-listbox-${id}`;
-  const optionIdPrefix = `select-option-${id}`;
 
   // State
   const [isOpen, setIsOpen] = useState(false);
@@ -86,8 +82,7 @@ export function Select({
 
   // Refs
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const listboxOsRef = useRef<React.ElementRef<typeof OverlayScrollbarsComponent>>(null);
-  const getListboxEl = useCallback(() => listboxOsRef.current?.getElement() ?? null, []);
+  const listboxRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Controlled vs Uncontrolled
@@ -220,7 +215,7 @@ export function Select({
     const handleClickOutside = (e: MouseEvent) => {
       if (
         triggerRef.current?.contains(e.target as Node) ||
-        getListboxEl()?.contains(e.target as Node)
+        listboxRef.current?.contains(e.target as Node)
       ) {
         return;
       }
@@ -243,12 +238,12 @@ export function Select({
     };
   }, [isOpen, updatePosition]);
 
-  // Sync listboxRef from OverlayScrollbarsComponent's underlying DOM element
+  // Focus listbox when opened
   useEffect(() => {
-    if (isOpen) {
-      getListboxEl()?.focus();
+    if (isOpen && listboxRef.current) {
+      listboxRef.current.focus();
     }
-  }, [isOpen, getListboxEl]);
+  }, [isOpen]);
 
   // Width-based styles: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%)
   const widthStyles = {
@@ -306,7 +301,7 @@ export function Select({
     'border border-[var(--select-menu-border)]',
     'rounded-[var(--select-menu-radius)]',
     'shadow-[var(--select-menu-shadow)]',
-    'max-h-[240px]',
+    'overflow-hidden',
     'focus:outline-none'
   );
 
@@ -329,11 +324,6 @@ export function Select({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-controls={listboxId}
-        aria-activedescendant={
-          isOpen && focusedIndex >= 0
-            ? `${optionIdPrefix}-${enabledOptions[focusedIndex]?.value}`
-            : undefined
-        }
         aria-invalid={!!error}
         disabled={disabled}
         onClick={() => (isOpen ? closeDropdown() : openDropdown())}
@@ -342,14 +332,11 @@ export function Select({
       >
         <span
           className={twMerge(
-            'truncate flex items-center gap-1.5',
+            'truncate',
             selectedOption ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]',
             disabled && 'text-[var(--color-text-subtle)]'
           )}
         >
-          {selectedOption?.icon && (
-            <span className="shrink-0 flex items-center">{selectedOption.icon}</span>
-          )}
           {selectedOption?.label ?? placeholder}
         </span>
         <div className="flex items-center gap-1 shrink-0">
@@ -383,9 +370,7 @@ export function Select({
       )}
 
       {/* Error */}
-      {typeof error === 'string' && error && (
-        <p className="text-body-sm text-[var(--color-state-danger)]">{error}</p>
-      )}
+      {error && <p className="text-body-sm text-[var(--color-state-danger)]">{error}</p>}
 
       {/* Dropdown Portal */}
       {isOpen &&
@@ -396,13 +381,8 @@ export function Select({
             }
             className={containerRef.current?.closest('[data-theme="dark"]') ? 'dark' : ''}
           >
-            <OverlayScrollbarsComponent
-              options={{
-                overflow: { x: 'hidden', y: 'scroll' },
-                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
-              }}
-              defer={false}
-              ref={listboxOsRef}
+            <div
+              ref={listboxRef}
               id={listboxId}
               role="listbox"
               aria-labelledby={triggerId}
@@ -439,7 +419,6 @@ export function Select({
                 return (
                   <div
                     key={option.value}
-                    id={`${optionIdPrefix}-${option.value}`}
                     role="option"
                     aria-selected={isSelected}
                     aria-disabled={option.disabled}
@@ -467,12 +446,7 @@ export function Select({
                             : 'text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)]'
                     )}
                   >
-                    <span className="flex items-center gap-1.5">
-                      {option.icon && (
-                        <span className="shrink-0 flex items-center">{option.icon}</span>
-                      )}
-                      {option.label}
-                    </span>
+                    <span>{option.label}</span>
                     {isSelected && (
                       <IconCheck
                         size={14}
@@ -482,7 +456,7 @@ export function Select({
                   </div>
                 );
               })}
-            </OverlayScrollbarsComponent>
+            </div>
           </div>,
           document.body
         )}

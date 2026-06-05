@@ -79,7 +79,8 @@ export const TopBar: React.FC<TopBarProps> = ({
     >
       {/* Left Section: Sidebar Toggle + Navigation */}
       <div className="flex items-center gap-[var(--topbar-section-gap)]">
-        {(showSidebarToggle || showSidebarToggleAfterBreadcrumb) && onSidebarToggle && (
+        {/* Sidebar Toggle - Always on the very left when shown */}
+        {(showSidebarToggle || showSidebarToggleAfterBreadcrumb) && (
           <button
             type="button"
             onClick={onSidebarToggle}
@@ -121,7 +122,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* Right Section: Actions */}
-      <div className="flex shrink-0 items-center gap-[var(--topbar-action-gap)]">{actions}</div>
+      <div className="flex items-center gap-[var(--topbar-action-gap)]">{actions}</div>
     </header>
   );
 };

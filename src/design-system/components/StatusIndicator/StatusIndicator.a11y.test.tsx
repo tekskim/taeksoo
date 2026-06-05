@@ -56,7 +56,7 @@ describe('StatusIndicator Accessibility', () => {
     }
   });
 
-  it('should have no accessibility violations for deprecated default layout (maps to icon-only)', async () => {
+  it('should have no accessibility violations for default layout', async () => {
     const { container } = render(<StatusIndicator status="active" layout="default" />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();

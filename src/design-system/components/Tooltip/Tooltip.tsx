@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, useId, type ReactNode } from 'react';
+import React, { useState, useRef, useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 /* ----------------------------------------
@@ -35,7 +35,6 @@ export function Tooltip({
   disabled = false,
   ...rest
 }: TooltipProps) {
-  const tooltipId = useId();
   const [isVisible, setIsVisible] = useState(false);
   const [isPositioned, setIsPositioned] = useState(false);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -44,7 +43,7 @@ export function Tooltip({
   const tooltipRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<number | undefined>(undefined);
 
-  const updatePosition = useCallback(() => {
+  const updatePosition = () => {
     if (!triggerRef.current || !tooltipRef.current) return;
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
@@ -99,7 +98,7 @@ export function Tooltip({
 
     setCoords({ x: clampedX, y: clampedY });
     setIsPositioned(true);
-  }, [position]);
+  };
 
   const handleMouseEnter = () => {
     if (disabled) return;
@@ -116,26 +115,19 @@ export function Tooltip({
     setIsPositioned(false);
   };
 
+  const handleClick = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsVisible(false);
+    setIsPositioned(false);
+  };
+
   useEffect(() => {
     if (isVisible) {
       updatePosition();
     }
-  }, [isVisible, updatePosition]);
-
-  // Update position on scroll/resize (capture scroll so nested scroll containers are handled)
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const handleUpdate = () => updatePosition();
-    const scrollOptions: AddEventListenerOptions = { capture: true, passive: true };
-    window.addEventListener('scroll', handleUpdate, scrollOptions);
-    window.addEventListener('resize', handleUpdate);
-
-    return () => {
-      window.removeEventListener('scroll', handleUpdate, scrollOptions);
-      window.removeEventListener('resize', handleUpdate);
-    };
-  }, [isVisible, updatePosition]);
+  }, [isVisible, position]);
 
   useEffect(() => {
     return () => {
@@ -200,8 +192,8 @@ export function Tooltip({
         onMouseLeave={handleMouseLeave}
         onFocus={handleMouseEnter}
         onBlur={handleMouseLeave}
+        onClick={handleClick}
         className="inline-flex"
-        aria-describedby={isVisible ? tooltipId : undefined}
       >
         {children}
       </div>
@@ -210,7 +202,6 @@ export function Tooltip({
         createPortal(
           <div
             ref={tooltipRef}
-            id={tooltipId}
             role="tooltip"
             className="fixed z-[var(--z-tooltip)] pointer-events-none transition-opacity duration-[var(--duration-fast)]"
             style={{
@@ -231,7 +222,8 @@ export function Tooltip({
                   rounded-[var(--tooltip-radius)]
                   text-[length:var(--tooltip-font-size)]
                   leading-[var(--tooltip-line-height)]
-                  text-left
+                  text-center
+                  min-w-[var(--tooltip-min-width)]
                   max-w-[var(--tooltip-max-width)]
                   w-max
                 "

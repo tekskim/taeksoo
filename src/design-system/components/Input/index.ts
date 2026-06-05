@@ -8,11 +8,12 @@ export { NumberInput } from './NumberInput';
 export type { NumberInputProps, NumberInputWidth } from './NumberInput';
 
 export { SearchInput } from './SearchInput';
-export type { SearchInputProps } from './SearchInput';
+export type { SearchInputProps, SearchInputSize } from './SearchInput';
 
 export { FilterSearchInput } from './FilterSearchInput';
 export type {
   FilterSearchInputProps,
+  FilterSearchInputSize,
   FilterField,
   FilterFieldType,
   AppliedFilter,

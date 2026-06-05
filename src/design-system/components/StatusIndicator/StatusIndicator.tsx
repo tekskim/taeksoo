@@ -12,12 +12,12 @@ import {
   IconCircleDashedCheck,
   IconLivePhotoOff,
   IconTool,
+  IconAlertCircle,
   IconAlertHexagon,
   IconShieldExclamation,
   IconCircleMinus,
   IconLivePhoto,
   IconBan,
-  IconCircleX,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -66,7 +66,7 @@ const IconInUse = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
-export type StatusLayout = 'icon-only' | 'badge';
+export type StatusLayout = 'icon-only' | 'default' | 'badge';
 export type StatusSize = 'sm' | 'md' | 'lg';
 
 export interface StatusConfig {
@@ -129,8 +129,8 @@ const statusConfig: Record<StatusType, StatusConfig> = {
   },
   down: {
     label: 'Down',
-    icon: <IconCircleX size={ICON_SIZE} strokeWidth={2} />,
-    bgColor: 'bg-[var(--status-muted-bg)]',
+    icon: <IconAlertCircle size={ICON_SIZE} strokeWidth={2} />,
+    bgColor: 'bg-[var(--status-warning-bg)]',
   },
   maintenance: {
     label: 'Maintenance',
@@ -200,8 +200,8 @@ export type ThakiColorScheme = 'success' | 'danger' | 'warning' | 'info' | 'mute
 export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
   /** Status type */
   status: StatusType;
-  /** Layout variant (also accepts thaki-ui 'iconOnly', 'default', 'leftIcon' for compat) */
-  layout?: StatusLayout | 'default' | 'leftIcon' | 'iconOnly';
+  /** Layout variant (also accepts thaki-ui 'leftIcon', 'iconOnly') */
+  layout?: StatusLayout | 'leftIcon' | 'iconOnly';
   /** Size variant (only applies to icon-only layout) */
   size?: StatusSize;
   /** Custom label (overrides default) */
@@ -220,7 +220,7 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
 
 export const StatusIndicator = memo(function StatusIndicator({
   status,
-  layout: rawLayout = 'icon-only',
+  layout: rawLayout = 'default',
   size = 'md',
   label,
   className = '',
@@ -230,11 +230,13 @@ export const StatusIndicator = memo(function StatusIndicator({
   tooltip,
   ...props
 }: StatusIndicatorProps) {
-  // Map deprecated layout aliases to current values
+  // thaki-ui compatibility: map layout aliases
   const layout: StatusLayout =
-    rawLayout === 'leftIcon' || rawLayout === 'default' || rawLayout === 'iconOnly'
-      ? 'icon-only'
-      : (rawLayout as StatusLayout);
+    rawLayout === 'leftIcon'
+      ? 'default'
+      : rawLayout === 'iconOnly'
+        ? 'icon-only'
+        : (rawLayout as StatusLayout);
 
   const config = statusConfig[status] ?? statusConfig.error;
 
@@ -329,31 +331,31 @@ export const StatusIndicator = memo(function StatusIndicator({
     );
   }
 
-  // Fallback to icon-only (should not reach here, but safety net)
-  const iconSize = iconSizes[size];
-  const containerSize = sizeStyles[size];
-  const fallbackIcon = isValidElement(displayIcon)
-    ? cloneElement(displayIcon as React.ReactElement<{ size?: number }>, { size: iconSize })
-    : displayIcon;
-  const fallbackClasses = twMerge(
-    'inline-flex items-center justify-center',
-    'rounded-full',
+  // Default layout with label (rounded pill shape)
+  const baseStyles = [
+    'inline-flex items-center',
+    'gap-[var(--status-gap)]',
+    'font-medium',
+    'rounded-[var(--status-radius)]',
     'text-[var(--status-text)]',
-    containerSize,
-    config.bgColor,
-    className
-  );
+    'text-[length:var(--status-font-size)]',
+    'leading-[var(--status-line-height)]',
+  ].join(' ');
+
+  const paddingStyles = 'px-[var(--status-padding-x)] py-[var(--status-padding-y)]';
+
+  const classes = twMerge(baseStyles, paddingStyles, config.bgColor, className);
+
   return (
-    <Tooltip content={displayLabel} position="top">
-      <span
-        data-figma-name="[TDS] StatusIndicator"
-        className={fallbackClasses}
-        role="status"
-        aria-label={displayLabel}
-        {...props}
-      >
-        <span className="shrink-0">{fallbackIcon}</span>
-      </span>
-    </Tooltip>
+    <span
+      data-figma-name="[TDS] StatusIndicator"
+      className={classes}
+      role="status"
+      aria-label={displayLabel}
+      {...props}
+    >
+      <span className="shrink-0">{displayIcon}</span>
+      <span>{displayLabel}</span>
+    </span>
   );
 });

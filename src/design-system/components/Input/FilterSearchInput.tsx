@@ -4,7 +4,6 @@ import {
   useCallback,
   useRef,
   useEffect,
-  useId,
   type InputHTMLAttributes,
   type KeyboardEvent,
 } from 'react';
@@ -15,6 +14,8 @@ import { Chip } from '../Chip';
 /* ----------------------------------------
    FilterSearchInput Types
    ---------------------------------------- */
+
+export type FilterSearchInputSize = 'sm' | 'md';
 
 /** Filter field type - text for freeform input, select for predefined options */
 export type FilterFieldType = 'text' | 'select';
@@ -51,8 +52,8 @@ export interface FilterSearchInputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'size' | 'type' | 'onChange' | 'value'
 > {
-  /** @deprecated Single size only (28px). Prop kept for backward compatibility. */
-  size?: 'sm' | 'md';
+  /** Input size */
+  size?: FilterSearchInputSize;
   /** Available filter fields */
   filters?: FilterField[];
   /** Currently applied filters */
@@ -79,6 +80,11 @@ export interface FilterSearchInputProps extends Omit<
    Size Styles
    ---------------------------------------- */
 
+const sizes: Record<FilterSearchInputSize, string> = {
+  sm: 'h-[var(--search-input-height-sm)] text-[length:var(--input-font-size-sm)]',
+  md: 'h-[var(--search-input-height-md)] text-[length:var(--input-font-size-sm)]',
+};
+
 /* ----------------------------------------
    Filter Dropdown Menu
    ---------------------------------------- */
@@ -90,7 +96,6 @@ interface FilterDropdownProps {
   onOptionSelect: (option: { value: string; label: string }) => void;
   onBack: () => void;
   isOpen: boolean;
-  listboxId: string;
 }
 
 function FilterDropdown({
@@ -100,7 +105,6 @@ function FilterDropdown({
   onOptionSelect,
   onBack,
   isOpen,
-  listboxId,
 }: FilterDropdownProps) {
   if (!isOpen) return null;
 
@@ -111,12 +115,11 @@ function FilterDropdown({
         <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
           {selectedFilter.label}
         </div>
-        <div id={listboxId} role="listbox">
+        <div>
           {selectedFilter.options.map((option) => (
             <button
               key={option.value}
               type="button"
-              role="option"
               onClick={() => onOptionSelect(option)}
               className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-body-sm text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
             >
@@ -143,12 +146,11 @@ function FilterDropdown({
       <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
         Filter by
       </div>
-      <div id={listboxId} role="listbox">
+      <div>
         {filters.map((filter) => (
           <button
             key={filter.id}
             type="button"
-            role="option"
             onClick={() => onFilterSelect(filter)}
             className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-body-sm text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
           >
@@ -167,7 +169,7 @@ function FilterDropdown({
 export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputProps>(
   (
     {
-      size: _size,
+      size = 'md',
       filters = [],
       appliedFilters = [],
       onFiltersChange,
@@ -187,7 +189,6 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
   ) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const listboxId = useId();
 
     // State
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -370,7 +371,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
       isFocused &&
         'border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]',
       disabled && 'bg-[var(--input-bg-disabled)] cursor-not-allowed',
-      'h-[var(--search-input-height-sm)] text-[length:var(--input-font-size-sm)]',
+      sizes[size],
       inputClassName
     );
 
@@ -408,15 +409,6 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
               placeholder={getPlaceholder()}
               disabled={disabled}
               {...props}
-              {...(filters.length > 0
-                ? {
-                    role: 'combobox' as const,
-                    'aria-expanded': isDropdownOpen && !disabled,
-                    'aria-haspopup': 'listbox' as const,
-                    'aria-autocomplete': 'list' as const,
-                    'aria-controls': listboxId,
-                  }
-                : {})}
             />
 
             {/* Search icon */}
@@ -434,7 +426,6 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
               onOptionSelect={handleOptionSelect}
               onBack={handleBack}
               isOpen={isDropdownOpen && !disabled}
-              listboxId={listboxId}
             />
           )}
         </div>

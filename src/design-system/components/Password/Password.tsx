@@ -177,9 +177,9 @@ export const Password = forwardRef<HTMLInputElement, PasswordProps>(
               className={toggleClasses}
             >
               {showPassword ? (
-                <IconEye size={16} stroke={1.5} />
-              ) : (
                 <IconEyeOff size={16} stroke={1.5} />
+              ) : (
+                <IconEye size={16} stroke={1.5} />
               )}
             </button>
           )}

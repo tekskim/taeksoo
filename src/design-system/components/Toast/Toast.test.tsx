@@ -53,13 +53,13 @@ describe('Toast', () => {
   it('calls onDismiss when close button is clicked', async () => {
     vi.useFakeTimers();
     const handleDismiss = vi.fn();
-    render(<Toast toast={createToast({ id: '1', dismissible: true })} onDismiss={handleDismiss} />);
+    render(<Toast toast={createToast({ id: '1' })} onDismiss={handleDismiss} />);
 
     const closeButton = screen.getByRole('button', { name: /닫기/i });
     fireEvent.click(closeButton);
 
-    // Wait for exit animation (300ms)
-    vi.advanceTimersByTime(300);
+    // Wait for animation timeout
+    vi.advanceTimersByTime(200);
 
     expect(handleDismiss).toHaveBeenCalledWith('1');
     vi.useRealTimers();

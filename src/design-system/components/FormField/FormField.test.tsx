@@ -116,13 +116,13 @@ describe('FormField', () => {
       expect(screen.getByText('Enter a unique username')).toBeInTheDocument();
     });
 
-    it('is hidden when there is an error', () => {
+    it('remains visible when there is an error', () => {
       render(
         <FormField error>
-          <FormField.HelperText>Helper text hidden</FormField.HelperText>
+          <FormField.HelperText>Helper text still visible</FormField.HelperText>
         </FormField>
       );
-      expect(screen.queryByText('Helper text hidden')).not.toBeInTheDocument();
+      expect(screen.getByText('Helper text still visible')).toBeInTheDocument();
     });
 
     it('has correct id when field has id', () => {
@@ -183,7 +183,7 @@ describe('FormField', () => {
       expect(screen.getByText('*')).toBeInTheDocument();
     });
 
-    it('renders form field with error — error replaces helper text', () => {
+    it('renders form field with error — both error and helper text visible', () => {
       render(
         <FormField id="password" error>
           <FormField.Label>Password</FormField.Label>
@@ -197,7 +197,7 @@ describe('FormField', () => {
 
       expect(screen.getByLabelText('Password')).toBeInTheDocument();
       expect(screen.getByText('Password is too short')).toBeInTheDocument();
-      expect(screen.queryByText('Must be at least 8 characters')).not.toBeInTheDocument();
+      expect(screen.getByText('Must be at least 8 characters')).toBeInTheDocument();
     });
   });
 });

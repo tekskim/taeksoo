@@ -29,7 +29,7 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
   if (status === 'done') {
     return (
       <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-        <IconCheck size={10} stroke={2.5} className="text-[var(--color-text-on-primary)]" />
+        <IconCheck size={10} stroke={2.5} className="text-white" />
       </div>
     );
   }

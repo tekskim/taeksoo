@@ -38,7 +38,7 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
       variant = 'text',
       width,
       height,
-      animation = 'wave',
+      animation = 'pulse',
       count = 1,
       gap = 8,
       loading = true,

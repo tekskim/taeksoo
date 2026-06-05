@@ -189,7 +189,7 @@ describe('Tabs', () => {
     it('renders underline variant by default', () => {
       renderTabs();
       const tablist = screen.getByRole('tablist');
-      expect(tablist).toHaveClass('scrollbar-none');
+      expect(tablist).toHaveClass('after:absolute');
     });
 
     it('renders boxed variant', () => {

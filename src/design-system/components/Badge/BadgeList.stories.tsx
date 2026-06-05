@@ -53,8 +53,9 @@ import { BadgeList } from '@thaki/tds';
       description: '뱃지 테마',
     },
     type: {
-      table: { disable: true },
-      description: '뱃지 타입 (deprecated)',
+      control: 'select',
+      options: ['solid', 'subtle'],
+      description: '뱃지 타입',
     },
     popoverTitle: {
       control: 'text',

@@ -23,10 +23,6 @@ export interface BadgeListProps {
   popoverTitle?: string;
   /** Custom render for each badge item */
   renderItem?: (item: string, index: number) => ReactNode;
-  /** Align the +N overflow trigger to the right, pushing it away from the badges */
-  overflowAlign?: 'inline' | 'right';
-  /** Max width of the popover content (e.g. '160px'). Overrides the default 320px. */
-  popoverMaxWidth?: string;
 }
 
 /* ----------------------------------------
@@ -42,20 +38,11 @@ export const BadgeList = memo(function BadgeList({
   type,
   popoverTitle,
   renderItem,
-  overflowAlign = 'inline',
-  popoverMaxWidth,
 }: BadgeListProps) {
   if (items.length === 0) return null;
 
   const visibleItems = items.slice(0, maxVisible);
   const remainingCount = items.length - maxVisible;
-
-  const POPOVER_CONTENT_WIDTH = 136;
-  const BADGE_H_PADDING = 12;
-  const CHAR_WIDTH = 6.6;
-  const hasLongBadge = items.some(
-    (item) => item.length * CHAR_WIDTH + BADGE_H_PADDING > POPOVER_CONTENT_WIDTH
-  );
 
   const renderBadge = (item: string, index: number, truncate?: boolean) =>
     renderItem ? (
@@ -75,10 +62,7 @@ export const BadgeList = memo(function BadgeList({
     );
 
   return (
-    <div
-      data-figma-name="[TDS] BadgeList"
-      className={`flex flex-nowrap gap-1 items-center${overflowAlign === 'right' && remainingCount > 0 ? ' w-full justify-between' : ''}`}
-    >
+    <div data-figma-name="[TDS] BadgeList" className="flex flex-nowrap gap-1 items-center">
       {visibleItems.map((item, index) => renderBadge(item, index, true))}
       {remainingCount > 0 && (
         <Popover
@@ -87,36 +71,29 @@ export const BadgeList = memo(function BadgeList({
           delay={100}
           hideDelay={100}
           content={
-            <div
-              className={`p-3 ${popoverMaxWidth ? '' : 'max-w-[320px]'} ${hasLongBadge || popoverMaxWidth ? '' : 'min-w-[160px]'}`}
-              style={popoverMaxWidth ? { maxWidth: popoverMaxWidth } : undefined}
-            >
-              <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2 whitespace-nowrap">
+            <div className="p-3 min-w-[120px] max-w-[320px] text-left">
+              <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                 {popoverTitle ?? `All items (${items.length})`}
               </div>
-              <div
-                className={`flex gap-1 items-start ${hasLongBadge || popoverMaxWidth ? 'flex-col' : 'flex-wrap min-w-[136px]'}`}
-              >
+              <div className="flex flex-col gap-1">
                 {items.map((item, index) => (
                   <Badge
                     key={index}
                     size={size}
                     theme={theme}
                     type={type}
-                    className="shrink-0 whitespace-nowrap"
+                    className="w-fit max-w-full"
                   >
-                    {item}
+                    <span className="break-all">{item}</span>
                   </Badge>
                 ))}
               </div>
             </div>
           }
         >
-          <span
-            className={`inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors ${size === 'sm' ? 'h-5' : size === 'md' ? 'h-6' : 'h-7'}`}
-          >
+          <Badge theme="gray" type="subtle" size={size} className="shrink-0 cursor-pointer">
             +{remainingCount}
-          </span>
+          </Badge>
         </Popover>
       )}
     </div>

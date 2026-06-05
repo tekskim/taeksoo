@@ -124,7 +124,7 @@ export const WithCustomContent: Story = {
       <SectionCard.Header title="Status & Labels" />
       <SectionCard.Content>
         <SectionCard.DataRow label="Status">
-          <StatusIndicator status="active" label="Running" layout="badge" />
+          <StatusIndicator status="active" label="Running" />
         </SectionCard.DataRow>
         <SectionCard.DataRow label="Labels">
           <HStack gap={1}>

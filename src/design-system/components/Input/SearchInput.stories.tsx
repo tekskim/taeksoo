@@ -121,9 +121,15 @@ export const Sizes: Story = {
     <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-full">
       <div>
         <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">
-          Default (28px)
+          Small
         </p>
-        <SearchInput placeholder="Search..." />
+        <SearchInput size="sm" placeholder="Search..." />
+      </div>
+      <div>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">
+          Medium (default)
+        </p>
+        <SearchInput size="md" placeholder="Search..." />
       </div>
     </div>
   ),

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { IconRefresh, IconCalendar } from '@tabler/icons-react';
-import { DateRangePicker } from '../DatePicker';
+import { IconRefresh, IconX, IconCalendar } from '@tabler/icons-react';
+import { DatePicker } from '../DatePicker';
 
 /* ----------------------------------------
    Types
@@ -128,15 +128,13 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [tempStartDate, setTempStartDate] = useState<Date | null>(null);
   const [tempEndDate, setTempEndDate] = useState<Date | null>(null);
+  const [selectingStart, setSelectingStart] = useState(true);
   const datePickerRef = useRef<HTMLDivElement>(null);
 
   // Close date picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (datePickerRef.current && !datePickerRef.current.contains(target)) {
-        const el = target instanceof Element ? target : target.parentElement;
-        if (el?.closest('[role="listbox"]')) return;
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
         setShowDatePicker(false);
       }
     };
@@ -169,7 +167,23 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
       setTempStartDate(oneWeekAgo);
       setTempEndDate(now);
     }
+    setSelectingStart(true);
     setShowDatePicker(true);
+  };
+
+  const handleApplyCustomPeriod = () => {
+    if (tempStartDate && tempEndDate) {
+      const newPeriod = { start: tempStartDate, end: tempEndDate };
+      if (!isCustomPeriodControlled) {
+        setInternalCustomPeriod(newPeriod);
+      }
+      if (!isTimeRangeControlled) {
+        setInternalTimeRange('custom');
+      }
+      onCustomPeriodChange?.(newPeriod);
+      onTimeRangeChange?.('custom');
+      setShowDatePicker(false);
+    }
   };
 
   const handleClearCustomPeriod = (e: React.MouseEvent) => {
@@ -189,7 +203,14 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
       setTempStartDate(customPeriod.start);
       setTempEndDate(customPeriod.end);
     }
+    setSelectingStart(true);
     setShowDatePicker(true);
+  };
+
+  const handleRangeChange = (range: { start: Date | null; end: Date | null }) => {
+    setTempStartDate(range.start);
+    setTempEndDate(range.end);
+    setSelectingStart(!range.start || !!range.end);
   };
 
   const hasCustomPeriod = customPeriod !== null;
@@ -217,59 +238,85 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
       {/* Period Selector */}
       <div className="monitoring-toolbar-period" ref={datePickerRef}>
         {hasCustomPeriod ? (
-          <button
-            type="button"
-            className="flex items-center gap-2 h-[var(--input-height-sm)] px-[var(--input-padding-x)] bg-[var(--color-surface-default)] border border-[var(--color-border-focus)] rounded-[var(--input-radius)] text-body-sm cursor-pointer transition-colors"
-            onClick={handlePeriodTextClick}
-          >
-            <IconCalendar
-              size={14}
-              stroke={1.5}
-              className="shrink-0 text-[var(--color-text-subtle)]"
-            />
-            <span className="text-[var(--color-text-default)] whitespace-nowrap font-medium">
+          <div className="monitoring-toolbar-period-tag">
+            <span className="monitoring-toolbar-period-tag-text" onClick={handlePeriodTextClick}>
               {formatDateForDisplay(customPeriod.start)}
-              <span className="mx-0.5 text-[var(--color-text-subtle)]">—</span>
+              <span className="monitoring-toolbar-period-tag-divider">—</span>
               {formatDateForDisplay(customPeriod.end)}
             </span>
-          </button>
+            <button
+              type="button"
+              className="monitoring-toolbar-period-tag-close"
+              onClick={handleClearCustomPeriod}
+              aria-label="Clear custom period"
+            >
+              <IconX size={12} stroke={2} />
+            </button>
+          </div>
         ) : (
           <button
             type="button"
-            className={`flex items-center gap-2 h-[var(--input-height-sm)] px-[var(--input-padding-x)] bg-[var(--color-surface-default)] border rounded-[var(--input-radius)] text-body-sm cursor-pointer transition-colors ${showDatePicker ? 'border-[var(--color-border-focus)]' : 'border-[var(--color-border-strong)] hover:border-[var(--color-border-focus)]'}`}
+            className={`monitoring-toolbar-period-btn ${showDatePicker ? 'monitoring-toolbar-period-btn-active' : ''}`}
             onClick={handleCustomPeriodClick}
           >
-            <IconCalendar
-              size={14}
-              stroke={1.5}
-              className="shrink-0 text-[var(--color-text-subtle)]"
-            />
-            <span className="text-[var(--color-text-subtle)] font-medium">Select period</span>
+            <IconCalendar size={12} stroke={2} />
+            <span>Period</span>
           </button>
         )}
 
         {/* Calendar Date Picker Dropdown */}
         {showDatePicker && (
           <div className="monitoring-toolbar-dropdown">
-            <DateRangePicker
-              value={{ start: tempStartDate, end: tempEndDate }}
-              onApply={(range) => {
-                const newPeriod = { start: range.start, end: range.end };
-                if (!isCustomPeriodControlled) {
-                  setInternalCustomPeriod(newPeriod);
-                }
-                if (!isTimeRangeControlled) {
-                  setInternalTimeRange('custom');
-                }
-                onCustomPeriodChange?.(newPeriod);
-                onTimeRangeChange?.('custom');
-                setShowDatePicker(false);
-              }}
-              onCancel={() => setShowDatePicker(false)}
-              minDate={minDate}
+            {/* Date Range Header */}
+            <div className="monitoring-toolbar-dropdown-header">
+              <div
+                className={`monitoring-toolbar-date-box ${selectingStart ? 'monitoring-toolbar-date-box-active' : ''}`}
+                onClick={() => setSelectingStart(true)}
+              >
+                <span className="monitoring-toolbar-date-label">START</span>
+                <span className="monitoring-toolbar-date-value">
+                  {formatDateForDisplay(tempStartDate)}
+                </span>
+              </div>
+              <div className="monitoring-toolbar-date-separator">~</div>
+              <div
+                className={`monitoring-toolbar-date-box ${!selectingStart ? 'monitoring-toolbar-date-box-active' : ''}`}
+                onClick={() => setSelectingStart(false)}
+              >
+                <span className="monitoring-toolbar-date-label">END</span>
+                <span className="monitoring-toolbar-date-value">
+                  {formatDateForDisplay(tempEndDate)}
+                </span>
+              </div>
+            </div>
+
+            {/* DatePicker */}
+            <DatePicker
+              mode="range"
+              rangeValue={{ start: tempStartDate, end: tempEndDate }}
+              onRangeChange={handleRangeChange}
               maxDate={maxDate}
-              className="!border-0 !shadow-none"
+              minDate={minDate}
             />
+
+            {/* Actions */}
+            <div className="monitoring-toolbar-dropdown-actions">
+              <button
+                type="button"
+                className="monitoring-toolbar-dropdown-cancel"
+                onClick={() => setShowDatePicker(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="monitoring-toolbar-dropdown-apply"
+                onClick={handleApplyCustomPeriod}
+                disabled={!tempStartDate || !tempEndDate}
+              >
+                Apply
+              </button>
+            </div>
           </div>
         )}
       </div>

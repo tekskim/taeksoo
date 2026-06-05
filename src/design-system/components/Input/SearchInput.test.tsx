@@ -125,9 +125,15 @@ describe('SearchInput', () => {
     });
   });
 
-  describe('Size', () => {
-    it('renders with fixed 28px height', () => {
+  describe('Size variants', () => {
+    it('renders with default md size', () => {
       render(<SearchInput />);
+      const input = screen.getByRole('searchbox');
+      expect(input).toHaveClass('h-[var(--search-input-height-md)]');
+    });
+
+    it('renders with sm size', () => {
+      render(<SearchInput size="sm" />);
       const input = screen.getByRole('searchbox');
       expect(input).toHaveClass('h-[var(--search-input-height-sm)]');
     });
@@ -184,7 +190,7 @@ describe('SearchInput', () => {
     it('generates unique id when not provided', () => {
       render(<SearchInput />);
       const input = screen.getByRole('searchbox');
-      expect(input.id).toBeTruthy();
+      expect(input.id).toMatch(/^search-input-/);
     });
 
     it('uses provided id', () => {

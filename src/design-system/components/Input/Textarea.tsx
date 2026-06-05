@@ -65,7 +65,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       value,
       defaultValue,
       required = false,
-      resize = 'none',
+      resize = 'vertical',
       autoResize = false,
       minRows = 3,
       maxRows,

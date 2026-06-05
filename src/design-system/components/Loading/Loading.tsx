@@ -132,12 +132,8 @@ export const Loading: React.FC<LoadingProps> = ({
             'cursor-not-allowed'
           )}
         >
-          <IconLoader2
-            size={12}
-            stroke={2}
-            className="text-[var(--color-text-on-primary)] animate-spin"
-          />
-          <span className="font-medium text-body-md leading-4 text-[var(--color-text-on-primary)] text-center">
+          <IconLoader2 size={12} stroke={2} className="text-white animate-spin" />
+          <span className="font-medium text-body-md leading-4 text-white text-center">
             {buttonLabel}
           </span>
         </button>

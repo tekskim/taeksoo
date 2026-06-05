@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from '../../utils/cn';
 import { Button } from '../Button';
-import { InlineMessage } from '../InlineMessage';
 import { useStableId } from '../../hooks/useId';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 
@@ -24,12 +23,12 @@ export interface ModalProps extends Omit<
   description?: string;
   /** Modal content (children) */
   children?: React.ReactNode;
+  /** Whether to show close button */
+  showCloseButton?: boolean;
   /** Close on backdrop click */
   closeOnBackdropClick?: boolean;
   /** Close on escape key */
   closeOnEscape?: boolean;
-  /** Modal width (design system presets) */
-  size?: 'sm' | 'md' | 'lg';
 }
 
 export interface ConfirmModalProps extends Omit<ModalProps, 'children'> {
@@ -59,9 +58,9 @@ export function Modal({
   title,
   description,
   children,
+  showCloseButton: _showCloseButton = false,
   closeOnBackdropClick = true,
   closeOnEscape = true,
-  size = 'sm',
   className,
   ...rest
 }: ModalProps) {
@@ -121,13 +120,11 @@ export function Modal({
     }
   }, [closeOnBackdropClick, onClose]);
 
-  const sizeWidthClass = size === 'md' ? 'w-[480px]' : size === 'lg' ? 'w-[640px]' : 'w-[360px]';
-
   if (!shouldRender) return null;
 
   const backdropClasses = twMerge(
     'fixed inset-0 z-[var(--z-modal)]',
-    'bg-[color-mix(in_srgb,var(--color-text-default)_60%,transparent)]',
+    'bg-black/60',
     'flex items-center justify-center',
     'transition-opacity duration-200 ease-out',
     isAnimating ? 'opacity-100' : 'opacity-0'
@@ -137,13 +134,12 @@ export function Modal({
     'bg-[var(--color-surface-default)]',
     'border border-[var(--color-border-default)]',
     'rounded-[var(--radius-xl)]',
-    'shadow-[0px_0px_4px_0px_color-mix(in_srgb,var(--color-text-default)_10%,transparent)]',
-    'p-4',
+    'shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)]',
+    'p-6',
     'flex flex-col gap-4',
     'transition-all duration-200 ease-out',
     isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
-    'max-w-[calc(100vw-2rem)]',
-    sizeWidthClass,
+    'w-[344px]',
     className
   );
 
@@ -184,12 +180,6 @@ export function Modal({
    ConfirmModal Component
    ---------------------------------------- */
 
-const confirmVariantToMessageVariant: Record<string, 'error' | 'warning' | 'info'> = {
-  danger: 'error',
-  warning: 'warning',
-  primary: 'info',
-};
-
 export function ConfirmModal({
   isOpen,
   onClose,
@@ -204,20 +194,13 @@ export function ConfirmModal({
   isLoading = false,
   ...props
 }: ConfirmModalProps) {
-  const messageVariant = confirmVariantToMessageVariant[confirmVariant] ?? 'info';
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} {...props}>
-      {/* Info Box + InlineMessage */}
-      {(infoLabel || description) && (
-        <div className="flex flex-col gap-2">
-          {infoLabel && infoValue && (
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-label-sm text-[var(--color-text-subtle)]">{infoLabel}</span>
-              <span className="text-body-md text-[var(--color-text-default)]">{infoValue}</span>
-            </div>
-          )}
-          {description && <InlineMessage variant={messageVariant}>{description}</InlineMessage>}
+    <Modal isOpen={isOpen} onClose={onClose} title={title} description={description} {...props}>
+      {/* Info Box */}
+      {infoLabel && infoValue && (
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+          <span className="text-label-sm text-[var(--color-text-subtle)]">{infoLabel}</span>
+          <span className="text-body-md text-[var(--color-text-default)]">{infoValue}</span>
         </div>
       )}
 

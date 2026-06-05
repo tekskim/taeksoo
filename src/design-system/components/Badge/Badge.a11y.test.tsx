@@ -21,10 +21,14 @@ describe('Badge Accessibility', () => {
     }
   });
 
-  it('should have no accessibility violations with subtle type', async () => {
-    const { container } = render(<Badge theme="blue">subtle</Badge>);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  it('should have no accessibility violations with different types', async () => {
+    const types = ['solid', 'subtle'] as const;
+
+    for (const type of types) {
+      const { container } = render(<Badge type={type}>{type}</Badge>);
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    }
   });
 
   it('should have no accessibility violations with icon', async () => {

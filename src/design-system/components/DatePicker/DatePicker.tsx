@@ -1,7 +1,5 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { IconChevronLeft, IconChevronRight, IconClock } from '@tabler/icons-react';
-import { NumberInput } from '../Input/NumberInput';
-import { Select } from '../Select';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -36,20 +34,12 @@ export interface DatePickerProps {
   disabled?: boolean;
   /** First day of week (0 = Sunday, 1 = Monday) */
   firstDayOfWeek?: 0 | 1;
-  /** Show time selection (hour and minute) below calendar */
-  showTime?: boolean;
-  /** Time format: '24h' (default) or '12h' (with AM/PM selector) */
-  timeFormat?: '24h' | '12h';
-  /** Time input mode: 'stepper' (two NumberInputs) or 'inline' (single HH:MM text input) */
-  timeInputMode?: 'stepper' | 'inline';
-  /** Show Cancel / Apply buttons (auto-enabled when showTime is true) */
-  showActions?: boolean;
-  /** Callback when Apply is clicked */
-  onApply?: (date: Date) => void;
-  /** Callback when Cancel is clicked */
-  onCancel?: () => void;
   /** Custom class name */
   className?: string;
+  /** @deprecated thaki-ui compatibility - use onChange/onRangeChange instead */
+  onApply?: (value: ThakiDatePickerValue) => void;
+  /** @deprecated thaki-ui compatibility - cancel handler */
+  onCancel?: () => void;
   /** @deprecated thaki-ui compatibility - number of visible months */
   numberOfMonths?: number;
   /** @deprecated thaki-ui compatibility - loading state */
@@ -206,19 +196,23 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   maxDate,
   disabled = false,
   firstDayOfWeek = 0,
-  showTime = false,
-  timeFormat = '24h',
-  timeInputMode = 'stepper',
-  showActions,
-  onApply,
-  onCancel,
   className = '',
   // thaki-ui compatibility props
+  onApply,
+  onCancel,
   numberOfMonths,
   isLoading,
 }) => {
   // thaki-ui compatibility: warn about deprecated props
   if (process.env.NODE_ENV === 'development') {
+    if (onApply)
+      console.warn(
+        '[DatePicker] onApply prop is deprecated. Selection is applied immediately via onChange/onRangeChange.'
+      );
+    if (onCancel)
+      console.warn(
+        '[DatePicker] onCancel prop is deprecated. Handle cancellation in parent component.'
+      );
     if (numberOfMonths && numberOfMonths > 1)
       console.warn(
         '[DatePicker] numberOfMonths > 1 is not supported. Only single month view is available.'
@@ -228,8 +222,6 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         '[DatePicker] isLoading prop is deprecated. Handle loading state in parent component.'
       );
   }
-
-  const shouldShowActions = showActions ?? showTime;
   // Initialize view month from value or today
   const initialDate = value || rangeValue.start || new Date();
   const [viewYear, setViewYear] = useState(initialDate.getFullYear());
@@ -238,89 +230,6 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   const [selectingRangeEnd, setSelectingRangeEnd] = useState(false);
   const [focusedDate, setFocusedDate] = useState<Date | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-
-  const currentHour24 = value ? value.getHours() : 0;
-  const currentMinute = value ? value.getMinutes() : 0;
-  const is12h = timeFormat === '12h';
-  const currentPeriod = currentHour24 >= 12 ? 'PM' : 'AM';
-  const displayHour = is12h ? currentHour24 % 12 || 12 : currentHour24;
-
-  const ampmOptions = useMemo(
-    () => [
-      { value: 'AM', label: 'AM' },
-      { value: 'PM', label: 'PM' },
-    ],
-    []
-  );
-
-  const handleTimeChange = useCallback(
-    (hour: number, minute: number) => {
-      if (!value || mode !== 'single') return;
-      const updated = new Date(value);
-      updated.setHours(hour, minute, 0, 0);
-      onChange?.(updated);
-    },
-    [value, mode, onChange]
-  );
-
-  const handlePeriodChange = useCallback(
-    (period: string) => {
-      if (!value || mode !== 'single') return;
-      const h = value.getHours();
-      let newHour: number;
-      if (period === 'AM') {
-        newHour = h >= 12 ? h - 12 : h;
-      } else {
-        newHour = h < 12 ? h + 12 : h;
-      }
-      handleTimeChange(newHour, currentMinute);
-    },
-    [value, mode, currentMinute, handleTimeChange]
-  );
-
-  const handle12hHourChange = useCallback(
-    (displayH: number) => {
-      let hour24: number;
-      if (currentPeriod === 'AM') {
-        hour24 = displayH === 12 ? 0 : displayH;
-      } else {
-        hour24 = displayH === 12 ? 12 : displayH + 12;
-      }
-      handleTimeChange(hour24, currentMinute);
-    },
-    [currentPeriod, currentMinute, handleTimeChange]
-  );
-
-  const inlineTimeStr = `${String(is12h ? displayHour : currentHour24).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
-  const [inlineTimeInput, setInlineTimeInput] = useState(inlineTimeStr);
-  const [inlineTimeFocused, setInlineTimeFocused] = useState(false);
-
-  useEffect(() => {
-    if (!inlineTimeFocused) {
-      setInlineTimeInput(inlineTimeStr);
-    }
-  }, [inlineTimeStr, inlineTimeFocused]);
-
-  const commitInlineTime = useCallback(
-    (raw: string) => {
-      const match = raw.match(/^(\d{1,2}):(\d{1,2})$/);
-      if (!match) return;
-      let h = Number(match[1]);
-      const m = Math.min(59, Math.max(0, Number(match[2])));
-      if (is12h) {
-        h = Math.min(12, Math.max(1, h));
-        if (currentPeriod === 'AM') {
-          h = h === 12 ? 0 : h;
-        } else {
-          h = h === 12 ? 12 : h + 12;
-        }
-      } else {
-        h = Math.min(23, Math.max(0, h));
-      }
-      handleTimeChange(h, m);
-    },
-    [is12h, currentPeriod, handleTimeChange]
-  );
 
   const weekdays = firstDayOfWeek === 1 ? WEEKDAYS_MONDAY_START : WEEKDAYS_SUNDAY_START;
 
@@ -682,123 +591,6 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           })}
         </div>
       </div>
-
-      {/* Time Picker */}
-      {showTime && mode === 'single' && (
-        <div className="flex items-center gap-2 pt-2 border-t border-[var(--color-border-subtle)]">
-          <span className="flex items-center gap-1 text-label-sm text-[var(--color-text-muted)] select-none">
-            <IconClock size={12} stroke={2} />
-            Time
-          </span>
-          <div className="flex items-center gap-1.5 ml-auto">
-            {timeInputMode === 'inline' ? (
-              <input
-                type="text"
-                value={inlineTimeFocused ? inlineTimeInput : inlineTimeStr}
-                onChange={(e) => setInlineTimeInput(e.target.value)}
-                onFocus={() => {
-                  setInlineTimeFocused(true);
-                  setInlineTimeInput(inlineTimeStr);
-                }}
-                onBlur={() => {
-                  commitInlineTime(inlineTimeInput);
-                  setInlineTimeFocused(false);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    commitInlineTime(inlineTimeInput);
-                    (e.target as HTMLInputElement).blur();
-                  }
-                }}
-                disabled={disabled || !value}
-                placeholder="HH:MM"
-                aria-label="Time"
-                className="w-[60px] h-8 px-2 text-body-sm text-center text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] outline-none focus:border-[var(--color-border-focus)] focus:shadow-[0_0_0_1px_var(--color-border-focus)] transition-all duration-[var(--duration-fast)] disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-            ) : (
-              <>
-                <NumberInput
-                  value={displayHour}
-                  onChange={is12h ? handle12hHourChange : (v) => handleTimeChange(v, currentMinute)}
-                  min={is12h ? 1 : 0}
-                  max={is12h ? 12 : 23}
-                  step={1}
-                  disabled={disabled || !value}
-                  width={64}
-                  aria-label="Hour"
-                />
-                <span className="text-label-sm text-[var(--color-text-muted)] select-none">:</span>
-                <NumberInput
-                  value={currentMinute}
-                  onChange={(v) => handleTimeChange(currentHour24, v)}
-                  min={0}
-                  max={59}
-                  step={1}
-                  disabled={disabled || !value}
-                  width={64}
-                  aria-label="Minute"
-                />
-              </>
-            )}
-            {is12h && (
-              <Select
-                options={ampmOptions}
-                value={currentPeriod}
-                onChange={handlePeriodChange}
-                disabled={disabled || !value}
-                size="md"
-                width={68}
-                aria-label="AM/PM"
-              />
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Cancel / Apply Actions */}
-      {shouldShowActions && (
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="
-              flex-1
-              h-[var(--button-height-sm)]
-              text-[length:var(--button-font-size-sm)]
-              leading-[var(--button-line-height-sm)]
-              font-medium
-              text-[var(--color-text-default)]
-              bg-[var(--color-surface-default)]
-              border border-[var(--color-border-strong)]
-              rounded-[var(--button-radius)]
-              transition-colors duration-[var(--duration-fast)]
-              hover:bg-[var(--button-secondary-hover-bg)]
-            "
-            onClick={onCancel}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            className={`
-              flex-1
-              h-[var(--button-height-sm)]
-              text-[length:var(--button-font-size-sm)]
-              leading-[var(--button-line-height-sm)]
-              font-medium
-              text-[var(--color-text-on-primary)]
-              bg-[var(--color-action-primary)]
-              rounded-[var(--button-radius)]
-              transition-colors duration-[var(--duration-fast)]
-              hover:bg-[var(--color-action-primary-hover)]
-              ${!value ? 'opacity-50 cursor-not-allowed' : ''}
-            `}
-            disabled={!value}
-            onClick={() => value && onApply?.(value)}
-          >
-            Apply
-          </button>
-        </div>
-      )}
     </div>
   );
 };

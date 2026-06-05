@@ -18,13 +18,6 @@ describe('StatusIndicator', () => {
       render(<StatusIndicator status="active" label="Running" />);
       expect(screen.getByRole('status')).toHaveAttribute('aria-label', 'Running');
     });
-
-    it('renders icon-only by default (no visible text)', () => {
-      render(<StatusIndicator status="active" />);
-      const indicator = screen.getByRole('status');
-      expect(indicator).toHaveClass('rounded-full');
-      expect(indicator).not.toHaveTextContent('Active');
-    });
   });
 
   describe('Status types', () => {
@@ -57,11 +50,10 @@ describe('StatusIndicator', () => {
   });
 
   describe('Layout variants', () => {
-    it('renders icon-only layout by default', () => {
+    it('renders default layout with icon and label by default', () => {
       render(<StatusIndicator status="active" />);
       const indicator = screen.getByRole('status');
-      expect(indicator).toHaveClass('rounded-full');
-      expect(indicator).not.toHaveTextContent('Active');
+      expect(indicator).toHaveTextContent('Active');
     });
 
     it('renders icon-only layout when specified', () => {
@@ -76,12 +68,6 @@ describe('StatusIndicator', () => {
       const indicator = screen.getByRole('status');
       expect(indicator).toHaveClass('rounded-md');
       expect(indicator).toHaveTextContent('Active');
-    });
-
-    it('maps deprecated "default" layout to icon-only', () => {
-      render(<StatusIndicator status="active" layout="default" />);
-      const indicator = screen.getByRole('status');
-      expect(indicator).toHaveClass('rounded-full');
     });
   });
 
@@ -129,24 +115,24 @@ describe('StatusIndicator', () => {
     });
   });
 
-  describe('Badge labels', () => {
+  describe('Default labels', () => {
     it('shows correct label for active', () => {
-      render(<StatusIndicator status="active" layout="badge" />);
+      render(<StatusIndicator status="active" layout="default" />);
       expect(screen.getByText('Active')).toBeInTheDocument();
     });
 
     it('shows correct label for error', () => {
-      render(<StatusIndicator status="error" layout="badge" />);
+      render(<StatusIndicator status="error" layout="default" />);
       expect(screen.getByText('Error')).toBeInTheDocument();
     });
 
     it('shows correct label for building', () => {
-      render(<StatusIndicator status="building" layout="badge" />);
+      render(<StatusIndicator status="building" layout="default" />);
       expect(screen.getByText('Building...')).toBeInTheDocument();
     });
 
     it('shows correct label for deleting', () => {
-      render(<StatusIndicator status="deleting" layout="badge" />);
+      render(<StatusIndicator status="deleting" layout="default" />);
       expect(screen.getByText('Deleting...')).toBeInTheDocument();
     });
   });
@@ -179,10 +165,11 @@ describe('StatusIndicator', () => {
       expect(screen.getByRole('status')).toBeInTheDocument();
     });
 
-    it('aria-label matches status for icon-only (default)', () => {
-      render(<StatusIndicator status="active" />);
+    it('aria-label matches displayed label for layout="default"', () => {
+      render(<StatusIndicator status="active" layout="default" />);
       const indicator = screen.getByRole('status');
       expect(indicator).toHaveAttribute('aria-label', 'Active');
+      expect(indicator).toHaveTextContent('Active');
     });
   });
 });

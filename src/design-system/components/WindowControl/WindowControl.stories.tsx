@@ -72,15 +72,6 @@ export const Maximize: Story = {
   },
 };
 
-// Restore (Maximized state)
-export const Restore: Story = {
-  args: {
-    type: 'maximize',
-    isMaximized: true,
-    onClick: () => console.log('Restore'),
-  },
-};
-
 // Close
 export const Close: Story = {
   args: {
@@ -155,23 +146,6 @@ export const InHeaderContext: Story = {
       <WindowControls
         onMinimize={() => console.log('Minimize')}
         onMaximize={() => console.log('Maximize')}
-        onClose={() => console.log('Close')}
-      />
-    </div>
-  ),
-};
-
-// In Header Context — Maximized
-export const InHeaderContextMaximized: Story = {
-  render: () => (
-    <div className="flex items-center justify-between bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
-      <span className="text-label-md text-[var(--color-text-default)]">
-        Application Window (Maximized)
-      </span>
-      <WindowControls
-        isMaximized
-        onMinimize={() => console.log('Minimize')}
-        onMaximize={() => console.log('Restore')}
         onClose={() => console.log('Close')}
       />
     </div>

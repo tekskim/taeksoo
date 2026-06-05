@@ -112,9 +112,6 @@ export {
   IconAddRobotCustom,
   IconWindowActive,
   IconWindowMinimized,
-  IconHardDriveFigma,
-  IconPackagesFigma,
-  IconFileFigma,
 } from './CustomIcons';
 // Newly added icons from SVG files (these replace existing ones)
 export {
@@ -299,7 +296,6 @@ export {
   IconAdjustments as Finetuning,
   IconBook as Study,
   IconTestPipe as Test,
-  IconFileTextSpark as FileTextSpark,
 } from '@tabler/icons-react';
 
 // Time & Schedule
@@ -380,9 +376,6 @@ import {
   IconAddRobotCustom,
   IconHistory,
   IconChat,
-  IconHardDriveFigma,
-  IconPackagesFigma,
-  IconFileFigma,
 } from './CustomIcons';
 
 export type TDSIconProps = IconProps;
@@ -482,7 +475,6 @@ import {
   IconAdjustments,
   IconBook,
   IconTestPipe,
-  IconFileTextSpark,
   IconClock,
   IconHourglass,
   IconArticle,
@@ -636,10 +628,6 @@ export const Icons = {
   Finetuning: IconAdjustments,
   Study: IconBook,
   Test: IconTestPipe,
-  FileTextSpark: IconFileTextSpark,
-  HardDriveFigma: IconHardDriveFigma,
-  PackagesFigma: IconPackagesFigma,
-  FileFigma: IconFileFigma,
 
   // Time & Schedule
   Schedule: IconClock,

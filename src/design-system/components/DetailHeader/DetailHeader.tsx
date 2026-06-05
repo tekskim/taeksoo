@@ -19,7 +19,7 @@ export function DetailHeader({ children, className, ...props }: DetailHeaderProp
       className={twMerge(
         'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
-        'rounded-[var(--radius-lg)]',
+        'rounded-lg',
         'px-4 pt-3 pb-3',
         'w-full',
         className

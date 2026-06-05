@@ -468,7 +468,7 @@ export const ExpandedContent: Story = {
       data={sampleUsers}
       rowKey="id"
       expandedContent={(row) => (
-        <div className="px-4 bg-[var(--color-surface-subtle)] text-body-md text-[var(--color-text-muted)] w-full">
+        <div className="px-4 py-3 bg-[var(--color-surface-subtle)] text-body-md text-[var(--color-text-muted)]">
           <div className="flex gap-6">
             <span>Email: {row.email}</span>
             <span>Role: {row.role}</span>
