@@ -25,31 +25,12 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { IconEdit, IconTrash, IconCopy, IconDownload } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
-
-function IconButton({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <button
-      className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-      aria-label={label}
-    >
-      <span className="text-[var(--color-text-muted)]">{icon}</span>
-    </button>
-  );
-}
+import { installedAppsMock } from '@/pages/apps/appsMockData';
+import type { InstalledAppResource } from '@/pages/apps/appsTypes';
 
 /* ----------------------------------------
-   Types
+   Types (local — for resource table rows)
    ---------------------------------------- */
-
-interface InstalledAppDetail {
-  id: string;
-  name: string;
-  version: string;
-  namespace: string;
-  status: string;
-  chartName: string;
-  lastDeployed: string;
-}
 
 interface AppResource {
   id: string;
@@ -57,82 +38,6 @@ interface AppResource {
   name: string;
   namespace: string;
 }
-
-/* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
-
-const installedAppsData: Record<string, InstalledAppDetail> = {
-  '1': {
-    id: '1',
-    name: 'postgresql-1',
-    version: '16.3.0',
-    namespace: 'default',
-    status: 'Deployed',
-    chartName: 'postgresql',
-    lastDeployed: 'Mar 11, 2026 14:20',
-  },
-  '2': {
-    id: '2',
-    name: 'kafka',
-    version: '08.33',
-    namespace: 'data',
-    status: 'Deployed',
-    chartName: 'kafka',
-    lastDeployed: 'Mar 10, 2026 09:15',
-  },
-  '3': {
-    id: '3',
-    name: 'valkey',
-    version: '80.2',
-    namespace: 'cache',
-    status: 'Deployed',
-    chartName: 'valkey',
-    lastDeployed: 'Mar 06, 2026 17:55',
-  },
-  '4': {
-    id: '4',
-    name: 'nginx-1',
-    version: '4.05',
-    namespace: 'ingress-nginx',
-    status: 'Deployed',
-    chartName: 'nginx',
-    lastDeployed: 'Mar 08, 2026 11:09',
-  },
-  '5': {
-    id: '5',
-    name: 'milvus',
-    version: '4.27',
-    namespace: 'ai',
-    status: 'Pending',
-    chartName: 'milvus',
-    lastDeployed: 'Mar 12, 2026 09:00',
-  },
-  '6': {
-    id: '6',
-    name: 'postgresql-1',
-    version: '16.30',
-    namespace: 'ai',
-    status: 'Failed',
-    chartName: 'postgresql',
-    lastDeployed: 'Mar 12, 2026 15:53',
-  },
-};
-
-const appResourcesData: Record<string, AppResource[]> = {
-  '1': [
-    { id: 'r1', type: 'StatefulSet', name: 'postgresql', namespace: 'default' },
-    { id: 'r2', type: 'Service', name: 'postgresql', namespace: 'default' },
-    { id: 'r3', type: 'Secret', name: 'postgresql', namespace: 'default' },
-    {
-      id: 'r4',
-      type: 'PersistentVolumeClaim',
-      name: 'data-postgresql-0',
-      namespace: 'default',
-    },
-    { id: 'r5', type: 'ConfigMap', name: 'postgresql-configuration', namespace: 'default' },
-  ],
-};
 
 /* ----------------------------------------
    Component
@@ -147,29 +52,14 @@ export default function InstalledAppDetailPage() {
   const [activeTab, setActiveTab] = useState('resources');
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const app = installedAppsData[appId || '1'];
-  const resources = appResourcesData[appId || '1'] || [];
-
-  const valuesYaml = `auth:
-  postgresPassword: "change-me"
-  username: "appuser"
-  password: "change-me"
-  database: "appdb"
-
-primary:
-  persistence:
-    enabled: true
-    size: 20Gi
-    storageClass: "longhorn"
-
-  resources:
-    requests:
-      cpu: "250m"
-      memory: "512Mi"
-    limits:
-      cpu: "1"
-      memory: "2Gi"
-`;
+  const app = installedAppsMock.find((a) => a.id === appId);
+  const resources: AppResource[] = (app?.resources ?? []).map((r: InstalledAppResource) => ({
+    id: r.name,
+    type: r.kind,
+    name: r.name,
+    namespace: r.namespace ?? app?.namespace ?? '',
+  }));
+  const valuesYaml = app?.valuesYaml ?? '';
 
   const resourceColumns: TableColumn<AppResource>[] = [
     {
@@ -229,7 +119,7 @@ primary:
             <Breadcrumb
               items={[
                 { label: 'Installed apps', href: '/container/installed-apps' },
-                { label: app.name },
+                { label: app.releaseName },
               ]}
             />
           }
@@ -239,7 +129,7 @@ primary:
     >
       <VStack gap={6}>
         <DetailHeader>
-          <DetailHeader.Title>{app.name}</DetailHeader.Title>
+          <DetailHeader.Title>{app.releaseName}</DetailHeader.Title>
 
           <DetailHeader.Actions>
             <Button
@@ -269,8 +159,8 @@ primary:
                 </Badge>
               }
             />
-            <DetailHeader.InfoCard label="App name" value={app.name} />
-            <DetailHeader.InfoCard label="Chart name" value={app.chartName} />
+            <DetailHeader.InfoCard label="App name" value={app.releaseName} />
+            <DetailHeader.InfoCard label="Chart name" value={app.name} />
             <DetailHeader.InfoCard label="Version" value={app.version} />
             <DetailHeader.InfoCard label="Namespace" value={app.namespace} />
             <DetailHeader.InfoCard label="Last deployed" value={app.lastDeployed} />
@@ -343,7 +233,7 @@ primary:
         description="This will remove the Helm release and all associated Kubernetes resources. This action cannot be undone."
         size="sm"
       >
-        <InfoBox label="App / Namespace" value={`${app.name} / ${app.namespace}`} />
+        <InfoBox label="App / Namespace" value={`${app.releaseName} / ${app.namespace}`} />
         <div className="flex gap-2 w-full">
           <Button variant="secondary" onClick={() => setIsDeleteOpen(false)} className="flex-1">
             Cancel
