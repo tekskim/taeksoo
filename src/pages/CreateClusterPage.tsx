@@ -1,7 +1,14 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
-import { IconInfoCircle, IconHelpCircle } from '@tabler/icons-react';
+import {
+  IconX,
+  IconCirclePlus,
+  IconInfoCircle,
+  IconHelpCircle,
+  IconEye,
+  IconEyeOff,
+} from '@tabler/icons-react';
 import {
   Button,
   Breadcrumb,
@@ -11,7 +18,6 @@ import {
   TopBar,
   Input,
   Select,
-  Disclosure,
   SectionCard,
   Table,
   Radio,
@@ -23,17 +29,14 @@ import {
   FormField,
   SelectionIndicator,
   Tooltip,
-  Password,
   Tabs,
   TabList,
   Tab,
   PageShell,
   WizardSummary,
-  fixedColumns,
-  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
-import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
 import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
@@ -54,10 +57,40 @@ interface FlavorRow {
   disk: string;
 }
 
+interface GpuFlavorRow {
+  id: string;
+  name: string;
+  vcpu: number;
+  gpu: string;
+  ram: string;
+  disk: string;
+}
+
+interface BareMetalFlavorRow {
+  id: string;
+  name: string;
+  model: string;
+  cpu: string;
+  ram: string;
+  storage: string;
+}
+
 interface KeyPairRow {
   id: string;
   name: string;
   fingerprint: string;
+}
+
+interface Label {
+  id: string;
+  key: string;
+  value: string;
+}
+
+interface Annotation {
+  id: string;
+  key: string;
+  value: string;
 }
 
 /* ----------------------------------------
@@ -70,11 +103,7 @@ const kubernetesVersionOptions = [
   { value: 'v1.32', label: 'v1.32' },
 ];
 
-const containerNetworkOptions = [
-  { value: 'kube-ovn', label: 'Kube OVN' },
-  { value: 'calico', label: 'Calico' },
-  { value: 'flannel', label: 'Flannel' },
-];
+const containerNetworkOptions = [{ value: 'cilium', label: 'Cilium' }];
 
 const tenantOptions = [
   { value: 'tenant-a', label: 'Tenant_A' },
@@ -83,20 +112,20 @@ const tenantOptions = [
 ];
 
 const mockExternalNetworks: NetworkRow[] = [
-  { id: 'ext-01', name: 'ext-01', subnetCidr: '10.244.0.0/16' },
-  { id: 'ext-02', name: 'ext-02', subnetCidr: '10.96.0.0/12' },
-  { id: 'ext-03', name: 'ext-03', subnetCidr: '192.168.0.0/16' },
-  { id: 'ext-04', name: 'ext-04', subnetCidr: '172.16.0.0/12' },
-  { id: 'ext-05', name: 'ext-05', subnetCidr: '10.128.0.0/12' },
-  { id: 'ext-06', name: 'ext-06', subnetCidr: '10.10.0.0/16' },
+  { id: 'ext-01', name: 'ext-01', subnetCidr: '10.70.62.120/91 +9' },
+  { id: 'ext-02', name: 'ext-02', subnetCidr: '102.68.8.0.0/4 0 +5' },
+  { id: 'ext-03', name: 'ext-03', subnetCidr: '40.068.43.0/4 1 +5' },
+  { id: 'ext-04', name: 'ext-04', subnetCidr: '102.68.19.0/2 3' },
+  { id: 'ext-05', name: 'ext-05', subnetCidr: '102.70.8.0.0/4 8' },
+  { id: 'ext-06', name: 'ext-06', subnetCidr: '10.17.84.01.1/4 8' },
 ];
 
 const mockTenantNetworks: NetworkRow[] = [
-  { id: 'net-01', name: 'net-01', subnetCidr: '10.20.0.0/16' },
-  { id: 'net-02', name: 'net-02', subnetCidr: '10.30.0.0/16' },
-  { id: 'net-03', name: 'net-03', subnetCidr: '192.168.100.0/24' },
-  { id: 'net-04', name: 'net-04', subnetCidr: '172.20.0.0/16' },
-  { id: 'net-05', name: 'net-05', subnetCidr: '10.50.0.0/24' },
+  { id: 'net-01', name: 'net-01', subnetCidr: '10.70.62.120/91 +9' },
+  { id: 'net-02', name: 'net-02', subnetCidr: '102.68.8.0.0/4 0 +5' },
+  { id: 'net-03', name: 'net-03', subnetCidr: '40.068.43.0/4 1 +5' },
+  { id: 'net-04', name: 'net-04', subnetCidr: '102.68.19.0/2 3' },
+  { id: 'net-05', name: 'net-05', subnetCidr: '102.70.8.0.0/4 8' },
 ];
 
 const subnetOptions = [
@@ -110,6 +139,68 @@ const mockFlavors: FlavorRow[] = [
   { id: 'th-medium', name: 'th.medium', vcpu: 4, ram: '8.0 GiB', disk: '40.0 GiB' },
   { id: 'th-large', name: 'th.large', vcpu: 8, ram: '16.0 GiB', disk: '80.0 GiB' },
   { id: 'th-xlarge', name: 'th.xlarge', vcpu: 16, ram: '32.0 GiB', disk: '160.0 GiB' },
+];
+
+const mockGpuFlavors: GpuFlavorRow[] = [
+  {
+    id: 'gpu-small',
+    name: 'th.gpu.small',
+    vcpu: 8,
+    gpu: 'NVIDIA A10 × 1',
+    ram: '32.0 GiB',
+    disk: '100.0 GiB',
+  },
+  {
+    id: 'gpu-medium',
+    name: 'th.gpu.medium',
+    vcpu: 16,
+    gpu: 'NVIDIA A10 × 2',
+    ram: '64.0 GiB',
+    disk: '200.0 GiB',
+  },
+  {
+    id: 'gpu-large',
+    name: 'th.gpu.large',
+    vcpu: 32,
+    gpu: 'NVIDIA A100 × 1',
+    ram: '128.0 GiB',
+    disk: '400.0 GiB',
+  },
+  {
+    id: 'gpu-xlarge',
+    name: 'th.gpu.xlarge',
+    vcpu: 64,
+    gpu: 'NVIDIA A100 × 2',
+    ram: '256.0 GiB',
+    disk: '800.0 GiB',
+  },
+];
+
+const mockBareMetalFlavors: BareMetalFlavorRow[] = [
+  {
+    id: 'bm-standard',
+    name: 'th.bm.standard',
+    model: 'Dell PowerEdge R750',
+    cpu: 'Intel Xeon Gold 6348 × 2 (56C)',
+    ram: '256 GiB',
+    storage: '2 × 960 GiB SSD',
+  },
+  {
+    id: 'bm-highmem',
+    name: 'th.bm.highmem',
+    model: 'HPE ProLiant DL380 Gen11',
+    cpu: 'Intel Xeon Gold 6434H × 2 (64C)',
+    ram: '1 TiB',
+    storage: '4 × 3.84 TiB NVMe',
+  },
+  {
+    id: 'bm-gpu',
+    name: 'th.bm.gpu',
+    model: 'Dell PowerEdge XE9680',
+    cpu: 'Intel Xeon Platinum 8480+ × 2 (120C)',
+    ram: '2 TiB',
+    storage: '8 × 3.84 TiB NVMe + NVIDIA H100 × 8',
+  },
 ];
 
 const imageOptions = [
@@ -164,7 +255,7 @@ export function CreateClusterPage() {
   // Basic Information
   const [clusterName, setClusterName] = useState('');
   const [kubernetesVersion, setKubernetesVersion] = useState('v1.34');
-  const [containerNetwork, setContainerNetwork] = useState('kube-ovn');
+  const [containerNetwork, setContainerNetwork] = useState('cilium');
   const [tenant, setTenant] = useState('tenant-a');
   const [description, setDescription] = useState('');
 
@@ -188,30 +279,64 @@ export function CreateClusterPage() {
   const [cpFlavorFilter, setCpFlavorFilter] = useState('vcpu');
 
   // Authentication
-  const [cpAuthMethod, setCpAuthMethod] = useState('keypair');
   const [selectedKeyPair, setSelectedKeyPair] = useState<string>('');
   const [keyPairSearch, setKeyPairSearch] = useState('');
   const [keyPairPage, setKeyPairPage] = useState(1);
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Worker Nodes
   const [nodeImage, setNodeImage] = useState('ubuntu-24.04-tk-base');
   const [nodeFlavor, setNodeFlavor] = useState('th-tiny');
-  const [nodeCount, setNodeCount] = useState(0);
+  const [nodeCount, setNodeCount] = useState(1);
   const [nodeFlavorFilter, setNodeFlavorFilter] = useState('vcpu');
 
   // Worker Nodes Authentication
-  const [workerAuthMethod, setWorkerAuthMethod] = useState('keypair');
   const [workerSelectedKeyPair, setWorkerSelectedKeyPair] = useState<string>('');
   const [workerKeyPairSearch, setWorkerKeyPairSearch] = useState('');
   const [workerKeyPairPage, setWorkerKeyPairPage] = useState(1);
   const [workerLoginName, setWorkerLoginName] = useState('');
   const [workerPassword, setWorkerPassword] = useState('');
   const [workerConfirmPassword, setWorkerConfirmPassword] = useState('');
+  const [workerShowPassword, setWorkerShowPassword] = useState(false);
+  const [workerShowConfirmPassword, setWorkerShowConfirmPassword] = useState(false);
 
-  const sidebarWidth = sidebarOpen ? 248 : 48;
+  // Labels & Annotations
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ id: '0', key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ id: '0', key: '', value: '' }] : []
+  );
+
+  // Label management
+  const addLabel = useCallback(() => {
+    setLabels((prev) => [...prev, { id: Date.now().toString(), key: '', value: '' }]);
+  }, []);
+
+  const removeLabel = useCallback((id: string) => {
+    setLabels((prev) => prev.filter((l) => l.id !== id));
+  }, []);
+
+  const updateLabel = useCallback((id: string, field: 'key' | 'value', value: string) => {
+    setLabels((prev) => prev.map((l) => (l.id === id ? { ...l, [field]: value } : l)));
+  }, []);
+
+  // Annotation management
+  const addAnnotation = useCallback(() => {
+    setAnnotations((prev) => [...prev, { id: Date.now().toString(), key: '', value: '' }]);
+  }, []);
+
+  const removeAnnotation = useCallback((id: string) => {
+    setAnnotations((prev) => prev.filter((a) => a.id !== id));
+  }, []);
+
+  const updateAnnotation = useCallback((id: string, field: 'key' | 'value', value: string) => {
+    setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
+  }, []);
+
+  const sidebarWidth = sidebarOpen ? 240 : 40;
 
   // Filtered network data
   const filteredExternalNetworks = mockExternalNetworks.filter(
@@ -267,36 +392,14 @@ export function CreateClusterPage() {
     {
       key: 'select',
       label: '',
-      width: fixedColumns.radio,
+      width: 48,
       align: 'center',
       render: (_value, row) => (
         <Radio checked={selectedKeyPair === row.id} onChange={() => setSelectedKeyPair(row.id)} />
       ),
     },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      minWidth: columnMinWidths.name,
-      sortable: true,
-      render: (_value, row) => (
-        <span className="truncate block min-w-0" title={row.name}>
-          {row.name}
-        </span>
-      ),
-    },
-    {
-      key: 'fingerprint',
-      label: 'Fingerprint',
-      flex: 1,
-      minWidth: columnMinWidths.fingerprint,
-      sortable: true,
-      render: (_value, row) => (
-        <span className="truncate block min-w-0" title={row.fingerprint}>
-          {row.fingerprint}
-        </span>
-      ),
-    },
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'fingerprint', label: 'Fingerprint', sortable: true },
   ];
 
   const filteredKeyPairs = mockKeyPairs.filter((kp) =>
@@ -308,121 +411,69 @@ export function CreateClusterPage() {
     {
       key: 'select',
       label: '',
-      width: fixedColumns.radio,
+      width: 48,
       align: 'center',
       render: (_value, row) => (
         <Radio checked={cpFlavor === row.id} onChange={() => setCpFlavor(row.id)} />
       ),
     },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      minWidth: columnMinWidths.name,
-      sortable: true,
-      render: (_value, row) => (
-        <span className="truncate block min-w-0" title={row.name}>
-          {row.name}
-        </span>
-      ),
-    },
-    {
-      key: 'vcpu',
-      label: 'vCPU',
-      flex: 1,
-      minWidth: columnMinWidths.vcpu,
-      sortable: true,
-      render: (_value, row) => (
-        <span className="truncate block min-w-0" title={String(row.vcpu)}>
-          {row.vcpu}
-        </span>
-      ),
-    },
-    {
-      key: 'ram',
-      label: 'RAM',
-      flex: 1,
-      minWidth: columnMinWidths.ram,
-      sortable: true,
-      render: (_value, row) => (
-        <span className="truncate block min-w-0" title={row.ram}>
-          {row.ram}
-        </span>
-      ),
-    },
-    {
-      key: 'disk',
-      label: 'Disk',
-      flex: 1,
-      minWidth: columnMinWidths.disk,
-      sortable: true,
-      render: (_value, row) => (
-        <span className="truncate block min-w-0" title={row.disk}>
-          {row.disk}
-        </span>
-      ),
-    },
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'vcpu', label: 'vCPU', sortable: true },
+    { key: 'ram', label: 'RAM', sortable: true },
+    { key: 'disk', label: 'Disk', sortable: true },
   ];
 
-  // Worker Node Flavor columns
+  // Worker Node — vCPU Flavor columns
   const nodeFlavorColumns: TableColumn<FlavorRow>[] = [
     {
       key: 'select',
       label: '',
-      width: fixedColumns.radio,
+      width: 48,
       align: 'center',
       render: (_value, row) => (
         <Radio checked={nodeFlavor === row.id} onChange={() => setNodeFlavor(row.id)} />
       ),
     },
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'vcpu', label: 'vCPU', sortable: true },
+    { key: 'ram', label: 'RAM', sortable: true },
+    { key: 'disk', label: 'Disk', sortable: true },
+  ];
+
+  // Worker Node — GPU Flavor columns
+  const nodeGpuFlavorColumns: TableColumn<GpuFlavorRow>[] = [
     {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      minWidth: columnMinWidths.name,
-      sortable: true,
+      key: 'select',
+      label: '',
+      width: 48,
+      align: 'center',
       render: (_value, row) => (
-        <span className="truncate block min-w-0" title={row.name}>
-          {row.name}
-        </span>
+        <Radio checked={nodeFlavor === row.id} onChange={() => setNodeFlavor(row.id)} />
       ),
     },
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'vcpu', label: 'vCPU', sortable: true },
+    { key: 'gpu', label: 'GPU', sortable: true },
+    { key: 'ram', label: 'RAM', sortable: true },
+    { key: 'disk', label: 'Disk', sortable: true },
+  ];
+
+  // Worker Node — BareMetal Flavor columns
+  const nodeBareMetalFlavorColumns: TableColumn<BareMetalFlavorRow>[] = [
     {
-      key: 'vcpu',
-      label: 'vCPU',
-      flex: 1,
-      minWidth: columnMinWidths.vcpu,
-      sortable: true,
+      key: 'select',
+      label: '',
+      width: 48,
+      align: 'center',
       render: (_value, row) => (
-        <span className="truncate block min-w-0" title={String(row.vcpu)}>
-          {row.vcpu}
-        </span>
+        <Radio checked={nodeFlavor === row.id} onChange={() => setNodeFlavor(row.id)} />
       ),
     },
-    {
-      key: 'ram',
-      label: 'RAM',
-      flex: 1,
-      minWidth: columnMinWidths.ram,
-      sortable: true,
-      render: (_value, row) => (
-        <span className="truncate block min-w-0" title={row.ram}>
-          {row.ram}
-        </span>
-      ),
-    },
-    {
-      key: 'disk',
-      label: 'Disk',
-      flex: 1,
-      minWidth: columnMinWidths.disk,
-      sortable: true,
-      render: (_value, row) => (
-        <span className="truncate block min-w-0" title={row.disk}>
-          {row.disk}
-        </span>
-      ),
-    },
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'model', label: 'Model', sortable: true },
+    { key: 'cpu', label: 'CPU', sortable: true },
+    { key: 'ram', label: 'RAM', sortable: true },
+    { key: 'storage', label: 'Storage', sortable: true },
   ];
 
   const handleCreate = () => {
@@ -438,10 +489,12 @@ export function CreateClusterPage() {
       cpImage,
       cpFlavor,
       cpNodeCount,
-      etcdDiskSize,
+      etcdVolumeSize,
       nodeImage,
       nodeFlavor,
       nodeCount,
+      labels,
+      annotations,
     });
     navigate('/container/cluster-management');
   };
@@ -459,7 +512,10 @@ export function CreateClusterPage() {
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        <ClusterManagementSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+        />
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -477,8 +533,8 @@ export function CreateClusterPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => navigate(-1)}
-          onForward={() => navigate(1)}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -493,7 +549,7 @@ export function CreateClusterPage() {
       contentClassName="pt-4 px-8 pb-20"
     >
       {/* Header */}
-      <VStack gap={1} className="mb-6">
+      <VStack gap={2} className="mb-6">
         <h1 className="text-heading-h4 leading-7 font-semibold text-[var(--color-text-default)]">
           Create cluster
         </h1>
@@ -543,11 +599,11 @@ export function CreateClusterPage() {
                   </FormField.Control>
                 </FormField>
 
-                {/* Container Network */}
+                {/* Container Network — Cilium only */}
                 <FormField required>
                   <FormField.Label>Container network</FormField.Label>
                   <FormField.Description>
-                    Select the container network (CNI) plugin that manages internal cluster traffic.
+                    Cilium is the only supported CNI plugin. It is automatically selected.
                   </FormField.Description>
                   <FormField.Control>
                     <Select
@@ -555,6 +611,7 @@ export function CreateClusterPage() {
                       value={containerNetwork}
                       onChange={setContainerNetwork}
                       fullWidth
+                      disabled
                     />
                   </FormField.Control>
                 </FormField>
@@ -570,19 +627,37 @@ export function CreateClusterPage() {
                   </FormField.Control>
                 </FormField>
 
+                {/* Cluster Type */}
+                <FormField required>
+                  <FormField.Label>Cluster type</FormField.Label>
+                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                    <RadioGroup
+                      value={nodeType}
+                      onChange={(value) => {
+                        const next = value as 'instance' | 'baremetal';
+                        setNodeType(next);
+                        setNodeFlavor('');
+                        setNodeFlavorFilter(next === 'baremetal' ? 'baremetal' : 'vcpu');
+                      }}
+                    >
+                      <Radio value="instance" label="Instance" />
+                      <Radio value="baremetal" label="BareMetal" />
+                    </RadioGroup>
+                  </FormField.Control>
+                </FormField>
+
                 {/* Description */}
-                <Disclosure defaultOpen={isV2} className={isV2 ? 'gap-3' : ''}>
-                  <Disclosure.Trigger>Description</Disclosure.Trigger>
-                  <Disclosure.Panel>
+                <FormField>
+                  <FormField.Label>Description</FormField.Label>
+                  <FormField.Control>
                     <Input
-                      placeholder="Description"
+                      placeholder="Enter a description (optional)"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       fullWidth
-                      className="mt-2"
                     />
-                  </Disclosure.Panel>
-                </Disclosure>
+                  </FormField.Control>
+                </FormField>
               </VStack>
             </SectionCard.Content>
           </SectionCard>
@@ -592,141 +667,235 @@ export function CreateClusterPage() {
             <SectionCard.Header title="Networking" />
             <SectionCard.Content>
               <VStack gap={6}>
-                {/* External network */}
-                <FormField>
-                  <FormField.Label>
-                    <HStack gap={1} align="center">
-                      External network
-                      <span className="text-[var(--color-state-danger)]">*</span>
-                      <Tooltip
-                        content="Displays the list of External networks created in the user domain for enabling external access for the cluster."
-                        position="right"
-                      >
-                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
-                      </Tooltip>
-                    </HStack>
-                  </FormField.Label>
-                  <FormField.Description>
-                    Select the external network for outbound access.
-                  </FormField.Description>
-                  <FormField.Control>
-                    <VStack gap={3}>
-                      <SearchInput
-                        placeholder="Search network by attributes"
-                        value={externalNetworkSearch}
-                        onChange={(e) => setExternalNetworkSearch(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Pagination
-                        currentPage={1}
-                        totalPages={Math.ceil(filteredExternalNetworks.length / 6) || 1}
-                        onPageChange={() => {}}
-                        totalItems={filteredExternalNetworks.length}
-                        selectedCount={selectedExternalNetwork ? 1 : 0}
-                      />
-                      <VStack gap={2}>
-                        <Table
-                          columns={externalNetworkColumns}
-                          data={filteredExternalNetworks}
-                          rowKey="id"
-                        />
-                        <SelectionIndicator
-                          selectedItems={
-                            selectedExternalNetwork
-                              ? [
-                                  {
-                                    id: selectedExternalNetwork,
-                                    label: selectedExternalNetwork,
-                                  },
-                                ]
-                              : []
-                          }
-                          emptyText="No network selected"
-                          onRemove={() => setSelectedExternalNetwork('')}
-                        />
-                      </VStack>
-                    </VStack>
-                  </FormField.Control>
-                </FormField>
+                {/* Instance: Cluster network(internal) → Subnet → External(자동) */}
+                {nodeType === 'instance' && (
+                  <>
+                    {/* Cluster network (tenant network first) */}
+                    <FormField>
+                      <FormField.Label>
+                        <HStack gap={1} align="center">
+                          <span>
+                            Cluster network
+                            <span className="ml-0.5 text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <Tooltip
+                            content="Select the tenant network for node placement and load balancer provisioning. Only networks connected to an external network are available."
+                            position="right"
+                          >
+                            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                          </Tooltip>
+                        </HStack>
+                      </FormField.Label>
+                      <FormField.Description>
+                        Select the tenant network for node placement and load balancer provisioning.
+                        Only networks connected to an external network are available.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <VStack gap={3}>
+                          <SearchInput
+                            placeholder="Search network by attributes"
+                            value={tenantNetworkSearch}
+                            onChange={(e) => setTenantNetworkSearch(e.target.value)}
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Pagination
+                            currentPage={1}
+                            totalPages={Math.ceil(filteredTenantNetworks.length / 5) || 1}
+                            onPageChange={() => {}}
+                            totalItems={filteredTenantNetworks.length}
+                            selectedCount={selectedTenantNetwork ? 1 : 0}
+                          />
+                          <VStack gap={2}>
+                            <Table
+                              columns={tenantNetworkColumns}
+                              data={filteredTenantNetworks}
+                              rowKey="id"
+                            />
+                            <SelectionIndicator
+                              selectedItems={
+                                selectedTenantNetwork
+                                  ? [{ id: selectedTenantNetwork, label: selectedTenantNetwork }]
+                                  : []
+                              }
+                              emptyText="No network selected"
+                              onRemove={() => setSelectedTenantNetwork('')}
+                            />
+                          </VStack>
+                        </VStack>
+                      </FormField.Control>
+                    </FormField>
 
-                {/* Tenant network */}
-                <FormField>
-                  <FormField.Label>
-                    <HStack gap={1} align="center">
-                      Tenant network
-                      <span className="text-[var(--color-state-danger)]">*</span>
-                      <Tooltip
-                        content="Displays the internal networks available to the project. Only networks with a router open to External gateway for the selected External network."
-                        position="right"
-                      >
-                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
-                      </Tooltip>
-                    </HStack>
-                  </FormField.Label>
-                  <FormField.Description>
-                    Select a tenant network for your cluster resources.
-                  </FormField.Description>
-                  <FormField.Control>
-                    <VStack gap={3}>
-                      <SearchInput
-                        placeholder="Search network by attributes"
-                        value={tenantNetworkSearch}
-                        onChange={(e) => setTenantNetworkSearch(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Pagination
-                        currentPage={1}
-                        totalPages={Math.ceil(filteredTenantNetworks.length / 5) || 1}
-                        onPageChange={() => {}}
-                        totalItems={filteredTenantNetworks.length}
-                        selectedCount={selectedTenantNetwork ? 1 : 0}
-                      />
-                      <VStack gap={2}>
-                        <Table
-                          columns={tenantNetworkColumns}
-                          data={filteredTenantNetworks}
-                          rowKey="id"
+                    {/* Subnet */}
+                    <FormField>
+                      <FormField.Label>
+                        <HStack gap={1} align="center">
+                          <span>
+                            Subnet
+                            <span className="ml-0.5 text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <Tooltip
+                            content="Displays the subnets within the selected cluster network. Only subnets connected to a router open to External Gateway are shown."
+                            position="right"
+                          >
+                            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                          </Tooltip>
+                        </HStack>
+                      </FormField.Label>
+                      <FormField.Description>
+                        Select the subnet for cluster node deployment.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <Select
+                          options={subnetOptions}
+                          value={selectedSubnet}
+                          onChange={setSelectedSubnet}
+                          fullWidth
                         />
-                        <SelectionIndicator
-                          selectedItems={
-                            selectedTenantNetwork
-                              ? [{ id: selectedTenantNetwork, label: selectedTenantNetwork }]
-                              : []
-                          }
-                          emptyText="No network selected"
-                          onRemove={() => setSelectedTenantNetwork('')}
-                        />
-                      </VStack>
-                    </VStack>
-                  </FormField.Control>
-                </FormField>
+                      </FormField.Control>
+                    </FormField>
 
-                {/* Subnet */}
-                <FormField>
-                  <FormField.Label>
-                    <HStack gap={1} align="center">
-                      Subnet
-                      <span className="text-[var(--color-state-danger)]">*</span>
-                      <Tooltip
-                        content="Displays the subnets within the selected Tenant network. Only subnets connected to a router open to External Gateway for the selected External network are shown."
-                        position="right"
-                      >
-                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
-                      </Tooltip>
-                    </HStack>
-                  </FormField.Label>
-                  <FormField.Description>
-                    You can also enter the private IP address for the kubernetes api server.
-                  </FormField.Description>
-                  <FormField.Control>
-                    <Select
-                      options={subnetOptions}
-                      value={selectedSubnet}
-                      onChange={setSelectedSubnet}
-                      fullWidth
-                    />
-                  </FormField.Control>
-                </FormField>
+                    {/* External network — tenant network의 라우터에서 자동 지정 */}
+                    <FormField>
+                      <FormField.Label>
+                        <HStack gap={1} align="center">
+                          <span>
+                            External network
+                            <span className="ml-0.5 text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <Tooltip
+                            content="The external network is automatically set to the selected tenant network."
+                            position="right"
+                          >
+                            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                          </Tooltip>
+                        </HStack>
+                      </FormField.Label>
+                      <FormField.Control>
+                        <p className="text-body-md text-[var(--color-text-default)]">
+                          {selectedTenantNetwork ? 'ext-01' : '—'}
+                        </p>
+                      </FormField.Control>
+                    </FormField>
+                  </>
+                )}
+
+                {/* BareMetal: External 먼저 선택 → Tenant(자동 필터) */}
+                {nodeType === 'baremetal' && (
+                  <>
+                    {/* Cluster network (BareMetal = external network 직접 선택) */}
+                    <FormField>
+                      <FormField.Label>
+                        <HStack gap={1} align="center">
+                          <span>
+                            Cluster network
+                            <span className="ml-0.5 text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <Tooltip
+                            content="Displays the list of external networks available in the project."
+                            position="right"
+                          >
+                            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                          </Tooltip>
+                        </HStack>
+                      </FormField.Label>
+                      <FormField.Description>
+                        Select the external network for node placement.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <VStack gap={3}>
+                          <SearchInput
+                            placeholder="Search network by attributes"
+                            value={externalNetworkSearch}
+                            onChange={(e) => setExternalNetworkSearch(e.target.value)}
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Pagination
+                            currentPage={1}
+                            totalPages={Math.ceil(filteredExternalNetworks.length / 5) || 1}
+                            onPageChange={() => {}}
+                            totalItems={filteredExternalNetworks.length}
+                            selectedCount={selectedExternalNetwork ? 1 : 0}
+                          />
+                          <VStack gap={2}>
+                            <Table
+                              columns={externalNetworkColumns}
+                              data={filteredExternalNetworks}
+                              rowKey="id"
+                            />
+                            <SelectionIndicator
+                              selectedItems={
+                                selectedExternalNetwork
+                                  ? [
+                                      {
+                                        id: selectedExternalNetwork,
+                                        label: selectedExternalNetwork,
+                                      },
+                                    ]
+                                  : []
+                              }
+                              emptyText="No network selected"
+                              onRemove={() => setSelectedExternalNetwork('')}
+                            />
+                          </VStack>
+                        </VStack>
+                      </FormField.Control>
+                    </FormField>
+
+                    {/* Tenant network — external 선택에 따라 자동 필터 */}
+                    <FormField>
+                      <FormField.Label>
+                        <HStack gap={1} align="center">
+                          <span>
+                            Tenant network
+                            <span className="ml-0.5 text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <Tooltip
+                            content="Displays the internal networks with a router open to External gateway for the selected External Network."
+                            position="right"
+                          >
+                            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                          </Tooltip>
+                        </HStack>
+                      </FormField.Label>
+                      <FormField.Description>
+                        Select tenant network for load balancer provisioning.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <VStack gap={3}>
+                          <SearchInput
+                            placeholder="Search network by attributes"
+                            value={tenantNetworkSearch}
+                            onChange={(e) => setTenantNetworkSearch(e.target.value)}
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Pagination
+                            currentPage={1}
+                            totalPages={Math.ceil(filteredTenantNetworks.length / 5) || 1}
+                            onPageChange={() => {}}
+                            totalItems={filteredTenantNetworks.length}
+                            selectedCount={selectedTenantNetwork ? 1 : 0}
+                          />
+                          <VStack gap={2}>
+                            <Table
+                              columns={tenantNetworkColumns}
+                              data={filteredTenantNetworks}
+                              rowKey="id"
+                            />
+                            <SelectionIndicator
+                              selectedItems={
+                                selectedTenantNetwork
+                                  ? [{ id: selectedTenantNetwork, label: selectedTenantNetwork }]
+                                  : []
+                              }
+                              emptyText="No network selected"
+                              onRemove={() => setSelectedTenantNetwork('')}
+                            />
+                          </VStack>
+                        </VStack>
+                      </FormField.Control>
+                    </FormField>
+                  </>
+                )}
               </VStack>
             </SectionCard.Content>
           </SectionCard>
@@ -736,24 +905,6 @@ export function CreateClusterPage() {
             <SectionCard.Header title="Node configuration" />
             <SectionCard.Content>
               <VStack gap={6}>
-                {/* Node Type */}
-                <FormField required>
-                  <FormField.Label>Node type</FormField.Label>
-                  <FormField.Description>
-                    Select the type of nodes to use for your cluster. Instance is used for VM-based
-                    clusters and BareMetal is used for physical server clusters.
-                  </FormField.Description>
-                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                    <RadioGroup
-                      value={nodeType}
-                      onChange={(value) => setNodeType(value as 'instance' | 'baremetal')}
-                    >
-                      <Radio value="instance" label="Instance" />
-                      <Radio value="baremetal" label="BareMetal" />
-                    </RadioGroup>
-                  </FormField.Control>
-                </FormField>
-
                 {/* Control planes */}
                 <div>
                   <h6 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
@@ -793,7 +944,6 @@ export function CreateClusterPage() {
                           >
                             <TabList>
                               <Tab value="vcpu">vCPU</Tab>
-                              <Tab value="gpu">GPU</Tab>
                             </TabList>
                           </Tabs>
                           <SearchInput
@@ -908,24 +1058,24 @@ export function CreateClusterPage() {
                       <FormField.Control>
                         <HStack gap={3} align="center">
                           <Slider
-                            min={1}
-                            max={1000}
-                            step={10}
+                            min={10}
+                            max={100}
+                            step={5}
                             value={etcdVolumeSize}
                             onChange={setEtcdVolumeSize}
                           />
                           <NumberInput
                             value={etcdVolumeSize}
                             onChange={setEtcdVolumeSize}
-                            min={1}
-                            max={1000}
+                            min={10}
+                            max={100}
                             step={1}
                             width="xs"
                             suffix="GiB"
                           />
                         </HStack>
                       </FormField.Control>
-                      <FormField.HelperText>1-1000 GiB</FormField.HelperText>
+                      <FormField.HelperText>10-100 GiB</FormField.HelperText>
                     </FormField>
 
                     {/* Authentication */}
@@ -936,121 +1086,159 @@ export function CreateClusterPage() {
                         either the Key Pair method or the Password method.
                       </FormField.Description>
                       <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                        <Tabs
-                          value={cpAuthMethod}
-                          onChange={setCpAuthMethod}
-                          variant="underline"
-                          size="sm"
-                        >
+                        <Tabs value="keypair" onChange={() => {}} variant="underline" size="sm">
                           <TabList>
                             <Tab value="keypair">Key Pair</Tab>
                             <Tab value="password">Password</Tab>
                           </TabList>
                         </Tabs>
 
-                        {cpAuthMethod === 'keypair' && (
-                          <VStack gap={3} className="pt-4">
-                            <SearchInput
-                              placeholder="Search key pairs by attributes"
-                              value={keyPairSearch}
-                              onChange={(e) => setKeyPairSearch(e.target.value)}
-                              className="w-[var(--search-input-width)]"
+                        {/* Key Pair section */}
+                        <VStack gap={3} className="pt-4">
+                          <SearchInput
+                            placeholder="Search key pairs by attributes"
+                            value={keyPairSearch}
+                            onChange={(e) => setKeyPairSearch(e.target.value)}
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Pagination
+                            currentPage={keyPairPage}
+                            totalPages={5}
+                            onPageChange={setKeyPairPage}
+                            totalItems={115}
+                            selectedCount={selectedKeyPair ? 1 : 0}
+                          />
+                          <VStack gap={2}>
+                            <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
+                            <SelectionIndicator
+                              selectedItems={
+                                selectedKeyPair
+                                  ? [
+                                      {
+                                        id: selectedKeyPair,
+                                        label:
+                                          mockKeyPairs.find((kp) => kp.id === selectedKeyPair)
+                                            ?.name || selectedKeyPair,
+                                      },
+                                    ]
+                                  : []
+                              }
+                              emptyText="No item selected"
+                              onRemove={() => setSelectedKeyPair('')}
                             />
-                            <Pagination
-                              currentPage={keyPairPage}
-                              totalPages={5}
-                              onPageChange={setKeyPairPage}
-                              totalItems={115}
-                              selectedCount={selectedKeyPair ? 1 : 0}
-                            />
-                            <VStack gap={2}>
-                              <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
-                              <SelectionIndicator
-                                selectedItems={
-                                  selectedKeyPair
-                                    ? [
-                                        {
-                                          id: selectedKeyPair,
-                                          label:
-                                            mockKeyPairs.find((kp) => kp.id === selectedKeyPair)
-                                              ?.name || selectedKeyPair,
-                                        },
-                                      ]
-                                    : []
-                                }
-                                emptyText="No item selected"
-                                onRemove={() => setSelectedKeyPair('')}
-                              />
-                            </VStack>
                           </VStack>
-                        )}
+                        </VStack>
 
-                        {cpAuthMethod === 'password' && (
-                          <VStack gap={6} className="pt-6">
-                            <FormField>
-                              <FormField.Label>Login name</FormField.Label>
-                              <FormField.Control>
-                                <Input
-                                  placeholder="Enter login name"
-                                  value={loginName}
-                                  onChange={(e) => setLoginName(e.target.value)}
-                                  fullWidth
-                                />
-                              </FormField.Control>
-                            </FormField>
-                            <FormField>
-                              <FormField.Label>Password</FormField.Label>
-                              <FormField.Control>
-                                <Password
-                                  placeholder="Enter password"
-                                  value={password}
-                                  onChange={(e) => setPassword(e.target.value)}
-                                  fullWidth
-                                />
-                              </FormField.Control>
-                            </FormField>
-                            <FormField>
-                              <FormField.Label>Confirm password</FormField.Label>
-                              <FormField.Control>
-                                <Password
-                                  placeholder="Enter password again"
-                                  value={confirmPassword}
-                                  onChange={(e) => setConfirmPassword(e.target.value)}
-                                  fullWidth
-                                />
-                              </FormField.Control>
-                            </FormField>
-                          </VStack>
-                        )}
+                        {/* Password section */}
+                        <VStack gap={6} className="pt-6">
+                          <FormField>
+                            <FormField.Label>Login name</FormField.Label>
+                            <FormField.Control>
+                              <Input
+                                placeholder="Enter login name"
+                                value={loginName}
+                                onChange={(e) => setLoginName(e.target.value)}
+                                fullWidth
+                              />
+                            </FormField.Control>
+                          </FormField>
+                          <FormField>
+                            <FormField.Label>Password</FormField.Label>
+                            <FormField.Control>
+                              <Input
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="Enter password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                fullWidth
+                                rightElement={
+                                  <button
+                                    type="button"
+                                    className="flex items-center"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    tabIndex={-1}
+                                  >
+                                    {showPassword ? (
+                                      <IconEyeOff size={14} />
+                                    ) : (
+                                      <IconEye size={14} />
+                                    )}
+                                  </button>
+                                }
+                              />
+                            </FormField.Control>
+                          </FormField>
+                          <FormField>
+                            <FormField.Label>Confirm password</FormField.Label>
+                            <FormField.Control>
+                              <Input
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                placeholder="Enter password again"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                fullWidth
+                                rightElement={
+                                  <button
+                                    type="button"
+                                    className="flex items-center"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    tabIndex={-1}
+                                  >
+                                    {showConfirmPassword ? (
+                                      <IconEyeOff size={14} />
+                                    ) : (
+                                      <IconEye size={14} />
+                                    )}
+                                  </button>
+                                }
+                              />
+                            </FormField.Control>
+                          </FormField>
+                        </VStack>
                       </FormField.Control>
                     </FormField>
 
                     {/* Node Count */}
-                    <FormField required>
-                      <FormField.Label>Node count</FormField.Label>
+                    <FormField>
+                      <FormField.Label>
+                        <HStack gap={1} align="center">
+                          <span>
+                            Node count
+                            <span className="ml-0.5 text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <Tooltip
+                            content="An odd number of control plane nodes is required to maintain etcd quorum."
+                            position="right"
+                          >
+                            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                          </Tooltip>
+                        </HStack>
+                      </FormField.Label>
                       <FormField.Description>
-                        Select the number of nodes to create.
+                        Select the number of control plane nodes. Only odd numbers are supported.
                       </FormField.Description>
                       <FormField.Control>
                         <HStack gap={3} align="center">
                           <Slider
                             min={1}
-                            max={10}
-                            step={1}
+                            max={7}
+                            step={2}
                             value={cpNodeCount}
                             onChange={setCpNodeCount}
                           />
                           <NumberInput
                             value={cpNodeCount}
-                            onChange={setCpNodeCount}
+                            onChange={(v) => {
+                              const clamped = Math.min(7, Math.max(1, v));
+                              setCpNodeCount(clamped % 2 === 0 ? clamped - 1 : clamped);
+                            }}
                             min={1}
-                            max={10}
-                            step={1}
+                            max={7}
+                            step={2}
                             width="xs"
                           />
                         </HStack>
                       </FormField.Control>
-                      <FormField.HelperText>1-10 nodes</FormField.HelperText>
                     </FormField>
                   </VStack>
                 </div>
@@ -1083,20 +1271,30 @@ export function CreateClusterPage() {
                 <FormField required>
                   <FormField.Label>Flavor</FormField.Label>
                   <FormField.Description>
-                    Select the Flavor that defines the vCPU, memory, and disk capacity for the
-                    worker nodes.
+                    {nodeType === 'baremetal'
+                      ? 'Select the BareMetal Flavor for the worker nodes.'
+                      : 'Select the Flavor that defines the vCPU, memory, and disk capacity for the worker nodes.'}
                   </FormField.Description>
                   <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                     <VStack gap={3}>
                       <Tabs
                         value={nodeFlavorFilter}
-                        onChange={setNodeFlavorFilter}
+                        onChange={(v) => {
+                          setNodeFlavorFilter(v);
+                          setNodeFlavor('');
+                        }}
                         variant="underline"
                         size="sm"
                       >
                         <TabList>
-                          <Tab value="vcpu">vCPU</Tab>
-                          <Tab value="gpu">GPU</Tab>
+                          {nodeType === 'instance' ? (
+                            <>
+                              <Tab value="vcpu">vCPU</Tab>
+                              <Tab value="gpu">GPU</Tab>
+                            </>
+                          ) : (
+                            <Tab value="baremetal">BareMetal</Tab>
+                          )}
                         </TabList>
                       </Tabs>
                       <SearchInput
@@ -1105,13 +1303,29 @@ export function CreateClusterPage() {
                       />
                       <Pagination
                         currentPage={1}
-                        totalPages={5}
+                        totalPages={1}
                         onPageChange={() => {}}
-                        totalItems={115}
+                        totalItems={
+                          nodeFlavorFilter === 'gpu'
+                            ? mockGpuFlavors.length
+                            : nodeFlavorFilter === 'baremetal'
+                              ? mockBareMetalFlavors.length
+                              : mockFlavors.length
+                        }
                         selectedCount={nodeFlavor ? 1 : 0}
                       />
                       <VStack gap={2}>
-                        <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
+                        {nodeFlavorFilter === 'gpu' ? (
+                          <Table columns={nodeGpuFlavorColumns} data={mockGpuFlavors} rowKey="id" />
+                        ) : nodeFlavorFilter === 'baremetal' ? (
+                          <Table
+                            columns={nodeBareMetalFlavorColumns}
+                            data={mockBareMetalFlavors}
+                            rowKey="id"
+                          />
+                        ) : (
+                          <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
+                        )}
                         <SelectionIndicator
                           selectedItems={
                             nodeFlavor
@@ -1119,7 +1333,9 @@ export function CreateClusterPage() {
                                   {
                                     id: nodeFlavor,
                                     label:
-                                      mockFlavors.find((f) => f.id === nodeFlavor)?.name ||
+                                      mockFlavors.find((f) => f.id === nodeFlavor)?.name ??
+                                      mockGpuFlavors.find((f) => f.id === nodeFlavor)?.name ??
+                                      mockBareMetalFlavors.find((f) => f.id === nodeFlavor)?.name ??
                                       nodeFlavor,
                                   },
                                 ]
@@ -1141,116 +1357,302 @@ export function CreateClusterPage() {
                     either the Key Pair method or the Password method.
                   </FormField.Description>
                   <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                    <Tabs
-                      value={workerAuthMethod}
-                      onChange={setWorkerAuthMethod}
-                      variant="underline"
-                      size="sm"
-                    >
+                    <Tabs value="keypair" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
                         <Tab value="keypair">Key Pair</Tab>
                         <Tab value="password">Password</Tab>
                       </TabList>
                     </Tabs>
 
-                    {workerAuthMethod === 'keypair' && (
-                      <VStack gap={3} className="pt-4">
-                        <SearchInput
-                          placeholder="Search key pairs by attributes"
-                          value={workerKeyPairSearch}
-                          onChange={(e) => setWorkerKeyPairSearch(e.target.value)}
-                          className="w-[var(--search-input-width)]"
+                    {/* Key Pair section */}
+                    <VStack gap={3} className="pt-4">
+                      <SearchInput
+                        placeholder="Search key pairs by attributes"
+                        value={workerKeyPairSearch}
+                        onChange={(e) => setWorkerKeyPairSearch(e.target.value)}
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Pagination
+                        currentPage={workerKeyPairPage}
+                        totalPages={5}
+                        onPageChange={setWorkerKeyPairPage}
+                        totalItems={115}
+                        selectedCount={workerSelectedKeyPair ? 1 : 0}
+                      />
+                      <VStack gap={2}>
+                        <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
+                        <SelectionIndicator
+                          selectedItems={
+                            workerSelectedKeyPair
+                              ? [
+                                  {
+                                    id: workerSelectedKeyPair,
+                                    label:
+                                      mockKeyPairs.find((kp) => kp.id === workerSelectedKeyPair)
+                                        ?.name || workerSelectedKeyPair,
+                                  },
+                                ]
+                              : []
+                          }
+                          emptyText="No item selected"
+                          onRemove={() => setWorkerSelectedKeyPair('')}
                         />
-                        <Pagination
-                          currentPage={workerKeyPairPage}
-                          totalPages={5}
-                          onPageChange={setWorkerKeyPairPage}
-                          totalItems={115}
-                          selectedCount={workerSelectedKeyPair ? 1 : 0}
-                        />
-                        <VStack gap={2}>
-                          <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
-                          <SelectionIndicator
-                            selectedItems={
-                              workerSelectedKeyPair
-                                ? [
-                                    {
-                                      id: workerSelectedKeyPair,
-                                      label:
-                                        mockKeyPairs.find((kp) => kp.id === workerSelectedKeyPair)
-                                          ?.name || workerSelectedKeyPair,
-                                    },
-                                  ]
-                                : []
-                            }
-                            emptyText="No item selected"
-                            onRemove={() => setWorkerSelectedKeyPair('')}
-                          />
-                        </VStack>
                       </VStack>
-                    )}
+                    </VStack>
 
-                    {workerAuthMethod === 'password' && (
-                      <VStack gap={6} className="pt-6">
-                        <FormField>
-                          <FormField.Label>Login name</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              placeholder="Enter login name"
-                              value={workerLoginName}
-                              onChange={(e) => setWorkerLoginName(e.target.value)}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>Password</FormField.Label>
-                          <FormField.Control>
-                            <Password
-                              placeholder="Enter password"
-                              value={workerPassword}
-                              onChange={(e) => setWorkerPassword(e.target.value)}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>Confirm password</FormField.Label>
-                          <FormField.Control>
-                            <Password
-                              placeholder="Enter password again"
-                              value={workerConfirmPassword}
-                              onChange={(e) => setWorkerConfirmPassword(e.target.value)}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                      </VStack>
-                    )}
+                    {/* Password section */}
+                    <VStack gap={6} className="pt-6">
+                      <FormField>
+                        <FormField.Label>Login name</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            placeholder="Enter login name"
+                            value={workerLoginName}
+                            onChange={(e) => setWorkerLoginName(e.target.value)}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                      </FormField>
+                      <FormField>
+                        <FormField.Label>Password</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            type={workerShowPassword ? 'text' : 'password'}
+                            placeholder="Enter password"
+                            value={workerPassword}
+                            onChange={(e) => setWorkerPassword(e.target.value)}
+                            fullWidth
+                            rightElement={
+                              <button
+                                type="button"
+                                className="flex items-center"
+                                onClick={() => setWorkerShowPassword(!workerShowPassword)}
+                                tabIndex={-1}
+                              >
+                                {workerShowPassword ? (
+                                  <IconEyeOff size={14} />
+                                ) : (
+                                  <IconEye size={14} />
+                                )}
+                              </button>
+                            }
+                          />
+                        </FormField.Control>
+                      </FormField>
+                      <FormField>
+                        <FormField.Label>Confirm password</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            type={workerShowConfirmPassword ? 'text' : 'password'}
+                            placeholder="Enter password again"
+                            value={workerConfirmPassword}
+                            onChange={(e) => setWorkerConfirmPassword(e.target.value)}
+                            fullWidth
+                            rightElement={
+                              <button
+                                type="button"
+                                className="flex items-center"
+                                onClick={() =>
+                                  setWorkerShowConfirmPassword(!workerShowConfirmPassword)
+                                }
+                                tabIndex={-1}
+                              >
+                                {workerShowConfirmPassword ? (
+                                  <IconEyeOff size={14} />
+                                ) : (
+                                  <IconEye size={14} />
+                                )}
+                              </button>
+                            }
+                          />
+                        </FormField.Control>
+                      </FormField>
+                    </VStack>
                   </FormField.Control>
                 </FormField>
 
                 {/* Node Count */}
-                <FormField required>
-                  <FormField.Label>Node count</FormField.Label>
+                <FormField>
+                  <FormField.Label>
+                    <HStack gap={1} align="center">
+                      <span>
+                        Node count
+                        <span className="ml-0.5 text-[var(--color-state-danger)]">*</span>
+                      </span>
+                      <Tooltip
+                        content="Specify how many worker nodes to include in the cluster."
+                        position="right"
+                      >
+                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                      </Tooltip>
+                    </HStack>
+                  </FormField.Label>
                   <FormField.Description>
-                    Select the number of worker nodes to create.
+                    Select the number of worker nodes to create. Only odd numbers are supported.
                   </FormField.Description>
                   <FormField.Control>
                     <HStack gap={3} align="center">
-                      <Slider min={0} max={20} step={1} value={nodeCount} onChange={setNodeCount} />
+                      <Slider min={1} max={7} step={2} value={nodeCount} onChange={setNodeCount} />
                       <NumberInput
                         value={nodeCount}
-                        onChange={setNodeCount}
-                        min={0}
-                        max={20}
-                        step={1}
+                        onChange={(v) => {
+                          const clamped = Math.min(7, Math.max(1, v));
+                          setNodeCount(clamped % 2 === 0 ? clamped - 1 : clamped);
+                        }}
+                        min={1}
+                        max={7}
+                        step={2}
                         width="xs"
                       />
                     </HStack>
                   </FormField.Control>
-                  <FormField.HelperText>0-20 nodes</FormField.HelperText>
                 </FormField>
+              </VStack>
+            </SectionCard.Content>
+          </SectionCard>
+
+          {/* Labels & Annotations */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Labels & annotations" />
+            <SectionCard.Content>
+              <VStack gap={6}>
+                {/* Labels */}
+                <VStack gap={3}>
+                  <VStack gap={1.5}>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+                    <p className="text-body-md text-[var(--color-text-subtle)]">
+                      Specify the labels used to identify and categorize the resource.
+                    </p>
+                  </VStack>
+
+                  {/* Bordered container for labels */}
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <VStack gap={1.5}>
+                      {labels.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <div className="w-5" />
+                        </div>
+                      )}
+                      {labels.map((label) => (
+                        <div
+                          key={label.id}
+                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                        >
+                          <Input
+                            placeholder="label key"
+                            value={label.key}
+                            onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                            fullWidth
+                          />
+                          <Input
+                            placeholder="label value"
+                            value={label.value}
+                            onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                            fullWidth
+                          />
+                          <button
+                            onClick={() => removeLabel(label.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={addLabel}
+                        >
+                          Add label
+                        </Button>
+                      </div>
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Annotations */}
+                <VStack gap={3}>
+                  <VStack gap={1.5}>
+                    <span className="text-label-lg text-[var(--color-text-default)]">
+                      Annotations
+                    </span>
+                    <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+                      Specify the annotations used to provide additional metadata for the resource.
+                    </p>
+                  </VStack>
+
+                  {/* Bordered container for annotations */}
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <VStack gap={1.5}>
+                      {annotations.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <div className="w-5" />
+                        </div>
+                      )}
+                      {annotations.map((annotation) => (
+                        <div
+                          key={annotation.id}
+                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                        >
+                          <Input
+                            placeholder="annotation key"
+                            value={annotation.key}
+                            onChange={(e) => updateAnnotation(annotation.id, 'key', e.target.value)}
+                            fullWidth
+                          />
+                          <Input
+                            placeholder="annotation value"
+                            value={annotation.value}
+                            onChange={(e) =>
+                              updateAnnotation(annotation.id, 'value', e.target.value)
+                            }
+                            fullWidth
+                          />
+                          <button
+                            onClick={() => removeAnnotation(annotation.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={addAnnotation}
+                        >
+                          Add annotation
+                        </Button>
+                      </div>
+                    </VStack>
+                  </div>
+                </VStack>
               </VStack>
             </SectionCard.Content>
           </SectionCard>
@@ -1258,13 +1660,14 @@ export function CreateClusterPage() {
 
         {/* Right Column - Summary (Floating Card Style) */}
         <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
             {/* Summary Content Area */}
             <WizardSummary
               items={[
                 { key: 'basic-info', label: 'Basic information', status: 'active' },
                 { key: 'networking', label: 'Networking', status: 'active' },
                 { key: 'node-config', label: 'Node configuration', status: 'done' },
+                { key: 'labels', label: 'Labels & annotations', status: 'done' },
               ]}
             />
 

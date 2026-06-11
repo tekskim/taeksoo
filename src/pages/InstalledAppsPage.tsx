@@ -19,6 +19,8 @@ import {
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -53,9 +55,10 @@ const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error'> = {
 
 export function InstalledAppsPage() {
   const navigate = useNavigate();
+  const { isStandalone } = useAppCatalogMode();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = isStandalone ? (sidebarOpen ? 200 : 0) : sidebarOpen ? 240 : 40;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -70,8 +73,10 @@ export function InstalledAppsPage() {
       )
     : installedAppsMock;
 
+  const basePath = isStandalone ? '/app-catalog/installed-apps' : '/container/installed-apps';
+
   const openDetail = (app: InstalledApp) => {
-    navigate(`/container/installed-apps/${app.id}`);
+    navigate(`${basePath}/${app.id}`);
   };
 
   const openDeleteModal = (app: InstalledApp, e?: React.MouseEvent) => {
@@ -91,7 +96,7 @@ export function InstalledAppsPage() {
 
   const openEditPage = (app: InstalledApp, e?: React.MouseEvent) => {
     e?.stopPropagation?.();
-    navigate(`/container/installed-apps/${app.id}/edit`);
+    navigate(`${basePath}/${app.id}/edit`);
   };
 
   const columns: TableColumn<InstalledApp>[] = [
@@ -111,12 +116,12 @@ export function InstalledAppsPage() {
       label: 'App name',
       flex: 1,
       minWidth: 120,
-      render: (value: string, row) => (
+      render: (_value: string, row) => (
         <span
           className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
           onClick={() => openDetail(row)}
         >
-          {value}
+          {row.displayName ?? toTitleCase(row.name)}
         </span>
       ),
     },
@@ -129,13 +134,6 @@ export function InstalledAppsPage() {
       key: 'namespace',
       label: 'Namespace',
       width: '120px',
-    },
-    {
-      key: 'chart',
-      label: 'Chart',
-      flex: 1,
-      minWidth: 180,
-      render: (value: string | undefined, row) => value ?? '—',
     },
     {
       key: 'lastDeployed',
@@ -193,7 +191,11 @@ export function InstalledAppsPage() {
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        isStandalone ? (
+          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        ) : (
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        )
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -210,16 +212,20 @@ export function InstalledAppsPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation={true}
+          showNavigation={!isStandalone}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Installed Apps' },
-              ]}
+              items={
+                isStandalone
+                  ? [{ label: 'Installed Apps' }]
+                  : [
+                      { label: 'clusterName', href: '/container' },
+                      { label: 'Apps', href: '/container/catalog' },
+                      { label: 'Installed Apps' },
+                    ]
+              }
             />
           }
           actions={

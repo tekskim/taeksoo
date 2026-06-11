@@ -1,95 +1,104 @@
 /**
  * Apps (Catalog / Installed Apps) 공통 타입
- * 기능명세서·정책서 기준 (Apps 정책서 3-3, 3-3-1)
+ * thaki-ui catalogData.ts 기준 정책서 정합
  */
 
 export type AppCategory =
-  | 'Big Data'
+  | 'All'
   | 'Database'
-  | 'Monitoring'
+  | 'Developer Tools'
+  | 'Data Processing'
   | 'Networking'
-  | 'Security'
-  | 'All';
+  | 'Vector DB';
 
-/** Required Option UI 타입 (정책서 3-3-1: password 마스킹, storageclass 드롭다운 등) */
-export type RequiredOptionType = 'string' | 'password' | 'int' | 'storageclass';
+export type PackageType = 'application' | 'operator';
+export type PackageLabel = 'Helm' | 'Operator-managed' | 'Operator';
+export type InstallScope = 'namespace' | 'cluster';
 
-export interface RequiredOption {
+export type ConfigurationFieldType = 'text' | 'password' | 'number' | 'select' | 'boolean';
+
+/** App 설치 시 사용자가 입력하는 설정 항목 */
+export interface ConfigurationField {
   key: string;
   label: string;
-  type?: RequiredOptionType;
-  /** 옵션 그룹 헤더 (동일 group 값의 첫 항목 위에 헤더로 표시) */
-  group?: string;
-  /** Input suffix 단위 (예: "Gi", "d"). 지정 시 UnitInput으로 렌더링 */
-  unit?: string;
+  type: ConfigurationFieldType;
+  required?: boolean;
+  defaultValue: string | number | boolean;
+  options?: string[];
 }
 
-/** Catalog에 노출되는 Helm Chart (서비스) */
+export type ConfigurationValue = string | number | boolean;
+
+/** Catalog에 노출되는 App 정의 (thaki-ui AppCatalogItem 기준) */
 export interface CatalogChart {
+  /** chartName (e.g. 'valkey', 'cnpg') */
   id: string;
+  /** chartName — URL 파라미터, 설치/검색 키 */
   name: string;
+  /** 사용자에게 표시되는 이름 (e.g. 'Valkey', 'CNPG') */
+  displayName: string;
   description: string;
   version: string;
-  /** 선택 가능한 버전 목록 (최신순). 없으면 version 단일 항목으로 처리 */
   availableVersions?: string[];
   category: AppCategory;
-  /** 로고 이미지 URL (없으면 아이콘 fallback) */
+  packageType: PackageType;
+  packageLabel: PackageLabel;
+  installScope: InstallScope;
+  /** 동일 차트 여러 번 설치 허용 여부 */
+  duplicateInstallable: boolean;
+  /** 로고 이미지 URL (없으면 iconText fallback) */
   logoUrl?: string;
-  /** Required Options 정의 (정책서 3-3-1. 없으면 Install 시 편집 UI 없이 확인 다이얼로그만) */
-  requiredOptions?: RequiredOption[];
-  /** 기본 values.yaml 템플릿 (Install 시 YAML 에디터에 표시) */
+  /** 아이콘 텍스트 fallback */
+  iconText?: string;
+  /** 설치 시 설정 항목 목록 */
+  configurationFields: ConfigurationField[];
+  /** Operator-managed 앱의 선행 Operator chartName */
+  requiredOperatorChartName?: string;
+  /** 기본 values.yaml (YAML 에디터용) */
   defaultValuesYaml?: string;
-}
-
-/** Chart의 Required Option key 목록 (requiredOptions 또는 레거시 requiredOptionKeys 기준) */
-export function getRequiredOptionKeys(chart: CatalogChart): string[] {
-  if (chart.requiredOptions?.length) return chart.requiredOptions.map((o) => o.key);
-  return (chart as { requiredOptionKeys?: string[] }).requiredOptionKeys ?? [];
 }
 
 /** 설치 상태 */
 export type InstalledAppStatus = 'Deployed' | 'Pending' | 'Failed';
 
-/** Release가 생성한 Kubernetes 리소스 1건 (상세 Resources 탭) */
+/** Release가 생성한 Kubernetes 리소스 1건 */
 export interface InstalledAppResource {
   kind: string;
   name: string;
   namespace?: string;
 }
 
-/** 설치된 App (Release) */
+/** 설치된 App (Helm Release / Operator-managed instance) */
 export interface InstalledApp {
   id: string;
-  name: string; // Chart 이름 = Release 이름
+  /** chartName = releaseName (단순화) */
+  name: string;
+  /** 사용자 표시용 이름 */
+  displayName?: string;
   version: string;
   namespace: string;
   status: InstalledAppStatus;
   installedAt: string;
-  /** Helm chart (e.g. bitnami/postgresql). 프로토타입 목록/상세 표시용 */
-  chart?: string;
-  /** 마지막 배포 시각 (목록/상세 표시용) */
   lastDeployed?: string;
-  clusterId?: string; // 클러스터 식별 (단일 클러스터 시 생략 가능)
-  /** 실패 시 오류 메시지 */
+  clusterId?: string;
   errorMessage?: string;
-  /** Chart values YAML (상세 Values YAML 탭, read-only) */
+  /** Install 시 사용자가 입력한 설정값 */
+  configurationValues?: Record<string, ConfigurationValue>;
+  /** Chart values YAML (상세 Values 탭) */
   valuesYaml?: string;
-  /** 이 Release가 생성한 Kubernetes 리소스 목록 (상세 Resources 탭) */
+  /** Kubernetes 리소스 목록 */
   resources?: InstalledAppResource[];
 }
 
-/** 설치된 Operator (Helm Release) */
+/** 설치된 Operator */
 export interface InstalledOperator {
   id: string;
-  /** Operator 시스템 이름 (예: cnpg-operator) */
   name: string;
-  /** 표시용 이름 (예: CNPG Operator) */
   displayName: string;
   version: string;
   status: InstalledAppStatus;
   namespace: string;
   installedAt: string;
-  /** 이 Operator에 의존하는 App 수 (0이면 삭제 가능) */
   dependentApplicationCount: number;
   logoUrl?: string;
   resources?: InstalledAppResource[];

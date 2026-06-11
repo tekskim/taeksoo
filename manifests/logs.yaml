@@ -1,0 +1,215 @@
+meta:
+  package: logs
+  base_url: "http://localhost:5173"
+  figma_file_key: "vf1Ejq9SKZdhv1hZej0k4s"
+  figma_page_name: "(v1.0.0) Log"
+  figma_page_id: "1:39"
+  capture_output_mode: existingFile
+
+screens:
+  - id: "LOG-001"
+    name: "Log Explorer"
+    route: "/logs/explorer"
+    type: page
+    figma_wrapper_id: "16:2"
+    capture:
+      method: playwright
+      preconditions: []
+      viewport: { width: 1920, height: 1080 }
+      theme: light
+    annotations:
+      - num: 1
+        title: "필터 바 & 검색"
+        target_y: 200
+        bullets:
+          - "필터 키: Query(입력형), App Identifier(선택형), Level(선택형), Partition(입력형)"
+          - "적용된 필터는 Chip으로 개별 제거 가능, Clear Filters로 전체 초기화"
+          - "Save Query: 필터 1개이상 적용 시 활성화"
+          - "Apply Query: 저장된 쿼리 드로어에서 선택 후 필터 일괄 적용"
+      - num: 2
+        title: "시간 범위 & Retention"
+        target_y: 260
+        bullets:
+          - "프리셋: 30m / 1h / 2h / 6h / 12h / 1d / Custom"
+          - "Retention Setting 버튼 클릭 시 드로어 열림"
+          - "드로어: 7 / 14 / 30 / 60 / 90 / 365일 선택 후 Update 저장"
+          - "설정값 로컬스토리지 유지, 반영 즉시 적용"
+      - num: 3
+        title: "히스토그램"
+        target_y: 350
+        bullets:
+          - "상단 배지: Total Logs, Logs/sec, Peak 시간대 표시"
+          - "바 클릭: 해당 bin 로그만 아래 표시"
+          - "드래그: 구간 선택, 선택된 bin만 필터링"
+          - "✕ Clear 버튼으로 범위 해제"
+          - "Collapse/Expand 토글 가능"
+      - num: 4
+        title: "로그 결과 뷰어"
+        target_y: 480
+        bullets:
+          - "다크 테마 코드 블록 (배경 #020617)"
+          - "행 클릭: time, level, App Identifier, domain, partition, message 인라인 펼침"
+          - "Load More: 20개씩 추가 로드"
+          - "Showing X / Y 고지량 표시"
+    states:
+      - id: "LOG-001-S01"
+        name: "Save Query Drawer"
+        type: drawer
+        trigger_selector: "[data-save-query-btn]"
+        capture:
+          method: playwright
+          actions:
+            - { type: click, selector: "[data-save-query-btn]" }
+            - { type: wait, timeout: 800 }
+      - id: "LOG-001-S02"
+        name: "Apply Query Drawer"
+        type: drawer
+        trigger_selector: "[data-apply-query-btn]"
+        capture:
+          method: playwright
+          actions:
+            - { type: click, selector: "[data-apply-query-btn]" }
+            - { type: wait, timeout: 800 }
+      - id: "LOG-001-S03"
+        name: "Retention Setting Drawer"
+        type: drawer
+        trigger_selector: "[data-retention-btn]"
+        capture:
+          method: playwright
+          actions:
+            - { type: click, selector: "[data-retention-btn]" }
+            - { type: wait, timeout: 800 }
+      - id: "LOG-001-S04"
+        name: "Log Detail Inline"
+        type: inline
+        trigger_selector: ".log-row"
+        capture:
+          method: playwright
+          actions:
+            - { type: click, selector: ".log-row:first-child" }
+            - { type: wait, timeout: 500 }
+
+  - id: "LOG-002"
+    name: "Saved Queries"
+    route: "/logs/saved-queries"
+    type: page
+    figma_wrapper_id: "16:15"
+    capture:
+      method: playwright
+      preconditions: []
+      viewport: { width: 1920, height: 1080 }
+      theme: light
+    annotations:
+      - num: 1
+        title: "필터 & 검색"
+        target_y: 190
+        bullets:
+          - "필터 키: Name(입력), Query(입력), App Identifier(입력), Level(입력)"
+          - "선택 시 Delete (N개) 버튼 표시, 시스템 쿼리는 수정/삭제 불가"
+      - num: 2
+        title: "페이지네이션"
+        target_y: 240
+        bullets:
+          - "페이지당 10개, 전체 항목 수 표시"
+          - "선택한 행 수 표시"
+      - num: 3
+        title: "테이블"
+        target_y: 320
+        bullets:
+          - "컬럼: Name, Level(배지), Query(tooltip), App Identifier, Created At, ⋮"
+          - "Level 밀도: ERROR/CRITICAL=빨강, WARN=노란, 기타=파랑"
+          - "⋮ 메뉴: Edit 드로어, Delete 확인 모달"
+          - "체크박스 선택 후 벌크 삭제 가능"
+    states:
+      - id: "LOG-002-S01"
+        name: "Edit Saved Query Drawer"
+        type: drawer
+        trigger_selector: "[data-row-action-edit]"
+        capture:
+          method: playwright
+          actions:
+            - { type: click, selector: "table tbody tr:first-child [data-row-more-btn]" }
+            - { type: wait, timeout: 500 }
+            - { type: click, selector: "[data-row-action-edit]" }
+            - { type: wait, timeout: 800 }
+      - id: "LOG-002-S02"
+        name: "Delete Confirm Modal"
+        type: modal
+        trigger_selector: "[data-row-action-delete]"
+        capture:
+          method: playwright
+          actions:
+            - { type: click, selector: "table tbody tr:first-child [data-row-more-btn]" }
+            - { type: wait, timeout: 500 }
+            - { type: click, selector: "[data-row-action-delete]" }
+            - { type: wait, timeout: 800 }
+
+  - id: "LOG-003"
+    name: "Live Tail"
+    route: "/logs/live-tail"
+    type: page
+    figma_wrapper_id: "16:28"
+    capture:
+      method: playwright
+      preconditions: []
+      viewport: { width: 1920, height: 1080 }
+      theme: light
+    annotations:
+      - num: 1
+        title: "필터 & 하이라이트"
+        target_y: 195
+        bullets:
+          - "필터 키: Query(입력), App Identifier(선택), Level(선택), Partition(입력)"
+          - "하이라이트 키워드: 최대 64자, 실시간 전체 로그 적용"
+          - "✕ 클리어 버튼 입력시 표시"
+      - num: 2
+        title: "스트리밍 제어"
+        target_y: 265
+        bullets:
+          - "Pause: 일시정지, 일시정지 중 새 로그 수 카운트"
+          - "Resume: 0.9초 Reconnecting 후 Connected, 만료 시 신규 세션"
+          - "Clear: 현재 버퍼 전체 삭제"
+          - "Time range 프리셋: 시작 시점 기준 필터링용"
+      - num: 3
+        title: "연결 상태 & 버퍼"
+        target_y: 375
+        bullets:
+          - "Buffer: 최대 1,000줄 유지 (고정)"
+          - "상태 배지: Connected(녹색), Reconnecting(노란), Paused(회색)"
+          - "세션 경고: 1h 만료 5분 전 표시"
+          - "만료 후: Resume 클릭으로 신규 세션"
+      - num: 4
+        title: "로그 스트림 뷰어"
+        target_y: 440
+        bullets:
+          - "실시간 자동 스크롤 (스트리밍 중)"
+          - "행 클릭: time, level, App Identifier, domain, partition, message 인라인 펼침"
+          - "다크 배경 (#020617) 코드 블록"
+
+flow_arrows:
+  - id: "LOG001-LOG002"
+    type: page_navigation
+    from: { screen: "LOG-001", element: "사이드바 Saved Queries 링크", canvas_x: 120, canvas_y: 260 }
+    to:   { screen: "LOG-002", canvas_x: 1960, canvas_y: 200 }
+    figma_nodes: ["Marker/LOG001-LOG002", "Arrow/LOG001-LOG002", "Label/LOG001-LOG002"]
+  - id: "LOG001-LOG003"
+    type: page_navigation
+    from: { screen: "LOG-001", element: "사이드바 Live Tail 링크", canvas_x: 120, canvas_y: 300 }
+    to:   { screen: "LOG-003", canvas_x: 3920, canvas_y: 200 }
+    figma_nodes: ["Marker/LOG001-LOG003", "Arrow/LOG001-LOG003", "Label/LOG001-LOG003"]
+  - id: "LOG001-SaveQueryDrawer"
+    type: drawer
+    from: { screen: "LOG-001", element: "Save Query 버튼", canvas_x: 420, canvas_y: 169 }
+    figma_nodes: ["Marker/LOG001-SaveQueryDrawer", "Arrow/LOG001-SaveQueryDrawer", "Label/LOG001-SaveQueryDrawer"]
+  - id: "LOG001-RetentionDrawer"
+    type: drawer
+    from: { screen: "LOG-001", element: "Retention Setting 버튼", canvas_x: 600, canvas_y: 169 }
+    figma_nodes: ["Marker/LOG001-RetentionDrawer", "Arrow/LOG001-RetentionDrawer", "Label/LOG001-RetentionDrawer"]
+  - id: "LOG002-EditDrawer"
+    type: drawer
+    from: { screen: "LOG-002", element: "⋮ Edit 메뉴", canvas_x: 3680, canvas_y: 284 }
+    figma_nodes: ["Marker/LOG002-EditDrawer", "Arrow/LOG002-EditDrawer", "Label/LOG002-EditDrawer"]
+  - id: "LOG002-DeleteModal"
+    type: modal
+    from: { screen: "LOG-002", element: "⋮ Delete 메뉴", canvas_x: 3640, canvas_y: 334 }
+    figma_nodes: ["Marker/LOG002-DeleteModal", "Arrow/LOG002-DeleteModal", "Label/LOG002-DeleteModal"]

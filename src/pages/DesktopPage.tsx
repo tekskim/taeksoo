@@ -58,9 +58,29 @@ import { agentRoutes } from '@/routes/agent.routes';
 import { iamRoutes } from '@/routes/iam.routes';
 import { containerRoutes } from '@/routes/container.routes';
 import { computeAdminRoutes } from '@/routes/compute-admin.routes';
+import { logsRoutes } from '@/routes/logs.routes';
+import { alertRoutes } from '@/routes/alert.routes';
+import { auditRoutes } from '@/routes/audit.routes';
+import { kmsRoutes } from '@/routes/kms.routes';
+import { lazy } from 'react';
+import { AppCatalogModeContext } from '@/contexts/AppCatalogModeContext';
+import { ContainerModeContext, type ContainerMode } from '@/contexts/ContainerModeContext';
+const CatalogPageLazy = lazy(() => import('@/pages/CatalogPage'));
+const InstalledAppsPageLazy = lazy(() =>
+  import('@/pages/InstalledAppsPage').then((m) => ({ default: m.InstalledAppsPage }))
+);
+const InstalledOperatorsPageLazy = lazy(() => import('@/pages/InstalledOperatorsPage'));
+const AppInstallPageLazy = lazy(() => import('@/pages/AppInstallPage'));
+const InstalledAppDetailPageLazy = lazy(() => import('@/pages/InstalledAppDetailPage'));
+const InstalledOperatorDetailPageLazy = lazy(() => import('@/pages/InstalledOperatorDetailPage'));
 import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
 import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreatePage';
 import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
+import ServePage from '@/pages/serve/ServePage';
+import MLStudioPage from '@/pages/ml-studio/MLStudioPage';
+import RunPage from '@/pages/run/RunPage';
+import FabricPage from '@/pages/fabric/FabricPage';
+import { FirewallsPage as SecurityFirewallsPage } from '@/pages/security/FirewallsPage';
 import { ComputeHomePage } from './ComputeHomePage';
 import { StorageHomePage } from './StorageHomePage';
 import { StorageDomainAdminHomePage } from './StorageDomainAdminHomePage';
@@ -84,6 +104,17 @@ import imgComputeAdmin from '@/assets/appIcon/computeadmin.webp';
 import imgCloud from '@/assets/appIcon/cloudbuilder.webp';
 import imgAdminCenter from '@/assets/appIcon/admincenter.png';
 import imgAIPlatformAdmin from '@/assets/appIcon/aiplatformadmin.png';
+import imgLogs from '@/assets/appIcon/logs.webp';
+import imgAlert from '@/assets/appIcon/alerts.webp';
+import imgAudit from '@/assets/appIcon/audit.webp';
+import imgAppCatalog from '@/assets/appIcon/app-catalog.webp';
+import imgSecurity from '@/assets/appIcon/security.webp';
+import imgKms from '@/assets/appIcon/kms.webp';
+import imgMetisContainer from '@/assets/appIcon/metis-container.webp';
+import imgServe from '@/assets/appIcon/metis-serve.webp';
+import imgMLStudio from '@/assets/appIcon/metis-ml-studio.webp';
+import imgRun from '@/assets/appIcon/metis-run.webp';
+import imgFabric from '@/assets/appIcon/metis-fabric.webp';
 import { ThakiLogoAnimated } from '@/components/ThakiLogoAnimated';
 
 // App Icons
@@ -123,9 +154,21 @@ const DESKTOP_ICONS_META = [
   { id: 'compute', icon: imgCompute, label: 'Compute' },
   { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
   { id: 'container', icon: imgContainer, label: 'Container' },
+  { id: 'aegis-container', icon: imgContainer, label: 'Aegis Container' },
+  { id: 'metis-container', icon: imgMetisContainer, label: 'Metis Container' },
+  { id: 'app-catalog', icon: imgAppCatalog, label: 'App Catalog' },
   { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
   { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
   { id: 'settings', icon: imgSettings, label: 'Settings' },
+  { id: 'logs', icon: imgLogs, label: 'Logs' },
+  { id: 'alert', icon: imgAlert, label: 'Alert' },
+  { id: 'audit', icon: imgAudit, label: 'Audit' },
+  { id: 'security', icon: imgSecurity, label: 'Security' },
+  { id: 'kms', icon: imgKms, label: 'KMS' },
+  { id: 'serve', icon: imgServe, label: 'Metis Serve' },
+  { id: 'ml-studio', icon: imgMLStudio, label: 'Metis ML Studio' },
+  { id: 'run', icon: imgRun, label: 'Metis Run' },
+  { id: 'fabric', icon: imgFabric, label: 'Metis Fabric' },
 ];
 
 function getInitialIconLayout(): DesktopIconItem[] {
@@ -937,6 +980,8 @@ const ADMIN_APP_IDS: Set<AppId> = new Set([
   'storage-domain-admin',
   'compute-admin',
   'cloud-builder',
+  'security',
+  'kms',
 ]);
 
 interface LaunchpadPanelProps {
@@ -1108,12 +1153,24 @@ type AppId =
   | 'storage-domain-admin'
   | 'storage-member'
   | 'container'
+  | 'aegis-container'
+  | 'metis-container'
   | 'agent'
   | 'ai-platform'
   | 'iam'
   | 'settings'
   | 'compute-admin'
-  | 'cloud-builder';
+  | 'cloud-builder'
+  | 'logs'
+  | 'alert'
+  | 'audit'
+  | 'app-catalog'
+  | 'security'
+  | 'kms'
+  | 'serve'
+  | 'ml-studio'
+  | 'run'
+  | 'fabric';
 
 interface WindowState {
   id: string;
@@ -1203,7 +1260,19 @@ function AppRoutes({ appId }: { appId: AppId }) {
         </Routes>
       );
     case 'container':
-      return <Routes>{containerRoutes}</Routes>;
+    case 'aegis-container':
+    case 'metis-container': {
+      const containerMode = appId as ContainerMode;
+      return (
+        <ContainerModeContext.Provider
+          value={{ mode: containerMode, isMetis: containerMode === 'metis-container' }}
+        >
+          <AppCatalogModeContext.Provider value={{ isStandalone: false }}>
+            <Routes>{containerRoutes}</Routes>
+          </AppCatalogModeContext.Provider>
+        </ContainerModeContext.Provider>
+      );
+    }
     case 'agent':
       return (
         <Routes>
@@ -1242,6 +1311,78 @@ function AppRoutes({ appId }: { appId: AppId }) {
           <Route path="/cloudbuilder/*" element={<CloudBuilderConsolePage />} />
         </Routes>
       );
+    case 'logs':
+      return <Routes>{logsRoutes}</Routes>;
+    case 'alert':
+      return <Routes>{alertRoutes}</Routes>;
+    case 'audit':
+      return <Routes>{auditRoutes}</Routes>;
+    case 'app-catalog':
+      return (
+        <AppCatalogModeContext.Provider value={{ isStandalone: true }}>
+          <Suspense fallback={null}>
+            <Routes>
+              <Route path="/app-catalog" element={<CatalogPageLazy />} />
+              <Route path="/app-catalog/:chartName/install" element={<AppInstallPageLazy />} />
+              <Route path="/app-catalog/installed-apps" element={<InstalledAppsPageLazy />} />
+              <Route
+                path="/app-catalog/installed-apps/:appId"
+                element={<InstalledAppDetailPageLazy />}
+              />
+              <Route
+                path="/app-catalog/installed-apps/:appId/edit"
+                element={<InstalledAppsPageLazy />}
+              />
+              <Route
+                path="/app-catalog/installed-operators"
+                element={<InstalledOperatorsPageLazy />}
+              />
+              <Route
+                path="/app-catalog/installed-operators/:operatorId"
+                element={<InstalledOperatorDetailPageLazy />}
+              />
+              <Route path="/app-catalog/*" element={<CatalogPageLazy />} />
+            </Routes>
+          </Suspense>
+        </AppCatalogModeContext.Provider>
+      );
+    case 'security':
+      return (
+        <Routes>
+          <Route path="/security" element={<SecurityFirewallsPage />} />
+          <Route path="/security/*" element={<SecurityFirewallsPage />} />
+        </Routes>
+      );
+    case 'serve':
+      return (
+        <Routes>
+          <Route path="/serve" element={<ServePage />} />
+          <Route path="/serve/*" element={<ServePage />} />
+        </Routes>
+      );
+    case 'ml-studio':
+      return (
+        <Routes>
+          <Route path="/ml-studio" element={<MLStudioPage />} />
+          <Route path="/ml-studio/*" element={<MLStudioPage />} />
+        </Routes>
+      );
+    case 'run':
+      return (
+        <Routes>
+          <Route path="/run" element={<RunPage />} />
+          <Route path="/run/*" element={<RunPage />} />
+        </Routes>
+      );
+    case 'fabric':
+      return (
+        <Routes>
+          <Route path="/fabric" element={<FabricPage />} />
+          <Route path="/fabric/*" element={<FabricPage />} />
+        </Routes>
+      );
+    case 'kms':
+      return <Routes>{kmsRoutes}</Routes>;
     default:
       return null;
   }
@@ -2123,6 +2264,12 @@ export function DesktopPage() {
       initialPath: '/storage-member',
     },
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
+    'aegis-container': { name: 'Aegis Container', icon: imgContainer, initialPath: '/container' },
+    'metis-container': {
+      name: 'Metis Container',
+      icon: imgMetisContainer,
+      initialPath: '/container',
+    },
     agent: { name: 'Agent Studio', icon: imgAgent, initialPath: '/agent' },
     'ai-platform': { name: 'AI Platform', icon: imgAi, initialPath: '/ai-platform' },
     iam: { name: 'IAM', icon: imgIam, initialPath: '/iam' },
@@ -2133,6 +2280,16 @@ export function DesktopPage() {
       initialPath: '/compute-admin',
     },
     'cloud-builder': { name: 'Cloud Builder', icon: imgCloud, initialPath: '/cloudbuilder' },
+    logs: { name: 'Logs', icon: imgLogs, initialPath: '/logs' },
+    alert: { name: 'Alert', icon: imgAlert, initialPath: '/alerts' },
+    audit: { name: 'Audit', icon: imgAudit, initialPath: '/audit' },
+    'app-catalog': { name: 'App Catalog', icon: imgAppCatalog, initialPath: '/app-catalog' },
+    security: { name: 'Security', icon: imgSecurity, initialPath: '/security' },
+    kms: { name: 'KMS', icon: imgKms, initialPath: '/kms' },
+    serve: { name: 'Metis Serve', icon: imgServe, initialPath: '/serve' },
+    'ml-studio': { name: 'Metis ML Studio', icon: imgMLStudio, initialPath: '/ml-studio' },
+    run: { name: 'Metis Run', icon: imgRun, initialPath: '/run' },
+    fabric: { name: 'Metis Fabric', icon: imgFabric, initialPath: '/fabric' },
   };
   const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set());
   const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([
@@ -2141,6 +2298,9 @@ export function DesktopPage() {
     'container',
     'ai-platform',
     'agent',
+    'logs',
+    'alert',
+    'audit',
     'settings',
   ]);
 
@@ -2916,19 +3076,22 @@ export function DesktopPage() {
       {/* Desktop Snackbar — above app windows (z-[5000]) */}
       <SnackbarContainer position="top-right" scope="global" className="!top-[60px] !z-[5000]" />
 
-      {/* Snackbar Test Button */}
-      <button
-        type="button"
-        onClick={() => {
-          const mock = SNACKBAR_MOCKS[snackbarIndexRef.current % SNACKBAR_MOCKS.length];
-          snackbarIndexRef.current++;
-          snackbar.show(mock);
-        }}
-        className="fixed bottom-6 left-6 z-[9999] size-10 flex items-center justify-center rounded-full bg-[var(--color-action-primary)] text-white shadow-lg hover:bg-[var(--color-action-primary-hover)] transition-colors"
-        aria-label="Test Snackbar"
-      >
-        <IconBell size={18} stroke={1.5} />
-      </button>
+      {/* Snackbar Test Button — hidden */}
+      {/* eslint-disable-next-line no-constant-binary-expression -- intentionally disabled test button */}
+      {false && (
+        <button
+          type="button"
+          onClick={() => {
+            const mock = SNACKBAR_MOCKS[snackbarIndexRef.current % SNACKBAR_MOCKS.length];
+            snackbarIndexRef.current++;
+            snackbar.show(mock);
+          }}
+          className="fixed bottom-6 left-6 z-[9999] size-10 flex items-center justify-center rounded-full bg-[var(--color-action-primary)] text-white shadow-lg hover:bg-[var(--color-action-primary-hover)] transition-colors"
+          aria-label="Test Snackbar"
+        >
+          <IconBell size={18} stroke={1.5} />
+        </button>
+      )}
 
       {/* Main Page Navigation Button - Bottom Left */}
     </div>

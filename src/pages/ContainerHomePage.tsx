@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -13,17 +13,19 @@ import {
   Pagination,
   PageShell,
   ContextMenu,
+  EmptyState,
   type TableColumn,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
 } from '@/design-system';
-import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerSidebar, INITIAL_CONTAINER_CLUSTERS } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconDotsCircleHorizontal, IconSettings } from '@tabler/icons-react';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { IconDotsCircleHorizontal, IconSettings, IconStack2 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -137,13 +139,14 @@ export function ContainerHomePage() {
   }, [searchTerm]);
   const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   const navigate = useNavigate();
+  const { isMetis } = useContainerMode();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
   // Update tab label on mount
   useEffect(() => {
-    updateActiveTabLabel('Home');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(isMetis ? 'Clusters' : 'Home');
+  }, [updateActiveTabLabel, isMetis]);
 
   const shellPanel = useShellPanel();
 
@@ -288,6 +291,12 @@ export function ContainerHomePage() {
     },
   ];
 
+  // Metis Container has no Home page. When clusters exist, land on the first cluster;
+  // when none are registered, fall through to the empty state below.
+  if (isMetis && INITIAL_CONTAINER_CLUSTERS.length > 0) {
+    return <Navigate to="/container/dashboard" replace />;
+  }
+
   return (
     <PageShell
       sidebar={<ContainerSidebar isOpen={true} />}
@@ -305,7 +314,7 @@ export function ContainerHomePage() {
       topBar={
         <TopBar
           showSidebarToggle={false}
-          breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: isMetis ? 'Clusters' : 'Home' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {
@@ -340,78 +349,74 @@ export function ContainerHomePage() {
       contentClassName="pt-6 px-8 pb-20"
     >
       <VStack gap={6}>
-        {/* Welcome Header */}
-        <SectionCard className="bg-[var(--color-surface-subtle)]">
-          <SectionCard.Content>
-            <VStack gap={2}>
-              <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-                Welcome to Thaki Cloud Container
-              </h1>
-              <p className="text-body-lg text-[var(--color-text-muted)]">
-                Manage effortlessly, scale and optimize your Kubernetes clusters, workloads, and
-                resources from a single platform.
-              </p>
-            </VStack>
-          </SectionCard.Content>
-        </SectionCard>
+        {isMetis ? (
+          <EmptyState
+            variant="inline"
+            icon={<IconStack2 size={48} stroke={1.25} />}
+            title="아직 등록된 클러스터가 없습니다"
+            description="이 플랫폼에 등록된 클러스터가 없습니다. 클러스터가 등록되면 여기에 표시됩니다."
+          />
+        ) : (
+          <>
+            {/* Clusters Section */}
+            <HStack gap={6} align="start">
+              {/* Clusters Table */}
+              <SectionCard className="flex-1">
+                <SectionCard.Header title="Clusters" />
+                <SectionCard.Content>
+                  <VStack gap={4}>
+                    <SearchInput
+                      placeholder="Search clusters by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(filteredData.length / pageSize)}
+                      onPageChange={setCurrentPage}
+                      totalItems={filteredData.length}
+                    />
+                    <Table<ClusterRow>
+                      columns={columns}
+                      data={paginatedData}
+                      rowKey="id"
+                      rowHeight="40px"
+                    />
+                  </VStack>
+                </SectionCard.Content>
+              </SectionCard>
 
-        {/* Clusters Section */}
-        <HStack gap={6} align="start">
-          {/* Clusters Table */}
-          <SectionCard className="flex-1">
-            <SectionCard.Header title="Clusters" />
-            <SectionCard.Content>
-              <VStack gap={4}>
-                <SearchInput
-                  placeholder="Search clusters by attributes"
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                />
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={Math.ceil(filteredData.length / pageSize)}
-                  onPageChange={setCurrentPage}
-                  totalItems={filteredData.length}
-                />
-                <Table<ClusterRow>
-                  columns={columns}
-                  data={paginatedData}
-                  rowKey="id"
-                  rowHeight="40px"
-                />
-              </VStack>
-            </SectionCard.Content>
-          </SectionCard>
-
-          {/* Create Cluster Card */}
-          <SectionCard className="w-[var(--search-input-width)] shrink-0">
-            <SectionCard.Content>
-              <VStack gap={4}>
-                <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create a cluster
-                </h3>
-                <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
-                  Create a Kubernetes cluster to start running and managing your containerized
-                  workloads.
-                </p>
-                <div className="w-full flex justify-end">
-                  <Button
-                    variant="primary"
-                    size="md"
-                    onClick={() => navigate('/container/cluster-management/create')}
-                  >
-                    Create cluster
-                  </Button>
-                </div>
-              </VStack>
-            </SectionCard.Content>
-          </SectionCard>
-        </HStack>
+              {/* Create Cluster Card */}
+              <SectionCard className="w-[var(--search-input-width)] shrink-0">
+                <SectionCard.Content>
+                  <VStack gap={4}>
+                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                      Create a cluster
+                    </h3>
+                    <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+                      Create a Kubernetes cluster to start running and managing your containerized
+                      workloads.
+                    </p>
+                    <div className="w-full flex justify-end">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => navigate('/container/cluster-management/create')}
+                      >
+                        Create cluster
+                      </Button>
+                    </div>
+                  </VStack>
+                </SectionCard.Content>
+              </SectionCard>
+            </HStack>
+          </>
+        )}
       </VStack>
     </PageShell>
   );

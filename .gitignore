@@ -41,3 +41,10 @@ storybook-static
 .env.*
 !.env.example
 icon-drop/
+
+# local tooling / temp capture artifacts
+.claude/
+.playwright-cli/
+cap_*.cjs
+public/delete_modal_cap.png
+public/delete_modal_full_cap.png

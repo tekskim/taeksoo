@@ -66,9 +66,10 @@ export function Slider({
   // Update value
   const updateValue = useCallback(
     (newValue: number) => {
-      // Clamp and step
+      // Clamp and step — snap relative to min so values stay on min + n*step grid
       const clampedValue = Math.min(max, Math.max(min, newValue));
-      const steppedValue = Math.round(clampedValue / step) * step;
+      const steps = Math.round((clampedValue - min) / step);
+      const steppedValue = Math.min(max, min + steps * step);
 
       if (!isControlled) {
         setInternalValue(steppedValue);

@@ -107,7 +107,7 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
   defaultCustomPeriod = null,
   onCustomPeriodChange,
   onRefresh,
-  showRefresh = true,
+  showRefresh = false,
   maxDate = new Date(),
   minDate,
   className = '',

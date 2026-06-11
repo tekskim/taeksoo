@@ -8,6 +8,7 @@ import { Button } from '@/design-system';
 import ComputeIcon from '@/assets/appIcon/compute.webp';
 import ComputeAdminIcon from '@/assets/appIcon/computeadmin.webp';
 import ContainerIcon from '@/assets/appIcon/container.webp';
+import MetisContainerIcon from '@/assets/appIcon/metis-container.webp';
 import CloudBuilderIcon from '@/assets/appIcon/cloudbuilder.webp';
 import AIPlatformIcon from '@/assets/appIcon/aiplatform.png';
 import AIAgentIcon from '@/assets/appIcon/agentops.webp';
@@ -40,6 +41,13 @@ const appCards: AppCard[] = [
     path: '/compute-admin',
   },
   { id: 'container', title: 'Container', iconSrc: ContainerIcon, path: '/container' },
+  { id: 'aegis-container', title: 'Aegis Container', iconSrc: ContainerIcon, path: '/container' },
+  {
+    id: 'metis-container',
+    title: 'Metis Container',
+    iconSrc: MetisContainerIcon,
+    path: '/container',
+  },
   { id: 'iam', title: 'IAM', iconSrc: IAMIcon, path: '/iam' },
   { id: 'security', title: 'Security', iconSrc: SecurityIcon, path: '/security' },
   {

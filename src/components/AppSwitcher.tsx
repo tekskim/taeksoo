@@ -19,6 +19,10 @@ import IAMIcon from '@/assets/appIcon/iam.webp';
 import SecurityIcon from '@/assets/appIcon/security.webp';
 import SettingsIcon from '@/assets/appIcon/settings.webp';
 import AdminCenterIcon from '@/assets/appIcon/admincenter.png';
+import LogsIcon from '@/assets/appIcon/logs.webp';
+import AlertIcon from '@/assets/appIcon/alerts.webp';
+import AuditIcon from '@/assets/appIcon/audit.webp';
+import AppCatalogIcon from '@/assets/appIcon/app-catalog.webp';
 
 /* ----------------------------------------
    Types
@@ -65,6 +69,10 @@ const apps: AppItem[] = [
   { id: 'settings', title: 'Settings', icon: SettingsIcon, path: '/settings' },
   { id: 'cloud-builder', title: 'Cloud Builder', icon: CloudBuilderIcon, path: '/cloudbuilder' },
   { id: 'admin-center', title: 'Admin Center', icon: AdminCenterIcon, path: '/admin-center' },
+  { id: 'logs', title: 'Logs', icon: LogsIcon, path: '/logs' },
+  { id: 'alert', title: 'Alert', icon: AlertIcon, path: '/alerts' },
+  { id: 'audit', title: 'Audit', icon: AuditIcon, path: '/audit' },
+  { id: 'app-catalog', title: 'App Catalog', icon: AppCatalogIcon, path: '/app-catalog' },
 ];
 
 /* ----------------------------------------

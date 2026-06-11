@@ -17,7 +17,7 @@ import {
   SectionCard,
   Badge,
 } from '@/design-system';
-import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconRefresh, IconSearch, IconApps } from '@tabler/icons-react';
 import type { CatalogChart, AppCategory } from '@/pages/apps/appsTypes';
@@ -46,8 +46,8 @@ interface CatalogChartCardProps {
 
 function CatalogChartCard({ chart, onInstall }: CatalogChartCardProps) {
   const [logoError, setLogoError] = useState(false);
-  const alreadyInstalled = installedAppsMock.some((app) => app.name === chart.name);
-  const categoryLabel = chart.category === 'Big Data' ? 'Big Data' : chart.category;
+  const alreadyInstalled =
+    !chart.duplicateInstallable && installedAppsMock.some((app) => app.name === chart.name);
   const showLogo = chart.logoUrl && !logoError;
 
   return (
@@ -70,7 +70,7 @@ function CatalogChartCard({ chart, onInstall }: CatalogChartCardProps) {
         </div>
         <VStack gap={1} className="flex-1 min-w-0">
           <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-            {toTitleCase(chart.name)}
+            {chart.displayName ?? toTitleCase(chart.name)}
           </span>
           <span className="text-body-md text-[var(--color-text-subtle)]">
             Version: {chart.version}
@@ -82,8 +82,13 @@ function CatalogChartCard({ chart, onInstall }: CatalogChartCardProps) {
       </p>
       <HStack gap={2} className="flex-wrap">
         <Badge variant="default" size="sm">
-          {categoryLabel}
+          {chart.category}
         </Badge>
+        {chart.packageLabel && (
+          <Badge variant={chart.packageType === 'operator' ? 'warning' : 'info'} size="sm">
+            {chart.packageLabel}
+          </Badge>
+        )}
       </HStack>
       <HStack justify="end" className="w-full pt-1">
         <Button variant="primary" size="sm" onClick={() => onInstall(chart)}>
@@ -121,13 +126,13 @@ export function AppCatalogPage() {
   }, [category, searchQuery]);
 
   const handleInstall = (chart: CatalogChart) => {
-    navigate(`/container/catalog/${chart.name}/install`);
+    navigate(`/app-catalog/${chart.name}/install`);
   };
 
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -144,18 +149,8 @@ export function AppCatalogPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Catalog' },
-              ]}
-            />
-          }
+          showNavigation={false}
+          breadcrumb={<Breadcrumb items={[{ label: 'Catalog' }]} />}
           actions={
             <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
               <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />

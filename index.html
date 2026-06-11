@@ -14,17 +14,21 @@
     <!-- Prevent FOUC: Apply theme before page renders -->
     <script>
       (function() {
-        var theme = localStorage.getItem('tds-theme');
+        var urlTheme = new URLSearchParams(window.location.search).get('theme');
+        var theme = urlTheme || localStorage.getItem('tds-theme');
         var isDark = theme === 'dark' || 
           (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
         if (isDark) {
           document.documentElement.classList.add('dark');
           document.documentElement.setAttribute('data-theme', 'dark');
         } else {
+          document.documentElement.classList.remove('dark');
           document.documentElement.setAttribute('data-theme', 'light');
         }
       })();
     </script>
+    <!-- Figma Capture Script -->
+    <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
     <!-- Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
       (function(l) {

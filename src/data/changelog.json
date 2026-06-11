@@ -1,6 +1,42 @@
 [
   {
     "id": "1",
+    "date": "2026-05-20",
+    "app": "enhance",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Replace Fabric sidebar placeholder icons with semantic Tabler icons",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "date": "2026-05-20",
+    "app": "chore",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Resolve merge conflicts with main",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "date": "2026-05-19",
+    "app": "fix",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Fix AI Platform Dashboard dark mode hardcoded colors",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "4",
     "date": "2026-05-15",
     "app": "refactor",
     "appColor": "from-gray-500 to-slate-500",
@@ -12,7 +48,7 @@
     ]
   },
   {
-    "id": "2",
+    "id": "5",
     "date": "2026-05-15",
     "app": "feat",
     "appColor": "from-gray-500 to-slate-500",
@@ -28,7 +64,7 @@
     ]
   },
   {
-    "id": "3",
+    "id": "6",
     "date": "2026-05-13",
     "app": "enhance",
     "appColor": "from-gray-500 to-slate-500",
@@ -40,7 +76,7 @@
     ]
   },
   {
-    "id": "4",
+    "id": "7",
     "date": "2026-05-12",
     "app": "feat",
     "appColor": "from-gray-500 to-slate-500",
@@ -52,7 +88,7 @@
     ]
   },
   {
-    "id": "5",
+    "id": "8",
     "date": "2026-05-12",
     "app": "fix",
     "appColor": "from-gray-500 to-slate-500",
@@ -68,7 +104,7 @@
     ]
   },
   {
-    "id": "6",
+    "id": "9",
     "date": "2026-05-12",
     "app": "enhance",
     "appColor": "from-gray-500 to-slate-500",
@@ -92,7 +128,7 @@
     ]
   },
   {
-    "id": "7",
+    "id": "10",
     "date": "2026-05-11",
     "app": "fix",
     "appColor": "from-gray-500 to-slate-500",
@@ -104,31 +140,11 @@
       {
         "text": "Add missing IconCheck import in ProjectSelector",
         "author": "mjhan-tk"
-      },
-      {
-        "text": "Simplify detail card structure to single gap-4 container",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Wrap Tabular detail in white card container per Figma",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Fix Table render signature (value, row) in TabularPage",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Align Tabular list page with Figma specs",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Unify AI Platform layout consistency across all routes",
-        "author": "mjhan-tk"
       }
     ]
   },
   {
-    "id": "8",
+    "id": "11",
     "date": "2026-05-11",
     "app": "enhance",
     "appColor": "from-gray-500 to-slate-500",
@@ -151,210 +167,6 @@
       },
       {
         "text": "Implement DevSpace page with list, drawers, and metrics",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Add charts for all Model Insights/Performance/Risk tabs",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Implement Tabular detail page matching Figma specs",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Refine Text Generation page UI to match Figma specs",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "9",
-    "date": "2026-05-11",
-    "app": "feat",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Add Tabular page with list and detail views",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Implement Text Generation detail page and fix PageShell layout",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "10",
-    "date": "2026-05-08",
-    "app": "feat",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Add Serverless pages and unify MetricCard component",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "11",
-    "date": "2026-05-07",
-    "app": "fix",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Restore AI Platform page implementations from feature branch",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Fix AI Platform sidebar import paths to prevent /agent/ redirect",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Add missing primaryProjectId destructuring in AIPlatformSidebar",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Fix CI build, lint, and test failures",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "12",
-    "date": "2026-05-07",
-    "app": "chore",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Trigger CI",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "13",
-    "date": "2026-05-07",
-    "app": "feat",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Add global dark/light mode toggle to AI Platform TopBar",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Add AI Platform My Templates CRUD and fixes",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Add dynamic browser tab title based on current page",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "14",
-    "date": "2026-05-07",
-    "app": "enhance",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Sync Volumes card UI with Figma and add Packages EmptyState",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Improve Drawer transitions and AI Platform UX",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "15",
-    "date": "2026-05-06",
-    "app": "enhance",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Add horizontal scroll when viewport is below minimum width",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Update Packages, Datasets, Models pages",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "16",
-    "date": "2026-05-06",
-    "app": "chore",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Rebuild docs assets",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Update tokens and legacy file",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "17",
-    "date": "2026-05-06",
-    "app": "feat",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Add AI Platform Workloads pages",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "18",
-    "date": "2026-04-28",
-    "app": "enhance",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Revamp Datasets page to match Figma design",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Improve AI Platform Models page and sidebar navigation",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Unify Agent sidebar to wide SNB layout",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "19",
-    "date": "2026-04-28",
-    "app": "docs",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Update TDS design skills",
-        "author": "mjhan-tk"
-      }
-    ]
-  },
-  {
-    "id": "20",
-    "date": "2026-04-28",
-    "app": "chore",
-    "appColor": "from-gray-500 to-slate-500",
-    "changes": [
-      {
-        "text": "Rebuild docs assets",
-        "author": "mjhan-tk"
-      },
-      {
-        "text": "Add Figma-to-TDS page reproduction skills and rules",
         "author": "mjhan-tk"
       }
     ]

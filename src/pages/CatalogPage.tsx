@@ -17,6 +17,8 @@ import {
 } from '@/design-system';
 import { IconSearch } from '@tabler/icons-react';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
@@ -154,8 +156,9 @@ const operatorCategories: OperatorCategory[] = ['All', 'Database'];
    ---------------------------------------- */
 
 export default function CatalogPage() {
+  const { isStandalone } = useAppCatalogMode();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const sidebarWidth = sidebarOpen ? 248 : 48;
+  const sidebarWidth = isStandalone ? (sidebarOpen ? 200 : 0) : sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
 
@@ -187,7 +190,11 @@ export default function CatalogPage() {
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        isStandalone ? (
+          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        ) : (
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        )
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -204,11 +211,11 @@ export default function CatalogPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation={true}
+          showNavigation={!isStandalone}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Catalog' }]} />}
-          actions={<ContainerTopBarActions />}
+          actions={isStandalone ? undefined : <ContainerTopBarActions />}
         />
       }
     >
@@ -282,7 +289,13 @@ export default function CatalogPage() {
                           <Button
                             variant="primary"
                             size="sm"
-                            onClick={() => navigate(`/container/catalog/${app.id}/install`)}
+                            onClick={() =>
+                              navigate(
+                                isStandalone
+                                  ? `/app-catalog/${app.id}/install`
+                                  : `/container/catalog/${app.id}/install`
+                              )
+                            }
                           >
                             Install
                           </Button>
@@ -351,7 +364,13 @@ export default function CatalogPage() {
                           <Button
                             variant="primary"
                             size="sm"
-                            onClick={() => navigate(`/container/catalog/${app.id}/install`)}
+                            onClick={() =>
+                              navigate(
+                                isStandalone
+                                  ? `/app-catalog/${app.id}/install`
+                                  : `/container/catalog/${app.id}/install`
+                              )
+                            }
                           >
                             Install
                           </Button>

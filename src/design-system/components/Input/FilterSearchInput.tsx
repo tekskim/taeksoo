@@ -432,21 +432,19 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
 
         {/* Applied Filters */}
         {!hideAppliedFilters && appliedFilters.length > 0 && (
-          <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
-            <div className="flex items-center gap-1 flex-wrap">
-              {appliedFilters.map((filter) => (
-                <Chip
-                  key={filter.id}
-                  label={filter.fieldLabel}
-                  value={filter.valueLabel || filter.value}
-                  onRemove={() => handleFilterRemove(filter.id)}
-                />
-              ))}
-            </div>
+          <div className="flex flex-wrap items-center gap-1 px-2 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
+            {appliedFilters.map((filter) => (
+              <Chip
+                key={filter.id}
+                label={filter.fieldLabel}
+                value={filter.valueLabel || filter.value}
+                onRemove={() => handleFilterRemove(filter.id)}
+              />
+            ))}
             <button
               type="button"
               onClick={handleClearFilters}
-              className="text-label-sm text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors whitespace-nowrap"
+              className="ml-auto text-label-sm text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors whitespace-nowrap"
             >
               {clearFiltersLabel}
             </button>

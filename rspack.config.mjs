@@ -102,7 +102,7 @@ export default defineConfig({
     isDev && new RefreshPlugin(),
   ].filter(Boolean),
   devServer: {
-    port: 5173,
+    port: Number(process.env.PORT) || 5173,
     hot: true,
     historyApiFallback: true,
     allowedHosts: ['local.thakicloud.net'],

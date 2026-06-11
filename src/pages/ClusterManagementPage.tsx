@@ -23,7 +23,7 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import {
   IconDownload,
   IconTrash,
@@ -31,6 +31,7 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
 
 /* ----------------------------------------
    Types
@@ -123,6 +124,7 @@ export function ClusterManagementPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
+  const { isMetis } = useContainerMode();
   const [selectedClusters, setSelectedClusters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
@@ -144,7 +146,7 @@ export function ClusterManagementPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Table columns
-  const columns: TableColumn<Cluster>[] = [
+  const allColumns: TableColumn<Cluster>[] = [
     {
       key: 'status',
       label: 'Status',
@@ -276,6 +278,8 @@ export function ClusterManagementPage() {
     setFilters([]);
   };
 
+  const columns = isMetis ? allColumns.filter((c) => c.key !== 'actions') : allColumns;
+
   // Create menu items
   const createMenuItems: ContextMenuItem[] = [
     {
@@ -284,6 +288,11 @@ export function ClusterManagementPage() {
       onClick: () => navigate('/container/cluster-management/create'),
     },
   ];
+
+  // Metis Container has no Cluster Management page — block direct access.
+  if (isMetis) {
+    return <Navigate to="/container" replace />;
+  }
 
   return (
     <PageShell
@@ -326,15 +335,17 @@ export function ClusterManagementPage() {
         <PageHeader
           title="Clusters"
           actions={
-            <ContextMenu items={createMenuItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create cluster
-              </Button>
-            </ContextMenu>
+            !isMetis ? (
+              <ContextMenu items={createMenuItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create cluster
+                </Button>
+              </ContextMenu>
+            ) : undefined
           }
         />
 
@@ -380,14 +391,16 @@ export function ClusterManagementPage() {
               >
                 Download YAML
               </Button>
-              <Button
-                variant="muted"
-                size="sm"
-                leftIcon={<IconTrash size={12} stroke={1.5} />}
-                disabled={selectedClusters.length === 0}
-              >
-                Delete
-              </Button>
+              {!isMetis && (
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} stroke={1.5} />}
+                  disabled={selectedClusters.length === 0}
+                >
+                  Delete
+                </Button>
+              )}
             </HStack>
           </HStack>
 
@@ -433,9 +446,9 @@ export function ClusterManagementPage() {
           columns={columns}
           data={paginatedClusters}
           rowKey="id"
-          selectable
-          selectedKeys={selectedClusters}
-          onSelectionChange={setSelectedClusters}
+          selectable={!isMetis}
+          selectedKeys={isMetis ? [] : selectedClusters}
+          onSelectionChange={isMetis ? undefined : setSelectedClusters}
         />
       </VStack>
     </PageShell>

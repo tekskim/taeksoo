@@ -11,15 +11,13 @@ import {
   Modal,
   InfoBox,
   Table,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { IconTrash } from '@tabler/icons-react';
@@ -28,18 +26,11 @@ import {
   installedOperatorsMock,
   dependentApplicationsByOperatorMock,
 } from '@/pages/apps/appsMockData';
-import type { InstalledAppResource, InstalledApp } from '@/pages/apps/appsTypes';
+import type { InstalledApp } from '@/pages/apps/appsTypes';
 
 /* ----------------------------------------
    Types (local — for table rows)
    ---------------------------------------- */
-
-interface ResourceRow {
-  id: string;
-  kind: string;
-  name: string;
-  namespace: string;
-}
 
 /* ----------------------------------------
    Component
@@ -48,48 +39,15 @@ interface ResourceRow {
 export default function InstalledOperatorDetailPage() {
   const { operatorId } = useParams<{ operatorId: string }>();
   const navigate = useNavigate();
+  const { isStandalone } = useAppCatalogMode();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const sidebarWidth = sidebarOpen ? 248 : 48;
+  const sidebarWidth = isStandalone ? (sidebarOpen ? 200 : 0) : sidebarOpen ? 248 : 48;
+  const basePath = isStandalone ? '/app-catalog' : '/container';
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const [activeTab, setActiveTab] = useState('details');
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const operator = installedOperatorsMock.find((op) => op.id === operatorId);
-  const resources: ResourceRow[] = (operator?.resources ?? []).map(
-    (r: InstalledAppResource, i: number) => ({
-      id: `${r.kind}-${r.name}-${i}`,
-      kind: r.kind,
-      name: r.name,
-      namespace: r.namespace ?? operator?.namespace ?? '',
-    })
-  );
   const dependentApps: InstalledApp[] = dependentApplicationsByOperatorMock[operatorId ?? ''] ?? [];
-
-  const resourceColumns: TableColumn<ResourceRow>[] = [
-    {
-      key: 'kind',
-      label: 'Kind',
-      flex: 1,
-      minWidth: 180,
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 2,
-      minWidth: columnMinWidths.name,
-      render: (value) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
-          {value}
-        </span>
-      ),
-    },
-    {
-      key: 'namespace',
-      label: 'Namespace',
-      flex: 1,
-      minWidth: columnMinWidths.namespace,
-    },
-  ];
 
   const appColumns: TableColumn<InstalledApp>[] = [
     {
@@ -131,7 +89,11 @@ export default function InstalledOperatorDetailPage() {
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        isStandalone ? (
+          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        ) : (
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        )
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -148,19 +110,26 @@ export default function InstalledOperatorDetailPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation={true}
-          onBack={() => navigate(-1)}
+          showNavigation={!isStandalone}
+          onBack={() => navigate(`${basePath}/installed-operators`)}
           onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Cluster1', href: '/container' },
-                { label: 'Installed operators', href: '/container/installed-operators' },
-                { label: operator.displayName },
-              ]}
+              items={
+                isStandalone
+                  ? [
+                      { label: 'Installed Operators', href: `${basePath}/installed-operators` },
+                      { label: operator.displayName },
+                    ]
+                  : [
+                      { label: 'Cluster1', href: '/container' },
+                      { label: 'Installed operators', href: '/container/installed-operators' },
+                      { label: operator.displayName },
+                    ]
+              }
             />
           }
-          actions={<ContainerTopBarActions />}
+          actions={isStandalone ? undefined : <ContainerTopBarActions />}
         />
       }
     >
@@ -204,36 +173,14 @@ export default function InstalledOperatorDetailPage() {
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-          <TabList>
-            <Tab value="details">Details</Tab>
-            <Tab value="dependent-apps">
-              Dependent apps{dependentApps.length > 0 ? ` (${dependentApps.length})` : ''}
-            </Tab>
-          </TabList>
-
-          <TabPanel value="details" className="pt-0">
-            <VStack gap={0} className="pt-4">
-              <Table<ResourceRow>
-                columns={resourceColumns}
-                data={resources}
-                rowKey="id"
-                emptyMessage="No resources found"
-              />
-            </VStack>
-          </TabPanel>
-
-          <TabPanel value="dependent-apps" className="pt-0">
-            <VStack gap={0} className="pt-4">
-              <Table<InstalledApp>
-                columns={appColumns}
-                data={dependentApps}
-                rowKey="id"
-                emptyMessage="No dependent apps found"
-              />
-            </VStack>
-          </TabPanel>
-        </Tabs>
+        <VStack gap={0} className="pt-4">
+          <Table<InstalledApp>
+            columns={appColumns}
+            data={dependentApps}
+            rowKey="id"
+            emptyMessage="No dependent apps found"
+          />
+        </VStack>
       </VStack>
 
       <Modal
@@ -257,7 +204,7 @@ export default function InstalledOperatorDetailPage() {
             onClick={() => {
               console.log('Delete operator', operator.id);
               setIsDeleteOpen(false);
-              navigate('/container/installed-operators');
+              navigate(`${basePath}/installed-operators`);
             }}
             className="flex-1"
           >

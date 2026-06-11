@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -19,6 +19,8 @@ import {
 import { IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { getContainerStatusTheme } from './containerStatusUtils';
@@ -48,7 +50,7 @@ const operatorColumns: TableColumn<InstalledOperator>[] = [
           </div>
         )}
         <Link
-          to={`/container/installed-operators/${row.id}`}
+          to={`${basePath}/${row.id}`}
           className="text-[var(--color-action-primary)] font-medium hover:underline truncate min-w-0"
         >
           {row.displayName}
@@ -107,11 +109,41 @@ const operatorColumns: TableColumn<InstalledOperator>[] = [
 ];
 
 export default function InstalledOperatorsPage() {
+  const { isStandalone } = useAppCatalogMode();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const sidebarWidth = sidebarOpen ? 248 : 48;
+  const sidebarWidth = isStandalone ? (sidebarOpen ? 200 : 0) : sidebarOpen ? 248 : 48;
+  const basePath = isStandalone
+    ? '/app-catalog/installed-operators'
+    : '/container/installed-operators';
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const operatorColumnsResolved = useMemo<TableColumn<InstalledOperator>[]>(
+    () =>
+      operatorColumns.map((col) => {
+        if (col.key !== 'displayName') return col;
+        return {
+          ...col,
+          render: (_, row: InstalledOperator) => (
+            <div className="flex items-center gap-2 min-w-0">
+              {row.logoUrl && (
+                <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-[4px] border border-[var(--color-border-default)]">
+                  <img src={row.logoUrl} alt={row.displayName} className="w-4 h-4" />
+                </div>
+              )}
+              <Link
+                to={`${basePath}/${row.id}`}
+                className="text-[var(--color-action-primary)] font-medium hover:underline truncate min-w-0"
+              >
+                {row.displayName}
+              </Link>
+            </div>
+          ),
+        };
+      }),
+    [basePath]
+  );
 
   useEffect(() => {
     updateActiveTabLabel('Installed operators');
@@ -126,7 +158,11 @@ export default function InstalledOperatorsPage() {
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        isStandalone ? (
+          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        ) : (
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        )
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -143,15 +179,19 @@ export default function InstalledOperatorsPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
+          showNavigation={!isStandalone}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[{ label: 'Cluster1', href: '/container' }, { label: 'Installed operators' }]}
+              items={
+                isStandalone
+                  ? [{ label: 'Installed Operators' }]
+                  : [{ label: 'Cluster1', href: '/container' }, { label: 'Installed operators' }]
+              }
             />
           }
-          actions={<ContainerTopBarActions />}
+          actions={isStandalone ? undefined : <ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
@@ -175,7 +215,7 @@ export default function InstalledOperatorsPage() {
         />
 
         <Table<InstalledOperator>
-          columns={operatorColumns}
+          columns={operatorColumnsResolved}
           data={filteredOperators}
           rowKey="id"
           emptyMessage="No installed operators found"

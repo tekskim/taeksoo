@@ -6,7 +6,6 @@ import {
   TabBar,
   TopBar,
   Breadcrumb,
-  Table,
   Tabs,
   TabList,
   Tab,
@@ -15,15 +14,16 @@ import {
   PageShell,
   DetailHeader,
   StatusIndicator,
-  type TableColumn,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconDownload, IconEdit, IconTrash, IconCopy } from '@tabler/icons-react';
 import type { InstalledAppStatus } from '@/pages/apps/appsTypes';
 import { installedAppsMock } from '@/pages/apps/appsMockData';
 
-/* Read-only YAML viewer: same look as Edit YAML pages (line numbers + content), no edit/save */
+/* ─── Read-only YAML viewer ─── */
 function YamlViewer({
   value,
   onCopy,
@@ -106,9 +106,11 @@ function toTitleCase(s: string): string {
 export function InstalledAppDetailPage() {
   const { appId } = useParams<{ appId: string }>();
   const navigate = useNavigate();
+  const { isStandalone } = useAppCatalogMode();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = isStandalone ? (sidebarOpen ? 200 : 0) : sidebarOpen ? 240 : 40;
+  const basePath = isStandalone ? '/app-catalog' : '/container';
 
   const app = installedAppsMock.find((a) => a.id === appId);
 
@@ -133,27 +135,21 @@ export function InstalledAppDetailPage() {
     }
   }, [app]);
 
-  const resourceColumns: TableColumn<{ kind: string; name: string; namespace?: string }>[] = [
-    { key: 'kind', label: 'Kind', width: '200px' },
-    { key: 'name', label: 'Name', flex: 1 },
-    { key: 'namespace', label: 'Namespace', width: '140px' },
-  ];
+  const sidebarEl = isStandalone ? (
+    <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+  ) : (
+    <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+  );
 
   if (!app) {
     return (
-      <PageShell
-        sidebar={
-          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-        }
-        sidebarWidth={sidebarWidth}
-        contentClassName="pt-4 px-8 pb-6"
-      >
+      <PageShell sidebar={sidebarEl} sidebarWidth={sidebarWidth} contentClassName="pt-4 px-8 pb-6">
         <VStack gap={4}>
           <p className="text-body-md text-[var(--color-text-muted)]">App not found.</p>
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/container/installed-apps')}
+            onClick={() => navigate(`${basePath}/installed-apps`)}
           >
             Back to Installed Apps
           </Button>
@@ -163,12 +159,11 @@ export function InstalledAppDetailPage() {
   }
 
   const isPending = app.status === 'Pending';
+  const chartDisplayName = app.displayName ?? toTitleCase(app.name);
 
   return (
     <PageShell
-      sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      }
+      sidebar={sidebarEl}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -184,17 +179,24 @@ export function InstalledAppDetailPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation
-          onBack={() => navigate('/container/installed-apps')}
+          showNavigation={!isStandalone}
+          onBack={() => navigate(`${basePath}/installed-apps`)}
           onForward={() => {}}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Installed Apps', href: '/container/installed-apps' },
-                { label: toTitleCase(app.name) },
-              ]}
+              items={
+                isStandalone
+                  ? [
+                      { label: 'Installed Apps', href: `${basePath}/installed-apps` },
+                      { label: chartDisplayName },
+                    ]
+                  : [
+                      { label: 'clusterName', href: '/container' },
+                      { label: 'Apps', href: '/container/catalog' },
+                      { label: 'Installed Apps', href: '/container/installed-apps' },
+                      { label: chartDisplayName },
+                    ]
+              }
             />
           }
           actions={
@@ -209,14 +211,14 @@ export function InstalledAppDetailPage() {
       <VStack gap={6}>
         <DetailHeader>
           <HStack justify="between" align="start" className="w-full flex-wrap gap-2">
-            <DetailHeader.Title>{toTitleCase(app.name)}</DetailHeader.Title>
+            <DetailHeader.Title>{chartDisplayName}</DetailHeader.Title>
             <DetailHeader.Actions>
               <Button
                 variant="secondary"
                 size="sm"
                 leftIcon={<IconEdit size={14} stroke={1.5} />}
                 disabled={isPending}
-                onClick={() => navigate(`/container/installed-apps/${app.id}/edit`)}
+                onClick={() => navigate(`${basePath}/installed-apps/${app.id}/edit`)}
               >
                 Edit / Upgrade
               </Button>
@@ -241,10 +243,9 @@ export function InstalledAppDetailPage() {
                 />
               }
             />
-            <DetailHeader.InfoCard label="App name" value={toTitleCase(app.name)} />
+            <DetailHeader.InfoCard label="App name" value={chartDisplayName} />
             <DetailHeader.InfoCard label="Version" value={app.version} />
             <DetailHeader.InfoCard label="Namespace" value={app.namespace} />
-            <DetailHeader.InfoCard label="Chart" value={app.chart ?? '—'} />
             <DetailHeader.InfoCard
               label="Last deployed"
               value={app.lastDeployed ?? app.installedAt ?? '—'}
@@ -252,29 +253,10 @@ export function InstalledAppDetailPage() {
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
-        <Tabs defaultValue="resources" variant="underline" size="sm">
+        <Tabs defaultValue="values" variant="underline" size="sm">
           <TabList>
-            <Tab value="resources">Resources</Tab>
-            <Tab value="values">Values.yaml</Tab>
+            <Tab value="values">Values</Tab>
           </TabList>
-          <TabPanel value="resources">
-            <VStack gap={3} className="pt-3">
-              {(app.resources ?? []).length === 0 ? (
-                <p className="text-body-md text-[var(--color-text-subtle)]">
-                  No resources. This release has not created any Kubernetes resources yet.
-                </p>
-              ) : (
-                <Table
-                  columns={resourceColumns}
-                  data={(app.resources ?? []).map((r, i) => ({
-                    ...r,
-                    id: `${r.kind}-${r.name}-${i}`,
-                  }))}
-                  rowKey="id"
-                />
-              )}
-            </VStack>
-          </TabPanel>
           <TabPanel value="values">
             <div className="pt-3 flex flex-col min-h-0 flex-1">
               <YamlViewer
