@@ -47,7 +47,8 @@ type DeliveryRecord = {
   target: string;
   ruleName: string;
   kind: DeliveryKind;
-  status: 'Success' | 'Failed';
+  /** Pending은 백엔드 값이 아닌 UI 전용 표시 상태 (정책 2-7) */
+  status: 'Success' | 'Failed' | 'Pending';
 };
 
 type AlertDetail = {
@@ -64,6 +65,8 @@ type AlertDetail = {
   acknowledgedAt: string | null;
   resolvedBy: string | null;
   resolvedAt: string | null;
+  /** Manual / Auto. Resolved 전이면 null → '-' 표시 (정책 0-7, 2-5) */
+  resolveType: 'Manual' | 'Auto' | null;
   timeline: TimelineEvent[];
   deliveryHistory: DeliveryRecord[];
 };
@@ -84,6 +87,7 @@ const FIXTURE: AlertDetail = {
   acknowledgedAt: '2026-06-05 09:00:05',
   resolvedBy: null,
   resolvedAt: null,
+  resolveType: null,
   timeline: [
     {
       time: '08:55:12',
@@ -97,7 +101,7 @@ const FIXTURE: AlertDetail = {
     {
       sentAt: '08:55:14',
       channel: 'Slack',
-      target: '#ops-alerts',
+      target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
       kind: 'Initial',
       status: 'Success',
@@ -113,10 +117,18 @@ const FIXTURE: AlertDetail = {
     {
       sentAt: '09:00:15',
       channel: 'Slack',
-      target: '#ops-alerts',
+      target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
       kind: 'Repeat',
       status: 'Success',
+    },
+    {
+      sentAt: '09:05:15',
+      channel: 'Email',
+      target: 'ops@thakicloud.net',
+      ruleName: 'Ops Email',
+      kind: 'Retry',
+      status: 'Pending',
     },
   ],
 };
@@ -135,6 +147,7 @@ const FIXTURE_RESOLVED: AlertDetail = {
   acknowledgedAt: '2026-06-04 18:50:10',
   resolvedBy: 'Kim',
   resolvedAt: '2026-06-04 19:10:00',
+  resolveType: 'Manual',
   timeline: [
     {
       time: '18:45:00',
@@ -160,7 +173,7 @@ const FIXTURE_RESOLVED: AlertDetail = {
     {
       sentAt: '18:45:02',
       channel: 'Slack',
-      target: '#ops-alerts',
+      target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
       kind: 'Initial',
       status: 'Success',
@@ -168,7 +181,7 @@ const FIXTURE_RESOLVED: AlertDetail = {
     {
       sentAt: '18:47:02',
       channel: 'Slack',
-      target: '#ops-alerts',
+      target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
       kind: 'Repeat',
       status: 'Success',
@@ -176,7 +189,7 @@ const FIXTURE_RESOLVED: AlertDetail = {
     {
       sentAt: '19:10:05',
       channel: 'Slack',
-      target: '#ops-alerts',
+      target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
       kind: 'Repeat',
       status: 'Success',
@@ -198,19 +211,17 @@ function SeverityBadge({ severity }: { severity: AlertSeverity }) {
       : 'text-[var(--color-state-warning)] bg-[var(--color-state-warning-bg)]';
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm font-medium ${cls}`}
+      className={`inline-flex items-center px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm font-medium ${cls}`}
     >
-      <span
-        className={`w-1.5 h-1.5 rounded-full ${severity === 'Critical' ? 'bg-[var(--color-state-danger)]' : 'bg-[var(--color-state-warning)]'}`}
-      />
       {severity}
     </span>
   );
 }
 
-function StateBadge({ state }: { state: AlertState }) {
+function StateBadge({ state, pulse = true }: { state: AlertState; pulse?: boolean }) {
+  // pulse: 현재 상태 표시(헤더 등)에서만 Firing 깜빡임. 타임라인 같은 과거 이력엔 끈다.
   const styles: Record<AlertState, string> = {
-    Firing: 'text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)] animate-pulse',
+    Firing: `text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]${pulse ? ' animate-pulse' : ''}`,
     Acknowledged: 'text-[var(--color-state-warning)] bg-[var(--color-state-warning-bg)]',
     Resolved: 'text-[var(--color-state-success)] bg-[var(--color-state-success-bg)]',
   };
@@ -227,6 +238,7 @@ function DeliveryStatusBadge({ status }: { status: DeliveryRecord['status'] }) {
   const styles: Record<DeliveryRecord['status'], string> = {
     Success: 'text-[var(--color-state-success)] bg-[var(--color-state-success-bg)]',
     Failed: 'text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]',
+    Pending: 'text-[var(--color-text-subtle)] bg-[var(--color-surface-subtle)]',
   };
   return (
     <span
@@ -254,12 +266,6 @@ function DeliveryKindBadge({ kind }: { kind: DeliveryKind }) {
     </span>
   );
 }
-
-const TIMELINE_ICON: Record<TimelineEventType, string> = {
-  Firing: '🔴',
-  Acknowledged: '🟡',
-  Resolved: '🟢',
-};
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
@@ -300,6 +306,7 @@ export default function AlertDetailPage() {
       state: 'Resolved',
       resolvedBy: 'Me',
       resolvedAt: ts,
+      resolveType: 'Manual',
       timeline: [
         ...prev.timeline,
         {
@@ -316,6 +323,9 @@ export default function AlertDetailPage() {
 
   const MAX_COMMENT = 1000;
 
+  // DetailHeader InfoGrid에 이미 표시되는 필드(State/Severity/Target/Alert Rule/
+  // Started At/Last Fired At/Occurrence Count)는 중복이므로 Overview에서 제외한다.
+  // Resolved By/At은 Resolved 상태일 때 헤더로 올라가므로 그때만 제외.
   const overviewFields: { label: string; value: React.ReactNode }[] = [
     {
       label: 'Alert ID',
@@ -326,17 +336,50 @@ export default function AlertDetailPage() {
         </HStack>
       ),
     },
-    { label: 'Alert Rule', value: alertDetail.alertRule },
-    { label: 'Severity', value: <SeverityBadge severity={alertDetail.severity} /> },
-    { label: 'State', value: <StateBadge state={alertDetail.state} /> },
-    { label: 'Target', value: alertDetail.target },
-    { label: 'Started At', value: alertDetail.startedAt },
-    { label: 'Last Fired At', value: alertDetail.lastFiredAt },
-    { label: 'Occurrence Count', value: String(alertDetail.occurrenceCount) },
     { label: 'Acknowledged By', value: alertDetail.acknowledgedBy ?? '-' },
     { label: 'Acknowledged At', value: alertDetail.acknowledgedAt ?? '-' },
-    { label: 'Resolved By', value: alertDetail.resolvedBy ?? '-' },
-    { label: 'Resolved At', value: alertDetail.resolvedAt ?? '-' },
+    ...(alertDetail.state !== 'Resolved'
+      ? [
+          { label: 'Resolved By', value: alertDetail.resolvedBy ?? '-' },
+          { label: 'Resolved At', value: alertDetail.resolvedAt ?? '-' },
+        ]
+      : []),
+    // 정책 2-5 #15: Manual / Auto. Resolved 전이면 '-'
+    { label: 'Resolve Type', value: alertDetail.resolveType ?? '-' },
+  ];
+
+  // ── Timeline table columns — TDS Table 패턴 (Delivery History와 동일) ──────
+  const timelineColumns: TableColumn<TimelineEvent>[] = [
+    {
+      key: 'time',
+      label: 'Time',
+      width: '100px',
+      resizable: false,
+      render: (v: any) => (
+        <span className="text-body-sm font-mono text-[var(--color-text-subtle)]">{v}</span>
+      ),
+    },
+    {
+      key: 'type',
+      label: 'Event',
+      width: '140px',
+      resizable: false,
+      render: (_: any, row: TimelineEvent) => <StateBadge state={row.type} pulse={false} />,
+    },
+    {
+      key: 'actor',
+      label: 'Actor',
+      width: '120px',
+      resizable: false,
+      render: (v: any) => <span className="text-body-sm text-[var(--color-text-subtle)]">{v}</span>,
+    },
+    {
+      key: 'comment',
+      label: 'Comment',
+      render: (v: any) => (
+        <span className="text-body-sm text-[var(--color-text-subtle)]">{v ?? '-'}</span>
+      ),
+    },
   ];
 
   // ── Delivery History table columns ────────────────────────────────────────
@@ -440,13 +483,13 @@ export default function AlertDetailPage() {
           {(alertDetail.state === 'Firing' || alertDetail.state === 'Acknowledged') && (
             <DetailHeader.Actions>
               {alertDetail.state === 'Firing' && (
-                <Button variant="primary" size="sm" onClick={handleAcknowledge}>
+                <Button variant="secondary" size="sm" onClick={handleAcknowledge}>
                   Acknowledge
                 </Button>
               )}
               {alertDetail.state === 'Acknowledged' && (
                 <Button
-                  variant="primary"
+                  variant="secondary"
                   size="sm"
                   leftIcon={<IconCheck size={12} />}
                   onClick={() => setResolveDrawerOpen(true)}
@@ -501,40 +544,14 @@ export default function AlertDetailPage() {
             </SectionCard>
           </TabPanel>
 
-          {/* Timeline tab */}
+          {/* Timeline tab — TDS Table 패턴 */}
           <TabPanel value="timeline">
-            <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
-              <VStack gap={0} className="w-full">
-                {alertDetail.timeline.map((event, idx) => (
-                  <div
-                    key={idx}
-                    className="px-5 py-4 border-b border-[var(--color-border-subtle)] last:border-0"
-                  >
-                    <HStack gap={3} align="start">
-                      <span className="text-lg mt-0.5">{TIMELINE_ICON[event.type]}</span>
-                      <VStack gap={1} className="flex-1">
-                        <HStack gap={2} align="center">
-                          <span className="text-body-md font-medium text-[var(--color-text-default)]">
-                            {event.type}
-                          </span>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            by {event.actor}
-                          </span>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] ml-auto">
-                            {event.time}
-                          </span>
-                        </HStack>
-                        {event.comment && (
-                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                            {event.comment}
-                          </p>
-                        )}
-                      </VStack>
-                    </HStack>
-                  </div>
-                ))}
-              </VStack>
-            </div>
+            <Table<TimelineEvent>
+              columns={timelineColumns}
+              data={alertDetail.timeline}
+              rowKey="time"
+              resizable={false}
+            />
           </TabPanel>
 
           {/* Delivery History tab — 정책 2-7, Kind 컬럼 (정책 0-8) */}
@@ -580,7 +597,7 @@ export default function AlertDetailPage() {
           {/* 정책 2-4: Comment만 입력. 필수, 최대 1,000자. */}
           <FormField label="Comment" required>
             <Textarea
-              placeholder="Enter resolution notes or action taken..."
+              placeholder="Enter resolution notes or action taken"
               value={resolveComment}
               onChange={(e) => setResolveComment(e.target.value.slice(0, MAX_COMMENT))}
               fullWidth

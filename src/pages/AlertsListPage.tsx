@@ -137,6 +137,8 @@ const MOCK_ALERTS: AlertRow[] = [
 ];
 
 const PAGE_SIZE = 5;
+// 정책 2-4: Resolve Comment 필수, 최대 1,000자
+const MAX_RESOLVE_COMMENT = 1000;
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -164,11 +166,8 @@ function SeverityBadge({ severity }: { severity: AlertSeverity }) {
       : 'text-[var(--color-state-warning)] bg-[var(--color-state-warning-bg)]';
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm font-medium ${cls}`}
+      className={`inline-flex items-center px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm font-medium ${cls}`}
     >
-      <span
-        className={`w-1.5 h-1.5 rounded-full ${severity === 'Critical' ? 'bg-[var(--color-state-danger)]' : 'bg-[var(--color-state-warning)]'}`}
-      />
       {severity}
     </span>
   );
@@ -240,6 +239,13 @@ export default function AlertsListPage() {
   const safePage = Math.min(page, totalPages);
   const pagedAlerts = filteredAlerts.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
+  // ── 선택된 행의 상태 기반 Bulk Action 활성 조건 (정책 1-6) ──────────────────
+  // 혼합 선택 시 해당 상태가 아닌 항목은 제외하고 처리한다.
+  // 처리 대상이 1건 이상 포함되어 있으면 해당 버튼 활성화.
+  const selectedRows = alertRows.filter((a) => selectedKeys.includes(a.id));
+  const canBulkAcknowledge = selectedRows.some((a) => a.state === 'Firing');
+  const canBulkResolve = selectedRows.some((a) => a.state === 'Acknowledged');
+
   const handleFiltersChange = (next: AppliedFilter[]) => {
     setAppliedFilters(next);
     setPage(1);
@@ -259,7 +265,9 @@ export default function AlertsListPage() {
   };
 
   const handleBulkResolve = () => {
-    setResolveTarget({ type: 'bulk', ids: selectedKeys });
+    // 정책 1-6: Acknowledged만 처리 대상. Firing/Resolved는 제외
+    const resolvableIds = selectedRows.filter((a) => a.state === 'Acknowledged').map((a) => a.id);
+    setResolveTarget({ type: 'bulk', ids: resolvableIds });
     setResolveNote('');
   };
 
@@ -293,7 +301,7 @@ export default function AlertsListPage() {
     } else {
       setAlertRows((prev) =>
         prev.map((a) =>
-          resolveTarget.ids.includes(a.id) && a.state !== 'Resolved'
+          resolveTarget.ids.includes(a.id) && a.state === 'Acknowledged'
             ? { ...a, state: 'Resolved' as AlertState, updatedAt: now, updatedBy: 'You' }
             : a
         )
@@ -381,45 +389,58 @@ export default function AlertsListPage() {
         <span className="text-body-sm text-[var(--color-text-subtle)]">{row.updatedBy ?? '-'}</span>
       ),
     },
-    {
-      key: '_action',
-      label: 'Action',
-      width: fixedColumns.actions,
-      align: 'center',
-      resizable: false,
-      render: (_: any, row: AlertRow) => {
-        const items: ContextMenuItem[] = [
+    // Resolved 알림은 수행 가능한 액션이 없으므로 Action 컬럼을 숨긴다
+    ...(stateFilter === 'Resolved'
+      ? []
+      : [
           {
-            id: 'acknowledge',
-            label: 'Acknowledge',
-            disabled: row.state !== 'Firing',
-            onClick: () => handleAcknowledgeSingle(row),
+            key: '_action',
+            label: 'Action',
+            width: fixedColumns.actions,
+            align: 'center',
+            resizable: false,
+            render: (_: any, row: AlertRow) => {
+              // 상태별로 수행 가능한 액션만 노출한다.
+              // Firing → Acknowledge만, Acknowledged → Resolve만.
+              const items: ContextMenuItem[] = [
+                ...(row.state === 'Firing'
+                  ? [
+                      {
+                        id: 'acknowledge',
+                        label: 'Acknowledge',
+                        onClick: () => handleAcknowledgeSingle(row),
+                      },
+                    ]
+                  : []),
+                ...(row.state === 'Acknowledged'
+                  ? [
+                      {
+                        id: 'resolve',
+                        label: 'Resolve',
+                        onClick: () => handleResolveSingle(row),
+                      },
+                    ]
+                  : []),
+              ];
+              return (
+                <div onClick={(e) => e.stopPropagation()}>
+                  <ContextMenu items={items} trigger="click" align="right">
+                    <button
+                      aria-label="Row actions"
+                      className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+                    >
+                      <IconDotsCircleHorizontal
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-subtle)]"
+                      />
+                    </button>
+                  </ContextMenu>
+                </div>
+              );
+            },
           },
-          {
-            id: 'resolve',
-            label: 'Resolve',
-            disabled: row.state === 'Resolved',
-            onClick: () => handleResolveSingle(row),
-          },
-        ];
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={items} trigger="click" align="right">
-              <button
-                aria-label="Row actions"
-                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
-              >
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--color-text-subtle)]"
-                />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
-    },
+        ]),
   ];
 
   return (
@@ -447,7 +468,7 @@ export default function AlertsListPage() {
             <Breadcrumb
               items={[
                 { label: 'prod-cluster-01', href: '/alerts/board' },
-                { label: 'Alert Status Board' },
+                { label: 'Alert Board' },
               ]}
             />
           }
@@ -456,7 +477,7 @@ export default function AlertsListPage() {
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={4}>
-        <PageHeader title="Alert Status Board" />
+        <PageHeader title="Alert Board" />
 
         {/* State filter tabs: Active / Resolved */}
         <HStack gap={0} className="border-b border-[var(--color-border-default)] w-full">
@@ -526,24 +547,27 @@ export default function AlertsListPage() {
             </ListToolbar.Actions>
           }
           bulkActions={
-            <ListToolbar.Actions>
-              <Button
-                variant="secondary"
-                size="sm"
-                disabled={selectedKeys.length === 0}
-                onClick={handleAcknowledge}
-              >
-                Acknowledge
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                disabled={selectedKeys.length === 0}
-                onClick={handleBulkResolve}
-              >
-                Resolve
-              </Button>
-            </ListToolbar.Actions>
+            // 정책 1-4: Resolved는 액션 불가 — Resolved 탭에선 Bulk 영역 숨김
+            stateFilter === 'Resolved' ? undefined : (
+              <ListToolbar.Actions>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  disabled={!canBulkAcknowledge}
+                  onClick={handleAcknowledge}
+                >
+                  Acknowledge
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  disabled={!canBulkResolve}
+                  onClick={handleBulkResolve}
+                >
+                  Resolve
+                </Button>
+              </ListToolbar.Actions>
+            )
           }
         />
 
@@ -561,7 +585,8 @@ export default function AlertsListPage() {
           data={pagedAlerts}
           rowKey="id"
           onRowClick={(row) => navigate(`/alerts/${row.id}`)}
-          selectable
+          // 정책 1-4: Resolved는 체크박스 선택 불가
+          selectable={stateFilter !== 'Resolved'}
           selectionType="checkbox"
           selectedKeys={selectedKeys}
           onSelectionChange={setSelectedKeys}
@@ -584,11 +609,9 @@ export default function AlertsListPage() {
             : 'Resolve Alert'
         }
         description={
-          resolveTarget?.type === 'single'
-            ? `${resolveTarget.row.alertRuleName.replace(/ Rule$/, '')}_${resolveTarget.row.target}`
-            : resolveTarget?.type === 'bulk'
-              ? `${resolveTarget.ids.length} alert${resolveTarget.ids.length > 1 ? 's' : ''} will be marked as Resolved.`
-              : ''
+          resolveTarget?.type === 'bulk'
+            ? 'Enter a comment to resolve the alerts. The action will be recorded in the timeline.'
+            : 'Enter a comment to resolve the alert. The action will be recorded in the timeline.'
         }
         width={400}
         footer={
@@ -596,7 +619,12 @@ export default function AlertsListPage() {
             <Button variant="secondary" onClick={() => setResolveTarget(null)} className="flex-1">
               Cancel
             </Button>
-            <Button variant="primary" onClick={confirmResolve} className="flex-1">
+            <Button
+              variant="primary"
+              onClick={confirmResolve}
+              disabled={!resolveNote.trim()}
+              className="flex-1"
+            >
               Resolve
             </Button>
           </HStack>
@@ -611,18 +639,18 @@ export default function AlertsListPage() {
               <InfoBox label="Severity" value={resolveTarget.row.severity} />
             </InfoBox.Group>
           )}
-          <FormField
-            label="Resolution Note"
-            hint="Optional — describe how this alert was resolved."
-          >
+          {/* 정책 2-4: Comment만 입력. 필수, 최대 1,000자. (AlertDetailPage 드로어와 동일) */}
+          <FormField label="Comment" required>
             <Textarea
               value={resolveNote}
-              onChange={(e) => setResolveNote(e.target.value)}
-              placeholder="e.g. Restarted the affected pod. CPU usage normalized."
-              rows={4}
-              resize="vertical"
+              onChange={(e) => setResolveNote(e.target.value.slice(0, MAX_RESOLVE_COMMENT))}
+              placeholder="Enter resolution notes or action taken"
               fullWidth
+              rows={5}
             />
+            <span className="mt-1 block text-right text-body-sm text-[var(--color-text-subtle)]">
+              {resolveNote.length} / {MAX_RESOLVE_COMMENT}
+            </span>
           </FormField>
         </VStack>
       </Drawer>

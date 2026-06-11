@@ -12,7 +12,9 @@ import {
   FormField,
   Input,
   Select,
-  Toggle,
+  Checkbox,
+  BadgeList,
+  ConfirmModal,
   Table,
   type TableColumn,
   fixedColumns,
@@ -22,12 +24,13 @@ import {
 } from '@/design-system';
 import { AlertSidebar } from '@/components/AlertSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { PREDEFINED_ALERT_RULES, type AlertRuleSeverity } from '@/mocks/alertRules';
+import { PREDEFINED_ALERT_RULES } from '@/mocks/alertRules';
 import { IconPlus, IconSend, IconX, IconDotsCircleHorizontal } from '@tabler/icons-react';
 
 // ── Types & Mock Data ─────────────────────────────────────────────────────────
 
 type DeliveryChannel = 'Slack' | 'Email';
+type DeliverySeverity = 'Critical' | 'Warning';
 type TestStatus = 'idle' | 'Pending' | 'Success' | 'Failed';
 
 type DeliveryTarget = {
@@ -43,6 +46,8 @@ type DeliveryRule = {
   name: string;
   /** 매칭 조건: 사전 정의된 Alert Rule (복수 선택, 1건 이상) */
   matchedRules: string[];
+  /** 매칭 조건: Severity (정책 3-3, 필수) */
+  severity: DeliverySeverity;
   /** Acknowledge 시 알림을 끄는 시간 (분) */
   muteMinutes: number;
   targets: DeliveryTarget[];
@@ -54,14 +59,22 @@ const MOCK_RULES: DeliveryRule[] = [
     enabled: true,
     name: 'Ops Slack',
     matchedRules: ['HighCpuUsage Rule', 'DiskSpaceLow Rule', 'PodCrashLoop Rule'],
+    severity: 'Critical',
     muteMinutes: 30,
-    targets: [{ id: 't1', channel: 'Slack', recipient: '#ops-alerts' }],
+    targets: [
+      {
+        id: 't1',
+        channel: 'Slack',
+        recipient: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
+      },
+    ],
   },
   {
     id: 'drule-2',
     enabled: true,
     name: 'Ops Email',
     matchedRules: ['LogRateSpike Rule', 'MemoryPressure Rule'],
+    severity: 'Warning',
     muteMinutes: 30,
     targets: [{ id: 't2', channel: 'Email', recipient: 'ops@thakicloud.net' }],
   },
@@ -70,10 +83,15 @@ const MOCK_RULES: DeliveryRule[] = [
     enabled: false,
     name: 'Cert Expiry → On-call',
     matchedRules: ['CertExpiry Rule'],
+    severity: 'Warning',
     muteMinutes: 60,
     targets: [
       { id: 't3', channel: 'Email', recipient: 'oncall@thakicloud.net' },
-      { id: 't4', channel: 'Slack', recipient: '#on-call' },
+      {
+        id: 't4',
+        channel: 'Slack',
+        recipient: 'https://hooks.slack.com/services/T024BE7LD/B7XX2ON3C',
+      },
     ],
   },
 ];
@@ -109,13 +127,14 @@ type RuleFormProps = {
   onClose: () => void;
   initial?: DeliveryRule | null;
   existingNames: string[];
-  onSave: (rule: Omit<DeliveryRule, 'id'>) => void;
+  // Status는 폼에서 다루지 않는다 — 생성 시 Enabled, 이후 리스트 Action 메뉴에서 토글 (정책)
+  onSave: (rule: Omit<DeliveryRule, 'id' | 'enabled'>) => void;
 };
 
 function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave }: RuleFormProps) {
-  const [enabled, setEnabled] = useState(initial?.enabled ?? true);
   const [name, setName] = useState(initial?.name ?? '');
   const [matchedRules, setMatchedRules] = useState<string[]>(initial?.matchedRules ?? []);
+  const [severity, setSeverity] = useState<DeliverySeverity | ''>(initial?.severity ?? '');
   const [muteMinutes, setMuteMinutes] = useState<string>(String(initial?.muteMinutes ?? 30));
   const [targets, setTargets] = useState<DeliveryTarget[]>(
     initial?.targets?.length
@@ -126,6 +145,7 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
   const [errors, setErrors] = useState<{
     name?: string;
     rules?: string;
+    severity?: string;
     mute?: string;
     targets?: string;
   }>({});
@@ -148,8 +168,7 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
     setTimeout(() => {
       const recipient = targets.find((t) => t.id === id)?.recipient ?? '';
       const ok =
-        recipient.trim().length > 0 &&
-        (recipient.includes('@') || recipient.startsWith('#') || recipient.startsWith('http'));
+        recipient.trim().length > 0 && (recipient.includes('@') || recipient.startsWith('http'));
       setTestStatus((prev) => ({ ...prev, [id]: ok ? 'Success' : 'Failed' }));
     }, 700);
   };
@@ -160,11 +179,12 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
     else if (existingNames.filter((n) => n !== initial?.name).includes(name.trim()))
       next.name = 'A rule with this name already exists.';
     if (matchedRules.length === 0) next.rules = 'Select at least one Alert Rule.';
+    if (!severity) next.severity = 'Severity is required.';
     const mute = Number(muteMinutes);
     if (muteMinutes === '' || Number.isNaN(mute) || mute < 0)
       next.mute = 'Mute time must be 0 or greater.';
     if (targets.every((t) => !t.recipient.trim()))
-      next.targets = 'At least one recipient is required.';
+      next.targets = 'At least one address is required.';
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -172,9 +192,9 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
   const handleSave = () => {
     if (!validate()) return;
     onSave({
-      enabled,
       name: name.trim(),
       matchedRules,
+      severity: severity as DeliverySeverity,
       muteMinutes: Number(muteMinutes),
       targets: targets.filter((t) => t.recipient.trim()),
     });
@@ -213,16 +233,6 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
       }
     >
       <VStack gap={6}>
-        {/* Status */}
-        <FormField label="Status" helperText="Whether this rule is active. Default: Enabled.">
-          <HStack gap={2} align="center">
-            <Toggle checked={enabled} onChange={setEnabled} />
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              {enabled ? 'Enabled' : 'Disabled'}
-            </span>
-          </HStack>
-        </FormField>
-
         {/* Rule Name */}
         <FormField label="Rule Name" required error={!!errors.name} errorMessage={errors.name}>
           <Input
@@ -243,35 +253,45 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
           errorMessage={errors.rules}
           helperText="Select one or more predefined Alert Rules to match."
         >
-          <div className="flex flex-wrap gap-2 p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-            {PREDEFINED_ALERT_RULES.map((r) => {
-              const active = matchedRules.includes(r.name);
-              const severityDot: Record<AlertRuleSeverity, string> = {
-                Critical: 'bg-[var(--color-state-danger)]',
-                Warning: 'bg-[var(--color-state-warning)]',
-              };
-              return (
-                <button
-                  key={r.id}
-                  type="button"
-                  onClick={() => {
-                    toggleRule(r.name);
-                    setErrors((p) => ({ ...p, rules: undefined }));
-                  }}
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius-full)] text-body-sm font-medium border transition-colors ${
-                    active
-                      ? 'bg-[var(--color-action-primary)] text-white border-transparent'
-                      : 'bg-[var(--color-surface-default)] text-[var(--color-text-subtle)] border-[var(--color-border-default)] hover:border-[var(--color-action-primary)]'
-                  }`}
-                >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full shrink-0 ${active ? 'bg-white/70' : severityDot[r.severity]}`}
-                  />
-                  {r.name}
-                </button>
-              );
-            })}
-          </div>
+          {/* TDS Checkbox 목록 — 커스텀 pill 대신 표준 컴포넌트 사용 */}
+          <VStack
+            gap={2}
+            className="p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]"
+          >
+            {PREDEFINED_ALERT_RULES.map((r) => (
+              <Checkbox
+                key={r.id}
+                label={r.name}
+                checked={matchedRules.includes(r.name)}
+                onChange={() => {
+                  toggleRule(r.name);
+                  setErrors((p) => ({ ...p, rules: undefined }));
+                }}
+              />
+            ))}
+          </VStack>
+        </FormField>
+
+        {/* Severity — 정책 3-3: 필수 Dropdown (Warning/Critical) */}
+        <FormField
+          label="Severity"
+          required
+          error={!!errors.severity}
+          errorMessage={errors.severity}
+        >
+          <Select
+            options={[
+              { value: 'Critical', label: 'Critical' },
+              { value: 'Warning', label: 'Warning' },
+            ]}
+            value={severity}
+            placeholder="Select severity"
+            onChange={(v) => {
+              setSeverity(v as DeliverySeverity);
+              setErrors((p) => ({ ...p, severity: undefined }));
+            }}
+            fullWidth
+          />
         </FormField>
 
         {/* Mute time */}
@@ -300,7 +320,7 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
           label="Targets"
           required
           errorMessage={errors.targets}
-          helperText="Add at least one target — enter an email address or a Slack channel / Webhook URL."
+          helperText="Add at least one target. Choose a channel, then enter the address to deliver alerts to."
         >
           <VStack gap={3} className="w-full">
             {targets.map((t) => (
@@ -308,31 +328,34 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
                 key={t.id}
                 className="rounded-[var(--radius-md)] border border-[var(--color-border-default)] p-3"
               >
-                <HStack gap={2} align="start" className="w-full">
-                  <div className="w-[120px] shrink-0">
-                    <Select
-                      options={[
-                        { value: 'Email', label: 'Email' },
-                        { value: 'Slack', label: 'Slack' },
-                      ]}
-                      value={t.channel}
-                      onChange={(v) => updateTarget(t.id, { channel: v as DeliveryChannel })}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <Input
-                      placeholder={
-                        t.channel === 'Slack' ? '#channel or Webhook URL' : 'email@example.com'
-                      }
-                      value={t.recipient}
-                      onChange={(e) => {
-                        updateTarget(t.id, { recipient: e.target.value });
-                        setErrors((p) => ({ ...p, targets: undefined }));
-                      }}
-                      fullWidth
-                    />
-                  </div>
+                {/* Channel(Select)과 Target(Text input)을 분리된 라벨 필드로 표시 */}
+                <HStack gap={2} align="start" justify="between" className="w-full">
+                  <VStack gap={3} className="flex-1">
+                    <FormField label="Channel">
+                      <Select
+                        options={[
+                          { value: 'Email', label: 'Email' },
+                          { value: 'Slack', label: 'Slack' },
+                        ]}
+                        value={t.channel}
+                        onChange={(v) => updateTarget(t.id, { channel: v as DeliveryChannel })}
+                        fullWidth
+                      />
+                    </FormField>
+                    <FormField label="Address">
+                      <Input
+                        placeholder={
+                          t.channel === 'Slack' ? 'Slack channel URL' : 'email@example.com'
+                        }
+                        value={t.recipient}
+                        onChange={(e) => {
+                          updateTarget(t.id, { recipient: e.target.value });
+                          setErrors((p) => ({ ...p, targets: undefined }));
+                        }}
+                        fullWidth
+                      />
+                    </FormField>
+                  </VStack>
                   <button
                     type="button"
                     onClick={() => removeTarget(t.id)}
@@ -343,8 +366,8 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
                     <IconX size={16} />
                   </button>
                 </HStack>
-                <HStack gap={2} align="center" justify="end" className="mt-2">
-                  {testBadge(testStatus[t.id] ?? 'idle')}
+                {/* 왼쪽 정렬, 전송 상태는 버튼 오른쪽에 표시 */}
+                <HStack gap={2} align="center" justify="start" className="mt-2">
                   <button
                     type="button"
                     onClick={() => testSend(t.id)}
@@ -352,6 +375,7 @@ function RoutingRuleFormDrawer({ isOpen, onClose, initial, existingNames, onSave
                   >
                     <IconSend size={13} /> Test Send
                   </button>
+                  {testBadge(testStatus[t.id] ?? 'idle')}
                 </HStack>
               </div>
             ))}
@@ -377,6 +401,8 @@ export default function AlertDeliverySettingsPage() {
   const [rules, setRules] = useState<DeliveryRule[]>(MOCK_RULES);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<DeliveryRule | null>(null);
+  // Delete는 즉시 실행하지 않고 ConfirmModal로 확인 후 진행 (다른 리소스 삭제 패턴과 동일)
+  const [deleteTarget, setDeleteTarget] = useState<DeliveryRule | null>(null);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
   const sidebarWidth = sidebarOpen ? 240 : 40;
@@ -391,13 +417,19 @@ export default function AlertDeliverySettingsPage() {
     setDrawerOpen(true);
   };
 
-  const handleSave = (data: Omit<DeliveryRule, 'id'>) => {
+  const handleSave = (data: Omit<DeliveryRule, 'id' | 'enabled'>) => {
     if (editTarget) {
+      // 수정 시 Status는 건드리지 않는다 (Action 메뉴에서만 토글)
       setRules((prev) => prev.map((r) => (r.id === editTarget.id ? { ...r, ...data } : r)));
     } else {
-      setRules((prev) => [...prev, { ...data, id: `drule-${Date.now()}` }]);
+      // 새 Rule의 첫 상태는 항상 Enabled
+      setRules((prev) => [...prev, { ...data, enabled: true, id: `drule-${Date.now()}` }]);
     }
   };
+
+  // Enable/Disable 즉시 토글 — 리스트 Action 메뉴 전용
+  const toggleEnabled = (id: string) =>
+    setRules((prev) => prev.map((r) => (r.id === id ? { ...r, enabled: !r.enabled } : r)));
 
   // ── TDS Table columns (raw <table> 대신 TDS Table 사용) ──────────────────────
   const columns: TableColumn<DeliveryRule>[] = [
@@ -427,21 +459,29 @@ export default function AlertDeliverySettingsPage() {
       flex: 1,
       minWidth: columnMinWidths.name,
       render: (_: any, row: DeliveryRule) => (
-        <div className="flex flex-wrap gap-1">
-          {row.matchedRules.slice(0, 2).map((r) => (
-            <span
-              key={r}
-              className="inline-flex items-center px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-subtle)] border border-[var(--color-border-default)]"
-            >
-              {r}
-            </span>
-          ))}
-          {row.matchedRules.length > 2 && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              +{row.matchedRules.length - 2} more
-            </span>
-          )}
-        </div>
+        // TDS BadgeList — maxVisible 초과분은 "+N" 배지 + Popover로 표시
+        <BadgeList
+          items={row.matchedRules}
+          maxVisible={2}
+          popoverTitle={`All rules (${row.matchedRules.length})`}
+        />
+      ),
+    },
+    {
+      key: 'severity',
+      label: 'Severity',
+      width: fixedColumns.statusLabel,
+      resizable: false,
+      render: (_: any, row: DeliveryRule) => (
+        <span
+          className={`inline-flex items-center px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm font-medium ${
+            row.severity === 'Critical'
+              ? 'text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]'
+              : 'text-[var(--color-state-warning)] bg-[var(--color-state-warning-bg)]'
+          }`}
+        >
+          {row.severity}
+        </span>
       ),
     },
     {
@@ -480,7 +520,12 @@ export default function AlertDeliverySettingsPage() {
       render: (_: any, row: DeliveryRule) => {
         const items: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => openEdit(row) },
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => deleteRule(row.id) },
+          {
+            id: 'toggle-enabled',
+            label: row.enabled ? 'Disable' : 'Enable',
+            onClick: () => toggleEnabled(row.id),
+          },
+          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => setDeleteTarget(row) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -558,10 +603,6 @@ export default function AlertDeliverySettingsPage() {
           resizable={false}
           emptyMessage={'No delivery rules yet. Create one with "New Rule".'}
         />
-
-        <p className="text-body-sm text-[var(--color-text-subtle)]">
-          {rules.filter((r) => r.enabled).length} of {rules.length} rules enabled
-        </p>
       </VStack>
 
       <RoutingRuleFormDrawer
@@ -571,6 +612,23 @@ export default function AlertDeliverySettingsPage() {
         initial={editTarget}
         existingNames={rules.map((r) => r.name)}
         onSave={handleSave}
+      />
+
+      {/* Delete Confirmation Modal — 리소스 삭제 공통 패턴 (ComputeAdminImagesPage 참조) */}
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Delete delivery rule"
+        description="Removing the selected delivery rule is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Rule Name"
+        infoValue={deleteTarget?.name}
+        onConfirm={() => {
+          if (deleteTarget) deleteRule(deleteTarget.id);
+          setDeleteTarget(null);
+        }}
       />
     </PageShell>
   );
