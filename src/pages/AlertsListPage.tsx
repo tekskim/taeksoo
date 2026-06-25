@@ -16,13 +16,14 @@ import {
   Drawer,
   FormField,
   Textarea,
-  InfoBox,
   Table,
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  StatusIndicator,
+  type StatusType,
 } from '@/design-system';
 import { AlertSidebar } from '@/components/AlertSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -53,7 +54,7 @@ const MOCK_ALERTS: AlertRow[] = [
     severity: 'Critical',
     state: 'Firing',
     target: 'node-03',
-    startedAt: '2026-06-05 09:12',
+    startedAt: '2026-06-05 09:12:00',
     updatedAt: null,
     updatedBy: null,
   },
@@ -64,8 +65,8 @@ const MOCK_ALERTS: AlertRow[] = [
     severity: 'Critical',
     state: 'Acknowledged',
     target: 'ceph-osd-7',
-    startedAt: '2026-06-05 09:05',
-    updatedAt: '2026-06-05 09:08',
+    startedAt: '2026-06-05 09:05:00',
+    updatedAt: '2026-06-05 09:08:00',
     updatedBy: 'Kim',
   },
   {
@@ -75,8 +76,8 @@ const MOCK_ALERTS: AlertRow[] = [
     severity: 'Warning',
     state: 'Acknowledged',
     target: 'api-gateway',
-    startedAt: '2026-06-05 08:55',
-    updatedAt: '2026-06-05 09:02',
+    startedAt: '2026-06-05 08:55:00',
+    updatedAt: '2026-06-05 09:02:00',
     updatedBy: 'Park',
   },
   {
@@ -86,7 +87,7 @@ const MOCK_ALERTS: AlertRow[] = [
     severity: 'Warning',
     state: 'Firing',
     target: 'worker-02',
-    startedAt: '2026-06-05 08:44',
+    startedAt: '2026-06-05 08:44:00',
     updatedAt: null,
     updatedBy: null,
   },
@@ -97,8 +98,8 @@ const MOCK_ALERTS: AlertRow[] = [
     severity: 'Warning',
     state: 'Resolved',
     target: 'ingress',
-    startedAt: '2026-06-05 07:50',
-    updatedAt: '2026-06-05 08:30',
+    startedAt: '2026-06-05 07:50:00',
+    updatedAt: '2026-06-05 08:30:00',
     updatedBy: 'Lee',
   },
   {
@@ -108,7 +109,7 @@ const MOCK_ALERTS: AlertRow[] = [
     severity: 'Critical',
     state: 'Firing',
     target: 'auth-service',
-    startedAt: '2026-06-05 08:30',
+    startedAt: '2026-06-05 08:30:00',
     updatedAt: null,
     updatedBy: null,
   },
@@ -119,8 +120,8 @@ const MOCK_ALERTS: AlertRow[] = [
     severity: 'Warning',
     state: 'Acknowledged',
     target: 'storage-ctrl',
-    startedAt: '2026-06-04 22:10',
-    updatedAt: '2026-06-04 22:15',
+    startedAt: '2026-06-04 22:10:00',
+    updatedAt: '2026-06-04 22:15:00',
     updatedBy: 'Choi',
   },
   {
@@ -130,31 +131,41 @@ const MOCK_ALERTS: AlertRow[] = [
     severity: 'Critical',
     state: 'Resolved',
     target: 'compute-worker',
-    startedAt: '2026-06-04 18:45',
-    updatedAt: '2026-06-04 19:10',
+    startedAt: '2026-06-04 18:45:00',
+    updatedAt: '2026-06-04 19:10:00',
     updatedBy: 'Kim',
   },
 ];
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 // 정책 2-4: Resolve Comment 필수, 최대 1,000자
 const MAX_RESOLVE_COMMENT = 1000;
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-/** 최초 발생 시각으로부터 경과 시간 (정책 1-3: Started At = 시각 + 경과시간) */
-function elapsedSince(started: string): string {
-  const ts = Date.parse(started.replace(' ', 'T'));
-  if (Number.isNaN(ts)) return '';
-  const diffMs = Date.now() - ts;
-  if (diffMs < 0) return 'just now';
-  const min = Math.floor(diffMs / 60000);
-  if (min < 1) return 'just now';
-  if (min < 60) return `${min}m ago`;
-  const hr = Math.floor(min / 60);
-  if (hr < 24) return `${hr}h ago`;
-  const day = Math.floor(hr / 24);
-  return `${day}d ago`;
+/** TDS UX writing(영문) 날짜+시각 표기 — 테이블이므로 UTC·초 생략: Mth DD, YYYY HH:mm */
+const MONTH_ABBR = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+function fmtDateTime(value: string | null): string {
+  if (!value) return '-';
+  const d = new Date(value.replace(' ', 'T'));
+  if (Number.isNaN(d.getTime())) return value;
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mi = String(d.getMinutes()).padStart(2, '0');
+  return `${MONTH_ABBR[d.getMonth()]} ${String(d.getDate()).padStart(2, '0')}, ${d.getFullYear()} ${hh}:${mi}`;
 }
 
 // ── Badge helpers ─────────────────────────────────────────────────────────────
@@ -173,28 +184,24 @@ function SeverityBadge({ severity }: { severity: AlertSeverity }) {
   );
 }
 
+// 정책(Status 정의): TDS StatusIndicator label-only badge + 시맨틱 색상.
+// status는 색상 계열만 결정(label-only라 아이콘은 노출 안 됨), 라벨은 도메인 값으로 override.
+// Firing→Danger(Red) / Acknowledged→Warning(Orange) / Resolved→Success(Green)
+const ALERT_STATE_STATUS: Record<AlertState, StatusType> = {
+  Firing: 'error',
+  Acknowledged: 'degraded',
+  Resolved: 'active',
+};
 function StateBadge({ state }: { state: AlertState }) {
-  const styles: Record<AlertState, string> = {
-    Firing: 'text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]',
-    Acknowledged: 'text-[var(--color-state-warning)] bg-[var(--color-state-warning-bg)]',
-    Resolved: 'text-[var(--color-state-success)] bg-[var(--color-state-success-bg)]',
-  };
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm font-medium ${styles[state]}`}
-    >
-      {state}
-    </span>
+    <StatusIndicator status={ALERT_STATE_STATUS[state]} label={state} layout="badge" hideIcon />
   );
 }
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
-type StateFilter = 'Active' | 'Resolved';
-
 export default function AlertsListPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [stateFilter, setStateFilter] = useState<StateFilter>('Active');
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [page, setPage] = useState(1);
   const [alertRows, setAlertRows] = useState<AlertRow[]>(MOCK_ALERTS);
@@ -211,13 +218,12 @@ export default function AlertsListPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   const filteredAlerts = useMemo(() => {
+    // 정책 1-2: 탭 구분 없이 한 페이지에서 관리하되 Resolved는 기본 미표시.
+    // Filter Search에 조건이 하나라도 추가되면 그때 Resolved도 노출 대상이 된다(필터 결과에 한함).
+    const hasFilters = appliedFilters.length > 0;
     return alertRows
       .filter((a) => {
-        const matchTab =
-          stateFilter === 'Active'
-            ? a.state === 'Firing' || a.state === 'Acknowledged'
-            : a.state === 'Resolved';
-
+        if (!hasFilters && a.state === 'Resolved') return false;
         for (const f of appliedFilters) {
           if (f.fieldId === 'state' && a.state !== f.value) return false;
           if (f.fieldId === 'severity' && a.severity !== f.value) return false;
@@ -229,15 +235,22 @@ export default function AlertsListPage() {
           if (f.fieldId === 'target' && !a.target.toLowerCase().includes(f.value.toLowerCase()))
             return false;
         }
-
-        return matchTab;
+        return true;
       })
       .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
-  }, [alertRows, stateFilter, appliedFilters]);
+  }, [alertRows, appliedFilters]);
 
   const totalPages = Math.max(1, Math.ceil(filteredAlerts.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const pagedAlerts = filteredAlerts.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  // Resolve 대상 행 목록 (단일/복수 통일). 단일=1행, 복수=Acknowledged 매칭 행.
+  const resolveRows: AlertRow[] = !resolveTarget
+    ? []
+    : resolveTarget.type === 'single'
+      ? [resolveTarget.row]
+      : alertRows.filter((a) => resolveTarget.ids.includes(a.id));
+  const resolveCount = resolveRows.length;
 
   // ── 선택된 행의 상태 기반 Bulk Action 활성 조건 (정책 1-6) ──────────────────
   // 혼합 선택 시 해당 상태가 아닌 항목은 제외하고 처리한다.
@@ -253,7 +266,7 @@ export default function AlertsListPage() {
   };
 
   const handleAcknowledge = () => {
-    const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
+    const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
     setAlertRows((prev) =>
       prev.map((a) =>
         selectedKeys.includes(a.id) && a.state === 'Firing'
@@ -272,7 +285,7 @@ export default function AlertsListPage() {
   };
 
   const handleAcknowledgeSingle = (row: AlertRow) => {
-    const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
+    const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
     setAlertRows((prev) =>
       prev.map((a) =>
         a.id === row.id
@@ -289,7 +302,7 @@ export default function AlertsListPage() {
 
   const confirmResolve = () => {
     if (!resolveTarget) return;
-    const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
+    const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
     if (resolveTarget.type === 'single') {
       setAlertRows((prev) =>
         prev.map((a) =>
@@ -323,14 +336,7 @@ export default function AlertsListPage() {
       render: (_: any, row: AlertRow) => <StateBadge state={row.state} />,
     },
     {
-      key: 'severity',
-      label: 'Severity',
-      width: fixedColumns.statusLabel,
-      align: 'center',
-      resizable: false,
-      render: (_: any, row: AlertRow) => <SeverityBadge severity={row.severity} />,
-    },
-    {
+      // TDS 컬럼 순서: Status 다음에 Name(Alert Rule)
       key: 'alertRuleName',
       label: 'Alert Rule',
       flex: 1,
@@ -347,6 +353,14 @@ export default function AlertsListPage() {
       ),
     },
     {
+      key: 'severity',
+      label: 'Severity',
+      width: fixedColumns.statusLabel,
+      align: 'center',
+      resizable: false,
+      render: (_: any, row: AlertRow) => <SeverityBadge severity={row.severity} />,
+    },
+    {
       key: 'target',
       label: 'Target',
       flex: 1,
@@ -358,29 +372,7 @@ export default function AlertsListPage() {
       ),
     },
     {
-      key: 'startedAt',
-      label: 'Started At',
-      flex: 1,
-      minWidth: columnMinWidths.timestamp,
-      render: (_: any, row: AlertRow) => (
-        <VStack gap={0.5}>
-          <span className="text-body-sm text-[var(--color-text-default)]">{row.startedAt}</span>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            {elapsedSince(row.startedAt)}
-          </span>
-        </VStack>
-      ),
-    },
-    {
-      key: 'updatedAt',
-      label: 'Updated At',
-      flex: 1,
-      minWidth: columnMinWidths.updatedAt,
-      render: (_: any, row: AlertRow) => (
-        <span className="text-body-sm text-[var(--color-text-subtle)]">{row.updatedAt ?? '-'}</span>
-      ),
-    },
-    {
+      // TDS 컬럼 순서: 기타 속성(Updated By)은 Date 컬럼들 앞에 배치
       key: 'updatedBy',
       label: 'Updated By',
       flex: 1,
@@ -389,58 +381,72 @@ export default function AlertsListPage() {
         <span className="text-body-sm text-[var(--color-text-subtle)]">{row.updatedBy ?? '-'}</span>
       ),
     },
-    // Resolved 알림은 수행 가능한 액션이 없으므로 Action 컬럼을 숨긴다
-    ...(stateFilter === 'Resolved'
-      ? []
-      : [
-          {
-            key: '_action',
-            label: 'Action',
-            width: fixedColumns.actions,
-            align: 'center',
-            resizable: false,
-            render: (_: any, row: AlertRow) => {
-              // 상태별로 수행 가능한 액션만 노출한다.
-              // Firing → Acknowledge만, Acknowledged → Resolve만.
-              const items: ContextMenuItem[] = [
-                ...(row.state === 'Firing'
-                  ? [
-                      {
-                        id: 'acknowledge',
-                        label: 'Acknowledge',
-                        onClick: () => handleAcknowledgeSingle(row),
-                      },
-                    ]
-                  : []),
-                ...(row.state === 'Acknowledged'
-                  ? [
-                      {
-                        id: 'resolve',
-                        label: 'Resolve',
-                        onClick: () => handleResolveSingle(row),
-                      },
-                    ]
-                  : []),
-              ];
-              return (
-                <div onClick={(e) => e.stopPropagation()}>
-                  <ContextMenu items={items} trigger="click" align="right">
-                    <button
-                      aria-label="Row actions"
-                      className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
-                    >
-                      <IconDotsCircleHorizontal
-                        size={16}
-                        stroke={1.5}
-                        className="text-[var(--color-text-subtle)]"
-                      />
-                    </button>
-                  </ContextMenu>
-                </div>
-              );
-            },
-          },
-        ]),
+    {
+      key: 'startedAt',
+      label: 'Started At',
+      flex: 1,
+      minWidth: columnMinWidths.timestamp,
+      render: (_: any, row: AlertRow) => (
+        <span className="text-body-sm text-[var(--color-text-default)]">
+          {fmtDateTime(row.startedAt)}
+        </span>
+      ),
+    },
+    {
+      key: 'updatedAt',
+      label: 'Updated At',
+      flex: 1,
+      minWidth: columnMinWidths.updatedAt,
+      render: (_: any, row: AlertRow) => (
+        <span className="text-body-sm text-[var(--color-text-subtle)]">
+          {fmtDateTime(row.updatedAt)}
+        </span>
+      ),
+    },
+    {
+      key: '_action',
+      label: 'Action',
+      width: fixedColumns.actions,
+      align: 'center',
+      resizable: false,
+      render: (_: any, row: AlertRow) => {
+        // 상태별로 수행 가능한 액션만 노출. Firing → Acknowledge, Acknowledged → Resolve.
+        // Resolved는 수행 가능한 액션이 없어 메뉴 대신 '-' 표기.
+        const items: ContextMenuItem[] = [
+          ...(row.state === 'Firing'
+            ? [
+                {
+                  id: 'acknowledge',
+                  label: 'Acknowledge',
+                  onClick: () => handleAcknowledgeSingle(row),
+                },
+              ]
+            : []),
+          ...(row.state === 'Acknowledged'
+            ? [{ id: 'resolve', label: 'Resolve', onClick: () => handleResolveSingle(row) }]
+            : []),
+        ];
+        if (items.length === 0) {
+          return <span className="text-body-sm text-[var(--color-text-subtle)]">-</span>;
+        }
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={items} trigger="click" align="right">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--color-text-subtle)]"
+                />
+              </button>
+            </ContextMenu>
+          </div>
+        );
+      },
+    },
   ];
 
   return (
@@ -478,27 +484,6 @@ export default function AlertsListPage() {
     >
       <VStack gap={4}>
         <PageHeader title="Alert Board" />
-
-        {/* State filter tabs: Active / Resolved */}
-        <HStack gap={0} className="border-b border-[var(--color-border-default)] w-full">
-          {(['Active', 'Resolved'] as StateFilter[]).map((s) => (
-            <button
-              key={s}
-              onClick={() => {
-                setStateFilter(s);
-                setPage(1);
-                setSelectedKeys([]);
-              }}
-              className={`px-4 py-2 text-body-md font-medium border-b-2 transition-colors ${
-                stateFilter === s
-                  ? 'border-[var(--color-action-primary)] text-[var(--color-action-primary)]'
-                  : 'border-transparent text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]'
-              }`}
-            >
-              {s}
-            </button>
-          ))}
-        </HStack>
 
         {/* List Toolbar */}
         <ListToolbar
@@ -547,27 +532,26 @@ export default function AlertsListPage() {
             </ListToolbar.Actions>
           }
           bulkActions={
-            // 정책 1-4: Resolved는 액션 불가 — Resolved 탭에선 Bulk 영역 숨김
-            stateFilter === 'Resolved' ? undefined : (
-              <ListToolbar.Actions>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  disabled={!canBulkAcknowledge}
-                  onClick={handleAcknowledge}
-                >
-                  Acknowledge
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  disabled={!canBulkResolve}
-                  onClick={handleBulkResolve}
-                >
-                  Resolve
-                </Button>
-              </ListToolbar.Actions>
-            )
+            // 단일 페이지에서 전 상태 관리 — 선택된 행의 상태에 따라 버튼 활성화.
+            // (Firing→Acknowledge, Acknowledged→Resolve / Resolved는 선택돼도 액션 없음)
+            <ListToolbar.Actions>
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={!canBulkAcknowledge}
+                onClick={handleAcknowledge}
+              >
+                Acknowledge
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={!canBulkResolve}
+                onClick={handleBulkResolve}
+              >
+                Resolve
+              </Button>
+            </ListToolbar.Actions>
           }
         />
 
@@ -585,8 +569,9 @@ export default function AlertsListPage() {
           data={pagedAlerts}
           rowKey="id"
           onRowClick={(row) => navigate(`/alerts/${row.id}`)}
-          // 정책 1-4: Resolved는 체크박스 선택 불가
-          selectable={stateFilter !== 'Resolved'}
+          selectable
+          // 정책 1-4: Resolved는 체크박스 선택 불가 (Bulk/Action도 자연히 불가)
+          isRowSelectable={(row) => row.state !== 'Resolved'}
           selectionType="checkbox"
           selectedKeys={selectedKeys}
           onSelectionChange={setSelectedKeys}
@@ -603,13 +588,9 @@ export default function AlertsListPage() {
       <Drawer
         isOpen={!!resolveTarget}
         onClose={() => setResolveTarget(null)}
-        title={
-          resolveTarget?.type === 'bulk'
-            ? `Resolve Alerts (${resolveTarget.ids.length})`
-            : 'Resolve Alert'
-        }
+        title={resolveCount > 1 ? 'Resolve Alerts' : 'Resolve Alert'}
         description={
-          resolveTarget?.type === 'bulk'
+          resolveCount > 1
             ? 'Enter a comment to resolve the alerts. The action will be recorded in the timeline.'
             : 'Enter a comment to resolve the alert. The action will be recorded in the timeline.'
         }
@@ -631,13 +612,32 @@ export default function AlertsListPage() {
         }
       >
         <VStack gap={4}>
-          {/* 대상 알림 컨텍스트 — TDS InfoBox 패턴 (AdminInstanceMigrateDrawer 참조) */}
-          {resolveTarget?.type === 'single' && (
-            <InfoBox.Group>
-              <InfoBox label="Alert ID" value={resolveTarget.row.id} />
-              <InfoBox label="Target" value={resolveTarget.row.target} />
-              <InfoBox label="Severity" value={resolveTarget.row.severity} />
-            </InfoBox.Group>
+          {/* 대상 Alert 목록 — Rule 이름 + ID만. 단일/복수 통일, 1개일 땐 (n) 미표시 */}
+          {resolveCount > 0 && (
+            <div>
+              <div className="mb-2 text-label-sm text-[var(--color-text-default)]">
+                Alerts to resolve{resolveCount > 1 ? ` (${resolveCount})` : ''}
+              </div>
+              <VStack
+                gap={0}
+                className="max-h-[168px] overflow-auto rounded-[var(--radius-md)] border border-[var(--color-border-default)]"
+              >
+                {resolveRows.map((a) => (
+                  <div
+                    key={a.id}
+                    className="truncate border-b border-[var(--color-border-subtle)] px-3 py-2.5 text-body-sm last:border-0"
+                  >
+                    <span className="font-medium text-[var(--color-text-default)]">
+                      {a.alertRuleName}
+                    </span>
+                    <span className="font-mono text-[var(--color-text-subtle)]">
+                      {' '}
+                      (ID: {a.shortId})
+                    </span>
+                  </div>
+                ))}
+              </VStack>
+            </div>
           )}
           {/* 정책 2-4: Comment만 입력. 필수, 최대 1,000자. (AlertDetailPage 드로어와 동일) */}
           <FormField label="Comment" required>
