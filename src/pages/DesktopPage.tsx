@@ -97,6 +97,7 @@ import imgIam from '@/assets/appIcon/iam.webp';
 import imgCompute from '@/assets/appIcon/compute.webp';
 import imgStorage from '@/assets/appIcon/storage.webp';
 import imgContainer from '@/assets/appIcon/container.webp';
+import imgContainerPlatform from '@/assets/appIcon/container-platform.svg?url';
 import imgAi from '@/assets/appIcon/aiplatform.png';
 import imgAgent from '@/assets/appIcon/agentops.webp';
 import imgSettings from '@/assets/appIcon/settings.webp';
@@ -154,7 +155,7 @@ const DESKTOP_ICONS_META = [
   { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
   { id: 'compute', icon: imgCompute, label: 'Compute' },
   { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
-  { id: 'container-platform', icon: imgContainer, label: 'Container Platform' },
+  { id: 'container-platform', icon: imgContainerPlatform, label: 'Container Platform' },
   { id: 'aegis-container', icon: imgContainer, label: 'Aegis Container' },
   { id: 'metis-container', icon: imgMetisContainer, label: 'Metis Container' },
   { id: 'app-catalog', icon: imgAppCatalog, label: 'App Catalog' },
@@ -2270,7 +2271,7 @@ export function DesktopPage() {
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
     'container-platform': {
       name: 'Container Platform',
-      icon: imgContainer,
+      icon: imgContainerPlatform,
       initialPath: '/container-platform/overview',
     },
     'aegis-container': { name: 'Aegis Container', icon: imgContainer, initialPath: '/container' },
