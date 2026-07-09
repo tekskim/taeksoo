@@ -1,5 +1,5 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
-import { IconLayoutDashboard, IconTopologyStar, IconRocket } from '@tabler/icons-react';
+import { IconLayoutDashboard, IconTopologyStar, IconRocket, IconBrain } from '@tabler/icons-react';
 import { FolderCog } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
@@ -7,9 +7,9 @@ import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/Desktop
 /* ----------------------------------------
    Container Platform Sidebar
 
-   A single persistent 200px left sidebar with exactly 4 sections.
-   No ContainerMode / cluster / drawer / icon-sidebar complexity —
-   this is the Walking Skeleton shell (Phase 1).
+   A single persistent 200px left sidebar. Overview / Clusters / Nodes /
+   Workloads / AI Workloads. No ContainerMode / cluster / drawer /
+   icon-sidebar complexity — this is the Walking Skeleton shell (Phase 1).
    ---------------------------------------- */
 
 export const CONTAINER_PLATFORM_SIDEBAR_WIDTH = 200;
@@ -60,6 +60,12 @@ export function ContainerPlatformSidebar() {
               label="Workloads"
               href="/container-platform/workloads"
               active={isActive('/container-platform/workloads')}
+            />
+            <MenuItem
+              icon={<IconBrain size={16} stroke={1.5} />}
+              label="AI Workloads"
+              href="/container-platform/ai-workloads"
+              active={isActive('/container-platform/ai-workloads')}
             />
           </MenuSection>
         </VStack>
