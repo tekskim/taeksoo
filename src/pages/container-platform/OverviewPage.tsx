@@ -6,13 +6,13 @@ import {
   VStack,
   HStack,
   Badge,
+  MetricCard,
   Table,
   type TableColumn,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
 import { useNavigate } from 'react-router-dom';
-import type { ReactNode } from 'react';
 import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
@@ -31,38 +31,6 @@ import type { ClusterSource, HealthStatus } from './containerPlatformTypes';
    Read-only estate rollup aggregated from the previously fragmented Aegis /
    Metis surfaces. All numbers come from getEstateSummary() — no backend.
    ---------------------------------------- */
-
-/** A single KPI tile. `emphasis` highlights at-risk signals (OVW-03). */
-function Tile({
-  label,
-  value,
-  hint,
-  emphasis = 'default',
-}: {
-  label: string;
-  value: ReactNode;
-  hint?: ReactNode;
-  emphasis?: 'default' | 'warning' | 'critical';
-}) {
-  // No semantic danger/warning border tokens exist in TDS — at-risk tiles are
-  // differentiated by their colored hint Badge; emphasis just thickens the border.
-  const emphasisRing =
-    emphasis === 'default'
-      ? 'border-[var(--color-border-default)]'
-      : 'border-[var(--color-border-strong)]';
-
-  return (
-    <div
-      className={`flex-1 min-w-0 bg-[var(--color-surface-default)] border ${emphasisRing} rounded-lg px-4 py-3`}
-    >
-      <VStack gap={1}>
-        <span className="text-body-sm text-[var(--color-text-muted)] truncate">{label}</span>
-        <span className="text-heading-h3 text-[var(--color-text-default)]">{value}</span>
-        {hint && <div className="mt-1">{hint}</div>}
-      </VStack>
-    </div>
-  );
-}
 
 interface SourceRow {
   id: ClusterSource;
@@ -136,17 +104,22 @@ export default function OverviewPage() {
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={4}>
-        <PageHeader title="Overview" />
+        <VStack gap={1}>
+          <PageHeader title="Overview" />
+          <span className="text-body-sm text-[var(--color-text-muted)]">
+            One read-only plane across Aegis Container, Metis Container, Metis Run, and ML Studio.
+          </span>
+        </VStack>
 
         {/* OVW-01: estate totals + cluster health rollup */}
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Estate</span>
-          <HStack gap={3} align="stretch" className="w-full">
-            <Tile label="Clusters" value={summary.clusterCount} />
-            <Tile label="Nodes" value={summary.nodeCount} />
-            <Tile label="Workloads" value={summary.workloadCount} />
-            <Tile
-              label="Cluster health"
+          <MetricCard.Group>
+            <MetricCard title="Clusters" value={summary.clusterCount} />
+            <MetricCard title="Nodes" value={summary.nodeCount} />
+            <MetricCard title="Workloads" value={summary.workloadCount} />
+            <MetricCard
+              title="Cluster health"
               value={
                 <HStack gap={1.5} align="center">
                   {HEALTH_ORDER.map((h) => (
@@ -157,70 +130,76 @@ export default function OverviewPage() {
                 </HStack>
               }
             />
-          </HStack>
+          </MetricCard.Group>
         </VStack>
 
-        {/* OVW-03: at-risk signals, visually emphasized */}
+        {/* OVW-03: at-risk signals, emphasized via the MetricCard error accent */}
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">At risk</span>
-          <HStack gap={3} align="stretch" className="w-full">
-            <Tile
-              label="Unhealthy nodes"
-              value={summary.unhealthyNodeCount}
-              emphasis={summary.unhealthyNodeCount > 0 ? 'warning' : 'default'}
-              hint={
-                <Badge
-                  theme={summary.unhealthyNodeCount > 0 ? 'yellow' : 'green'}
-                  type="subtle"
-                  size="sm"
-                >
-                  {summary.unhealthyNodeCount > 0 ? 'Needs attention' : 'All Ready'}
-                </Badge>
+          <MetricCard.Group>
+            <MetricCard
+              title="Unhealthy nodes"
+              accent={summary.unhealthyNodeCount > 0 ? 'error' : undefined}
+              value={
+                <HStack gap={2} align="center">
+                  <span>{summary.unhealthyNodeCount}</span>
+                  <Badge
+                    theme={summary.unhealthyNodeCount > 0 ? 'yellow' : 'green'}
+                    type="subtle"
+                    size="sm"
+                  >
+                    {summary.unhealthyNodeCount > 0 ? 'Needs attention' : 'All Ready'}
+                  </Badge>
+                </HStack>
               }
             />
-            <Tile
-              label="Failing workloads"
-              value={summary.failingWorkloadCount}
-              emphasis={summary.failingWorkloadCount > 0 ? 'critical' : 'default'}
-              hint={
-                <Badge
-                  theme={summary.failingWorkloadCount > 0 ? 'red' : 'green'}
-                  type="subtle"
-                  size="sm"
-                >
-                  {summary.failingWorkloadCount > 0 ? 'Failed' : 'None failing'}
-                </Badge>
+            <MetricCard
+              title="Failing workloads"
+              accent={summary.failingWorkloadCount > 0 ? 'error' : undefined}
+              value={
+                <HStack gap={2} align="center">
+                  <span>{summary.failingWorkloadCount}</span>
+                  <Badge
+                    theme={summary.failingWorkloadCount > 0 ? 'red' : 'green'}
+                    type="subtle"
+                    size="sm"
+                  >
+                    {summary.failingWorkloadCount > 0 ? 'Failed' : 'None failing'}
+                  </Badge>
+                </HStack>
               }
             />
-            {/* Spacers keep the at-risk tiles aligned with the 4-up estate row. */}
+            {/* Spacers keep the at-risk cards aligned with the 4-up estate row. */}
             <div className="flex-1 min-w-0" aria-hidden />
             <div className="flex-1 min-w-0" aria-hidden />
-          </HStack>
+          </MetricCard.Group>
         </VStack>
 
         {/* AI workloads: Metis Run (serving) + ML Studio (training/notebooks) rollup */}
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">AI workloads</span>
-          <HStack gap={3} align="stretch" className="w-full">
-            <Tile label="Inference services" value={ai.inferenceServiceCount} />
-            <Tile label="Training jobs" value={ai.trainingJobCount} />
-            <Tile label="Notebooks" value={ai.notebookCount} />
-            <Tile
-              label="GPUs (used / total)"
-              value={`${gpu.usedGpus} / ${gpu.totalGpus}`}
-              hint={
-                <Badge
-                  theme={gpu.usedGpus >= gpu.totalGpus ? 'yellow' : 'blue'}
-                  type="subtle"
-                  size="sm"
-                >
-                  {gpu.totalGpus > 0
-                    ? `${Math.round((gpu.usedGpus / gpu.totalGpus) * 100)}% allocated`
-                    : 'No GPUs'}
-                </Badge>
+          <MetricCard.Group>
+            <MetricCard title="Inference services" value={ai.inferenceServiceCount} />
+            <MetricCard title="Training jobs" value={ai.trainingJobCount} />
+            <MetricCard title="Notebooks" value={ai.notebookCount} />
+            <MetricCard
+              title="GPUs (used / total)"
+              value={
+                <HStack gap={2} align="center">
+                  <span>{`${gpu.usedGpus} / ${gpu.totalGpus}`}</span>
+                  <Badge
+                    theme={gpu.usedGpus >= gpu.totalGpus ? 'yellow' : 'blue'}
+                    type="subtle"
+                    size="sm"
+                  >
+                    {gpu.totalGpus > 0
+                      ? `${Math.round((gpu.usedGpus / gpu.totalGpus) * 100)}% allocated`
+                      : 'No GPUs'}
+                  </Badge>
+                </HStack>
               }
             />
-          </HStack>
+          </MetricCard.Group>
         </VStack>
 
         {/* OVW-02: per-source (Aegis vs Metis) fragmentation breakdown */}
