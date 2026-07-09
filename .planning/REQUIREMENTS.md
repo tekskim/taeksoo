@@ -87,17 +87,34 @@ Deferred to a future milestone. Tracked, not in this roadmap.
 
 Which phases cover which requirements. Populated during roadmap creation.
 
-| Requirement               | Phase | Status  |
-| ------------------------- | ----- | ------- |
-| (populated by roadmapper) | —     | Pending |
+| Requirement | Phase                                        | Status  |
+| ----------- | -------------------------------------------- | ------- |
+| PLAT-01     | Phase 1 (Desktop App Registration & Shell)   | Pending |
+| PLAT-02     | Phase 1 (Desktop App Registration & Shell)   | Pending |
+| PLAT-03     | Phase 1 (Desktop App Registration & Shell)   | Pending |
+| TDS-01      | Phase 1 (Desktop App Registration & Shell)   | Pending |
+| TDS-03      | Phase 2 (Cross-Cluster Mock Data Foundation) | Pending |
+| OVW-01      | Phase 3 (Overview Dashboard)                 | Pending |
+| OVW-02      | Phase 3 (Overview Dashboard)                 | Pending |
+| OVW-03      | Phase 3 (Overview Dashboard)                 | Pending |
+| CLU-01      | Phase 4 (Clusters List)                      | Pending |
+| CLU-02      | Phase 4 (Clusters List)                      | Pending |
+| TDS-02      | Phase 4 (Clusters List)                      | Pending |
+| CLU-03      | Phase 5 (Cluster Detail)                     | Pending |
+| NODE-01     | Phase 6 (Nodes List)                         | Pending |
+| NODE-02     | Phase 6 (Nodes List)                         | Pending |
+| NODE-03     | Phase 6 (Nodes List)                         | Pending |
+| WKL-01      | Phase 7 (Workloads List)                     | Pending |
+| WKL-03      | Phase 7 (Workloads List)                     | Pending |
+| WKL-02      | Phase 8 (Workloads Filtering)                | Pending |
 
 **Coverage:**
 
-- v1 requirements: 17 total
-- Mapped to phases: (roadmapper)
-- Unmapped: (roadmapper)
+- v1 requirements: 18 total (source doc previously stated 17 — miscount corrected; 6 categories × 3 REQ-IDs)
+- Mapped to phases: 18/18 ✓
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-07-09_
-_Last updated: 2026-07-09 after initial definition_
+_Last updated: 2026-07-09 after roadmap creation (traceability populated)_
