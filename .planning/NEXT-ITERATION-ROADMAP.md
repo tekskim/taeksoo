@@ -65,4 +65,19 @@ Reference archetypes for AI-on-Kubernetes observability: OpenShift AI, Kubeflow,
 
 ---
 
+## Status (2026-07-09)
+
+- **Phase A — DONE** (AI absorption: Metis Run → Inference Services, ML Studio → Training Jobs + Notebooks, GPU first-class; dedicated AI Workloads section + Overview/Cluster rollups).
+- **Phase B — DONE.** B1 Overview → TDS `MetricCard`; B3 concept subtitle naming the 4 absorbed products; B2 dedicated app icon (`container-platform.svg`).
+- **Phase C — DONE.** C1 Namespaces + Events; C2 Node detail drill-down (Nodes rows clickable); C3 global "Search estate" (sidebar → grouped results).
+- **B4 refactor — DEFERRED on purpose:** internal cleanup, no visible design change, would risk regressing 8 working screens.
+
+**Decisions resolved:** AI Workloads = dedicated section. Container icon = replacement kept + dedicated icon added.
+
+**Verification:** Playwright E2E 16/16 PASS, 0 page errors, 10 screens. eslint/tsc clean, `rspack build` exit 0, no `@thaki/shared`, no hardcoded widths.
+
+Sidebar now: Overview · Clusters · Nodes · Namespaces · Workloads · AI Workloads · Events + global search.
+
+---
+
 _Drafted 2026-07-09. Mockup-only; supersedes the earlier v2 note's backend/deploy/MFE items (dropped per stakeholder)._
