@@ -57,6 +57,7 @@ import { storageMemberRoutes } from '@/routes/storage-member.routes';
 import { agentRoutes } from '@/routes/agent.routes';
 import { iamRoutes } from '@/routes/iam.routes';
 import { containerRoutes } from '@/routes/container.routes';
+import { containerPlatformRoutes } from '@/routes/container-platform.routes';
 import { computeAdminRoutes } from '@/routes/compute-admin.routes';
 import { logsRoutes } from '@/routes/logs.routes';
 import { alertRoutes } from '@/routes/alert.routes';
@@ -153,7 +154,7 @@ const DESKTOP_ICONS_META = [
   { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
   { id: 'compute', icon: imgCompute, label: 'Compute' },
   { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
-  { id: 'container', icon: imgContainer, label: 'Container' },
+  { id: 'container-platform', icon: imgContainer, label: 'Container Platform' },
   { id: 'aegis-container', icon: imgContainer, label: 'Aegis Container' },
   { id: 'metis-container', icon: imgMetisContainer, label: 'Metis Container' },
   { id: 'app-catalog', icon: imgAppCatalog, label: 'App Catalog' },
@@ -1153,6 +1154,7 @@ type AppId =
   | 'storage-domain-admin'
   | 'storage-member'
   | 'container'
+  | 'container-platform'
   | 'aegis-container'
   | 'metis-container'
   | 'agent'
@@ -1273,6 +1275,8 @@ function AppRoutes({ appId }: { appId: AppId }) {
         </ContainerModeContext.Provider>
       );
     }
+    case 'container-platform':
+      return <Routes>{containerPlatformRoutes}</Routes>;
     case 'agent':
       return (
         <Routes>
@@ -2264,6 +2268,11 @@ export function DesktopPage() {
       initialPath: '/storage-member',
     },
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
+    'container-platform': {
+      name: 'Container Platform',
+      icon: imgContainer,
+      initialPath: '/container-platform/overview',
+    },
     'aegis-container': { name: 'Aegis Container', icon: imgContainer, initialPath: '/container' },
     'metis-container': {
       name: 'Metis Container',
@@ -2295,7 +2304,7 @@ export function DesktopPage() {
   const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([
     'compute',
     'storage',
-    'container',
+    'aegis-container',
     'ai-platform',
     'agent',
     'logs',
