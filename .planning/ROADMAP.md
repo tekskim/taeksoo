@@ -19,7 +19,7 @@ estate that is today scattered across four products — read-only, TDS-compliant
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Desktop App Registration & Shell** - Register the Container Platform app + windowed shell with sidebar navigation
+- [x] **Phase 1: Desktop App Registration & Shell** - Register the Container Platform app + windowed shell with sidebar navigation (completed 2026-07-09)
 - [ ] **Phase 2: Cross-Cluster Mock Data Foundation** - Typed inline mock estate (clusters/nodes/workloads) every screen reads from
 - [ ] **Phase 3: Overview Dashboard** - Estate health rollup with summary tiles, per-source breakdown, and at-risk signal
 - [ ] **Phase 4: Clusters List** - Searchable, paginated cross-cluster list via TDS ListToolbar/Table
@@ -44,7 +44,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 4. All shell chrome renders via `@/design-system` components — no raw HTML layout.
    **Plans**: 2 plans
    - [x] 01-01-PLAN.md — Build the Container Platform shell (routes, sidebar, 4 TDS placeholder pages) + register in DesktopPage (5 places)
-   - [ ] 01-02-PLAN.md — Human-verify the walking skeleton end-to-end (open from desktop, navigate 4 sections, no console errors)
+   - [x] 01-02-PLAN.md — Human-verify the walking skeleton end-to-end (open from desktop, navigate 4 sections, no console errors)
          **UI hint**: yes
 
 ### Phase 2: Cross-Cluster Mock Data Foundation
@@ -148,13 +148,13 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
-| Phase                                 | Plans Complete | Status      | Completed |
-| ------------------------------------- | -------------- | ----------- | --------- |
-| 1. Desktop App Registration & Shell   | 1/2            | In Progress |           |
-| 2. Cross-Cluster Mock Data Foundation | 0/TBD          | Not started | -         |
-| 3. Overview Dashboard                 | 0/TBD          | Not started | -         |
-| 4. Clusters List                      | 0/TBD          | Not started | -         |
-| 5. Cluster Detail                     | 0/TBD          | Not started | -         |
-| 6. Nodes List                         | 0/TBD          | Not started | -         |
-| 7. Workloads List                     | 0/TBD          | Not started | -         |
-| 8. Workloads Filtering                | 0/TBD          | Not started | -         |
+| Phase                                 | Plans Complete | Status      | Completed  |
+| ------------------------------------- | -------------- | ----------- | ---------- |
+| 1. Desktop App Registration & Shell   | 2/2            | Complete    | 2026-07-09 |
+| 2. Cross-Cluster Mock Data Foundation | 0/TBD          | Not started | -          |
+| 3. Overview Dashboard                 | 0/TBD          | Not started | -          |
+| 4. Clusters List                      | 0/TBD          | Not started | -          |
+| 5. Cluster Detail                     | 0/TBD          | Not started | -          |
+| 6. Nodes List                         | 0/TBD          | Not started | -          |
+| 7. Workloads List                     | 0/TBD          | Not started | -          |
+| 8. Workloads Filtering                | 0/TBD          | Not started | -          |
