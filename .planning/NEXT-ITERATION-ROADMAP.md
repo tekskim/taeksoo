@@ -12,6 +12,35 @@ Reference archetypes for AI-on-Kubernetes observability: OpenShift AI, Kubeflow,
 
 ---
 
+## Product model — DECIDED: Model A (Rancher-style), 2026-07-09
+
+Container Platform is a **cross-cluster observation + navigation plane**, NOT a re-implementation
+of the full Kubernetes management console. The deep per-resource management already built in
+Aegis/Metis Container is **reused**, not rebuilt.
+
+**Container Platform owns** (estate-wide, read-only): Overview · Clusters (fleet) · Nodes ·
+Namespaces · Workloads overview · **AI Workloads** (the one genuinely new consolidation, absorbing
+Metis Run + ML Studio) · Events · global Search. Job: "see everything across clusters, spot
+problems, find things, then go manage."
+
+**Aegis/Metis Container keep** (per-cluster, full CRUD): the workload/service/storage/network
+resource management, YAML editors, console, and cluster lifecycle — Deployments/StatefulSets/
+DaemonSets/Jobs/CronJobs/Pods, Services, Ingresses, PV/PVC/StorageClass/ConfigMaps/Secrets,
+HPA/LimitRanges/ResourceQuotas/NetworkPolicies/PDB, cluster create/import.
+
+**The seam:** from a Container Platform cluster (or resource row) the operator drills in via an
+**"Open in cluster management"** hand-off that opens the existing Aegis/Metis Container app scoped
+to that cluster. Container Platform never re-implements CRUD. App Catalog stays out (separate project).
+
+**Not chosen:** Model B (CP absorbs everything, retire Aegis/Metis) — too large, discards existing
+investment. Model C (phased pull-up) remains available later if specific management surfaces prove
+worth hoisting into CP.
+
+**Implication (deferred build):** add the drill-in / "Open in cluster management" affordance from CP
+cluster detail; do NOT add CRUD/YAML to CP. (Decision recorded; implementation later.)
+
+---
+
 ## Phase A — AI Workload Absorption (lead, must)
 
 **A1. Extend the estate data model**
