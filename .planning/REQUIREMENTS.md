@@ -18,9 +18,9 @@ Requirements for the MVP (unified read-only observability). Each maps to a roadm
 
 ### Platform Integration
 
-- [ ] **PLAT-01**: A "Container Platform" app icon appears on the desktop grid
-- [ ] **PLAT-02**: Clicking the icon opens Container Platform in its own desktop window
-- [ ] **PLAT-03**: The app has a persistent left sidebar to navigate Overview / Clusters / Nodes / Workloads
+- [x] **PLAT-01**: A "Container Platform" app icon appears on the desktop grid
+- [x] **PLAT-02**: Clicking the icon opens Container Platform in its own desktop window
+- [x] **PLAT-03**: The app has a persistent left sidebar to navigate Overview / Clusters / Nodes / Workloads
 
 ### Overview Dashboard
 
@@ -48,7 +48,7 @@ Requirements for the MVP (unified read-only observability). Each maps to a roadm
 
 ### Design & Data Compliance
 
-- [ ] **TDS-01**: All screens use `@/design-system` components only (PageShell/Table/ListToolbar/Pagination/TopBar/Breadcrumb) — no raw HTML tables
+- [x] **TDS-01**: All screens use `@/design-system` components only (PageShell/Table/ListToolbar/Pagination/TopBar/Breadcrumb) — no raw HTML tables
 - [ ] **TDS-02**: Table column widths use `fixedColumns`/`columnMinWidths` presets — no hardcoded widths
 - [ ] **TDS-03**: All data comes from inline typed TS mock modules — no network/MSW
 
@@ -87,26 +87,26 @@ Deferred to a future milestone. Tracked, not in this roadmap.
 
 Which phases cover which requirements. Populated during roadmap creation.
 
-| Requirement | Phase                                        | Status  |
-| ----------- | -------------------------------------------- | ------- |
-| PLAT-01     | Phase 1 (Desktop App Registration & Shell)   | Pending |
-| PLAT-02     | Phase 1 (Desktop App Registration & Shell)   | Pending |
-| PLAT-03     | Phase 1 (Desktop App Registration & Shell)   | Pending |
-| TDS-01      | Phase 1 (Desktop App Registration & Shell)   | Pending |
-| TDS-03      | Phase 2 (Cross-Cluster Mock Data Foundation) | Pending |
-| OVW-01      | Phase 3 (Overview Dashboard)                 | Pending |
-| OVW-02      | Phase 3 (Overview Dashboard)                 | Pending |
-| OVW-03      | Phase 3 (Overview Dashboard)                 | Pending |
-| CLU-01      | Phase 4 (Clusters List)                      | Pending |
-| CLU-02      | Phase 4 (Clusters List)                      | Pending |
-| TDS-02      | Phase 4 (Clusters List)                      | Pending |
-| CLU-03      | Phase 5 (Cluster Detail)                     | Pending |
-| NODE-01     | Phase 6 (Nodes List)                         | Pending |
-| NODE-02     | Phase 6 (Nodes List)                         | Pending |
-| NODE-03     | Phase 6 (Nodes List)                         | Pending |
-| WKL-01      | Phase 7 (Workloads List)                     | Pending |
-| WKL-03      | Phase 7 (Workloads List)                     | Pending |
-| WKL-02      | Phase 8 (Workloads Filtering)                | Pending |
+| Requirement | Phase                                        | Status   |
+| ----------- | -------------------------------------------- | -------- |
+| PLAT-01     | Phase 1 (Desktop App Registration & Shell)   | Complete |
+| PLAT-02     | Phase 1 (Desktop App Registration & Shell)   | Complete |
+| PLAT-03     | Phase 1 (Desktop App Registration & Shell)   | Complete |
+| TDS-01      | Phase 1 (Desktop App Registration & Shell)   | Complete |
+| TDS-03      | Phase 2 (Cross-Cluster Mock Data Foundation) | Pending  |
+| OVW-01      | Phase 3 (Overview Dashboard)                 | Pending  |
+| OVW-02      | Phase 3 (Overview Dashboard)                 | Pending  |
+| OVW-03      | Phase 3 (Overview Dashboard)                 | Pending  |
+| CLU-01      | Phase 4 (Clusters List)                      | Pending  |
+| CLU-02      | Phase 4 (Clusters List)                      | Pending  |
+| TDS-02      | Phase 4 (Clusters List)                      | Pending  |
+| CLU-03      | Phase 5 (Cluster Detail)                     | Pending  |
+| NODE-01     | Phase 6 (Nodes List)                         | Pending  |
+| NODE-02     | Phase 6 (Nodes List)                         | Pending  |
+| NODE-03     | Phase 6 (Nodes List)                         | Pending  |
+| WKL-01      | Phase 7 (Workloads List)                     | Pending  |
+| WKL-03      | Phase 7 (Workloads List)                     | Pending  |
+| WKL-02      | Phase 8 (Workloads Filtering)                | Pending  |
 
 **Coverage:**
 
