@@ -17,7 +17,12 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
-import { getEstateSummary, getPlatformStatusTheme } from './containerPlatformMockData';
+import {
+  getEstateSummary,
+  getPlatformStatusTheme,
+  getAISummary,
+  getGpuSummary,
+} from './containerPlatformMockData';
 import type { ClusterSource, HealthStatus } from './containerPlatformTypes';
 
 /* ----------------------------------------
@@ -72,6 +77,8 @@ const HEALTH_ORDER: HealthStatus[] = ['Healthy', 'Warning', 'Critical'];
 export default function OverviewPage() {
   const navigate = useNavigate();
   const summary = getEstateSummary();
+  const ai = getAISummary();
+  const gpu = getGpuSummary();
 
   const sourceRows: SourceRow[] = (['Aegis', 'Metis'] as ClusterSource[]).map((src) => ({
     id: src,
@@ -188,6 +195,31 @@ export default function OverviewPage() {
             {/* Spacers keep the at-risk tiles aligned with the 4-up estate row. */}
             <div className="flex-1 min-w-0" aria-hidden />
             <div className="flex-1 min-w-0" aria-hidden />
+          </HStack>
+        </VStack>
+
+        {/* AI workloads: Metis Run (serving) + ML Studio (training/notebooks) rollup */}
+        <VStack gap={2}>
+          <span className="text-label-lg text-[var(--color-text-default)]">AI workloads</span>
+          <HStack gap={3} align="stretch" className="w-full">
+            <Tile label="Inference services" value={ai.inferenceServiceCount} />
+            <Tile label="Training jobs" value={ai.trainingJobCount} />
+            <Tile label="Notebooks" value={ai.notebookCount} />
+            <Tile
+              label="GPUs (used / total)"
+              value={`${gpu.usedGpus} / ${gpu.totalGpus}`}
+              hint={
+                <Badge
+                  theme={gpu.usedGpus >= gpu.totalGpus ? 'yellow' : 'blue'}
+                  type="subtle"
+                  size="sm"
+                >
+                  {gpu.totalGpus > 0
+                    ? `${Math.round((gpu.usedGpus / gpu.totalGpus) * 100)}% allocated`
+                    : 'No GPUs'}
+                </Badge>
+              }
+            />
           </HStack>
         </VStack>
 
