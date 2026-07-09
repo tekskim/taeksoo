@@ -75,7 +75,10 @@ export default function NodesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-text-default)] font-medium truncate block" title={value}>
+        <span
+          className="text-[var(--color-action-primary)] font-medium truncate block"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -187,6 +190,7 @@ export default function NodesPage() {
           data={pagedRows}
           rowKey="id"
           resizable={false}
+          onRowClick={(row) => navigate(`/container-platform/nodes/${row.id}`)}
           emptyMessage="No nodes found."
         />
       </VStack>
