@@ -39,12 +39,12 @@ function Tile({
   hint?: ReactNode;
   emphasis?: 'default' | 'warning' | 'critical';
 }) {
+  // No semantic danger/warning border tokens exist in TDS — at-risk tiles are
+  // differentiated by their colored hint Badge; emphasis just thickens the border.
   const emphasisRing =
-    emphasis === 'critical'
-      ? 'border-[var(--color-border-danger,var(--color-border-strong))]'
-      : emphasis === 'warning'
-        ? 'border-[var(--color-border-warning,var(--color-border-strong))]'
-        : 'border-[var(--color-border-default)]';
+    emphasis === 'default'
+      ? 'border-[var(--color-border-default)]'
+      : 'border-[var(--color-border-strong)]';
 
   return (
     <div

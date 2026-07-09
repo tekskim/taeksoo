@@ -3,7 +3,7 @@
 // Container Platform screen reads from the selectors exported here — there is no
 // backend. Statuses map to TDS Badge themes via getPlatformStatusTheme().
 
-import type { BadgeTheme } from '@/design-system/components/Badge/Badge';
+import type { BadgeTheme } from '@/design-system';
 import { getContainerStatusTheme } from '@/pages/containerStatusUtils';
 import type {
   Cluster,
@@ -263,13 +263,17 @@ export function getEstateSummary(): EstateSummary {
     nodeCount: nodes.length,
     workloadCount: workloads.length,
     clustersByHealth,
-    unhealthyNodeCount: nodes.filter((n) => n.status !== 'Ready').length,
+    unhealthyNodeCount: nodes.filter((n) => n.status === 'NotReady').length,
     failingWorkloadCount: workloads.filter((w) => w.status === 'Failed').length,
     bySource,
   };
 }
 
-// --- Status theming (reuses the container status util; adds Warning=yellow) ------
+// --- Status theming --------------------------------------------------------------
+// Single source of truth for every Container Platform status Badge (health, node,
+// AND workload statuses). Reuses getContainerStatusTheme as the fallback and adds
+// the platform-specific mappings (Warning=yellow, Pending=yellow, Succeeded=gray)
+// so the same status is themed identically on every screen.
 
 const PLATFORM_STATUS_THEME: Record<string, BadgeTheme> = {
   healthy: 'green',
@@ -278,6 +282,9 @@ const PLATFORM_STATUS_THEME: Record<string, BadgeTheme> = {
   schedulingdisabled: 'yellow',
   critical: 'red',
   notready: 'red',
+  // workload statuses
+  pending: 'yellow',
+  succeeded: 'gray',
 };
 
 export function getPlatformStatusTheme(status: string): BadgeTheme {

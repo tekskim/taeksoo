@@ -77,7 +77,7 @@ export default function WorkloadsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-text-primary)] font-medium truncate block" title={value}>
+        <span className="text-[var(--color-text-default)] font-medium truncate block" title={value}>
           {value}
         </span>
       ),

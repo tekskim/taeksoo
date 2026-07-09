@@ -57,13 +57,6 @@ function UsageCell({ value }: { value: number }) {
 const WORKLOAD_STATUSES: WorkloadStatus[] = ['Running', 'Pending', 'Failed', 'Succeeded'];
 const WORKLOAD_KINDS: WorkloadKind[] = ['Deployment', 'StatefulSet', 'DaemonSet', 'Job', 'Pod'];
 
-const WORKLOAD_STATUS_THEME: Record<WorkloadStatus, 'green' | 'yellow' | 'red' | 'gray'> = {
-  Running: 'green',
-  Pending: 'yellow',
-  Failed: 'red',
-  Succeeded: 'gray',
-};
-
 export default function ClusterDetailPage() {
   const navigate = useNavigate();
   const { clusterId = '' } = useParams<{ clusterId: string }>();
@@ -210,7 +203,7 @@ export default function ClusterDetailPage() {
         </span>
         <HStack gap={2} align="center" className="flex-wrap">
           {workloadByStatus.map(({ status, count }) => (
-            <Badge key={status} theme={WORKLOAD_STATUS_THEME[status]} type="subtle" size="sm">
+            <Badge key={status} theme={getPlatformStatusTheme(status)} type="subtle" size="sm">
               {count} {status}
             </Badge>
           ))}
