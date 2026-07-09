@@ -41,6 +41,7 @@ export interface ClusterNode {
   memoryGiB: number;
   cpuUsagePct: number;
   memUsagePct: number;
+  gpuCount: number; // GPUs on this node (0 for non-GPU nodes)
   kubeletVersion: string;
 }
 
@@ -65,4 +66,70 @@ export interface EstateSummary {
   unhealthyNodeCount: number;
   failingWorkloadCount: number;
   bySource: Record<ClusterSource, { clusters: number; nodes: number; workloads: number }>;
+}
+
+// --- AI workloads (Metis Run + ML Studio absorbed into Container Platform) --------
+// Container Platform folds the previously separate AI surfaces in as first-class
+// workload categories: model serving (Metis Run) -> InferenceService, and ML Studio
+// -> TrainingJob + Notebook. GPU is a first-class node/estate resource.
+
+export type AIWorkloadKind = 'InferenceService' | 'TrainingJob' | 'Notebook';
+
+/** Model serving endpoint — absorbed from Metis Run. */
+export interface InferenceService {
+  id: string;
+  name: string;
+  clusterId: string;
+  clusterName: string;
+  source: ClusterSource;
+  status: WorkloadStatus;
+  model: string;
+  framework: string; // vLLM / Triton / TF-Serving / TorchServe
+  gpuCount: number;
+  ready: number;
+  desired: number;
+  rps: number; // mock requests/sec
+  latencyMs: number; // mock p95 latency
+}
+
+/** Training run — absorbed from ML Studio. */
+export interface TrainingJob {
+  id: string;
+  name: string;
+  clusterId: string;
+  clusterName: string;
+  source: ClusterSource;
+  status: WorkloadStatus;
+  framework: string; // PyTorch / TensorFlow / JAX
+  gpuCount: number;
+  progressPct: number;
+  durationHrs: number;
+  owner: string;
+}
+
+export type NotebookState = 'Running' | 'Idle' | 'Stopped';
+
+/** Interactive notebook server — absorbed from ML Studio. */
+export interface Notebook {
+  id: string;
+  name: string;
+  clusterId: string;
+  clusterName: string;
+  source: ClusterSource;
+  state: NotebookState;
+  gpuCount: number;
+  owner: string;
+  image: string;
+}
+
+export interface GpuSummary {
+  usedGpus: number;
+  totalGpus: number;
+}
+
+export interface AISummary {
+  inferenceServiceCount: number;
+  trainingJobCount: number;
+  notebookCount: number;
+  gpus: GpuSummary;
 }

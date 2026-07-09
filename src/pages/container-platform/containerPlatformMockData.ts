@@ -6,11 +6,16 @@
 import type { BadgeTheme } from '@/design-system';
 import { getContainerStatusTheme } from '@/pages/containerStatusUtils';
 import type {
+  AISummary,
   Cluster,
   ClusterNode,
   ClusterSource,
   EstateSummary,
+  GpuSummary,
+  InferenceService,
   NodeRole,
+  Notebook,
+  TrainingJob,
   Workload,
   WorkloadKind,
   WorkloadStatus,
@@ -148,6 +153,8 @@ function buildNodes(): ClusterNode[] {
       else if (cl.status === 'Warning' && i === cl.nodeCount - 1) status = 'SchedulingDisabled';
       const cpuCores = cl.source === 'Metis' ? 32 : 24;
       const memoryGiB = cl.source === 'Metis' ? 256 : 128;
+      // GPUs live on Metis worker nodes (the AI clusters); control-plane + Aegis have none.
+      const gpuCount = cl.source === 'Metis' && !isControl ? 8 : 0;
       out.push({
         id: `${cl.id}-node-${i + 1}`,
         name: `${cl.name}-${isControl ? 'cp' : 'worker'}-${i + 1}`,
@@ -160,6 +167,7 @@ function buildNodes(): ClusterNode[] {
         memoryGiB,
         cpuUsagePct,
         memUsagePct,
+        gpuCount,
         kubeletVersion: KUBELET_BY_VERSION[cl.k8sVersion] ?? cl.k8sVersion,
       });
     }
@@ -269,6 +277,296 @@ export function getEstateSummary(): EstateSummary {
   };
 }
 
+// --- AI workloads (Metis Run + ML Studio absorbed) ------------------------------
+// Deterministic inline mock. These live on the Metis GPU clusters. Statuses reuse
+// WorkloadStatus so they theme through getPlatformStatusTheme like everything else.
+
+export const inferenceServices: InferenceService[] = [
+  {
+    id: 'inf-1',
+    name: 'llama3-70b-chat',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    status: 'Running',
+    model: 'Llama-3-70B-Instruct',
+    framework: 'vLLM',
+    gpuCount: 4,
+    ready: 2,
+    desired: 2,
+    rps: 42,
+    latencyMs: 180,
+  },
+  {
+    id: 'inf-2',
+    name: 'sdxl-turbo',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    status: 'Running',
+    model: 'SDXL-Turbo',
+    framework: 'Triton',
+    gpuCount: 2,
+    ready: 3,
+    desired: 3,
+    rps: 18,
+    latencyMs: 320,
+  },
+  {
+    id: 'inf-3',
+    name: 'bge-m3-embed',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    status: 'Running',
+    model: 'BGE-M3',
+    framework: 'TF-Serving',
+    gpuCount: 1,
+    ready: 2,
+    desired: 2,
+    rps: 210,
+    latencyMs: 24,
+  },
+  {
+    id: 'inf-4',
+    name: 'whisper-large-v3',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    status: 'Failed',
+    model: 'Whisper-large-v3',
+    framework: 'TorchServe',
+    gpuCount: 1,
+    ready: 0,
+    desired: 1,
+    rps: 0,
+    latencyMs: 0,
+  },
+  {
+    id: 'inf-5',
+    name: 'qwen2-7b',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    status: 'Pending',
+    model: 'Qwen2-7B',
+    framework: 'vLLM',
+    gpuCount: 1,
+    ready: 0,
+    desired: 1,
+    rps: 0,
+    latencyMs: 0,
+  },
+  {
+    id: 'inf-6',
+    name: 'resnet-classifier',
+    clusterId: 'cl-metis-train-a100',
+    clusterName: 'metis-train-a100',
+    source: 'Metis',
+    status: 'Running',
+    model: 'ResNet-50',
+    framework: 'Triton',
+    gpuCount: 1,
+    ready: 1,
+    desired: 1,
+    rps: 60,
+    latencyMs: 45,
+  },
+  {
+    id: 'inf-7',
+    name: 'clip-vit-embed',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    status: 'Running',
+    model: 'CLIP-ViT-L',
+    framework: 'TF-Serving',
+    gpuCount: 1,
+    ready: 1,
+    desired: 1,
+    rps: 90,
+    latencyMs: 30,
+  },
+];
+
+export const trainingJobs: TrainingJob[] = [
+  {
+    id: 'trn-1',
+    name: 'llama-lora-finetune',
+    clusterId: 'cl-metis-train-a100',
+    clusterName: 'metis-train-a100',
+    source: 'Metis',
+    status: 'Running',
+    framework: 'PyTorch',
+    gpuCount: 8,
+    progressPct: 62,
+    durationHrs: 14.5,
+    owner: 'jiwoo',
+  },
+  {
+    id: 'trn-2',
+    name: 'sdxl-dreambooth',
+    clusterId: 'cl-metis-train-a100',
+    clusterName: 'metis-train-a100',
+    source: 'Metis',
+    status: 'Running',
+    framework: 'PyTorch',
+    gpuCount: 4,
+    progressPct: 38,
+    durationHrs: 6.2,
+    owner: 'minho',
+  },
+  {
+    id: 'trn-3',
+    name: 'bert-pretrain',
+    clusterId: 'cl-metis-train-a100',
+    clusterName: 'metis-train-a100',
+    source: 'Metis',
+    status: 'Succeeded',
+    framework: 'TensorFlow',
+    gpuCount: 8,
+    progressPct: 100,
+    durationHrs: 72.0,
+    owner: 'sora',
+  },
+  {
+    id: 'trn-4',
+    name: 'rlhf-reward-model',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    status: 'Running',
+    framework: 'JAX',
+    gpuCount: 2,
+    progressPct: 12,
+    durationHrs: 2.1,
+    owner: 'taeksoo',
+  },
+  {
+    id: 'trn-5',
+    name: 'yolo-finetune',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    status: 'Failed',
+    framework: 'PyTorch',
+    gpuCount: 1,
+    progressPct: 47,
+    durationHrs: 3.3,
+    owner: 'hana',
+  },
+];
+
+export const notebooks: Notebook[] = [
+  {
+    id: 'nb-1',
+    name: 'jiwoo-dev',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    state: 'Running',
+    gpuCount: 1,
+    owner: 'jiwoo',
+    image: 'pytorch-2.3-cuda12',
+  },
+  {
+    id: 'nb-2',
+    name: 'minho-eda',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    state: 'Idle',
+    gpuCount: 0,
+    owner: 'minho',
+    image: 'datascience-cpu',
+  },
+  {
+    id: 'nb-3',
+    name: 'sora-vision',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    state: 'Running',
+    gpuCount: 1,
+    owner: 'sora',
+    image: 'tf-2.16-gpu',
+  },
+  {
+    id: 'nb-4',
+    name: 'taeksoo-llm',
+    clusterId: 'cl-metis-dev',
+    clusterName: 'metis-dev',
+    source: 'Metis',
+    state: 'Running',
+    gpuCount: 1,
+    owner: 'taeksoo',
+    image: 'vllm-notebook',
+  },
+  {
+    id: 'nb-5',
+    name: 'hana-sandbox',
+    clusterId: 'cl-metis-dev',
+    clusterName: 'metis-dev',
+    source: 'Metis',
+    state: 'Stopped',
+    gpuCount: 0,
+    owner: 'hana',
+    image: 'minimal-cpu',
+  },
+  {
+    id: 'nb-6',
+    name: 'research-shared',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    state: 'Idle',
+    gpuCount: 2,
+    owner: 'team-ml',
+    image: 'pytorch-2.3-cuda12',
+  },
+];
+
+export function getInferenceServicesByCluster(clusterId: string): InferenceService[] {
+  return inferenceServices.filter((s) => s.clusterId === clusterId);
+}
+export function getTrainingJobsByCluster(clusterId: string): TrainingJob[] {
+  return trainingJobs.filter((j) => j.clusterId === clusterId);
+}
+export function getNotebooksByCluster(clusterId: string): Notebook[] {
+  return notebooks.filter((n) => n.clusterId === clusterId);
+}
+
+/** All AI workloads owned by a cluster (used by the cluster detail page). */
+export function getAIWorkloadsByCluster(clusterId: string): {
+  inference: InferenceService[];
+  training: TrainingJob[];
+  notebooks: Notebook[];
+} {
+  return {
+    inference: getInferenceServicesByCluster(clusterId),
+    training: getTrainingJobsByCluster(clusterId),
+    notebooks: getNotebooksByCluster(clusterId),
+  };
+}
+
+export function getGpuSummary(): GpuSummary {
+  const totalGpus = nodes.reduce((sum, n) => sum + n.gpuCount, 0);
+  const usedGpus =
+    inferenceServices.reduce((sum, s) => sum + s.gpuCount, 0) +
+    trainingJobs.reduce((sum, j) => sum + j.gpuCount, 0) +
+    notebooks.reduce((sum, n) => sum + n.gpuCount, 0);
+  return { usedGpus, totalGpus };
+}
+
+export function getAISummary(): AISummary {
+  return {
+    inferenceServiceCount: inferenceServices.length,
+    trainingJobCount: trainingJobs.length,
+    notebookCount: notebooks.length,
+    gpus: getGpuSummary(),
+  };
+}
+
 // --- Status theming --------------------------------------------------------------
 // Single source of truth for every Container Platform status Badge (health, node,
 // AND workload statuses). Reuses getContainerStatusTheme as the fallback and adds
@@ -285,6 +583,8 @@ const PLATFORM_STATUS_THEME: Record<string, BadgeTheme> = {
   // workload statuses
   pending: 'yellow',
   succeeded: 'gray',
+  // notebook states (running -> green via fallback; stopped -> gray via fallback)
+  idle: 'blue',
 };
 
 export function getPlatformStatusTheme(status: string): BadgeTheme {
