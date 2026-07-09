@@ -20,13 +20,13 @@ estate that is today scattered across four products — read-only, TDS-compliant
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Desktop App Registration & Shell** - Register the Container Platform app + windowed shell with sidebar navigation (completed 2026-07-09)
-- [ ] **Phase 2: Cross-Cluster Mock Data Foundation** - Typed inline mock estate (clusters/nodes/workloads) every screen reads from
-- [ ] **Phase 3: Overview Dashboard** - Estate health rollup with summary tiles, per-source breakdown, and at-risk signal
-- [ ] **Phase 4: Clusters List** - Searchable, paginated cross-cluster list via TDS ListToolbar/Table
-- [ ] **Phase 5: Cluster Detail** - Drill-down cluster view with node/workload summary
-- [ ] **Phase 6: Nodes List** - Cross-cluster nodes list with status theming and capacity
-- [ ] **Phase 7: Workloads List** - Cross-cluster workloads list (kind/name/namespace/cluster/status/replicas)
-- [ ] **Phase 8: Workloads Filtering** - Filter workloads by kind and cluster on top of the list
+- [x] **Phase 2: Cross-Cluster Mock Data Foundation** - Typed inline mock estate (clusters/nodes/workloads) every screen reads from (completed 2026-07-09)
+- [x] **Phase 3: Overview Dashboard** - Estate health rollup with summary tiles, per-source breakdown, and at-risk signal (completed 2026-07-09)
+- [x] **Phase 4: Clusters List** - Searchable, paginated cross-cluster list via TDS ListToolbar/Table (completed 2026-07-09)
+- [x] **Phase 5: Cluster Detail** - Drill-down cluster view with node/workload summary (completed 2026-07-09)
+- [x] **Phase 6: Nodes List** - Cross-cluster nodes list with status theming and capacity (completed 2026-07-09)
+- [x] **Phase 7: Workloads List** - Cross-cluster workloads list (kind/name/namespace/cluster/status/replicas) (completed 2026-07-09)
+- [x] **Phase 8: Workloads Filtering** - Filter workloads by kind and cluster on top of the list (completed 2026-07-09)
 
 ## Phase Details
 
@@ -148,13 +148,13 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
-| Phase                                 | Plans Complete | Status      | Completed  |
-| ------------------------------------- | -------------- | ----------- | ---------- |
-| 1. Desktop App Registration & Shell   | 2/2            | Complete    | 2026-07-09 |
-| 2. Cross-Cluster Mock Data Foundation | 0/TBD          | Not started | -          |
-| 3. Overview Dashboard                 | 0/TBD          | Not started | -          |
-| 4. Clusters List                      | 0/TBD          | Not started | -          |
-| 5. Cluster Detail                     | 0/TBD          | Not started | -          |
-| 6. Nodes List                         | 0/TBD          | Not started | -          |
-| 7. Workloads List                     | 0/TBD          | Not started | -          |
-| 8. Workloads Filtering                | 0/TBD          | Not started | -          |
+| Phase                                 | Plans Complete | Status   | Completed  |
+| ------------------------------------- | -------------- | -------- | ---------- |
+| 1. Desktop App Registration & Shell   | 2/2            | Complete | 2026-07-09 |
+| 2. Cross-Cluster Mock Data Foundation | 1/1            | Complete | 2026-07-09 |
+| 3. Overview Dashboard                 | 1/1            | Complete | 2026-07-09 |
+| 4. Clusters List                      | 1/1            | Complete | 2026-07-09 |
+| 5. Cluster Detail                     | 1/1            | Complete | 2026-07-09 |
+| 6. Nodes List                         | 1/1            | Complete | 2026-07-09 |
+| 7. Workloads List                     | 1/1            | Complete | 2026-07-09 |
+| 8. Workloads Filtering                | 1/1            | Complete | 2026-07-09 |
