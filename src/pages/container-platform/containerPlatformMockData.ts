@@ -8,11 +8,13 @@ import { getContainerStatusTheme } from '@/pages/containerStatusUtils';
 import type {
   AISummary,
   Cluster,
+  ClusterEvent,
   ClusterNode,
   ClusterSource,
   EstateSummary,
   GpuSummary,
   InferenceService,
+  Namespace,
   NodeRole,
   Notebook,
   TrainingJob,
@@ -567,6 +569,275 @@ export function getAISummary(): AISummary {
   };
 }
 
+// --- Namespaces (derived from workloads) ----------------------------------------
+
+export function getNamespaces(): Namespace[] {
+  const map = new Map<string, Namespace>();
+  workloads.forEach((w) => {
+    const key = `${w.clusterId}/${w.namespace}`;
+    const existing = map.get(key);
+    if (existing) existing.workloadCount += 1;
+    else
+      map.set(key, {
+        id: key,
+        name: w.namespace,
+        clusterId: w.clusterId,
+        clusterName: w.clusterName,
+        source: w.source,
+        workloadCount: 1,
+      });
+  });
+  return Array.from(map.values());
+}
+
+// --- Events (Rancher-style estate event stream) ---------------------------------
+// Deterministic. Warnings are correlated with the unhealthy parts of the estate
+// (metis-serving Critical, the cordoned/NotReady nodes, failing workloads).
+
+export const events: ClusterEvent[] = [
+  {
+    id: 'ev-1',
+    type: 'Warning',
+    reason: 'BackOff',
+    objectKind: 'Pod',
+    objectName: 'whisper-large-v3-0',
+    namespace: 'ml-serving',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    message: 'Back-off restarting failed container (CUDA out of memory)',
+    ageMinutes: 3,
+  },
+  {
+    id: 'ev-2',
+    type: 'Warning',
+    reason: 'FailedScheduling',
+    objectKind: 'Pod',
+    objectName: 'qwen2-7b-1',
+    namespace: 'ml-serving',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    message: '0/4 nodes available: 1 node(s) had untolerated taint, insufficient nvidia.com/gpu',
+    ageMinutes: 6,
+  },
+  {
+    id: 'ev-3',
+    type: 'Warning',
+    reason: 'NodeNotReady',
+    objectKind: 'Node',
+    objectName: 'metis-serving-worker-4',
+    namespace: '-',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    message: 'Node metis-serving-worker-4 status is now: NodeNotReady',
+    ageMinutes: 11,
+  },
+  {
+    id: 'ev-4',
+    type: 'Normal',
+    reason: 'Scheduled',
+    objectKind: 'Pod',
+    objectName: 'sdxl-turbo-2',
+    namespace: 'ml-serving',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    message: 'Successfully assigned ml-serving/sdxl-turbo-2 to metis-serving-worker-2',
+    ageMinutes: 14,
+  },
+  {
+    id: 'ev-5',
+    type: 'Warning',
+    reason: 'Unhealthy',
+    objectKind: 'Pod',
+    objectName: 'api-deployment-6',
+    namespace: 'platform',
+    clusterId: 'cl-aegis-prod-tokyo',
+    clusterName: 'aegis-prod-tokyo',
+    source: 'Aegis',
+    message: 'Readiness probe failed: HTTP probe failed with statuscode: 503',
+    ageMinutes: 18,
+  },
+  {
+    id: 'ev-6',
+    type: 'Warning',
+    reason: 'NodeSchedulable',
+    objectKind: 'Node',
+    objectName: 'aegis-prod-tokyo-worker-5',
+    namespace: '-',
+    clusterId: 'cl-aegis-prod-tokyo',
+    clusterName: 'aegis-prod-tokyo',
+    source: 'Aegis',
+    message: 'Node cordoned by operator for maintenance',
+    ageMinutes: 22,
+  },
+  {
+    id: 'ev-7',
+    type: 'Normal',
+    reason: 'Completed',
+    objectKind: 'Job',
+    objectName: 'bert-pretrain',
+    namespace: 'ml-serving',
+    clusterId: 'cl-metis-train-a100',
+    clusterName: 'metis-train-a100',
+    source: 'Metis',
+    message: 'Training job completed successfully after 72h',
+    ageMinutes: 26,
+  },
+  {
+    id: 'ev-8',
+    type: 'Normal',
+    reason: 'ScalingReplicaSet',
+    objectKind: 'Deployment',
+    objectName: 'gateway-deployment-1',
+    namespace: 'platform',
+    clusterId: 'cl-aegis-prod-seoul',
+    clusterName: 'aegis-prod-seoul',
+    source: 'Aegis',
+    message: 'Scaled up replica set to 3',
+    ageMinutes: 31,
+  },
+  {
+    id: 'ev-9',
+    type: 'Warning',
+    reason: 'FailedMount',
+    objectKind: 'Pod',
+    objectName: 'yolo-finetune-0',
+    namespace: 'ml-serving',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    message: 'Unable to attach or mount volumes: timed out waiting for dataset PVC',
+    ageMinutes: 37,
+  },
+  {
+    id: 'ev-10',
+    type: 'Normal',
+    reason: 'Started',
+    objectKind: 'Pod',
+    objectName: 'jiwoo-dev',
+    namespace: 'default',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    message: 'Started notebook container (pytorch-2.3-cuda12)',
+    ageMinutes: 42,
+  },
+  {
+    id: 'ev-11',
+    type: 'Normal',
+    reason: 'Pulled',
+    objectKind: 'Pod',
+    objectName: 'inference-deployment-7',
+    namespace: 'ingest',
+    clusterId: 'cl-metis-train-a100',
+    clusterName: 'metis-train-a100',
+    source: 'Metis',
+    message: 'Container image already present on machine',
+    ageMinutes: 48,
+  },
+  {
+    id: 'ev-12',
+    type: 'Warning',
+    reason: 'OOMKilling',
+    objectKind: 'Pod',
+    objectName: 'trainer-statefulset-3',
+    namespace: 'monitoring',
+    clusterId: 'cl-metis-dev',
+    clusterName: 'metis-dev',
+    source: 'Metis',
+    message: 'Memory cgroup out of memory: Killed process',
+    ageMinutes: 55,
+  },
+  {
+    id: 'ev-13',
+    type: 'Normal',
+    reason: 'Created',
+    objectKind: 'Deployment',
+    objectName: 'cache-deployment-2',
+    namespace: 'default',
+    clusterId: 'cl-aegis-staging',
+    clusterName: 'aegis-staging',
+    source: 'Aegis',
+    message: 'Created container cache',
+    ageMinutes: 63,
+  },
+  {
+    id: 'ev-14',
+    type: 'Normal',
+    reason: 'SuccessfulCreate',
+    objectKind: 'StatefulSet',
+    objectName: 'db-statefulset-1',
+    namespace: 'platform',
+    clusterId: 'cl-aegis-prod-seoul',
+    clusterName: 'aegis-prod-seoul',
+    source: 'Aegis',
+    message: 'create Pod db-statefulset-1-0 in StatefulSet successful',
+    ageMinutes: 71,
+  },
+  {
+    id: 'ev-15',
+    type: 'Warning',
+    reason: 'BackoffLimitExceeded',
+    objectKind: 'Job',
+    objectName: 'yolo-finetune',
+    namespace: 'ml-serving',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    message: 'Job has reached the specified backoff limit',
+    ageMinutes: 88,
+  },
+  {
+    id: 'ev-16',
+    type: 'Normal',
+    reason: 'Provisioned',
+    objectKind: 'Pod',
+    objectName: 'exporter-daemonset-4',
+    namespace: 'monitoring',
+    clusterId: 'cl-aegis-edge-busan',
+    clusterName: 'aegis-edge-busan',
+    source: 'Aegis',
+    message: 'Successfully provisioned volume',
+    ageMinutes: 96,
+  },
+  {
+    id: 'ev-17',
+    type: 'Normal',
+    reason: 'Killing',
+    objectKind: 'Pod',
+    objectName: 'minho-eda',
+    namespace: 'default',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    message: 'Stopping idle notebook to reclaim resources',
+    ageMinutes: 104,
+  },
+  {
+    id: 'ev-18',
+    type: 'Normal',
+    reason: 'LeaderElection',
+    objectKind: 'Deployment',
+    objectName: 'scheduler-deployment-3',
+    namespace: 'kube-system',
+    clusterId: 'cl-aegis-prod-seoul',
+    clusterName: 'aegis-prod-seoul',
+    source: 'Aegis',
+    message: 'became leader',
+    ageMinutes: 120,
+  },
+];
+
+export function getEvents(): ClusterEvent[] {
+  return events;
+}
+export function getEventsByCluster(clusterId: string): ClusterEvent[] {
+  return events.filter((e) => e.clusterId === clusterId);
+}
+
 // --- Status theming --------------------------------------------------------------
 // Single source of truth for every Container Platform status Badge (health, node,
 // AND workload statuses). Reuses getContainerStatusTheme as the fallback and adds
@@ -585,6 +856,8 @@ const PLATFORM_STATUS_THEME: Record<string, BadgeTheme> = {
   succeeded: 'gray',
   // notebook states (running -> green via fallback; stopped -> gray via fallback)
   idle: 'blue',
+  // event types (warning -> yellow above)
+  normal: 'gray',
 };
 
 export function getPlatformStatusTheme(status: string): BadgeTheme {

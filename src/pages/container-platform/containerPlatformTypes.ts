@@ -127,6 +127,33 @@ export interface GpuSummary {
   totalGpus: number;
 }
 
+// --- Namespaces & Events (Rancher-style estate breadth) --------------------------
+
+export interface Namespace {
+  id: string;
+  name: string;
+  clusterId: string;
+  clusterName: string;
+  source: ClusterSource;
+  workloadCount: number;
+}
+
+export type EventType = 'Normal' | 'Warning';
+
+export interface ClusterEvent {
+  id: string;
+  type: EventType;
+  reason: string;
+  objectKind: string;
+  objectName: string;
+  namespace: string;
+  clusterId: string;
+  clusterName: string;
+  source: ClusterSource;
+  message: string;
+  ageMinutes: number;
+}
+
 export interface AISummary {
   inferenceServiceCount: number;
   trainingJobCount: number;
