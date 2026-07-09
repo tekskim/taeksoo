@@ -42,8 +42,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 2. Clicking the icon opens Container Platform in its own draggable desktop window.
 3. A persistent left sidebar lists Overview / Clusters / Nodes / Workloads, and clicking each navigates to that route (placeholder content acceptable).
 4. All shell chrome renders via `@/design-system` components — no raw HTML layout.
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 2 plans
+   - [ ] 01-01-PLAN.md — Build the Container Platform shell (routes, sidebar, 4 TDS placeholder pages) + register in DesktopPage (5 places)
+   - [ ] 01-02-PLAN.md — Human-verify the walking skeleton end-to-end (open from desktop, navigate 4 sections, no console errors)
+         **UI hint**: yes
 
 ### Phase 2: Cross-Cluster Mock Data Foundation
 
@@ -148,7 +150,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase                                 | Plans Complete | Status      | Completed |
 | ------------------------------------- | -------------- | ----------- | --------- |
-| 1. Desktop App Registration & Shell   | 0/TBD          | Not started | -         |
+| 1. Desktop App Registration & Shell   | 0/2            | Not started | -         |
 | 2. Cross-Cluster Mock Data Foundation | 0/TBD          | Not started | -         |
 | 3. Overview Dashboard                 | 0/TBD          | Not started | -         |
 | 4. Clusters List                      | 0/TBD          | Not started | -         |
