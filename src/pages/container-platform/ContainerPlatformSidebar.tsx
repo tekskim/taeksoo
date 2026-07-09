@@ -1,5 +1,12 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
-import { IconLayoutDashboard, IconTopologyStar, IconRocket, IconBrain } from '@tabler/icons-react';
+import {
+  IconLayoutDashboard,
+  IconTopologyStar,
+  IconRocket,
+  IconBrain,
+  IconStack2,
+  IconActivity,
+} from '@tabler/icons-react';
 import { FolderCog } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
@@ -56,6 +63,12 @@ export function ContainerPlatformSidebar() {
               active={isActive('/container-platform/nodes')}
             />
             <MenuItem
+              icon={<IconStack2 size={16} stroke={1.5} />}
+              label="Namespaces"
+              href="/container-platform/namespaces"
+              active={isActive('/container-platform/namespaces')}
+            />
+            <MenuItem
               icon={<IconRocket size={16} stroke={1.5} />}
               label="Workloads"
               href="/container-platform/workloads"
@@ -66,6 +79,12 @@ export function ContainerPlatformSidebar() {
               label="AI Workloads"
               href="/container-platform/ai-workloads"
               active={isActive('/container-platform/ai-workloads')}
+            />
+            <MenuItem
+              icon={<IconActivity size={16} stroke={1.5} />}
+              label="Events"
+              href="/container-platform/events"
+              active={isActive('/container-platform/events')}
             />
           </MenuSection>
         </VStack>
