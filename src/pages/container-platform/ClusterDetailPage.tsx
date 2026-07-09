@@ -25,6 +25,7 @@ import {
   getClusterById,
   getNodesByCluster,
   getWorkloadsByCluster,
+  getAIWorkloadsByCluster,
   getPlatformStatusTheme,
 } from './containerPlatformMockData';
 import type {
@@ -101,6 +102,12 @@ export default function ClusterDetailPage() {
 
   const nodes = getNodesByCluster(cluster.id);
   const clusterWorkloads = getWorkloadsByCluster(cluster.id);
+
+  // AI workloads + GPU capacity (only Metis GPU clusters have these).
+  const ai = getAIWorkloadsByCluster(cluster.id);
+  const gpuCapacity = nodes.reduce((sum, n) => sum + n.gpuCount, 0);
+  const aiCount = ai.inference.length + ai.training.length + ai.notebooks.length;
+  const hasAI = aiCount > 0 || gpuCapacity > 0;
 
   const workloadByStatus = WORKLOAD_STATUSES.map((s) => ({
     status: s,
@@ -193,6 +200,7 @@ export default function ClusterDetailPage() {
             label="Memory (GiB)"
             value={`${cluster.memory.usedGiB} / ${cluster.memory.totalGiB}`}
           />
+          {gpuCapacity > 0 && <DetailHeader.InfoCard label="GPUs" value={gpuCapacity} />}
         </DetailHeader.InfoGrid>
       </DetailHeader>
 
@@ -216,6 +224,29 @@ export default function ClusterDetailPage() {
           ))}
         </HStack>
       </VStack>
+
+      {/* AI workloads (Metis Run + ML Studio) — only for GPU/AI clusters */}
+      {hasAI && (
+        <VStack gap={2}>
+          <span className="text-label-lg text-[var(--color-text-default)]">
+            AI workloads ({aiCount})
+          </span>
+          <HStack gap={2} align="center" className="flex-wrap">
+            <Badge theme="blue" type="subtle" size="sm">
+              {ai.inference.length} Inference
+            </Badge>
+            <Badge theme="gray" type="subtle" size="sm">
+              {ai.training.length} Training
+            </Badge>
+            <Badge theme="gray" type="subtle" size="sm">
+              {ai.notebooks.length} Notebooks
+            </Badge>
+            <Badge theme="gray" type="subtle" size="sm">
+              {gpuCapacity} GPUs
+            </Badge>
+          </HStack>
+        </VStack>
+      )}
 
       {/* Nodes */}
       <VStack gap={2}>
