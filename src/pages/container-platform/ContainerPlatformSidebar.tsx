@@ -1,4 +1,5 @@
-import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { useState, type KeyboardEvent } from 'react';
+import { VStack, MenuItem, MenuSection, SearchInput } from '@/design-system';
 import {
   IconLayoutDashboard,
   IconTopologyStar,
@@ -8,7 +9,7 @@ import {
   IconActivity,
 } from '@tabler/icons-react';
 import { FolderCog } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 /* ----------------------------------------
@@ -23,11 +24,26 @@ export const CONTAINER_PLATFORM_SIDEBAR_WIDTH = 200;
 
 export function ContainerPlatformSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const isDesktopWindow = useIsDesktopWindow();
   const desktopControls = useDesktopWindowControls();
 
+  const [searchValue, setSearchValue] = useState('');
+
   const isActive = (href: string) =>
     location.pathname === href || location.pathname.startsWith(href + '/');
+
+  const submitSearch = () => {
+    const term = searchValue.trim();
+    navigate(`/container-platform/search${term ? `?q=${encodeURIComponent(term)}` : ''}`);
+  };
+
+  const onSearchKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      submitSearch();
+    }
+  };
 
   return (
     <aside className="w-[200px] h-screen fixed left-0 top-0 bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
@@ -38,6 +54,19 @@ export function ContainerPlatformSidebar() {
         onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
       >
         <span className="text-label-lg text-[var(--color-text-default)]">Container Platform</span>
+      </div>
+
+      {/* Global estate search */}
+      <div className="px-3 pt-2 pb-1">
+        <SearchInput
+          size="sm"
+          fullWidth
+          placeholder="Search estate"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={onSearchKeyDown}
+          onClear={() => setSearchValue('')}
+        />
       </div>
 
       {/* Navigation */}

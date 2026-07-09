@@ -10,6 +10,7 @@ const NamespacesPage = lazy(() => import('@/pages/container-platform/NamespacesP
 const EventsPage = lazy(() => import('@/pages/container-platform/EventsPage'));
 const WorkloadsPage = lazy(() => import('@/pages/container-platform/WorkloadsPage'));
 const AIWorkloadsPage = lazy(() => import('@/pages/container-platform/AIWorkloadsPage'));
+const SearchPage = lazy(() => import('@/pages/container-platform/SearchPage'));
 
 export const containerPlatformRoutes = (
   <>
@@ -22,6 +23,7 @@ export const containerPlatformRoutes = (
     <Route path="/container-platform/events" element={<EventsPage />} />
     <Route path="/container-platform/workloads" element={<WorkloadsPage />} />
     <Route path="/container-platform/ai-workloads" element={<AIWorkloadsPage />} />
+    <Route path="/container-platform/search" element={<SearchPage />} />
     <Route
       path="/container-platform/*"
       element={<Navigate to="/container-platform/overview" replace />}
