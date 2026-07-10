@@ -107,7 +107,8 @@ export default function OverviewPage() {
         <VStack gap={1}>
           <PageHeader title="Overview" />
           <span className="text-body-sm text-[var(--color-text-muted)]">
-            One read-only plane across Aegis Container, Metis Container, Metis Run, and ML Studio.
+            The multi-cluster container substrate — Aegis, Maxis (training), Metis (serving), and
+            legacy Metis Run workloads all run here.
           </span>
         </VStack>
 
