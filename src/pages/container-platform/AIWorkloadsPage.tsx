@@ -6,6 +6,8 @@ import {
   Breadcrumb,
   VStack,
   Badge,
+  Button,
+  Tooltip,
   Table,
   Tabs,
   TabList,
@@ -15,6 +17,7 @@ import {
   FilterSearchInput,
   type AppliedFilter,
   type TableColumn,
+  type BadgeProps,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -27,6 +30,7 @@ import {
   inferenceServices,
   trainingJobs,
   notebooks,
+  getDevspaces,
   getPlatformStatusTheme,
 } from './containerPlatformMockData';
 import type {
@@ -35,22 +39,31 @@ import type {
   Notebook,
   NotebookState,
   WorkloadStatus,
+  Devspace,
+  DevspaceState,
+  ManagedBy,
 } from './containerPlatformTypes';
 
 /* ----------------------------------------
-   AI Workloads (Metis Run + ML Studio absorbed)
+   AI Workloads (observed, not managed — the substrate seam)
 
-   Container Platform folds the previously separate AI surfaces in as a
-   first-class section. A segmented view switches between the three AI workload
-   kinds — Inference Services (model serving), Training Jobs, and Notebooks —
-   each a read-only TDS Table with name search + cluster/status filters and
-   client-side pagination (mirrors ClustersPage mechanics). Segment change
-   resets search, filters, and page.
+   Container Platform is the substrate: these AI workloads RUN on it, but the
+   owning products MANAGE them (training -> Maxis, serving -> Metis). This page
+   is therefore attribution + drill-out only:
+     - each row carries a "Managed by" badge (same theme map as WorkloadsPage)
+     - an "Open in {product} ↗" affordance signals "manage elsewhere" (Model A
+       seam) — Maxis/Metis are separate apps, so it never navigates a broken route
+   Dev Spaces are the exception: they are hosted BY Container Platform and use the
+   shared /path/to pod-access routing, so they have no drill-out.
+
+   Each tab is a read-only TDS Table with name search + cluster/state filters and
+   client-side pagination (mirrors ClustersPage mechanics). Tab change resets
+   search, filters, and page.
    ---------------------------------------- */
 
 const ROWS_PER_PAGE = 10;
 
-type Segment = 'inference' | 'training' | 'notebooks';
+type Segment = 'inference' | 'training' | 'notebooks' | 'devspaces';
 
 const WORKLOAD_STATUS_OPTIONS: { value: WorkloadStatus; label: string }[] = [
   { value: 'Running', label: 'Running' },
@@ -65,6 +78,24 @@ const NOTEBOOK_STATE_OPTIONS: { value: NotebookState; label: string }[] = [
   { value: 'Stopped', label: 'Stopped' },
 ];
 
+const DEVSPACE_STATE_OPTIONS: { value: DevspaceState; label: string }[] = [
+  { value: 'Running', label: 'Running' },
+  { value: 'Idle', label: 'Idle' },
+  { value: 'Stopped', label: 'Stopped' },
+];
+
+// Managed-by (owning product) badge theme. Same map used by WorkloadsPage so the
+// attribution reads identically on every substrate surface.
+const MANAGED_BY_THEME: Record<ManagedBy, BadgeProps['theme']> = {
+  Aegis: 'blue',
+  Maxis: 'green',
+  Metis: 'yellow',
+  'Metis Run': 'gray',
+  Devspace: 'blue',
+};
+
+const devspaces = getDevspaces();
+
 /** Cluster filter options derived from the rows actually present in a segment. */
 function clusterOptionsFrom(items: { clusterId: string; clusterName: string }[]) {
   const seen = new Map<string, string>();
@@ -75,6 +106,7 @@ function clusterOptionsFrom(items: { clusterId: string; clusterName: string }[])
 const INFERENCE_CLUSTER_OPTIONS = clusterOptionsFrom(inferenceServices);
 const TRAINING_CLUSTER_OPTIONS = clusterOptionsFrom(trainingJobs);
 const NOTEBOOK_CLUSTER_OPTIONS = clusterOptionsFrom(notebooks);
+const DEVSPACE_CLUSTER_OPTIONS = clusterOptionsFrom(devspaces);
 
 const NameCell = (value: string) => (
   <span className="text-[var(--color-text-default)] font-medium truncate block" title={value}>
@@ -87,6 +119,28 @@ const TruncCell = (value: string) => (
     {value}
   </span>
 );
+
+/** Attribution badge — constant per tab (CP just hosts these). */
+const managedByCell = (product: ManagedBy) => (
+  <Badge theme={MANAGED_BY_THEME[product]} type="subtle" size="sm">
+    {product}
+  </Badge>
+);
+
+/**
+ * Drill-out affordance (Model A seam). Maxis/Metis are separate apps not present
+ * in this mockup, so this is a visual "manage elsewhere" signal — it never
+ * navigates a broken route. Hover surfaces where the workload is actually managed.
+ */
+function DrillOutButton({ product }: { product: 'Maxis' | 'Metis' }) {
+  return (
+    <Tooltip content={`Managed in ${product} (separate app)`} position="left">
+      <Button type="button" variant="ghost" size="sm" onClick={(e) => e.preventDefault()}>
+        {`Open in ${product} ↗`}
+      </Button>
+    </Tooltip>
+  );
+}
 
 const inferenceColumns: TableColumn<InferenceService>[] = [
   {
@@ -118,6 +172,14 @@ const inferenceColumns: TableColumn<InferenceService>[] = [
       </Badge>
     ),
   },
+  {
+    key: 'managedBy',
+    label: 'Managed by',
+    width: fixedColumns.statusLabel,
+    align: 'center',
+    resizable: false,
+    render: () => managedByCell('Metis'),
+  },
   { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
   {
     key: 'ready',
@@ -133,6 +195,14 @@ const inferenceColumns: TableColumn<InferenceService>[] = [
     flex: 1,
     minWidth: columnMinWidths.duration,
     render: (value: number) => `${value} ms`,
+  },
+  {
+    key: 'actions',
+    label: '',
+    width: columnMinWidths.owner,
+    align: 'right',
+    resizable: false,
+    render: () => <DrillOutButton product="Metis" />,
   },
 ];
 
@@ -165,6 +235,14 @@ const trainingColumns: TableColumn<TrainingJob>[] = [
       </Badge>
     ),
   },
+  {
+    key: 'managedBy',
+    label: 'Managed by',
+    width: fixedColumns.statusLabel,
+    align: 'center',
+    resizable: false,
+    render: () => managedByCell('Maxis'),
+  },
   { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
   {
     key: 'progressPct',
@@ -183,6 +261,14 @@ const trainingColumns: TableColumn<TrainingJob>[] = [
     render: (value: number) => `${value} h`,
   },
   { key: 'owner', label: 'Owner', flex: 1, minWidth: columnMinWidths.owner, render: TruncCell },
+  {
+    key: 'actions',
+    label: '',
+    width: columnMinWidths.owner,
+    align: 'right',
+    resizable: false,
+    render: () => <DrillOutButton product="Maxis" />,
+  },
 ];
 
 const notebookColumns: TableColumn<Notebook>[] = [
@@ -214,6 +300,14 @@ const notebookColumns: TableColumn<Notebook>[] = [
       </Badge>
     ),
   },
+  {
+    key: 'managedBy',
+    label: 'Managed by',
+    width: fixedColumns.statusLabel,
+    align: 'center',
+    resizable: false,
+    render: () => managedByCell('Maxis'),
+  },
   { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
   {
     key: 'image',
@@ -221,6 +315,69 @@ const notebookColumns: TableColumn<Notebook>[] = [
     flex: 1,
     minWidth: columnMinWidths.containerImage,
     render: TruncCell,
+  },
+  {
+    key: 'actions',
+    label: '',
+    width: columnMinWidths.owner,
+    align: 'right',
+    resizable: false,
+    render: () => <DrillOutButton product="Maxis" />,
+  },
+];
+
+const devspaceColumns: TableColumn<Devspace>[] = [
+  {
+    key: 'name',
+    label: 'Name',
+    flex: 1,
+    minWidth: columnMinWidths.name,
+    sortable: true,
+    render: NameCell,
+  },
+  { key: 'owner', label: 'Owner', flex: 1, minWidth: columnMinWidths.owner, render: TruncCell },
+  {
+    key: 'clusterName',
+    label: 'Cluster',
+    flex: 1,
+    minWidth: columnMinWidths.node,
+    render: TruncCell,
+  },
+  {
+    key: 'state',
+    label: 'State',
+    width: fixedColumns.statusLabel,
+    align: 'center',
+    resizable: false,
+    render: (value: DevspaceState) => (
+      <Badge theme={getPlatformStatusTheme(value)} type="subtle" size="sm">
+        {value}
+      </Badge>
+    ),
+  },
+  { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
+  {
+    key: 'image',
+    label: 'Image',
+    flex: 1,
+    minWidth: columnMinWidths.containerImage,
+    render: TruncCell,
+  },
+  {
+    key: 'accessUrl',
+    label: 'Access',
+    flex: 1,
+    minWidth: columnMinWidths.path,
+    // Substrate pod-access route (/path/to...), not an external link — render as a
+    // token-styled code string so it reads as an internal routing handle.
+    render: (value: string) => (
+      <code
+        className="font-mono text-body-sm text-[var(--color-text-muted)] truncate block"
+        title={value}
+      >
+        {value}
+      </code>
+    ),
   },
 ];
 
@@ -280,6 +437,17 @@ export default function AIWorkloadsPage() {
     [term, clusterFilters, statusFilters]
   );
 
+  const devspaceRows = useMemo(
+    () =>
+      devspaces.filter((d) => {
+        if (term && !d.name.toLowerCase().includes(term)) return false;
+        if (clusterFilters.length > 0 && !clusterFilters.includes(d.clusterId)) return false;
+        if (statusFilters.length > 0 && !statusFilters.includes(d.state)) return false;
+        return true;
+      }),
+    [term, clusterFilters, statusFilters]
+  );
+
   const config = {
     inference: {
       total: inferenceRows.length,
@@ -317,6 +485,18 @@ export default function AIWorkloadsPage() {
       },
       emptyMessage: 'No notebooks found.',
     },
+    devspaces: {
+      total: devspaceRows.length,
+      searchPlaceholder: 'Search dev spaces by name',
+      clusterOptions: DEVSPACE_CLUSTER_OPTIONS,
+      statusFilter: {
+        id: 'status',
+        label: 'State',
+        type: 'select' as const,
+        options: DEVSPACE_STATE_OPTIONS,
+      },
+      emptyMessage: 'No dev spaces found.',
+    },
   }[segment];
 
   const totalPages = Math.max(1, Math.ceil(config.total / ROWS_PER_PAGE));
@@ -338,15 +518,29 @@ export default function AIWorkloadsPage() {
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
-        <PageHeader title="AI Workloads" />
+        <VStack gap={1}>
+          <PageHeader title="AI Workloads" />
+          <span className="text-body-sm text-[var(--color-text-muted)]">
+            These AI workloads run on the Container Platform substrate. Training is managed in
+            Maxis, serving in Metis &mdash; Open &#8599; drills out to the managing product.
+          </span>
+        </VStack>
 
         <Tabs value={segment} onChange={handleSegmentChange} variant="boxed">
           <TabList>
             <Tab value="inference">Inference Services</Tab>
             <Tab value="training">Training Jobs</Tab>
             <Tab value="notebooks">Notebooks</Tab>
+            <Tab value="devspaces">Dev Spaces</Tab>
           </TabList>
         </Tabs>
+
+        {segment === 'devspaces' && (
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            Dev Spaces are hosted by Container Platform; pod access uses the shared /path/to
+            routing.
+          </span>
+        )}
 
         <ListToolbar
           primaryActions={
@@ -408,6 +602,15 @@ export default function AIWorkloadsPage() {
           <Table<Notebook>
             columns={notebookColumns}
             data={notebookRows.slice(sliceStart, sliceStart + ROWS_PER_PAGE)}
+            rowKey="id"
+            resizable={false}
+            emptyMessage={config.emptyMessage}
+          />
+        )}
+        {segment === 'devspaces' && (
+          <Table<Devspace>
+            columns={devspaceColumns}
+            data={devspaceRows.slice(sliceStart, sliceStart + ROWS_PER_PAGE)}
             rowKey="id"
             resizable={false}
             emptyMessage={config.emptyMessage}

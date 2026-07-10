@@ -175,7 +175,7 @@ export default function OverviewPage() {
           </MetricCard.Group>
         </VStack>
 
-        {/* AI workloads: Metis Run (serving) + ML Studio (training/notebooks) rollup */}
+        {/* AI workloads: observed on the substrate; managed in Maxis (training) / Metis (serving) */}
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">AI workloads</span>
           <MetricCard.Group>
@@ -200,6 +200,9 @@ export default function OverviewPage() {
               }
             />
           </MetricCard.Group>
+          <span className="text-body-sm text-[var(--color-text-muted)]">
+            Managed in Maxis (training) / Metis (serving) &mdash; hosted on this substrate.
+          </span>
         </VStack>
 
         {/* OVW-02: per-source (Aegis vs Metis) fragmentation breakdown */}
