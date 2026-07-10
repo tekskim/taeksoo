@@ -7,6 +7,7 @@ import {
   IconBrain,
   IconStack2,
   IconActivity,
+  IconDatabase,
 } from '@tabler/icons-react';
 import { FolderCog } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -96,6 +97,12 @@ export function ContainerPlatformSidebar() {
               label="Namespaces"
               href="/container-platform/namespaces"
               active={isActive('/container-platform/namespaces')}
+            />
+            <MenuItem
+              icon={<IconDatabase size={16} stroke={1.5} />}
+              label="Volumes"
+              href="/container-platform/volumes"
+              active={isActive('/container-platform/volumes')}
             />
             <MenuItem
               icon={<IconRocket size={16} stroke={1.5} />}

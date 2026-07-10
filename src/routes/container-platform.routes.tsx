@@ -7,6 +7,7 @@ const ClusterDetailPage = lazy(() => import('@/pages/container-platform/ClusterD
 const NodesPage = lazy(() => import('@/pages/container-platform/NodesPage'));
 const NodeDetailPage = lazy(() => import('@/pages/container-platform/NodeDetailPage'));
 const NamespacesPage = lazy(() => import('@/pages/container-platform/NamespacesPage'));
+const VolumesPage = lazy(() => import('@/pages/container-platform/VolumesPage'));
 const EventsPage = lazy(() => import('@/pages/container-platform/EventsPage'));
 const WorkloadsPage = lazy(() => import('@/pages/container-platform/WorkloadsPage'));
 const AIWorkloadsPage = lazy(() => import('@/pages/container-platform/AIWorkloadsPage'));
@@ -20,6 +21,7 @@ export const containerPlatformRoutes = (
     <Route path="/container-platform/nodes" element={<NodesPage />} />
     <Route path="/container-platform/nodes/:nodeId" element={<NodeDetailPage />} />
     <Route path="/container-platform/namespaces" element={<NamespacesPage />} />
+    <Route path="/container-platform/volumes" element={<VolumesPage />} />
     <Route path="/container-platform/events" element={<EventsPage />} />
     <Route path="/container-platform/workloads" element={<WorkloadsPage />} />
     <Route path="/container-platform/ai-workloads" element={<AIWorkloadsPage />} />
