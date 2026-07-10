@@ -63,4 +63,17 @@ with model/framework/RPS/epoch semantics). That was **over-absorption.** Per the
 - **New `Volumes` section** is the one clean new absorption to add.
 - Everything else (substrate lenses) stays and is already correct.
 
+## Implemented in the mockup (2026-07-09)
+
+- **Data model:** `Workload.managedBy` (Aegis/Maxis/Metis/Metis Run/Devspace); `Volume` (owner + isolation); `Devspace` (/path/to access). Selectors `getVolumes`/`getVolumesByCluster`/`getDevspaces`.
+- **New `Volumes` section** (sidebar, after Namespaces): PV/PVC cross-cluster with **Owner** badge + isolation — shows CP owns the plane while products keep isolated volumes (D2).
+- **`Workloads`** gains a "Managed by" column + filter — "everything runs here, product X owns it."
+- **`AI Workloads` reframed** to observe-not-manage: subtitle + "Managed by" column + "Open in Maxis/Metis ↗" drill-out (Model A seam), plus a **Dev Spaces** tab (CP-hosted, /path/to access — the shared substrate routing per D3).
+- **Overview** subtitle corrected to substrate framing (ML Studio → Maxis, NOT absorbed) + AI note.
+- **Verification:** Playwright E2E 20/20 PASS, 0 page errors. eslint/tsc clean, no `@thaki/shared`, no hardcoded widths.
+
+**Still decisions, not built:** D3 (Devspace) shown as _conditional-yes_ affordance; D4/D5/D6 (multi-cluster owner, partition=namespace, shared project) are architecture policy — reflected in the data model's attribution/isolation but not enforced (no backend).
+
+---
+
 _Recorded 2026-07-09. Local mockup only; no backend/deploy/MFE. Model A (Rancher-style) seam still holds._
