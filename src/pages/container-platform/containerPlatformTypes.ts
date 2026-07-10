@@ -4,6 +4,14 @@
 
 export type ClusterSource = 'Aegis' | 'Metis';
 
+/**
+ * Which product manages a workload. Container Platform is the substrate; the
+ * products (Maxis = AI training, Metis = serving, Aegis = general apps) run ON
+ * it. "Metis Run" is legacy (its workloads/volumes were folded into the
+ * substrate); "Devspace" workloads are hosted by Container Platform itself.
+ */
+export type ManagedBy = 'Aegis' | 'Maxis' | 'Metis' | 'Metis Run' | 'Devspace';
+
 /** Rolled-up health used by clusters and the overview dashboard. */
 export type HealthStatus = 'Healthy' | 'Warning' | 'Critical';
 
@@ -56,6 +64,7 @@ export interface Workload {
   status: WorkloadStatus;
   ready: number;
   desired: number;
+  managedBy: ManagedBy; // which product owns this workload (CP just hosts it)
 }
 
 export interface EstateSummary {
@@ -152,6 +161,47 @@ export interface ClusterEvent {
   source: ClusterSource;
   message: string;
   ageMinutes: number;
+}
+
+// --- Volumes (absorbed from Metis Run into the substrate) ------------------------
+// Container Platform owns the volume plane, but every volume carries an owner and
+// an isolation scope so Metis/Maxis still get isolated volumes (split-memo issue).
+
+export type VolumeKind = 'PV' | 'PVC';
+export type VolumeStatus = 'Bound' | 'Available' | 'Released' | 'Pending';
+
+export interface Volume {
+  id: string;
+  name: string;
+  kind: VolumeKind;
+  clusterId: string;
+  clusterName: string;
+  source: ClusterSource;
+  owner: ManagedBy; // which product's data this volume holds
+  capacityGiB: number;
+  status: VolumeStatus;
+  storageClass: string;
+  accessMode: string; // RWO / RWX / ROX
+  isolation: string; // owning namespace, or 'shared'
+}
+
+// --- Devspace (dev environments; hosted by Container Platform, under review) ------
+// Reuses the substrate's /path/to pod-access routing (one impl shared with Metis
+// Run pods) instead of each product building its own.
+
+export type DevspaceState = 'Running' | 'Idle' | 'Stopped';
+
+export interface Devspace {
+  id: string;
+  name: string;
+  owner: string; // user
+  clusterId: string;
+  clusterName: string;
+  source: ClusterSource;
+  state: DevspaceState;
+  gpuCount: number;
+  image: string;
+  accessUrl: string; // /path/to-style substrate route
 }
 
 export interface AISummary {

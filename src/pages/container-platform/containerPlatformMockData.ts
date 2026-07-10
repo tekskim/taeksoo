@@ -11,13 +11,16 @@ import type {
   ClusterEvent,
   ClusterNode,
   ClusterSource,
+  Devspace,
   EstateSummary,
   GpuSummary,
   InferenceService,
+  ManagedBy,
   Namespace,
   NodeRole,
   Notebook,
   TrainingJob,
+  Volume,
   Workload,
   WorkloadKind,
   WorkloadStatus,
@@ -209,6 +212,14 @@ function workloadStatusFor(cl: Cluster, index: number, kind: WorkloadKind): Work
   return 'Running';
 }
 
+/** Which product owns a cluster's workloads (CP is the substrate; products run on it). */
+function managedByForCluster(cl: Cluster): ManagedBy {
+  if (cl.source === 'Aegis') return 'Aegis';
+  if (cl.id === 'cl-metis-serving') return 'Metis'; // serving
+  if (cl.id === 'cl-metis-dev') return 'Metis Run'; // legacy, folded into substrate
+  return 'Maxis'; // metis-train-a100, metis-mlstudio → AI training
+}
+
 function buildWorkloads(): Workload[] {
   const out: Workload[] = [];
   clusters.forEach((cl) => {
@@ -231,6 +242,7 @@ function buildWorkloads(): Workload[] {
         status,
         ready,
         desired,
+        managedBy: managedByForCluster(cl),
       });
     }
   });
@@ -836,6 +848,285 @@ export function getEvents(): ClusterEvent[] {
 }
 export function getEventsByCluster(clusterId: string): ClusterEvent[] {
   return events.filter((e) => e.clusterId === clusterId);
+}
+
+// --- Volumes (absorbed from Metis Run into the substrate) -----------------------
+// CP owns the volume plane; each volume carries owner + isolation so products keep
+// isolated volumes.
+
+export const volumes: Volume[] = [
+  {
+    id: 'vol-1',
+    name: 'pvc-db-data',
+    kind: 'PVC',
+    clusterId: 'cl-aegis-prod-seoul',
+    clusterName: 'aegis-prod-seoul',
+    source: 'Aegis',
+    owner: 'Aegis',
+    capacityGiB: 100,
+    status: 'Bound',
+    storageClass: 'fast-ssd',
+    accessMode: 'RWO',
+    isolation: 'platform',
+  },
+  {
+    id: 'vol-2',
+    name: 'pv-shared-logs',
+    kind: 'PV',
+    clusterId: 'cl-aegis-prod-seoul',
+    clusterName: 'aegis-prod-seoul',
+    source: 'Aegis',
+    owner: 'Aegis',
+    capacityGiB: 200,
+    status: 'Bound',
+    storageClass: 'standard',
+    accessMode: 'RWX',
+    isolation: 'shared',
+  },
+  {
+    id: 'vol-3',
+    name: 'pvc-cache',
+    kind: 'PVC',
+    clusterId: 'cl-aegis-prod-tokyo',
+    clusterName: 'aegis-prod-tokyo',
+    source: 'Aegis',
+    owner: 'Aegis',
+    capacityGiB: 50,
+    status: 'Bound',
+    storageClass: 'fast-ssd',
+    accessMode: 'RWO',
+    isolation: 'platform',
+  },
+  {
+    id: 'vol-4',
+    name: 'pvc-model-cache',
+    kind: 'PVC',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    owner: 'Metis',
+    capacityGiB: 500,
+    status: 'Bound',
+    storageClass: 'nvme',
+    accessMode: 'RWX',
+    isolation: 'ml-serving',
+  },
+  {
+    id: 'vol-5',
+    name: 'pvc-whisper-tmp',
+    kind: 'PVC',
+    clusterId: 'cl-metis-serving',
+    clusterName: 'metis-serving',
+    source: 'Metis',
+    owner: 'Metis',
+    capacityGiB: 100,
+    status: 'Pending',
+    storageClass: 'nvme',
+    accessMode: 'RWO',
+    isolation: 'ml-serving',
+  },
+  {
+    id: 'vol-6',
+    name: 'pvc-dataset-imagenet',
+    kind: 'PVC',
+    clusterId: 'cl-metis-train-a100',
+    clusterName: 'metis-train-a100',
+    source: 'Metis',
+    owner: 'Maxis',
+    capacityGiB: 2000,
+    status: 'Bound',
+    storageClass: 'nvme',
+    accessMode: 'ROX',
+    isolation: 'ml-serving',
+  },
+  {
+    id: 'vol-7',
+    name: 'pvc-checkpoints',
+    kind: 'PVC',
+    clusterId: 'cl-metis-train-a100',
+    clusterName: 'metis-train-a100',
+    source: 'Metis',
+    owner: 'Maxis',
+    capacityGiB: 1000,
+    status: 'Bound',
+    storageClass: 'nvme',
+    accessMode: 'RWX',
+    isolation: 'ml-serving',
+  },
+  {
+    id: 'vol-8',
+    name: 'pv-scratch',
+    kind: 'PV',
+    clusterId: 'cl-metis-train-a100',
+    clusterName: 'metis-train-a100',
+    source: 'Metis',
+    owner: 'Maxis',
+    capacityGiB: 500,
+    status: 'Available',
+    storageClass: 'nvme',
+    accessMode: 'RWO',
+    isolation: 'shared',
+  },
+  {
+    id: 'vol-9',
+    name: 'pvc-notebook-home',
+    kind: 'PVC',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    owner: 'Maxis',
+    capacityGiB: 200,
+    status: 'Bound',
+    storageClass: 'standard',
+    accessMode: 'RWX',
+    isolation: 'default',
+  },
+  {
+    id: 'vol-10',
+    name: 'pv-shared-models',
+    kind: 'PV',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    owner: 'Maxis',
+    capacityGiB: 800,
+    status: 'Bound',
+    storageClass: 'nvme',
+    accessMode: 'ROX',
+    isolation: 'shared',
+  },
+  {
+    id: 'vol-11',
+    name: 'pvc-devspace-home',
+    kind: 'PVC',
+    clusterId: 'cl-metis-dev',
+    clusterName: 'metis-dev',
+    source: 'Metis',
+    owner: 'Metis Run',
+    capacityGiB: 100,
+    status: 'Bound',
+    storageClass: 'standard',
+    accessMode: 'RWO',
+    isolation: 'default',
+  },
+  {
+    id: 'vol-12',
+    name: 'pvc-legacy-run',
+    kind: 'PVC',
+    clusterId: 'cl-metis-dev',
+    clusterName: 'metis-dev',
+    source: 'Metis',
+    owner: 'Metis Run',
+    capacityGiB: 50,
+    status: 'Released',
+    storageClass: 'standard',
+    accessMode: 'RWO',
+    isolation: 'default',
+  },
+  {
+    id: 'vol-13',
+    name: 'pvc-stage-db',
+    kind: 'PVC',
+    clusterId: 'cl-aegis-staging',
+    clusterName: 'aegis-staging',
+    source: 'Aegis',
+    owner: 'Aegis',
+    capacityGiB: 40,
+    status: 'Bound',
+    storageClass: 'standard',
+    accessMode: 'RWO',
+    isolation: 'default',
+  },
+  {
+    id: 'vol-14',
+    name: 'pv-edge-cache',
+    kind: 'PV',
+    clusterId: 'cl-aegis-edge-busan',
+    clusterName: 'aegis-edge-busan',
+    source: 'Aegis',
+    owner: 'Aegis',
+    capacityGiB: 30,
+    status: 'Available',
+    storageClass: 'standard',
+    accessMode: 'RWO',
+    isolation: 'shared',
+  },
+];
+
+export function getVolumes(): Volume[] {
+  return volumes;
+}
+export function getVolumesByCluster(clusterId: string): Volume[] {
+  return volumes.filter((v) => v.clusterId === clusterId);
+}
+
+// --- Devspace (dev environments hosted by CP; /path/to substrate routing) --------
+
+export const devspaces: Devspace[] = [
+  {
+    id: 'ds-1',
+    name: 'jiwoo-devspace',
+    owner: 'jiwoo',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    state: 'Running',
+    gpuCount: 1,
+    image: 'pytorch-2.3-cuda12',
+    accessUrl: '/path/to/devspace/jiwoo-devspace',
+  },
+  {
+    id: 'ds-2',
+    name: 'minho-devspace',
+    owner: 'minho',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    state: 'Idle',
+    gpuCount: 0,
+    image: 'datascience-cpu',
+    accessUrl: '/path/to/devspace/minho-devspace',
+  },
+  {
+    id: 'ds-3',
+    name: 'sora-devspace',
+    owner: 'sora',
+    clusterId: 'cl-metis-dev',
+    clusterName: 'metis-dev',
+    source: 'Metis',
+    state: 'Running',
+    gpuCount: 1,
+    image: 'tf-2.16-gpu',
+    accessUrl: '/path/to/devspace/sora-devspace',
+  },
+  {
+    id: 'ds-4',
+    name: 'taeksoo-devspace',
+    owner: 'taeksoo',
+    clusterId: 'cl-metis-dev',
+    clusterName: 'metis-dev',
+    source: 'Metis',
+    state: 'Running',
+    gpuCount: 1,
+    image: 'vllm-notebook',
+    accessUrl: '/path/to/devspace/taeksoo-devspace',
+  },
+  {
+    id: 'ds-5',
+    name: 'hana-devspace',
+    owner: 'hana',
+    clusterId: 'cl-metis-mlstudio',
+    clusterName: 'metis-mlstudio',
+    source: 'Metis',
+    state: 'Stopped',
+    gpuCount: 0,
+    image: 'minimal-cpu',
+    accessUrl: '/path/to/devspace/hana-devspace',
+  },
+];
+
+export function getDevspaces(): Devspace[] {
+  return devspaces;
 }
 
 // --- Status theming --------------------------------------------------------------
