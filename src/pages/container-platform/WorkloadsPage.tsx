@@ -12,6 +12,7 @@ import {
   FilterSearchInput,
   type AppliedFilter,
   type TableColumn,
+  type BadgeProps,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -21,7 +22,7 @@ import {
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
 import { workloads, clusters, getPlatformStatusTheme } from './containerPlatformMockData';
-import type { Workload, WorkloadKind, WorkloadStatus } from './containerPlatformTypes';
+import type { Workload, WorkloadKind, WorkloadStatus, ManagedBy } from './containerPlatformTypes';
 
 /* ----------------------------------------
    Workloads list (Phases 7 + 8)
@@ -41,6 +42,24 @@ const KIND_OPTIONS: { value: WorkloadKind; label: string }[] = [
   { value: 'Pod', label: 'Pod' },
 ];
 
+// Managed-by (owning product) badge theme. Small local map — mirrors the same
+// owner mapping used by VolumesPage so both surfaces stay visually consistent.
+const MANAGED_BY_THEME: Record<ManagedBy, BadgeProps['theme']> = {
+  Aegis: 'blue',
+  Maxis: 'green',
+  Metis: 'yellow',
+  'Metis Run': 'gray',
+  Devspace: 'blue',
+};
+
+const MANAGED_BY_OPTIONS: { value: ManagedBy; label: string }[] = [
+  { value: 'Aegis', label: 'Aegis' },
+  { value: 'Maxis', label: 'Maxis' },
+  { value: 'Metis', label: 'Metis' },
+  { value: 'Metis Run', label: 'Metis Run' },
+  { value: 'Devspace', label: 'Devspace' },
+];
+
 const CLUSTER_OPTIONS = clusters.map((c) => ({ value: c.id, label: c.name }));
 
 export default function WorkloadsPage() {
@@ -56,11 +75,15 @@ export default function WorkloadsPage() {
     const clusterFilters = appliedFilters
       .filter((f) => f.fieldId === 'cluster')
       .map((f) => f.value);
+    const managedByFilters = appliedFilters
+      .filter((f) => f.fieldId === 'managedBy')
+      .map((f) => f.value);
 
     return workloads.filter((w) => {
       if (term && !w.name.toLowerCase().includes(term)) return false;
       if (kindFilters.length > 0 && !kindFilters.includes(w.kind)) return false;
       if (clusterFilters.length > 0 && !clusterFilters.includes(w.clusterId)) return false;
+      if (managedByFilters.length > 0 && !managedByFilters.includes(w.managedBy)) return false;
       return true;
     });
   }, [searchValue, appliedFilters]);
@@ -123,6 +146,18 @@ export default function WorkloadsPage() {
       ),
     },
     {
+      key: 'managedBy',
+      label: 'Managed by',
+      width: fixedColumns.statusLabel,
+      align: 'center',
+      resizable: false,
+      render: (value: ManagedBy) => (
+        <Badge theme={MANAGED_BY_THEME[value]} type="subtle" size="sm">
+          {value}
+        </Badge>
+      ),
+    },
+    {
       key: 'ready',
       label: 'Replicas',
       flex: 1,
@@ -147,6 +182,10 @@ export default function WorkloadsPage() {
     >
       <VStack gap={3}>
         <PageHeader title="Workloads" />
+        <p className="text-body-sm text-[var(--color-text-subtle)] -mt-2">
+          Everything runs on the Container Platform substrate; &lsquo;Managed by&rsquo; shows which
+          product owns it.
+        </p>
 
         <ListToolbar
           primaryActions={
@@ -163,6 +202,12 @@ export default function WorkloadsPage() {
                 filters={[
                   { id: 'kind', label: 'Kind', type: 'select', options: KIND_OPTIONS },
                   { id: 'cluster', label: 'Cluster', type: 'select', options: CLUSTER_OPTIONS },
+                  {
+                    id: 'managedBy',
+                    label: 'Managed by',
+                    type: 'select',
+                    options: MANAGED_BY_OPTIONS,
+                  },
                 ]}
                 appliedFilters={appliedFilters}
                 onFiltersChange={(next) => {
