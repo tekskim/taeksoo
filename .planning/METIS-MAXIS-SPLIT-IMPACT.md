@@ -45,8 +45,9 @@ with model/framework/RPS/epoch semantics). That was **over-absorption.** Per the
 - **D2. Metis Run Volume → CP?** → **Yes, with an ownership/isolation model:** CP owns the volume _plane_,
   each volume carries `owner` (Metis/Maxis/Aegis) + isolation scope, so products keep isolated volumes.
   (Resolves "Container가 volume 가져가면 Metis/Maxis 격리 volume 불가" issue.)
-- **D3. ML Studio Devspace → CP?** → **Yes, IF** CP owns the `/path/to` pod-access routing as a shared
-  substrate capability (one impl for Metis Run pods + Devspace). Otherwise keep Devspace in Maxis.
+- **D3. ML Studio Devspace → CP?** → **LOCKED YES (2026-07-09):** Devspace folds into Container Platform,
+  with CP owning the `/path/to` pod-access routing as a shared substrate capability (one impl for Metis
+  Run pods + Devspace). Reflected in the mockup's Dev Spaces tab.
 - **D4. Multi-cluster component — CP self-build vs TKAI/Fabric?** → **Shared component (TKAI/Fabric).**
   Do not duplicate multi-cluster machinery inside CP.
 - **D5. `partition = namespace` tenancy?** → **Adopt namespace as CP's partition boundary** (align with
