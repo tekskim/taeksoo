@@ -16,9 +16,9 @@ import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/Desktop
 /* ----------------------------------------
    Container Platform Sidebar
 
-   A single persistent 200px left sidebar. Overview / Clusters / Nodes /
-   Workloads / AI Workloads. No ContainerMode / cluster / drawer /
-   icon-sidebar complexity — this is the Walking Skeleton shell (Phase 1).
+   A single persistent 200px left sidebar with eight items: Overview · Clusters ·
+   Nodes · Namespaces · Volumes · Workloads · AI Workloads · Events. No
+   ContainerMode / cluster / drawer / icon-sidebar complexity.
    ---------------------------------------- */
 
 export const CONTAINER_PLATFORM_SIDEBAR_WIDTH = 200;
