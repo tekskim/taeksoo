@@ -12,7 +12,6 @@ import {
   FilterSearchInput,
   type AppliedFilter,
   type TableColumn,
-  type BadgeProps,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -21,7 +20,12 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
-import { getVolumes, clusters, getPlatformStatusTheme } from './containerPlatformMockData';
+import {
+  getVolumes,
+  clusters,
+  getPlatformStatusTheme,
+  getManagedByTheme,
+} from './containerPlatformMockData';
 import type { Volume, VolumeKind, VolumeStatus, ManagedBy } from './containerPlatformTypes';
 
 /* ----------------------------------------
@@ -35,16 +39,6 @@ import type { Volume, VolumeKind, VolumeStatus, ManagedBy } from './containerPla
    ---------------------------------------- */
 
 const ROWS_PER_PAGE = 10;
-
-// Owner (managing product) badge theme. Small explicit map — reusable pattern
-// so Workloads' "Managed by" column can mirror it.
-const OWNER_THEME: Record<ManagedBy, BadgeProps['theme']> = {
-  Aegis: 'blue',
-  Maxis: 'green',
-  Metis: 'yellow',
-  'Metis Run': 'gray',
-  Devspace: 'blue',
-};
 
 const OWNER_OPTIONS: { value: ManagedBy; label: string }[] = [
   { value: 'Aegis', label: 'Aegis' },
@@ -136,7 +130,7 @@ export default function VolumesPage() {
       align: 'center',
       resizable: false,
       render: (value: ManagedBy) => (
-        <Badge theme={OWNER_THEME[value]} type="subtle" size="sm">
+        <Badge theme={getManagedByTheme(value)} type="solid" size="sm">
           {value}
         </Badge>
       ),

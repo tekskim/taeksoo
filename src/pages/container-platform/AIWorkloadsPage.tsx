@@ -17,7 +17,6 @@ import {
   FilterSearchInput,
   type AppliedFilter,
   type TableColumn,
-  type BadgeProps,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -32,6 +31,7 @@ import {
   notebooks,
   getDevspaces,
   getPlatformStatusTheme,
+  getManagedByTheme,
 } from './containerPlatformMockData';
 import type {
   InferenceService,
@@ -84,16 +84,6 @@ const DEVSPACE_STATE_OPTIONS: { value: DevspaceState; label: string }[] = [
   { value: 'Stopped', label: 'Stopped' },
 ];
 
-// Managed-by (owning product) badge theme. Same map used by WorkloadsPage so the
-// attribution reads identically on every substrate surface.
-const MANAGED_BY_THEME: Record<ManagedBy, BadgeProps['theme']> = {
-  Aegis: 'blue',
-  Maxis: 'green',
-  Metis: 'yellow',
-  'Metis Run': 'gray',
-  Devspace: 'blue',
-};
-
 const devspaces = getDevspaces();
 
 /** Cluster filter options derived from the rows actually present in a segment. */
@@ -120,9 +110,10 @@ const TruncCell = (value: string) => (
   </span>
 );
 
-/** Attribution badge — constant per tab (CP just hosts these). */
+/** Attribution badge — constant per tab (CP just hosts these). Solid so it reads
+ * as attribution, distinct from the subtle status badges. */
 const managedByCell = (product: ManagedBy) => (
-  <Badge theme={MANAGED_BY_THEME[product]} type="subtle" size="sm">
+  <Badge theme={getManagedByTheme(product)} type="solid" size="sm">
     {product}
   </Badge>
 );

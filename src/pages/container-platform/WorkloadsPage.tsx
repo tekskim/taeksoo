@@ -12,7 +12,6 @@ import {
   FilterSearchInput,
   type AppliedFilter,
   type TableColumn,
-  type BadgeProps,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -21,7 +20,12 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
-import { workloads, clusters, getPlatformStatusTheme } from './containerPlatformMockData';
+import {
+  workloads,
+  clusters,
+  getPlatformStatusTheme,
+  getManagedByTheme,
+} from './containerPlatformMockData';
 import type { Workload, WorkloadKind, WorkloadStatus, ManagedBy } from './containerPlatformTypes';
 
 /* ----------------------------------------
@@ -41,16 +45,6 @@ const KIND_OPTIONS: { value: WorkloadKind; label: string }[] = [
   { value: 'Job', label: 'Job' },
   { value: 'Pod', label: 'Pod' },
 ];
-
-// Managed-by (owning product) badge theme. Small local map — mirrors the same
-// owner mapping used by VolumesPage so both surfaces stay visually consistent.
-const MANAGED_BY_THEME: Record<ManagedBy, BadgeProps['theme']> = {
-  Aegis: 'blue',
-  Maxis: 'green',
-  Metis: 'yellow',
-  'Metis Run': 'gray',
-  Devspace: 'blue',
-};
 
 const MANAGED_BY_OPTIONS: { value: ManagedBy; label: string }[] = [
   { value: 'Aegis', label: 'Aegis' },
@@ -152,7 +146,7 @@ export default function WorkloadsPage() {
       align: 'center',
       resizable: false,
       render: (value: ManagedBy) => (
-        <Badge theme={MANAGED_BY_THEME[value]} type="subtle" size="sm">
+        <Badge theme={getManagedByTheme(value)} type="solid" size="sm">
           {value}
         </Badge>
       ),
