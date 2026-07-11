@@ -211,7 +211,12 @@ export default function ClusterDetailPage() {
         </span>
         <HStack gap={2} align="center" className="flex-wrap">
           {workloadByStatus.map(({ status, count }) => (
-            <Badge key={status} theme={getPlatformStatusTheme(status)} type="subtle" size="sm">
+            <Badge
+              key={status}
+              theme={count === 0 ? 'gray' : getPlatformStatusTheme(status)}
+              type="subtle"
+              size="sm"
+            >
               {count} {status}
             </Badge>
           ))}
