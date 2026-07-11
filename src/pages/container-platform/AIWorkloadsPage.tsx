@@ -143,7 +143,6 @@ const inferenceColumns: TableColumn<InferenceService>[] = [
     render: NameCell,
   },
   { key: 'model', label: 'Model', flex: 1, minWidth: columnMinWidths.model, render: TruncCell },
-  { key: 'framework', label: 'Framework', flex: 1, minWidth: columnMinWidths.type },
   {
     key: 'clusterName',
     label: 'Cluster',
@@ -178,6 +177,7 @@ const inferenceColumns: TableColumn<InferenceService>[] = [
     width: fixedColumns.actions,
     align: 'right',
     resizable: false,
+    sticky: 'right',
     render: () => <DrillOutButton product="Metis" />,
   },
 ];
@@ -234,6 +234,7 @@ const trainingColumns: TableColumn<TrainingJob>[] = [
     width: fixedColumns.actions,
     align: 'right',
     resizable: false,
+    sticky: 'right',
     render: () => <DrillOutButton product="Maxis" />,
   },
 ];
@@ -282,6 +283,7 @@ const notebookColumns: TableColumn<Notebook>[] = [
     width: fixedColumns.actions,
     align: 'right',
     resizable: false,
+    sticky: 'right',
     render: () => <DrillOutButton product="Maxis" />,
   },
 ];
