@@ -22,9 +22,10 @@ import {
 } from './ContainerPlatformSidebar';
 import {
   getVolumes,
-  clusters,
   getPlatformStatusTheme,
   getManagedByTheme,
+  clusterFilterOptions,
+  MANAGED_BY_OPTIONS,
 } from './containerPlatformMockData';
 import type { Volume, VolumeKind, VolumeStatus, ManagedBy } from './containerPlatformTypes';
 
@@ -40,22 +41,12 @@ import type { Volume, VolumeKind, VolumeStatus, ManagedBy } from './containerPla
 
 const ROWS_PER_PAGE = 10;
 
-const OWNER_OPTIONS: { value: ManagedBy; label: string }[] = [
-  { value: 'Aegis', label: 'Aegis' },
-  { value: 'Maxis', label: 'Maxis' },
-  { value: 'Metis', label: 'Metis' },
-  { value: 'Metis Run', label: 'Metis Run' },
-  { value: 'Devspace', label: 'Devspace' },
-];
-
 const STATUS_OPTIONS: { value: VolumeStatus; label: string }[] = [
   { value: 'Bound', label: 'Bound' },
   { value: 'Available', label: 'Available' },
   { value: 'Released', label: 'Released' },
   { value: 'Pending', label: 'Pending' },
 ];
-
-const CLUSTER_OPTIONS = clusters.map((c) => ({ value: c.id, label: c.name }));
 
 export default function VolumesPage() {
   const navigate = useNavigate();
@@ -201,9 +192,14 @@ export default function VolumesPage() {
                   setPage(1);
                 }}
                 filters={[
-                  { id: 'owner', label: 'Owner', type: 'select', options: OWNER_OPTIONS },
+                  { id: 'owner', label: 'Owner', type: 'select', options: MANAGED_BY_OPTIONS },
                   { id: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
-                  { id: 'cluster', label: 'Cluster', type: 'select', options: CLUSTER_OPTIONS },
+                  {
+                    id: 'cluster',
+                    label: 'Cluster',
+                    type: 'select',
+                    options: clusterFilterOptions,
+                  },
                 ]}
                 appliedFilters={appliedFilters}
                 onFiltersChange={(next) => {

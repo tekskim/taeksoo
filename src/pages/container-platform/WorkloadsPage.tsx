@@ -22,9 +22,10 @@ import {
 } from './ContainerPlatformSidebar';
 import {
   workloads,
-  clusters,
   getPlatformStatusTheme,
   getManagedByTheme,
+  clusterFilterOptions,
+  MANAGED_BY_OPTIONS,
 } from './containerPlatformMockData';
 import type { Workload, WorkloadKind, WorkloadStatus, ManagedBy } from './containerPlatformTypes';
 
@@ -45,16 +46,6 @@ const KIND_OPTIONS: { value: WorkloadKind; label: string }[] = [
   { value: 'Job', label: 'Job' },
   { value: 'Pod', label: 'Pod' },
 ];
-
-const MANAGED_BY_OPTIONS: { value: ManagedBy; label: string }[] = [
-  { value: 'Aegis', label: 'Aegis' },
-  { value: 'Maxis', label: 'Maxis' },
-  { value: 'Metis', label: 'Metis' },
-  { value: 'Metis Run', label: 'Metis Run' },
-  { value: 'Devspace', label: 'Devspace' },
-];
-
-const CLUSTER_OPTIONS = clusters.map((c) => ({ value: c.id, label: c.name }));
 
 export default function WorkloadsPage() {
   const navigate = useNavigate();
@@ -195,7 +186,12 @@ export default function WorkloadsPage() {
                 }}
                 filters={[
                   { id: 'kind', label: 'Kind', type: 'select', options: KIND_OPTIONS },
-                  { id: 'cluster', label: 'Cluster', type: 'select', options: CLUSTER_OPTIONS },
+                  {
+                    id: 'cluster',
+                    label: 'Cluster',
+                    type: 'select',
+                    options: clusterFilterOptions,
+                  },
                   {
                     id: 'managedBy',
                     label: 'Managed by',

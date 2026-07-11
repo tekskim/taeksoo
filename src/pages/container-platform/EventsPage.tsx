@@ -20,7 +20,11 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
-import { getEvents, clusters, getPlatformStatusTheme } from './containerPlatformMockData';
+import {
+  getEvents,
+  getPlatformStatusTheme,
+  clusterFilterOptions,
+} from './containerPlatformMockData';
 import type { ClusterEvent, EventType } from './containerPlatformTypes';
 
 /* ----------------------------------------
@@ -37,8 +41,6 @@ const TYPE_OPTIONS: { value: EventType; label: string }[] = [
   { value: 'Normal', label: 'Normal' },
   { value: 'Warning', label: 'Warning' },
 ];
-
-const CLUSTER_OPTIONS = clusters.map((c) => ({ value: c.id, label: c.name }));
 
 /** Compact relative age: minutes under an hour, otherwise whole hours. */
 function formatAge(ageMinutes: number): string {
@@ -180,7 +182,12 @@ export default function EventsPage() {
                 }}
                 filters={[
                   { id: 'type', label: 'Type', type: 'select', options: TYPE_OPTIONS },
-                  { id: 'cluster', label: 'Cluster', type: 'select', options: CLUSTER_OPTIONS },
+                  {
+                    id: 'cluster',
+                    label: 'Cluster',
+                    type: 'select',
+                    options: clusterFilterOptions,
+                  },
                 ]}
                 appliedFilters={appliedFilters}
                 onFiltersChange={(next) => {
