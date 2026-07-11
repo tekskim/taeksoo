@@ -20,7 +20,7 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
-import { nodes, clusters, getPlatformStatusTheme } from './containerPlatformMockData';
+import { nodes, getPlatformStatusTheme, clusterFilterOptions } from './containerPlatformMockData';
 import type { ClusterNode, NodeStatus } from './containerPlatformTypes';
 
 /* ----------------------------------------
@@ -38,8 +38,6 @@ const STATUS_OPTIONS: { value: NodeStatus; label: string }[] = [
   { value: 'NotReady', label: 'NotReady' },
   { value: 'SchedulingDisabled', label: 'SchedulingDisabled' },
 ];
-
-const CLUSTER_OPTIONS = clusters.map((c) => ({ value: c.id, label: c.name }));
 
 export default function NodesPage() {
   const navigate = useNavigate();
@@ -165,7 +163,12 @@ export default function NodesPage() {
                   setPage(1);
                 }}
                 filters={[
-                  { id: 'cluster', label: 'Cluster', type: 'select', options: CLUSTER_OPTIONS },
+                  {
+                    id: 'cluster',
+                    label: 'Cluster',
+                    type: 'select',
+                    options: clusterFilterOptions,
+                  },
                   { id: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
                 ]}
                 appliedFilters={appliedFilters}

@@ -20,7 +20,7 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
-import { getNamespaces, clusters } from './containerPlatformMockData';
+import { getNamespaces, clusterFilterOptions } from './containerPlatformMockData';
 import type { Namespace, ClusterSource } from './containerPlatformTypes';
 
 /* ----------------------------------------
@@ -37,8 +37,6 @@ const SOURCE_OPTIONS: { value: ClusterSource; label: string }[] = [
   { value: 'Aegis', label: 'Aegis' },
   { value: 'Metis', label: 'Metis' },
 ];
-
-const CLUSTER_OPTIONS = clusters.map((c) => ({ value: c.id, label: c.name }));
 
 export default function NamespacesPage() {
   const navigate = useNavigate();
@@ -143,7 +141,12 @@ export default function NamespacesPage() {
                   setPage(1);
                 }}
                 filters={[
-                  { id: 'cluster', label: 'Cluster', type: 'select', options: CLUSTER_OPTIONS },
+                  {
+                    id: 'cluster',
+                    label: 'Cluster',
+                    type: 'select',
+                    options: clusterFilterOptions,
+                  },
                   { id: 'source', label: 'Source', type: 'select', options: SOURCE_OPTIONS },
                 ]}
                 appliedFilters={appliedFilters}
