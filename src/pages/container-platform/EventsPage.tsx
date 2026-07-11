@@ -119,17 +119,6 @@ export default function EventsPage() {
       },
     },
     {
-      key: 'namespace',
-      label: 'Namespace',
-      flex: 1,
-      minWidth: columnMinWidths.namespace,
-      render: (value: string) => (
-        <span className="truncate block" title={value}>
-          {value}
-        </span>
-      ),
-    },
-    {
       key: 'clusterName',
       label: 'Cluster',
       flex: 1,

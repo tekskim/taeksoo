@@ -161,23 +161,6 @@ export default function VolumesPage() {
       ),
     },
     {
-      key: 'storageClass',
-      label: 'Storage Class',
-      flex: 1,
-      minWidth: columnMinWidths.storageClass,
-      render: (value: string) => (
-        <span className="truncate block" title={value}>
-          {value}
-        </span>
-      ),
-    },
-    {
-      key: 'accessMode',
-      label: 'Access Mode',
-      flex: 1,
-      minWidth: columnMinWidths.accessModes,
-    },
-    {
       key: 'isolation',
       label: 'Isolation',
       flex: 1,

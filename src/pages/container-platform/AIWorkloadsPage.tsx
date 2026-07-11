@@ -172,6 +172,7 @@ const inferenceColumns: TableColumn<InferenceService>[] = [
       </Badge>
     ),
   },
+  { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
   {
     key: 'managedBy',
     label: 'Managed by',
@@ -180,26 +181,10 @@ const inferenceColumns: TableColumn<InferenceService>[] = [
     resizable: false,
     render: () => managedByCell('Metis'),
   },
-  { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
-  {
-    key: 'ready',
-    label: 'Replicas',
-    flex: 1,
-    minWidth: columnMinWidths.replicas,
-    render: (_: unknown, row: InferenceService) => `${row.ready} / ${row.desired}`,
-  },
-  { key: 'rps', label: 'RPS', flex: 1, minWidth: columnMinWidths.count, sortable: true },
-  {
-    key: 'latencyMs',
-    label: 'p95 Latency',
-    flex: 1,
-    minWidth: columnMinWidths.duration,
-    render: (value: number) => `${value} ms`,
-  },
   {
     key: 'actions',
     label: '',
-    width: columnMinWidths.owner,
+    width: fixedColumns.actions,
     align: 'right',
     resizable: false,
     render: () => <DrillOutButton product="Metis" />,
@@ -215,7 +200,6 @@ const trainingColumns: TableColumn<TrainingJob>[] = [
     sortable: true,
     render: NameCell,
   },
-  { key: 'framework', label: 'Framework', flex: 1, minWidth: columnMinWidths.type },
   {
     key: 'clusterName',
     label: 'Cluster',
@@ -235,14 +219,6 @@ const trainingColumns: TableColumn<TrainingJob>[] = [
       </Badge>
     ),
   },
-  {
-    key: 'managedBy',
-    label: 'Managed by',
-    width: fixedColumns.statusLabel,
-    align: 'center',
-    resizable: false,
-    render: () => managedByCell('Maxis'),
-  },
   { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
   {
     key: 'progressPct',
@@ -252,19 +228,19 @@ const trainingColumns: TableColumn<TrainingJob>[] = [
     sortable: true,
     render: (value: number) => `${value}%`,
   },
-  {
-    key: 'durationHrs',
-    label: 'Duration',
-    flex: 1,
-    minWidth: columnMinWidths.duration,
-    sortable: true,
-    render: (value: number) => `${value} h`,
-  },
   { key: 'owner', label: 'Owner', flex: 1, minWidth: columnMinWidths.owner, render: TruncCell },
+  {
+    key: 'managedBy',
+    label: 'Managed by',
+    width: fixedColumns.statusLabel,
+    align: 'center',
+    resizable: false,
+    render: () => managedByCell('Maxis'),
+  },
   {
     key: 'actions',
     label: '',
-    width: columnMinWidths.owner,
+    width: fixedColumns.actions,
     align: 'right',
     resizable: false,
     render: () => <DrillOutButton product="Maxis" />,
@@ -300,6 +276,7 @@ const notebookColumns: TableColumn<Notebook>[] = [
       </Badge>
     ),
   },
+  { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
   {
     key: 'managedBy',
     label: 'Managed by',
@@ -308,18 +285,10 @@ const notebookColumns: TableColumn<Notebook>[] = [
     resizable: false,
     render: () => managedByCell('Maxis'),
   },
-  { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
-  {
-    key: 'image',
-    label: 'Image',
-    flex: 1,
-    minWidth: columnMinWidths.containerImage,
-    render: TruncCell,
-  },
   {
     key: 'actions',
     label: '',
-    width: columnMinWidths.owner,
+    width: fixedColumns.actions,
     align: 'right',
     resizable: false,
     render: () => <DrillOutButton product="Maxis" />,
@@ -356,13 +325,6 @@ const devspaceColumns: TableColumn<Devspace>[] = [
     ),
   },
   { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
-  {
-    key: 'image',
-    label: 'Image',
-    flex: 1,
-    minWidth: columnMinWidths.containerImage,
-    render: TruncCell,
-  },
   {
     key: 'accessUrl',
     label: 'Access',
