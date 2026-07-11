@@ -22,6 +22,8 @@ import {
   getPlatformStatusTheme,
   getAISummary,
   getGpuSummary,
+  workloads,
+  getEvents,
 } from './containerPlatformMockData';
 import type { ClusterSource, HealthStatus } from './containerPlatformTypes';
 
@@ -47,6 +49,9 @@ export default function OverviewPage() {
   const summary = getEstateSummary();
   const ai = getAISummary();
   const gpu = getGpuSummary();
+  // Two more at-risk signals so the row shows four real metrics (not two + a gap).
+  const pendingWorkloadCount = workloads.filter((w) => w.status === 'Pending').length;
+  const warningEventCount = getEvents().filter((e) => e.type === 'Warning').length;
 
   const sourceRows: SourceRow[] = (['Aegis', 'Metis'] as ClusterSource[]).map((src) => ({
     id: src,
@@ -170,9 +175,32 @@ export default function OverviewPage() {
                 </HStack>
               }
             />
-            {/* Spacers keep the at-risk cards aligned with the 4-up estate row. */}
-            <div className="flex-1 min-w-0" aria-hidden />
-            <div className="flex-1 min-w-0" aria-hidden />
+            <MetricCard
+              title="Pending workloads"
+              value={
+                <HStack gap={2} align="center">
+                  <span>{pendingWorkloadCount}</span>
+                  <Badge
+                    theme={pendingWorkloadCount > 0 ? 'yellow' : 'green'}
+                    type="subtle"
+                    size="sm"
+                  >
+                    {pendingWorkloadCount > 0 ? 'Scheduling' : 'None pending'}
+                  </Badge>
+                </HStack>
+              }
+            />
+            <MetricCard
+              title="Warnings (24h)"
+              value={
+                <HStack gap={2} align="center">
+                  <span>{warningEventCount}</span>
+                  <Badge theme={warningEventCount > 0 ? 'yellow' : 'green'} type="subtle" size="sm">
+                    {warningEventCount > 0 ? 'Review events' : 'Quiet'}
+                  </Badge>
+                </HStack>
+              }
+            />
           </MetricCard.Group>
         </VStack>
 
