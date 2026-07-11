@@ -489,7 +489,7 @@ export default function AIWorkloadsPage() {
         </Tabs>
 
         {segment === 'devspaces' && (
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
             Dev Spaces are hosted by Container Platform; pod access uses the shared /path/to
             routing.
           </span>

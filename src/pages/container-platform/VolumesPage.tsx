@@ -174,7 +174,7 @@ export default function VolumesPage() {
     >
       <VStack gap={3}>
         <PageHeader title="Volumes" />
-        <p className="text-body-sm text-[var(--color-text-subtle)] -mt-2">
+        <p className="text-body-sm text-[var(--color-text-muted)]">
           Volumes absorbed from Metis Run — Container Platform owns the plane; each volume keeps its
           owner and isolation.
         </p>

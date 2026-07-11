@@ -167,7 +167,7 @@ export default function WorkloadsPage() {
     >
       <VStack gap={3}>
         <PageHeader title="Workloads" />
-        <p className="text-body-sm text-[var(--color-text-subtle)] -mt-2">
+        <p className="text-body-sm text-[var(--color-text-muted)]">
           Everything runs on the Container Platform substrate; &lsquo;Managed by&rsquo; shows which
           product owns it.
         </p>
