@@ -1155,3 +1155,32 @@ export function getPlatformStatusTheme(status: string): BadgeTheme {
   const normalized = status.toLowerCase().trim();
   return PLATFORM_STATUS_THEME[normalized] ?? getContainerStatusTheme(status);
 }
+
+// Managed-by / owner (which product owns a workload/volume). Single source so the
+// same product themes identically everywhere. Render these as `type="solid"` to
+// separate attribution from status badges (which use `type="subtle"`).
+const MANAGED_BY_THEME: Record<ManagedBy, BadgeTheme> = {
+  Aegis: 'blue',
+  Maxis: 'green',
+  Metis: 'yellow',
+  'Metis Run': 'gray',
+  Devspace: 'blue',
+};
+
+export function getManagedByTheme(owner: ManagedBy): BadgeTheme {
+  return MANAGED_BY_THEME[owner];
+}
+
+/** Shared filter option lists (deduped from the pages that used to inline them). */
+export const MANAGED_BY_OPTIONS: { value: ManagedBy; label: string }[] = [
+  { value: 'Aegis', label: 'Aegis' },
+  { value: 'Maxis', label: 'Maxis' },
+  { value: 'Metis', label: 'Metis' },
+  { value: 'Metis Run', label: 'Metis Run' },
+  { value: 'Devspace', label: 'Devspace' },
+];
+
+export const clusterFilterOptions: { value: string; label: string }[] = clusters.map((c) => ({
+  value: c.id,
+  label: c.name,
+}));
