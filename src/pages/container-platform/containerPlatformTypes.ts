@@ -8,7 +8,7 @@ export type ClusterSource = 'Aegis' | 'Metis';
  * Which product manages a workload. Container Platform is the common base; the
  * products (Maxis = AI training + dev environments, Metis = serving,
  * Aegis = general apps) run on it. Dev-environment pods are ordinary
- * Maxis-managed workloads — CP has no dedicated devspace surface (D-3).
+ * Maxis-managed workloads — CP has no dedicated devspace surface (CorePlan D-24).
  */
 export type ManagedBy = 'Aegis' | 'Maxis' | 'Metis';
 

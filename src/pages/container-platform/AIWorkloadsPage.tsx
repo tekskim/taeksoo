@@ -52,7 +52,7 @@ import type {
      - an "Open in {product} ↗" link signals "manage elsewhere" — Maxis/Metis
        are separate apps, so it never navigates a broken route
    Dev-environment pods are ordinary Maxis-managed workloads (Workloads list),
-   not a dedicated section here (D-3).
+   not a dedicated section here (CorePlan D-24).
 
    Each tab is a read-only TDS Table with name search + cluster/state filters and
    client-side pagination (mirrors ClustersPage mechanics). Tab change resets
