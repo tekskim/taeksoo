@@ -5,12 +5,12 @@
 export type ClusterSource = 'Aegis' | 'Metis';
 
 /**
- * Which product manages a workload. Container Platform is the substrate; the
- * products (Maxis = AI training, Metis = serving, Aegis = general apps) run ON
- * it. "Metis Run" is legacy (its workloads/volumes were folded into the
- * substrate); "Devspace" workloads are hosted by Container Platform itself.
+ * Which product manages a workload. Container Platform is the common base; the
+ * products (Maxis = AI training + dev environments, Metis = serving,
+ * Aegis = general apps) run on it. Dev-environment pods are ordinary
+ * Maxis-managed workloads — CP has no dedicated devspace surface (D-3).
  */
-export type ManagedBy = 'Aegis' | 'Maxis' | 'Metis' | 'Metis Run' | 'Devspace';
+export type ManagedBy = 'Aegis' | 'Maxis' | 'Metis';
 
 /** Rolled-up health used by clusters and the overview dashboard. */
 export type HealthStatus = 'Healthy' | 'Warning' | 'Critical';
@@ -77,14 +77,14 @@ export interface EstateSummary {
   bySource: Record<ClusterSource, { clusters: number; nodes: number; workloads: number }>;
 }
 
-// --- AI workloads (Metis Run + ML Studio absorbed into Container Platform) --------
-// Container Platform folds the previously separate AI surfaces in as first-class
-// workload categories: model serving (Metis Run) -> InferenceService, and ML Studio
-// -> TrainingJob + Notebook. GPU is a first-class node/estate resource.
+// --- AI workloads (observed on the platform; owned by Metis/Maxis) ---------------
+// Container Platform hosts these but does not manage them: model serving ->
+// InferenceService (Metis), training -> TrainingJob + Notebook (Maxis). GPU is
+// tracked as a node/estate resource.
 
 export type AIWorkloadKind = 'InferenceService' | 'TrainingJob' | 'Notebook';
 
-/** Model serving endpoint — absorbed from Metis Run. */
+/** Model serving endpoint — managed by Metis. */
 export interface InferenceService {
   id: string;
   name: string;
@@ -101,7 +101,7 @@ export interface InferenceService {
   latencyMs: number; // mock p95 latency
 }
 
-/** Training run — absorbed from ML Studio. */
+/** Training run — managed by Maxis. */
 export interface TrainingJob {
   id: string;
   name: string;
@@ -118,7 +118,7 @@ export interface TrainingJob {
 
 export type NotebookState = 'Running' | 'Idle' | 'Stopped';
 
-/** Interactive notebook server — absorbed from ML Studio. */
+/** Interactive notebook server — managed by Maxis. */
 export interface Notebook {
   id: string;
   name: string;
@@ -163,9 +163,9 @@ export interface ClusterEvent {
   ageMinutes: number;
 }
 
-// --- Volumes (absorbed from Metis Run into the substrate) ------------------------
-// Container Platform owns the volume plane, but every volume carries an owner and
-// an isolation scope so Metis/Maxis still get isolated volumes (split-memo issue).
+// --- Volumes (K8s PV/PVC across the estate) ---------------------------------------
+// Every volume carries an owner and an isolation scope so each product's data
+// stays attributable and isolated.
 
 export type VolumeKind = 'PV' | 'PVC';
 export type VolumeStatus = 'Bound' | 'Available' | 'Released' | 'Pending';
@@ -183,25 +183,6 @@ export interface Volume {
   storageClass: string;
   accessMode: string; // RWO / RWX / ROX
   isolation: string; // owning namespace, or 'shared'
-}
-
-// --- Devspace (dev environments; hosted by Container Platform, under review) ------
-// Reuses the substrate's /path/to pod-access routing (one impl shared with Metis
-// Run pods) instead of each product building its own.
-
-export type DevspaceState = 'Running' | 'Idle' | 'Stopped';
-
-export interface Devspace {
-  id: string;
-  name: string;
-  owner: string; // user
-  clusterId: string;
-  clusterName: string;
-  source: ClusterSource;
-  state: DevspaceState;
-  gpuCount: number;
-  image: string;
-  accessUrl: string; // /path/to-style substrate route
 }
 
 export interface AISummary {

@@ -17,6 +17,7 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
+import { ContainerPlatformTabBar } from './ContainerPlatformTabBar';
 import {
   getEstateSummary,
   getPlatformStatusTheme,
@@ -98,6 +99,7 @@ export default function OverviewPage() {
     <PageShell
       sidebar={<ContainerPlatformSidebar />}
       sidebarWidth={CONTAINER_PLATFORM_SIDEBAR_WIDTH}
+      tabBar={<ContainerPlatformTabBar />}
       topBar={
         <TopBar
           showNavigation
@@ -112,8 +114,8 @@ export default function OverviewPage() {
         <VStack gap={1}>
           <PageHeader title="Overview" />
           <span className="text-body-sm text-[var(--color-text-muted)]">
-            The multi-cluster container substrate — Aegis, Maxis (training), Metis (serving), and
-            legacy Metis Run workloads all run here.
+            One place for every cluster — Aegis, Maxis (training), and Metis (serving) workloads all
+            run here.
           </span>
         </VStack>
 
@@ -204,7 +206,7 @@ export default function OverviewPage() {
           </MetricCard.Group>
         </VStack>
 
-        {/* AI workloads: observed on the substrate; managed in Maxis (training) / Metis (serving) */}
+        {/* AI workloads: observed here; managed in Maxis (training) / Metis (serving) */}
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">AI workloads</span>
           <MetricCard.Group>
@@ -230,7 +232,7 @@ export default function OverviewPage() {
             />
           </MetricCard.Group>
           <span className="text-body-sm text-[var(--color-text-muted)]">
-            Managed in Maxis (training) / Metis (serving) &mdash; hosted on this substrate.
+            Managed in Maxis (training) / Metis (serving) &mdash; hosted on Container Platform.
           </span>
         </VStack>
 

@@ -11,7 +11,6 @@ import type {
   ClusterEvent,
   ClusterNode,
   ClusterSource,
-  Devspace,
   EstateSummary,
   GpuSummary,
   InferenceService,
@@ -212,12 +211,11 @@ function workloadStatusFor(cl: Cluster, index: number, kind: WorkloadKind): Work
   return 'Running';
 }
 
-/** Which product owns a cluster's workloads (CP is the substrate; products run on it). */
+/** Which product owns a cluster's workloads (CP hosts them; products own them). */
 function managedByForCluster(cl: Cluster): ManagedBy {
   if (cl.source === 'Aegis') return 'Aegis';
   if (cl.id === 'cl-metis-serving') return 'Metis'; // serving
-  if (cl.id === 'cl-metis-dev') return 'Metis Run'; // legacy, folded into substrate
-  return 'Maxis'; // metis-train-a100, metis-mlstudio → AI training
+  return 'Maxis'; // metis-train-a100, metis-mlstudio, metis-dev → AI training + dev environments
 }
 
 function buildWorkloads(): Workload[] {
@@ -291,7 +289,7 @@ export function getEstateSummary(): EstateSummary {
   };
 }
 
-// --- AI workloads (Metis Run + ML Studio absorbed) ------------------------------
+// --- AI workloads (observed on the platform; owned by Metis/Maxis) ---------------
 // Deterministic inline mock. These live on the Metis GPU clusters. Statuses reuse
 // WorkloadStatus so they theme through getPlatformStatusTheme like everything else.
 
@@ -850,7 +848,7 @@ export function getEventsByCluster(clusterId: string): ClusterEvent[] {
   return events.filter((e) => e.clusterId === clusterId);
 }
 
-// --- Volumes (absorbed from Metis Run into the substrate) -----------------------
+// --- Volumes (K8s PV/PVC across the estate) --------------------------------------
 // CP owns the volume plane; each volume carries owner + isolation so products keep
 // isolated volumes.
 
@@ -1002,7 +1000,7 @@ export const volumes: Volume[] = [
     clusterId: 'cl-metis-dev',
     clusterName: 'metis-dev',
     source: 'Metis',
-    owner: 'Metis Run',
+    owner: 'Maxis',
     capacityGiB: 100,
     status: 'Bound',
     storageClass: 'standard',
@@ -1011,12 +1009,12 @@ export const volumes: Volume[] = [
   },
   {
     id: 'vol-12',
-    name: 'pvc-legacy-run',
+    name: 'pvc-devspace-scratch',
     kind: 'PVC',
     clusterId: 'cl-metis-dev',
     clusterName: 'metis-dev',
     source: 'Metis',
-    owner: 'Metis Run',
+    owner: 'Maxis',
     capacityGiB: 50,
     status: 'Released',
     storageClass: 'standard',
@@ -1060,75 +1058,6 @@ export function getVolumesByCluster(clusterId: string): Volume[] {
   return volumes.filter((v) => v.clusterId === clusterId);
 }
 
-// --- Devspace (dev environments hosted by CP; /path/to substrate routing) --------
-
-export const devspaces: Devspace[] = [
-  {
-    id: 'ds-1',
-    name: 'jiwoo-devspace',
-    owner: 'jiwoo',
-    clusterId: 'cl-metis-mlstudio',
-    clusterName: 'metis-mlstudio',
-    source: 'Metis',
-    state: 'Running',
-    gpuCount: 1,
-    image: 'pytorch-2.3-cuda12',
-    accessUrl: '/path/to/devspace/jiwoo-devspace',
-  },
-  {
-    id: 'ds-2',
-    name: 'minho-devspace',
-    owner: 'minho',
-    clusterId: 'cl-metis-mlstudio',
-    clusterName: 'metis-mlstudio',
-    source: 'Metis',
-    state: 'Idle',
-    gpuCount: 0,
-    image: 'datascience-cpu',
-    accessUrl: '/path/to/devspace/minho-devspace',
-  },
-  {
-    id: 'ds-3',
-    name: 'sora-devspace',
-    owner: 'sora',
-    clusterId: 'cl-metis-dev',
-    clusterName: 'metis-dev',
-    source: 'Metis',
-    state: 'Running',
-    gpuCount: 1,
-    image: 'tf-2.16-gpu',
-    accessUrl: '/path/to/devspace/sora-devspace',
-  },
-  {
-    id: 'ds-4',
-    name: 'taeksoo-devspace',
-    owner: 'taeksoo',
-    clusterId: 'cl-metis-dev',
-    clusterName: 'metis-dev',
-    source: 'Metis',
-    state: 'Running',
-    gpuCount: 1,
-    image: 'vllm-notebook',
-    accessUrl: '/path/to/devspace/taeksoo-devspace',
-  },
-  {
-    id: 'ds-5',
-    name: 'hana-devspace',
-    owner: 'hana',
-    clusterId: 'cl-metis-mlstudio',
-    clusterName: 'metis-mlstudio',
-    source: 'Metis',
-    state: 'Stopped',
-    gpuCount: 0,
-    image: 'minimal-cpu',
-    accessUrl: '/path/to/devspace/hana-devspace',
-  },
-];
-
-export function getDevspaces(): Devspace[] {
-  return devspaces;
-}
-
 // --- Status theming --------------------------------------------------------------
 // Single source of truth for every Container Platform status Badge (health, node,
 // AND workload statuses). Reuses getContainerStatusTheme as the fallback and adds
@@ -1163,8 +1092,6 @@ const MANAGED_BY_THEME: Record<ManagedBy, BadgeTheme> = {
   Aegis: 'blue',
   Maxis: 'green',
   Metis: 'yellow',
-  'Metis Run': 'gray',
-  Devspace: 'blue',
 };
 
 export function getManagedByTheme(owner: ManagedBy): BadgeTheme {
@@ -1176,8 +1103,6 @@ export const MANAGED_BY_OPTIONS: { value: ManagedBy; label: string }[] = [
   { value: 'Aegis', label: 'Aegis' },
   { value: 'Maxis', label: 'Maxis' },
   { value: 'Metis', label: 'Metis' },
-  { value: 'Metis Run', label: 'Metis Run' },
-  { value: 'Devspace', label: 'Devspace' },
 ];
 
 export const clusterFilterOptions: { value: string; label: string }[] = clusters.map((c) => ({

@@ -25,11 +25,11 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
+import { ContainerPlatformTabBar } from './ContainerPlatformTabBar';
 import {
   inferenceServices,
   trainingJobs,
   notebooks,
-  getDevspaces,
   getPlatformStatusTheme,
   getManagedByTheme,
 } from './containerPlatformMockData';
@@ -39,22 +39,20 @@ import type {
   Notebook,
   NotebookState,
   WorkloadStatus,
-  Devspace,
-  DevspaceState,
   ManagedBy,
 } from './containerPlatformTypes';
 
 /* ----------------------------------------
-   AI Workloads (observed, not managed — the substrate seam)
+   AI Workloads (observed, not managed)
 
-   Container Platform is the substrate: these AI workloads RUN on it, but the
-   owning products MANAGE them (training -> Maxis, serving -> Metis). This page
-   is therefore attribution + drill-out only:
+   These AI workloads RUN on Container Platform, but the owning products MANAGE
+   them (training -> Maxis, serving -> Metis). This page is therefore
+   attribution + hand-off only:
      - each row carries a "Managed by" badge (same theme map as WorkloadsPage)
-     - an "Open in {product} ↗" affordance signals "manage elsewhere" (Model A
-       seam) — Maxis/Metis are separate apps, so it never navigates a broken route
-   Dev Spaces are the exception: they are hosted BY Container Platform and use the
-   shared /path/to pod-access routing, so they have no drill-out.
+     - an "Open in {product} ↗" link signals "manage elsewhere" — Maxis/Metis
+       are separate apps, so it never navigates a broken route
+   Dev-environment pods are ordinary Maxis-managed workloads (Workloads list),
+   not a dedicated section here (D-3).
 
    Each tab is a read-only TDS Table with name search + cluster/state filters and
    client-side pagination (mirrors ClustersPage mechanics). Tab change resets
@@ -63,7 +61,7 @@ import type {
 
 const ROWS_PER_PAGE = 10;
 
-type Segment = 'inference' | 'training' | 'notebooks' | 'devspaces';
+type Segment = 'inference' | 'training' | 'notebooks';
 
 const WORKLOAD_STATUS_OPTIONS: { value: WorkloadStatus; label: string }[] = [
   { value: 'Running', label: 'Running' },
@@ -78,14 +76,6 @@ const NOTEBOOK_STATE_OPTIONS: { value: NotebookState; label: string }[] = [
   { value: 'Stopped', label: 'Stopped' },
 ];
 
-const DEVSPACE_STATE_OPTIONS: { value: DevspaceState; label: string }[] = [
-  { value: 'Running', label: 'Running' },
-  { value: 'Idle', label: 'Idle' },
-  { value: 'Stopped', label: 'Stopped' },
-];
-
-const devspaces = getDevspaces();
-
 /** Cluster filter options derived from the rows actually present in a segment. */
 function clusterOptionsFrom(items: { clusterId: string; clusterName: string }[]) {
   const seen = new Map<string, string>();
@@ -96,7 +86,6 @@ function clusterOptionsFrom(items: { clusterId: string; clusterName: string }[])
 const INFERENCE_CLUSTER_OPTIONS = clusterOptionsFrom(inferenceServices);
 const TRAINING_CLUSTER_OPTIONS = clusterOptionsFrom(trainingJobs);
 const NOTEBOOK_CLUSTER_OPTIONS = clusterOptionsFrom(notebooks);
-const DEVSPACE_CLUSTER_OPTIONS = clusterOptionsFrom(devspaces);
 
 const NameCell = (value: string) => (
   <span className="text-[var(--color-text-default)] font-medium truncate block" title={value}>
@@ -288,54 +277,6 @@ const notebookColumns: TableColumn<Notebook>[] = [
   },
 ];
 
-const devspaceColumns: TableColumn<Devspace>[] = [
-  {
-    key: 'name',
-    label: 'Name',
-    flex: 1,
-    minWidth: columnMinWidths.name,
-    sortable: true,
-    render: NameCell,
-  },
-  { key: 'owner', label: 'Owner', flex: 1, minWidth: columnMinWidths.owner, render: TruncCell },
-  {
-    key: 'clusterName',
-    label: 'Cluster',
-    flex: 1,
-    minWidth: columnMinWidths.node,
-    render: TruncCell,
-  },
-  {
-    key: 'state',
-    label: 'State',
-    width: fixedColumns.statusLabel,
-    align: 'center',
-    resizable: false,
-    render: (value: DevspaceState) => (
-      <Badge theme={getPlatformStatusTheme(value)} type="subtle" size="sm">
-        {value}
-      </Badge>
-    ),
-  },
-  { key: 'gpuCount', label: 'GPUs', flex: 1, minWidth: columnMinWidths.gpu, sortable: true },
-  {
-    key: 'accessUrl',
-    label: 'Access',
-    flex: 1,
-    minWidth: columnMinWidths.path,
-    // Substrate pod-access route (/path/to...), not an external link — render as a
-    // token-styled code string so it reads as an internal routing handle.
-    render: (value: string) => (
-      <code
-        className="font-mono text-body-sm text-[var(--color-text-muted)] truncate block"
-        title={value}
-      >
-        {value}
-      </code>
-    ),
-  },
-];
-
 export default function AIWorkloadsPage() {
   const navigate = useNavigate();
 
@@ -392,17 +333,6 @@ export default function AIWorkloadsPage() {
     [term, clusterFilters, statusFilters]
   );
 
-  const devspaceRows = useMemo(
-    () =>
-      devspaces.filter((d) => {
-        if (term && !d.name.toLowerCase().includes(term)) return false;
-        if (clusterFilters.length > 0 && !clusterFilters.includes(d.clusterId)) return false;
-        if (statusFilters.length > 0 && !statusFilters.includes(d.state)) return false;
-        return true;
-      }),
-    [term, clusterFilters, statusFilters]
-  );
-
   const config = {
     inference: {
       total: inferenceRows.length,
@@ -440,18 +370,6 @@ export default function AIWorkloadsPage() {
       },
       emptyMessage: 'No notebooks found.',
     },
-    devspaces: {
-      total: devspaceRows.length,
-      searchPlaceholder: 'Search dev spaces by name',
-      clusterOptions: DEVSPACE_CLUSTER_OPTIONS,
-      statusFilter: {
-        id: 'status',
-        label: 'State',
-        type: 'select' as const,
-        options: DEVSPACE_STATE_OPTIONS,
-      },
-      emptyMessage: 'No dev spaces found.',
-    },
   }[segment];
 
   const totalPages = Math.max(1, Math.ceil(config.total / ROWS_PER_PAGE));
@@ -462,6 +380,7 @@ export default function AIWorkloadsPage() {
     <PageShell
       sidebar={<ContainerPlatformSidebar />}
       sidebarWidth={CONTAINER_PLATFORM_SIDEBAR_WIDTH}
+      tabBar={<ContainerPlatformTabBar />}
       topBar={
         <TopBar
           showNavigation
@@ -476,8 +395,8 @@ export default function AIWorkloadsPage() {
         <VStack gap={1}>
           <PageHeader title="AI Workloads" />
           <span className="text-body-sm text-[var(--color-text-muted)]">
-            These AI workloads run on the Container Platform substrate. Training is managed in
-            Maxis, serving in Metis &mdash; Open &#8599; drills out to the managing product.
+            These AI workloads run on Container Platform but are managed by their owning product
+            &mdash; training in Maxis, serving in Metis. Open &#8599; hands off to that product.
           </span>
         </VStack>
 
@@ -486,16 +405,8 @@ export default function AIWorkloadsPage() {
             <Tab value="inference">Inference Services</Tab>
             <Tab value="training">Training Jobs</Tab>
             <Tab value="notebooks">Notebooks</Tab>
-            <Tab value="devspaces">Dev Spaces</Tab>
           </TabList>
         </Tabs>
-
-        {segment === 'devspaces' && (
-          <span className="text-body-sm text-[var(--color-text-muted)]">
-            Dev Spaces are hosted by Container Platform; pod access uses the shared /path/to
-            routing.
-          </span>
-        )}
 
         <ListToolbar
           primaryActions={
@@ -557,15 +468,6 @@ export default function AIWorkloadsPage() {
           <Table<Notebook>
             columns={notebookColumns}
             data={notebookRows.slice(sliceStart, sliceStart + ROWS_PER_PAGE)}
-            rowKey="id"
-            resizable={false}
-            emptyMessage={config.emptyMessage}
-          />
-        )}
-        {segment === 'devspaces' && (
-          <Table<Devspace>
-            columns={devspaceColumns}
-            data={devspaceRows.slice(sliceStart, sliceStart + ROWS_PER_PAGE)}
             rowKey="id"
             resizable={false}
             emptyMessage={config.emptyMessage}

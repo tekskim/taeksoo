@@ -20,6 +20,7 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
+import { ContainerPlatformTabBar } from './ContainerPlatformTabBar';
 import { getNamespaces, clusterFilterOptions } from './containerPlatformMockData';
 import type { Namespace, ClusterSource } from './containerPlatformTypes';
 
@@ -115,6 +116,7 @@ export default function NamespacesPage() {
     <PageShell
       sidebar={<ContainerPlatformSidebar />}
       sidebarWidth={CONTAINER_PLATFORM_SIDEBAR_WIDTH}
+      tabBar={<ContainerPlatformTabBar />}
       topBar={
         <TopBar
           showNavigation

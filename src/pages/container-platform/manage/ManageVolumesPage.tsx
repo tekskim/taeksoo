@@ -1,9 +1,6 @@
 import { useState, useMemo } from 'react';
 import {
-  PageShell,
   PageHeader,
-  TopBar,
-  Breadcrumb,
   VStack,
   Badge,
   Table,
@@ -15,32 +12,24 @@ import {
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import { useNavigate } from 'react-router-dom';
+import { ManageShell, useManageCluster } from './ManageShell';
 import {
-  ContainerPlatformSidebar,
-  CONTAINER_PLATFORM_SIDEBAR_WIDTH,
-} from './ContainerPlatformSidebar';
-import { ContainerPlatformTabBar } from './ContainerPlatformTabBar';
-import {
-  getVolumes,
+  getVolumesByCluster,
   getPlatformStatusTheme,
   getManagedByTheme,
-  clusterFilterOptions,
-  MANAGED_BY_OPTIONS,
-} from './containerPlatformMockData';
-import type { Volume, VolumeKind, VolumeStatus, ManagedBy } from './containerPlatformTypes';
+} from '../containerPlatformMockData';
+import type { Volume, VolumeKind, VolumeStatus, ManagedBy } from '../containerPlatformTypes';
 
 /* ----------------------------------------
-   Volumes list (estate K8s volumes)
-
-   Read-only cross-cluster PV/PVC inventory. Each volume keeps its owning
-   product (owner) and isolation scope so Metis/Maxis still get isolated
-   volumes. Search by volume name with client-side pagination plus structured
-   filters for owner, status, and cluster. Mirrors NamespacesPage /
-   WorkloadsPage structure.
+   Cluster manage — Volumes (PV/PVC in this cluster)
    ---------------------------------------- */
 
 const ROWS_PER_PAGE = 10;
+
+const KIND_OPTIONS: { value: VolumeKind; label: string }[] = [
+  { value: 'PV', label: 'PV' },
+  { value: 'PVC', label: 'PVC' },
+];
 
 const STATUS_OPTIONS: { value: VolumeStatus; label: string }[] = [
   { value: 'Bound', label: 'Bound' },
@@ -49,31 +38,26 @@ const STATUS_OPTIONS: { value: VolumeStatus; label: string }[] = [
   { value: 'Pending', label: 'Pending' },
 ];
 
-export default function VolumesPage() {
-  const navigate = useNavigate();
+export default function ManageVolumesPage() {
+  const { clusterId } = useManageCluster();
+  const allRows = useMemo(() => getVolumesByCluster(clusterId), [clusterId]);
 
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
 
-  const allVolumes = useMemo(() => getVolumes(), []);
-
   const filteredData = useMemo(() => {
     const term = searchValue.trim().toLowerCase();
-    const ownerFilters = appliedFilters.filter((f) => f.fieldId === 'owner').map((f) => f.value);
+    const kindFilters = appliedFilters.filter((f) => f.fieldId === 'kind').map((f) => f.value);
     const statusFilters = appliedFilters.filter((f) => f.fieldId === 'status').map((f) => f.value);
-    const clusterFilters = appliedFilters
-      .filter((f) => f.fieldId === 'cluster')
-      .map((f) => f.value);
 
-    return allVolumes.filter((v) => {
+    return allRows.filter((v) => {
       if (term && !v.name.toLowerCase().includes(term)) return false;
-      if (ownerFilters.length > 0 && !ownerFilters.includes(v.owner)) return false;
+      if (kindFilters.length > 0 && !kindFilters.includes(v.kind)) return false;
       if (statusFilters.length > 0 && !statusFilters.includes(v.status)) return false;
-      if (clusterFilters.length > 0 && !clusterFilters.includes(v.clusterId)) return false;
       return true;
     });
-  }, [allVolumes, searchValue, appliedFilters]);
+  }, [allRows, searchValue, appliedFilters]);
 
   const totalPages = Math.max(1, Math.ceil(filteredData.length / ROWS_PER_PAGE));
   const safePage = Math.min(page, totalPages);
@@ -98,21 +82,17 @@ export default function VolumesPage() {
       width: fixedColumns.statusLabel,
       align: 'center',
       resizable: false,
-      render: (value: VolumeKind) => (
-        <Badge theme={value === 'PV' ? 'blue' : 'gray'} type="subtle" size="sm">
-          {value}
-        </Badge>
-      ),
     },
     {
-      key: 'clusterName',
-      label: 'Cluster',
-      flex: 1,
-      minWidth: columnMinWidths.name,
-      render: (value: string) => (
-        <span className="truncate block" title={value}>
+      key: 'status',
+      label: 'Status',
+      width: fixedColumns.statusLabel,
+      align: 'center',
+      resizable: false,
+      render: (value: VolumeStatus) => (
+        <Badge theme={getPlatformStatusTheme(value)} type="subtle" size="sm">
           {value}
-        </span>
+        </Badge>
       ),
     },
     {
@@ -128,25 +108,6 @@ export default function VolumesPage() {
       ),
     },
     {
-      key: 'capacityGiB',
-      label: 'Capacity',
-      flex: 1,
-      minWidth: columnMinWidths.capacity,
-      render: (value: number) => `${value} GiB`,
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'center',
-      resizable: false,
-      render: (value: VolumeStatus) => (
-        <Badge theme={getPlatformStatusTheme(value)} type="subtle" size="sm">
-          {value}
-        </Badge>
-      ),
-    },
-    {
       key: 'isolation',
       label: 'Isolation',
       flex: 1,
@@ -157,28 +118,32 @@ export default function VolumesPage() {
         </span>
       ),
     },
+    {
+      key: 'capacityGiB',
+      label: 'Capacity',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
+      render: (value: number) => `${value} GiB`,
+    },
+    {
+      key: 'storageClass',
+      label: 'Storage class',
+      flex: 1,
+      minWidth: columnMinWidths.type,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
+    },
+    { key: 'accessMode', label: 'Access', flex: 1, minWidth: columnMinWidths.type },
   ];
 
   return (
-    <PageShell
-      sidebar={<ContainerPlatformSidebar />}
-      sidebarWidth={CONTAINER_PLATFORM_SIDEBAR_WIDTH}
-      tabBar={<ContainerPlatformTabBar />}
-      topBar={
-        <TopBar
-          showNavigation
-          onBack={() => navigate(-1)}
-          onForward={() => navigate(1)}
-          breadcrumb={<Breadcrumb items={[{ label: 'Volumes' }]} />}
-        />
-      }
-      contentClassName="pt-4 px-8 pb-6"
-    >
+    <ManageShell clusterId={clusterId} crumb="Volumes">
       <VStack gap={3}>
         <PageHeader title="Volumes" />
-        <p className="text-body-sm text-[var(--color-text-muted)]">
-          Every PV and PVC across the estate; each volume keeps its owner and isolation scope.
-        </p>
 
         <ListToolbar
           primaryActions={
@@ -193,14 +158,8 @@ export default function VolumesPage() {
                   setPage(1);
                 }}
                 filters={[
-                  { id: 'owner', label: 'Owner', type: 'select', options: MANAGED_BY_OPTIONS },
+                  { id: 'kind', label: 'Kind', type: 'select', options: KIND_OPTIONS },
                   { id: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
-                  {
-                    id: 'cluster',
-                    label: 'Cluster',
-                    type: 'select',
-                    options: clusterFilterOptions,
-                  },
                 ]}
                 appliedFilters={appliedFilters}
                 onFiltersChange={(next) => {
@@ -224,9 +183,9 @@ export default function VolumesPage() {
           data={pagedRows}
           rowKey="id"
           resizable={false}
-          emptyMessage="No volumes found."
+          emptyMessage="No volumes in this cluster."
         />
       </VStack>
-    </PageShell>
+    </ManageShell>
   );
 }

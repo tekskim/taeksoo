@@ -16,9 +16,9 @@ import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/Desktop
 /* ----------------------------------------
    Container Platform Sidebar
 
-   A single persistent 200px left sidebar with eight items: Overview · Clusters ·
-   Nodes · Namespaces · Volumes · Workloads · AI Workloads · Events. No
-   ContainerMode / cluster / drawer / icon-sidebar complexity.
+   A single persistent 200px left sidebar (estate scope): Overview · Clusters ·
+   Nodes · Namespaces · Volumes · Workloads · AI Workloads · Events.
+   Entering a cluster swaps this for ClusterManageSidebar (cluster scope).
    ---------------------------------------- */
 
 export const CONTAINER_PLATFORM_SIDEBAR_WIDTH = 200;

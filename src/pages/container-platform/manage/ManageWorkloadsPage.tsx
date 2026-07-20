@@ -1,11 +1,9 @@
 import { useState, useMemo } from 'react';
 import {
-  PageShell,
   PageHeader,
-  TopBar,
-  Breadcrumb,
   VStack,
   Badge,
+  Button,
   Table,
   Pagination,
   ListToolbar,
@@ -16,26 +14,20 @@ import {
   columnMinWidths,
 } from '@/design-system';
 import { useNavigate } from 'react-router-dom';
+import { ManageShell, useManageCluster } from './ManageShell';
+import { manageBasePath } from '../ClusterManageSidebar';
 import {
-  ContainerPlatformSidebar,
-  CONTAINER_PLATFORM_SIDEBAR_WIDTH,
-} from './ContainerPlatformSidebar';
-import { ContainerPlatformTabBar } from './ContainerPlatformTabBar';
-import {
-  workloads,
+  getWorkloadsByCluster,
   getPlatformStatusTheme,
   getManagedByTheme,
-  clusterFilterOptions,
-  MANAGED_BY_OPTIONS,
-} from './containerPlatformMockData';
-import type { Workload, WorkloadKind, WorkloadStatus, ManagedBy } from './containerPlatformTypes';
+} from '../containerPlatformMockData';
+import type { Workload, WorkloadKind, WorkloadStatus, ManagedBy } from '../containerPlatformTypes';
 
 /* ----------------------------------------
-   Workloads list (Phases 7 + 8)
+   Cluster manage — Workloads
 
-   Read-only cross-cluster workload inventory (WKL-01). Search by workload name
-   with client-side pagination (WKL-03) plus structured filters for kind and
-   cluster (WKL-02), combined via the same FilterSearchInput used by ClustersPage.
+   Cluster-scoped workload list with a create entry point. Rows drill into a
+   simple detail; Create Deployment opens the simplified create concept.
    ---------------------------------------- */
 
 const ROWS_PER_PAGE = 10;
@@ -48,8 +40,19 @@ const KIND_OPTIONS: { value: WorkloadKind; label: string }[] = [
   { value: 'Pod', label: 'Pod' },
 ];
 
-export default function WorkloadsPage() {
+const STATUS_OPTIONS: { value: WorkloadStatus; label: string }[] = [
+  { value: 'Running', label: 'Running' },
+  { value: 'Pending', label: 'Pending' },
+  { value: 'Failed', label: 'Failed' },
+  { value: 'Succeeded', label: 'Succeeded' },
+];
+
+export default function ManageWorkloadsPage() {
   const navigate = useNavigate();
+  const { clusterId } = useManageCluster();
+  const base = manageBasePath(clusterId);
+
+  const allRows = useMemo(() => getWorkloadsByCluster(clusterId), [clusterId]);
 
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
@@ -58,21 +61,15 @@ export default function WorkloadsPage() {
   const filteredData = useMemo(() => {
     const term = searchValue.trim().toLowerCase();
     const kindFilters = appliedFilters.filter((f) => f.fieldId === 'kind').map((f) => f.value);
-    const clusterFilters = appliedFilters
-      .filter((f) => f.fieldId === 'cluster')
-      .map((f) => f.value);
-    const managedByFilters = appliedFilters
-      .filter((f) => f.fieldId === 'managedBy')
-      .map((f) => f.value);
+    const statusFilters = appliedFilters.filter((f) => f.fieldId === 'status').map((f) => f.value);
 
-    return workloads.filter((w) => {
+    return allRows.filter((w) => {
       if (term && !w.name.toLowerCase().includes(term)) return false;
       if (kindFilters.length > 0 && !kindFilters.includes(w.kind)) return false;
-      if (clusterFilters.length > 0 && !clusterFilters.includes(w.clusterId)) return false;
-      if (managedByFilters.length > 0 && !managedByFilters.includes(w.managedBy)) return false;
+      if (statusFilters.length > 0 && !statusFilters.includes(w.status)) return false;
       return true;
     });
-  }, [searchValue, appliedFilters]);
+  }, [allRows, searchValue, appliedFilters]);
 
   const totalPages = Math.max(1, Math.ceil(filteredData.length / ROWS_PER_PAGE));
   const safePage = Math.min(page, totalPages);
@@ -91,28 +88,12 @@ export default function WorkloadsPage() {
         </span>
       ),
     },
-    {
-      key: 'kind',
-      label: 'Kind',
-      flex: 1,
-      minWidth: columnMinWidths.type,
-    },
+    { key: 'kind', label: 'Kind', flex: 1, minWidth: columnMinWidths.type },
     {
       key: 'namespace',
       label: 'Namespace',
       flex: 1,
       minWidth: columnMinWidths.namespace,
-      render: (value: string) => (
-        <span className="truncate block" title={value}>
-          {value}
-        </span>
-      ),
-    },
-    {
-      key: 'clusterName',
-      label: 'Cluster',
-      flex: 1,
-      minWidth: columnMinWidths.name,
       render: (value: string) => (
         <span className="truncate block" title={value}>
           {value}
@@ -153,26 +134,20 @@ export default function WorkloadsPage() {
   ];
 
   return (
-    <PageShell
-      sidebar={<ContainerPlatformSidebar />}
-      sidebarWidth={CONTAINER_PLATFORM_SIDEBAR_WIDTH}
-      tabBar={<ContainerPlatformTabBar />}
-      topBar={
-        <TopBar
-          showNavigation
-          onBack={() => navigate(-1)}
-          onForward={() => navigate(1)}
-          breadcrumb={<Breadcrumb items={[{ label: 'Workloads' }]} />}
-        />
-      }
-      contentClassName="pt-4 px-8 pb-6"
-    >
+    <ManageShell clusterId={clusterId} crumb="Workloads">
       <VStack gap={3}>
-        <PageHeader title="Workloads" />
-        <p className="text-body-sm text-[var(--color-text-muted)]">
-          Everything here runs on Container Platform; &lsquo;Managed by&rsquo; shows which product
-          owns it.
-        </p>
+        <PageHeader
+          title="Workloads"
+          actions={
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => navigate(`${base}/workloads/create`)}
+            >
+              Create Deployment
+            </Button>
+          }
+        />
 
         <ListToolbar
           primaryActions={
@@ -188,18 +163,7 @@ export default function WorkloadsPage() {
                 }}
                 filters={[
                   { id: 'kind', label: 'Kind', type: 'select', options: KIND_OPTIONS },
-                  {
-                    id: 'cluster',
-                    label: 'Cluster',
-                    type: 'select',
-                    options: clusterFilterOptions,
-                  },
-                  {
-                    id: 'managedBy',
-                    label: 'Managed by',
-                    type: 'select',
-                    options: MANAGED_BY_OPTIONS,
-                  },
+                  { id: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
                 ]}
                 appliedFilters={appliedFilters}
                 onFiltersChange={(next) => {
@@ -222,10 +186,11 @@ export default function WorkloadsPage() {
           columns={columns}
           data={pagedRows}
           rowKey="id"
+          onRowClick={(row) => navigate(`${base}/workloads/${row.id}`)}
           resizable={false}
-          emptyMessage="No workloads found."
+          emptyMessage="No workloads in this cluster."
         />
       </VStack>
-    </PageShell>
+    </ManageShell>
   );
 }

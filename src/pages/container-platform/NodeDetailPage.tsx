@@ -20,6 +20,7 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
+import { ContainerPlatformTabBar } from './ContainerPlatformTabBar';
 import { nodes, getEvents, getPlatformStatusTheme } from './containerPlatformMockData';
 import type { ClusterEvent, EventType } from './containerPlatformTypes';
 
@@ -54,6 +55,7 @@ export default function NodeDetailPage() {
     <PageShell
       sidebar={<ContainerPlatformSidebar />}
       sidebarWidth={CONTAINER_PLATFORM_SIDEBAR_WIDTH}
+      tabBar={<ContainerPlatformTabBar />}
       topBar={
         <TopBar
           showNavigation

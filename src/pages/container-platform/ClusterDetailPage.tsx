@@ -6,6 +6,7 @@ import {
   VStack,
   HStack,
   Badge,
+  Button,
   Table,
   DetailHeader,
   EmptyState,
@@ -21,6 +22,7 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
+import { ContainerPlatformTabBar } from './ContainerPlatformTabBar';
 import {
   getClusterById,
   getNodesByCluster,
@@ -69,6 +71,7 @@ export default function ClusterDetailPage() {
     <PageShell
       sidebar={<ContainerPlatformSidebar />}
       sidebarWidth={CONTAINER_PLATFORM_SIDEBAR_WIDTH}
+      tabBar={<ContainerPlatformTabBar />}
       topBar={
         <TopBar
           showNavigation
@@ -172,6 +175,15 @@ export default function ClusterDetailPage() {
       {/* Header: identity + capacity */}
       <DetailHeader>
         <DetailHeader.Title>{cluster.name}</DetailHeader.Title>
+        <DetailHeader.Actions>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => navigate(`/container-platform/clusters/${cluster.id}/manage`)}
+          >
+            Manage cluster
+          </Button>
+        </DetailHeader.Actions>
         <DetailHeader.InfoGrid>
           <DetailHeader.InfoCard
             label="Source"
@@ -230,7 +242,7 @@ export default function ClusterDetailPage() {
         </HStack>
       </VStack>
 
-      {/* AI workloads (Metis Run + ML Studio) — only for GPU/AI clusters */}
+      {/* AI workloads — only for GPU/AI clusters */}
       {hasAI && (
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">

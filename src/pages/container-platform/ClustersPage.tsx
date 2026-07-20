@@ -20,6 +20,7 @@ import {
   ContainerPlatformSidebar,
   CONTAINER_PLATFORM_SIDEBAR_WIDTH,
 } from './ContainerPlatformSidebar';
+import { ContainerPlatformTabBar } from './ContainerPlatformTabBar';
 import { clusters, getPlatformStatusTheme } from './containerPlatformMockData';
 import type { Cluster, ClusterSource, HealthStatus } from './containerPlatformTypes';
 
@@ -140,6 +141,7 @@ export default function ClustersPage() {
     <PageShell
       sidebar={<ContainerPlatformSidebar />}
       sidebarWidth={CONTAINER_PLATFORM_SIDEBAR_WIDTH}
+      tabBar={<ContainerPlatformTabBar />}
       topBar={
         <TopBar
           showNavigation
