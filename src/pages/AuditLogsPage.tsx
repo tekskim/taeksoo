@@ -1,277 +1,307 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   VStack,
   HStack,
   TabBar,
   TopBar,
   Breadcrumb,
-  Button,
   PageShell,
   PageHeader,
-  SearchInput,
-  Tabs,
-  TabList,
-  Tab,
-  DropdownRoot,
-  DropdownSelect,
-  DropdownOption,
+  FilterSearchInput,
+  type AppliedFilter,
+  ListToolbar,
+  Pagination,
+  Table,
+  type TableColumn,
+  Select,
+  Toggle,
+  Tag,
+  Tooltip,
+  StatusIndicator,
 } from '@/design-system';
 import { AuditSidebar } from '@/components/AuditSidebar';
+import LogTimelineChart, { type TimeRange } from '@/components/LogTimelineChart';
+import { LabelWithTip } from '@/components/LabelWithTip';
 import { useTabs } from '@/contexts/TabContext';
-import { IconDownload, IconChevronRight } from '@tabler/icons-react';
+import { IconAlertTriangle } from '@tabler/icons-react';
+import type { AuditLog } from './audit/types';
+import {
+  AUDIT_LOGS,
+  CATEGORY_LABEL,
+  CURRENT_ROLE,
+  DEFAULT_TIME_RANGE,
+  STATS,
+  STATUS_META,
+  TIME_PRESETS,
+  formatActionLabel,
+  formatShortTime,
+  maskActorId,
+} from './audit/mockData';
+import type { StatsBucket } from './audit/types';
 
-// ── Types & Mock Data ─────────────────────────────────────────────────────────
+// 타임라인 히스토그램 버킷 스텝 — 1시간 (로그 분포를 시간 단위로 집계)
+const TIMELINE_STEP_MS = 3_600_000;
 
-type AuditResult = 'Success' | 'Failure' | 'Denied';
-type AuditCategory = 'IAM' | 'Container' | 'Storage' | 'KMS' | 'Network';
-
-type AuditEntry = {
-  id: string;
-  timestamp: string;
-  action: string;
-  category: AuditCategory;
-  user: string;
-  resource: string;
-  result: AuditResult;
-  ip: string;
-  detail: string;
+// 행위자 표시 — 비관리자는 마스킹 (§0-5). 목업 역할은 sysadmin이라 원문 노출
+const displayActor = (log: AuditLog): string => {
+  const base = log.actor_name ?? log.actor_id;
+  return CURRENT_ROLE === 'domain_user' ? maskActorId(base) : base;
+};
+const displayIp = (log: AuditLog): string => {
+  if (!log.actor_ip) return '-';
+  return CURRENT_ROLE === 'domain_user' ? '***' : log.actor_ip;
 };
 
-const MOCK_ENTRIES: AuditEntry[] = [
-  {
-    id: 'a-001',
-    timestamp: '2026-06-05 09:14:28',
-    action: 'User.Login',
-    category: 'IAM',
-    user: 'taeksoo.kim',
-    resource: 'iam/authn',
-    result: 'Success',
-    ip: '192.168.1.42',
-    detail: 'Login via LDAP. MFA verified.',
-  },
-  {
-    id: 'a-002',
-    timestamp: '2026-06-05 09:13:05',
-    action: 'Role.Assign',
-    category: 'IAM',
-    user: 'admin',
-    resource: 'role:cluster-admin → u-9123',
-    result: 'Success',
-    ip: '192.168.1.10',
-    detail: 'Assigned cluster-admin role to user ID u-9123.',
-  },
-  {
-    id: 'a-003',
-    timestamp: '2026-06-05 09:12:44',
-    action: 'Pod.Delete',
-    category: 'Container',
-    user: 'taeksoo.kim',
-    resource: 'ns/production/pod/web-app',
-    result: 'Success',
-    ip: '192.168.1.42',
-    detail: 'Pod deleted manually. Deployment re-created automatically.',
-  },
-  {
-    id: 'a-004',
-    timestamp: '2026-06-05 09:11:30',
-    action: 'Volume.Create',
-    category: 'Storage',
-    user: 'jieun.park',
-    resource: 'vol/pvc-data-worker-02',
-    result: 'Success',
-    ip: '10.0.1.55',
-    detail: 'Created 50Gi RBD volume. Attached to node worker-02.',
-  },
-  {
-    id: 'a-005',
-    timestamp: '2026-06-05 09:10:12',
-    action: 'Key.Rotate',
-    category: 'KMS',
-    user: 'system',
-    resource: 'key/kms-3921',
-    result: 'Success',
-    ip: 'internal',
-    detail: 'Automatic key rotation triggered (90-day policy).',
-  },
-  {
-    id: 'a-006',
-    timestamp: '2026-06-05 09:09:00',
-    action: 'Namespace.AccessDenied',
-    category: 'IAM',
-    user: 'jieun.park',
-    resource: 'ns/kube-system',
-    result: 'Denied',
-    ip: '10.0.1.55',
-    detail: 'Access denied: user lacks cluster-level read permission.',
-  },
-  {
-    id: 'a-007',
-    timestamp: '2026-06-05 09:07:33',
-    action: 'SecurityGroup.Update',
-    category: 'Network',
-    user: 'minho.lee',
-    resource: 'sg/sg-api-gateway',
-    result: 'Success',
-    ip: '192.168.2.30',
-    detail: 'Added inbound rule: TCP 8443 from 0.0.0.0/0.',
-  },
-  {
-    id: 'a-008',
-    timestamp: '2026-06-05 09:05:20',
-    action: 'Certificate.Issue',
-    category: 'KMS',
-    user: 'system',
-    resource: 'cert/api.thakicloud.net',
-    result: 'Success',
-    ip: 'internal',
-    detail: "Certificate issued via Let's Encrypt. TTL=90d.",
-  },
-  {
-    id: 'a-009',
-    timestamp: '2026-06-05 09:03:11',
-    action: 'User.Login',
-    category: 'IAM',
-    user: 'unknown',
-    resource: 'iam/authn',
-    result: 'Failure',
-    ip: '203.0.113.45',
-    detail: 'Login failed: invalid credentials. 5th consecutive failure.',
-  },
-  {
-    id: 'a-010',
-    timestamp: '2026-06-05 09:01:55',
-    action: 'Volume.Snapshot.Delete',
-    category: 'Storage',
-    user: 'taeksoo.kim',
-    resource: 'snap/snap-vol-001',
-    result: 'Success',
-    ip: '192.168.1.42',
-    detail: 'Deleted stale snapshot older than 30 days.',
-  },
-  {
-    id: 'a-011',
-    timestamp: '2026-06-05 09:00:40',
-    action: 'Deployment.Scale',
-    category: 'Container',
-    user: 'system',
-    resource: 'ns/production/deploy/compute',
-    result: 'Success',
-    ip: 'internal',
-    detail: 'HPA scaled replicas from 3 to 5 due to CPU pressure.',
-  },
-  {
-    id: 'a-012',
-    timestamp: '2026-06-05 08:59:22',
-    action: 'Network.Policy.Create',
-    category: 'Network',
-    user: 'taeksoo.kim',
-    resource: 'netpol/deny-egress-default',
-    result: 'Success',
-    ip: '192.168.1.42',
-    detail: 'Created deny-all egress NetworkPolicy for namespace production.',
-  },
-  {
-    id: 'a-013',
-    timestamp: '2026-06-05 08:57:09',
-    action: 'Secret.Access',
-    category: 'KMS',
-    user: 'compute-sa',
-    resource: 'secret/db-password',
-    result: 'Success',
-    ip: 'internal',
-    detail: 'Service account accessed secret (automated pipeline).',
-  },
-  {
-    id: 'a-014',
-    timestamp: '2026-06-05 08:55:01',
-    action: 'User.PasswordReset',
-    category: 'IAM',
-    user: 'admin',
-    resource: 'user/jieun.park',
-    result: 'Success',
-    ip: '192.168.1.10',
-    detail: 'Admin-triggered password reset. Email sent.',
-  },
-  {
-    id: 'a-015',
-    timestamp: '2026-06-05 08:53:44',
-    action: 'Firewall.Rule.Delete',
-    category: 'Network',
-    user: 'minho.lee',
-    resource: 'fw/fw-prod-edge/rule-7',
-    result: 'Denied',
-    ip: '192.168.2.30',
-    detail: 'Deletion denied: rule is referenced by active listener.',
-  },
-];
-
-const CATEGORIES: ('All' | AuditCategory)[] = [
-  'All',
-  'IAM',
-  'Container',
-  'Storage',
-  'KMS',
-  'Network',
-];
-const TIME_RANGES = ['Last 1 hour', 'Last 6 hours', 'Last 24 hours', 'Last 7 days'];
-const RESULT_FILTERS: ('All' | AuditResult)[] = ['All', 'Success', 'Failure', 'Denied'];
-
-// ── Badge helpers ─────────────────────────────────────────────────────────────
-
-function ResultBadge({ result }: { result: AuditResult }) {
-  const styles: Record<AuditResult, string> = {
-    Success: 'text-[var(--color-status-success)] bg-[var(--color-status-success-subtle)]',
-    Failure: 'text-[var(--color-status-error)] bg-[var(--color-status-error-subtle)]',
-    Denied: 'text-[var(--color-status-warning)] bg-[var(--color-status-warning-subtle)]',
-  };
-  return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${styles[result]}`}
-    >
-      {result}
-    </span>
-  );
-}
-
-function CategoryBadge({ category }: { category: AuditCategory }) {
-  return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-[var(--color-surface-subtle)] text-[var(--color-text-secondary)] border border-[var(--color-border-default)]">
-      {category}
-    </span>
-  );
-}
-
-// ── Main Page ─────────────────────────────────────────────────────────────────
-
+// ── 메인 ────────────────────────────────────────────────────────────────────────
 export default function AuditLogsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [category, setCategory] = useState<'All' | AuditCategory>('All');
-  const [resultFilter, setResultFilter] = useState<'All' | AuditResult>('All');
-  const [timeRange, setTimeRange] = useState(TIME_RANGES[0]);
-  const [search, setSearch] = useState('');
-  const [expandedRow, setExpandedRow] = useState<string | null>(null);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+  const [timeRange, setTimeRange] = useState<string>(DEFAULT_TIME_RANGE);
+  const [sensitiveOnly, setSensitiveOnly] = useState(false);
+  // 타임라인 드래그 선택 구간 — 지정 시 테이블을 해당 시간 범위로 필터링
+  const [selectedRange, setSelectedRange] = useState<TimeRange | null>(null);
+  const [page, setPage] = useState(1);
+  // 페이지당 최대 10개 고정 — TDS 테이블엔 page-size 선택 패턴이 없어 임의 셀렉터를 두지 않는다
+  const pageSize = 10;
 
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const navigate = useNavigate();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
+  // 액션·서비스 옵션은 통계에서 동적 구성 (§2-3)
+  const actionOptions = useMemo(
+    () =>
+      Object.keys(STATS.by_action)
+        .filter((a) => a !== 'login')
+        .sort()
+        .map((value) => ({ value, label: formatActionLabel(value) })),
+    []
+  );
+  const serviceOptions = useMemo(
+    () =>
+      Object.keys(STATS.by_service)
+        .sort()
+        .map((value) => ({ value, label: value })),
+    []
+  );
 
   const filtered = useMemo(() => {
-    return MOCK_ENTRIES.filter((e) => {
-      const matchCat = category === 'All' || e.category === category;
-      const matchResult = resultFilter === 'All' || e.result === resultFilter;
-      const matchSearch =
-        !search ||
-        e.action.toLowerCase().includes(search.toLowerCase()) ||
-        e.user.toLowerCase().includes(search.toLowerCase()) ||
-        e.resource.toLowerCase().includes(search.toLowerCase());
-      return matchCat && matchResult && matchSearch;
-    });
-  }, [category, resultFilter, search]);
+    const get = (fieldId: string) => appliedFilters.find((f) => f.fieldId === fieldId)?.value;
+    const tpn = get('tpn')?.toLowerCase();
+    const trn = get('trn')?.toLowerCase();
+    const ip = get('actor_ip')?.toLowerCase();
+    const category = get('action_category');
+    const action = get('action');
+    const status = get('status');
+    const service = get('source_service');
 
-  const resultCounts = {
-    Success: MOCK_ENTRIES.filter((e) => e.result === 'Success').length,
-    Failure: MOCK_ENTRIES.filter((e) => e.result === 'Failure').length,
-    Denied: MOCK_ENTRIES.filter((e) => e.result === 'Denied').length,
+    return AUDIT_LOGS.filter((l) => {
+      if (sensitiveOnly && !l.sensitive) return false;
+      // 타임라인 드래그 선택 구간 [start, end) 필터 (§2-4-1)
+      if (selectedRange) {
+        const ts = new Date(l.timestamp).getTime();
+        if (ts < selectedRange.start.getTime() || ts >= selectedRange.end.getTime()) return false;
+      }
+      if (tpn && !l.tpn.toLowerCase().includes(tpn)) return false;
+      if (trn && !l.trn.toLowerCase().includes(trn)) return false;
+      if (ip && !(l.actor_ip ?? '').toLowerCase().includes(ip)) return false;
+      if (category && l.action_category !== category) return false;
+      if (action && l.action !== action) return false;
+      if (status && l.status !== status) return false;
+      if (service && l.source_service !== service) return false;
+      return true;
+    }).sort((a, b) => b.timestamp.localeCompare(a.timestamp)); // 시간 최신순 고정 (§2-6)
+  }, [appliedFilters, sensitiveOnly, selectedRange]);
+
+  // 타임라인 히스토그램 — 실제 로그 분포에서 파생 (LogExplorer 패턴: 차트 ⟷ 테이블 동일 데이터).
+  // 전체 로그를 1시간 버킷으로 집계해 막대가 곧 로그 분포이며, 드래그 구간 ↔ 행이 정확히 대응한다.
+  const timelineBuckets = useMemo<StatsBucket[]>(() => {
+    if (AUDIT_LOGS.length === 0) return [];
+    const times = AUDIT_LOGS.map((l) => new Date(l.timestamp).getTime());
+    const min = Math.min(...times);
+    const max = Math.max(...times);
+    const windowStart = Math.floor(min / TIMELINE_STEP_MS) * TIMELINE_STEP_MS;
+    const lastStart = Math.floor(max / TIMELINE_STEP_MS) * TIMELINE_STEP_MS;
+    const n = Math.round((lastStart - windowStart) / TIMELINE_STEP_MS) + 1;
+    const buckets: StatsBucket[] = Array.from({ length: n }, (_, i) => ({
+      start: new Date(windowStart + i * TIMELINE_STEP_MS).toISOString(),
+      total: 0,
+      failed: 0,
+      sensitive: 0,
+    }));
+    for (const l of AUDIT_LOGS) {
+      const idx = Math.floor((new Date(l.timestamp).getTime() - windowStart) / TIMELINE_STEP_MS);
+      if (idx < 0 || idx >= n) continue;
+      buckets[idx].total += 1;
+      if (l.sensitive) buckets[idx].sensitive += 1;
+      if (l.status !== 'success') buckets[idx].failed += 1;
+    }
+    return buckets;
+  }, []);
+
+  // 헤더 요약 — 전체 로그 기준(히스토그램 합계와 일치, LogExplorer처럼 필터와 무관하게 고정)
+  const headerStats = useMemo(() => {
+    const total = AUDIT_LOGS.length;
+    const success = AUDIT_LOGS.filter((l) => l.status === 'success').length;
+    const failed = total - success;
+    return {
+      successRate: total ? (success / total) * 100 : null,
+      failureRate: total ? (failed / total) * 100 : null,
+    };
+  }, []);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(page, totalPages);
+  const paged = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
+  const handleFiltersChange = (next: AppliedFilter[]) => {
+    setAppliedFilters(next);
+    setPage(1); // 필터 변경 시 1페이지로 리셋 (§2-6)
   };
+
+  const columns: TableColumn<AuditLog>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      headerRender: () => (
+        <LabelWithTip
+          label="Status"
+          tip="Event outcome — Success, Fail, or Denied (by authentication / authorization / policy)."
+        />
+      ),
+      width: 110,
+      align: 'center',
+      resizable: false,
+      render: (_: unknown, row: AuditLog) => (
+        <StatusIndicator
+          status={STATUS_META[row.status].indicator}
+          label={STATUS_META[row.status].label}
+          layout="badge"
+          hideIcon
+        />
+      ),
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      headerRender: () => (
+        <LabelWithTip label="Action" tip="What was done, as verb + noun (e.g., Update role)." />
+      ),
+      flex: 1,
+      minWidth: 200,
+      render: (_: unknown, row: AuditLog) => (
+        <HStack gap={1.5} align="center" className="min-w-0">
+          <span className="truncate text-body-md font-medium text-[var(--color-action-primary)]">
+            {formatActionLabel(row.action)}
+          </span>
+          {row.sensitive && (
+            <Tooltip content="Sensitive event">
+              <IconAlertTriangle size={14} className="shrink-0 text-[var(--color-state-warning)]" />
+            </Tooltip>
+          )}
+        </HStack>
+      ),
+    },
+    {
+      key: 'source_service',
+      label: 'Service',
+      headerRender: () => (
+        <LabelWithTip label="Service" tip="The platform service that emitted the event." />
+      ),
+      width: 110,
+      resizable: false,
+      render: (_: unknown, row: AuditLog) => (
+        <span className="text-body-sm text-[var(--color-text-subtle)]">{row.source_service}</span>
+      ),
+    },
+    {
+      key: 'trn',
+      label: 'Target',
+      headerRender: () => (
+        <LabelWithTip
+          label="Target"
+          tip="The resource acted on — TRN (target type:id path) or its name."
+        />
+      ),
+      flex: 1,
+      minWidth: 180,
+      render: (_: unknown, row: AuditLog) => (
+        <span className="block truncate text-body-sm font-mono text-[var(--color-text-subtle)]">
+          {row.target_name ? `${row.target_name}` : row.trn}
+        </span>
+      ),
+    },
+    {
+      key: 'tpn',
+      label: 'Actor',
+      headerRender: () => (
+        <LabelWithTip
+          label="Actor"
+          tip="Who performed the action — TPN (actor type:id path). PII is masked by role."
+        />
+      ),
+      flex: 1,
+      minWidth: 150,
+      render: (_: unknown, row: AuditLog) => (
+        <span className="block truncate text-body-sm text-[var(--color-text-default)]">
+          {displayActor(row)}
+        </span>
+      ),
+    },
+    {
+      key: 'actor_ip',
+      label: 'IP',
+      headerRender: () => (
+        <LabelWithTip label="IP" tip="Source IP address of the actor (masked by role)." />
+      ),
+      width: 130,
+      resizable: false,
+      render: (_: unknown, row: AuditLog) => (
+        <span className="text-body-sm font-mono text-[var(--color-text-subtle)]">
+          {displayIp(row)}
+        </span>
+      ),
+    },
+    {
+      key: 'compliance_labels',
+      label: 'Labels',
+      headerRender: () => (
+        <LabelWithTip
+          label="Labels"
+          tip="Compliance labels auto-applied to the event (e.g., SOC2, ISMS-P)."
+        />
+      ),
+      width: 150,
+      resizable: false,
+      render: (_: unknown, row: AuditLog) =>
+        row.compliance_labels.length ? (
+          <HStack gap={1} className="flex-wrap">
+            {row.compliance_labels.map((l) => (
+              <Tag key={l} size="sm" variant="info">
+                {l}
+              </Tag>
+            ))}
+          </HStack>
+        ) : (
+          <span className="text-body-sm text-[var(--color-text-subtle)]">-</span>
+        ),
+    },
+    {
+      key: 'timestamp',
+      label: 'Time',
+      headerRender: () => (
+        <LabelWithTip label="Time" tip="When the event occurred (cluster time)." />
+      ),
+      width: 170,
+      resizable: false,
+      render: (_: unknown, row: AuditLog) => (
+        <span className="text-body-sm font-mono text-[var(--color-text-default)]">
+          {formatShortTime(row.timestamp)}
+        </span>
+      ),
+    },
+  ];
 
   return (
     <PageShell
@@ -306,189 +336,119 @@ export default function AuditLogsPage() {
       <VStack gap={4}>
         <PageHeader
           title="Audit Logs"
-          description="Track every user and system action across the cluster."
-          actions={
-            <Button variant="secondary" size="sm" leftIcon={<IconDownload size={14} />}>
-              Export CSV
-            </Button>
+          description="Search and inspect every user and system action across the cluster."
+        />
+
+        {/* 이벤트 타임라인 (§2-4-1) — 실제 로그 분포 히스토그램. 막대 클릭·드래그로 시간 구간 선택 시 테이블 필터링 */}
+        <LogTimelineChart
+          buckets={timelineBuckets}
+          stepMs={TIMELINE_STEP_MS}
+          successRate={headerStats.successRate}
+          failureRate={headerStats.failureRate}
+          onRangeSelect={(range) => {
+            setSelectedRange(range);
+            setPage(1);
+          }}
+        />
+
+        {/* 시간 범위 + 필터 (§2-3, §2-4) */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <Select
+                value={timeRange}
+                onChange={setTimeRange}
+                width="sm"
+                options={TIME_PRESETS.map((p) => ({ value: p, label: p }))}
+              />
+              <FilterSearchInput
+                size="sm"
+                filters={[
+                  {
+                    id: 'tpn',
+                    label: 'Actor (TPN)',
+                    type: 'text',
+                    placeholder: 'e.g. user:taeksoo.kim',
+                  },
+                  {
+                    id: 'trn',
+                    label: 'Target (TRN)',
+                    type: 'text',
+                    placeholder: 'e.g. instance:vm-7781',
+                  },
+                  {
+                    id: 'actor_ip',
+                    label: 'Actor IP',
+                    type: 'text',
+                    placeholder: 'e.g. 10.0.1.42',
+                  },
+                  {
+                    id: 'action_category',
+                    label: 'Category',
+                    type: 'select',
+                    options: (Object.keys(CATEGORY_LABEL) as (keyof typeof CATEGORY_LABEL)[]).map(
+                      (k) => ({ value: k, label: CATEGORY_LABEL[k] })
+                    ),
+                  },
+                  { id: 'action', label: 'Action', type: 'select', options: actionOptions },
+                  {
+                    id: 'status',
+                    label: 'Result',
+                    type: 'select',
+                    options: [
+                      { value: 'success', label: 'Success' },
+                      { value: 'failure', label: 'Fail' },
+                      { value: 'denied', label: 'Denied' },
+                    ],
+                  },
+                  {
+                    id: 'source_service',
+                    label: 'Service',
+                    type: 'select',
+                    options: serviceOptions,
+                  },
+                ]}
+                appliedFilters={appliedFilters}
+                onFiltersChange={handleFiltersChange}
+                placeholder="Search by attributes"
+                className="w-[var(--search-input-width)]"
+              />
+              <ListToolbar.Divider />
+              <label className="flex cursor-pointer items-center gap-2 text-body-sm text-[var(--color-text-default)]">
+                <Toggle
+                  checked={sensitiveOnly}
+                  onChange={(e) => {
+                    setSensitiveOnly(e.target.checked);
+                    setPage(1);
+                  }}
+                />
+                Sensitive only
+              </label>
+            </ListToolbar.Actions>
           }
         />
 
-        {/* Summary bar */}
-        <div className="grid grid-cols-3 gap-3">
-          {(Object.entries(resultCounts) as [AuditResult, number][]).map(([result, count]) => (
-            <div
-              key={result}
-              className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg px-4 py-3"
-            >
-              <p
-                className={`text-2xl font-semibold ${
-                  result === 'Success'
-                    ? 'text-[var(--color-status-success)]'
-                    : result === 'Failure'
-                      ? 'text-[var(--color-status-error)]'
-                      : 'text-[var(--color-status-warning)]'
-                }`}
-              >
-                {count}
-              </p>
-              <p className="text-xs text-[var(--color-text-subtle)] mt-0.5">{result}</p>
-            </div>
-          ))}
-        </div>
+        {/* 페이지네이션 — 테이블 상단 좌측 (페이지당 10개 고정) */}
+        <Pagination
+          currentPage={safePage}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          totalItems={filtered.length}
+        />
 
-        {/* Filters */}
-        <HStack gap={3} align="center" wrap>
-          {/* Time range */}
-          <DropdownRoot value={timeRange} onChange={(v) => setTimeRange(v)}>
-            <DropdownSelect width="lg" />
-            {TIME_RANGES.map((r) => (
-              <DropdownOption key={r} value={r}>
-                {r}
-              </DropdownOption>
-            ))}
-          </DropdownRoot>
-
-          {/* Result filter */}
-          <DropdownRoot
-            value={resultFilter}
-            onChange={(v) => setResultFilter(v as 'All' | AuditResult)}
-          >
-            <DropdownSelect width="md" />
-            {RESULT_FILTERS.map((r) => (
-              <DropdownOption key={r} value={r}>
-                {r === 'All' ? 'All Results' : r}
-              </DropdownOption>
-            ))}
-          </DropdownRoot>
-
-          {/* Category tabs */}
-          <Tabs
-            value={category}
-            onChange={(v) => setCategory(v as 'All' | AuditCategory)}
-            variant="boxed"
-            size="sm"
-          >
-            <TabList>
-              {CATEGORIES.map((c) => (
-                <Tab key={c} value={c}>
-                  {c}
-                </Tab>
-              ))}
-            </TabList>
-          </Tabs>
-
-          <SearchInput
-            placeholder="Search action, user, resource..."
-            size="sm"
-            className="w-72"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </HStack>
-
-        {/* Table */}
-        <div className="w-full border border-[var(--color-border-default)] rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                <th className="text-left px-4 py-3 text-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wider w-[160px]">
-                  Timestamp
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wider w-[80px]">
-                  Category
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wider w-[200px]">
-                  Action
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wider w-[130px]">
-                  User
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wider">
-                  Resource
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wider w-[90px]">
-                  Result
-                </th>
-                <th className="px-4 py-3 w-[32px]" />
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="px-4 py-12 text-center text-[var(--color-text-subtle)]"
-                  >
-                    No audit entries match the current filters.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((entry) => (
-                  <>
-                    <tr
-                      key={entry.id}
-                      className="border-b border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-subtle)] cursor-pointer transition-colors"
-                      onClick={() => setExpandedRow(expandedRow === entry.id ? null : entry.id)}
-                    >
-                      <td className="px-4 py-3 text-xs font-mono text-[var(--color-text-secondary)]">
-                        {entry.timestamp}
-                      </td>
-                      <td className="px-4 py-3">
-                        <CategoryBadge category={entry.category} />
-                      </td>
-                      <td className="px-4 py-3 font-mono text-xs text-[var(--color-text-primary)]">
-                        {entry.action}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-[var(--color-text-secondary)]">
-                        {entry.user}
-                      </td>
-                      <td className="px-4 py-3 text-xs font-mono text-[var(--color-text-secondary)] truncate max-w-[240px]">
-                        {entry.resource}
-                      </td>
-                      <td className="px-4 py-3">
-                        <ResultBadge result={entry.result} />
-                      </td>
-                      <td className="px-4 py-3 text-[var(--color-text-subtle)]">
-                        <IconChevronRight
-                          size={14}
-                          className={`transition-transform ${expandedRow === entry.id ? 'rotate-90' : ''}`}
-                        />
-                      </td>
-                    </tr>
-                    {expandedRow === entry.id && (
-                      <tr
-                        key={entry.id + '-detail'}
-                        className="border-b border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]"
-                      >
-                        <td colSpan={7} className="px-6 py-4">
-                          <div className="grid grid-cols-[120px_1fr] gap-y-2 text-xs">
-                            <span className="text-[var(--color-text-subtle)]">Entry ID</span>
-                            <span className="font-mono text-[var(--color-text-primary)]">
-                              {entry.id}
-                            </span>
-                            <span className="text-[var(--color-text-subtle)]">IP Address</span>
-                            <span className="font-mono text-[var(--color-text-primary)]">
-                              {entry.ip}
-                            </span>
-                            <span className="text-[var(--color-text-subtle)]">Detail</span>
-                            <span className="text-[var(--color-text-secondary)]">
-                              {entry.detail}
-                            </span>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <p className="text-xs text-[var(--color-text-subtle)]">
-          {filtered.length} entries · {timeRange}
-        </p>
+        {/* 결과 테이블 (§2-6) */}
+        <Table<AuditLog>
+          columns={columns}
+          data={paged}
+          rowKey="event_id"
+          onRowClick={(row) => navigate(`/audit/logs/${row.event_id}`)}
+          resizable={false}
+          emptyMessage={
+            appliedFilters.length || sensitiveOnly || selectedRange
+              ? 'No audit events in the selected time range or filters.'
+              : 'No audit events to display.'
+          }
+        />
       </VStack>
     </PageShell>
   );

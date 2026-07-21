@@ -1,5 +1,5 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
-import { IconListDetails, IconFilter } from '@tabler/icons-react';
+import { IconLayoutDashboard, IconListSearch, IconReportAnalytics } from '@tabler/icons-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppSwitcher } from './AppSwitcher';
 
@@ -8,21 +8,28 @@ interface AuditSidebarProps {
   onToggle?: () => void;
 }
 
+// 정책서 §0-1: Audit 앱 = 감사 대시보드 / 감사 로그 / 리포트 (3개 화면)
 const NAV_ITEMS = [
   {
     section: 'Audit',
     items: [
       {
+        id: 'audit-dashboard',
+        label: 'Dashboard',
+        icon: <IconLayoutDashboard size={16} stroke={1.5} />,
+        href: '/audit/dashboard',
+      },
+      {
         id: 'audit-logs',
         label: 'Audit Logs',
-        icon: <IconListDetails size={16} stroke={1.5} />,
+        icon: <IconListSearch size={16} stroke={1.5} />,
         href: '/audit/logs',
       },
       {
-        id: 'audit-policy',
-        label: 'Audit Policy',
-        icon: <IconFilter size={16} stroke={1.5} />,
-        href: '/audit/policy',
+        id: 'audit-reports',
+        label: 'Reports',
+        icon: <IconReportAnalytics size={16} stroke={1.5} />,
+        href: '/audit/reports',
       },
     ],
   },
