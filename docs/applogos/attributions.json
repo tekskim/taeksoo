@@ -1,0 +1,79 @@
+{
+  "_note": "App Catalog 로고 에셋 출처/라이선스 기록. 상용 배포 전 Apache(Kafka/Hadoop) 건은 법무/브랜드 최종 확인 권장.",
+  "downloadedAt": "2026-06-12",
+  "_processing": {
+    "normalizedAt": "2026-06-12",
+    "canvas": "256x256",
+    "padding": "24px each side (inner 208x208), 중앙정렬, preserveAspectRatio=xMidYMid meet (왜곡 없음)",
+    "svg": "cnpg/gitea/milvus/valkey: 원본을 256x256 viewBox로 래핑 (마크 자체는 미변형). 원본은 _originals/ 보관.",
+    "png": "전 로고 256x256 PNG, 투명 배경.",
+    "kafka": "공식 EPS(벡터) → PDF(gs) → SVG(pdf2svg) 변환. 흰배경 path 제거 후 256 viewBox 정규화. 진짜 벡터 SVG로 보유(kafka.svg). PNG는 SVG에서 렌더.",
+    "hadoop": "공식 elephant.png(71x71)를 투명화 후 Lanczos 업스케일(→208). 공식 고해상 원본 부재로 약간 소프트함. 코끼리 색(황) 미변형.",
+    "note": "kafka/hadoop의 흰배경 투명화는 마크 재색칠이 아니라 배경 제거임. Apache 상표 정책상 마크 색/형태는 보존됨."
+  },
+  "assets": [
+    {
+      "app": "Gitea",
+      "file": "gitea.svg",
+      "source": "https://raw.githubusercontent.com/go-gitea/gitea/main/assets/logo.svg",
+      "repo": "go-gitea/gitea",
+      "license": "MIT (repository); logo is Gitea trademark",
+      "format": "SVG",
+      "notes": "코드 MIT. 제품 식별 용도 사용 가능. 변형/경쟁제품 사용 시 브랜드 가이드 확인."
+    },
+    {
+      "app": "CloudNativePG (CNPG, incl. CNPG Operator)",
+      "file": "cnpg.svg",
+      "source": "https://raw.githubusercontent.com/cncf/artwork/master/projects/cloudnativepg/icon/color/cloudnativepg-icon-color.svg",
+      "repo": "cncf/artwork",
+      "license": "CNCF / Linux Foundation Trademark Usage (https://www.linuxfoundation.org/trademark-usage)",
+      "format": "SVG",
+      "notes": "변형 금지, fine print에 상표 귀속 표기."
+    },
+    {
+      "app": "Milvus",
+      "file": "milvus.svg",
+      "source": "https://raw.githubusercontent.com/milvus-io/artwork/master/icon/color/milvus-icon-color.svg",
+      "repo": "milvus-io/artwork",
+      "license": "LF AI & Data / Linux Foundation Trademark Usage",
+      "format": "SVG",
+      "notes": "변형 금지, 제휴 암시 금지, 상표 귀속 표기."
+    },
+    {
+      "app": "Valkey",
+      "file": "valkey.svg",
+      "source": "https://raw.githubusercontent.com/valkey-io/valkey-io.github.io/main/static/img/Valkey-logo.svg",
+      "repo": "valkey-io/valkey-io.github.io",
+      "license": "LF Projects 소유 상표 (Valkey, 2026-02 등록)",
+      "format": "SVG",
+      "notes": "LF 상표 정책 준수."
+    },
+    {
+      "app": "Apache Kafka",
+      "file": "kafka.svg (+ png/kafka.png)",
+      "source": "https://svn.apache.org/repos/asf/kafka/site/logos/originals/eps/ICON%20-%20Black%20on%20White.eps",
+      "repo": "Apache 공식 SVN/사이트 로고 (kafka-site logos/originals/eps)",
+      "license": "Apache Software Foundation Trademark Policy (https://www.apache.org/foundation/marks/)",
+      "format": "공식 EPS(벡터) → PDF → SVG 변환(흰배경 path 제거) → 256 viewBox 정규화. 진짜 벡터 SVG. 색(#231F20)·형태 미변형.",
+      "notes": "Apache는 순수 SVG 미배포이나 공식 EPS가 벡터라 SVG로 손실없이 변환. 비공식 트레이싱 아님. 색/비율 변경 금지, 식별 외 용도 서면 승인. 원본은 _originals/kafka-from-eps.svg 보관."
+    },
+    {
+      "app": "Apache Hadoop",
+      "file": "hadoop.png",
+      "source": "https://svn.apache.org/repos/asf/hadoop/logos/out_rgb/elephant_rgb.pdf",
+      "repo": "Apache 공식 SVN 로고 저장소 (svn.apache.org/repos/asf = ASF 정본 브랜드 배포처)",
+      "license": "Apache License 2.0 + ASF 상표 표기 (Wikimedia가 이 SVN을 출처로 명시)",
+      "format": "공식 벡터 PDF → 600dpi(3928px) 렌더 → 256px. 코끼리 단독 마크, 투명배경.",
+      "notes": "ASF 정본 로고 저장소의 벡터 원본이라 신뢰도·화질 모두 최상. 색/형태 미변형. 원본 PDF는 _originals/hadoop-elephant-official.pdf 보관. (이전 ambari 2차 소스는 폐기)"
+    },
+    {
+      "app": "SeaweedFS",
+      "file": "seaweedfs.png",
+      "source": "https://raw.githubusercontent.com/seaweedfs/seaweedfs/master/note/seaweedfs.png",
+      "repo": "seaweedfs/seaweedfs (공식 레포, README 로고)",
+      "license": "Apache-2.0 (레포 라이선스)",
+      "format": "PNG 437x437 → 256px. 공식 일러스트 배지(파란 카드형, 텍스트/물고기/Go 고퍼 포함) — 단독 아이콘 버전 미배포.",
+      "notes": "다른 단색 마크와 톤이 다른 풀컬러 배지이나 이게 SeaweedFS 공식 브랜드. 원본은 _originals/seaweedfs.png 보관."
+    }
+  ]
+}
