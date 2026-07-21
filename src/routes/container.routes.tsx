@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 
 const ContainerHomePage = lazy(() => import('@/pages/ContainerHomePage'));
 const ContainerDashboardPage = lazy(() => import('@/pages/ContainerDashboardPage'));
@@ -117,11 +117,12 @@ const PodDisruptionBudgetDetailPage = lazy(() => import('@/pages/PodDisruptionBu
 const ClusterManagementPage = lazy(() => import('@/pages/ClusterManagementPage'));
 const CreateClusterPage = lazy(() => import('@/pages/CreateClusterPage'));
 const ClusterDetailPage = lazy(() => import('@/pages/ClusterDetailPage'));
-const AppCatalogPage = lazy(() => import('@/pages/AppCatalogPage'));
-const AppInstallPage = lazy(() => import('@/pages/AppInstallPage'));
+const CatalogPage = lazy(() => import('@/pages/CatalogPage'));
 const InstalledAppsPage = lazy(() => import('@/pages/InstalledAppsPage'));
 const InstalledAppDetailPage = lazy(() => import('@/pages/InstalledAppDetailPage'));
+const AppInstallPage = lazy(() => import('@/pages/AppInstallPage'));
 const InstalledAppEditPage = lazy(() => import('@/pages/InstalledAppEditPage'));
+const AppEditPage = lazy(() => import('@/pages/AppEditPage'));
 const InstalledOperatorsPage = lazy(() => import('@/pages/InstalledOperatorsPage'));
 const InstalledOperatorDetailPage = lazy(() => import('@/pages/InstalledOperatorDetailPage'));
 
@@ -326,26 +327,20 @@ export const containerRoutes = (
     <Route path="/container/pdb/create-yaml-v2" element={<CreatePodDisruptionBudgetYamlPage />} />
     <Route path="/container/pdb/:pdbName/edit-yaml" element={<EditPodDisruptionBudgetYamlPage />} />
     <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
-    <Route path="/container/appcatalog/catalog" element={<AppCatalogPage />} />
-    <Route path="/container/appcatalog/catalog/:chartName/install" element={<AppInstallPage />} />
-    <Route path="/container/appcatalog/installed-apps" element={<InstalledAppsPage />} />
+    <Route path="/container/catalog" element={<CatalogPage />} />
+    <Route path="/container/catalog/:chartName/install" element={<AppInstallPage />} />
+    <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
+    <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
+    <Route path="/container/installed-apps/:appId/edit" element={<AppEditPage />} />
+    <Route path="/container/installed-operators" element={<InstalledOperatorsPage />} />
     <Route
-      path="/container/appcatalog/installed-apps/:appId"
-      element={<InstalledAppDetailPage />}
-    />
-    <Route
-      path="/container/appcatalog/installed-apps/:appId/edit"
-      element={<InstalledAppEditPage />}
-    />
-    <Route path="/container/appcatalog/installed-operators" element={<InstalledOperatorsPage />} />
-    <Route
-      path="/container/appcatalog/installed-operators/:operatorId"
+      path="/container/installed-operators/:operatorId"
       element={<InstalledOperatorDetailPage />}
     />
     <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
     <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
-    <Route path="/container/*" element={<ContainerDashboardPage />} />
+    <Route path="/container/*" element={<Navigate to="/container" replace />} />
   </>
 );

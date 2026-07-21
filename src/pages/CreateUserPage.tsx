@@ -14,11 +14,13 @@ import {
   Table,
   Pagination,
   Tooltip,
+  Badge,
+  BadgeList,
   SelectionIndicator,
   FormField,
   SearchInput,
   PageShell,
-  WizardSectionStatusIcon,
+  WizardSummary,
   type TableColumn,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -32,6 +34,7 @@ import {
   IconCircleCheck,
   IconExternalLink,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -49,7 +52,8 @@ interface UserGroup {
   id: string;
   name: string;
   type: string;
-  roles: string;
+  roles: string[];
+  description: string;
   userCount: number;
   createdAt: string;
 }
@@ -72,57 +76,64 @@ const mockUserGroups: UserGroup[] = [
     id: 'group-1',
     name: 'Users',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'Default user group',
     userCount: 130,
-    createdAt: 'Sep 12, 2025 08:15:22',
+    createdAt: 'Sep 12, 2026 08:15:22',
   },
   {
     id: 'group-2',
     name: 'Admins',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'Administrator group',
     userCount: 130,
-    createdAt: 'Sep 12, 2025 09:32:44',
+    createdAt: 'Sep 12, 2026 09:32:44',
   },
   {
     id: 'group-3',
     name: 'Members',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'General members',
     userCount: 130,
-    createdAt: 'Sep 12, 2025 10:48:17',
+    createdAt: 'Sep 12, 2026 10:48:17',
   },
   {
     id: 'group-4',
     name: 'test',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'Test group',
     userCount: 130,
-    createdAt: 'Sep 12, 2025 11:55:33',
+    createdAt: 'Sep 12, 2026 11:55:33',
   },
   {
     id: 'group-5',
     name: 'MemberGroup',
     type: 'Built-in',
-    roles: 'ReadCompute (+3)',
+    roles: ['Compute:tenantA', 'Container:clusterA', 'IAM:ReadOnly', 'Storage:Host'],
+    description: 'Member group',
     userCount: 130,
-    createdAt: 'Sep 12, 2025 13:22:08',
+    createdAt: 'Sep 12, 2026 13:22:08',
   },
   {
     id: 'group-6',
     name: 'Developers',
     type: 'Custom',
-    roles: 'FullAccess (+2)',
+    roles: ['FullAccess', 'Container:clusterB', 'IAM:Admin'],
+    description: 'Development team',
     userCount: 45,
-    createdAt: 'Aug 15, 2025 14:40:51',
+    createdAt: 'Aug 15, 2026 14:40:51',
   },
   {
     id: 'group-7',
     name: 'Viewers',
     type: 'Custom',
-    roles: 'ReadOnly',
+    roles: ['ReadOnly'],
+    description: 'Read-only viewers',
     userCount: 200,
-    createdAt: 'Jul 22, 2025 16:18:26',
+    createdAt: 'Jul 22, 2026 16:18:26',
   },
 ];
 
@@ -136,7 +147,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -154,7 +165,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -208,36 +219,16 @@ function SummarySidebar({
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card with Header and Status */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Header */}
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Create user</h4>
-
-            {/* Section Status List */}
-            <div className="flex flex-col">
-              {SECTION_ORDER.map((sectionKey) => {
-                const isWriting = sectionStatus[sectionKey] === 'writing';
-
-                return (
-                  <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SECTION_LABELS[sectionKey]}
-                    </span>
-                    {isWriting ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </VStack>
-        </div>
+        <WizardSummary
+          title="Create user"
+          items={SECTION_ORDER.map((key) => ({
+            key,
+            label: SECTION_LABELS[key],
+            status: sectionStatus[key],
+          }))}
+        />
 
         {/* Action Buttons */}
         <HStack gap={2}>
@@ -306,10 +297,10 @@ function PasswordSection({
         {hasMinLength ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasMinLength ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasMinLength ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           8-64 characters long
         </span>
@@ -318,10 +309,10 @@ function PasswordSection({
         {hasUppercase ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasUppercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasUppercase ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one uppercase letter (A-Z)
         </span>
@@ -330,10 +321,10 @@ function PasswordSection({
         {hasLowercase ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasLowercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasLowercase ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one lowercase letter (a-z)
         </span>
@@ -342,10 +333,10 @@ function PasswordSection({
         {hasNumber ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasNumber ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasNumber ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one number
         </span>
@@ -354,10 +345,10 @@ function PasswordSection({
         {hasSpecialChar ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasSpecialChar ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasSpecialChar ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one special character
         </span>
@@ -375,10 +366,10 @@ function PasswordSection({
       {passwordsMatch ? (
         <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
       ) : (
-        <IconCircle size={16} className="text-white/50" />
+        <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
       )}
       <span
-        className={`text-body-sm ${passwordsMatch ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+        className={`text-body-sm ${passwordsMatch ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
       >
         Passwords match.
       </span>
@@ -421,7 +412,7 @@ function PasswordSection({
 
       {/* Password inputs - shown when manual is selected */}
       {(isV2 || passwordOption === 'manual') && (
-        <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+        <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-2">
           <HStack gap={6} align="center">
             {/* Password */}
             <HStack gap={1.5} align="center">
@@ -446,7 +437,7 @@ function PasswordSection({
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <IconEyeOff size={14} /> : <IconEye size={14} />}
+                    {showPassword ? <IconEye size={14} /> : <IconEyeOff size={14} />}
                   </button>
                 </div>
               </Tooltip>
@@ -475,7 +466,7 @@ function PasswordSection({
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    {showConfirmPassword ? <IconEyeOff size={14} /> : <IconEye size={14} />}
+                    {showConfirmPassword ? <IconEye size={14} /> : <IconEyeOff size={14} />}
                   </button>
                 </div>
               </Tooltip>
@@ -683,6 +674,7 @@ function BasicInformationSection({
                     onUsernameChange(e.target.value);
                     onUsernameErrorChange(null);
                   }}
+                  error={!!usernameError}
                   fullWidth
                 />
               </FormField.Control>
@@ -730,6 +722,7 @@ function BasicInformationSection({
                     onEmailChange(e.target.value);
                     onEmailErrorChange(null);
                   }}
+                  error={!!emailError}
                   fullWidth
                 />
               </FormField.Control>
@@ -772,7 +765,7 @@ function BasicInformationSection({
                 <HStack gap={2} align="center">
                   <Toggle checked={status} onChange={onStatusChange} />
                   <span className="text-body-md text-[var(--color-text-default)]">
-                    {status ? 'Enabled' : 'Disabled'}
+                    {status ? 'Active' : 'Disabled'}
                   </span>
                 </HStack>
               </FormField.Control>
@@ -831,7 +824,7 @@ function UserGroupSection({
     (group) =>
       group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       group.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      group.roles.toLowerCase().includes(searchQuery.toLowerCase())
+      group.roles.some((r) => r.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredGroups.length / itemsPerPage);
@@ -846,37 +839,50 @@ function UserGroupSection({
       label: 'User group name',
       sortable: true,
       render: (_, row) => (
-        <HStack gap={1.5} align="center">
-          <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
-          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-        </HStack>
+        <div className="flex flex-col gap-0.5">
+          <HStack gap={1.5} align="center">
+            <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)]">
+            <span className="truncate">ID: {row.id}</span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </div>
       ),
     },
     {
       key: 'type',
       label: 'Type',
       render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
+        <Badge theme="white" size="sm">
+          {value}
+        </Badge>
       ),
     },
     {
       key: 'roles',
-      label: 'Roles',
-      render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
+      label: 'Policies',
+      minWidth: 180,
+      render: (value: string[]) => (
+        <BadgeList
+          items={value}
+          maxVisible={1}
+          maxBadgeWidth="140px"
+          popoverTitle={`All Roles (${value.length})`}
+          overflowAlign="right"
+          popoverMaxWidth="160px"
+        />
       ),
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
     },
     {
       key: 'userCount',
-      label: 'User count',
-      sortable: true,
-      render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      ),
-    },
-    {
-      key: 'createdAt',
-      label: 'Created at',
+      label: 'Members',
       sortable: true,
       render: (value) => (
         <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
@@ -1220,15 +1226,11 @@ export default function CreateUserPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'Users', href: '/iam/users' },
-                { label: 'Create user' },
-              ]}
+              items={[{ label: 'Users', href: '/iam/users' }, { label: 'Create User' }]}
             />
           }
         />

@@ -18,24 +18,18 @@ import {
   Badge,
   SectionCard,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
   Tooltip,
   Popover,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
-  IconChevronDown,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -92,11 +86,11 @@ const mockHPAData: Record<string, HPAData> = {
     status: 'Active',
     namespace: 'default',
     targetReference: 'php-apache',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     minReplicas: 1,
     maxReplicas: 10,
     currentReplicas: 1,
-    lastScaleTime: 'Jul 25, 2025',
+    lastScaleTime: 'Jul 25, 2026',
     labels: {
       foo: 'bar',
     },
@@ -110,11 +104,11 @@ const mockHPAData: Record<string, HPAData> = {
     status: 'Processing',
     namespace: 'kube-system',
     targetReference: 'nginx-deployment',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
     minReplicas: 2,
     maxReplicas: 20,
     currentReplicas: 5,
-    lastScaleTime: 'Nov 8, 2025',
+    lastScaleTime: 'Nov 8, 2026',
     labels: {
       app: 'nginx',
     },
@@ -152,21 +146,21 @@ const mockConditionsData: ConditionRow[] = [
     condition: 'AbleToScale',
     status: 'True',
     message: '[SucceededRescale] the HPA controller was able to update the target scale',
-    updated: 'Nov 10, 2025',
+    updated: 'Nov 10, 2026',
   },
   {
     id: '2',
     condition: 'ScalingActive',
     status: 'True',
     message: '[ValidMetricFound] the HPA was able to successfully calculate a replica count',
-    updated: 'Nov 10, 2025',
+    updated: 'Nov 10, 2026',
   },
   {
     id: '3',
     condition: 'ScalingLimited',
     status: 'False',
     message: '[DesiredWithinRange] the desired count is within the acceptable range',
-    updated: 'Nov 10, 2025',
+    updated: 'Nov 10, 2026',
   },
 ];
 
@@ -184,7 +178,8 @@ function MetricsTab() {
           <SectionCard.Content>
             <SectionCard.DataRow label="Source" value={mockMetricData.source} showDivider={false} />
             <SectionCard.DataRow label="Name" value={mockMetricData.name} />
-            <SectionCard.DataRow label="Target name" value={mockMetricData.targetType} />
+            <SectionCard.DataRow label="Target name" value={mockMetricData.referentName} />
+            <SectionCard.DataRow label="Target type" value={mockMetricData.targetType} />
             <SectionCard.DataRow label="Value" value={mockMetricData.value} />
             <SectionCard.DataRow
               label="Referent API version"
@@ -278,9 +273,9 @@ function ConditionsTab() {
     },
     {
       key: 'status',
-      label: 'Size',
+      label: 'Status',
       flex: 1,
-      minWidth: columnMinWidths.size,
+      minWidth: columnMinWidths.status,
       sortable: true,
     },
     {
@@ -336,7 +331,7 @@ export function ContainerHPADetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get HPA data
-  const hpa = mockHPAData[hpaId || ''] || mockHPAData['1'];
+  const hpa = hpaId ? mockHPAData[hpaId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -344,8 +339,10 @@ export function ContainerHPADetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`HPA: ${hpa.name}`);
-  }, [updateActiveTabLabel, hpa.name]);
+    if (hpa) {
+      updateActiveTabLabel(`HPA: ${hpa.name}`);
+    }
+  }, [updateActiveTabLabel, hpa]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -364,6 +361,70 @@ export function ContainerHPADetailPage() {
     console.log('Open in new tab:', tab);
   };
 
+  if (!hpa) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'HPA', href: '/container/hpa' }, { label: hpaId ?? 'HPA' }]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="HPA not found"
+          description={`The HPA "${hpaId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/hpa')}>
+              Back to HPA
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   const getStatusType = (status: string): 'active' | 'building' | 'error' => {
     switch (status) {
       case 'Active':
@@ -380,14 +441,9 @@ export function ContainerHPADetailPage() {
   // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/hpa/${hpa.id}/edit?name=${encodeURIComponent(hpa.name)}`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/hpa/${hpa.name}/edit-yaml`),
+      onClick: () => navigate(`/container/hpa/${hpaId}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -423,41 +479,12 @@ export function ContainerHPADetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Horizontal pod autoscalers', href: '/container/hpa' },
-                { label: hpa.name },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'HPA', href: '/container/hpa' }, { label: hpa.name }]} />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={hpa.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -513,7 +540,7 @@ export function ContainerHPADetailPage() {
 
           {/* Second row: Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(hpa.labels).length})
@@ -538,14 +565,14 @@ export function ContainerHPADetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All labels ({Object.keys(hpa.labels).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(hpa.labels).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>
@@ -560,7 +587,7 @@ export function ContainerHPADetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(hpa.annotations).length})
@@ -585,14 +612,14 @@ export function ContainerHPADetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All annotations ({Object.keys(hpa.annotations).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(hpa.annotations).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>

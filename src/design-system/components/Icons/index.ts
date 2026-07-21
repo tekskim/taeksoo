@@ -378,6 +378,8 @@ import {
   IconChat,
 } from './CustomIcons';
 
+export { IconHardDriveFigma, IconPackagesFigma } from './CustomIcons';
+
 export type TDSIconProps = IconProps;
 
 /* ----------------------------------------

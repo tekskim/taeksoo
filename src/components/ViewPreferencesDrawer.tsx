@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Drawer, Button, Select } from '@/design-system';
+import { HStack } from '@/design-system/layouts';
 import { IconGripVertical, IconEye, IconEyeOff, IconRefresh } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -150,14 +151,14 @@ export function ViewPreferencesDrawer({
       title="View preferences"
       width={320}
       footer={
-        <div className="flex gap-2">
-          <Button variant="secondary" size="sm" onClick={handleCancel} className="flex-1 h-8">
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={handleCancel} className="flex-1">
             Cancel
           </Button>
-          <Button variant="primary" size="sm" onClick={handleSave} className="flex-1 h-8">
+          <Button variant="primary" onClick={handleSave} className="flex-1">
             Save
           </Button>
-        </div>
+        </HStack>
       }
     >
       <div className="flex flex-col gap-6">

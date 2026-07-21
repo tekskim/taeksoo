@@ -14,42 +14,13 @@ import {
   SectionCard,
   Disclosure,
   PageShell,
+  WizardSummary,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconX,
-  IconCheck,
-  IconCirclePlus,
-  IconPencilCog,
-} from '@tabler/icons-react';
-
-/* ----------------------------------------
-   Types
-   ---------------------------------------- */
-
-type NamespaceSectionStep = 'basic-info' | 'pod-security' | 'labels-annotations';
-
-// Section labels for display
-const NAMESPACE_SECTION_LABELS: Record<NamespaceSectionStep, string> = {
-  'basic-info': 'Basic Information',
-  'pod-security': 'Pod Security Admission',
-  'labels-annotations': 'Labels & Annotations',
-};
-
-// Section order for navigation
-const NAMESPACE_SECTION_ORDER: NamespaceSectionStep[] = [
-  'basic-info',
-  'pod-security',
-  'labels-annotations',
-];
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
 // Pod Security profile options
 const PSA_PROFILE_OPTIONS = [
@@ -68,80 +39,6 @@ interface Annotation {
   id: string;
   key: string;
   value: string;
-}
-
-/* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
-   Summary Sidebar Component
-   ---------------------------------------- */
-function SummarySidebar({
-  sectionStates,
-}: {
-  sectionStates: Record<NamespaceSectionStep, WizardSectionState>;
-}) {
-  const navigate = useNavigate();
-
-  return (
-    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={4}>
-            <span className="text-heading-h5">Summary</span>
-            <VStack gap={0}>
-              {NAMESPACE_SECTION_ORDER.map((step) => (
-                <HStack key={step} justify="between" className="py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {NAMESPACE_SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStates[step]} />
-                </HStack>
-              ))}
-            </VStack>
-          </VStack>
-        </div>
-
-        {/* Button row */}
-        <HStack gap={2}>
-          <Button variant="secondary" size="md" onClick={() => navigate('/container/namespaces')}>
-            Cancel
-          </Button>
-          <Button variant="primary" size="md" className="flex-1">
-            Create
-          </Button>
-        </HStack>
-      </div>
-    </div>
-  );
 }
 
 /* ----------------------------------------
@@ -191,16 +88,8 @@ export function CreateNamespacePage() {
     isV2 ? [{ id: Date.now().toString(), key: '', value: '' }] : []
   );
 
-  // Section states for summary
-  const getSectionStates = (): Record<NamespaceSectionStep, WizardSectionState> => {
-    return {
-      // Namespace IS the resource being named; no namespace field, name has no default → 'pre' when empty
-      'basic-info': namespaceName.trim() ? 'done' : 'pre',
-      // pod-security, labels-annotations are optional → always done
-      'pod-security': 'done',
-      'labels-annotations': 'done',
-    };
-  };
+  const hasFilledLabels = labels.some((l) => l.key.trim() || l.value.trim());
+  const hasFilledAnnotations = annotations.some((a) => a.key.trim() || a.value.trim());
 
   // Label handlers
   const addLabel = useCallback(() => {
@@ -228,6 +117,14 @@ export function CreateNamespacePage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
+  const handleCreate = useCallback(() => {
+    const trimmed = namespaceName.trim();
+    if (!trimmed) return;
+    navigate('/container/namespaces');
+  }, [namespaceName, navigate]);
+
+  const isCreateDisabled = !namespaceName.trim();
+
   return (
     <PageShell
       sidebar={
@@ -249,50 +146,24 @@ export function CreateNamespacePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Namespaces', href: '/container/namespaces' },
                 { label: 'Create Namespace' },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
+        <VStack gap={1}>
           <h1 className="text-heading-h4">Create namespace</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Namespace is a logical partition within a cluster that isolates and organizes resources
@@ -445,10 +316,10 @@ export function CreateNamespacePage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -461,7 +332,7 @@ export function CreateNamespacePage() {
                         {labels.map((label) => (
                           <div
                             key={label.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                           >
                             <Input
                               placeholder="label key"
@@ -513,10 +384,10 @@ export function CreateNamespacePage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -529,7 +400,7 @@ export function CreateNamespacePage() {
                         {annotations.map((annotation) => (
                           <div
                             key={annotation.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                           >
                             <Input
                               placeholder="annotation key"
@@ -578,7 +449,42 @@ export function CreateNamespacePage() {
           </VStack>
 
           {/* Summary Sidebar */}
-          <SummarySidebar sectionStates={getSectionStates()} />
+          <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
+            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+              <WizardSummary
+                items={[
+                  {
+                    key: 'basic-info',
+                    label: 'Basic information',
+                    status: namespaceName.trim() ? 'done' : 'active',
+                  },
+                  {
+                    key: 'pod-security',
+                    label: 'Pod security admission',
+                    status: enforceEnabled || auditEnabled || warnEnabled ? 'done' : 'active',
+                  },
+                  {
+                    key: 'labels-annotations',
+                    label: 'Labels & annotations',
+                    status: hasFilledLabels || hasFilledAnnotations ? 'done' : 'active',
+                  },
+                ]}
+              />
+              <HStack gap={2} className="w-full justify-end">
+                <Button variant="secondary" onClick={() => navigate('/container/namespaces')}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  className="flex-1"
+                  onClick={handleCreate}
+                  disabled={isCreateDisabled}
+                >
+                  Create
+                </Button>
+              </HStack>
+            </div>
+          </div>
         </HStack>
       </VStack>
     </PageShell>

@@ -1,224 +1,169 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   VStack,
+  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
-  PageShell,
-  DetailHeader,
-  Badge,
-  Button,
-  Modal,
-  InfoBox,
-  Table,
   Tabs,
   TabList,
   Tab,
   TabPanel,
-  type TableColumn,
-  columnMinWidths,
+  Button,
+  PageShell,
+  DetailHeader,
+  StatusIndicator,
 } from '@/design-system';
-import { useParams, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
 import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconEdit,
-  IconTrash,
-  IconCopy,
-  IconDownload,
-} from '@tabler/icons-react';
-import { getContainerStatusTheme } from './containerStatusUtils';
+import { IconBell, IconDownload, IconEdit, IconTrash, IconCopy } from '@tabler/icons-react';
+import type { InstalledAppStatus } from '@/pages/apps/appsTypes';
+import { installedAppsMock } from '@/pages/apps/appsMockData';
 
-function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
+/* ─── Read-only YAML viewer ─── */
+function YamlViewer({
+  value,
+  onCopy,
+  onDownload,
+}: {
+  value: string;
+  onCopy: () => void;
+  onDownload: () => void;
+}) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const lineNumbersRef = useRef<HTMLDivElement>(null);
+  const lines = value.split('\n');
+  const lineCount = lines.length;
+
+  const handleScroll = useCallback(() => {
+    if (scrollContainerRef.current && lineNumbersRef.current) {
+      lineNumbersRef.current.scrollTop = scrollContainerRef.current.scrollTop;
+    }
+  }, []);
+
   return (
-    <button
-      className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-      aria-label={label}
-    >
-      <span className="text-[var(--color-text-muted)]">{icon}</span>
-    </button>
+    <div className="flex flex-col gap-2 w-full min-h-0 flex-1">
+      <HStack justify="end" gap={2}>
+        <Button
+          variant="secondary"
+          size="sm"
+          leftIcon={<IconCopy size={12} stroke={1.5} />}
+          onClick={onCopy}
+        >
+          Copy
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          leftIcon={<IconDownload size={12} stroke={1.5} />}
+          onClick={onDownload}
+        >
+          Download
+        </Button>
+      </HStack>
+      <div className="flex-1 flex min-h-[320px] border border-[var(--color-border-default)] rounded-[4px] bg-[var(--color-base-white)] overflow-hidden relative">
+        <div
+          ref={lineNumbersRef}
+          className="w-[44px] flex-shrink-0 overflow-y-scroll py-2 pr-2 select-none text-right bg-[var(--color-surface-default)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="font-mono text-body-md leading-[18px] text-[var(--color-text-subtle)]">
+            {Array.from({ length: lineCount }, (_, i) => (
+              <div key={i + 1}>{i + 1}</div>
+            ))}
+          </div>
+        </div>
+        <div
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="flex-1 min-w-0 overflow-auto"
+        >
+          <pre className="w-full min-h-full py-2 px-2.5 font-mono text-body-md leading-[18px] text-[var(--color-text-default)] bg-transparent whitespace-pre select-text">
+            {value}
+          </pre>
+        </div>
+      </div>
+    </div>
   );
 }
 
-/* ----------------------------------------
-   Types
-   ---------------------------------------- */
-
-interface InstalledAppDetail {
-  id: string;
-  name: string;
-  version: string;
-  namespace: string;
-  status: string;
-  chartName: string;
-  lastDeployed: string;
-}
-
-interface AppResource {
-  id: string;
-  type: string;
-  name: string;
-  namespace: string;
-}
-
-/* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
-
-const installedAppsData: Record<string, InstalledAppDetail> = {
-  '1': {
-    id: '1',
-    name: 'postgresql-1',
-    version: '16.3.0',
-    namespace: 'default',
-    status: 'Deployed',
-    chartName: 'postgresql',
-    lastDeployed: 'Mar 11, 2026 14:20',
-  },
-  '2': {
-    id: '2',
-    name: 'kafka',
-    version: '08.33',
-    namespace: 'data',
-    status: 'Deployed',
-    chartName: 'kafka',
-    lastDeployed: 'Mar 10, 2026 09:15',
-  },
-  '3': {
-    id: '3',
-    name: 'valkey',
-    version: '80.2',
-    namespace: 'cache',
-    status: 'Deployed',
-    chartName: 'valkey',
-    lastDeployed: 'Mar 06, 2026 17:55',
-  },
-  '4': {
-    id: '4',
-    name: 'nginx-1',
-    version: '4.05',
-    namespace: 'ingress-nginx',
-    status: 'Deployed',
-    chartName: 'nginx',
-    lastDeployed: 'Mar 08, 2026 11:09',
-  },
-  '5': {
-    id: '5',
-    name: 'milvus',
-    version: '4.27',
-    namespace: 'ai',
-    status: 'Pending',
-    chartName: 'milvus',
-    lastDeployed: 'Mar 12, 2026 09:00',
-  },
-  '6': {
-    id: '6',
-    name: 'postgresql-1',
-    version: '16.30',
-    namespace: 'ai',
-    status: 'Failed',
-    chartName: 'postgresql',
-    lastDeployed: 'Mar 12, 2026 15:53',
-  },
+const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error'> = {
+  Deployed: 'active',
+  Pending: 'building',
+  Failed: 'error',
 };
 
-const appResourcesData: Record<string, AppResource[]> = {
-  '1': [
-    { id: 'r1', type: 'StatefulSet', name: 'postgresql', namespace: 'default' },
-    { id: 'r2', type: 'Service', name: 'postgresql', namespace: 'default' },
-    { id: 'r3', type: 'Secret', name: 'postgresql', namespace: 'default' },
-    {
-      id: 'r4',
-      type: 'PersistentVolumeClaim',
-      name: 'data-postgresql-0',
-      namespace: 'default',
-    },
-    { id: 'r5', type: 'ConfigMap', name: 'postgresql-configuration', namespace: 'default' },
-  ],
-};
+function toTitleCase(s: string): string {
+  return s
+    .replace(/-/g, ' ')
+    .split(' ')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+}
 
-/* ----------------------------------------
-   Component
-   ---------------------------------------- */
-
-export default function InstalledAppDetailPage() {
+export function InstalledAppDetailPage() {
   const { appId } = useParams<{ appId: string }>();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const sidebarWidth = sidebarOpen ? 248 : 48;
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const { isStandalone } = useAppCatalogMode();
-  const [activeTab, setActiveTab] = useState('resources');
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const sidebarWidth = isStandalone ? (sidebarOpen ? 200 : 0) : sidebarOpen ? 240 : 40;
+  const basePath = isStandalone ? '/app-catalog' : '/container';
 
-  const app = installedAppsData[appId || '1'];
-  const resources = appResourcesData[appId || '1'] || [];
+  const app = installedAppsMock.find((a) => a.id === appId);
 
-  const valuesYaml = `auth:
-  postgresPassword: "change-me"
-  username: "appuser"
-  password: "change-me"
-  database: "appdb"
+  const downloadValuesYaml = () => {
+    if (!app) return;
+    const content = app.valuesYaml ?? '# No values';
+    const blob = new Blob([content], { type: 'text/yaml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${app.name}-values.yaml`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
-primary:
-  persistence:
-    enabled: true
-    size: 20Gi
-    storageClass: "longhorn"
+  const copyValuesYaml = useCallback(async () => {
+    if (!app) return;
+    try {
+      await navigator.clipboard.writeText(app.valuesYaml ?? '# No values');
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  }, [app]);
 
-  resources:
-    requests:
-      cpu: "250m"
-      memory: "512Mi"
-    limits:
-      cpu: "1"
-      memory: "2Gi"
-`;
+  const sidebarEl = isStandalone ? (
+    <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+  ) : (
+    <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+  );
 
-  const resourceColumns: TableColumn<AppResource>[] = [
-    {
-      key: 'type',
-      label: 'Kind',
-      flex: 1,
-      minWidth: columnMinWidths.type,
-      sortable: true,
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 2,
-      minWidth: columnMinWidths.name,
-      sortable: true,
-      render: (value) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
-          {value}
-        </span>
-      ),
-    },
-    {
-      key: 'namespace',
-      label: 'Namespace',
-      flex: 1,
-      minWidth: columnMinWidths.namespace,
-      sortable: true,
-    },
-  ];
+  if (!app) {
+    return (
+      <PageShell sidebar={sidebarEl} sidebarWidth={sidebarWidth} contentClassName="pt-4 px-8 pb-6">
+        <VStack gap={4}>
+          <p className="text-body-md text-[var(--color-text-muted)]">App not found.</p>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => navigate(`${basePath}/installed-apps`)}
+          >
+            Back to Installed Apps
+          </Button>
+        </VStack>
+      </PageShell>
+    );
+  }
 
-  if (!app) return null;
+  const isPending = app.status === 'Pending';
+  const chartDisplayName = app.displayName ?? toTitleCase(app.name);
 
   return (
     <PageShell
-      sidebar={
-        isStandalone ? (
-          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-        ) : (
-          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-        )
-      }
+      sidebar={sidebarEl}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -234,151 +179,97 @@ primary:
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          showNavigation={!isStandalone}
+          onBack={() => navigate(`${basePath}/installed-apps`)}
+          onForward={() => {}}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'App Catalog', href: '/container/appcatalog/catalog' },
-                { label: 'Installed Apps', href: '/container/appcatalog/installed-apps' },
-                { label: app.name },
-              ]}
+              items={
+                isStandalone
+                  ? [
+                      { label: 'Installed Apps', href: `${basePath}/installed-apps` },
+                      { label: chartDisplayName },
+                    ]
+                  : [
+                      { label: 'clusterName', href: '/container' },
+                      { label: 'Apps', href: '/container/catalog' },
+                      { label: 'Installed Apps', href: '/container/installed-apps' },
+                      { label: chartDisplayName },
+                    ]
+              }
             />
           }
           actions={
-            <>
-              <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
-              <TopBarActionButton
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-              />
-            </>
+            <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </button>
           }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={4}>
+      <VStack gap={6}>
         <DetailHeader>
-          <DetailHeader.Title>{app.name}</DetailHeader.Title>
-
-          <DetailHeader.Actions>
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<IconEdit size={12} />}
-              onClick={() => navigate(`/container/appcatalog/installed-apps/${appId}/edit`)}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<IconTrash size={12} />}
-              onClick={() => setIsDeleteOpen(true)}
-            >
-              Delete
-            </Button>
-          </DetailHeader.Actions>
-
+          <HStack justify="between" align="start" className="w-full flex-wrap gap-2">
+            <DetailHeader.Title>{chartDisplayName}</DetailHeader.Title>
+            <DetailHeader.Actions>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconEdit size={14} stroke={1.5} />}
+                disabled={isPending}
+                onClick={() => navigate(`${basePath}/installed-apps/${app.id}/edit`)}
+              >
+                Edit / Upgrade
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconTrash size={14} stroke={1.5} />}
+                disabled={isPending}
+              >
+                Delete
+              </Button>
+            </DetailHeader.Actions>
+          </HStack>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
               value={
-                <Badge theme={getContainerStatusTheme(app.status)} type="subtle" size="sm">
-                  {app.status}
-                </Badge>
+                <StatusIndicator
+                  status={statusMap[app.status]}
+                  label={app.status}
+                  layout="default"
+                />
               }
             />
-            <DetailHeader.InfoCard label="App name" value={app.name} />
-            <DetailHeader.InfoCard label="Chart name" value={app.chartName} />
+            <DetailHeader.InfoCard label="App name" value={chartDisplayName} />
             <DetailHeader.InfoCard label="Version" value={app.version} />
             <DetailHeader.InfoCard label="Namespace" value={app.namespace} />
-            <DetailHeader.InfoCard label="Last deployed" value={app.lastDeployed} />
+            <DetailHeader.InfoCard
+              label="Last deployed"
+              value={app.lastDeployed ?? app.installedAt ?? '—'}
+            />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+        <Tabs defaultValue="values" variant="underline" size="sm">
           <TabList>
-            <Tab value="resources">Resources</Tab>
-            <Tab value="values">Values.yaml</Tab>
+            <Tab value="values">Values</Tab>
           </TabList>
-
-          <TabPanel value="resources" className="pt-0">
-            <VStack gap={0} className="pt-4">
-              <Table
-                columns={resourceColumns}
-                data={resources}
-                rowKey="id"
-                emptyMessage="No resources found"
+          <TabPanel value="values">
+            <div className="pt-3 flex flex-col min-h-0 flex-1">
+              <YamlViewer
+                value={app.valuesYaml ?? '# No values'}
+                onCopy={copyValuesYaml}
+                onDownload={downloadValuesYaml}
               />
-            </VStack>
-          </TabPanel>
-
-          <TabPanel value="values" className="pt-0">
-            <VStack gap={3} className="pt-4">
-              <div className="flex items-center justify-end gap-2">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconCopy size={12} />}
-                  onClick={() => navigator.clipboard.writeText(valuesYaml)}
-                >
-                  Copy
-                </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
-                  Download
-                </Button>
-              </div>
-              <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden p-2">
-                <div className="overflow-auto bg-[var(--color-surface-default)]">
-                  <table className="w-full border-collapse">
-                    <tbody>
-                      {valuesYaml.split('\n').map((line, i) => (
-                        <tr key={i} className="leading-[20px]">
-                          <td className="px-3 py-0 text-right select-none text-body-sm text-[var(--color-text-disabled)] font-mono w-[1%] whitespace-nowrap align-top">
-                            {i + 1}
-                          </td>
-                          <td className="px-3 py-0 text-body-sm text-[var(--color-text-default)] font-mono whitespace-pre">
-                            {line || '\u00A0'}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </VStack>
+            </div>
           </TabPanel>
         </Tabs>
       </VStack>
-
-      <Modal
-        isOpen={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
-        title="Delete App"
-        description="This will remove the Helm release and all associated Kubernetes resources. This action cannot be undone."
-        size="sm"
-      >
-        <InfoBox label="App / Namespace" value={`${app.name} / ${app.namespace}`} />
-        <div className="flex gap-2 w-full">
-          <Button variant="secondary" onClick={() => setIsDeleteOpen(false)} className="flex-1">
-            Cancel
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              console.log('Delete', app.id);
-              setIsDeleteOpen(false);
-              navigate('/container/appcatalog/installed-apps');
-            }}
-            className="flex-1"
-          >
-            Delete
-          </Button>
-        </div>
-      </Modal>
     </PageShell>
   );
 }
+
+export default InstalledAppDetailPage;

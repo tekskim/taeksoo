@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
-import { useIsDesktopWindow } from '@/contexts/DesktopWindowContext';
+import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 /* ----------------------------------------
    Types
@@ -74,7 +74,26 @@ export const TabBar: React.FC<TabBarProps> = ({
 }) => {
   const navigate = useNavigate();
   const isDesktopWindow = useIsDesktopWindow();
+  const desktopControls = useDesktopWindowControls();
   const effectiveShowWindowControls = showWindowControls && !isDesktopWindow;
+
+  // Top Bar acts as the window drag / double-click-maximize handle (tds_ssot AppWindow spec:
+  // "제목 표시줄(Top Bar)로 창을 끌어 이동", "Top Bar 더블 클릭 시 최대화/복원").
+  // Only the empty bar area drives the window — tabs and control buttons keep their own behavior.
+  const isWindowDragTarget = (e: React.MouseEvent) => {
+    const t = e.target as HTMLElement;
+    return !t.closest('[data-tab-id]') && !t.closest('button');
+  };
+
+  const handleBarMouseDown = (e: React.MouseEvent) => {
+    if (!isDesktopWindow || !desktopControls || !isWindowDragTarget(e)) return;
+    desktopControls.onDragStart(e);
+  };
+
+  const handleBarDoubleClick = (e: React.MouseEvent) => {
+    if (!isDesktopWindow || !desktopControls || !isWindowDragTarget(e)) return;
+    desktopControls.onDoubleClick();
+  };
 
   const handleWindowClose = useCallback(() => {
     if (onWindowClose) {
@@ -145,6 +164,8 @@ export const TabBar: React.FC<TabBarProps> = ({
   return (
     <div
       data-figma-name="[TDS] TabBar"
+      onMouseDown={isDesktopWindow ? handleBarMouseDown : undefined}
+      onDoubleClick={isDesktopWindow ? handleBarDoubleClick : undefined}
       className={`
         relative
         flex items-center

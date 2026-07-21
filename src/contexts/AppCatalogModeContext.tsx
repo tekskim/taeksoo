@@ -1,20 +1,17 @@
 import { createContext, useContext } from 'react';
-import type { ReactNode } from 'react';
 
 interface AppCatalogModeContextValue {
+  /** true: standalone 데스크탑 앱 모드, false: Container 내 서브메뉴 모드 */
   isStandalone: boolean;
 }
 
-const AppCatalogModeContext = createContext<AppCatalogModeContextValue>({ isStandalone: false });
+const AppCatalogModeContext = createContext<AppCatalogModeContextValue>({
+  isStandalone: true,
+});
 
-export function AppCatalogModeProvider({ children }: { children: ReactNode }) {
-  return (
-    <AppCatalogModeContext.Provider value={{ isStandalone: true }}>
-      {children}
-    </AppCatalogModeContext.Provider>
-  );
-}
-
-export function useAppCatalogMode() {
+export function useAppCatalogMode(): AppCatalogModeContextValue {
   return useContext(AppCatalogModeContext);
 }
+
+export { AppCatalogModeContext };
+export default AppCatalogModeContext;

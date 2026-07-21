@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -26,8 +25,9 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconPlus } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { CreateKeyPairDrawer } from '@/components/CreateKeyPairDrawer';
 
 /* ----------------------------------------
    Types
@@ -49,61 +49,61 @@ const mockKeyPairs: KeyPair[] = [
     id: 'kp-001',
     name: 'tk-keypair',
     fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
   },
   {
     id: 'kp-002',
     name: 'dev-keypair',
     fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
   },
   {
     id: 'kp-003',
     name: 'prod-keypair',
     fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
   },
   {
     id: 'kp-004',
     name: 'staging-keypair',
     fingerprint: 'ff:ee:dd:cc:bb:aa:99:88:77:66:55:44:33:22:11:00',
-    createdAt: 'Aug 30, 2025 21:37:41',
+    createdAt: 'Aug 30, 2026 21:37:41',
   },
   {
     id: 'kp-005',
     name: 'test-keypair',
     fingerprint: '12:34:56:78:9a:bc:de:f0:12:34:56:78:9a:bc:de:f0',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
   },
   {
     id: 'kp-006',
     name: 'backup-keypair',
     fingerprint: 'ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67:89',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
   {
     id: 'kp-007',
     name: 'jenkins-keypair',
     fingerprint: '98:76:54:32:10:fe:dc:ba:98:76:54:32:10:fe:dc:ba',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
   {
     id: 'kp-008',
     name: 'ansible-keypair',
     fingerprint: '01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f:10',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
   },
   {
     id: 'kp-009',
     name: 'terraform-keypair',
     fingerprint: 'f0:e1:d2:c3:b4:a5:96:87:78:69:5a:4b:3c:2d:1e:0f',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
   },
   {
     id: 'kp-010',
     name: 'github-deploy-key',
     fingerprint: 'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99',
-    createdAt: 'Aug 1, 2025 10:20:28',
+    createdAt: 'Aug 1, 2026 10:20:28',
   },
 ];
 
@@ -113,20 +113,25 @@ const mockKeyPairs: KeyPair[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'fingerprint', label: 'Fingerprint', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'fingerprint', label: 'Fingerprint', type: 'text' },
 ];
 
 export function KeyPairsPage() {
+  const navigate = useNavigate();
   const [selectedKeyPairs, setSelectedKeyPairs] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [keyPairs, setKeyPairs] = useState(mockKeyPairs);
 
+  // Create drawer state
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [keyPairToDelete, setKeyPairToDelete] = useState<KeyPair | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -141,8 +146,24 @@ export function KeyPairsPage() {
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Key Pairs');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -176,7 +197,7 @@ export function KeyPairsPage() {
 
     return keyPairs.filter((kp) => {
       return appliedFilters.every((filter) => {
-        const value = String(kp[filter.field as keyof KeyPair] || '').toLowerCase();
+        const value = String(kp[filter.fieldId as keyof KeyPair] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -206,7 +227,7 @@ export function KeyPairsPage() {
   };
 
   // Handle bulk delete
-  const handleBulkDelete = () => {
+  const performBulkDelete = () => {
     setKeyPairs((prev) => prev.filter((kp) => !selectedKeyPairs.includes(kp.id)));
     setSelectedKeyPairs([]);
   };
@@ -256,6 +277,7 @@ export function KeyPairsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -269,7 +291,10 @@ export function KeyPairsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -317,18 +342,9 @@ export function KeyPairsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Key pairs' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Key pairs' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -338,7 +354,12 @@ export function KeyPairsPage() {
         <PageHeader
           title="Key pairs"
           actions={
-            <Button variant="primary" size="md">
+            <Button
+              variant="primary"
+              size="md"
+              leftIcon={<IconPlus size={12} />}
+              onClick={() => setIsCreateDrawerOpen(true)}
+            >
               Create Key Pair
             </Button>
           }
@@ -360,6 +381,7 @@ export function KeyPairsPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -370,7 +392,7 @@ export function KeyPairsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedKeyPairs.length === 0}
-                onClick={handleBulkDelete}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -398,6 +420,7 @@ export function KeyPairsPage() {
           selectable
           selectedKeys={selectedKeyPairs}
           onSelectionChange={setSelectedKeyPairs}
+          loading={loading}
         />
       </VStack>
 
@@ -407,12 +430,26 @@ export function KeyPairsPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete key pair"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected key pairs is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         infoLabel="Key pair name"
         infoValue={keyPairToDelete?.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={() => {
+          performBulkDelete();
+          setIsBulkDeleteOpen(false);
+        }}
+        title="Delete selected key pairs"
+        description="Removing the selected key pairs is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
       />
 
       {/* View Preferences Drawer */}
@@ -424,6 +461,12 @@ export function KeyPairsPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Create Key Pair Drawer */}
+      <CreateKeyPairDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
       />
     </PageShell>
   );

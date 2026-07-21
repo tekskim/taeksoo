@@ -1,25 +1,19 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  Button,
   Breadcrumb,
+  Button,
   HStack,
-  VStack,
-  TabBar,
-  TopBar,
   InlineMessage,
   PageShell,
+  TabBar,
+  TopBar,
+  VStack,
+  YamlEditor,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconPencilCog,
-} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Mock HPA YAML Data
@@ -31,7 +25,7 @@ metadata:
   annotations:
     meta.helm.sh/release-name: php-apache
     meta.helm.sh/release-namespace: default
-  creationTimestamp: '2025-07-25T09:12:20Z'
+  creationTimestamp: '2026-07-25T09:12:20Z'
   generation: 1
   labels:
     app.kubernetes.io/managed-by: Helm
@@ -54,7 +48,7 @@ metadata:
           f:scaleTargetRef: {}
       manager: helm
       operation: Update
-      time: '2025-07-25T09:12:20Z'
+      time: '2026-07-25T09:12:20Z'
   name: php-apache-hpa
   namespace: default
   resourceVersion: '12345'
@@ -75,12 +69,12 @@ spec:
     name: php-apache
 status:
   conditions:
-    - lastTransitionTime: '2025-07-25T09:12:30Z'
+    - lastTransitionTime: '2026-07-25T09:12:30Z'
       message: recommended size matches current size
       reason: ReadyForNewScale
       status: 'True'
       type: AbleToScale
-    - lastTransitionTime: '2025-07-25T09:12:30Z'
+    - lastTransitionTime: '2026-07-25T09:12:30Z'
       message: the HPA was able to successfully calculate a replica count
       reason: ValidMetricFound
       status: 'True'
@@ -94,73 +88,6 @@ status:
       type: Resource
   currentReplicas: 1
   desiredReplicas: 1`;
-
-/* ----------------------------------------
-   YAML Editor with Line Numbers
-   ---------------------------------------- */
-
-interface YamlEditorProps {
-  value: string;
-  onChange: (value: string) => void;
-  onCopy: () => void;
-}
-
-function YamlEditor({ value, onChange, onCopy }: YamlEditorProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const lineNumbersRef = useRef<HTMLDivElement>(null);
-
-  const lines = value.split('\n');
-  const lineCount = lines.length;
-
-  // Sync scroll between line numbers and textarea
-  const handleScroll = useCallback(() => {
-    if (textareaRef.current && lineNumbersRef.current) {
-      lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
-    }
-  }, []);
-
-  return (
-    <div className="flex-1 flex min-h-0 border border-[var(--color-border-default)] rounded-[4px] bg-[var(--color-base-white)] overflow-hidden relative">
-      {/* Line Numbers */}
-      <div
-        ref={lineNumbersRef}
-        className="w-[44px] flex-shrink-0 overflow-y-scroll py-2 pr-2 select-none text-right bg-[var(--color-surface-default)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        <div className="font-mono text-body-md leading-[18px] text-[var(--color-text-subtle)]">
-          {Array.from({ length: lineCount }, (_, i) => (
-            <div key={i + 1}>{i + 1}</div>
-          ))}
-        </div>
-      </div>
-
-      {/* Editor */}
-      <div className="flex-1 min-w-0 overflow-hidden">
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onScroll={handleScroll}
-          className="w-full h-full py-2 px-2.5 pr-12 font-mono text-body-md leading-[18px] text-[var(--color-text-default)] bg-transparent border-none outline-none resize-none overflow-auto yaml-editor-scroll"
-          spellCheck={false}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-        />
-      </div>
-
-      {/* Copy Button - Absolute positioned */}
-      <div className="absolute top-2 right-4">
-        <button
-          onClick={onCopy}
-          className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-          title="Copy to clipboard"
-        >
-          <IconCopy size={12} stroke={1.5} />
-        </button>
-      </div>
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Main Page Component
@@ -202,16 +129,6 @@ export function EditHPAYamlPage() {
 
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
-
-  // Handle copy to clipboard
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(yamlContent);
-      // Could add a toast notification here
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  }, [yamlContent]);
 
   // Handle read from file
   const handleReadFromFile = useCallback(() => {
@@ -265,50 +182,19 @@ export function EditHPAYamlPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Horizontal Pod Autoscalers', href: '/container/hpa' },
-                { label: hpaName || 'Edit HPA' },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'HPA', href: '/container/hpa' }, { label: 'Edit HPA' }]} />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="h-full flex flex-col pt-3 px-8 pb-6 min-h-0"
     >
       <VStack gap={6} className="flex-1 min-h-0">
         {/* Header */}
-        <VStack gap={2} className="flex-shrink-0">
+        <VStack gap={1} className="flex-shrink-0">
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">HPA: {hpaName}</h1>
           <InlineMessage variant="warning">
             This HPA is managed by a Helm app; changes made here will likely be overwritten the next
@@ -317,10 +203,10 @@ export function EditHPAYamlPage() {
         </VStack>
 
         {/* YAML Editor */}
-        <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
+        <YamlEditor value={yamlContent} onChange={setYamlContent} />
 
         {/* Footer */}
-        <div className="flex-shrink-0 h-[61px] flex items-center justify-between border-t border-[var(--color-border-strong)]">
+        <div className="flex-shrink-0 flex items-center justify-between">
           {/* Left side - Read from File */}
           <div>
             <input

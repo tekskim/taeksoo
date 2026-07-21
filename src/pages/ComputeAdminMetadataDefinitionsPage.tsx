@@ -1,10 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Table,
   SearchInput,
@@ -12,6 +11,7 @@ import {
   ContextMenu,
   PageShell,
   PageHeader,
+  ListToolbar,
   fixedColumns,
   Popover,
   Badge,
@@ -19,8 +19,8 @@ import {
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -61,6 +61,7 @@ const mockMetadataDefinitions: MetadataDefinition[] = Array.from({ length: 115 }
    ---------------------------------------- */
 
 export default function ComputeAdminMetadataDefinitionsPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -68,6 +69,14 @@ export default function ComputeAdminMetadataDefinitionsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedMetadata, setSelectedMetadata] = useState<string[]>([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const itemsPerPage = 10;
 
   // Global tab management
@@ -79,10 +88,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Metadata Definitions' },
-  ];
+  const breadcrumbItems = [{ label: 'Metadata Definitions' }];
 
   // Filtered metadata
   const filteredMetadata = useMemo(() => {
@@ -163,11 +169,11 @@ export default function ComputeAdminMetadataDefinitionsPage() {
               delay={100}
               hideDelay={100}
               content={
-                <div className="p-3 min-w-[120px] max-w-[320px]">
+                <div className="p-3 min-w-[160px] max-w-[320px]">
                   <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                     All Resource Types ({types.length})
                   </div>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                     {types.map((t, i) => (
                       <Badge key={i} theme="white" size="sm">
                         {t}
@@ -202,10 +208,14 @@ export default function ComputeAdminMetadataDefinitionsPage() {
       label: 'Action',
       width: fixedColumns.action,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getMetadataMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -244,18 +254,12 @@ export default function ComputeAdminMetadataDefinitionsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -267,10 +271,9 @@ export default function ComputeAdminMetadataDefinitionsPage() {
           }
         />
 
-        {/* Action Bar */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            <div className="w-[var(--search-input-width)]">
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
               <SearchInput
                 placeholder="Search metadata by attributes"
                 value={searchTerm}
@@ -278,26 +281,31 @@ export default function ComputeAdminMetadataDefinitionsPage() {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
+                size="sm"
+                className="w-[var(--search-input-width)]"
               />
-            </div>
-            <button
-              type="button"
-              className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-              aria-label="Download"
-            >
-              <IconDownload size={12} stroke={1.5} />
-            </button>
-          </div>
-          <div className="h-4 w-px bg-[var(--color-border-default)]" />
-          <Button
-            variant="muted"
-            size="sm"
-            leftIcon={<IconTrash size={12} />}
-            disabled={selectedMetadata.length === 0}
-          >
-            Delete
-          </Button>
-        </div>
+              <button
+                type="button"
+                className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                aria-label="Download"
+              >
+                <IconDownload size={12} stroke={1.5} />
+              </button>
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedMetadata.length === 0}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
 
         {/* Pagination */}
         <Pagination
@@ -320,6 +328,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
             (window.location.href = `/compute-admin/metadata-definition/${row.id}`)
           }
           stickyHeader
+          loading={loading}
         />
       </VStack>
     </PageShell>

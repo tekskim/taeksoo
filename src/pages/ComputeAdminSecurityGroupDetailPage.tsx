@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -25,7 +24,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -78,61 +77,61 @@ const mockSecurityGroupsMap: Record<string, SecurityGroupDetail> = {
     id: 'sg-001',
     name: 'sg-01',
     description: 'Web server access group',
-    createdAt: 'Jan 15, 2024 12:22:26',
+    createdAt: 'Jan 15, 2026 12:22:26',
   },
   'sg-002': {
     id: 'sg-002',
     name: 'default',
     description: 'Default security group',
-    createdAt: 'Jan 10, 2024 01:17:01',
+    createdAt: 'Jan 10, 2026 01:17:01',
   },
   'sg-003': {
     id: 'sg-003',
     name: 'db-sg',
     description: 'Database access group',
-    createdAt: 'Feb 1, 2024 10:20:28',
+    createdAt: 'Feb 1, 2026 10:20:28',
   },
   'sg-004': {
     id: 'sg-004',
     name: 'app-sg',
     description: 'Application server security group',
-    createdAt: 'Feb 15, 2024 12:22:26',
+    createdAt: 'Feb 15, 2026 12:22:26',
   },
   'sg-005': {
     id: 'sg-005',
     name: 'lb-sg',
     description: 'Load balancer security group',
-    createdAt: 'Mar 1, 2024 10:20:28',
+    createdAt: 'Mar 1, 2026 10:20:28',
   },
   'sg-006': {
     id: 'sg-006',
     name: 'cache-sg',
     description: 'Cache server access group',
-    createdAt: 'Mar 10, 2024 01:17:01',
+    createdAt: 'Mar 10, 2026 01:17:01',
   },
   'sg-007': {
     id: 'sg-007',
     name: 'monitor-sg',
     description: 'Monitoring access group',
-    createdAt: 'Apr 1, 2024 10:20:28',
+    createdAt: 'Apr 1, 2026 10:20:28',
   },
   'sg-008': {
     id: 'sg-008',
     name: 'vpn-sg',
     description: 'VPN access group',
-    createdAt: 'Apr 15, 2024 12:22:26',
+    createdAt: 'Apr 15, 2026 12:22:26',
   },
   'sg-009': {
     id: 'sg-009',
     name: 'admin-sg',
     description: 'Admin access group',
-    createdAt: 'May 1, 2024 10:20:28',
+    createdAt: 'May 1, 2026 10:20:28',
   },
   'sg-010': {
     id: 'sg-010',
     name: 'test-sg',
     description: 'Test environment security group',
-    createdAt: 'May 10, 2024 01:17:01',
+    createdAt: 'May 10, 2026 01:17:01',
   },
 };
 
@@ -328,10 +327,14 @@ export default function SecurityGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getPortContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -378,6 +381,7 @@ export default function SecurityGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleContextMenuItems(row)} trigger="click" align="right">
@@ -417,31 +421,23 @@ export default function SecurityGroupDetailPage() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Security groups', href: '/compute-admin/security-groups' },
+                  { label: 'Security Groups', href: '/compute-admin/security-groups' },
                   { label: securityGroup.name },
                 ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
               />
             }
           />
         }
         contentClassName="pt-4 px-8 pb-20"
       >
-        <VStack gap={6} className="min-w-[1176px]">
+        <VStack gap={6}>
           {/* Header Card */}
-          <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
+          <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 pt-3 pb-4">
             {/* Title */}
             <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
               {securityGroup.name}
@@ -454,28 +450,54 @@ export default function SecurityGroupDetailPage() {
               </Button>
             </div>
 
-            {/* Info Row */}
+            {/* Info Grid — Row 1 */}
             <div className="flex items-center gap-2">
               {/* ID */}
-              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
-                <div className="flex items-center gap-1 mt-1.5">
-                  <p className="text-body-md text-[var(--color-text-default)]">
-                    {securityGroup.id}
-                  </p>
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
                   <CopyButton value={securityGroup.id} size="sm" iconOnly />
                 </div>
+                <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
+                  {securityGroup.id}
+                </p>
+              </div>
+
+              {/* Description */}
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Description</span>
+                <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
+                  {securityGroup.description}
+                </p>
               </div>
 
               {/* Tenant */}
-              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Tenant</span>
                 <p className="text-body-md text-[var(--color-text-default)] mt-1.5">tenantA</p>
               </div>
+            </div>
 
-              {/* Created at */}
-              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
+            {/* Info Grid — Row 2 */}
+            <div className="flex items-center gap-2 mt-3">
+              {/* Origin */}
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Origin</span>
+                <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
+                  Container(
+                  <Link
+                    to="/container"
+                    className="text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  >
+                    cluster-01
+                  </Link>
+                  )
+                </p>
+              </div>
+
+              {/* Created At */}
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Created At</span>
                 <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
                   {securityGroup.createdAt}
                 </p>
@@ -545,6 +567,7 @@ export default function SecurityGroupDetailPage() {
                     selectable
                     selectedKeys={selectedRules}
                     onSelectionChange={setSelectedRules}
+                    emptyMessage="No rules found"
                   />
                 </VStack>
               </TabPanel>
@@ -561,7 +584,7 @@ export default function SecurityGroupDetailPage() {
           setRuleToDelete(null);
         }}
         title="Delete rule"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected rules is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

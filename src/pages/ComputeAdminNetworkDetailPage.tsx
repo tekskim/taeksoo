@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -31,13 +30,13 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconCirclePlus,
   IconTrash,
-  IconBell,
   IconDotsCircleHorizontal,
   IconEdit,
   IconDownload,
   IconCube,
   IconRouter,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -120,7 +119,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     tenant: 'tenantA',
     shared: true,
     external: true,
-    createdAt: 'Dec 28, 2025 07:11:07',
+    createdAt: 'Dec 28, 2026 07:11:07',
     networkName: 'network',
     description: '-',
     portSecurity: true,
@@ -138,7 +137,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     tenant: 'tenantB',
     shared: false,
     external: false,
-    createdAt: 'Dec 20, 2025 23:27:51',
+    createdAt: 'Dec 20, 2026 23:27:51',
     networkName: 'internal-net',
     description: 'Private network for project',
     portSecurity: true,
@@ -156,7 +155,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     tenant: 'tenantA',
     shared: false,
     external: false,
-    createdAt: 'Dec 15, 2025 12:22:26',
+    createdAt: 'Dec 15, 2026 12:22:26',
     networkName: 'dev-network',
     description: 'Development network',
     portSecurity: false,
@@ -174,7 +173,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     tenant: 'tenantC',
     shared: true,
     external: true,
-    createdAt: 'Dec 10, 2025 01:17:01',
+    createdAt: 'Dec 10, 2026 01:17:01',
     networkName: 'prod-net',
     description: 'Production network',
     portSecurity: false,
@@ -192,7 +191,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     tenant: 'tenantB',
     shared: false,
     external: false,
-    createdAt: 'Dec 5, 2025 14:12:36',
+    createdAt: 'Dec 5, 2026 14:12:36',
     networkName: 'test-network',
     description: 'Test network',
     portSecurity: true,
@@ -233,7 +232,7 @@ const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
   portCount: 100,
   usedIps: 13,
   freeIps: 240,
-  createdAt: 'Dec 25, 2025 10:32:16',
+  createdAt: 'Dec 25, 2026 10:32:16',
 }));
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
@@ -250,7 +249,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   floatingIp: '10.70.0.1',
   macAddress: 'fa:16:3e:77:62:19',
   adminState: 'Up' as const,
-  createdAt: 'Dec 25, 2025 10:32:16',
+  createdAt: 'Dec 25, 2026 10:32:16',
 }));
 
 const mockDhcpAgents: DhcpAgent[] = Array.from({ length: 115 }, (_, i) => ({
@@ -258,7 +257,7 @@ const mockDhcpAgents: DhcpAgent[] = Array.from({ length: 115 }, (_, i) => ({
   host: `compute-node-${String(i + 1).padStart(2, '0')}`,
   status: i % 5 === 0 ? ('down' as const) : ('active' as const),
   adminState: i % 7 === 0 ? ('Down' as const) : ('Up' as const),
-  createdAt: 'Dec 15, 2025 12:22:26',
+  createdAt: 'Dec 15, 2026 12:22:26',
 }));
 
 /* ----------------------------------------
@@ -349,7 +348,6 @@ export default function NetworkDetailPage() {
   }, [network.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Networks', href: '/compute-admin/networks' },
     { label: network.name },
   ];
@@ -498,7 +496,12 @@ export default function NetworkDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID:{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -545,6 +548,7 @@ export default function NetworkDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Subnet) => {
         const subnetMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit subnet', row.id) },
@@ -558,7 +562,10 @@ export default function NetworkDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={subnetMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -595,7 +602,12 @@ export default function NetworkDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -618,8 +630,11 @@ export default function NetworkDetailPage() {
               >
                 {row.attachedTo.name}
               </Link>
-              <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                ID : {row.attachedTo.id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedTo.id}>
+                  ID : {row.attachedTo.id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedTo.id} />
               </span>
             </div>
             <Tooltip
@@ -627,7 +642,7 @@ export default function NetworkDetailPage() {
               position="top"
               delay={0}
             >
-              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
+              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] p-1">
                 {row.attachedTo.type === 'router' ? (
                   <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
@@ -659,11 +674,11 @@ export default function NetworkDetailPage() {
                   delay={100}
                   hideDelay={100}
                   content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="p-3 min-w-[160px] max-w-[320px]">
                       <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                         All Security Groups ({sgCount})
                       </div>
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                         {row.securityGroups.map((sg, i) => (
                           <Badge key={i} theme="white" size="sm">
                             {sg}
@@ -729,6 +744,7 @@ export default function NetworkDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Port) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button
@@ -782,6 +798,7 @@ export default function NetworkDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: DhcpAgent) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button
@@ -818,21 +835,14 @@ export default function NetworkDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Network Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{network.name}</DetailHeader.Title>

@@ -13,6 +13,9 @@ const ComputeAdminCreateInstancePage = lazy(() => import('@/pages/ComputeAdminCr
 const ComputeAdminInstanceTemplatesPage = lazy(
   () => import('@/pages/ComputeAdminInstanceTemplatesPage')
 );
+const ComputeAdminInstanceTemplateDetailViewPage = lazy(
+  () => import('@/pages/ComputeAdminInstanceTemplateDetailViewPage')
+);
 const ComputeAdminInstanceTemplateDetailPage = lazy(
   () => import('@/pages/ComputeAdminInstanceTemplateDetailPage')
 );
@@ -94,18 +97,19 @@ const ComputeAdminCertificateDetailPage = lazy(
   () => import('@/pages/ComputeAdminCertificateDetailPage')
 );
 
-// Firewall
-const ComputeAdminFirewallsPage = lazy(() => import('@/pages/ComputeAdminFirewallsPage'));
-const ComputeAdminFirewallDetailPage = lazy(() => import('@/pages/ComputeAdminFirewallDetailPage'));
-const ComputeAdminFirewallPolicyDetailPage = lazy(
-  () => import('@/pages/ComputeAdminFirewallPolicyDetailPage')
+// Tenants, Metadata, Monitor, Physical Nodes
+const ComputeAdminTenantsPage = lazy(() => import('@/pages/ComputeAdminTenantsPage'));
+const ComputeAdminTenantDetailPage = lazy(() => import('@/pages/ComputeAdminTenantDetailPage'));
+const ComputeAdminMetadataDefinitionsPage = lazy(
+  () => import('@/pages/ComputeAdminMetadataDefinitionsPage')
 );
-const ComputeAdminFirewallRuleDetailPage = lazy(
-  () => import('@/pages/ComputeAdminFirewallRuleDetailPage')
+const ComputeAdminMetadataDefinitionDetailPage = lazy(
+  () => import('@/pages/ComputeAdminMetadataDefinitionDetailPage')
 );
-const ComputeAdminCreateFirewallRulePage = lazy(
-  () => import('@/pages/ComputeAdminCreateFirewallRulePage')
+const ComputeAdminMonitorOverviewPage = lazy(
+  () => import('@/pages/ComputeAdminMonitorOverviewPage')
 );
+const ComputeAdminPhysicalNodesPage = lazy(() => import('@/pages/ComputeAdminPhysicalNodesPage'));
 
 // Other
 const ComputeAdminTopologyD3Page = lazy(() => import('@/pages/ComputeAdminTopologyD3Page'));
@@ -132,6 +136,10 @@ export const computeAdminRoutes = (
     />
     <Route
       path="/compute-admin/instance-templates/:id"
+      element={<ComputeAdminInstanceTemplateDetailViewPage />}
+    />
+    <Route
+      path="/compute-admin/instance-templates/:id/edit"
       element={<ComputeAdminInstanceTemplateDetailPage />}
     />
 
@@ -168,6 +176,7 @@ export const computeAdminRoutes = (
       path="/compute-admin/bare-metal-nodes/:id"
       element={<ComputeAdminBareMetalDetailPage />}
     />
+    <Route path="/compute-admin/bare-metal/:id" element={<ComputeAdminBareMetalDetailPage />} />
 
     {/* Storage - Volumes */}
     <Route path="/compute-admin/volumes" element={<ComputeAdminVolumesPage />} />
@@ -213,24 +222,25 @@ export const computeAdminRoutes = (
     <Route path="/compute-admin/certificates" element={<ComputeAdminCertificatesPage />} />
     <Route path="/compute-admin/certificates/:id" element={<ComputeAdminCertificateDetailPage />} />
 
-    {/* Firewall */}
-    <Route path="/compute-admin/firewall" element={<ComputeAdminFirewallsPage />} />
+    {/* Tenants & Management */}
+    <Route path="/compute-admin/tenants" element={<ComputeAdminTenantsPage />} />
+    <Route path="/compute-admin/tenants/:id" element={<ComputeAdminTenantDetailPage />} />
     <Route
-      path="/compute-admin/firewall/create-rule"
-      element={<ComputeAdminCreateFirewallRulePage />}
-    />
-    <Route path="/compute-admin/firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
-    <Route
-      path="/compute-admin/firewall-policies/:id"
-      element={<ComputeAdminFirewallPolicyDetailPage />}
+      path="/compute-admin/metadata-definition"
+      element={<ComputeAdminMetadataDefinitionsPage />}
     />
     <Route
-      path="/compute-admin/firewall-rules/:id"
-      element={<ComputeAdminFirewallRuleDetailPage />}
+      path="/compute-admin/metadata-definition/:id"
+      element={<ComputeAdminMetadataDefinitionDetailPage />}
     />
+
+    {/* Monitor & Physical Nodes */}
+    <Route path="/compute-admin/monitor-overview" element={<ComputeAdminMonitorOverviewPage />} />
+    <Route path="/compute-admin/physical-nodes" element={<ComputeAdminPhysicalNodesPage />} />
 
     {/* Other */}
     <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
     <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
+    <Route path="/compute-admin/*" element={<ComputeAdminHomePage />} />
   </>
 );

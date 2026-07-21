@@ -13,6 +13,7 @@ import {
   TabPanel,
   Pagination,
   PageShell,
+  ErrorState,
   Button,
   ContextMenu,
   SearchInput,
@@ -24,21 +25,17 @@ import {
   columnMinWidths,
   Tooltip,
   Popover,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
+  IconAlertTriangle,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -94,7 +91,7 @@ const mockCronJobData: Record<string, CronJobData> = {
     status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
-    createdAt: 'Jul 25, 2025 09:14:33',
+    createdAt: 'Jul 25, 2026 09:14:33',
     schedule: '@daily',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
@@ -113,7 +110,7 @@ const mockCronJobData: Record<string, CronJobData> = {
     status: 'Suspended',
     namespace: 'database',
     image: 'backup-tool:v2.1',
-    createdAt: 'Nov 9, 2025 02:18:47',
+    createdAt: 'Nov 9, 2026 02:18:47',
     schedule: '0 2 * * *',
     labels: {
       'app.kubernetes.io/name': 'backup',
@@ -135,7 +132,7 @@ const mockJobsData: JobRow[] = [
     duration: '10s',
     restarts: 0,
     health: 'succeeded = 1',
-    createdAt: 'Jul 25, 2025 09:22:15',
+    createdAt: 'Jul 25, 2026 09:22:15',
   },
   {
     id: '2',
@@ -146,7 +143,7 @@ const mockJobsData: JobRow[] = [
     duration: '—',
     restarts: 0,
     health: '—',
-    createdAt: 'Jul 25, 2025 09:25:02',
+    createdAt: 'Jul 25, 2026 09:25:02',
   },
   {
     id: '3',
@@ -157,7 +154,7 @@ const mockJobsData: JobRow[] = [
     duration: '2m',
     restarts: 1,
     health: 'running',
-    createdAt: 'Jul 25, 2025 09:28:44',
+    createdAt: 'Jul 25, 2026 09:28:44',
   },
 ];
 
@@ -192,12 +189,6 @@ function JobsTab({ jobs }: JobsTabProps) {
 
   const createJobMenuItems = (row: JobRow): ContextMenuItem[] => {
     return [
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () =>
-          navigate(`/container/jobs/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
-      },
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
@@ -305,9 +296,13 @@ function JobsTab({ jobs }: JobsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: JobRow) => (
         <ContextMenu items={createJobMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -456,9 +451,13 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -528,7 +527,7 @@ export function CronJobDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get cronjob data
-  const cronjob = mockCronJobData[cronjobId || '1'] || mockCronJobData['1'];
+  const cronjob = cronjobId ? mockCronJobData[cronjobId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -536,8 +535,10 @@ export function CronJobDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`CronJob: ${cronjob.name}`);
-  }, [updateActiveTabLabel, cronjob.name]);
+    if (cronjob) {
+      updateActiveTabLabel(`CronJob: ${cronjob.name}`);
+    }
+  }, [updateActiveTabLabel, cronjob]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -556,6 +557,73 @@ export function CronJobDetailPage() {
     console.log('Open in new tab:', tab);
   };
 
+  if (!cronjob) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'CronJobs', href: '/container/cronjobs' },
+                  { label: cronjobId ?? 'CronJob' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="CronJob not found"
+          description={`The cron job "${cronjobId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/cronjobs')}>
+              Back to CronJobs
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
@@ -567,12 +635,6 @@ export function CronJobDetailPage() {
       id: 'suspend',
       label: cronjob.status === 'Suspended' ? 'Resume' : 'Suspend',
       onClick: () => console.log('Suspend/Resume'),
-    },
-    {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () =>
-        navigate(`/container/cronjobs/${cronjob.id}/edit?name=${encodeURIComponent(cronjob.name)}`),
     },
     {
       id: 'edit-yaml',
@@ -613,41 +675,14 @@ export function CronJobDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'CronJobs', href: '/container/cronjobs' },
-                { label: cronjob.name },
-              ]}
+              items={[{ label: 'CronJobs', href: '/container/cronjobs' }, { label: cronjob.name }]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={cronjob.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -703,7 +738,7 @@ export function CronJobDetailPage() {
 
           {/* Labels & Annotations Cards */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(cronjob.labels).length})
@@ -728,14 +763,14 @@ export function CronJobDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All labels ({Object.keys(cronjob.labels).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(cronjob.labels).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>
@@ -750,7 +785,7 @@ export function CronJobDetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(cronjob.annotations).length})
@@ -775,14 +810,14 @@ export function CronJobDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All annotations ({Object.keys(cronjob.annotations).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(cronjob.annotations).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>

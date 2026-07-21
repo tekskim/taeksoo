@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   FilterSearchInput,
   Table,
@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -29,8 +28,9 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -270,9 +270,9 @@ const mockFlavors: Flavor[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'access',
+    id: 'access',
     label: 'Access',
     type: 'select',
     options: [
@@ -283,15 +283,13 @@ const filterFields: FilterField[] = [
 ];
 
 export function FlavorsPage() {
+  const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'cpu';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
-
-  // Selection state
-  const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -309,8 +307,24 @@ export function FlavorsPage() {
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Flavors');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -345,7 +359,7 @@ export function FlavorsPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((f) => {
         return appliedFilters.every((filter) => {
-          const value = String(f[filter.field as keyof Flavor] || '').toLowerCase();
+          const value = String(f[filter.fieldId as keyof Flavor] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });
@@ -374,8 +388,11 @@ export function FlavorsPage() {
             >
               {row.name}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)] truncate">
-              ID:{row.id}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
             </span>
           </div>
         ),
@@ -429,11 +446,11 @@ export function FlavorsPage() {
                     delay={100}
                     hideDelay={100}
                     content={
-                      <div className="p-3 min-w-[120px] max-w-[320px]">
+                      <div className="p-3 min-w-[160px] max-w-[320px]">
                         <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                           All Metadata ({pairs.length})
                         </div>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                           {pairs.map((pair, i) => (
                             <Badge key={i} theme="white" size="sm">
                               {pair.trim()}
@@ -458,6 +475,7 @@ export function FlavorsPage() {
         label: 'Action',
         width: fixedColumns.actions,
         align: 'center',
+        sticky: 'right',
         render: (_, row) => {
           const menuItems: ContextMenuItem[] = [
             {
@@ -475,7 +493,10 @@ export function FlavorsPage() {
           return (
             <div onClick={(e) => e.stopPropagation()}>
               <ContextMenu items={menuItems} trigger="click" align="right">
-                <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                <button
+                  aria-label="Row actions"
+                  className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                >
                   <IconDotsCircleHorizontal
                     size={16}
                     stroke={1.5}
@@ -520,20 +541,12 @@ export function FlavorsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Flavors' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Flavors' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -545,7 +558,7 @@ export function FlavorsPage() {
             <Tab value="cpu">CPU</Tab>
             <Tab value="gpu">GPU</Tab>
             <Tab value="mpu">MPU</Tab>
-            <Tab value="custom">Bare metal</Tab>
+            <Tab value="custom">Custom</Tab>
           </TabList>
         </Tabs>
 
@@ -565,6 +578,7 @@ export function FlavorsPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -578,7 +592,6 @@ export function FlavorsPage() {
           showSettings
           onSettingsClick={() => setIsPreferencesOpen(true)}
           totalItems={filteredFlavors.length}
-          selectedCount={selectedFlavors.length}
         />
 
         {/* Flavor Table */}
@@ -587,6 +600,7 @@ export function FlavorsPage() {
           data={filteredFlavors.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
           rowKey="id"
           emptyMessage="No flavors found"
+          loading={loading}
         />
       </VStack>
 

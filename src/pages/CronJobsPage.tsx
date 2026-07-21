@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -6,7 +6,7 @@ import {
   Breadcrumb,
   Table,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ListToolbar,
   ContextMenu,
@@ -14,21 +14,21 @@ import {
   PageHeader,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
+  ConfirmModal,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
@@ -36,7 +36,6 @@ import {
   IconCircleDashed,
   IconPlayerPause,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -66,7 +65,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'imageName',
     schedule: '@daily',
     lastSchedule: '36 days',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '2',
@@ -76,7 +75,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'backup-tool:v2.1',
     schedule: '0 2 * * *',
     lastSchedule: '12h',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
   },
   {
     id: '3',
@@ -86,7 +85,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'cleanup-tool:v1.5',
     schedule: '*/30 * * * *',
     lastSchedule: '15m',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '4',
@@ -96,7 +95,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'report-gen:v3.2',
     schedule: '0 9 * * 1',
     lastSchedule: '7 days',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
   },
   {
     id: '5',
@@ -106,7 +105,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'sync-worker:v2.0',
     schedule: '*/5 * * * *',
     lastSchedule: '3m',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '6',
@@ -116,7 +115,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'indexer:v4.1',
     schedule: '0 3 * * 0',
     lastSchedule: '5 days',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
   },
   {
     id: '7',
@@ -126,7 +125,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'cache-warmer:v1.2',
     schedule: '0 6 * * *',
     lastSchedule: '2 days',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
   },
   {
     id: '8',
@@ -136,8 +135,28 @@ const cronJobsData: CronJobRow[] = [
     image: 'metrics:v1.0',
     schedule: '*/10 * * * *',
     lastSchedule: '8m',
-    createdAt: 'Nov 5, 2025 14:12:36',
+    createdAt: 'Nov 5, 2026 14:12:36',
   },
+];
+
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'namespace', label: 'Namespace', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'Active', label: 'Active' },
+      { value: 'Suspended', label: 'Suspended' },
+      { value: 'Processing', label: 'Processing' },
+      { value: 'Error', label: 'Error' },
+    ],
+  },
+  { id: 'image', label: 'Image', type: 'text' },
+  { id: 'schedule', label: 'Schedule', type: 'text' },
+  { id: 'lastSchedule', label: 'Last schedule', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
 ];
 
 /* ----------------------------------------
@@ -155,12 +174,46 @@ export function CronJobsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const [data, setData] = useState(cronJobsData);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters([]);
+  };
+
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      return appliedFilters.every((filter) => {
+        const raw = item[filter.fieldId as keyof CronJobRow];
+        const value = String(typeof raw === 'number' ? raw : (raw ?? '')).toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [data, appliedFilters]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
@@ -184,8 +237,8 @@ export function CronJobsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(cronJobsData.length / rowsPerPage);
-  const paginatedData = cronJobsData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -204,12 +257,6 @@ export function CronJobsPage() {
       id: 'suspend',
       label: row.status === 'Suspended' ? 'Resume' : 'Suspend',
       onClick: () => console.log('Suspend/Resume:', row.id),
-    },
-    {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () =>
-        navigate(`/container/cronjobs/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
     },
     {
       id: 'edit-yaml',
@@ -257,16 +304,14 @@ export function CronJobsPage() {
       sortable: true,
       render: (value: string, row) => (
         <div className="min-w-0">
-          <span
-            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          <Link
+            to={`/container/cronjobs/${row.id}`}
+            className="text-[var(--color-action-primary)] font-medium hover:underline truncate block"
             title={value}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/container/cronjobs/${row.id}`);
-            }}
+            onClick={(e) => e.stopPropagation()}
           >
             {value}
-          </span>
+          </Link>
         </div>
       ),
     },
@@ -338,10 +383,14 @@ export function CronJobsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -354,12 +403,10 @@ export function CronJobsPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
+  const handleBulkDeleteConfirm = () => {
+    setData((prev) => prev.filter((row) => !selectedRows.includes(row.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
   };
 
   // Create menu items
@@ -397,55 +444,20 @@ export function CronJobsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'CronJobs' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'CronJobs' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-cronjobs', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-cronjobs', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -467,6 +479,7 @@ export function CronJobsPage() {
         />
       }
       bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -479,7 +492,7 @@ export function CronJobsPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create CronJob{' '}
+                Create CronJob
               </Button>
             </ContextMenu>
           }
@@ -489,10 +502,14 @@ export function CronJobsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
                 placeholder="Search cron jobs by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -509,6 +526,7 @@ export function CronJobsPage() {
                 size="sm"
                 leftIcon={<IconCircleDashed size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Run now:', selectedRows)}
               >
                 Run now
               </Button>
@@ -517,6 +535,7 @@ export function CronJobsPage() {
                 size="sm"
                 leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Resume:', selectedRows)}
               >
                 Resume
               </Button>
@@ -525,6 +544,7 @@ export function CronJobsPage() {
                 size="sm"
                 leftIcon={<IconPlayerPause size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Suspend:', selectedRows)}
               >
                 Suspend
               </Button>
@@ -533,6 +553,7 @@ export function CronJobsPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML:', selectedRows)}
               >
                 Download YAML
               </Button>
@@ -541,18 +562,15 @@ export function CronJobsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
-          filters={filters.map((filter, index) => ({
-            id: String(index),
-            field: filter.key,
-            value: filter.value,
-          }))}
-          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-          onFiltersClear={handleClearFilters}
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
         />
 
         {/* Pagination */}
@@ -560,22 +578,35 @@ export function CronJobsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={cronJobsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
         <Table<CronJobRow>
           columns={columns}
+          loading={loading}
           data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No cron jobs found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete selected CronJobs"
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} CronJob(s)`}
+      />
     </PageShell>
   );
 }

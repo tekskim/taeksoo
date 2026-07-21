@@ -1,20 +1,16 @@
-import { useState } from 'react';
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconDatabase,
   IconCpu,
   IconDisc,
   IconBucket,
   IconBrandSpeedtest,
   IconServer2,
-  IconFolders,
-  IconShare,
 } from '@tabler/icons-react';
 import { HardDrive } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import { ProjectSelector } from './ProjectSelector';
-import { mockProjects } from '@/contexts/ProjectContext';
 import { AppSwitcher } from './AppSwitcher';
 
 /* ----------------------------------------
@@ -24,10 +20,10 @@ import { AppSwitcher } from './AppSwitcher';
 interface StorageSidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  forceVisible?: boolean;
 }
 
-export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps) {
-  const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0].id);
+export function StorageSidebar({ isOpen = true, onToggle, forceVisible }: StorageSidebarProps) {
   const location = useLocation();
 
   // Check if current path matches href
@@ -43,31 +39,31 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* App Switcher with Toggle */}
-      <AppSwitcher currentAppId="storage" onToggleSidebar={onToggle} />
-
-      {/* Project Selector */}
-      <div className="px-3 py-2">
-        <ProjectSelector
-          projects={mockProjects}
-          selectedProjectId={selectedProjectId}
-          onProjectSelect={setSelectedProjectId}
-        />
-      </div>
+      <AppSwitcher currentAppId="storage-system-admin" onToggleSidebar={onToggle} />
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2"
+        aria-label="Storage navigation"
+      >
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
 
           {/* Home */}
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
-            label="Home"
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+            label="Dashboard"
             href="/storage"
             active={isActive('/storage')}
           />
@@ -110,22 +106,6 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
             />
           </MenuSection>
 
-          {/* File Section */}
-          <MenuSection title="File" defaultOpen={true}>
-            <MenuItem
-              icon={<IconFolders size={16} stroke={1.5} />}
-              label="File Systems"
-              href="/storage/file-systems"
-              active={isActive('/storage/file-systems')}
-            />
-            <MenuItem
-              icon={<IconShare size={16} stroke={1.5} />}
-              label="NFS"
-              href="/storage/nfs"
-              active={isActive('/storage/nfs')}
-            />
-          </MenuSection>
-
           {/* Object Section */}
           <MenuSection title="Object" defaultOpen={true}>
             <MenuItem
@@ -146,7 +126,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

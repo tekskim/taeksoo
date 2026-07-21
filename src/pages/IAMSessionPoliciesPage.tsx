@@ -35,7 +35,7 @@ export default function IAMSessionPoliciesPage() {
     useTabs();
 
   // Session policy state
-  const [sessionIdleTimeout, setSessionIdleTimeout] = useState(30); // Minutes
+  const [sessionIdleTimeout, setSessionIdleTimeout] = useState(180); // Minutes
   const [sessionMaxLifespan, setSessionMaxLifespan] = useState(8); // Hours
   const [loginTimeout, setLoginTimeout] = useState(30); // Minutes
   const [loginActionTimeout, setLoginActionTimeout] = useState(5); // Minutes
@@ -56,7 +56,7 @@ export default function IAMSessionPoliciesPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Session policies' }];
+  const breadcrumbItems = [{ label: 'Session Policies' }];
 
   // Handle reset to default
   const handleResetToDefault = () => {
@@ -141,7 +141,7 @@ export default function IAMSessionPoliciesPage() {
                                 value={sessionIdleTimeout}
                                 onChange={setSessionIdleTimeout}
                                 min={15}
-                                max={60}
+                                max={180}
                                 step={1}
                                 width="xs"
                               />
@@ -150,7 +150,7 @@ export default function IAMSessionPoliciesPage() {
                               </span>
                             </HStack>
                           </FormField.Control>
-                          <FormField.HelperText>15 - 60 Minutes</FormField.HelperText>
+                          <FormField.HelperText>15 - 180 Minutes</FormField.HelperText>
                         </FormField>
                       </div>
 

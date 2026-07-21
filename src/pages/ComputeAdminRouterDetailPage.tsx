@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -24,7 +23,9 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconEdit, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconDownload, IconSettings } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
+import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDrawer';
 
 /* ----------------------------------------
    Types
@@ -83,7 +84,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
     routerName: 'router-01',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01 (+3)',
@@ -100,7 +101,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     routerName: 'main-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -117,7 +118,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: false,
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     routerName: 'dev-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-02',
@@ -134,7 +135,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     routerName: 'prod-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -151,7 +152,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Down',
     access: 'Project',
     externalGateway: false,
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
     routerName: 'test-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-03',
@@ -168,7 +169,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
     routerName: 'backup-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -185,7 +186,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Down',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     routerName: 'dmz-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -202,7 +203,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: false,
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     routerName: 'internal-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-02',
@@ -219,7 +220,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     routerName: 'edge-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -236,7 +237,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     routerName: 'vpn-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -274,7 +275,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   macAddress: `fa:16:3e:${String(i + 1).padStart(2, '0')}:ab:cd`,
   type: i % 2 === 0 ? 'Internal Interface' : 'External Interface',
   adminState: i % 5 === 0 ? ('Down' as const) : ('Up' as const),
-  createdAt: `Dec ${15 - (i % 15)}, 2025`,
+  createdAt: `Dec ${15 - (i % 15)}, 2026`,
 }));
 
 const mockStaticRoutes: StaticRoute[] = Array.from({ length: 115 }, (_, i) => ({
@@ -330,6 +331,7 @@ export default function RouterDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isGatewayDrawerOpen, setIsGatewayDrawerOpen] = useState(false);
 
   // Get router data based on URL ID
   const router = id ? mockRoutersMap[id] || defaultRouterDetail : defaultRouterDetail;
@@ -344,7 +346,6 @@ export default function RouterDetailPage() {
   }, [router.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Routers', href: '/compute-admin/routers' },
     { label: router.name },
   ];
@@ -437,8 +438,11 @@ export default function RouterDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -480,6 +484,7 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Port) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button
@@ -511,6 +516,7 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: StaticRoute) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button
@@ -547,25 +553,26 @@ export default function RouterDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Router Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{router.name}</DetailHeader.Title>
           <DetailHeader.Actions>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconSettings size={12} />}
+              onClick={() => setIsGatewayDrawerOpen(true)}
+            >
+              External gateway setting
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
               Edit
             </Button>
@@ -666,23 +673,25 @@ export default function RouterDetailPage() {
 
                 {/* Action Bar */}
                 <div className="flex items-center gap-2">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      value={portSearchTerm}
-                      onChange={(e) => {
-                        setPortSearchTerm(e.target.value);
-                        setPortCurrentPage(1);
-                      }}
-                      placeholder="Search interface by attributes"
+                  <div className="flex items-center gap-1">
+                    <div className="w-[var(--search-input-width)]">
+                      <SearchInput
+                        value={portSearchTerm}
+                        onChange={(e) => {
+                          setPortSearchTerm(e.target.value);
+                          setPortCurrentPage(1);
+                        }}
+                        placeholder="Search interface by attributes"
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
                     />
                   </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    iconOnly
-                    icon={<IconDownload size={12} />}
-                    aria-label="Download"
-                  />
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
                     variant="muted"
@@ -728,23 +737,25 @@ export default function RouterDetailPage() {
 
                 {/* Action Bar */}
                 <div className="flex items-center gap-2">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      value={routeSearchTerm}
-                      onChange={(e) => {
-                        setRouteSearchTerm(e.target.value);
-                        setRouteCurrentPage(1);
-                      }}
-                      placeholder="Search static route by attributes"
+                  <div className="flex items-center gap-1">
+                    <div className="w-[var(--search-input-width)]">
+                      <SearchInput
+                        value={routeSearchTerm}
+                        onChange={(e) => {
+                          setRouteSearchTerm(e.target.value);
+                          setRouteCurrentPage(1);
+                        }}
+                        placeholder="Search static route by attributes"
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
                     />
                   </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    iconOnly
-                    icon={<IconDownload size={12} />}
-                    aria-label="Download"
-                  />
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
                     variant="muted"
@@ -779,6 +790,12 @@ export default function RouterDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <AdminExternalGatewayDrawer
+        isOpen={isGatewayDrawerOpen}
+        onClose={() => setIsGatewayDrawerOpen(false)}
+        routerName={router.name}
+      />
     </PageShell>
   );
 }

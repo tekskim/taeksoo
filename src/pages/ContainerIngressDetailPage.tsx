@@ -18,21 +18,17 @@ import {
   Badge,
   Tooltip,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
   Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconSearch,
-  IconChevronDown,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -69,7 +65,7 @@ const mockIngressData: Record<string, IngressData> = {
     status: 'OK',
     namespace: 'default',
     ingressClass: 'ingressclassName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -87,7 +83,7 @@ const mockIngressData: Record<string, IngressData> = {
     status: 'True',
     namespace: 'kube-system',
     ingressClass: 'traefik',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
     labels: {
       'app.kubernetes.io/name': 'traefik',
     },
@@ -135,7 +131,7 @@ function RulesTab({ rules }: RulesTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          className="text-body-md text-[var(--color-text-default)] truncate block min-w-0"
           title={value}
         >
           {value}
@@ -150,7 +146,7 @@ function RulesTab({ rules }: RulesTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          className="text-body-md text-[var(--color-text-default)] truncate block min-w-0"
           title={value}
         >
           {value}
@@ -172,7 +168,7 @@ function RulesTab({ rules }: RulesTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          className="text-body-md text-[var(--color-text-default)] truncate block min-w-0"
           title={value}
         >
           {value}
@@ -211,9 +207,14 @@ export function ContainerIngressDetailPage() {
     useTabs();
   const shellPanel = useShellPanel();
 
+  const [notFound, setNotFound] = useState(false);
+
   useEffect(() => {
     if (ingressId && mockIngressData[ingressId]) {
       setIngress(mockIngressData[ingressId]);
+      setNotFound(false);
+    } else {
+      setNotFound(true);
     }
   }, [ingressId]);
 
@@ -250,10 +251,7 @@ export function ContainerIngressDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () =>
-        navigate(
-          `/container/ingresses/${ingressId}/edit?name=${encodeURIComponent(ingress?.name ?? ingressId)}`
-        ),
+      onClick: () => console.log('Edit Config'),
     },
     {
       id: 'edit-yaml',
@@ -273,7 +271,7 @@ export function ContainerIngressDetailPage() {
     },
   ];
 
-  if (!ingress) {
+  if (notFound || !ingress) {
     return (
       <PageShell
         sidebar={
@@ -282,7 +280,15 @@ export function ContainerIngressDetailPage() {
         sidebarWidth={sidebarWidth}
         contentClassName="flex items-center justify-center"
       >
-        <p className="text-[var(--color-text-subtle)]">Loading...</p>
+        <ErrorState
+          title="Ingress not found"
+          description={`The ingress "${ingressId}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/ingresses')}>
+              Back to Ingresses
+            </Button>
+          }
+        />
       </PageShell>
     );
   }
@@ -308,37 +314,17 @@ export function ContainerIngressDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Ingresses', href: '/container/ingresses' },
                 { label: ingress.name },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -394,7 +380,7 @@ export function ContainerIngressDetailPage() {
 
           {/* Labels & Annotations Cards */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(ingress.labels).length})
@@ -419,14 +405,14 @@ export function ContainerIngressDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All labels ({Object.keys(ingress.labels).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(ingress.labels).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>
@@ -441,7 +427,7 @@ export function ContainerIngressDetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(ingress.annotations).length})
@@ -466,14 +452,14 @@ export function ContainerIngressDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All annotations ({Object.keys(ingress.annotations).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(ingress.annotations).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>

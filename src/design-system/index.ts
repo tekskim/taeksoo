@@ -67,6 +67,11 @@ export * from './components/InfoBox';
 export * from './components/FileListCard';
 export * from './components/ExpandableChecklist';
 export * from './components/Card';
+export * from './components/MetricCard';
+export * from './components/CatalogCard';
+export * from './components/ChainedSelect';
+export * from './components/Snackbar';
+export * from './components/YamlEditor';
 
 // Layouts
 export * from './layouts';

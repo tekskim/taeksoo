@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -11,21 +11,25 @@ import {
   FormField,
   Input,
   Select,
-  Toggle,
   SectionCard,
-  WizardSummary,
   PreSection,
   DoneSection,
   DoneSectionRow,
   InlineMessage,
-  Password,
+  ConfirmModal,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  Badge,
 } from '@/design-system';
-import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
+import type { WizardSectionState } from '@/design-system';
+import { WizardSectionStatusIcon } from '@/design-system/components/Wizard/WizardSection';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
 import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconAlertTriangle } from '@tabler/icons-react';
+import { IconBell, IconAlertTriangle, IconChevronLeft } from '@tabler/icons-react';
 import {
   catalogCharts,
   installedAppsMock,
@@ -33,31 +37,21 @@ import {
   namespaceOptions,
   clusterOptions,
 } from '@/pages/apps/appsMockData';
-import type { RequiredOption } from '@/pages/apps/appsTypes';
+import { isChartInstalledInTarget } from '@/pages/apps/appsTypes';
+import { ModeSelectTable } from '@/pages/apps/ModeSelectTable';
 
 const CURRENT_CLUSTER_ID = 'cluster-1';
-const STORAGECLASS_OPTIONS = [
-  { value: '', label: 'Select StorageClass' },
-  { value: 'standard', label: 'standard' },
-  { value: 'fast', label: 'fast' },
-  { value: 'longhorn', label: 'longhorn' },
-];
-const RESOURCE_TIER_OPTIONS = [
-  { value: 'Small', label: 'Small' },
-  { value: 'Medium', label: 'Medium' },
-  { value: 'Large', label: 'Large' },
-  { value: 'Custom', label: 'Custom (manual entry)' },
-];
 
-type SectionStep = 'target' | 'version' | 'configuration';
+type SectionStep = 'version' | 'target' | 'configuration';
+type InstallTab = 'basic' | 'values';
 
 const SECTION_LABELS: Record<SectionStep, string> = {
+  version: 'Chart Version',
   target: 'Target',
-  version: 'Version',
   configuration: 'Configuration',
 };
 
-const SECTION_ORDER: SectionStep[] = ['target', 'version', 'configuration'];
+const SECTION_ORDER: SectionStep[] = ['version', 'target', 'configuration'];
 
 function toTitleCase(s: string): string {
   return s
@@ -68,252 +62,163 @@ function toTitleCase(s: string): string {
 }
 
 /* ----------------------------------------
-   UnitInput — Input with unit label to the right
+   buildPresetYaml — Config Form 선택값(Mode)을 기반으로 YAML 생성
+   Helm chart 기본값을 그대로 사용하고 Mode 선택 시 해당 섹션만 오버라이드
    ---------------------------------------- */
+function buildPresetYaml(
+  baseYaml: string,
+  modeOverride: string | undefined,
+  appName?: string
+): string {
+  // modeOverride is a complete per-mode template from tenant-values.yaml.
+  // When provided, it replaces the base entirely (no append).
+  let yaml = modeOverride ?? baseYaml;
 
-function UnitInput({
-  value,
-  onChange,
-  unit,
-  placeholder,
-  disabled,
-  type = 'text',
-}: {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  unit: string;
-  placeholder?: string;
-  disabled?: boolean;
-  type?: 'text' | 'number';
-}) {
+  if (appName) {
+    yaml = yaml.replace(/\$\{FULLNAME_OVERRIDE\}/g, appName);
+  }
+
+  return yaml;
+}
+
+/* ----------------------------------------
+   YamlEditor — 라인 번호 있는 YAML 편집기
+   ---------------------------------------- */
+function YamlEditor({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const lines = value.split('\n');
+
   return (
-    <div className="flex items-center gap-2 w-full">
-      <Input
-        type={type}
+    <div
+      className="flex font-mono text-[13px] rounded-md border border-[var(--color-border-default)] overflow-hidden"
+      style={{ minHeight: '420px', background: 'var(--color-surface-default)' }}
+    >
+      {/* Line numbers */}
+      <div
+        className="select-none text-right pr-3 pl-3 pt-3 pb-3"
+        style={{
+          minWidth: '44px',
+          background: 'var(--color-surface-subtle)',
+          borderRight: '1px solid var(--color-border-subtle)',
+          color: 'var(--color-text-muted)',
+          lineHeight: '20px',
+          userSelect: 'none',
+        }}
+      >
+        {lines.map((_, i) => (
+          <div key={i}>{i + 1}</div>
+        ))}
+      </div>
+      {/* Textarea */}
+      <textarea
+        className="flex-1 resize-none outline-none p-3"
+        style={{
+          background: 'transparent',
+          color: 'var(--color-text-default)',
+          lineHeight: '20px',
+          tabSize: 2,
+          fontFamily: 'inherit',
+        }}
+        spellCheck={false}
         value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        disabled={disabled}
-        className="flex-1"
+        onChange={(e) => onChange(e.target.value)}
+        rows={Math.max(lines.length + 2, 20)}
       />
-      <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] shrink-0">
-        {unit}
-      </span>
     </div>
   );
 }
 
 /* ----------------------------------------
-   YAML Editor with line numbers
+   WizardSummarySidebar
    ---------------------------------------- */
-
-/* ----------------------------------------
-   Required Options Form Field
-   ---------------------------------------- */
-
-function OptionsFormField({
-  opt,
-  value,
-  onChange,
-}: {
-  opt: RequiredOption;
-  value: string;
-  onChange: (key: string, val: string) => void;
-}) {
-  const isRequired = opt.required && opt.type !== 'boolean' && opt.type !== 'resource-tier';
-
-  const control = (() => {
-    switch (opt.type) {
-      case 'password':
-        return (
-          <Password
-            value={value}
-            onChange={(e) => onChange(opt.key, e.target.value)}
-            fullWidth
-            placeholder="••••••••"
-          />
-        );
-
-      case 'int':
-        return (
-          <Input
-            type="number"
-            value={value}
-            onChange={(e) => onChange(opt.key, e.target.value)}
-            fullWidth
-            placeholder="e.g. 3"
-          />
-        );
-
-      case 'storageclass':
-        return (
-          <Select
-            options={STORAGECLASS_OPTIONS}
-            value={value || ''}
-            onChange={(v) => onChange(opt.key, v ?? '')}
-            fullWidth
-          />
-        );
-
-      case 'select':
-        return (
-          <Select
-            options={[{ value: '', label: 'Select…' }, ...(opt.options ?? [])]}
-            value={value || ''}
-            onChange={(v) => onChange(opt.key, v ?? '')}
-            fullWidth
-          />
-        );
-
-      case 'resource-tier':
-        return (
-          <Select
-            options={RESOURCE_TIER_OPTIONS}
-            value={value || 'Medium'}
-            onChange={(v) => onChange(opt.key, v ?? 'Medium')}
-            fullWidth
-          />
-        );
-
-      case 'boolean':
-        return (
-          <div className="pt-1">
-            <Toggle
-              checked={value === 'true'}
-              onChange={(e) => onChange(opt.key, e.target.checked ? 'true' : 'false')}
-            />
-          </div>
-        );
-
-      default:
-        if (opt.unit) {
-          return (
-            <UnitInput
-              value={value}
-              onChange={(e) => onChange(opt.key, e.target.value)}
-              unit={opt.unit}
-              placeholder="e.g. 8"
-              type="number"
-            />
-          );
-        }
-        return (
-          <Input
-            value={value}
-            onChange={(e) => onChange(opt.key, e.target.value)}
-            fullWidth
-            placeholder={`e.g. ${opt.defaultValue ?? opt.label}`}
-          />
-        );
-    }
-  })();
-
-  return (
-    <FormField required={isRequired}>
-      <FormField.Label>{opt.label}</FormField.Label>
-      <FormField.Control>{control}</FormField.Control>
-      {opt.description && <FormField.Description>{opt.description}</FormField.Description>}
-    </FormField>
-  );
-}
-
-function OptionsForm({
-  opts,
-  values,
-  onChange,
-}: {
-  opts: RequiredOption[];
-  values: Record<string, string>;
-  onChange: (key: string, val: string) => void;
-}) {
-  if (opts.length === 0) {
-    return <InlineMessage variant="info">This chart has no configurable options.</InlineMessage>;
-  }
-
-  // Filter conditional fields: only show when showWhen condition is met
-  const isVisible = (opt: RequiredOption): boolean => {
-    if (!opt.showWhen) return true;
-    return values[opt.showWhen.key] === opt.showWhen.value;
-  };
-
-  // Group-aware rendering: show group header when group changes
-  const elements: React.ReactNode[] = [];
-  let lastGroup: string | undefined = undefined;
-
-  opts.forEach((opt) => {
-    if (!isVisible(opt)) return;
-
-    if (opt.group && opt.group !== lastGroup) {
-      elements.push(
-        <div key={`group-${opt.group}`} className="pt-2 first:pt-0">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--color-text-subtle)]">
-            {opt.group}
-          </span>
-          <div className="w-full h-px bg-[var(--color-border-subtle)] mt-1 mb-3" />
-        </div>
-      );
-      lastGroup = opt.group;
-    }
-
-    elements.push(
-      <OptionsFormField key={opt.key} opt={opt} value={values[opt.key] ?? ''} onChange={onChange} />
-    );
-  });
-
-  return <VStack gap={4}>{elements}</VStack>;
-}
-
-/* ----------------------------------------
-   Summary Sidebar
-   ---------------------------------------- */
-
-function SummarySidebar({
+function WizardSummarySidebar({
   sectionStatus,
+  yamlReady,
   onCancel,
-  onInstall,
-  isInstallDisabled,
+  onApply,
   submitting,
 }: {
   sectionStatus: Record<SectionStep, WizardSectionState>;
+  yamlReady: boolean;
   onCancel: () => void;
-  onInstall: () => void;
-  isInstallDisabled: boolean;
+  onApply: () => void;
   submitting: boolean;
 }) {
-  const items: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
-    key,
-    label: SECTION_LABELS[key],
-    status: sectionStatus[key],
-  }));
+  const items: { key: string; label: string; status: WizardSectionState }[] = [
+    {
+      key: 'basic',
+      label: 'Basic Information',
+      // done only after Next is clicked in Configuration (marks section as done);
+      // re-editing via Edit button resets it back to active
+      status: sectionStatus.configuration === 'done' ? 'done' : 'active',
+    },
+    {
+      key: 'values',
+      label: 'Values',
+      // no required fields — always done
+      status: 'done',
+    },
+  ];
 
   return (
-    <div className="w-[280px] shrink-0 sticky top-4 self-start flex flex-col gap-4">
-      <WizardSummary items={items} />
-      <HStack gap={2}>
-        <Button variant="secondary" onClick={onCancel} className="w-[80px]">
-          Cancel
-        </Button>
-        <Button
-          variant="primary"
-          onClick={onInstall}
-          disabled={isInstallDisabled}
-          className="flex-1"
-        >
-          {submitting ? 'Installing...' : 'Install'}
-        </Button>
-      </HStack>
+    <div className="w-[280px] shrink-0 sticky top-4 self-start">
+      {/* Outer card — bg-surface-default (TDS FloatingCard outer shell) */}
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+        {/* Inner Summary card — bg-surface-subtle (TDS FloatingCard inner summary area) */}
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-3">
+          <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
+          <div className="flex flex-col">
+            {items.map((item) => (
+              <div key={item.key} className="flex items-center justify-between py-1.5">
+                <span className="text-body-md text-[var(--color-text-default)]">{item.label}</span>
+                <WizardSectionStatusIcon status={item.status} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Action buttons — inside outer card, outside inner summary card (3:7 ratio) */}
+        <HStack gap={2}>
+          <Button variant="secondary" onClick={onCancel} className="flex-[0.3]">
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={onApply}
+            disabled={!yamlReady || submitting}
+            className="flex-[0.7]"
+          >
+            {submitting ? 'Installing...' : 'Install'}
+          </Button>
+        </HStack>
+      </div>
     </div>
   );
 }
 
 /* ----------------------------------------
-   Apps > Install Page (FR-003, FR-004, FR-006, FR-007)
-   Wizard Flow: Target → Version → Configuration → Install
+   Apps > Install Page
+   Flow: [Wizard: Target → Version → Configuration(Mode)] → [YAML Editor]
+   FR-011, FR-012, FR-013
    ---------------------------------------- */
 
 export function AppInstallPage() {
   const { chartName } = useParams<{ chartName: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const captureMode = searchParams.get('captureMode') === 'true';
+  const captureTab = searchParams.get('captureTab') as InstallTab | null;
+  const captureSection = searchParams.get('captureSection') as SectionStep | null;
+
+  // 경로 컨텍스트 감지: /container/catalog → Container 사이드바 + Container 경로로 복귀
+  const isContainerCatalog = location.pathname.startsWith('/container/catalog/');
+  const catalogBackPath = isContainerCatalog
+    ? '/container/catalog'
+    : '/container/appcatalog/catalog';
+  const installedAppsPath = isContainerCatalog
+    ? '/container/apps/installed-apps'
+    : '/container/appcatalog/installed-apps';
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const { isStandalone } = useAppCatalogMode();
@@ -322,7 +227,23 @@ export function AppInstallPage() {
   const chart = catalogCharts.find((c) => c.name === chartName);
   const versions = chart?.availableVersions ?? (chart ? [chart.version] : []);
   const versionOptions = versions.map((v) => ({ value: v, label: v }));
-  const opts = chart?.requiredOptions ?? [];
+
+  // captureMode: full-page scroll 허용
+  useEffect(() => {
+    if (!captureMode) return;
+    const h = document.documentElement;
+    const b = document.body;
+    h.style.overflow = 'auto';
+    h.style.height = 'auto';
+    b.style.overflow = 'auto';
+    b.style.height = 'auto';
+    return () => {
+      h.style.overflow = '';
+      h.style.height = '';
+      b.style.overflow = '';
+      b.style.height = '';
+    };
+  }, [captureMode]);
 
   // Check dependency is installed
   const dependencyInstalled = useMemo(() => {
@@ -333,83 +254,124 @@ export function AppInstallPage() {
     );
   }, [chart]);
 
-  // Section states
-  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
-    target: 'active',
-    version: 'pre',
-    configuration: 'pre',
-  });
+  // ── Tab state ──
+  const [activeInstallTab, setActiveInstallTab] = useState<InstallTab>(captureTab ?? 'basic');
 
-  // Form values: initialize with defaultValues from opts
+  const initialSectionStatus = useMemo((): Record<SectionStep, WizardSectionState> => {
+    if (captureSection === 'configuration') {
+      return { version: 'done', target: 'done', configuration: 'active' };
+    }
+    if (captureSection === 'target') {
+      return { version: 'done', target: 'active', configuration: 'pre' };
+    }
+    return { version: 'active', target: 'pre', configuration: 'pre' };
+  }, [captureSection]);
+
+  const [sectionStatus, setSectionStatus] =
+    useState<Record<SectionStep, WizardSectionState>>(initialSectionStatus);
+
+  const defaultAppName =
+    chart?.requiredOptions?.find((o) => o.key === 'FULLNAME_OVERRIDE')?.defaultValue ??
+    chart?.name ??
+    '';
+  const [appName, setAppName] = useState(defaultAppName);
   const [namespace, setNamespace] = useState(namespaceOptions[0]?.value ?? '');
   const [version, setVersion] = useState(versions[0] ?? '');
-  const [optionValues, setOptionValues] = useState<Record<string, string>>(() => {
-    const defaults: Record<string, string> = {};
-    opts.forEach((o) => {
-      if (o.defaultValue !== undefined) defaults[o.key] = o.defaultValue;
-    });
-    // Apply Medium tier presets by default if chart has tierPresets
-    if (chart?.tierPresets?.Medium) {
-      Object.assign(defaults, chart.tierPresets.Medium.values);
+
+  // FR-014: 중복 설치 차단 — !allowMultiple 앱이 동일 클러스터·네임스페이스에 이미 설치된 경우
+  const isDuplicateBlocked = useMemo(() => {
+    if (!chart || chart.allowMultiple) return false;
+    if (!namespace) return false;
+    return isChartInstalledInTarget(installedAppsMock, chart.name, CURRENT_CLUSTER_ID, namespace);
+  }, [chart, namespace]);
+  const [selectedMode, setSelectedMode] = useState(() => chart?.deployModes?.[0]?.value ?? '');
+
+  // ── YAML Editor state (captureTab=values 시 기본값 pre-fill) ──
+  const [yamlContent, setYamlContent] = useState(() => {
+    if (captureTab === 'values' && chart) {
+      const modeOverride = chart?.deployModes?.[0]?.value
+        ? chart.modeYamlOverrides?.[chart.deployModes[0].value]
+        : undefined;
+      const initialAppName =
+        chart.requiredOptions?.find((o) => o.key === 'FULLNAME_OVERRIDE')?.defaultValue ??
+        chart.name;
+      return buildPresetYaml(chart.defaultValuesYaml ?? '', modeOverride, initialAppName);
     }
-    return defaults;
+    return '';
   });
+  const [yamlEdited, setYamlEdited] = useState(false);
+  const [showPreviousWarning, setShowPreviousWarning] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const setStep = (updates: Partial<Record<SectionStep, WizardSectionState>>) =>
     setSectionStatus((prev) => ({ ...prev, ...updates }));
 
-  // Release name: if allowMultiple, auto-append a suffix based on existing release count in namespace
-  const autoReleaseName = useMemo(() => {
+  // Build YAML from Helm chart defaults + mode override + app name
+  const buildYaml = useCallback(() => {
     if (!chart) return '';
-    if (!chart.allowMultiple) return chart.name;
-    const existingCount = installedAppsMock.filter(
-      (app) => app.name === chart.name && app.namespace === namespace
-    ).length;
-    return `${chart.name}-${existingCount + 1}`;
-  }, [chart, namespace]);
+    const modeOverride = selectedMode ? chart.modeYamlOverrides?.[selectedMode] : undefined;
+    return buildPresetYaml(chart.defaultValuesYaml ?? '', modeOverride, appName || undefined);
+  }, [chart, selectedMode, appName]);
 
-  // Required fields validation — skip _tier (UI-only), boolean, resource-tier
-  const isConfigDone = useMemo(() => {
-    if (opts.length === 0) return true;
-    return opts.every((o) => {
-      if (o.type === 'resource-tier' || o.type === 'boolean') return true;
-      if (!o.required) return true;
-      // Skip conditional fields that are not visible
-      if (o.showWhen && optionValues[o.showWhen.key] !== o.showWhen.value) return true;
-      return (optionValues[o.key] ?? '').trim() !== '';
-    });
-  }, [opts, optionValues]);
+  // "Next" from Configuration → Values tab
+  const handleGoToYaml = () => {
+    setYamlContent(buildYaml());
+    setYamlEdited(false);
+    setStep({ configuration: 'done' });
+    setActiveInstallTab('values');
+  };
 
-  const isInstallDisabled = sectionStatus.configuration !== 'done' || submitting;
+  // Previous / tab switch from Values
+  const handlePreviousFromYaml = () => {
+    if (yamlEdited) {
+      setShowPreviousWarning(true);
+    } else {
+      setActiveInstallTab('basic');
+    }
+  };
 
-  const handleOptionChange = useCallback(
-    (key: string, val: string) => {
-      setOptionValues((prev) => {
-        const next = { ...prev, [key]: val };
-        // When tier changes (and not Custom), apply tier presets
-        if (key === '_tier' && val !== 'Custom' && chart?.tierPresets?.[val]) {
-          Object.assign(next, chart.tierPresets[val].values);
-        }
-        return next;
-      });
-    },
-    [chart]
-  );
+  const handleConfirmPrevious = () => {
+    setShowPreviousWarning(false);
+    setActiveInstallTab('basic');
+    setYamlEdited(false);
+  };
 
-  const handleInstall = async () => {
-    if (isInstallDisabled) return;
+  const handleConfirmReset = () => {
+    setYamlContent(buildYaml());
+    setYamlEdited(false);
+    setShowResetModal(false);
+  };
+
+  // Intercept tab clicks when Values has unsaved edits
+  const handleTabChange = (value: string) => {
+    if (activeInstallTab === 'values' && value === 'basic' && yamlEdited) {
+      setShowPreviousWarning(true);
+    } else {
+      setActiveInstallTab(value as InstallTab);
+    }
+  };
+
+  // Apply (Install)
+  const handleApply = async () => {
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
-    navigate('/container/appcatalog/installed-apps');
+    navigate(installedAppsPath);
   };
 
-  const sidebarNode = isStandalone ? (
-    <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-  ) : (
-    <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-  );
+  const handleYamlChange = (v: string) => {
+    setYamlContent(v);
+    setYamlEdited(true);
+  };
+
+  // 경로 기반으로 사이드바 결정: Container catalog 경로이면 ContainerSidebar 우선
+  const sidebarNode =
+    isContainerCatalog || !isStandalone ? (
+      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    ) : (
+      <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    );
 
   if (!chart) {
     return (
@@ -422,11 +384,7 @@ export function AppInstallPage() {
           <p className="text-body-md text-[var(--color-text-muted)]">
             Chart not found: {chartName}
           </p>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => navigate('/container/appcatalog/catalog')}
-          >
+          <Button variant="secondary" size="sm" onClick={() => navigate(catalogBackPath)}>
             Back to Catalog
           </Button>
         </VStack>
@@ -434,6 +392,9 @@ export function AppInstallPage() {
     );
   }
 
+  const chartTitle = chart.displayName ?? toTitleCase(chart.name);
+
+  /* ── YAML Editor Phase ── */
   return (
     <PageShell
       sidebar={sidebarNode}
@@ -453,15 +414,15 @@ export function AppInstallPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation
-          onBack={() => navigate('/container/appcatalog/catalog')}
+          onBack={() => navigate(catalogBackPath)}
           onForward={() => {}}
           breadcrumb={
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'App Catalog', href: '/container/appcatalog/catalog' },
-                { label: 'Catalog', href: '/container/appcatalog/catalog' },
-                { label: `Install ${chart.displayName ?? toTitleCase(chart.name)}` },
+                { label: 'App Catalog', href: catalogBackPath },
+                { label: 'Catalog', href: catalogBackPath },
+                { label: `Install ${chartTitle}` },
               ]}
             />
           }
@@ -485,192 +446,325 @@ export function AppInstallPage() {
               fontWeight: 'var(--font-weight-semibold)',
             }}
           >
-            Install {chart.displayName ?? toTitleCase(chart.name)}
+            Install {chartTitle}
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">{chart.description}</p>
         </div>
 
-        {/* Two-column layout: sections + summary sidebar */}
+        {/* Two-column layout: Tabs (left) + Summary sidebar (right) */}
         <HStack gap={6} align="start" className="w-full">
-          {/* Left: Form Sections */}
-          <VStack gap={4} className="flex-1">
-            {/* ── Section 1: Target ── */}
-            {sectionStatus.target === 'pre' && <PreSection title={SECTION_LABELS.target} />}
-            {sectionStatus.target === 'active' && (
-              <SectionCard isActive>
-                <SectionCard.Header title={SECTION_LABELS.target} showDivider />
-                <SectionCard.Content gap={6}>
-                  <FormField>
-                    <FormField.Label>Cluster</FormField.Label>
-                    <FormField.Control>
-                      <Select
-                        options={clusterOptions}
-                        value={CURRENT_CLUSTER_ID}
-                        onChange={() => {}}
-                        fullWidth
-                        disabled
-                      />
-                    </FormField.Control>
-                  </FormField>
-                  {chart.appType !== 'Operator' && (
-                    <FormField required>
-                      <FormField.Label>Namespace</FormField.Label>
-                      <FormField.Control>
-                        <Select
-                          options={namespaceOptions}
-                          value={namespace}
-                          onChange={(v) => setNamespace(v ?? '')}
-                          fullWidth
-                        />
-                      </FormField.Control>
-                    </FormField>
-                  )}
-                  <div className="flex justify-end">
-                    <Button
-                      variant="primary"
-                      onClick={() => setStep({ target: 'done', version: 'active' })}
-                      disabled={chart.appType !== 'Operator' && !namespace}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </SectionCard.Content>
-              </SectionCard>
-            )}
-            {sectionStatus.target === 'done' && (
-              <DoneSection
-                title={SECTION_LABELS.target}
-                onEdit={() => setStep({ target: 'active', version: 'pre', configuration: 'pre' })}
-              >
-                <DoneSectionRow
-                  label="Cluster"
-                  value={
-                    clusterOptions.find((c) => c.value === CURRENT_CLUSTER_ID)?.label ??
-                    CURRENT_CLUSTER_ID
-                  }
-                />
-                {chart.appType !== 'Operator' && (
-                  <DoneSectionRow label="Namespace" value={namespace} />
-                )}
-              </DoneSection>
-            )}
+          {/* Left: Tabs + tab content */}
+          <div className="flex-1 min-w-0">
+            <Tabs value={activeInstallTab} onChange={handleTabChange} variant="underline" size="sm">
+              <TabList>
+                <Tab value="basic">Basic Information</Tab>
+                <Tab value="values" disabled={!yamlContent}>
+                  Values
+                </Tab>
+              </TabList>
 
-            {/* ── Section 2: Version ── */}
-            {sectionStatus.version === 'pre' && <PreSection title={SECTION_LABELS.version} />}
-            {sectionStatus.version === 'active' && (
-              <SectionCard isActive>
-                <SectionCard.Header title={SECTION_LABELS.version} showDivider />
-                <SectionCard.Content gap={6}>
-                  <FormField required>
-                    <FormField.Label>Version</FormField.Label>
-                    <FormField.Control>
-                      <Select
-                        options={versionOptions}
-                        value={version}
-                        onChange={(v) => setVersion(v ?? '')}
-                        fullWidth
-                      />
-                    </FormField.Control>
-                  </FormField>
-                  <div className="flex justify-end">
-                    <Button
-                      variant="primary"
-                      onClick={() => setStep({ version: 'done', configuration: 'active' })}
-                      disabled={!version}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </SectionCard.Content>
-              </SectionCard>
-            )}
-            {sectionStatus.version === 'done' && (
-              <DoneSection
-                title={SECTION_LABELS.version}
-                onEdit={() => setStep({ version: 'active', configuration: 'pre' })}
-              >
-                <DoneSectionRow label="Version" value={version} />
-              </DoneSection>
-            )}
+              {/* ── Tab: Basic Information (Wizard) ── */}
+              <TabPanel value="basic">
+                <VStack gap={4} className="pt-4">
+                  {/* ── Section 1: Version ── */}
+                  {sectionStatus.version === 'pre' && <PreSection title={SECTION_LABELS.version} />}
+                  {sectionStatus.version === 'active' && (
+                    <SectionCard isActive>
+                      <SectionCard.Header title={SECTION_LABELS.version} showDivider />
+                      <SectionCard.Content gap={6} showDividers={false}>
+                        <FormField required>
+                          <FormField.Label>Chart Version</FormField.Label>
+                          <FormField.Control>
+                            <Select
+                              options={versionOptions}
+                              value={version}
+                              onChange={(v) => setVersion(v ?? '')}
+                              fullWidth
+                            />
+                          </FormField.Control>
+                        </FormField>
 
-            {/* ── Section 3: Configuration ── */}
-            {sectionStatus.configuration === 'pre' && (
-              <PreSection title={SECTION_LABELS.configuration} />
-            )}
-            {sectionStatus.configuration === 'active' && (
-              <SectionCard isActive>
-                <SectionCard.Header title={SECTION_LABELS.configuration} showDivider />
-                <SectionCard.Content gap={4}>
-                  {/* Dependency warning */}
-                  {!dependencyInstalled && chart?.dependsOn && (
-                    <InlineMessage
-                      variant="warning"
-                      icon={<IconAlertTriangle size={16} stroke={1.5} />}
-                    >
-                      <strong>{chart.dependsOn}</strong> must be installed before this app. Please
-                      install the Operator first from the App Catalog.
-                    </InlineMessage>
+                        <div className="flex justify-end">
+                          <Button
+                            variant="primary"
+                            onClick={() => setStep({ version: 'done', target: 'active' })}
+                            disabled={!version}
+                          >
+                            Next
+                          </Button>
+                        </div>
+                      </SectionCard.Content>
+                    </SectionCard>
                   )}
-                  {/* App Name (Release Name) — auto-generated, read-only */}
-                  <FormField>
-                    <FormField.Label>App name</FormField.Label>
-                    <FormField.Control>
-                      <Input value={autoReleaseName} disabled fullWidth />
-                    </FormField.Control>
-                  </FormField>
-                  <OptionsForm opts={opts} values={optionValues} onChange={handleOptionChange} />
-                  <div className="flex justify-end pt-2">
-                    <Button
-                      variant="primary"
-                      onClick={() => setStep({ configuration: 'done' })}
-                      disabled={!isConfigDone}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </SectionCard.Content>
-              </SectionCard>
-            )}
-            {sectionStatus.configuration === 'done' && (
-              <DoneSection
-                title={SECTION_LABELS.configuration}
-                onEdit={() => setStep({ configuration: 'active' })}
-              >
-                <DoneSectionRow label="App name" value={autoReleaseName} />
-                {opts
-                  .filter((opt) => opt.type !== 'resource-tier')
-                  .filter(
-                    (opt) => !opt.showWhen || optionValues[opt.showWhen.key] === opt.showWhen.value
-                  )
-                  .map((opt) => (
-                    <DoneSectionRow
-                      key={opt.key}
-                      label={opt.label}
-                      value={
-                        opt.type === 'password'
-                          ? '••••••••'
-                          : opt.type === 'boolean'
-                            ? optionValues[opt.key] === 'true'
-                              ? 'Enabled'
-                              : 'Disabled'
-                            : optionValues[opt.key] || '—'
+                  {sectionStatus.version === 'done' && (
+                    <DoneSection
+                      title={SECTION_LABELS.version}
+                      onEdit={() =>
+                        setStep({ version: 'active', target: 'pre', configuration: 'pre' })
                       }
-                    />
-                  ))}
-              </DoneSection>
-            )}
-          </VStack>
+                    >
+                      <DoneSectionRow label="Chart Version" value={version} />
+                    </DoneSection>
+                  )}
 
-          {/* Right: Summary Sidebar */}
-          <SummarySidebar
+                  {/* ── Section 2: Target ── */}
+                  {sectionStatus.target === 'pre' && <PreSection title={SECTION_LABELS.target} />}
+                  {sectionStatus.target === 'active' && (
+                    <SectionCard isActive>
+                      <SectionCard.Header title={SECTION_LABELS.target} showDivider />
+                      <SectionCard.Content gap={6} showDividers={false}>
+                        <FormField>
+                          <FormField.Label>Cluster</FormField.Label>
+                          <FormField.Control>
+                            <Select
+                              options={clusterOptions}
+                              value={CURRENT_CLUSTER_ID}
+                              onChange={() => {}}
+                              fullWidth
+                              disabled
+                            />
+                          </FormField.Control>
+                        </FormField>
+
+                        {chart.appType !== 'Operator' && (
+                          <FormField required>
+                            <FormField.Label>Namespace</FormField.Label>
+                            <FormField.Control>
+                              <Select
+                                options={namespaceOptions}
+                                value={namespace}
+                                onChange={(v) => setNamespace(v ?? '')}
+                                fullWidth
+                              />
+                            </FormField.Control>
+                          </FormField>
+                        )}
+
+                        <div className="flex justify-end">
+                          <Button
+                            variant="primary"
+                            onClick={() => setStep({ target: 'done', configuration: 'active' })}
+                            disabled={chart.appType !== 'Operator' && !namespace}
+                          >
+                            Next
+                          </Button>
+                        </div>
+                      </SectionCard.Content>
+                    </SectionCard>
+                  )}
+                  {sectionStatus.target === 'done' && (
+                    <DoneSection
+                      title={SECTION_LABELS.target}
+                      onEdit={() => setStep({ target: 'active', configuration: 'pre' })}
+                    >
+                      <DoneSectionRow
+                        label="Cluster"
+                        value={
+                          clusterOptions.find((c) => c.value === CURRENT_CLUSTER_ID)?.label ??
+                          CURRENT_CLUSTER_ID
+                        }
+                      />
+                      {chart.appType !== 'Operator' && (
+                        <DoneSectionRow label="Namespace" value={namespace} />
+                      )}
+                    </DoneSection>
+                  )}
+
+                  {/* ── Section 3: Configuration ── */}
+                  {sectionStatus.configuration === 'pre' && (
+                    <PreSection title={SECTION_LABELS.configuration} />
+                  )}
+                  {sectionStatus.configuration === 'active' && (
+                    <SectionCard isActive>
+                      <SectionCard.Header title={SECTION_LABELS.configuration} showDivider />
+                      <SectionCard.Content gap={6} showDividers={false}>
+                        {!dependencyInstalled && chart?.dependsOn && (
+                          <InlineMessage
+                            variant="warning"
+                            icon={<IconAlertTriangle size={16} stroke={1.5} />}
+                          >
+                            <strong>{chart.dependsOn}</strong> must be installed before this app.
+                            Please install the Operator first from the App Catalog.
+                          </InlineMessage>
+                        )}
+
+                        <FormField required>
+                          <FormField.Label>App name</FormField.Label>
+                          <FormField.Control>
+                            <Input
+                              value={appName}
+                              onChange={(e) => setAppName(e.target.value)}
+                              placeholder="e.g. my-postgres"
+                              fullWidth
+                            />
+                          </FormField.Control>
+                        </FormField>
+
+                        {chart.deployModes && chart.deployModes.length > 0 && (
+                          <FormField required>
+                            <FormField.Label>Mode Template</FormField.Label>
+                            <FormField.Description>
+                              Compare available mode templates and select one. The selected row
+                              determines the YAML template loaded in the next step.
+                            </FormField.Description>
+                            <FormField.Control>
+                              <ModeSelectTable
+                                modes={chart.deployModes}
+                                value={selectedMode}
+                                onChange={setSelectedMode}
+                              />
+                            </FormField.Control>
+                          </FormField>
+                        )}
+
+                        {isDuplicateBlocked && (
+                          <InlineMessage
+                            variant="warning"
+                            icon={<IconAlertTriangle size={16} stroke={1.5} />}
+                          >
+                            <strong>{chartTitle}</strong> is already installed in namespace{' '}
+                            <strong>{namespace}</strong>. This app cannot be installed more than
+                            once in the same namespace.
+                          </InlineMessage>
+                        )}
+
+                        <div className="flex justify-end pt-1">
+                          <Button
+                            variant="primary"
+                            onClick={handleGoToYaml}
+                            disabled={!appName || isDuplicateBlocked}
+                          >
+                            Next
+                          </Button>
+                        </div>
+                      </SectionCard.Content>
+                    </SectionCard>
+                  )}
+                  {sectionStatus.configuration === 'done' && (
+                    <DoneSection
+                      title={SECTION_LABELS.configuration}
+                      onEdit={() => setStep({ configuration: 'active' })}
+                    >
+                      <DoneSectionRow label="App name" value={appName} />
+                      {selectedMode && (
+                        <DoneSectionRow
+                          label="Mode"
+                          value={
+                            chart.deployModes?.find((m) => m.value === selectedMode)?.label ??
+                            selectedMode
+                          }
+                        />
+                      )}
+                    </DoneSection>
+                  )}
+                </VStack>
+              </TabPanel>
+
+              {/* ── Tab: Values (YAML Editor) ── */}
+              <TabPanel value="values">
+                <VStack gap={6} className="pt-4">
+                  {/* Info banner */}
+                  <InlineMessage variant="info">
+                    The values.yaml below is pre-filled with Helm chart defaults.
+                  </InlineMessage>
+
+                  {/* YAML Editor */}
+                  <div
+                    className="rounded-lg p-4"
+                    style={{
+                      background: 'var(--color-surface-default)',
+                      border: '1px solid var(--color-border-default)',
+                    }}
+                  >
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      {/* Left: filename */}
+                      <span
+                        className="font-semibold shrink-0"
+                        style={{
+                          fontSize: 'var(--font-size-13)',
+                          color: 'var(--color-text-subtle)',
+                        }}
+                      >
+                        values.yaml
+                      </span>
+
+                      {/* Right: mode info + modified badge + reset button */}
+                      <div className="flex items-center gap-2 flex-wrap justify-end">
+                        {selectedMode && (
+                          <span
+                            className="text-[12px]"
+                            style={{ color: 'var(--color-text-subtle)' }}
+                          >
+                            Mode Template:{' '}
+                            <strong style={{ color: 'var(--color-text-default)' }}>
+                              {chart.deployModes?.find((m) => m.value === selectedMode)?.template ??
+                                selectedMode}
+                            </strong>
+                          </span>
+                        )}
+                        {yamlEdited && (
+                          <Badge theme="gray" type="subtle">
+                            Modified
+                          </Badge>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setShowResetModal(true)}
+                        >
+                          Reset to template
+                        </Button>
+                      </div>
+                    </div>
+                    <YamlEditor value={yamlContent} onChange={handleYamlChange} />
+                  </div>
+
+                  {/* Previous button */}
+                  <div className="flex justify-start pt-1">
+                    <Button variant="secondary" onClick={handlePreviousFromYaml}>
+                      <IconChevronLeft size={16} className="mr-1" />
+                      Previous
+                    </Button>
+                  </div>
+                </VStack>
+              </TabPanel>
+            </Tabs>
+          </div>
+
+          {/* Right: Summary Sidebar (always visible across tabs) */}
+          <WizardSummarySidebar
             sectionStatus={sectionStatus}
-            onCancel={() => navigate('/container/appcatalog/catalog')}
-            onInstall={handleInstall}
-            isInstallDisabled={isInstallDisabled}
+            yamlReady={!!yamlContent}
+            onCancel={() => navigate(catalogBackPath)}
+            onApply={handleApply}
             submitting={submitting}
           />
         </HStack>
       </VStack>
+
+      {/* Previous Warning Modal */}
+      <ConfirmModal
+        isOpen={showPreviousWarning}
+        onClose={() => setShowPreviousWarning(false)}
+        onConfirm={handleConfirmPrevious}
+        title="Your YAML changes will be reset"
+        description="Going back will discard all changes you've made to the YAML. Continue?"
+        confirmText="Reset"
+        cancelText="Cancel"
+        confirmVariant="danger"
+      />
+
+      {/* Reset to template Modal */}
+      <ConfirmModal
+        isOpen={showResetModal}
+        onClose={() => setShowResetModal(false)}
+        onConfirm={handleConfirmReset}
+        title="Reset to template"
+        description="This will discard all your edits and restore the original mode template. Continue?"
+        confirmText="Reset"
+        cancelText="Cancel"
+        confirmVariant="danger"
+      />
     </PageShell>
   );
 }

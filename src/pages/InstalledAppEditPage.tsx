@@ -16,15 +16,15 @@ import {
   WizardSummary,
   WritingSection,
   PreSection,
+  Password,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
-import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
-import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconTerminal2, IconEdit, IconEye, IconEyeOff } from '@tabler/icons-react';
+import { IconEdit } from '@tabler/icons-react';
 
-function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
+function IconButton({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <button
       className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
@@ -135,7 +135,7 @@ function SummarySidebar({ sectionStatus, onCancel, onSave, isSaveDisabled }: Sum
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         <div className="flex flex-col w-full">
@@ -243,7 +243,6 @@ export default function InstalledAppEditPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
-  const { isStandalone } = useAppCatalogMode();
 
   const installedApp = installedAppData[appId || ''];
   const chartName = installedApp?.chartName || '';
@@ -268,20 +267,34 @@ export default function InstalledAppEditPage() {
   const [databaseName, setDatabaseName] = useState(installedApp?.databaseName || '');
   const [storageClass, setStorageClass] = useState(installedApp?.storageClass || '');
   const [storageSize, setStorageSize] = useState<number | undefined>(installedApp?.storageSize);
-  const [showPassword, setShowPassword] = useState(false);
 
   // Validation errors
+  const [namespaceError, setNamespaceError] = useState<string | null>(null);
+  const [versionError, setVersionError] = useState<string | null>(null);
   const [adminPasswordError, setAdminPasswordError] = useState<string | null>(null);
   const [databaseNameError, setDatabaseNameError] = useState<string | null>(null);
   const [storageClassError, setStorageClassError] = useState<string | null>(null);
   const [storageSizeError, setStorageSizeError] = useState<string | null>(null);
 
-  // Wizard state — Target/Version은 변경 불가이므로 처음부터 done, Configuration이 바로 active
+  // Wizard state — edit page starts with config section open
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     target: 'done',
     version: 'done',
     configuration: 'active',
   });
+
+  const validateTarget = () => {
+    return true;
+  };
+
+  const validateVersion = () => {
+    if (!selectedVersion) {
+      setVersionError('Please select a version.');
+      return false;
+    }
+    setVersionError(null);
+    return true;
+  };
 
   const validateConfiguration = () => {
     let hasError = false;
@@ -315,7 +328,9 @@ export default function InstalledAppEditPage() {
   const goToNextSection = useCallback(
     (currentSection: SectionStep) => {
       let isValid = true;
-      if (currentSection === 'configuration') isValid = validateConfiguration();
+      if (currentSection === 'target') isValid = validateTarget();
+      else if (currentSection === 'version') isValid = validateVersion();
+      else if (currentSection === 'configuration') isValid = validateConfiguration();
       if (!isValid) return;
 
       const currentIndex = SECTION_ORDER.indexOf(currentSection);
@@ -396,7 +411,7 @@ export default function InstalledAppEditPage() {
   const allDone = SECTION_ORDER.every((s) => sectionStatus[s] === 'done');
 
   const handleCancel = () => {
-    navigate(`/container/appcatalog/installed-apps/${appId}`);
+    navigate(`/container/installed-apps/${appId}`);
   };
 
   const handleSave = () => {
@@ -410,7 +425,7 @@ export default function InstalledAppEditPage() {
       storageClass,
       storageSize,
     });
-    navigate(`/container/appcatalog/installed-apps/${appId}`);
+    navigate(`/container/installed-apps/${appId}`);
   };
 
   const currentVersions = versionOptions[chartName] || [
@@ -420,11 +435,7 @@ export default function InstalledAppEditPage() {
   return (
     <PageShell
       sidebar={
-        isStandalone ? (
-          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-        ) : (
-          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-        )
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -442,27 +453,17 @@ export default function InstalledAppEditPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'App Catalog', href: '/container/appcatalog/catalog' },
-                { label: 'Installed Apps', href: '/container/appcatalog/installed-apps' },
-                { label: `Edit ${appName}` },
+                { label: 'Installed apps', href: '/container/installed-apps' },
+                { label: 'Edit App' },
               ]}
             />
           }
-          actions={
-            <>
-              <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
-              <TopBarActionButton
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-              />
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
@@ -480,22 +481,150 @@ export default function InstalledAppEditPage() {
         <HStack gap={6} align="start" className="w-full">
           {/* Left Column - Wizard Sections */}
           <VStack gap={4} className="flex-1">
-            {/* Target Section — read-only */}
-            <SectionCard>
-              <SectionCard.Header title={SECTION_LABELS['target']} showDivider />
-              <SectionCard.Content>
-                <SectionCard.DataRow label="Cluster" value={releaseName || '-'} />
-                <SectionCard.DataRow label="Namespace" value={namespace || '-'} />
-              </SectionCard.Content>
-            </SectionCard>
+            {/* Target Section */}
+            {sectionStatus['target'] === 'writing' ? (
+              <WritingSection
+                title={SECTION_LABELS['target']}
+                onEdit={() => editSection('target')}
+              />
+            ) : (
+              <SectionCard isActive={sectionStatus['target'] === 'active'}>
+                <SectionCard.Header
+                  title={SECTION_LABELS['target']}
+                  showDivider={sectionStatus['target'] === 'done'}
+                  actions={
+                    sectionStatus['target'] === 'active' && isEditing ? (
+                      <HStack gap={2}>
+                        <Button variant="secondary" size="sm" onClick={cancelEditing}>
+                          Cancel
+                        </Button>
+                        <Button variant="primary" size="sm" onClick={doneEditing}>
+                          Done
+                        </Button>
+                      </HStack>
+                    ) : sectionStatus['target'] === 'done' ? (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconEdit size={12} />}
+                        onClick={() => editSection('target')}
+                      >
+                        Edit
+                      </Button>
+                    ) : undefined
+                  }
+                />
+                {sectionStatus['target'] === 'active' && (
+                  <SectionCard.Content showDividers={false}>
+                    <VStack gap={0}>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                      <div className="py-6">
+                        <FormField>
+                          <FormField.Label>Cluster</FormField.Label>
+                          <FormField.Control>
+                            <Select
+                              options={[{ value: 'current', label: 'Cluster name (current)' }]}
+                              value="current"
+                              disabled
+                              fullWidth
+                            />
+                          </FormField.Control>
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                      <div className="py-6">
+                        <FormField>
+                          <FormField.Label>Namespace</FormField.Label>
+                          <FormField.Control>
+                            <Input value={namespace} disabled fullWidth />
+                          </FormField.Control>
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                      {!isEditing && (
+                        <HStack justify="end" className="pt-3">
+                          <Button variant="primary" onClick={() => goToNextSection('target')}>
+                            Next
+                          </Button>
+                        </HStack>
+                      )}
+                    </VStack>
+                  </SectionCard.Content>
+                )}
+                {sectionStatus['target'] === 'done' && (
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Cluster" value={releaseName || '-'} />
+                    <SectionCard.DataRow label="Namespace" value={namespace || '-'} />
+                  </SectionCard.Content>
+                )}
+              </SectionCard>
+            )}
 
-            {/* Version Section — read-only */}
-            <SectionCard>
-              <SectionCard.Header title={SECTION_LABELS['version']} showDivider />
-              <SectionCard.Content>
-                <SectionCard.DataRow label="Version" value={selectedVersion || '-'} />
-              </SectionCard.Content>
-            </SectionCard>
+            {/* Version Section */}
+            {sectionStatus['version'] === 'writing' ? (
+              <WritingSection
+                title={SECTION_LABELS['version']}
+                onEdit={() => editSection('version')}
+              />
+            ) : sectionStatus['version'] === 'pre' ? (
+              <PreSection title={SECTION_LABELS['version']} />
+            ) : (
+              <SectionCard isActive={sectionStatus['version'] === 'active'}>
+                <SectionCard.Header
+                  title={SECTION_LABELS['version']}
+                  showDivider={sectionStatus['version'] === 'done'}
+                  actions={
+                    sectionStatus['version'] === 'active' && isEditing ? (
+                      <HStack gap={2}>
+                        <Button variant="secondary" size="sm" onClick={cancelEditing}>
+                          Cancel
+                        </Button>
+                        <Button variant="primary" size="sm" onClick={doneEditing}>
+                          Done
+                        </Button>
+                      </HStack>
+                    ) : sectionStatus['version'] === 'done' ? (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconEdit size={12} />}
+                        onClick={() => editSection('version')}
+                      >
+                        Edit
+                      </Button>
+                    ) : undefined
+                  }
+                />
+                {sectionStatus['version'] === 'active' && (
+                  <SectionCard.Content showDividers={false}>
+                    <VStack gap={0}>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                      <div className="py-6">
+                        <FormField>
+                          <FormField.Label>Chart version</FormField.Label>
+                          <FormField.Control>
+                            <Input value={selectedVersion} disabled fullWidth />
+                          </FormField.Control>
+                        </FormField>
+                      </div>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                      {!isEditing && (
+                        <HStack justify="end" className="pt-3">
+                          <Button variant="primary" onClick={() => goToNextSection('version')}>
+                            Next
+                          </Button>
+                        </HStack>
+                      )}
+                    </VStack>
+                  </SectionCard.Content>
+                )}
+                {sectionStatus['version'] === 'done' && (
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Chart version" value={selectedVersion || '-'} />
+                  </SectionCard.Content>
+                )}
+              </SectionCard>
+            )}
 
             {/* Configuration Section */}
             {sectionStatus['configuration'] === 'writing' ? (
@@ -549,33 +678,15 @@ export default function InstalledAppEditPage() {
                         <FormField required error={!!adminPasswordError}>
                           <FormField.Label>Admin Password</FormField.Label>
                           <FormField.Control>
-                            <div className="relative w-full">
-                              <Input
-                                type={showPassword ? 'text' : 'password'}
-                                value={adminPassword}
-                                onChange={(e) => {
-                                  setAdminPassword(e.target.value);
-                                  setAdminPasswordError(null);
-                                }}
-                                placeholder="Enter admin password"
-                                fullWidth
-                              />
-                              <button
-                                type="button"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
-                                onClick={() => setShowPassword(!showPassword)}
-                                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                              >
-                                {showPassword ? (
-                                  <IconEyeOff
-                                    size={14}
-                                    className="text-[var(--color-text-subtle)]"
-                                  />
-                                ) : (
-                                  <IconEye size={14} className="text-[var(--color-text-subtle)]" />
-                                )}
-                              </button>
-                            </div>
+                            <Password
+                              value={adminPassword}
+                              onChange={(e) => {
+                                setAdminPassword(e.target.value);
+                                setAdminPasswordError(null);
+                              }}
+                              placeholder="Enter admin password"
+                              fullWidth
+                            />
                           </FormField.Control>
                           <FormField.ErrorMessage>{adminPasswordError}</FormField.ErrorMessage>
                         </FormField>

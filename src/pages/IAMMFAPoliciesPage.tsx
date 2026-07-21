@@ -66,7 +66,7 @@ export default function IAMMFAPoliciesPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'MFA policies' }];
+  const breadcrumbItems = [{ label: 'MFA Policies' }];
 
   // Handle reset to default
   const handleResetToDefault = () => {
@@ -198,14 +198,15 @@ export default function IAMMFAPoliciesPage() {
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                       <HStack gap={2} justify="end" className="w-full pt-3">
-                        <button
-                          type="button"
+                        <Button
+                          variant="link"
+                          size="md"
+                          leftIcon={<IconRefresh size={12} />}
                           onClick={handleResetToDefault}
-                          className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                          className="mr-4"
                         >
-                          <IconRefresh size={12} stroke={1.5} />
                           Reset to default
-                        </button>
+                        </Button>
                         <Button variant="secondary" size="md" onClick={handleReload}>
                           Reload
                         </Button>
@@ -230,8 +231,8 @@ export default function IAMMFAPoliciesPage() {
                   size="sm"
                 >
                   <TabList>
-                    <Tab value="otp">OTP</Tab>
-                    <Tab value="email">Email</Tab>
+                    <Tab value="otp">OTP policy</Tab>
+                    <Tab value="email">Email policy</Tab>
                   </TabList>
                 </Tabs>
 
@@ -245,11 +246,16 @@ export default function IAMMFAPoliciesPage() {
 
                         {/* OTP Enable Toggle */}
                         <div className="py-6">
-                          <Toggle
-                            checked={otpEnabled}
-                            onChange={(e) => setOtpEnabled(e.target.checked)}
-                            label={otpEnabled ? 'On' : 'Off'}
-                          />
+                          <FormField spacing="loose">
+                            <FormField.Label>Enabled</FormField.Label>
+                            <FormField.Control>
+                              <Toggle
+                                checked={otpEnabled}
+                                onChange={(e) => setOtpEnabled(e.target.checked)}
+                                label={otpEnabled ? 'On' : 'Off'}
+                              />
+                            </FormField.Control>
+                          </FormField>
                         </div>
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -281,7 +287,7 @@ export default function IAMMFAPoliciesPage() {
 
                         {/* Reusable Token */}
                         <div className="py-6">
-                          <FormField>
+                          <FormField spacing="loose">
                             <FormField.Label>Reusable token</FormField.Label>
                             <FormField.Description>
                               For security, always keep this disabled. Enabling it may expose the
@@ -332,14 +338,15 @@ export default function IAMMFAPoliciesPage() {
 
                         {/* Action Buttons */}
                         <HStack gap={2} justify="end" className="w-full pt-3">
-                          <button
-                            type="button"
+                          <Button
+                            variant="link"
+                            size="md"
+                            leftIcon={<IconRefresh size={12} />}
                             onClick={handleMethodsResetToDefault}
-                            className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                            className="mr-4"
                           >
-                            <IconRefresh size={12} stroke={1.5} />
                             Reset to default
-                          </button>
+                          </Button>
                           <Button variant="secondary" size="md" onClick={handleMethodsReload}>
                             Reload
                           </Button>
@@ -362,11 +369,16 @@ export default function IAMMFAPoliciesPage() {
 
                         {/* Email Enable Toggle */}
                         <div className="py-6">
-                          <Toggle
-                            checked={emailEnabled}
-                            onChange={(e) => setEmailEnabled(e.target.checked)}
-                            label={emailEnabled ? 'On' : 'Off'}
-                          />
+                          <FormField spacing="loose">
+                            <FormField.Label>Enabled</FormField.Label>
+                            <FormField.Control>
+                              <Toggle
+                                checked={emailEnabled}
+                                onChange={(e) => setEmailEnabled(e.target.checked)}
+                                label={emailEnabled ? 'On' : 'Off'}
+                              />
+                            </FormField.Control>
+                          </FormField>
                         </div>
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -494,14 +506,15 @@ export default function IAMMFAPoliciesPage() {
 
                         {/* Action Buttons */}
                         <HStack gap={2} justify="end" className="w-full pt-3">
-                          <button
-                            type="button"
+                          <Button
+                            variant="link"
+                            size="md"
+                            leftIcon={<IconRefresh size={12} />}
                             onClick={handleMethodsResetToDefault}
-                            className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                            className="mr-4"
                           >
-                            <IconRefresh size={12} stroke={1.5} />
                             Reset to default
-                          </button>
+                          </Button>
                           <Button variant="secondary" size="md" onClick={handleMethodsReload}>
                             Reload
                           </Button>

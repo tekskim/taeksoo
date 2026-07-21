@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -26,12 +25,13 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
+import { CreateSGRuleDrawer } from '@/components/CreateSGRuleDrawer';
 import { CreateSecurityGroupDrawer } from '@/components/CreateSecurityGroupDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
-import containerIcon from '@/assets/appIcon/container.png';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import containerIcon from '@/assets/appIcon/container.webp';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -61,7 +61,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Web server access group',
     ingressRules: 3,
     egressRules: 3,
-    createdAt: 'Jan 15, 2024 12:22:26',
+    createdAt: 'Jan 15, 2026 12:22:26',
     status: 'active',
     origin: 'container',
   },
@@ -71,7 +71,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Default security group',
     ingressRules: 2,
     egressRules: 2,
-    createdAt: 'Jan 10, 2024 01:17:01',
+    createdAt: 'Jan 10, 2026 01:17:01',
     status: 'active',
     origin: 'container',
   },
@@ -81,7 +81,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Database access group',
     ingressRules: 5,
     egressRules: 1,
-    createdAt: 'Feb 1, 2024 10:20:28',
+    createdAt: 'Feb 1, 2026 10:20:28',
     status: 'active',
   },
   {
@@ -90,7 +90,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Application server security group',
     ingressRules: 8,
     egressRules: 4,
-    createdAt: 'Feb 15, 2024 12:22:26',
+    createdAt: 'Feb 15, 2026 12:22:26',
     status: 'active',
     origin: 'container',
   },
@@ -100,7 +100,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Load balancer security group',
     ingressRules: 4,
     egressRules: 2,
-    createdAt: 'Mar 1, 2024 10:20:28',
+    createdAt: 'Mar 1, 2026 10:20:28',
     status: 'active',
   },
   {
@@ -109,7 +109,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Cache server access group',
     ingressRules: 2,
     egressRules: 1,
-    createdAt: 'Mar 10, 2024 01:17:01',
+    createdAt: 'Mar 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -118,7 +118,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Monitoring access group',
     ingressRules: 6,
     egressRules: 3,
-    createdAt: 'Apr 1, 2024 10:20:28',
+    createdAt: 'Apr 1, 2026 10:20:28',
     status: 'error',
   },
   {
@@ -127,7 +127,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'VPN access group',
     ingressRules: 10,
     egressRules: 5,
-    createdAt: 'Apr 15, 2024 12:22:26',
+    createdAt: 'Apr 15, 2026 12:22:26',
     status: 'active',
   },
   {
@@ -136,7 +136,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Admin access group',
     ingressRules: 15,
     egressRules: 8,
-    createdAt: 'May 1, 2024 10:20:28',
+    createdAt: 'May 1, 2026 10:20:28',
     status: 'active',
   },
   {
@@ -145,7 +145,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Test environment security group',
     ingressRules: 1,
     egressRules: 1,
-    createdAt: 'May 10, 2024 01:17:01',
+    createdAt: 'May 10, 2026 01:17:01',
     status: 'active',
   },
 ];
@@ -165,20 +165,22 @@ const sgStatusMap: Record<SecurityGroupStatus, 'active' | 'error'> = {
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'description', label: 'Description', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
 ];
 
 export function SecurityGroupsPage() {
+  const navigate = useNavigate();
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [securityGroups] = useState(mockSecurityGroups);
+  const [securityGroups, setSecurityGroups] = useState(mockSecurityGroups);
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<SecurityGroup | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Create security group drawer state
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
@@ -191,6 +193,13 @@ export function SecurityGroupsPage() {
   const [createRuleOpen, setCreateRuleOpen] = useState(false);
   const [editGroupOpen, setEditGroupOpen] = useState(false);
   const [selectedGroupForDrawer, setSelectedGroupForDrawer] = useState<SecurityGroup | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleCreateRule = (sg: SecurityGroup) => {
@@ -215,7 +224,16 @@ export function SecurityGroupsPage() {
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Security Groups');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -247,7 +265,7 @@ export function SecurityGroupsPage() {
 
     return securityGroups.filter((sg) => {
       return appliedFilters.every((filter) => {
-        const value = String(sg[filter.field as keyof SecurityGroup] || '').toLowerCase();
+        const value = String(sg[filter.fieldId as keyof SecurityGroup] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -270,7 +288,22 @@ export function SecurityGroupsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 w-full">
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+            <Link
+              to={`/compute/security-groups/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
+          </div>
           {row.origin === 'container' && (
             <Tooltip
               content="This security group was created via the Container cluster."
@@ -281,16 +314,6 @@ export function SecurityGroupsPage() {
               </div>
             </Tooltip>
           )}
-          <div className="flex flex-col gap-0.5 min-w-0">
-            <Link
-              to={`/compute/security-groups/${row.id}`}
-              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
-          </div>
         </div>
       ),
     },
@@ -328,10 +351,14 @@ export function SecurityGroupsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -357,10 +384,18 @@ export function SecurityGroupsPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && groupToDelete) {
-      // Handle delete
+      const id = groupToDelete.id;
+      setSecurityGroups((prev) => prev.filter((sg) => sg.id !== id));
       setDeleteModalOpen(false);
       setGroupToDelete(null);
+      setSelectedGroups((prev) => prev.filter((x) => x !== id));
     }
+  };
+
+  const handleBulkDelete = () => {
+    setSecurityGroups((prev) => prev.filter((sg) => !selectedGroups.includes(sg.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedGroups([]);
   };
 
   return (
@@ -384,22 +419,12 @@ export function SecurityGroupsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Security groups' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Security Groups' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -439,6 +464,7 @@ export function SecurityGroupsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedGroups.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -465,6 +491,8 @@ export function SecurityGroupsPage() {
           selectable
           selectedKeys={selectedGroups}
           onSelectionChange={setSelectedGroups}
+          emptyMessage="No security groups found"
+          loading={loading}
         />
       </VStack>
 
@@ -476,11 +504,24 @@ export function SecurityGroupsPage() {
           setGroupToDelete(null);
         }}
         title="Delete security group"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected security groups is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => handleContextMenuSelect('delete')}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected security groups"
+        description="Removing the selected security groups is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedGroups.length} security group(s)`}
       />
 
       {/* View Preferences Drawer */}
@@ -495,7 +536,7 @@ export function SecurityGroupsPage() {
       />
 
       {/* Security Group Drawers */}
-      <CreateSecurityGroupRuleDrawer
+      <CreateSGRuleDrawer
         isOpen={createRuleOpen}
         onClose={() => setCreateRuleOpen(false)}
         securityGroupId={selectedGroupForDrawer?.id}

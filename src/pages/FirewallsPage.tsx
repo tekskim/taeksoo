@@ -1,32 +1,40 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
   Tab,
   TabPanel,
   Table,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
+  ListToolbar,
   StatusIndicator,
   ContextMenu,
+  ConfirmModal,
   Badge,
   PageShell,
   PageHeader,
   fixedColumns,
   Popover,
 } from '@/design-system';
-import type { TableColumn, ContextMenuItem } from '@/design-system';
+import type {
+  TableColumn,
+  ContextMenuItem,
+  FilterField,
+  AppliedFilter,
+  FilterItem,
+} from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -68,6 +76,11 @@ interface FirewallPolicy {
   createdAt: string;
 }
 
+type DeleteTarget =
+  | { kind: 'firewall'; item: Firewall }
+  | { kind: 'policy'; item: FirewallPolicy }
+  | { kind: 'rule'; item: FirewallRule };
+
 interface FirewallRule {
   id: string;
   name: string;
@@ -107,7 +120,7 @@ const mockFirewalls: Firewall[] = Array.from({ length: 25 }, (_, i) => ({
         ]
       : [],
   adminState: i % 5 === 0 ? 'Down' : 'Up',
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025 ${String(8 + (i % 16)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:${String((i * 13) % 60).padStart(2, '0')}`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026 ${String(8 + (i % 16)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:${String((i * 13) % 60).padStart(2, '0')}`,
 }));
 
 const mockFirewallPolicies: FirewallPolicy[] = Array.from({ length: 20 }, (_, i) => ({
@@ -125,7 +138,7 @@ const mockFirewallPolicies: FirewallPolicy[] = Array.from({ length: 20 }, (_, i)
   audited: i % 2 === 0,
   shared: i % 3 === 0,
   adminState: i % 4 === 0 ? 'Down' : 'Up',
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026`,
 }));
 
 const mockFirewallRules: FirewallRule[] = Array.from({ length: 30 }, (_, i) => ({
@@ -141,7 +154,7 @@ const mockFirewallRules: FirewallRule[] = Array.from({ length: 30 }, (_, i) => (
   destinationPort: ['80', '443', '22', '3306', 'any'][i % 5],
   action: ['allow', 'deny', 'reject'][i % 3] as 'allow' | 'deny' | 'reject',
   enabled: i % 4 !== 0,
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026`,
 }));
 
 /* ----------------------------------------
@@ -153,6 +166,123 @@ const firewallStatusMap: Record<FirewallStatus, 'active' | 'down' | 'error'> = {
   down: 'down',
   error: 'error',
 };
+
+const firewallFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'id', label: 'ID', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'down', label: 'Down' },
+      { value: 'error', label: 'Error' },
+    ],
+  },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
+  { id: 'ingressPolicy', label: 'Ingress policy', type: 'text' },
+  { id: 'egressPolicy', label: 'Egress policy', type: 'text' },
+  { id: 'associatedPorts', label: 'Associated ports', type: 'text' },
+  {
+    id: 'adminState',
+    label: 'Admin state',
+    type: 'select',
+    options: [
+      { value: 'Up', label: 'Up' },
+      { value: 'Down', label: 'Down' },
+    ],
+  },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
+const policyFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'id', label: 'ID', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'down', label: 'Down' },
+      { value: 'error', label: 'Error' },
+    ],
+  },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
+  { id: 'firstRule', label: 'First rule', type: 'text' },
+  { id: 'firstFirewall', label: 'First NACL', type: 'text' },
+  {
+    id: 'shared',
+    label: 'Shared',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+  {
+    id: 'audited',
+    label: 'Audited',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
+
+const ruleFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'id', label: 'ID', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'down', label: 'Down' },
+      { value: 'error', label: 'Error' },
+    ],
+  },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
+  {
+    id: 'protocol',
+    label: 'Protocol',
+    type: 'select',
+    options: [
+      { value: 'tcp', label: 'TCP' },
+      { value: 'udp', label: 'UDP' },
+      { value: 'icmp', label: 'ICMP' },
+      { value: 'any', label: 'Any' },
+    ],
+  },
+  {
+    id: 'action',
+    label: 'Rule action',
+    type: 'select',
+    options: [
+      { value: 'allow', label: 'Allow' },
+      { value: 'deny', label: 'Deny' },
+      { value: 'reject', label: 'Reject' },
+    ],
+  },
+  { id: 'sourceIp', label: 'Source IP', type: 'text' },
+  { id: 'sourcePort', label: 'Source port', type: 'text' },
+  { id: 'destinationIp', label: 'Destination IP', type: 'text' },
+  { id: 'destinationPort', label: 'Destination port', type: 'text' },
+  {
+    id: 'enabled',
+    label: 'Enabled',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'On' },
+      { value: 'false', label: 'Off' },
+    ],
+  },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
+];
 
 /* ----------------------------------------
    Component
@@ -166,25 +296,46 @@ export default function FirewallsPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Firewalls state
-  const [firewallSearchTerm, setFirewallSearchTerm] = useState('');
+  const [firewallRows, setFirewallRows] = useState(mockFirewalls);
+  const [firewallAppliedFilters, setFirewallAppliedFilters] = useState<AppliedFilter[]>([]);
   const [firewallCurrentPage, setFirewallCurrentPage] = useState(1);
   const [selectedFirewalls, setSelectedFirewalls] = useState<string[]>([]);
   const firewallsPerPage = 10;
 
   // Policies state
-  const [policySearchTerm, setPolicySearchTerm] = useState('');
+  const [policyRows, setPolicyRows] = useState(mockFirewallPolicies);
+  const [policyAppliedFilters, setPolicyAppliedFilters] = useState<AppliedFilter[]>([]);
   const [policyCurrentPage, setPolicyCurrentPage] = useState(1);
   const [selectedPolicies, setSelectedPolicies] = useState<string[]>([]);
   const policiesPerPage = 10;
 
   // Rules state
-  const [ruleSearchTerm, setRuleSearchTerm] = useState('');
+  const [ruleRows, setRuleRows] = useState(mockFirewallRules);
+  const [ruleAppliedFilters, setRuleAppliedFilters] = useState<AppliedFilter[]>([]);
   const [ruleCurrentPage, setRuleCurrentPage] = useState(1);
   const [selectedRules, setSelectedRules] = useState<string[]>([]);
   const rulesPerPage = 10;
 
+  const [loading, setLoading] = useState(true);
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<DeleteTarget | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [bulkDeleteKind, setBulkDeleteKind] = useState<'firewall' | 'policy' | 'rule' | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Firewalls');
+  }, [updateActiveTabLabel]);
+
   const navigate = useNavigate();
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -193,16 +344,52 @@ export default function FirewallsPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [{ label: 'Proj-1', href: '/compute' }, { label: 'NACLs' }];
+  const breadcrumbItems = [{ label: 'NACLs' }];
+
+  const firewallToolbarFilters: FilterItem[] = firewallAppliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const policyToolbarFilters: FilterItem[] = policyAppliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const ruleToolbarFilters: FilterItem[] = ruleAppliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const removeFirewallFilter = (filterId: string) => {
+    setFirewallAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  const removePolicyFilter = (filterId: string) => {
+    setPolicyAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  const removeRuleFilter = (filterId: string) => {
+    setRuleAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
 
   // Filtered firewalls
   const filteredFirewalls = useMemo(() => {
-    if (!firewallSearchTerm) return mockFirewalls;
-    const query = firewallSearchTerm.toLowerCase();
-    return mockFirewalls.filter(
-      (fw) => fw.name.toLowerCase().includes(query) || fw.id.toLowerCase().includes(query)
-    );
-  }, [firewallSearchTerm]);
+    if (firewallAppliedFilters.length === 0) return firewallRows;
+    return firewallRows.filter((fw) => {
+      return firewallAppliedFilters.every((filter) => {
+        if (filter.fieldId === 'associatedPorts') {
+          const ports = fw.associatedPorts.map((p) => p.name).join(' ');
+          return ports.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        const value = String(fw[filter.fieldId as keyof Firewall] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [firewallRows, firewallAppliedFilters]);
 
   const totalFirewallPages = Math.ceil(filteredFirewalls.length / firewallsPerPage);
   const paginatedFirewalls = useMemo(() => {
@@ -212,12 +399,20 @@ export default function FirewallsPage() {
 
   // Filtered policies
   const filteredPolicies = useMemo(() => {
-    if (!policySearchTerm) return mockFirewallPolicies;
-    const query = policySearchTerm.toLowerCase();
-    return mockFirewallPolicies.filter(
-      (p) => p.name.toLowerCase().includes(query) || p.id.toLowerCase().includes(query)
-    );
-  }, [policySearchTerm]);
+    if (policyAppliedFilters.length === 0) return policyRows;
+    return policyRows.filter((p) => {
+      return policyAppliedFilters.every((filter) => {
+        if (filter.fieldId === 'shared') {
+          return String(p.shared) === filter.value;
+        }
+        if (filter.fieldId === 'audited') {
+          return String(p.audited) === filter.value;
+        }
+        const value = String(p[filter.fieldId as keyof FirewallPolicy] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [policyRows, policyAppliedFilters]);
 
   const totalPolicyPages = Math.ceil(filteredPolicies.length / policiesPerPage);
   const paginatedPolicies = useMemo(() => {
@@ -227,21 +422,68 @@ export default function FirewallsPage() {
 
   // Filtered rules
   const filteredRules = useMemo(() => {
-    if (!ruleSearchTerm) return mockFirewallRules;
-    const query = ruleSearchTerm.toLowerCase();
-    return mockFirewallRules.filter(
-      (r) =>
-        r.name.toLowerCase().includes(query) ||
-        r.id.toLowerCase().includes(query) ||
-        r.protocol.toLowerCase().includes(query)
-    );
-  }, [ruleSearchTerm]);
+    if (ruleAppliedFilters.length === 0) return ruleRows;
+    return ruleRows.filter((r) => {
+      return ruleAppliedFilters.every((filter) => {
+        if (filter.fieldId === 'enabled') {
+          return String(r.enabled) === filter.value;
+        }
+        const value = String(r[filter.fieldId as keyof FirewallRule] ?? '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [ruleRows, ruleAppliedFilters]);
 
   const totalRulePages = Math.ceil(filteredRules.length / rulesPerPage);
   const paginatedRules = useMemo(() => {
     const start = (ruleCurrentPage - 1) * rulesPerPage;
     return filteredRules.slice(start, start + rulesPerPage);
   }, [filteredRules, ruleCurrentPage]);
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (itemToDelete) {
+      const id = itemToDelete.item.id;
+      switch (itemToDelete.kind) {
+        case 'firewall':
+          setFirewallRows((prev) => prev.filter((fw) => fw.id !== id));
+          setSelectedFirewalls((s) => s.filter((x) => x !== id));
+          break;
+        case 'policy':
+          setPolicyRows((prev) => prev.filter((p) => p.id !== id));
+          setSelectedPolicies((s) => s.filter((x) => x !== id));
+          break;
+        case 'rule':
+          setRuleRows((prev) => prev.filter((r) => r.id !== id));
+          setSelectedRules((s) => s.filter((x) => x !== id));
+          break;
+      }
+    }
+    handleDeleteCancel();
+  };
+
+  const handleBulkDeleteCancel = () => {
+    setIsBulkDeleteOpen(false);
+    setBulkDeleteKind(null);
+  };
+
+  const handleBulkDeleteConfirm = () => {
+    if (bulkDeleteKind === 'firewall') {
+      setFirewallRows((prev) => prev.filter((fw) => !selectedFirewalls.includes(fw.id)));
+      setSelectedFirewalls([]);
+    } else if (bulkDeleteKind === 'policy') {
+      setPolicyRows((prev) => prev.filter((p) => !selectedPolicies.includes(p.id)));
+      setSelectedPolicies([]);
+    } else if (bulkDeleteKind === 'rule') {
+      setRuleRows((prev) => prev.filter((r) => !selectedRules.includes(r.id)));
+      setSelectedRules([]);
+    }
+    handleBulkDeleteCancel();
+  };
 
   // Context menu items
   const getFirewallMenuItems = (fw: Firewall): ContextMenuItem[] => [
@@ -255,7 +497,10 @@ export default function FirewallsPage() {
       id: 'delete',
       label: 'Delete',
       status: 'danger',
-      onClick: () => console.log('Delete firewall', fw.id),
+      onClick: () => {
+        setItemToDelete({ kind: 'firewall', item: fw });
+        setDeleteModalOpen(true);
+      },
     },
   ];
 
@@ -266,7 +511,10 @@ export default function FirewallsPage() {
       id: 'delete',
       label: 'Delete',
       status: 'danger',
-      onClick: () => console.log('Delete policy', p.id),
+      onClick: () => {
+        setItemToDelete({ kind: 'policy', item: p });
+        setDeleteModalOpen(true);
+      },
     },
   ];
 
@@ -276,7 +524,10 @@ export default function FirewallsPage() {
       id: 'delete',
       label: 'Delete',
       status: 'danger',
-      onClick: () => console.log('Delete rule', r.id),
+      onClick: () => {
+        setItemToDelete({ kind: 'rule', item: r });
+        setDeleteModalOpen(true);
+      },
     },
   ];
 
@@ -305,7 +556,12 @@ export default function FirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -324,8 +580,11 @@ export default function FirewallsPage() {
             >
               {row.ingressPolicy}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.ingressPolicyId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.ingressPolicyId}>
+                ID : {row.ingressPolicyId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.ingressPolicyId} />
             </span>
           </div>
         ) : (
@@ -347,8 +606,11 @@ export default function FirewallsPage() {
             >
               {row.egressPolicy}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.egressPolicyId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.egressPolicyId}>
+                ID : {row.egressPolicyId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.egressPolicyId} />
             </span>
           </div>
         ) : (
@@ -367,8 +629,11 @@ export default function FirewallsPage() {
               <span className="text-[var(--color-text-default)]">
                 {row.associatedPorts[0].name}
               </span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID: {row.associatedPorts[0].id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.associatedPorts[0].id}>
+                  ID : {row.associatedPorts[0].id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.associatedPorts[0].id} />
               </span>
             </div>
             {row.associatedPorts.length > 1 && (
@@ -379,11 +644,11 @@ export default function FirewallsPage() {
                   delay={100}
                   hideDelay={100}
                   content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="p-3 min-w-[160px] max-w-[320px]">
                       <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                         All Ports ({row.associatedPorts.length})
                       </div>
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                         {row.associatedPorts.map((p, i) => (
                           <Badge key={i} theme="white" size="sm">
                             {p.name}
@@ -427,10 +692,14 @@ export default function FirewallsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getFirewallMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -459,7 +728,12 @@ export default function FirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -472,8 +746,11 @@ export default function FirewallsPage() {
         <div className="flex items-center gap-1 min-w-0">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-[var(--color-text-default)]">{row.firstRule}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID:{row.firstRuleId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.firstRuleId}>
+                ID : {row.firstRuleId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.firstRuleId} />
             </span>
           </div>
           {row.rulesCount > 1 && (
@@ -493,8 +770,11 @@ export default function FirewallsPage() {
         <div className="flex items-center gap-1 min-w-0">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-[var(--color-text-default)]">{row.firstFirewall}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID:{row.firstFirewallId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.firstFirewallId}>
+                ID : {row.firstFirewallId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.firstFirewallId} />
             </span>
           </div>
           {row.firewallsCount > 1 && (
@@ -522,10 +802,14 @@ export default function FirewallsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getPolicyMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -554,7 +838,12 @@ export default function FirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -604,10 +893,14 @@ export default function FirewallsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -641,14 +934,12 @@ export default function FirewallsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-          }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -687,37 +978,51 @@ export default function FirewallsPage() {
           {/* NACLs Tab */}
           <TabPanel value="firewalls" className="pt-3">
             <VStack gap={3}>
-              {/* Action Bar */}
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      value={firewallSearchTerm}
-                      onChange={(e) => {
-                        setFirewallSearchTerm(e.target.value);
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={firewallFilterFields}
+                      appliedFilters={firewallAppliedFilters}
+                      onFiltersChange={(f) => {
+                        setFirewallAppliedFilters(f);
                         setFirewallCurrentPage(1);
                       }}
-                      placeholder="Search NACLs by attributes"
+                      placeholder="Search by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      hideAppliedFilters
                     />
-                  </div>
-                  <button
-                    type="button"
-                    className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                    aria-label="Download"
-                  >
-                    <IconDownload size={12} stroke={1.5} />
-                  </button>
-                </div>
-                <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                <Button
-                  variant="muted"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} />}
-                  disabled={selectedFirewalls.length === 0}
-                >
-                  Delete
-                </Button>
-              </div>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                      aria-label="Download"
+                      onClick={() => console.log('Download')}
+                    >
+                      <IconDownload size={12} stroke={1.5} />
+                    </button>
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedFirewalls.length === 0}
+                      onClick={() => {
+                        setBulkDeleteKind('firewall');
+                        setIsBulkDeleteOpen(true);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+                filters={firewallToolbarFilters}
+                onFilterRemove={removeFirewallFilter}
+                onFiltersClear={() => setFirewallAppliedFilters([])}
+              />
 
               {/* Pagination */}
               <Pagination
@@ -733,9 +1038,11 @@ export default function FirewallsPage() {
                 columns={firewallColumns}
                 data={paginatedFirewalls}
                 rowKey="id"
+                emptyMessage="No firewalls found"
                 selectable
                 selectedKeys={selectedFirewalls}
                 onSelectionChange={setSelectedFirewalls}
+                loading={loading}
               />
             </VStack>
           </TabPanel>
@@ -743,37 +1050,51 @@ export default function FirewallsPage() {
           {/* Policies Tab */}
           <TabPanel value="policies" className="pt-3">
             <VStack gap={3}>
-              {/* Action Bar */}
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      value={policySearchTerm}
-                      onChange={(e) => {
-                        setPolicySearchTerm(e.target.value);
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={policyFilterFields}
+                      appliedFilters={policyAppliedFilters}
+                      onFiltersChange={(f) => {
+                        setPolicyAppliedFilters(f);
                         setPolicyCurrentPage(1);
                       }}
-                      placeholder="Search policies by attributes"
+                      placeholder="Search by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      hideAppliedFilters
                     />
-                  </div>
-                  <button
-                    type="button"
-                    className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                    aria-label="Download"
-                  >
-                    <IconDownload size={12} stroke={1.5} />
-                  </button>
-                </div>
-                <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                <Button
-                  variant="muted"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} />}
-                  disabled={selectedPolicies.length === 0}
-                >
-                  Delete
-                </Button>
-              </div>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                      aria-label="Download"
+                      onClick={() => console.log('Download')}
+                    >
+                      <IconDownload size={12} stroke={1.5} />
+                    </button>
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedPolicies.length === 0}
+                      onClick={() => {
+                        setBulkDeleteKind('policy');
+                        setIsBulkDeleteOpen(true);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+                filters={policyToolbarFilters}
+                onFilterRemove={removePolicyFilter}
+                onFiltersClear={() => setPolicyAppliedFilters([])}
+              />
 
               {/* Pagination */}
               <Pagination
@@ -789,9 +1110,11 @@ export default function FirewallsPage() {
                 columns={policyColumns}
                 data={paginatedPolicies}
                 rowKey="id"
+                emptyMessage="No policies found"
                 selectable
                 selectedKeys={selectedPolicies}
                 onSelectionChange={setSelectedPolicies}
+                loading={loading}
               />
             </VStack>
           </TabPanel>
@@ -799,37 +1122,51 @@ export default function FirewallsPage() {
           {/* Rules Tab */}
           <TabPanel value="rules" className="pt-3">
             <VStack gap={3}>
-              {/* Action Bar */}
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      value={ruleSearchTerm}
-                      onChange={(e) => {
-                        setRuleSearchTerm(e.target.value);
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={ruleFilterFields}
+                      appliedFilters={ruleAppliedFilters}
+                      onFiltersChange={(f) => {
+                        setRuleAppliedFilters(f);
                         setRuleCurrentPage(1);
                       }}
-                      placeholder="Search rules by attributes"
+                      placeholder="Search by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      hideAppliedFilters
                     />
-                  </div>
-                  <button
-                    type="button"
-                    className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                    aria-label="Download"
-                  >
-                    <IconDownload size={12} stroke={1.5} />
-                  </button>
-                </div>
-                <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                <Button
-                  variant="muted"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} />}
-                  disabled={selectedRules.length === 0}
-                >
-                  Delete
-                </Button>
-              </div>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                      aria-label="Download"
+                      onClick={() => console.log('Download')}
+                    >
+                      <IconDownload size={12} stroke={1.5} />
+                    </button>
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedRules.length === 0}
+                      onClick={() => {
+                        setBulkDeleteKind('rule');
+                        setIsBulkDeleteOpen(true);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+                filters={ruleToolbarFilters}
+                onFilterRemove={removeRuleFilter}
+                onFiltersClear={() => setRuleAppliedFilters([])}
+              />
 
               {/* Pagination */}
               <Pagination
@@ -845,14 +1182,68 @@ export default function FirewallsPage() {
                 columns={ruleColumns}
                 data={paginatedRules}
                 rowKey="id"
+                emptyMessage="No rules found"
                 selectable
                 selectedKeys={selectedRules}
                 onSelectionChange={setSelectedRules}
+                loading={loading}
               />
             </VStack>
           </TabPanel>
         </Tabs>
       </VStack>
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title={
+          itemToDelete?.kind === 'firewall'
+            ? 'Delete NACL'
+            : itemToDelete?.kind === 'policy'
+              ? 'Delete NACL policy'
+              : 'Delete NACL rule'
+        }
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel={
+          itemToDelete?.kind === 'firewall'
+            ? 'NACL name'
+            : itemToDelete?.kind === 'policy'
+              ? 'Policy name'
+              : 'Rule name'
+        }
+        infoValue={itemToDelete?.item.name}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={handleBulkDeleteCancel}
+        onConfirm={handleBulkDeleteConfirm}
+        title={
+          bulkDeleteKind === 'firewall'
+            ? 'Delete selected NACLs'
+            : bulkDeleteKind === 'policy'
+              ? 'Delete selected NACL policies'
+              : 'Delete selected NACL rules'
+        }
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={
+          bulkDeleteKind === 'firewall'
+            ? `${selectedFirewalls.length} NACL(s)`
+            : bulkDeleteKind === 'policy'
+              ? `${selectedPolicies.length} policy(ies)`
+              : bulkDeleteKind === 'rule'
+                ? `${selectedRules.length} rule(s)`
+                : '0'
+        }
+      />
     </PageShell>
   );
 }

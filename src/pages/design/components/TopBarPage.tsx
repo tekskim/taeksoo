@@ -7,7 +7,7 @@ import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -18,7 +18,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -27,7 +27,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -81,12 +83,10 @@ function TopBarGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[ 사이드바 토글 ] [ ← → ] [ Breadcrumb ]         [ Utility Control ]`}</pre>
         </div>
 
@@ -183,8 +183,6 @@ function TopBarGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* States */}
       <VStack gap={4}>
         <SectionTitle>States</SectionTitle>
@@ -230,8 +228,6 @@ function TopBarGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Behavior */}
       <VStack gap={4}>
         <SectionTitle>Behavior</SectionTitle>
@@ -274,8 +270,6 @@ function TopBarGuidelines() {
         </VStack>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Usage Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
@@ -287,8 +281,6 @@ function TopBarGuidelines() {
           dontItems={['사이드바가 열린 상태에서 토글 버튼을 중복 표시하지 않는다.']}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Content Guidelines */}
       <VStack gap={4}>
@@ -325,11 +317,13 @@ export function TopBarPage() {
           code={`<TopBar
   showSidebarToggle
   onSidebarToggle={() => {}}
+  canGoBack={false}     // disabled when no history
+  canGoForward={false}  // disabled when no forward history
   breadcrumb={<Breadcrumb items={[{ label: 'Home' }, { label: 'Settings' }]} />}
   actions={<TopBarAction icon={<IconBell size={16} />} aria-label="Notifications" />}
 />`}
         >
-          <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
+          <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
             <TopBar
               showSidebarToggle
               onSidebarToggle={() => {}}
@@ -363,7 +357,7 @@ export function TopBarPage() {
                 좌측 사이드바 토글 + 뒤로/앞으로 + 브레드크럼. 우측 Utility Control 없음.
               </span>
             </VStack>
-            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
               <TopBar
                 showSidebarToggle
                 onSidebarToggle={() => {}}
@@ -385,7 +379,7 @@ export function TopBarPage() {
                 우측에 유틸리티 버튼(Terminal, Files, Copy, Search)과 알림 배지가 추가된 형태.
               </span>
             </VStack>
-            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
               <TopBar
                 showSidebarToggle
                 onSidebarToggle={() => {}}
@@ -415,12 +409,31 @@ export function TopBarPage() {
 
           <VStack gap={3}>
             <VStack gap={1}>
+              <Label>Disabled Navigation</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                히스토리가 없을 때 뒤로/앞으로 버튼이 비활성화된다. canGoBack, canGoForward prop으로
+                제어.
+              </span>
+            </VStack>
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
+              <TopBar
+                showSidebarToggle
+                onSidebarToggle={() => {}}
+                canGoBack={false}
+                canGoForward={false}
+                breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
               <Label>With Badge (알림)</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 알림 버튼에 읽지 않은 알림이 있을 때 배지가 노출된다.
               </span>
             </VStack>
-            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
               <TopBar
                 showSidebarToggle
                 onSidebarToggle={() => {}}

@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -16,20 +16,14 @@ import {
   InlineMessage,
   FormField,
   PageShell,
+  WizardSummary,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconSearch,
-  IconX,
-  IconCheck,
-  IconCirclePlus,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -157,93 +151,39 @@ interface Metric {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 interface SummarySidebarProps {
-  sections: HPASectionStep[];
-  sectionLabels: Record<HPASectionStep, string>;
   sectionStates: Record<HPASectionStep, WizardSectionState>;
   onCancel: () => void;
   onSubmit: () => void;
-  isEditMode?: boolean;
+  createDisabled: boolean;
 }
 
 function SummarySidebar({
-  sections,
-  sectionLabels,
   sectionStates,
   onCancel,
   onSubmit,
-  isEditMode = false,
+  createDisabled,
 }: SummarySidebarProps) {
+  const summaryItems: WizardSummaryItem[] = HPA_SECTION_ORDER.map((key) => ({
+    key,
+    label: HPA_SECTION_LABELS[key],
+    status: sectionStates[key],
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Summary Content */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
-
-            <VStack gap={0}>
-              {sections.map((section) => {
-                const status = sectionStates[section];
-                return (
-                  <HStack key={section} justify="between" align="center" className="py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {sectionLabels[section]}
-                    </span>
-                    {status === 'writing' ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <SummaryStatusIcon status={status} />
-                    )}
-                  </HStack>
-                );
-              })}
-            </VStack>
-          </VStack>
-        </div>
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+        <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={onSubmit} className="flex-1">
-            {isEditMode ? 'Save' : 'Create'}
+          <Button variant="primary" onClick={onSubmit} className="flex-1" disabled={createDisabled}>
+            Create
           </Button>
         </HStack>
       </div>
@@ -256,10 +196,6 @@ function SummarySidebar({
    ---------------------------------------- */
 export default function CreateHPAPage() {
   const navigate = useNavigate();
-  const { hpaId } = useParams();
-  const isEditMode = !!hpaId;
-  const [searchParams] = useSearchParams();
-  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab } = useTabs();
 
@@ -281,16 +217,12 @@ export default function CreateHPAPage() {
   const [maxReplicas, setMaxReplicas] = useState(10);
 
   // Behavior state
-  const [scaleDownBehavior, setScaleDownBehavior] = useState(true);
-  const [scaleDownPolicies, setScaleDownPolicies] = useState<ScalingPolicy[]>([
-    { id: 'initial-sd-policy', type: '', value: 0, periodSeconds: 0 },
-  ]);
+  const [scaleDownBehavior, setScaleDownBehavior] = useState(false);
+  const [scaleDownPolicies, setScaleDownPolicies] = useState<ScalingPolicy[]>([]);
   const [scaleDownSelectPolicy, setScaleDownSelectPolicy] = useState('Max');
   const [scaleDownStabilization, setScaleDownStabilization] = useState(300);
-  const [scaleUpBehavior, setScaleUpBehavior] = useState(true);
-  const [scaleUpPolicies, setScaleUpPolicies] = useState<ScalingPolicy[]>([
-    { id: 'initial-su-policy', type: '', value: 0, periodSeconds: 0 },
-  ]);
+  const [scaleUpBehavior, setScaleUpBehavior] = useState(false);
+  const [scaleUpPolicies, setScaleUpPolicies] = useState<ScalingPolicy[]>([]);
   const [scaleUpSelectPolicy, setScaleUpSelectPolicy] = useState('Max');
   const [scaleUpStabilization, setScaleUpStabilization] = useState(300);
 
@@ -361,14 +293,12 @@ export default function CreateHPAPage() {
   // Section states for summary
   const getSectionStates = (): Record<HPASectionStep, WizardSectionState> => {
     return {
-      // namespace has default → 'active' until name is typed
-      'basic-info': name.trim() ? 'done' : 'active',
-      // target is required but has no default; nothing else in this section has a default → 'pre' when empty
+      'basic-info': namespace && name ? 'done' : 'active',
       target: targetReference ? 'done' : 'pre',
-      // behavior, metrics, labels-annotations are optional → always done
-      behavior: 'done',
-      metrics: 'done',
-      'labels-annotations': 'done',
+      behavior: scaleDownBehavior || scaleUpBehavior ? 'done' : 'pre',
+      metrics: metrics.length > 0 ? 'done' : 'pre',
+      'labels-annotations':
+        labels.some((l) => l.key) || annotations.some((a) => a.key) ? 'done' : 'pre',
     };
   };
 
@@ -507,12 +437,6 @@ export default function CreateHPAPage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
-  useEffect(() => {
-    if (isEditMode && hpaId) {
-      setName(nameFromQuery || hpaId);
-    }
-  }, [isEditMode, hpaId]);
-
   const handleCancel = () => {
     navigate('/container/hpa');
   };
@@ -557,53 +481,27 @@ export default function CreateHPAPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
                 { label: 'Service Discovery', href: '/container' },
                 { label: 'Horizontal Pod Autoscalers', href: '/container/hpa' },
-                ...(isEditMode
-                  ? [
-                      { label: nameFromQuery || hpaId!, href: `/container/hpa/${hpaId}` },
-                      { label: 'Edit config' },
-                    ]
-                  : [{ label: 'Create horizontal pod autoscaler' }]),
+                { label: 'Create horizontal pod autoscaler', href: '/container/hpa/create' },
               ]}
             />
           }
-          actions={
-            <HStack gap={1}>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" />
-              </button>
-            </HStack>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
+        <VStack gap={1}>
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-            {isEditMode
-              ? `Horizontal pod autoscaler: ${nameFromQuery || hpaId}`
-              : 'Create horizontal pod autoscaler'}
+            Create horizontal pod autoscaler
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Horizontal Pod Autoscaler automatically adjusts the number of running Pods based on
@@ -629,7 +527,6 @@ export default function CreateHPAPage() {
                         value={namespace}
                         onChange={setNamespace}
                         fullWidth
-                        disabled={isEditMode}
                       />
                     </FormField.Control>
                   </FormField>
@@ -642,7 +539,6 @@ export default function CreateHPAPage() {
                         placeholder="Enter a unique name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        disabled={isEditMode}
                         fullWidth
                       />
                     </FormField.Control>
@@ -730,9 +626,9 @@ export default function CreateHPAPage() {
                     {scaleDownBehavior && (
                       <VStack gap={6} className="mt-1">
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1.5}>
+                          <VStack gap={2}>
                             {scaleDownPolicies.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Type <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
@@ -749,7 +645,7 @@ export default function CreateHPAPage() {
                             {scaleDownPolicies.map((policy) => (
                               <div
                                 key={policy.id}
-                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Select
                                   options={SCALING_POLICY_TYPE_OPTIONS}
@@ -828,9 +724,9 @@ export default function CreateHPAPage() {
                     {scaleUpBehavior && (
                       <VStack gap={6} className="mt-1">
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1.5}>
+                          <VStack gap={2}>
                             {scaleUpPolicies.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Type <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
@@ -847,7 +743,7 @@ export default function CreateHPAPage() {
                             {scaleUpPolicies.map((policy) => (
                               <div
                                 key={policy.id}
-                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Select
                                   options={SCALING_POLICY_TYPE_OPTIONS}
@@ -924,7 +820,7 @@ export default function CreateHPAPage() {
                   {metrics.map((metric) => (
                     <div
                       key={metric.id}
-                      className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                      className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3 w-full"
                     >
                       <VStack gap={6}>
                         <HStack justify="between" align="start" className="w-full">
@@ -1086,9 +982,9 @@ export default function CreateHPAPage() {
                                 Metric Selector
                               </label>
                               <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                                <VStack gap={1.5}>
+                                <VStack gap={2}>
                                   {metric.selectors.length > 0 && (
-                                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                       <label className="text-label-sm text-[var(--color-text-default)]">
                                         Key
                                       </label>
@@ -1104,7 +1000,7 @@ export default function CreateHPAPage() {
                                   {metric.selectors.map((selector) => (
                                     <div
                                       key={selector.id}
-                                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                     >
                                       <Input
                                         placeholder="Input key"
@@ -1203,12 +1099,12 @@ export default function CreateHPAPage() {
                       Specify the labels used to identify and categorize the resource.
                     </FormField.Description>
                     <FormField.Control>
-                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                         <VStack gap={3}>
                           {labels.length > 0 && (
                             <VStack gap={2} className="w-full">
                               {/* Header row */}
-                              <div className="grid grid-cols-[1fr_1fr_23px] gap-1">
+                              <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
                                 <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                                   Key
                                 </span>
@@ -1220,7 +1116,7 @@ export default function CreateHPAPage() {
                               {labels.map((label) => (
                                 <div
                                   key={label.id}
-                                  className="grid grid-cols-[1fr_1fr_23px] gap-1 items-center"
+                                  className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
                                 >
                                   <Input
                                     placeholder="e.g. key"
@@ -1270,12 +1166,12 @@ export default function CreateHPAPage() {
                       Specify the annotations used to provide additional metadata for the resource.
                     </FormField.Description>
                     <FormField.Control>
-                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                         <VStack gap={3}>
                           {annotations.length > 0 && (
                             <VStack gap={2} className="w-full">
                               {/* Header row */}
-                              <div className="grid grid-cols-[1fr_1fr_23px] gap-1">
+                              <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
                                 <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                                   Key
                                 </span>
@@ -1287,7 +1183,7 @@ export default function CreateHPAPage() {
                               {annotations.map((annotation) => (
                                 <div
                                   key={annotation.id}
-                                  className="grid grid-cols-[1fr_1fr_23px] gap-1 items-center"
+                                  className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
                                 >
                                   <Input
                                     placeholder="e.g. key"
@@ -1340,12 +1236,10 @@ export default function CreateHPAPage() {
 
           {/* Summary Sidebar */}
           <SummarySidebar
-            sections={HPA_SECTION_ORDER}
-            sectionLabels={HPA_SECTION_LABELS}
             sectionStates={getSectionStates()}
             onCancel={handleCancel}
-            onSubmit={handleCreate}
-            isEditMode={isEditMode}
+            onSubmit={handleSubmit}
+            createDisabled={!name.trim()}
           />
         </HStack>
       </VStack>

@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { execSync } from 'child_process';
 
@@ -21,7 +21,7 @@ function generateChangelogPlugin() {
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
   // 로컬 개발: '/', 프로덕션 빌드: '/tds_ssot/'
-  base: command === 'serve' ? '/' : '/taeksoo/',
+  base: command === 'serve' ? '/' : '/tds_ssot/',
   build: {
     outDir: 'docs',
   },

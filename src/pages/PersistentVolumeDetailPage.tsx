@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   TabBar,
@@ -19,21 +19,15 @@ import {
   Tooltip,
   PageShell,
   FormField,
+  ErrorState,
   type ContextMenuItem,
   Popover,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
-  IconChevronDown,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconChevronDown, IconAlertTriangle } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -78,7 +72,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
     id: '1',
     name: 'pvc-143076e7-d0b2-4d76-92fc-cea5cbe8b3a2',
     status: 'Active',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
     },
@@ -110,7 +104,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
     id: '2',
     name: 'pvc-abc12345-1234-5678-abcd-1234567890ab',
     status: 'Processing',
-    createdAt: 'Jul 24, 2025 03:19:59',
+    createdAt: 'Jul 24, 2026 03:19:59',
     labels: {
       app: 'postgres',
     },
@@ -146,20 +140,30 @@ export function PersistentVolumeDetailPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [activeTab, setActiveTab] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'customize';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Shell Panel state
   const shellPanel = useShellPanel();
 
   // Load PV data
   const [pvData, setPvData] = useState<PersistentVolumeData | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (pvId && mockPersistentVolumeData[pvId]) {
-      setPvData(mockPersistentVolumeData[pvId]);
+    if (!pvId) {
+      setNotFound(true);
+      setPvData(null);
+      return;
+    }
+    const data = mockPersistentVolumeData[pvId];
+    if (data) {
+      setNotFound(false);
+      setPvData(data);
     } else {
-      // Default to first PV if not found
-      setPvData(mockPersistentVolumeData['1']);
+      setNotFound(true);
+      setPvData(null);
     }
   }, [pvId]);
 
@@ -185,20 +189,111 @@ export function PersistentVolumeDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
+  const tabBarTabs = tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }));
+
+  if (!notFound && !pvData) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
+                  { label: pvId ?? '…' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <div>Loading...</div>
+      </PageShell>
+    );
+  }
+
+  if (notFound) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
+                  { label: pvId ?? 'Persistent Volume' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Persistent volume not found"
+          description={`The persistent volume "${pvId ?? ''}" does not exist.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/container/persistent-volumes')}
+            >
+              Back to Persistent Volumes
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   if (!pvData) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
-    {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () =>
-        navigate(
-          `/container/persistent-volumes/${pvId}/edit?name=${encodeURIComponent(pvData?.name ?? pvId)}`
-        ),
-    },
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
@@ -247,7 +342,7 @@ export function PersistentVolumeDetailPage() {
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
-          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabBarTabs}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -259,56 +354,18 @@ export function PersistentVolumeDetailPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Persistent volumes', href: '/container/persistent-volumes' },
+                { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
                 { label: pvData.name },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-pv', `Kubectl: ${pvData.name}`);
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={pvData.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -383,14 +440,14 @@ export function PersistentVolumeDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All labels ({labelsCount})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(pvData.labels).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>
@@ -428,14 +485,14 @@ export function PersistentVolumeDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All annotations ({annotationsCount})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(pvData.annotations).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>
@@ -456,11 +513,11 @@ export function PersistentVolumeDetailPage() {
         {/* Tabs */}
         <Tabs value={activeTab} onChange={setActiveTab} className="w-full">
           <TabList>
-            <Tab value={0}>Customize</Tab>
+            <Tab value="customize">Customize</Tab>
           </TabList>
 
           {/* Customize Tab */}
-          <TabPanel value={0}>
+          <TabPanel value="customize">
             <VStack gap={3}>
               {/* Customize Content */}
               <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
@@ -510,7 +567,7 @@ export function PersistentVolumeDetailPage() {
                     <h3 className="text-label-lg text-[var(--color-text-default)]">
                       Mount options
                     </h3>
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <div className="grid grid-cols-[1fr] gap-2">
                         <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
                         <Input value={pvData.mountOptions} onChange={() => {}} fullWidth readOnly />
@@ -527,7 +584,7 @@ export function PersistentVolumeDetailPage() {
                       {pvData.nodeSelectors.map((group) => (
                         <div
                           key={group.id}
-                          className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full"
+                          className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                         >
                           <div className="grid grid-cols-[1fr_140px_1fr] gap-2 items-center">
                             <span className="text-label-sm text-[var(--color-text-subtle)]">

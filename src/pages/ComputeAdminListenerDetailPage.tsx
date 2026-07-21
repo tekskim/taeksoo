@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -28,11 +27,11 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconTrash,
-  IconBell,
   IconDotsCircleHorizontal,
   IconCertificate,
   IconDownload,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -107,7 +106,7 @@ const mockListenersMap: Record<string, ListenerDetail> = {
     name: 'listener-http-80',
     status: 'active',
     adminState: 'Up',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     description: '-',
     protocol: 'HTTP',
     port: 80,
@@ -125,7 +124,7 @@ const mockListenersMap: Record<string, ListenerDetail> = {
     name: 'listener-https-443',
     status: 'active',
     adminState: 'Up',
-    createdAt: 'Jul 24, 2025 03:19:59',
+    createdAt: 'Jul 24, 2026 03:19:59',
     description: 'HTTPS listener for API',
     protocol: 'HTTPS',
     port: 443,
@@ -143,7 +142,7 @@ const mockListenersMap: Record<string, ListenerDetail> = {
     name: 'listener-tcp-8080',
     status: 'active',
     adminState: 'Up',
-    createdAt: 'Jul 23, 2025 20:06:42',
+    createdAt: 'Jul 23, 2026 20:06:42',
     description: 'TCP listener for app',
     protocol: 'TCP',
     port: 8080,
@@ -298,11 +297,12 @@ export default function ListenerDetailPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Load balancers', href: '/compute-admin/load-balancers' },
+    { label: 'Load Balancers', href: '/compute-admin/load-balancers' },
     {
       label: listener.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${listener.loadBalancer?.id}`,
+      href: listener.loadBalancer?.id
+        ? `/compute-admin/load-balancers/${listener.loadBalancer.id}`
+        : undefined,
     },
     { label: listener.name },
   ];
@@ -398,7 +398,12 @@ export default function ListenerDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -435,6 +440,7 @@ export default function ListenerDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
           {
@@ -447,7 +453,10 @@ export default function ListenerDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={poolMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -486,7 +495,12 @@ export default function ListenerDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -494,6 +508,7 @@ export default function ListenerDetailPage() {
       key: 'behavior',
       label: 'Behavior',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'position',
@@ -517,6 +532,7 @@ export default function ListenerDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: L7Policy) => {
         const policyMenuItems: ContextMenuItem[] = [
           {
@@ -570,7 +586,12 @@ export default function ListenerDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -602,6 +623,7 @@ export default function ListenerDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Certificate) => {
         const getCertMenuItems = (): ContextMenuItem[] => {
           switch (row.type) {
@@ -640,7 +662,10 @@ export default function ListenerDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={certMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -677,21 +702,14 @@ export default function ListenerDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              hasNotification
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{listener.name}</DetailHeader.Title>
@@ -739,7 +757,7 @@ export default function ListenerDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Name" value={listener.name} />
+                    <SectionCard.DataRow label="Listener name" value={listener.name} />
                     <SectionCard.DataRow label="Description" value={listener.description} />
                     <SectionCard.DataRow label="Admin state" value={listener.adminState} />
                     <SectionCard.DataRow label="Protocol" value={listener.protocol} />
@@ -830,10 +848,11 @@ export default function ListenerDetailPage() {
                     <SectionCard.DataRow
                       label="Status"
                       value={
-                        <StatusIndicator
-                          layout="icon-only"
-                          status={poolStatusMap[mockPools[0]?.status] || 'down'}
-                        />
+                        mockPools[0]?.status === 'active'
+                          ? 'Active'
+                          : mockPools[0]?.status === 'down'
+                            ? 'Down'
+                            : 'Error'
                       }
                     />
                     <SectionCard.DataRow label="Description" value="-" />
@@ -876,7 +895,7 @@ export default function ListenerDetailPage() {
                   </div>
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedL7Policies.length === 0}

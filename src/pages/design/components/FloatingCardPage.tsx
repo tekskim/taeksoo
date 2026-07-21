@@ -1,14 +1,6 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import {
-  VStack,
-  HStack,
-  FloatingCard,
-  Button,
-  FormField,
-  NumberInput,
-  ProgressBar,
-} from '@/design-system';
+import { VStack, HStack, Button, FormField, NumberInput, ProgressBar } from '@/design-system';
 import { WizardSectionStatusIcon } from '@/design-system/components/Wizard/WizardSection';
 import {
   IconCheck,
@@ -16,11 +8,362 @@ import {
   IconProgress,
   IconCircleDashed,
   IconMinus,
+  IconChevronRight,
+  IconChevronDown,
 } from '@tabler/icons-react';
+import { useState } from 'react';
+
+function DeploymentSummaryPreview() {
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({
+    deployment: false,
+    pod: true,
+    container: false,
+  });
+
+  const podSections = [
+    'Basic Information',
+    'Labels & Annotations',
+    'Scaling and Upgrade Policy',
+    'Networking',
+    'Node Scheduling',
+    'Pod Scheduling',
+    'Resources',
+    'Security Context',
+    'Storage',
+  ];
+
+  return (
+    <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
+      <div className="w-[var(--wizard-summary-width)]">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+            <VStack gap={4}>
+              <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+                Summary
+              </h5>
+
+              {/* Deployment */}
+              <VStack gap={2}>
+                <button
+                  onClick={() => setExpanded((p) => ({ ...p, deployment: !p.deployment }))}
+                  className="flex items-center justify-between pr-2 w-full hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                >
+                  <div className="flex items-center gap-1.5">
+                    {expanded.deployment ? (
+                      <IconChevronDown
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)]"
+                      />
+                    ) : (
+                      <IconChevronRight
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)]"
+                      />
+                    )}
+                    <span className="text-label-lg text-[var(--color-text-default)]">
+                      Deployment
+                    </span>
+                  </div>
+                  <WizardSectionStatusIcon status="active" />
+                </button>
+                {expanded.deployment && (
+                  <VStack gap={0} className="ml-3">
+                    {[
+                      'Basic information',
+                      'Labels & Annotations',
+                      'Scaling and Upgrade Policy',
+                    ].map((label) => (
+                      <div
+                        key={label}
+                        className="flex items-center justify-between px-2 py-1 w-full"
+                      >
+                        <span className="text-body-md text-[var(--color-text-default)]">
+                          {label}
+                        </span>
+                        <WizardSectionStatusIcon status="done" />
+                      </div>
+                    ))}
+                  </VStack>
+                )}
+              </VStack>
+
+              {/* Pod */}
+              <VStack gap={2}>
+                <button
+                  onClick={() => setExpanded((p) => ({ ...p, pod: !p.pod }))}
+                  className="flex items-center justify-between pr-2 w-full hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                >
+                  <div className="flex items-center gap-1.5">
+                    {expanded.pod ? (
+                      <IconChevronDown
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)]"
+                      />
+                    ) : (
+                      <IconChevronRight
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)]"
+                      />
+                    )}
+                    <span className="text-label-lg text-[var(--color-text-default)]">Pod</span>
+                  </div>
+                  <WizardSectionStatusIcon status="done" />
+                </button>
+                {expanded.pod && (
+                  <VStack gap={0} className="ml-3">
+                    {podSections.map((label) => (
+                      <div
+                        key={label}
+                        className="flex items-center justify-between px-2 py-1 w-full"
+                      >
+                        <span className="text-body-md text-[var(--color-text-default)]">
+                          {label}
+                        </span>
+                        <WizardSectionStatusIcon status="done" />
+                      </div>
+                    ))}
+                  </VStack>
+                )}
+              </VStack>
+
+              {/* Container-0 */}
+              <VStack gap={2}>
+                <button
+                  onClick={() => setExpanded((p) => ({ ...p, container: !p.container }))}
+                  className="flex items-center justify-between pr-2 w-full hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                >
+                  <div className="flex items-center gap-1.5">
+                    {expanded.container ? (
+                      <IconChevronDown
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)]"
+                      />
+                    ) : (
+                      <IconChevronRight
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)]"
+                      />
+                    )}
+                    <span className="text-label-lg text-[var(--color-text-default)]">
+                      Container-0
+                    </span>
+                  </div>
+                  <WizardSectionStatusIcon status="done" />
+                </button>
+              </VStack>
+            </VStack>
+          </div>
+
+          <HStack gap={2}>
+            <Button variant="secondary" size="md">
+              Cancel
+            </Button>
+            <Button variant="primary" size="md" disabled className="flex-1">
+              Create
+            </Button>
+          </HStack>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SummarySection({
+  label,
+  status,
+  items,
+  defaultExpanded = false,
+}: {
+  label: string;
+  status: 'done' | 'active' | 'pre';
+  items?: { label: string; status: 'done' | 'active' | 'pre' }[];
+  defaultExpanded?: boolean;
+}) {
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const hasChildren = items && items.length > 0;
+
+  return (
+    <VStack gap={2}>
+      <button
+        onClick={() => hasChildren && setExpanded(!expanded)}
+        className="flex items-center justify-between pr-2 w-full hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+      >
+        <div className="flex items-center gap-1.5">
+          {hasChildren ? (
+            expanded ? (
+              <IconChevronDown size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+            ) : (
+              <IconChevronRight size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+            )
+          ) : (
+            <IconChevronRight size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+          )}
+          <span className="text-label-lg text-[var(--color-text-default)]">{label}</span>
+        </div>
+        <WizardSectionStatusIcon status={status} />
+      </button>
+      {hasChildren && expanded && (
+        <VStack gap={0} className="ml-3">
+          {items.map((item) => (
+            <div key={item.label} className="flex items-center justify-between px-2 py-1 w-full">
+              <span className="text-body-md text-[var(--color-text-default)]">{item.label}</span>
+              <WizardSectionStatusIcon status={item.status} />
+            </div>
+          ))}
+        </VStack>
+      )}
+    </VStack>
+  );
+}
+
+function SummaryCard({
+  children,
+  actionLabel = 'Create',
+  actionEnabled = false,
+}: {
+  children: React.ReactNode;
+  actionLabel?: string;
+  actionEnabled?: boolean;
+}) {
+  return (
+    <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
+      <div className="w-[var(--wizard-summary-width)]">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+            {children}
+          </div>
+          <HStack gap={2}>
+            <Button variant="secondary" size="md">
+              Cancel
+            </Button>
+            <Button variant="primary" size="md" disabled={!actionEnabled} className="flex-1">
+              {actionLabel}
+            </Button>
+          </HStack>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InstanceSummaryPreview() {
+  const configItems = [
+    { label: 'Launch type', status: 'done' as const },
+    { label: 'Basic information', status: 'done' as const },
+    { label: 'Source', status: 'done' as const },
+    { label: 'Flavor', status: 'active' as const },
+    { label: 'Network', status: 'pre' as const },
+    { label: 'Authentication', status: 'pre' as const },
+    { label: 'Advanced', status: 'pre' as const },
+  ];
+
+  return (
+    <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
+      <div className="w-[var(--wizard-summary-width)]">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+          {/* Summary section */}
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+            <VStack gap={4}>
+              <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+                Summary
+              </h5>
+              <div className="flex flex-col">
+                {configItems.map((item) => (
+                  <div key={item.label} className="flex items-center justify-between py-1">
+                    <span className="text-body-md text-[var(--color-text-default)]">
+                      {item.label}
+                    </span>
+                    <WizardSectionStatusIcon status={item.status} />
+                  </div>
+                ))}
+              </div>
+            </VStack>
+          </div>
+
+          {/* Quota section */}
+          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+            <VStack gap={3}>
+              <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
+              <VStack gap={3}>
+                {[
+                  { label: 'Instance', used: 3, max: 10 },
+                  { label: 'vCPU', used: 7, max: 20 },
+                  { label: 'RAM (GiB)', used: 18, max: 50 },
+                  { label: 'Disk', used: 3, max: 10 },
+                  { label: 'Disk capacity (GiB)', used: 70, max: 1000 },
+                ].map((item) => (
+                  <ProgressBar
+                    key={item.label}
+                    variant="quota"
+                    label={item.label}
+                    value={item.used}
+                    max={item.max}
+                    showValue
+                  />
+                ))}
+              </VStack>
+            </VStack>
+          </div>
+
+          {/* Number of Instances */}
+          <FormField label="Number of Instances">
+            <NumberInput value={1} onChange={() => {}} min={1} max={10} fullWidth />
+          </FormField>
+
+          {/* Buttons */}
+          <HStack gap={2}>
+            <Button variant="secondary" size="md">
+              Cancel
+            </Button>
+            <Button variant="primary" size="md" disabled className="flex-1">
+              Create
+            </Button>
+          </HStack>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AgentSummaryPreview() {
+  return (
+    <SummaryCard actionEnabled>
+      <VStack gap={4}>
+        <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+          Summary
+        </h5>
+        <SummarySection
+          label="Configuration"
+          status="active"
+          items={[
+            { label: 'Basic information', status: 'done' },
+            { label: 'Model settings', status: 'active' },
+            { label: 'Prompt settings', status: 'pre' },
+          ]}
+          defaultExpanded
+        />
+        <SummarySection
+          label="Data & MCP Connection"
+          status="pre"
+          items={[
+            { label: 'Connect data sources', status: 'pre' },
+            { label: 'Connect MCP tools', status: 'pre' },
+          ]}
+        />
+      </VStack>
+    </SummaryCard>
+  );
+}
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -31,7 +374,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -40,7 +383,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -96,8 +441,6 @@ function FloatingCardGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       <VStack gap={2}>
         <SectionTitle>Composition (구성 요소)</SectionTitle>
@@ -186,8 +529,6 @@ function FloatingCardGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       <VStack gap={2}>
         <SectionTitle>States</SectionTitle>
         <TableWrapper>
@@ -238,8 +579,6 @@ function FloatingCardGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       <VStack gap={2}>
         <SectionTitle>Behavior</SectionTitle>
         <Prose>
@@ -283,8 +622,6 @@ function FloatingCardGuidelines() {
         </Prose>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       <VStack gap={2}>
         <SectionTitle>Usage Guidelines</SectionTitle>
         <DosDonts
@@ -321,118 +658,21 @@ export function FloatingCardPage() {
         '모바일 환경 등 뷰포트 너비가 충분하지 않아 우측 고정 레이아웃을 지원하기 어려운 경우',
         'Quota 정보가 없고 요약 내용이 없는 단순 확인(Confirm) 다이얼로그 상황',
       ]}
-      preview={
-        <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
-          <FloatingCard
-            title="Summary"
-            sections={[
-              {
-                tabTitle: 'Configuration',
-                items: [
-                  { id: 'basic', title: 'Basic information', status: 'success' },
-                  { id: 'source', title: 'Source', status: 'success' },
-                  { id: 'flavor', title: 'Flavor', status: 'processing' },
-                  { id: 'network', title: 'Network', status: 'default' },
-                ],
-                collapsible: true,
-                defaultExpanded: true,
-              },
-            ]}
-            quota={[
-              { label: 'Instance', current: 3, total: 10 },
-              { label: 'vCPU', current: 7, total: 20 },
-              { label: 'RAM', current: 18, total: 50, unit: 'GiB' },
-            ]}
-            instanceCount={1}
-            onInstanceCountChange={() => {}}
-            onCancel={() => {}}
-            onAction={() => {}}
-            actionLabel="Create"
-            actionEnabled={false}
-            portal={false}
-            width="var(--wizard-summary-width)"
-          />
-        </div>
-      }
+      preview={<DeploymentSummaryPreview />}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">
               Create Instance — Full (Summary + Quota + Instance Count)
             </span>
-            <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
-              <FloatingCard
-                title="Summary"
-                sections={[
-                  {
-                    tabTitle: 'Configuration',
-                    items: [
-                      { id: 'launch', title: 'Launch type', status: 'success' },
-                      { id: 'basic', title: 'Basic information', status: 'success' },
-                      { id: 'source', title: 'Source', status: 'success' },
-                      { id: 'flavor', title: 'Flavor', status: 'processing' },
-                      { id: 'network', title: 'Network', status: 'default' },
-                      { id: 'auth', title: 'Authentication', status: 'default' },
-                      { id: 'advanced', title: 'Advanced', status: 'default' },
-                    ],
-                    collapsible: true,
-                    defaultExpanded: true,
-                  },
-                ]}
-                quota={[
-                  { label: 'Instance', current: 3, total: 10 },
-                  { label: 'vCPU', current: 7, total: 20 },
-                  { label: 'RAM', current: 18, total: 50, unit: 'GiB' },
-                ]}
-                instanceCount={1}
-                onInstanceCountChange={() => {}}
-                onCancel={() => {}}
-                onAction={() => {}}
-                actionLabel="Create"
-                actionEnabled={false}
-                portal={false}
-                width="var(--wizard-summary-width)"
-              />
-            </div>
+            <InstanceSummaryPreview />
           </VStack>
 
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">
               Create Agent — Multi-section (Collapsible Tabs, No Quota)
             </span>
-            <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
-              <FloatingCard
-                title="Summary"
-                sections={[
-                  {
-                    tabTitle: 'Configuration',
-                    items: [
-                      { id: 'basic-info', title: 'Basic information', status: 'success' },
-                      { id: 'model', title: 'Model settings', status: 'processing' },
-                      { id: 'prompt', title: 'Prompt settings', status: 'default' },
-                    ],
-                    collapsible: true,
-                    defaultExpanded: true,
-                    showSuccessIcon: false,
-                  },
-                  {
-                    tabTitle: 'Data & MCP Connection',
-                    items: [
-                      { id: 'data', title: 'Connect data sources', status: 'default' },
-                      { id: 'mcp', title: 'Connect MCP tools', status: 'default' },
-                    ],
-                    collapsible: true,
-                    defaultExpanded: false,
-                  },
-                ]}
-                onCancel={() => {}}
-                onAction={() => {}}
-                actionLabel="Create"
-                actionEnabled={true}
-                portal={false}
-                width="var(--wizard-summary-width)"
-              />
-            </div>
+            <AgentSummaryPreview />
           </VStack>
 
           <VStack gap={3}>

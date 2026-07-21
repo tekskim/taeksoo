@@ -1,0 +1,147 @@
+# Figma → TDS Page Reproduction Rules
+
+이 규칙은 Figma 디자인을 TDS 컴포넌트(`@/design-system`)로 페이지를 재현할 때 적용됩니다.
+아래 실수 패턴은 실제 반복 발생한 문제에서 도출되었습니다.
+
+## 적용 조건
+
+- 사용자가 Figma URL을 주고 페이지 구현을 요청할 때
+- AI Platform, Chat, Container 등 서비스 페이지를 만들거나 수정할 때
+- "페이지 만들어줘", "재현해", "Figma 따라해" 등의 요청
+
+## 필수 사전 절차 (구현 전)
+
+### 1. 전체 케이스 파악 (빠뜨림 방지)
+
+```
+1. get_metadata로 해당 섹션의 모든 프레임/페이지 리스팅
+2. 케이스 목록 작성 (예: empty, basic, readonly, error, full)
+3. 사용자에게 케이스 목록 보고 후 구현 시작
+```
+
+### 2. TDS 컴포넌트 매핑 (직접 구현 방지)
+
+Figma에서 보이는 UI 요소를 먼저 TDS 컴포넌트에 매핑합니다.
+**직접 div로 만들지 않습니다.**
+
+| Figma 요소 | TDS 컴포넌트 | 비고 |
+|---|---|---|
+| 경고/에러/정보 배너 | `InlineMessage` | variant="warning/error/info/success" |
+| 상태 표시 (Active, Error 등) | `StatusIndicator` | status prop |
+| 빈 상태 화면 | `EmptyState` | variant="card/inline" |
+| 에러 화면 | `ErrorState` | |
+| 툴팁 | `Tooltip` | |
+| 모달/다이얼로그 | `Modal`, `ConfirmModal` | |
+| 사이드 패널 | `Drawer` | |
+| 페이지 헤더 | `PageHeader` | |
+| 상세 헤더 | `DetailHeader` | |
+| 카드 섹션 | `SectionCard` | |
+| 탭 | `Tabs`, `TabBar` | |
+| 컨텍스트 메뉴 | `ContextMenu` | |
+| 뱃지/태그 | `Badge`, `Chip` | |
+| 페이지 레이아웃 | `PageShell` | |
+
+### 3. 아이콘 매칭 (임의 선택 금지)
+
+```
+1. get_design_context로 Figma 아이콘의 SVG asset URL 획득
+2. SVG 파일을 다운로드하여 Read로 path 형태 확인
+3. SVG path 형태를 기준으로 Tabler Icons에서 가장 일치하는 아이콘 선택
+4. TDS/Tabler에 없는 아이콘이면 사용자에게 보고
+5. stroke 두께도 SVG에서 확인하여 stroke={N} prop으로 명시
+```
+
+**절대 금지**: 아이콘 이름만 보고 추측하여 매칭 (예: "Request" → IconThumbUp)
+
+## 구현 규칙
+
+### 4. Figma 수치 그대로 사용 (임의 변경 금지)
+
+`get_design_context`에서 반환된 코드의 Tailwind 클래스를 분석하여 **정확한 수치**를 추출합니다.
+
+**추출 필수 항목**:
+- `rounded-[Npx]` → 라운드
+- `p-[Npx]`, `px-[Npx]`, `py-[Npx]` → 패딩
+- `gap-[Npx]` → 간격
+- `text-[Npx]`, `leading-[Npx]` → 폰트 크기/행간
+- `w-[Npx]`, `h-[Npx]`, `size-[Npx]` → 너비/높이
+- `bg-[color]` → 배경색
+- `text-[color:...]` → 텍스트 색상
+
+**절대 금지**: Figma에 `rounded-[16px]`이면 `rounded-md`로 대체하지 않고 `rounded-[16px]` 그대로 사용
+
+### 5. 색상은 TDS CSS 변수 우선
+
+Figma 코드에서 hex 값이 나오면 TDS CSS 변수와 매칭합니다.
+
+```
+#e5e7eb → var(--color-surface-muted) 또는 직접 hex
+#0f172a → var(--color-text-default)
+#64748b → var(--color-text-subtle)
+```
+
+TDS 변수에 없는 색상은 hex 값 그대로 사용합니다.
+
+### 6. 인라인 메시지는 반드시 InlineMessage 사용
+
+경고, 에러, 정보 배너를 직접 div로 만들지 않습니다.
+
+```tsx
+// ❌ 금지
+<div className="flex items-center gap-2 bg-[#fef2f2] px-4 py-3 rounded-md">
+  <IconAlertCircle />
+  <span>Error message</span>
+</div>
+
+// ✅ 필수
+<InlineMessage variant="error">Error message</InlineMessage>
+```
+
+### 7. 조건부 렌더링은 케이스별 분리
+
+각 상태(케이스)를 명확하게 분리하여 구현합니다.
+
+```tsx
+// 케이스 정의
+type CaseId = 'empty' | 'basic' | 'readonly' | 'error' | 'full';
+
+// 케이스별 데이터 함수
+function getCaseData(caseId: CaseId) { ... }
+
+// 조건부 렌더링
+{isReadOnly ? <ReadOnlyBar /> : <ChatInput />}
+```
+
+## 검증 규칙
+
+### 8. 구현 후 필수 검증
+
+1. **TypeScript 타입 체크**: `npx tsc --noEmit`
+2. **브라우저 시각적 검증**: 모든 케이스를 브라우저에서 스크린샷 확인
+3. **Figma 스크린샷 대조**: Figma `get_design_context`의 스크린샷과 구현 스크린샷 비교
+
+### 9. 시간 보고
+
+작업 완료 시 소요 시간을 보고합니다.
+
+## 속도 최적화
+
+### 10. 병렬 Figma 호출
+
+같은 섹션의 여러 케이스는 `get_design_context`를 **병렬로** 호출합니다.
+
+```
+// 동시에 호출
+get_design_context(node1) // basic case
+get_design_context(node2) // readonly case  
+get_design_context(node3) // error case
+```
+
+### 11. 한 번에 전체 구현
+
+케이스를 하나씩 구현하지 않고, 모든 케이스의 Figma 정보를 먼저 수집한 후 **한 번에** 전체 페이지를 작성합니다.
+
+## 버전
+
+- **Created**: 2026-04-28
+- **Source**: ChatConversationPage 재현 작업에서 5회 반복 수정 후 도출

@@ -1,7 +1,8 @@
 # TDS Design Apply
 
 추출된 TDS 디자인 스펙을 thaki-shared 컴포넌트에 반영하는 스킬입니다.
-**스타일만 변경하며, 로직/이벤트/상태 관리는 절대 변경하지 않습니다.**
+**스타일 변경이 주 목적이며, 디자인 반영에 필수적인 API 변경도 함께 적용합니다.**
+**로직/이벤트/상태 관리는 절대 변경하지 않습니다.**
 
 ## 트리거
 
@@ -19,17 +20,24 @@
 ### 절대 금지
 
 1. **`.tsx` 파일의 로직 변경 금지**: 이벤트 핸들러, state, hooks, API 호출 등
-2. **`.tsx` 파일의 렌더 구조 변경 금지**: JSX 트리, 컴포넌트 합성 구조, 조건부 렌더링
+2. **`.tsx` 파일의 렌더 구조 변경 금지**: JSX 트리, 컴포넌트 합성 구조, 조건부 렌더링 — 단, 아이콘 색상 제어를 위한 순수 스타일 wrapper(`<span>`) 추가는 허용 (Pitfall 2 Case B 참조)
 3. **토큰 이름(key) 변경 금지**: `tokens/light.json`, `tokens/dark.json`의 키 이름 변경 불가
    - 예: `semantic.color.primary` → `semantic.color.actionPrimary` (금지)
 4. **props 삭제 금지**: 불필요한 props는 `@deprecated` JSDoc 처리
+5. **`@tabler/icons-react` 직접 import 금지**: 컴포넌트에서 Tabler 아이콘을 직접 import하지 않음. 반드시 `src/components/Icon`에서 래핑된 아이콘을 사용
+6. **`src/styles/shared-utilities.css` 수정 금지**: 이 파일은 Tailwind로 표현할 수 없거나 어려운 스타일만 선언하는 파일. 사이즈 변경, 색상 변경 등 Tailwind 클래스나 `.styles.ts` CVA로 해결할 수 있는 스타일은 절대 이 파일에 추가/수정하지 않음. 반드시 `.styles.ts`나 컴포넌트의 Tailwind 클래스에서 처리
 
 ### 허용
 
 1. **`.styles.ts` 파일의 CVA classes 변경**: Tailwind 클래스, CSS 변수 참조 등
 2. **`tokens/light.json`, `tokens/dark.json`의 토큰 값(value) 변경**: 색상값, 크기값 등
 3. **props 추가**: 반드시 사용자 확인 후
-4. **`tailwind.preset.js` 재생성**: 토큰 값 변경 후 `pnpm generate:tailwind-preset`
+4. **토큰/프리셋 재생성**: 토큰 값 변경 후 반드시 아래 3개 명령 실행:
+   ```bash
+   pnpm run generate:tokens          # JSON → CSS 변환
+   pnpm run generate:tailwind-preset # Tailwind preset 재생성
+   pnpm run generate:token-docs      # 토큰 문서 재생성
+   ```
 5. **`.tsx` 파일의 조건부 스타일 클래스 변경/추가** (아래 조건 충족 시):
    - 기존 state 변수를 그대로 사용 (새 state 추가 금지)
    - `className` 합성 위치에서 조건부 클래스만 추가/변경
@@ -40,6 +48,15 @@
    - `path d` 속성 — 아이콘 형태 (TDS Tabler Icons path에 맞춤)
    - `strokeWidth`, `stroke`, `fill` — 아이콘 선 굵기/색상
    - 로직(이벤트, 조건부 렌더링 등)은 변경 불가
+   - ⚠️ **Figma SVG의 viewBox를 임의로 16x16 등으로 재계산 금지** — Pitfall 1.5 참조
+   - ⚠️ **stroke-width가 없는 SVG에 임의로 strokeWidth prop 주입 금지** — SVG 기본값 1이 정답
+7. **API 변경 (디자인 반영에 필수적인 경우)**:
+   - props 기본값 변경: `size='md'` → `size='sm'` (TDS 기본 스타일과 일치시키기 위해)
+   - `@deprecated` JSDoc 추가: TDS에서 제거된 variant/type/size 표시
+   - 새 variant/theme 값 추가: TDS에 존재하지만 shared에 없는 옵션
+   - CVA `defaultVariants` 변경: 기본값이 TDS와 일치하도록 조정
+   - **props 삭제는 절대 금지** — deprecated 처리만 가능
+   - **조건**: 스펙에 `api-required`로 분류된 항목만 해당
 
 ## 동작 절차
 
@@ -114,6 +131,16 @@
 
 - .tsx 로직 (이벤트 핸들러, state, hooks, 조건부 렌더링)
 - .types.ts (타입 변경 없음)
+
+### 8. API Changes (디자인 반영 필수)
+
+| #   | 변경 유형    | 변경 내용           | 영향 범위              | 마이그레이션                     |
+| --- | ------------ | ------------------- | ---------------------- | -------------------------------- |
+| 1   | default 변경 | `size`: 'md' → 'sm' | size 미지정 사용처     | 기존 동작 유지: `size="md"` 명시 |
+| 2   | @deprecated  | `solid` type        | 기존 solid 사용처 경고 | `subtle`로 전환 권장             |
+
+> 스펙에 `api-required` 항목이 없으면 "API 변경 없음"으로 명시.
+> 이 섹션의 내용은 PR 본문의 "API Changes" 섹션에 그대로 반영됩니다.
 ```
 
 ### Step 4: 사용자 확인 대기
@@ -126,6 +153,9 @@ Pre-flight 리포트를 보여주고 사용자 승인을 기다립니다.
 
 ### Step 5: 적용
 
+> **Guard**: 오케스트레이터에서 호출된 경우 이미 최신화 완료. 독립 실행 시에는
+> `cd /Users/pobae/thaki-shared && git checkout main && git pull origin main` 후 작업 브랜치로 전환하세요.
+
 사용자 승인 후:
 
 1. **`.styles.ts` 파일 수정**:
@@ -137,11 +167,21 @@ Pre-flight 리포트를 보여주고 사용자 승인을 기다립니다.
    - `tokens/light.json`에서 해당 토큰의 **값만** 변경
    - `tokens/dark.json`에서도 대응 값 변경
    - 이름/키는 절대 변경하지 않음
+   - ⚠️ **token-map.md에서 "exact"로 표기된 토큰도 실제 CSS 값이 다를 수 있음** — 반드시 `src/styles/tokens/tokens-light.css`에서 실제 resolve 값을 확인
 
-3. **Tailwind preset 재생성** (토큰 변경 시):
+3. **토큰/프리셋 재생성** (토큰 변경 시):
+
    ```bash
-   cd /Users/pobae/thaki-shared && pnpm generate:tailwind-preset
+   cd /path/to/thaki-shared && pnpm run generate:tokens && pnpm run generate:tailwind-preset && pnpm run generate:token-docs
    ```
+
+   → `tokens-light.css`, `tokens-dark.css`, `tailwind.preset.js`, `token-docs.json`이 자동 갱신됨
+
+4. **API 변경 적용** (스펙에 `api-required` 항목이 있는 경우):
+   - props 기본값 변경: `.tsx`에서 destructuring default 값 수정
+   - `@deprecated` JSDoc: `.tsx` 또는 `.types.ts`의 타입 정의에 추가
+   - 새 variant/theme: `.types.ts`의 union type에 값 추가 + `.styles.ts`에 스타일 정의
+   - CVA `defaultVariants`: `.styles.ts`의 defaultVariants 객체 수정
 
 ### Step 5.5: 스펙 대조 검증 (Critical)
 
@@ -175,16 +215,34 @@ Pre-flight 리포트를 보여주고 사용자 승인을 기다립니다.
 
 > ⚠️ **이 단계를 건너뛰지 마세요.** 이전 싱크에서 Extract가 크기 차이(`12x12 vs 24px`)를 정확히 파악했음에도 Apply가 반영하지 않아 누락이 발생했습니다. 스펙에 기록된 모든 차이는 반드시 코드에 반영되어야 합니다.
 
-### Step 6: 빌드 확인
+### Step 6: 빌드 및 검증
 
 ```bash
-cd /Users/pobae/thaki-shared && pnpm build
+cd /path/to/thaki-shared
+pnpm tsc --noEmit      # 타입 체크 (필수, 가장 먼저)
+pnpm build             # 라이브러리 빌드
 ```
 
-빌드 실패 시:
+**타입 체크 실패 시**:
 
-- 타입 에러 → `.styles.ts` 수정 (로직 파일 변경 금지)
+- `.styles.ts` 수정 (로직 파일 변경 금지)
 - 토큰 참조 에러 → `token-map.md` 확인 후 수정
+
+**추가 검증** (PR 제출 전):
+
+```bash
+pnpm lint              # ESLint 검사
+pnpm verify:package    # 패키지 export 검증 (새 export 추가 시 필수)
+pnpm build-storybook   # 스토리북 빌드 (스토리 변경 시 필수)
+```
+
+**직접 import 잔여 검사** (아이콘 정책):
+
+```bash
+grep -r "@tabler/icons-react" src/components/{ComponentName}/ --include="*.tsx"
+```
+
+위 결과가 비어 있어야 합니다. `wrapped.tsx`에서의 import만 허용.
 
 ## Safety Guards
 
@@ -195,7 +253,8 @@ cd /Users/pobae/thaki-shared && pnpm build
 - `.styles.ts` ✅ 허용
 - `tokens/light.json`, `tokens/dark.json` ✅ 허용 (값만)
 - `.tsx` ⚠️ 조건부 허용 (아래 Guard 3 참조)
-- `.types.ts` ❌ 삭제 감지 시 즉시 중단
+- `.types.ts` ⚠️ API 변경 시 허용 (아래 Guard 4 참조), 삭제 감지 시 즉시 중단
+- `src/styles/shared-utilities.css` ❌ 수정 금지 — Tailwind 불가능한 스타일 전용 파일
 - 기타 파일 ❌ 감지 시 경고
 
 ### Guard 2: 토큰 이름 변경 체크
@@ -215,6 +274,7 @@ cd /Users/pobae/thaki-shared && pnpm build
 - 인라인 SVG의 `viewBox`, `path d`, `strokeWidth`, `width`, `height` 변경
 - Tailwind 클래스 문자열 상수 (`const xxxStyles = '...'`) 변경
 - `aria-label` 등 접근성 텍스트 변경
+- 아이콘 정책에 의한 import 전환: `@tabler/icons-react` → `../Icon` (wrapped 아이콘) + 아이콘 usage 변경 (`size`, `weight`, `color` prop 매핑)
 
 **금지되는 `.tsx` 변경 (로직/구조)** — 감지 시 즉시 중단:
 
@@ -222,6 +282,427 @@ cd /Users/pobae/thaki-shared && pnpm build
 - `onClick`, `onChange`, `onSubmit` 등 이벤트 핸들러 추가/변경/삭제
 - 새로운 state 변수 도입 (기존 state 활용은 허용)
 - 조건부 렌더링(`if`, JSX 내 `&&`, ternary`) 구조 변경
-- import 구조 변경 (신규 라이브러리 추가 등)
-- props destructuring 변경
+- import 구조 변경 (신규 라이브러리 추가 등) — 단, 아이콘 정책에 의한 `@tabler/icons-react` → `../Icon` 전환은 허용 (Pitfall 4 참조)
+- props destructuring 변경 (단, API 변경에 의한 기본값 수정은 허용)
 - API 호출, 비동기 로직 변경
+
+### Guard 4: API 변경 허용 범위
+
+스펙에 `api-required`로 분류된 항목에 한해 아래 변경을 허용합니다:
+
+**허용되는 API 변경**:
+
+- `.tsx` props destructuring에서 기본값 변경: `{ size = 'md' }` → `{ size = 'sm' }`
+- `.tsx` / `.types.ts` 타입 정의에 `@deprecated` JSDoc 추가
+- `.types.ts` union type에 새 값 추가: `'sm' | 'md'` → `'sm' | 'md' | 'xs'`
+- `.styles.ts` CVA `defaultVariants` 변경
+
+**금지되는 API 변경** — 감지 시 즉시 중단:
+
+- props 삭제 (union type에서 값 제거)
+- props 이름(key) 변경
+- 컴포넌트 export 이름 변경
+- 기존 variant의 시맨틱 변경 (예: `primary`가 의미하는 색상 계열 변경)
+
+## thaki-shared 코드 컨벤션
+
+> thaki-shared 레포의 `.cursor/rules/`, `AGENTS.md`, `AI_GUIDE.md`에 정의된 규칙입니다.
+> TDS 워크스페이스에서는 자동 적용되지 않으므로 이 섹션에 내재화합니다.
+
+### 스타일 패턴
+
+- **`.styles.ts` + CVA**: 모든 스타일은 `class-variance-authority` variant로 정의
+- **`cn()`**: 클래스 결합 시 항상 `cn()` 사용, 수동 문자열 빌드 금지
+- **디자인 토큰 우선**: `var(--semantic-*)`, `var(--component-*)`, Tailwind preset 사용. raw hex/px 값 금지
+- **컴포넌트 props**: 명시적 public props interface export. 내부 타입은 미노출
+
+### 스토리북 컨벤션
+
+- 스토리 위치: `src/stories/` (컴포넌트 폴더 co-location 아님)
+- import: public barrel (`src/components/index.tsx` 또는 `@thaki/shared`)에서 import. deep path import 금지
+- 포맷: CSF 3 (`satisfies Meta<typeof Component>`)
+- 최소 요구: `Default` 스토리 필수. 의미 있는 시각적 상태가 있으면 variant/state 스토리 추가
+- `args`로 knobs 정의, render 함수에 하드코딩 금지
+
+### Provider 계약 (Breaking Change 주의)
+
+아래 Provider의 API를 변경하면 downstream 앱이 깨집니다:
+
+| Provider                 | 필수 companion        | 비고                             |
+| ------------------------ | --------------------- | -------------------------------- |
+| `ToastProvider`          | `Toaster` (sonner)    | `toast`는 sonner에서 직접 import |
+| `LocaleProvider`         | `changeLocale` export | 언어 전환 콜백                   |
+| `OverlayProvider`        | `overlayStore` export | store 인스턴스 전달              |
+| `createTabProvider(...)` | factory function      | 앱별 탭 provider 생성            |
+
+### PR 타이틀 / 커밋 컨벤션
+
+thaki-shared는 **squash merge** 전용입니다. PR 타이틀이 최종 커밋 메시지가 되고, **semantic-release**가 이를 기반으로 릴리스를 결정합니다.
+
+**PR 타이틀 포맷**: `type(scope): description`
+
+| type                             | 릴리스 영향      | 사용 시점                               |
+| -------------------------------- | ---------------- | --------------------------------------- |
+| `feat`                           | **minor** 릴리스 | 새 컴포넌트, 새 export, 새 prop 추가    |
+| `fix`                            | **patch** 릴리스 | 소비자에게 영향 있는 버그 수정          |
+| `perf`                           | **patch** 릴리스 | 성능 개선                               |
+| `style`                          | 릴리스 없음      | 디자인 토큰/스타일 변경 (기존 API 유지) |
+| `refactor`                       | 릴리스 없음      | 내부 리팩토링 (public API 변경 없음)    |
+| `chore` / `ci` / `docs` / `test` | 릴리스 없음      | 빌드, CI, 문서, 테스트                  |
+
+**디자인 싱크 PR에서의 type 선택 기준**:
+
+- 스타일만 변경 (토큰값, CVA 클래스) → `style`
+- 새 variant/prop 추가 → `feat`
+- 기존 시각적 버그 수정 → `fix`
+- CI/릴리스 파이프라인 변경 → `ci` (절대 `fix` 아님)
+
+### 패키지 이름
+
+- 올바른 이름: `@ThakiCloud/shared`
+- 앱 import alias: `@thaki/shared`
+- **금지**: `@thakicloud/shared` (대소문자 틀림)
+
+### 검증 명령어
+
+```bash
+pnpm lint              # ESLint
+pnpm build             # 라이브러리 빌드
+pnpm verify:package    # 패키지 export 검증
+pnpm build-storybook   # 스토리북 빌드
+pnpm tsc --noEmit      # 타입 체크
+```
+
+## Known Pitfalls
+
+### Pitfall 0: CVA base 스타일 상속 — variant 적용 시 반드시 분석 (Critical)
+
+CVA(class-variance-authority)는 **base 스타일이 모든 variant에 무조건 상속**됩니다. variant에 새 클래스를 추가해도 base 클래스가 사라지지 않습니다.
+
+**문제 시나리오 (TabSelector 실제 사례)**:
+
+```typescript
+// base에 underline 탭용 스타일이 있음
+export const tabButtonStyles = cva(
+  [
+    'px-3 py-0 pb-2.5', // ← pb-2.5가 모든 variant에 상속
+    'border-0 border-b-2', // ← border-b-2가 모든 variant에 상속
+    'transition-all duration-normal', // ← transition-all이 상속
+  ],
+  {
+    variants: {
+      variant: {
+        pill: [
+          'h-8 rounded-md', // ← h-8을 추가해도 pb-2.5는 그대로
+          'text-[12px]', // ← 추가만 됨, base는 리셋 안 됨
+        ],
+      },
+    },
+  }
+);
+```
+
+pill variant는 `pb-2.5`, `border-b-2`, `transition-all`을 그대로 물려받아 의도하지 않은 렌더링이 됩니다.
+
+**필수 분석 절차 (Apply 시 매 컴포넌트)**:
+
+1. **CVA base 클래스 전수 검사**: `.styles.ts`의 CVA base 배열을 한 줄씩 읽고, 해당 variant에서 의미 없거나 충돌하는 속성을 리스트업
+2. **리셋 클래스 명시 추가**: pill/boxed 등 구조가 다른 variant에는 base를 명시적으로 오버라이드하는 클래스 추가
+   ```typescript
+   pill: [
+     'py-0 pb-0',           // ← base의 pb-2.5 리셋
+     'border-0 border-b-0', // ← base의 border-b-2 리셋
+     'transition-colors duration-fast', // ← transition-all 오버라이드
+   ],
+   ```
+3. **Tailwind 우선순위 주의**: 같은 속성의 Tailwind 클래스가 여러 개면 **마지막 클래스가 아니라 specificity 기준**으로 적용됨. `pb-0`이 `pb-2.5`를 확실히 덮으려면 variant 배열에서 명시해야 함
+
+**체크리스트**:
+
+| base 속성            | 확인 질문                                    | 리셋 필요 시                |
+| -------------------- | -------------------------------------------- | --------------------------- |
+| padding (pb, pt, py) | 이 variant에 동일한 padding이 필요한가?      | `py-0 pb-0` 등 명시         |
+| border (border-b-\*) | 이 variant에 bottom border가 필요한가?       | `border-b-0` 명시           |
+| transition           | 이 variant에 all 속성 transition이 필요한가? | `transition-colors` 등 명시 |
+| display (flex)       | inline-flex가 필요한가?                      | `inline-flex` 명시          |
+| text color           | base 색상이 이 variant와 맞는가?             | 해당 색상 클래스 덮기       |
+
+### Pitfall 0-B: CSS 구현 기법 차이 — border vs inset shadow (Critical)
+
+TDS와 thaki-shared가 **같은 시각 효과를 다른 CSS 기법**으로 구현하는 경우가 있습니다. 값만 맞춰서는 동일한 결과가 나오지 않습니다.
+
+**실제 사례 (Tabs boxed)**:
+
+```typescript
+// ❌ thaki-shared — CSS border 사용 (요소 크기에 1px 추가)
+'border border-border-subtle rounded-lg';
+
+// ✅ TDS — inset box-shadow 사용 (요소 크기 변화 없음)
+'shadow-[inset_0_0_0_1px_var(--color-border-subtle)]';
+```
+
+두 방식은 시각적으로 비슷하지만:
+
+- `border 1px` → 요소의 실제 크기가 2px 증가 (box-sizing: border-box면 내부 축소)
+- `inset box-shadow 1px` → 요소 크기 변화 없음, 내부에 렌더링
+
+**필수 확인 절차**:
+
+1. TDS 소스에서 `shadow-[inset_`, `border`, `outline` 등 테두리 구현 방식을 확인
+2. 동일한 기법을 thaki-shared에도 적용
+3. "같은 색상이니까 OK"가 아니라 "같은 CSS property인가?"를 체크
+
+### Pitfall 1: CVA `compoundVariants`에서 `false` vs `undefined` 불일치
+
+CVA의 `compoundVariants`는 **정확한 값 매칭**을 합니다. `error: false`로 조건을 걸면, `error` prop이 `undefined`일 때 매칭되지 않습니다.
+
+```typescript
+// ❌ 문제 — error가 undefined일 때 이 compoundVariant가 적용되지 않음
+compoundVariants: [
+  {
+    disabled: false,
+    error: false,
+    class: '[color:var(--semantic-color-textMuted)]',
+  },
+],
+
+// ✅ 해결 — 기본 스타일은 base 클래스에 넣고, 특수 상태만 variant로 override
+export const styles = cva(
+  '... [color:var(--semantic-color-textMuted)] hover:[color:var(--semantic-color-text)]',
+  {
+    variants: {
+      disabled: { true: 'pointer-events-none opacity-50' },
+      error: { true: '[color:var(--component-input-color-borderError)]' },
+    },
+  }
+);
+```
+
+**적용 원칙**: 기본 상태(normal)의 스타일은 CVA base 클래스에 넣고, `disabled`/`error` 같은 특수 상태만 variant로 override.
+
+### Pitfall 1.5: Figma 커스텀 아이콘 SVG — viewBox/stroke-width 임의 변환 금지 (Critical)
+
+Figma 원본 SVG를 TDS 커스텀 아이콘(`CustomIcons.tsx`)으로 재현할 때, **SVG 속성을 임의로 변환하면 굵기·비율이 틀어집니다.**
+
+#### 금지 패턴 (3회 반복 실패한 원인)
+
+| #   | 금지 행위                              | 발생하는 문제                                                              | 올바른 방법                                                                       |
+| --- | -------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 1   | viewBox를 `0 0 16 16`으로 재계산       | path 좌표를 스케일해야 하는데 부정확해짐                                   | **Figma 원본 viewBox를 그대로 유지** (width/height만 16으로 설정하면 자동 스케일) |
+| 2   | `strokeWidth={1.5}` 주입               | Figma SVG에 stroke-width 속성이 없으면 기본값은 1. 1.5를 넣으면 50% 굵어짐 | **stroke-width 미명시 = 기본값 1. `strokeWidth` prop을 아예 넣지 않는다**         |
+| 3   | Tabler 아이콘이 "비슷해 보인다"고 사용 | path d가 다르면 미세하게 다른 모양으로 렌더링                              | **path d를 좌표 수준에서 대조** 후 일치할 때만 Tabler 사용                        |
+
+#### 올바른 커스텀 아이콘 생성 절차
+
+1. **Figma SVG를 있는 그대로 사용**: `curl`로 다운로드한 SVG의 `viewBox`, `path d`, `stroke-*` 속성을 한 글자도 바꾸지 않음
+2. **viewBox에 padding 추가**: Figma SVG viewBox에 stroke가 잘리지 않도록 상하좌우 0.5px씩 여유를 준다
+   ```
+   원본 viewBox="0 0 12.6667 10.3333"
+   → 적용 viewBox="-0.5 -0.5 13.6667 11.3333"
+   ```
+3. **width/height만 `{size}` prop으로 설정**: `<svg width={size} height={size}>` — SVG 엔진이 viewBox 비율에 맞춰 자동 스케일
+4. **stroke-width는 절대 외부에서 주입하지 않음**: Figma SVG에 명시적 stroke-width가 있으면 해당 값을 `<path strokeWidth={값}>` 에 하드코딩. 없으면 SVG 기본값 1이 적용되도록 **strokeWidth prop 자체를 생략**
+5. **사용 시 `stroke` prop도 전달하지 않음**: `<IconCustomFigma size={16} />` 만 사용. `stroke={1.5}` 같은 prop 금지
+
+#### 코드 템플릿
+
+```tsx
+export const IconCustomFigma = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="{Figma 원본 viewBox에 ±0.5 padding 추가}"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <path
+          d="{Figma 원본 path d 그대로}"
+          stroke={color}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          {/* strokeWidth는 Figma SVG에 명시된 경우에만 추가. 없으면 생략 (기본값 1) */}
+        />
+      </svg>
+    );
+  }
+);
+```
+
+> ⚠️ 이 규칙을 어기면 "굵기가 다르다" "모양이 다르다" 피드백이 반복됩니다. 실제로 이 프로젝트에서 3회 반복된 사례입니다.
+
+### Pitfall 2: Icon 컴포넌트의 색상 상속 (`currentColor`)
+
+Icon wrapper(`src/components/Icon/Icon.tsx`)는 `color` prop이 없으면 `var(--semantic-color-text)`를 **인라인 스타일**(`style.color`)로 적용합니다. 인라인 스타일은 Tailwind 클래스보다 specificity가 높아서, 아이콘에 `className="text-text-inverse"`를 넣어도 무시됩니다.
+
+**핵심 원리**:
+
+```tsx
+// Icon.tsx 내부 (line 108)
+finalColor = color || variantConfig?.primaryColor || DEFAULT_COLOR;
+// DEFAULT_COLOR = 'var(--semantic-color-text)'
+
+finalStyle = { ...style, color: finalColor, flexShrink: 0 };
+// → 인라인 style.color가 모든 Tailwind color 클래스를 덮어씀
+```
+
+**`color="currentColor"` 주의**: CSS 스펙에서 `color: currentColor`는 `color: inherit`와 동일합니다. 즉, 같은 요소의 Tailwind 클래스가 아닌 **부모 요소**에서 색상을 상속합니다.
+
+#### Case A: 정적 색상 (hover 없음)
+
+`color` prop에 CSS 변수를 직접 전달합니다. `className`으로 색상 제어 금지.
+
+```tsx
+// ❌ 잘못됨 — className이 인라인 스타일에 의해 무시됨
+<CheckIcon size={10} weight="bold" className="text-text-inverse" />
+
+// ❌ 잘못됨 — currentColor = inherit → 부모 색상 상속, className 무시
+<CheckIcon size={10} weight="bold" color="currentColor" className="text-text-inverse" />
+
+// ✅ 올바름 — color prop으로 직접 전달
+<CheckIcon size={10} weight="bold" color="var(--semantic-color-textInverse)" />
+<ProgressIcon size="lg" color="var(--semantic-color-textMuted)" />
+<CircleDashedIcon size="lg" color="var(--semantic-color-border)" />
+```
+
+#### Case B: hover 전환이 필요한 경우
+
+색상 클래스를 **부모 wrapper**로 이동하고, 아이콘에는 `color="currentColor"`만 사용합니다.
+
+```tsx
+// ❌ 잘못됨 — hover 클래스가 인라인 스타일에 의해 무시됨
+<ChevronDownIcon size="md" weight="thin"
+  className="text-text-muted group-hover:text-text transition-colors" />
+
+// ✅ 올바름 — 부모 span이 색상 제어, 아이콘은 상속
+<span className="text-text-muted group-hover:text-text transition-colors inline-flex">
+  <ChevronDownIcon size="md" weight="thin" color="currentColor" />
+</span>
+```
+
+#### Case C: 부모 요소가 이미 색상을 제어하는 경우
+
+Button 내부 아이콘 등, 부모가 이미 적절한 `color`를 갖고 있으면 `color="currentColor"`만으로 충분합니다.
+
+```tsx
+// ✅ Button이 text color를 제어 → 아이콘은 상속
+<Button variant="ghost">
+  <ChevronLeftIcon size="sm" weight="thin" color="currentColor" />
+</Button>
+```
+
+#### Case D: variant prop으로 색상 제어
+
+Icon wrapper의 variant 시스템을 활용합니다.
+
+```tsx
+// ✅ variant로 색상 제어 — variant config의 primaryColor가 적용됨
+<CheckCircleIcon size="md" variant="success" />
+<AlertIcon size="md" variant="error" />
+
+// ✅ color prop으로 명시적 색상 전달
+<ActiveIcon color="white" size="sm" weight="bold" />
+```
+
+**판단 기준 요약**:
+
+| 상황                           | 방법                                  | 예시                                            |
+| ------------------------------ | ------------------------------------- | ----------------------------------------------- |
+| 색상 고정 (흰색, muted 등)     | `color="var(--token)"`                | `color="var(--semantic-color-textInverse)"`     |
+| hover 전환 필요                | 부모 wrapper + `color="currentColor"` | `<span className="text-muted hover:text-text">` |
+| 부모가 색상 제어 (Button 내부) | `color="currentColor"`                | Button의 ghost variant가 색상 결정              |
+| variant 시스템 활용            | `variant="success"` 등                | `<AlertIcon variant="error" />`                 |
+
+### Pitfall 3: 토큰 값(value) 불일치 — "이름은 같지만 값이 다른" 케이스
+
+`token-map.md`에서 "exact" 매핑으로 표기된 토큰이라도, 실제 참조하는 primitive 값이 다를 수 있습니다:
+
+```json
+// ❌ thaki-shared (잘못된 값)
+"textMuted": "{primitive.color.trueGray500}"  // → #737373
+
+// ✅ TDS 기준 (올바른 값)
+"textMuted": "{primitive.color.blueGray600}"  // → #475569
+```
+
+**확인 방법**:
+
+1. TDS의 `src/index.css` 또는 `compatibility.css`에서 해당 시맨틱 토큰의 최종 hex 값 확인
+2. thaki-shared의 `src/styles/tokens/tokens-light.css`에서 같은 이름의 토큰 값 비교
+3. 값이 다르면 `tokens/light.json`에서 참조하는 primitive 토큰을 수정
+
+### Pitfall 4: 아이콘 정책 — `@tabler/icons-react` 직접 import 금지
+
+thaki-shared는 자체 Icon 시스템(`src/components/Icon/svg/wrapped.tsx`)을 통해 Tabler 아이콘을 래핑하여 사용합니다. 컴포넌트에서 `@tabler/icons-react`를 직접 import하면 정책 위반입니다.
+
+**등록 패턴** (`wrapped.tsx`):
+
+```typescript
+import { IconBan } from '@tabler/icons-react';
+
+export const BanIcon: IconComponent = wrapTablerIcon(IconBan, 'BanIcon');
+```
+
+**컴포넌트에서 사용**:
+
+```tsx
+// ❌ 금지 — 직접 Tabler import
+import { IconBan } from '@tabler/icons-react';
+<IconBan size={14} strokeWidth={2} />;
+
+// ✅ 허용 — 래핑된 아이콘 import
+import { BanIcon } from '../Icon';
+<BanIcon color="white" size="sm" weight="bold" />;
+```
+
+**신규 아이콘이 필요한 경우**:
+
+1. `wrapped.tsx`의 Tabler import 목록에 아이콘 추가
+2. 해당 카테고리 섹션에 `wrapTablerIcon` 등록
+3. 컴포넌트에서 `../Icon`으로 import하여 사용
+
+**Icon props 매핑**:
+
+| 직접 import (금지)      | 래핑 아이콘 (허용)        | 설명        |
+| ----------------------- | ------------------------- | ----------- |
+| `size={12}`             | `size="xs"`               | 12px        |
+| `size={14}`             | `size="sm"`               | 14px        |
+| `size={16}`             | `size="md"`               | 16px (기본) |
+| `size={20}`             | `size="lg"`               | 20px        |
+| `size={24}`             | `size="xl"`               | 24px        |
+| `strokeWidth={1.5}`     | `weight="regular"` (기본) | stroke 1.5  |
+| `strokeWidth={2}`       | `weight="bold"`           | stroke 2    |
+| `className="animate-*"` | `className="animate-*"`   | 그대로 전달 |
+
+### Pitfall 5: `shared-utilities.css` 수정 유혹 — Tailwind/.styles.ts 우선
+
+`src/styles/shared-utilities.css`는 **Tailwind로 표현할 수 없거나 하기 어려운 스타일**만 선언하는 전용 파일입니다. 사이즈, 색상, 패딩 등 Tailwind 클래스로 해결 가능한 스타일은 이 파일에 추가하면 안 됩니다.
+
+```css
+/* ❌ 금지 — Tailwind로 충분히 표현 가능한 스타일 */
+.control-input {
+  height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+/* ✅ 허용 — Tailwind로 표현이 어려운 복합 스타일 */
+.control-input:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--semantic-color-surface),
+    0 0 0 4px var(--semantic-color-borderFocus);
+}
+```
+
+**스타일 수정 우선순위**:
+
+1. `.styles.ts` CVA 클래스 (최우선)
+2. 컴포넌트 `.tsx`의 Tailwind 클래스 문자열
+3. 토큰 값 변경 (`tokens/light.json`, `tokens/dark.json`)
+4. `shared-utilities.css` (Tailwind 불가능한 경우에만, 최후 수단)

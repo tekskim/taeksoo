@@ -1,11 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -19,6 +18,8 @@ import {
   Pagination,
   ContextMenu,
   PageShell,
+  ErrorState,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -31,12 +32,12 @@ import {
   IconLink,
   IconLinkOff,
   IconTrash,
-  IconBell,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconCirclePlus,
   IconDownload,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -94,7 +95,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
     routerName: 'router-01',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01 (+3)',
@@ -111,7 +112,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     routerName: 'main-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -128,7 +129,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: false,
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     routerName: 'dev-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-02',
@@ -145,7 +146,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     routerName: 'prod-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -162,7 +163,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Down',
     access: 'Project',
     externalGateway: false,
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
     routerName: 'test-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-03',
@@ -179,7 +180,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
     routerName: 'backup-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -196,7 +197,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Down',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     routerName: 'dmz-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -213,7 +214,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: false,
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     routerName: 'internal-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-02',
@@ -230,7 +231,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     routerName: 'edge-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -247,7 +248,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     routerName: 'vpn-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -259,26 +260,8 @@ const mockRoutersMap: Record<string, RouterDetail> = {
   },
 };
 
-const defaultRouterDetail: RouterDetail = {
-  id: 'unknown',
-  name: 'Unknown Router',
-  status: 'active',
-  adminState: 'Up',
-  access: 'Project',
-  externalGateway: false,
-  createdAt: '-',
-  routerName: '-',
-  availabilityZone: '-',
-  availabilityZoneHint: '-',
-  description: '-',
-  network: { name: '-', id: '' },
-  snat: false,
-  subnet: { name: '-', id: '' },
-  gatewayIp: '-',
-};
-
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => {
-  const date = new Date(2025, 8 - Math.floor(i / 10), 12 - (i % 28));
+  const date = new Date(2026, 8 - Math.floor(i / 10), 12 - (i % 28));
   return {
     id: `port-${String(i + 1).padStart(3, '0')}`,
     name: `port-${String(i + 1).padStart(2, '0')}`,
@@ -319,15 +302,16 @@ const portStatusMap: Record<PortStatus, 'active' | 'building' | 'shutoff'> = {
    ---------------------------------------- */
 
 export default function RouterDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [searchParams] = useSearchParams();
-  const initialTab = searchParams.get('tab') || 'details';
-  const [activeDetailTab, setActiveDetailTab] = useState(initialTab);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeDetailTab = searchParams.get('tab') || 'details';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Port state
   const [portSearchTerm, setPortSearchTerm] = useState('');
@@ -345,23 +329,23 @@ export default function RouterDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Get router data based on URL ID
-  const router = id ? mockRoutersMap[id] || defaultRouterDetail : defaultRouterDetail;
+  const router = id ? mockRoutersMap[id] : undefined;
   const ports = mockPorts;
   const staticRoutes = mockStaticRoutes;
 
   // Update tab label to router name
   useEffect(() => {
-    if (router.name) {
+    if (router?.name) {
       updateActiveTabLabel(router.name);
     }
-  }, [router.name, updateActiveTabLabel]);
+  }, [router?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
     { label: 'Routers', href: '/compute/routers' },
-    { label: router.name },
+    { label: router?.name ?? id ?? '—' },
   ];
 
   // Convert tabs to TabBar format
@@ -429,6 +413,48 @@ export default function RouterDetailPage() {
 
   const totalRoutePages = Math.ceil(filteredRoutes.length / routesPerPage);
 
+  if (!router) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Router not found"
+          description={`The router with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/routers')}>
+              Back to routers
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // Port columns - matches Figma design
   const portColumns: TableColumn<Port>[] = [
     {
@@ -452,8 +478,11 @@ export default function RouterDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -488,6 +517,7 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Port) => {
         const portMenuItems: ContextMenuItem[] = [
           {
@@ -500,7 +530,10 @@ export default function RouterDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={portMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -534,6 +567,7 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: StaticRoute) => {
         const routeMenuItems: ContextMenuItem[] = [
           {
@@ -546,7 +580,10 @@ export default function RouterDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={routeMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -581,29 +618,32 @@ export default function RouterDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Router Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{router.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconLink size={12} />}
+              onClick={() => console.log('Connect subnet', router.id)}
+            >
               Connect subnet
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
             <ContextMenu
@@ -611,12 +651,20 @@ export default function RouterDetailPage() {
                 {
                   id: 'disconnect-subnet',
                   label: 'Disconnect subnet',
-                  onClick: () => {},
+                  onClick: () => console.log('Disconnect subnet', router.id),
                   status: 'danger',
                 },
-                { id: 'external-gateway', label: 'External gateway Setting', onClick: () => {} },
-                { id: 'create-static-route', label: 'Create static Route', onClick: () => {} },
-                { id: 'edit', label: 'Edit', onClick: () => {} },
+                {
+                  id: 'external-gateway',
+                  label: 'External gateway Setting',
+                  onClick: () => console.log('External gateway Setting', router.id),
+                },
+                {
+                  id: 'create-static-route',
+                  label: 'Create static Route',
+                  onClick: () => console.log('Create static Route', router.id),
+                },
+                { id: 'edit', label: 'Edit', onClick: () => console.log('Edit router', router.id) },
               ]}
               trigger="click"
             >
@@ -738,6 +786,7 @@ export default function RouterDetailPage() {
                     size="sm"
                     leftIcon={<IconLinkOff size={12} />}
                     disabled={selectedPorts.length === 0}
+                    onClick={() => console.log('Disconnect ports', selectedPorts)}
                   >
                     Disconnect
                   </Button>
@@ -757,6 +806,7 @@ export default function RouterDetailPage() {
                   columns={portColumns}
                   data={paginatedPorts}
                   rowKey="id"
+                  emptyMessage="No ports found"
                   sortBy={portSortBy}
                   sortDirection={portSortDirection}
                   onSort={handlePortSort}
@@ -773,7 +823,12 @@ export default function RouterDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between min-h-[28px]">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Static Route</h3>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() => console.log('Create static route', id)}
+                  >
                     Create static route
                   </Button>
                 </div>
@@ -796,6 +851,7 @@ export default function RouterDetailPage() {
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedRoutes.length === 0}
+                    onClick={() => console.log('Delete static routes', selectedRoutes)}
                   >
                     Delete
                   </Button>
@@ -815,6 +871,7 @@ export default function RouterDetailPage() {
                   columns={staticRouteColumns}
                   data={paginatedRoutes}
                   rowKey="id"
+                  emptyMessage="No static routes found"
                   selectable
                   selectedKeys={selectedRoutes}
                   onSelectionChange={setSelectedRoutes}
@@ -824,6 +881,20 @@ export default function RouterDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Delete router"
+        description="Removing this router is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/routers');
+        }}
+      />
     </PageShell>
   );
 }

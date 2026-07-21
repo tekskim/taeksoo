@@ -1,4 +1,4 @@
-import { useState, useCallback, createContext, useContext } from 'react';
+import { useState, useCallback, createContext, useContext, type ReactNode } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -24,13 +24,13 @@ import {
   type InstanceInfo as EditInstanceInfo,
 } from '@/components/EditInstanceDrawer';
 import {
-  LockSettingDrawer,
+  LockInstanceDrawer,
   type InstanceInfo as LockInstanceInfo,
-} from '@/components/LockSettingDrawer';
+} from '@/components/LockInstanceDrawer';
 import {
-  BootSettingDrawer,
+  ToggleBootableDrawer,
   type VolumeInfo as BootVolumeInfo,
-} from '@/components/BootSettingDrawer';
+} from '@/components/ToggleBootableDrawer';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   CreateVolumeSnapshotDrawer,
@@ -41,9 +41,9 @@ import {
   type VolumeInfo as BackupVolumeInfo,
 } from '@/components/CreateVolumeBackupDrawer';
 import {
-  CloneVolumeDrawer,
+  CreateVolumeFromResourceDrawer,
   type VolumeInfo as CloneVolumeInfo,
-} from '@/components/CloneVolumeDrawer';
+} from '@/components/CreateVolumeFromResourceDrawer';
 import {
   ExtendVolumeDrawer,
   type VolumeInfo as ExtendVolumeInfo,
@@ -97,13 +97,13 @@ import {
 } from '@/components/CreateVolumeFromBackupDrawer';
 import { AddL7PolicyDrawer } from '@/components/AddL7PolicyDrawer';
 import { RegisterCertificateDrawer } from '@/components/RegisterCertificateDrawer';
-import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
+import { CreateSGRuleDrawer } from '@/components/CreateSGRuleDrawer';
 import { EditNetworkDrawer } from '@/components/EditNetworkDrawer';
 import { EditRouterDrawer } from '@/components/EditRouterDrawer';
 import { CreateStaticRouteDrawer } from '@/components/CreateStaticRouteDrawer';
 import { EditPortDrawer } from '@/components/EditPortDrawer';
 import { CreateAllowedAddressPairDrawer } from '@/components/CreateAllowedAddressPairDrawer';
-import { EditFloatingIPDrawer } from '@/components/EditFloatingIPDrawer';
+import { EditFIPDrawer } from '@/components/EditFIPDrawer';
 import { CreateSecurityGroupDrawer } from '@/components/CreateSecurityGroupDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import { EditCertificateDrawer } from '@/components/EditCertificateDrawer';
@@ -111,8 +111,8 @@ import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
 import { EditPoolDrawer } from '@/components/EditPoolDrawer';
 import { AddL7RuleDrawer } from '@/components/AddL7RuleDrawer';
 import { EditListenerDrawer } from '@/components/EditListenerDrawer';
-import { AllocateIPDrawer } from '@/components/AllocateIPDrawer';
-import { CreateHealthMonitorDrawer } from '@/components/CreateHealthMonitorDrawer';
+import { AllocateFIPDrawer } from '@/components/AllocateFIPDrawer';
+import { HealthMonitorDrawer } from '@/components/HealthMonitorDrawer';
 import { EditMemberDrawer } from '@/components/EditMemberDrawer';
 import {
   DetachVolumeDrawer,
@@ -126,7 +126,7 @@ import {
   DetachInterfaceDrawer,
   type InstanceInfo as DetachInterfaceInstanceInfo,
 } from '@/components/DetachInterfaceDrawer';
-import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
+import { AssociateFIPtoInstanceDrawer } from '@/components/AssociateFIPtoInstanceDrawer';
 import {
   DisassociateFloatingIPDrawer,
   type InstanceInfo as DisassociateFloatingIPInstanceInfo,
@@ -148,11 +148,11 @@ import {
   ResizeInstanceDrawer,
   type InstanceInfo as ResizeInstanceInfo,
 } from '@/components/ResizeInstanceDrawer';
-import { CreateVolumeBackupWithSelectionDrawer } from '@/components/CreateVolumeBackupWithSelectionDrawer';
-import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
+import { CreateVolumeBackupFromListDrawer } from '@/components/CreateVolumeBackupFromListDrawer';
+import { RestoreVolumeSnapshotDrawer } from '@/components/RestoreVolumeSnapshotDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
-import { AttachInstanceDrawer } from '@/components/AttachInstanceDrawer';
-import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
+import { AttachInstanceToVolumeDrawer } from '@/components/AttachInstanceToVolumeDrawer';
+import { SubnetDrawer } from '@/components/SubnetDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
 import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
@@ -160,52 +160,106 @@ import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPT
 import { ChangeServerCertificateDrawer } from '@/components/ChangeServerCertificateDrawer';
 import { ChangeCACertificateDrawer } from '@/components/ChangeCACertificateDrawer';
 import { ManageSNICertificateDrawer } from '@/components/ManageSNICertificateDrawer';
-import { ExternalGatewaySettingDrawer } from '@/components/ExternalGatewaySettingDrawer';
+import { ManageExternalGatewayDrawer } from '@/components/ManageExternalGatewayDrawer';
+import { CreatePolicyDrawer } from '@/components/CreatePolicyDrawer';
+import { EditPolicyDrawer } from '@/components/EditPolicyDrawer';
+import { EditRuleDrawer } from '@/components/EditRuleDrawer';
 import { ConnectSubnetDrawer } from '@/components/ConnectSubnetDrawer';
-import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingIPToPortDrawer';
+import { AssociateFIPtoPortDrawer } from '@/components/AssociateFIPtoPortDrawer';
 import { DisconnectSubnetDrawer } from '@/components/DisconnectSubnetDrawer';
-import { ManageMembersDrawer } from '@/components/ManageMembersDrawer';
-import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
+import { ManageLoadBalancerMemberDrawer } from '@/components/ManageLoadBalancerMemberDrawer';
 import { IdentifyDeviceDrawer } from '@/components/IdentifyDeviceDrawer';
 import { CreateFolderDrawer } from '@/components/CreateFolderDrawer';
 import { CreateObjectDrawer } from '@/components/CreateObjectDrawer';
-import { MoveFilesDrawer } from '@/components/MoveFilesDrawer';
-import { EditObjectDrawer } from '@/components/EditObjectDrawer';
-import { ManageUserGroupsDrawer } from '@/components/ManageUserGroupsDrawer';
-import { ManageUsersDrawer } from '@/components/ManageUsersDrawer';
-import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
+import { MoveFolderDrawer } from '@/components/MoveFolderDrawer';
+import { EditFileDrawer } from '@/components/EditFileDrawer';
+import { EditFolderDrawer } from '@/components/EditFolderDrawer';
+import { UserGroupsDrawer } from '@/components/UserGroupsDrawer';
+import { GroupMembersDrawer } from '@/components/GroupMembersDrawer';
+import { GroupRolesDrawer } from '@/components/GroupRolesDrawer';
 import { ResetPasswordDrawer } from '@/components/ResetPasswordDrawer';
-import { EditUserDrawer } from '@/components/EditUserDrawer';
+import { UserEditDrawer } from '@/components/UserEditDrawer';
+import { AttachPoliciesDrawer } from '@/components/AttachPoliciesDrawer';
+import { CreateAccessKeyDrawer } from '@/components/CreateAccessKeyDrawer';
+import { EditAccessKeyDrawer } from '@/components/EditAccessKeyDrawer';
 import { EditUserGroupDrawer } from '@/components/EditUserGroupDrawer';
-import { ManagePoliciesDrawer } from '@/components/ManagePoliciesDrawer';
+import { RolePoliciesDrawer } from '@/components/RolePoliciesDrawer';
 import { EditRoleDrawer } from '@/components/EditRoleDrawer';
-import { CreateDomainDrawer } from '@/components/CreateDomainDrawer';
-import { EditDomainDrawer } from '@/components/EditDomainDrawer';
+import { GrantAccessDrawer } from '@/components/GrantAccessDrawer';
+import { DomainCreateDrawer } from '@/components/DomainCreateDrawer';
+import { DomainEditDrawer } from '@/components/DomainEditDrawer';
 import { SetDefaultDomainDrawer } from '@/components/SetDefaultDomainDrawer';
-import { AdminLockSettingDrawer } from '@/components/AdminLockSettingDrawer';
+import { AdminLockInstanceDrawer } from '@/components/AdminLockInstanceDrawer';
 import { EditSystemAdminDrawer } from '@/components/EditSystemAdminDrawer';
+import { CreateUserDrawer } from '@/components/CreateUserDrawer';
 import {
-  MigrateInstanceDrawer,
+  AdminInstanceMigrateDrawer,
   type MigrateInstanceInfo,
-} from '@/components/MigrateInstanceDrawer';
+} from '@/components/AdminInstanceMigrateDrawer';
 import {
-  LiveMigrateInstanceDrawer,
+  AdminInstanceLiveMigrateDrawer,
   type LiveMigrateInstanceInfo,
-} from '@/components/LiveMigrateInstanceDrawer';
+} from '@/components/AdminInstanceLiveMigrateDrawer';
 import {
-  ManageMetadataDrawer,
+  AdminMetadataDrawer,
   type ManageMetadataImageInfo,
-} from '@/components/ManageMetadataDrawer';
+} from '@/components/AdminMetadataDrawer';
 import {
-  MigrateVolumeDrawer,
+  AdminVolumeMigrateDrawer,
   type MigrateVolumeInfo as MigrateVolumeVolumeInfo,
-} from '@/components/MigrateVolumeDrawer';
+} from '@/components/AdminVolumeMigrateDrawer';
+import {
+  UpdateVolumeStatusDrawer,
+  type UpdateVolumeStatusInfo,
+} from '@/components/UpdateVolumeStatusDrawer';
+import {
+  UpdateSnapshotStatusDrawer,
+  type UpdateSnapshotStatusInfo,
+} from '@/components/UpdateSnapshotStatusDrawer';
+import { CreateVolumeTypeDrawer } from '@/components/CreateVolumeTypeDrawer';
+import { EditVolumeTypeDrawer, type VolumeTypeInfo } from '@/components/EditVolumeTypeDrawer';
+import {
+  ManageQosSpecDrawer,
+  type ManageQosSpecVolumeTypeInfo,
+} from '@/components/ManageQosSpecDrawer';
+import {
+  ManageAccessDrawer,
+  type ManageAccessVolumeTypeInfo,
+} from '@/components/ManageAccessDrawer';
+import {
+  CreateEncryptionDrawer,
+  type CreateEncryptionVolumeTypeInfo,
+} from '@/components/CreateEncryptionDrawer';
+import { CreateQosSpecDrawer } from '@/components/CreateQosSpecDrawer';
+import { EditConsumerDrawer, type EditConsumerQosSpecInfo } from '@/components/EditConsumerDrawer';
+import {
+  CreateExtraSpecDrawer,
+  type CreateExtraSpecVolumeTypeInfo,
+} from '@/components/CreateExtraSpecDrawer';
+import { EditExtraSpecDrawer, type EditExtraSpecInfo } from '@/components/EditExtraSpecDrawer';
+import {
+  CreateQosExtraSpecDrawer,
+  type CreateQosExtraSpecInfo,
+} from '@/components/CreateQosExtraSpecDrawer';
 import { ManageRulesDrawer, type FirewallPolicyInfo } from '@/components/ManageRulesDrawer';
 import {
   ModifyQuotasDrawer,
   type TenantInfo as ModifyQuotasTenantInfo,
 } from '@/components/ModifyQuotasDrawer';
 import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
+import { AssignTenantDrawer, type AssignTenantNodeInfo } from '@/components/AssignTenantDrawer';
+import { AddDhcpAgentDrawer } from '@/components/AddDhcpAgentDrawer';
+import { AdminCreateRouterDrawer } from '@/components/AdminCreateRouterDrawer';
+import { AdminExternalGatewayDrawer } from '@/components/AdminExternalGatewayDrawer';
+import { ManageAclRulesDrawer } from '@/components/ManageAclRulesDrawer';
+import { AdminTenantDrawer } from '@/components/AdminTenantDrawer';
+import { CreateFirewallDrawer } from '@/components/CreateFirewallDrawer';
+import { SecurityCreateSGDrawer } from '@/components/SecurityCreateSGDrawer';
+import { EditFirewallDrawer, type FirewallInfo } from '@/components/EditFirewallDrawer';
+import {
+  ManageFirewallPortsDrawer,
+  type FirewallInfo as ManagePortsFirewallInfo,
+} from '@/components/ManageFirewallPortsDrawer';
 
 /* ----------------------------------------
    Mock Data for Drawers ---------------------------------------- */
@@ -435,14 +489,89 @@ const mockMigrateVolume: MigrateVolumeVolumeInfo = {
   currentBackend: 'host-01',
 };
 
+const mockUpdateVolumeStatus: UpdateVolumeStatusInfo = {
+  id: 'vol-001',
+  name: 'name',
+  currentStatus: 'Error',
+};
+
+const mockUpdateSnapshotStatus: UpdateSnapshotStatusInfo = {
+  id: 'snap-001',
+  name: 'name',
+  currentStatus: 'Error',
+};
+
+const mockEditVolumeType: VolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'type',
+  description: '',
+};
+
+const mockManageQosVolumeType: ManageQosSpecVolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'name',
+};
+
+const mockManageAccessVolumeType: ManageAccessVolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'name',
+};
+
+const mockCreateEncryptionVolumeType: CreateEncryptionVolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'name',
+};
+
+const mockEditConsumerQosSpec: EditConsumerQosSpecInfo = {
+  id: 'qos-001',
+  name: 'spec',
+  currentConsumer: 'Frontend',
+};
+
+const mockCreateExtraSpecVolumeType: CreateExtraSpecVolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'name',
+};
+
+const mockEditExtraSpec: EditExtraSpecInfo = {
+  volumeTypeId: 'vt-001',
+  volumeTypeName: 'name',
+  parameter: 'parameter',
+  value: 'value',
+};
+
+const mockCreateQosExtraSpec: CreateQosExtraSpecInfo = {
+  id: 'qos-001',
+  name: 'spec',
+};
+
 const mockFirewallPolicy: FirewallPolicyInfo = {
   id: 'policy-001',
+  name: 'name',
+};
+
+const mockEditFirewall: FirewallInfo = {
+  id: 'fw-001',
+  name: 'name',
+  description: '',
+  ingressPolicyId: '',
+  egressPolicyId: '',
+  adminStateUp: true,
+};
+
+const mockManagePortsFirewall: ManagePortsFirewallInfo = {
+  id: 'fw-001',
   name: 'name',
 };
 
 const mockQuotasTenant: ModifyQuotasTenantInfo = {
   id: 'tenant-001',
   name: 'tenant',
+};
+
+const mockAssignTenantNode: AssignTenantNodeInfo = {
+  id: '12345678',
+  serial: 'node-bm-001',
 };
 
 const mockResizeInstance: ResizeInstanceInfo = {
@@ -492,7 +621,7 @@ function DrawerListItem({
 
   return (
     <div
-      className="flex items-center justify-between px-4 py-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer group"
+      className="flex items-center justify-between px-4 py-3 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer group"
       onClick={onOpen}
     >
       <HStack gap={4} className="flex-1 items-center min-w-0">
@@ -533,6 +662,870 @@ function DrawerListItem({
 // Alias for backward compatibility
 const DrawerCard = DrawerListItem;
 
+function matchesDrawerSearch(query: string, title: string, description: string, category?: string) {
+  const q = query.toLowerCase();
+  return (
+    title.toLowerCase().includes(q) ||
+    description.toLowerCase().includes(q) ||
+    (category != null && category.toLowerCase().includes(q))
+  );
+}
+
+interface FilteredGroupProps {
+  heading: string;
+  items: { title: string; description: string; category?: string }[];
+  children: React.ReactNode;
+}
+
+function FilteredGroup({ heading, items, children }: FilteredGroupProps) {
+  const searchQuery = useContext(DrawerSearchContext);
+  if (
+    searchQuery &&
+    !items.some((i) => matchesDrawerSearch(searchQuery, i.title, i.description, i.category))
+  ) {
+    return null;
+  }
+  return (
+    <VStack gap={2}>
+      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+        {heading}{' '}
+      </h2>
+      <div className="flex flex-col gap-2">{children}</div>
+    </VStack>
+  );
+}
+
+interface FilteredDisclosureSectionProps {
+  allItems: { title: string; description: string; category?: string }[];
+  children: ReactNode;
+}
+
+function FilteredDisclosureSection({ allItems, children }: FilteredDisclosureSectionProps) {
+  const searchQuery = useContext(DrawerSearchContext);
+  if (
+    searchQuery &&
+    !allItems.some((i) => matchesDrawerSearch(searchQuery, i.title, i.description, i.category))
+  ) {
+    return null;
+  }
+  return <>{children}</>;
+}
+
+type DrawerSearchItem = { title: string; description: string; category?: string };
+
+const COMPUTE_INSTANCE_ACTIONS_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create instance snapshot',
+    description:
+      'Create a snapshot of an instance to capture its current system state as an image.',
+    category: 'Instance',
+  },
+  {
+    title: 'Edit instance',
+    description:
+      'Edit instance name and description. Allows modification of basic instance metadata.',
+    category: 'Instance',
+  },
+  {
+    title: 'Lock setting',
+    description: 'Lock or unlock an instance to prevent accidental deletion or modification.',
+    category: 'Instance',
+  },
+  {
+    title: 'Manage tags',
+    description: 'Add, edit, or remove tags to categorize and manage resources.',
+    category: 'Instance',
+  },
+  {
+    title: 'Rescue instance',
+    description: "Create a temporary recovery server using your instance's root disk.",
+    category: 'Instance',
+  },
+  {
+    title: 'Rebuild instance',
+    description: 'Rebuild the instance by reinstalling the operating system using a new image.',
+    category: 'Instance',
+  },
+  {
+    title: 'Resize instance',
+    description: 'Change the flavor to adjust vCPU, memory, or disk capacity.',
+    category: 'Instance',
+  },
+];
+
+const COMPUTE_INSTANCE_SNAPSHOT_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Edit instance snapshot',
+    description: 'Edit the name and description of an instance snapshot.',
+    category: 'Snapshot',
+  },
+  {
+    title: 'Create volume from instance snapshot',
+    description:
+      "Create a new volume from an instance snapshot, containing the same data as the snapshot's system disk.",
+    category: 'Snapshot',
+  },
+];
+
+const COMPUTE_VOLUME_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create volume snapshot',
+    description:
+      'Create a snapshot of a volume to back up its current data state for later restoration.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create volume backup',
+    description:
+      'Create a full backup of a volume and store it in the backup service for disaster recovery.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create volume backup (with selection)',
+    description: 'Create a volume backup with volume selection table, search, and pagination.',
+    category: 'Volume',
+  },
+  {
+    title: 'Restore from snapshot',
+    description: 'Restore a volume from a snapshot by selecting from available snapshots.',
+    category: 'Volume',
+  },
+  {
+    title: 'Attach volume',
+    description: 'Attach a volume to an instance by selecting from available instances.',
+    category: 'Volume',
+  },
+  {
+    title: 'Attach instance',
+    description: 'Attach an instance to a volume by selecting from available instances.',
+    category: 'Volume',
+  },
+  {
+    title: 'Change type',
+    description: 'Change the storage type of a volume to another available volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create subnet',
+    description: 'Create a new subnet with CIDR, gateway, DHCP, and advanced network settings.',
+    category: 'Network',
+  },
+  {
+    title: 'Create router',
+    description:
+      'Create a virtual router to route traffic between networks with external gateway options.',
+    category: 'Network',
+  },
+  {
+    title: 'Attach port to instance',
+    description:
+      'Attach a network port to an instance with Fixed IP, Floating IP, and availability zone.',
+    category: 'Network',
+  },
+  {
+    title: 'Clone volume',
+    description: 'Create an exact copy of a volume for testing, backup, or new instance creation.',
+    category: 'Volume',
+  },
+  {
+    title: 'Extend volume',
+    description: 'Increase the size of a volume to expand its storage capacity.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create image from volume',
+    description:
+      'Create a new image using a volume as the source. The image will contain all data currently stored on the volume.',
+    category: 'Volume',
+  },
+  {
+    title: 'Edit volume',
+    description: 'Edit the name and description of an existing volume.',
+    category: 'Volume',
+  },
+  {
+    title: 'Boot setting',
+    description: 'Enable or disable a volume as a boot source for new instances.',
+    category: 'Volume',
+  },
+  {
+    title: 'Change volume type',
+    description: 'Change the storage type of this volume to another available volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create transfer',
+    description: 'Create a transfer request to share this volume with another project.',
+    category: 'Volume',
+  },
+  {
+    title: 'Edit volume backup',
+    description: 'Edit the name and description of an existing volume backup.',
+    category: 'Volume',
+  },
+  {
+    title: 'Accept volume transfer',
+    description: 'Accept a volume transfer using the provided transfer ID and authorization key.',
+    category: 'Volume',
+  },
+  {
+    title: 'Edit volume snapshot',
+    description: 'Edit the name and description of an existing volume snapshot.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create volume from snapshot',
+    description:
+      'Create a new volume from an existing volume snapshot with customizable capacity and type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create volume from backup',
+    description:
+      'Create a new volume from an existing volume backup with customizable capacity, type, and availability zone.',
+    category: 'Volume',
+  },
+  {
+    title: 'Detach volume',
+    description:
+      'Detach a volume from an instance. Once detached, it will no longer be accessible from the instance.',
+    category: 'Volume',
+  },
+];
+
+const COMPUTE_IMAGE_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create volume from image',
+    description:
+      'Create a new volume using the selected image. The new volume will contain an identical copy of the image data.',
+    category: 'Image',
+  },
+  {
+    title: 'Edit image',
+    description: 'Edit image name and description. Allows modification of basic image metadata.',
+    category: 'Image',
+  },
+];
+
+const COMPUTE_KEY_PAIR_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create key pair',
+    description:
+      'Create a new SSH key pair or import an existing public key to securely access your instances.',
+    category: 'Key pair',
+  },
+  {
+    title: 'Edit key pair',
+    description: 'Edit the name of an existing SSH key pair.',
+    category: 'Key pair',
+  },
+];
+
+const COMPUTE_SERVER_GROUP_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create server group',
+    description:
+      'Create a server group to control how instances are placed across compute hosts using affinity/anti-affinity policies.',
+    category: 'Server group',
+  },
+  {
+    title: 'Edit server group',
+    description: 'Edit the name of an existing server group.',
+    category: 'Server group',
+  },
+];
+
+const COMPUTE_NETWORK_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Edit network',
+    description:
+      'Edit network settings including name, description, admin state, and port security.',
+    category: 'Network',
+  },
+  {
+    title: 'Edit router',
+    description: 'Edit router settings including name, description, and admin state.',
+    category: 'Router',
+  },
+  {
+    title: 'Create static route',
+    description: 'Add a static route to manually define traffic paths beyond connected subnets.',
+    category: 'Router',
+  },
+  {
+    title: 'Edit port',
+    description: 'Edit port settings including name and description.',
+    category: 'Port',
+  },
+  {
+    title: 'Create allowed address pair',
+    description:
+      'Specify additional IP or MAC addresses that are allowed to pass through this port.',
+    category: 'Port',
+  },
+  {
+    title: 'Edit floating IP',
+    description: 'Edit floating IP description.',
+    category: 'Floating IP',
+  },
+  {
+    title: 'Allocate IP',
+    description: 'Assign an additional fixed IP address to a port from a subnet.',
+    category: 'Port',
+  },
+  {
+    title: 'Attach interface',
+    description:
+      'Attach a new network interface to this instance. Connect it to another network or subnet for additional access.',
+    category: 'Network',
+  },
+  {
+    title: 'Detach interface',
+    description:
+      'Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary.',
+    category: 'Network',
+  },
+  {
+    title: 'Associate floating IP',
+    description: 'Assign a floating IP to this instance for external network access.',
+    category: 'Floating IP',
+  },
+  {
+    title: 'Disassociate floating IP',
+    description:
+      'Remove the association between a floating IP and this instance. The instance will lose external network access through that IP.',
+    category: 'Floating IP',
+  },
+  {
+    title: 'Allocate floating IP',
+    description:
+      'Allocate a new floating IP from an external network pool with optional DNS settings.',
+    category: 'Floating IP',
+  },
+  {
+    title: 'External gateway setting',
+    description: 'Configure external gateway for a router to enable access to external networks.',
+    category: 'Router',
+  },
+  {
+    title: 'Connect subnet',
+    description: 'Connect an existing subnet to a router to enable routing between networks.',
+    category: 'Router',
+  },
+  {
+    title: 'Associate floating IP to port',
+    description: 'Associate a floating IP with a port to enable external network access.',
+    category: 'Port',
+  },
+  {
+    title: 'Disconnect subnet',
+    description: 'Disconnect a subnet from a router to remove its routing path.',
+    category: 'Router',
+  },
+];
+
+const COMPUTE_SECURITY_GROUP_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create rule',
+    description: 'A security group rule defines allowed inbound or outbound network traffic.',
+    category: 'Security group',
+  },
+  {
+    title: 'Create security group',
+    description: 'Create a security group to define network access rules for your instances.',
+    category: 'Security group',
+  },
+  {
+    title: 'Edit security group',
+    description: 'Edit security group name and description.',
+    category: 'Security group',
+  },
+  {
+    title: 'Manage security groups',
+    description:
+      'Attach or detach security groups for an interface to control inbound and outbound traffic.',
+    category: 'Security group',
+  },
+  {
+    title: 'Edit port security groups',
+    description:
+      'Manage security groups on a port with port security toggle and multi-select table.',
+    category: 'Port',
+  },
+];
+
+const COMPUTE_LOAD_BALANCER_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Add L7 policy',
+    description:
+      'Add an L7 policy to control traffic routing based on layer 7 attributes like URL path or headers.',
+    category: 'Load balancer',
+  },
+  {
+    title: 'Register certificate',
+    description:
+      'Register a certificate issued by an external CA for use within Compute resources.',
+    category: 'Certificate',
+  },
+  {
+    title: 'Edit certificate',
+    description: 'Edit certificate name and description.',
+    category: 'Certificate',
+  },
+  {
+    title: 'Edit load balancer',
+    description: 'Edit load balancer name, description, and admin state.',
+    category: 'Load balancer',
+  },
+  {
+    title: 'Edit pool',
+    description:
+      'Edit pool settings including algorithm, session persistence, TLS, and admin state.',
+    category: 'Load balancer',
+  },
+  {
+    title: 'Add L7 rule',
+    description:
+      'Add an L7 rule to match incoming requests based on headers, paths, or other attributes.',
+    category: 'Load balancer',
+  },
+  {
+    title: 'Edit listener',
+    description:
+      'Edit listener settings including name, connection limits, timeouts, and allowed CIDRs.',
+    category: 'Load balancer',
+  },
+  {
+    title: 'Create health monitor',
+    description: 'Create a health monitor for a pool to check backend member availability.',
+    category: 'Load balancer',
+  },
+  {
+    title: 'Edit member',
+    description:
+      'Edit pool member settings including weight, monitor address, backup, and admin state.',
+    category: 'Load balancer',
+  },
+  {
+    title: 'Manage members',
+    description:
+      'Manage pool members by adding instances or external members with configurable port and weight.',
+    category: 'Load balancer',
+  },
+  {
+    title: 'Associate floating IP to LB',
+    description: 'Associate a floating IP to a load balancer for external access.',
+    category: 'Load balancer',
+  },
+  {
+    title: 'Change server certificate',
+    description: 'Change the server certificate for a listener with certificate selection table.',
+    category: 'Certificate',
+  },
+  {
+    title: 'Change CA certificate',
+    description: 'Change the CA certificate for a listener with certificate selection table.',
+    category: 'Certificate',
+  },
+  {
+    title: 'Manage SNI certificate',
+    description: 'Enable SNI and manage multiple SNI certificates for a listener.',
+    category: 'Certificate',
+  },
+];
+
+const COMPUTE_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [
+  ...COMPUTE_INSTANCE_ACTIONS_ITEMS,
+  ...COMPUTE_INSTANCE_SNAPSHOT_ITEMS,
+  ...COMPUTE_VOLUME_ITEMS,
+  ...COMPUTE_IMAGE_ITEMS,
+  ...COMPUTE_KEY_PAIR_ITEMS,
+  ...COMPUTE_SERVER_GROUP_ITEMS,
+  ...COMPUTE_NETWORK_ITEMS,
+  ...COMPUTE_SECURITY_GROUP_ITEMS,
+  ...COMPUTE_LOAD_BALANCER_ITEMS,
+];
+
+const COMPUTE_ADMIN_INSTANCE_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Migrate instance',
+    description:
+      'Migrate the instance to a different host. Migration does not change the instance configuration or data.',
+    category: 'Instance',
+  },
+  {
+    title: 'Live migrate instance',
+    description: 'Live migrate the instance to a different host without shutting it down.',
+    category: 'Instance',
+  },
+];
+
+const COMPUTE_ADMIN_IMAGE_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Manage metadata',
+    description: 'Select existing metadata or define new metadata to apply to the image.',
+    category: 'Image',
+  },
+];
+
+const COMPUTE_ADMIN_VOLUME_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Migrate volume',
+    description:
+      'Migrates the volume to a different storage backend. The volume may be limited in availability during the migration process.',
+    category: 'Volume',
+  },
+  {
+    title: 'Update volume status',
+    description:
+      'Manually update the administrative status of a volume when automatic management is insufficient.',
+    category: 'Volume',
+  },
+  {
+    title: 'Update snapshot status',
+    description:
+      'Manually update the administrative status of a volume snapshot when automatic management is insufficient.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create volume type',
+    description: 'Creates a new volume type and configures its basic properties.',
+    category: 'Volume',
+  },
+  {
+    title: 'Edit volume type',
+    description:
+      "Edit the volume type's name and description. These changes update basic information only.",
+    category: 'Volume',
+  },
+  {
+    title: 'Manage QoS spec',
+    description:
+      'Adds or updates QoS specifications to configure quality policies for the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Manage access',
+    description: 'Manages public access settings and tenant permissions for the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create encryption',
+    description: 'Creates the encryption settings to apply to the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create QoS spec',
+    description: 'Creates a new QoS specification and configures its attributes.',
+    category: 'Volume',
+  },
+  {
+    title: 'Edit consumer',
+    description: 'Modifies the consumer scope applied to the QoS specification.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create extra spec',
+    description: 'Creates an extra spec to apply to the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Edit extra spec',
+    description: 'Edit an extra spec to apply to the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create extra spec (QoS spec)',
+    description: 'Creates an extra spec to apply to the QoS spec.',
+    category: 'Volume',
+  },
+];
+
+const COMPUTE_ADMIN_NETWORK_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Manage rules',
+    description: 'Select rules from the list to add to the firewall policy.',
+    category: 'Network',
+  },
+  {
+    title: 'Create subnet',
+    description: 'Create a new subnet with CIDR, gateway, DHCP, and advanced network settings.',
+    category: 'Network',
+  },
+  {
+    title: 'Add DHCP agent',
+    description: 'Adds a DHCP agent to the network.',
+    category: 'Network',
+  },
+  {
+    title: 'Create router',
+    description: 'Create a virtual router to route traffic between different networks or subnets.',
+    category: 'Network',
+  },
+  {
+    title: 'External gateway setting',
+    description: 'Configures the external gateway for the router.',
+    category: 'Network',
+  },
+  {
+    title: 'Manage ACL rules',
+    description: 'Add or remove ingress ACL rules for a floating IP.',
+    category: 'Network',
+  },
+];
+
+const COMPUTE_ADMIN_TENANT_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Modify quotas',
+    description: 'Modifies the resource usage limits allocated to the tenant.',
+    category: 'Tenant',
+  },
+  {
+    title: 'Create tenant',
+    description: 'Creates a new tenant and configures its basic properties.',
+    category: 'Tenant',
+  },
+  {
+    title: 'Edit tenant',
+    description: "Edit the tenant's name and description.",
+    category: 'Tenant',
+  },
+];
+
+const COMPUTE_ADMIN_BARE_METAL_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Assign tenant to node',
+    description: 'Select a tenant to assign to a bare metal node.',
+    category: 'Bare Metal',
+  },
+];
+
+const COMPUTE_ADMIN_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [
+  ...COMPUTE_ADMIN_INSTANCE_ITEMS,
+  ...COMPUTE_ADMIN_IMAGE_ITEMS,
+  ...COMPUTE_ADMIN_VOLUME_ITEMS,
+  ...COMPUTE_ADMIN_NETWORK_ITEMS,
+  ...COMPUTE_ADMIN_TENANT_ITEMS,
+  ...COMPUTE_ADMIN_BARE_METAL_ITEMS,
+];
+
+const IAM_USER_MANAGEMENT_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create user',
+    description: 'Create a new user with username, password, email, and status settings.',
+    category: 'User',
+  },
+  {
+    title: 'Manage user groups',
+    description: 'Add or remove user groups for a specific user.',
+    category: 'User',
+  },
+  {
+    title: 'Manage roles',
+    description: 'Add or remove roles directly assigned to a specific user.',
+    category: 'User',
+  },
+  {
+    title: 'Reset password',
+    description: 'Reset the login password for a specific user.',
+    category: 'User',
+  },
+  {
+    title: 'Edit user',
+    description: "Edit the user's basic information like email and display name.",
+    category: 'User',
+  },
+  {
+    title: 'Attach policies',
+    description: 'Attach policies to a specific user.',
+    category: 'User',
+  },
+  {
+    title: 'Create access key',
+    description: 'Create a new access key for programmatic access.',
+    category: 'User',
+  },
+  {
+    title: 'Edit access key',
+    description: "Edit an existing access key's description and status.",
+    category: 'User',
+  },
+];
+
+const IAM_USER_GROUP_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Manage users',
+    description: 'Add or remove members of a user group.',
+    category: 'User group',
+  },
+  {
+    title: 'Edit user group',
+    description: "Edit the user group's basic information.",
+    category: 'User group',
+  },
+];
+
+const IAM_ROLE_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Manage policies',
+    description: 'Add or remove policies of a role.',
+  },
+  {
+    title: 'Edit role',
+    description: 'Edit basic information for a role.',
+  },
+  {
+    title: 'Grant access',
+    description:
+      'Grant a role to a user or service account with a scheduled start time and duration.',
+  },
+  {
+    title: 'Manage linked policies',
+    description: 'Add or remove policies linked to a role.',
+  },
+];
+
+const IAM_DOMAIN_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create domain',
+    description: 'Create a new domain to manage resources and policies independently.',
+  },
+  {
+    title: 'Edit domain',
+    description: "Edit the domain's basic information.",
+  },
+  {
+    title: 'Set default domain',
+    description: 'Set the default domain for the system administrator.',
+  },
+  {
+    title: 'Lock setting',
+    description: 'Lock or unlock a system administrator account.',
+  },
+  {
+    title: 'Edit system administrator',
+    description: "Edit the system administrator's basic information.",
+  },
+];
+
+const IAM_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [
+  ...IAM_USER_MANAGEMENT_ITEMS,
+  ...IAM_USER_GROUP_ITEMS,
+  ...IAM_ROLE_ITEMS,
+  ...IAM_DOMAIN_ITEMS,
+];
+
+const STORAGE_OBJECT_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create folder',
+    description: 'Create a new folder in a bucket with a specified parent location.',
+    category: 'Object storage',
+  },
+  {
+    title: 'Create object',
+    description: 'Upload files to a bucket with ACL settings and tags.',
+    category: 'Object storage',
+  },
+  {
+    title: 'Move objects',
+    description: 'Move files or folders to a different location within the bucket.',
+    category: 'Object storage',
+  },
+  {
+    title: 'Edit file',
+    description: 'Edit file name and manage tags.',
+    category: 'Object storage',
+  },
+  {
+    title: 'Edit folder',
+    description: 'Rename a folder within a bucket.',
+    category: 'Object storage',
+  },
+];
+
+const STORAGE_PHYSICAL_DISK_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Identify device',
+    description: 'Indicate the LED on a physical disk to identify the device.',
+    category: 'Physical disk',
+  },
+];
+
+const STORAGE_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [
+  ...STORAGE_OBJECT_ITEMS,
+  ...STORAGE_PHYSICAL_DISK_ITEMS,
+];
+
+const CONTAINER_RESOURCE_SEARCH_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Resource type search',
+    description:
+      'Search and navigate Kubernetes resource types across clusters with categorized resource lists.',
+    category: 'Search',
+  },
+];
+
+const SECURITY_FIREWALL_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create firewall',
+    description:
+      'Create a new firewall with tenant assignment, ingress/egress policies, and admin state settings.',
+    category: 'Firewall',
+  },
+  {
+    title: 'Edit firewall',
+    description: 'Edit firewall name, description, ingress/egress policies, and admin state.',
+    category: 'Firewall',
+  },
+  {
+    title: 'Manage ports',
+    description: 'Select ports from the list to associate with a firewall.',
+    category: 'Firewall',
+  },
+];
+
+const SECURITY_POLICY_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create policy',
+    description: 'Create a firewall policy with tenant assignment, shared and audited settings.',
+    category: 'Policy',
+  },
+  {
+    title: 'Edit policy',
+    description: 'Edit policy name, description, shared and audited settings.',
+    category: 'Policy',
+  },
+  {
+    title: 'Edit rule',
+    description:
+      'Edit firewall rule with protocol, action, source/destination CIDR and port settings.',
+    category: 'Rule',
+  },
+];
+
+const SECURITY_SG_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'Create security group',
+    description: 'Create a new security group with tenant assignment and quota management.',
+    category: 'Security Group',
+  },
+];
+
+const SECURITY_DISCLOSURE_ALL_ITEMS: DrawerSearchItem[] = [
+  ...SECURITY_FIREWALL_ITEMS,
+  ...SECURITY_POLICY_ITEMS,
+  ...SECURITY_SG_ITEMS,
+];
+
+const TABLE_SETTINGS_ITEMS: DrawerSearchItem[] = [
+  {
+    title: 'View preferences',
+    description:
+      'Customize table view by showing/hiding columns, reordering columns, and adjusting rows per page.',
+    category: 'Table',
+  },
+];
+
 /* ----------------------------------------
    DrawersPage Component ---------------------------------------- */
 
@@ -564,6 +1557,7 @@ export function DrawersPage() {
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
+  const [isSecurityOpen, setIsSecurityOpen] = useState(false);
 
   // Drawer states
 
@@ -624,35 +1618,35 @@ export function DrawersPage() {
           {/* Drawer Categories */}
           <VStack gap={4}>
             {/* Compute App Drawers */}
-            <Disclosure open={isSearching || isComputeOpen} onChange={setIsComputeOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                  <div className="flex items-center gap-3">
-                    {isSearching || isComputeOpen ? (
-                      <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                    ) : (
-                      <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                    )}
-                    <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                      Compute{' '}
-                    </Badge>
-                    <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                      Drawers{' '}
-                    </span>
-                    <span className="text-body-md text-[var(--color-text-subtle)]">
-                      (73 drawers)
-                    </span>
+            <FilteredDisclosureSection allItems={COMPUTE_DISCLOSURE_ALL_ITEMS}>
+              <Disclosure open={isSearching || isComputeOpen} onChange={setIsComputeOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isSearching || isComputeOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Compute{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (73 drawers)
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  {/* Instance Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Instance actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Instance Actions */}
+                    <FilteredGroup
+                      heading="Instance actions"
+                      items={COMPUTE_INSTANCE_ACTIONS_ITEMS}
+                    >
                       <DrawerCard
                         title="Create instance snapshot"
                         description="Create a snapshot of an instance to capture its current system state as an image."
@@ -709,15 +1703,13 @@ export function DrawersPage() {
                         linked
                         linkedTo="Instance list"
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Instance Snapshot Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Instance snapshot actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Instance Snapshot Actions */}
+                    <FilteredGroup
+                      heading="Instance snapshot actions"
+                      items={COMPUTE_INSTANCE_SNAPSHOT_ITEMS}
+                    >
                       <DrawerCard
                         title="Edit instance snapshot"
                         description="Edit the name and description of an instance snapshot."
@@ -734,15 +1726,10 @@ export function DrawersPage() {
                         linked
                         linkedTo="Instance snapshots"
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Volume Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Volume actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Volume Actions */}
+                    <FilteredGroup heading="Volume actions" items={COMPUTE_VOLUME_ITEMS}>
                       <DrawerCard
                         title="Create volume snapshot"
                         description="Create a snapshot of a volume to back up its current data state for later restoration."
@@ -921,15 +1908,10 @@ export function DrawersPage() {
                         linked
                         linkedTo="Instance list, Volumes"
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Image Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Image actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Image Actions */}
+                    <FilteredGroup heading="Image actions" items={COMPUTE_IMAGE_ITEMS}>
                       <DrawerCard
                         title="Create volume from image"
                         description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
@@ -946,15 +1928,10 @@ export function DrawersPage() {
                         linked
                         linkedTo="Images"
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Key pair Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Key pair actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Key pair Actions */}
+                    <FilteredGroup heading="Key pair actions" items={COMPUTE_KEY_PAIR_ITEMS}>
                       <DrawerCard
                         title="Create key pair"
                         description="Create a new SSH key pair or import an existing public key to securely access your instances."
@@ -967,15 +1944,13 @@ export function DrawersPage() {
                         category="Key pair"
                         onOpen={() => openDrawerFn('edit-key-pair')}
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Server group Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Server group actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Server group Actions */}
+                    <FilteredGroup
+                      heading="Server group actions"
+                      items={COMPUTE_SERVER_GROUP_ITEMS}
+                    >
                       <DrawerCard
                         title="Create server group"
                         description="Create a server group to control how instances are placed across compute hosts using affinity/anti-affinity policies."
@@ -988,15 +1963,10 @@ export function DrawersPage() {
                         category="Server group"
                         onOpen={() => openDrawerFn('edit-server-group')}
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Network Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Network actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Network Actions */}
+                    <FilteredGroup heading="Network actions" items={COMPUTE_NETWORK_ITEMS}>
                       <DrawerCard
                         title="Edit network"
                         description="Edit network settings including name, description, admin state, and port security."
@@ -1109,15 +2079,13 @@ export function DrawersPage() {
                         category="Router"
                         onOpen={() => openDrawerFn('disconnect-subnet')}
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Security group Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Security group actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Security group Actions */}
+                    <FilteredGroup
+                      heading="Security group actions"
+                      items={COMPUTE_SECURITY_GROUP_ITEMS}
+                    >
                       <DrawerCard
                         title="Create rule"
                         description="A security group rule defines allowed inbound or outbound network traffic."
@@ -1156,15 +2124,13 @@ export function DrawersPage() {
                         linked
                         linkedTo="Ports"
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Load balancer Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Load balancer actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Load balancer Actions */}
+                    <FilteredGroup
+                      heading="Load balancer actions"
+                      items={COMPUTE_LOAD_BALANCER_ITEMS}
+                    >
                       <DrawerCard
                         title="Add L7 policy"
                         description="Add an L7 policy to control traffic routing based on layer 7 attributes like URL path or headers."
@@ -1253,42 +2219,39 @@ export function DrawersPage() {
                         category="Certificate"
                         onOpen={() => openDrawerFn('manage-s-n-i-certificate')}
                       />
-                    </div>
+                    </FilteredGroup>
                   </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* Compute Admin App Drawers */}
-            <Disclosure open={isSearching || isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                  <div className="flex items-center gap-3">
-                    {isSearching || isComputeAdminOpen ? (
-                      <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                    ) : (
-                      <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                    )}
-                    <Badge variant="warning" size="sm" className="w-[110px] justify-center">
-                      Compute Admin{' '}
-                    </Badge>
-                    <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                      Drawers{' '}
-                    </span>
-                    <span className="text-body-md text-[var(--color-text-subtle)]">
-                      (6 drawers)
-                    </span>
+            <FilteredDisclosureSection allItems={COMPUTE_ADMIN_DISCLOSURE_ALL_ITEMS}>
+              <Disclosure open={isSearching || isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isSearching || isComputeAdminOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="warning" size="sm" className="w-[110px] justify-center">
+                        Compute Admin{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (26 drawers)
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  {/* Instance actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Instance actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Instance actions */}
+                    <FilteredGroup heading="Instance actions" items={COMPUTE_ADMIN_INSTANCE_ITEMS}>
                       <DrawerCard
                         title="Migrate instance"
                         description="Migrate the instance to a different host. Migration does not change the instance configuration or data."
@@ -1305,15 +2268,10 @@ export function DrawersPage() {
                         linked
                         linkedTo="Instance list"
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Image actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Image actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Image actions */}
+                    <FilteredGroup heading="Image actions" items={COMPUTE_ADMIN_IMAGE_ITEMS}>
                       <DrawerCard
                         title="Manage metadata"
                         description="Select existing metadata or define new metadata to apply to the image."
@@ -1322,15 +2280,10 @@ export function DrawersPage() {
                         linked
                         linkedTo="Image list"
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Volume actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Volume actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Volume actions */}
+                    <FilteredGroup heading="Volume actions" items={COMPUTE_ADMIN_VOLUME_ITEMS}>
                       <DrawerCard
                         title="Migrate volume"
                         description="Migrates the volume to a different storage backend. The volume may be limited in availability during the migration process."
@@ -1339,15 +2292,106 @@ export function DrawersPage() {
                         linked
                         linkedTo="Volume list"
                       />
-                    </div>
-                  </VStack>
+                      <DrawerCard
+                        title="Update volume status"
+                        description="Manually update the administrative status of a volume when automatic management is insufficient."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('update-volume-status')}
+                        linked
+                        linkedTo="Volume list"
+                      />
+                      <DrawerCard
+                        title="Update snapshot status"
+                        description="Manually update the administrative status of a volume snapshot when automatic management is insufficient."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('update-snapshot-status')}
+                        linked
+                        linkedTo="Volume snapshot list"
+                      />
+                      <DrawerCard
+                        title="Create volume type"
+                        description="Creates a new volume type and configures its basic properties."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-volume-type')}
+                        linked
+                        linkedTo="Volume type list"
+                      />
+                      <DrawerCard
+                        title="Edit volume type"
+                        description="Edit the volume type's name and description. These changes update basic information only."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('edit-volume-type')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Manage QoS spec"
+                        description="Adds or updates QoS specifications to configure quality policies for the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('manage-qos-spec')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Manage access"
+                        description="Manages public access settings and tenant permissions for the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('manage-access')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Create encryption"
+                        description="Creates the encryption settings to apply to the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-encryption')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Create QoS spec"
+                        description="Creates a new QoS specification and configures its attributes."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-qos-spec')}
+                        linked
+                        linkedTo="QoS spec list"
+                      />
+                      <DrawerCard
+                        title="Edit consumer"
+                        description="Modifies the consumer scope applied to the QoS specification."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('edit-consumer')}
+                        linked
+                        linkedTo="QoS spec detail"
+                      />
+                      <DrawerCard
+                        title="Create extra spec"
+                        description="Creates an extra spec to apply to the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-extra-spec')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Edit extra spec"
+                        description="Edit an extra spec to apply to the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('edit-extra-spec')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Create extra spec (QoS spec)"
+                        description="Creates an extra spec to apply to the QoS spec."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-qos-extra-spec')}
+                        linked
+                        linkedTo="QoS spec detail"
+                      />
+                    </FilteredGroup>
 
-                  {/* Network actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Network actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Network actions */}
+                    <FilteredGroup heading="Network actions" items={COMPUTE_ADMIN_NETWORK_ITEMS}>
                       <DrawerCard
                         title="Manage rules"
                         description="Select rules from the list to add to the firewall policy."
@@ -1356,15 +2400,50 @@ export function DrawersPage() {
                         linked
                         linkedTo="Firewall policies"
                       />
-                    </div>
-                  </VStack>
+                      <DrawerCard
+                        title="Create subnet"
+                        description="Create a new subnet with CIDR, gateway, DHCP, and advanced network settings."
+                        category="Network"
+                        onOpen={() => openDrawerFn('admin-create-subnet')}
+                        linked
+                        linkedTo="Networks"
+                      />
+                      <DrawerCard
+                        title="Add DHCP agent"
+                        description="Adds a DHCP agent to the network."
+                        category="Network"
+                        onOpen={() => openDrawerFn('add-dhcp-agent')}
+                        linked
+                        linkedTo="Networks"
+                      />
+                      <DrawerCard
+                        title="Create router"
+                        description="Create a virtual router to route traffic between different networks or subnets."
+                        category="Network"
+                        onOpen={() => openDrawerFn('admin-create-router')}
+                        linked
+                        linkedTo="Routers"
+                      />
+                      <DrawerCard
+                        title="External gateway setting"
+                        description="Configures the external gateway for the router."
+                        category="Network"
+                        onOpen={() => openDrawerFn('admin-external-gateway')}
+                        linked
+                        linkedTo="Routers"
+                      />
+                      <DrawerCard
+                        title="Manage ACL rules"
+                        description="Add or remove ingress ACL rules for a floating IP."
+                        category="Network"
+                        onOpen={() => openDrawerFn('manage-acl-rules')}
+                        linked
+                        linkedTo="Floating IPs"
+                      />
+                    </FilteredGroup>
 
-                  {/* Tenant actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Tenant actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Tenant actions */}
+                    <FilteredGroup heading="Tenant actions" items={COMPUTE_ADMIN_TENANT_ITEMS}>
                       <DrawerCard
                         title="Modify quotas"
                         description="Modifies the resource usage limits allocated to the tenant."
@@ -1373,42 +2452,81 @@ export function DrawersPage() {
                         linked
                         linkedTo="Tenant detail"
                       />
-                    </div>
+                      <DrawerCard
+                        title="Create tenant"
+                        description="Creates a new tenant and configures its basic properties."
+                        category="Tenant"
+                        onOpen={() => openDrawerFn('admin-create-tenant')}
+                        linked
+                        linkedTo="Tenants"
+                      />
+                      <DrawerCard
+                        title="Edit tenant"
+                        description="Edit the tenant's name and description."
+                        category="Tenant"
+                        onOpen={() => openDrawerFn('admin-edit-tenant')}
+                        linked
+                        linkedTo="Tenants"
+                      />
+                    </FilteredGroup>
+
+                    {/* Bare metal actions */}
+                    <FilteredGroup
+                      heading="Bare metal actions"
+                      items={COMPUTE_ADMIN_BARE_METAL_ITEMS}
+                    >
+                      <DrawerCard
+                        title="Assign tenant to node"
+                        description="Select a tenant to assign to a bare metal node."
+                        category="Bare Metal"
+                        onOpen={() => openDrawerFn('assign-tenant-to-node')}
+                        linked
+                        linkedTo="Bare metal nodes"
+                      />
+                    </FilteredGroup>
                   </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* IAM App Drawers */}
-            <Disclosure open={isSearching || isIAMOpen} onChange={setIsIAMOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                  <div className="flex items-center gap-3">
-                    {isSearching || isIAMOpen ? (
-                      <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                    ) : (
-                      <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                    )}
-                    <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                      IAM{' '}
-                    </Badge>
-                    <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                      Drawers{' '}
-                    </span>
-                    <span className="text-body-md text-[var(--color-text-subtle)]">
-                      (13 drawers)
-                    </span>
+            <FilteredDisclosureSection allItems={IAM_DISCLOSURE_ALL_ITEMS}>
+              <Disclosure open={isSearching || isIAMOpen} onChange={setIsIAMOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isSearching || isIAMOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        IAM{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (14 drawers)
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  {/* USER MANAGEMENT ACTIONS */}
-                  <VStack gap={2}>
-                    <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                      User management actions{' '}
-                    </h3>
-                    <div className="flex flex-col gap-2">
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* USER MANAGEMENT ACTIONS */}
+                    <FilteredGroup
+                      heading="User management actions"
+                      items={IAM_USER_MANAGEMENT_ITEMS}
+                    >
+                      <DrawerCard
+                        title="Create user"
+                        description="Create a new user with username, password, email, and status settings."
+                        category="User"
+                        onOpen={() => openDrawerFn('create-user')}
+                        linked
+                        linkedTo="IAM system administrators"
+                      />
                       <DrawerCard
                         title="Manage user groups"
                         description="Add or remove user groups for a specific user."
@@ -1439,15 +2557,37 @@ export function DrawersPage() {
                         linked
                         linkedTo="IAM users"
                       />
-                    </div>
-                  </VStack>
+                      <DrawerCard
+                        title="Attach policies"
+                        description="Attach policies to a specific user."
+                        category="User"
+                        onOpen={() => openDrawerFn('attach-policies')}
+                        linked
+                        linkedTo="IAM users"
+                      />
+                      <DrawerCard
+                        title="Create access key"
+                        description="Create a new access key for programmatic access."
+                        category="User"
+                        onOpen={() => openDrawerFn('create-access-key')}
+                        linked
+                        linkedTo="IAM users"
+                      />
+                      <DrawerCard
+                        title="Edit access key"
+                        description="Edit an existing access key's description and status."
+                        category="User"
+                        onOpen={() => openDrawerFn('edit-access-key')}
+                        linked
+                        linkedTo="IAM users"
+                      />
+                    </FilteredGroup>
 
-                  {/* User Group Management */}
-                  <VStack gap={2}>
-                    <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                      User group management actions{' '}
-                    </h3>
-                    <div className="flex flex-col gap-2">
+                    {/* User Group Management */}
+                    <FilteredGroup
+                      heading="User group management actions"
+                      items={IAM_USER_GROUP_ITEMS}
+                    >
                       <DrawerCard
                         title="Manage users"
                         description="Add or remove members of a user group."
@@ -1464,15 +2604,10 @@ export function DrawersPage() {
                         linked
                         linkedTo="IAM user groups"
                       />
-                    </div>
-                  </VStack>
+                    </FilteredGroup>
 
-                  {/* Role Management */}
-                  <VStack gap={2}>
-                    <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                      Role management actions{' '}
-                    </h3>
-                    <div className="flex flex-col gap-2">
+                    {/* Role Management */}
+                    <FilteredGroup heading="Role management actions" items={IAM_ROLE_ITEMS}>
                       <DrawerCard
                         title="Manage policies"
                         description="Add or remove policies of a role."
@@ -1485,15 +2620,22 @@ export function DrawersPage() {
                         onOpen={() => openDrawerFn('edit-role')}
                         badge="Role"
                       />
-                    </div>
-                  </VStack>
+                      <DrawerCard
+                        title="Grant access"
+                        description="Grant a role to a user or service account with a scheduled start time and duration."
+                        onOpen={() => openDrawerFn('grant-access')}
+                        badge="Role"
+                      />
+                      <DrawerCard
+                        title="Manage linked policies"
+                        description="Add or remove policies linked to a role."
+                        onOpen={() => openDrawerFn('manage-linked-policies')}
+                        badge="Role"
+                      />
+                    </FilteredGroup>
 
-                  {/* Domain Management */}
-                  <VStack gap={2}>
-                    <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                      Domain management actions{' '}
-                    </h3>
-                    <div className="flex flex-col gap-2">
+                    {/* Domain Management */}
+                    <FilteredGroup heading="Domain management actions" items={IAM_DOMAIN_ITEMS}>
                       <DrawerCard
                         title="Create domain"
                         description="Create a new domain to manage resources and policies independently."
@@ -1524,42 +2666,39 @@ export function DrawersPage() {
                         onOpen={() => openDrawerFn('edit-system-admin')}
                         badge="Admin"
                       />
-                    </div>
+                    </FilteredGroup>
                   </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* Storage App Drawers */}
-            <Disclosure open={isSearching || isStorageOpen} onChange={setIsStorageOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                  <div className="flex items-center gap-3">
-                    {isSearching || isStorageOpen ? (
-                      <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                    ) : (
-                      <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                    )}
-                    <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                      Storage{' '}
-                    </Badge>
-                    <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                      Drawers{' '}
-                    </span>
-                    <span className="text-body-md text-[var(--color-text-subtle)]">
-                      (5 drawers)
-                    </span>
+            <FilteredDisclosureSection allItems={STORAGE_DISCLOSURE_ALL_ITEMS}>
+              <Disclosure open={isSearching || isStorageOpen} onChange={setIsStorageOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isSearching || isStorageOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Storage{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (6 drawers)
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  {/* Object Storage Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Object storage actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Object Storage Actions */}
+                    <FilteredGroup heading="Object storage actions" items={STORAGE_OBJECT_ITEMS}>
                       <DrawerCard
                         title="Create folder"
                         description="Create a new folder in a bucket with a specified parent location."
@@ -1573,92 +2712,173 @@ export function DrawersPage() {
                         onOpen={() => openDrawerFn('create-object')}
                       />
                       <DrawerCard
-                        title="Move files"
+                        title="Move objects"
                         description="Move files or folders to a different location within the bucket."
                         category="Object storage"
                         onOpen={() => openDrawerFn('move-files')}
                       />
                       <DrawerCard
-                        title="Edit object"
-                        description="Edit object name and manage tags."
+                        title="Edit file"
+                        description="Edit file name and manage tags."
                         category="Object storage"
                         onOpen={() => openDrawerFn('edit-object')}
                       />
-                    </div>
-                  </VStack>
+                      <DrawerCard
+                        title="Edit folder"
+                        description="Rename a folder within a bucket."
+                        category="Object storage"
+                        onOpen={() => openDrawerFn('edit-folder')}
+                      />
+                    </FilteredGroup>
 
-                  {/* Physical Disk Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Physical disk actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                    {/* Physical Disk Actions */}
+                    <FilteredGroup
+                      heading="Physical disk actions"
+                      items={STORAGE_PHYSICAL_DISK_ITEMS}
+                    >
                       <DrawerCard
                         title="Identify device"
                         description="Indicate the LED on a physical disk to identify the device."
                         category="Physical disk"
                         onOpen={() => openDrawerFn('identify-device')}
                       />
-                    </div>
+                    </FilteredGroup>
                   </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* Container App Drawers */}
-            <Disclosure open={isSearching || isContainerOpen} onChange={setIsContainerOpen}>
-              <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                  <div className="flex items-center gap-3">
-                    {isSearching || isContainerOpen ? (
-                      <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                    ) : (
-                      <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                    )}
-                    <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                      Container{' '}
-                    </Badge>
-                    <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                      Drawers{' '}
-                    </span>
-                    <span className="text-body-md text-[var(--color-text-subtle)]">(1 drawer)</span>
+            <FilteredDisclosureSection allItems={CONTAINER_RESOURCE_SEARCH_ITEMS}>
+              <Disclosure open={isSearching || isContainerOpen} onChange={setIsContainerOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isSearching || isContainerOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Container{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (1 drawer)
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={4} className="pt-4">
-                  {/* Resource Search Actions */}
-                  <VStack gap={2}>
-                    <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                      Resource search actions{' '}
-                    </h2>
-                    <div className="flex flex-col gap-2">
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Resource Search Actions */}
+                    <FilteredGroup
+                      heading="Resource search actions"
+                      items={CONTAINER_RESOURCE_SEARCH_ITEMS}
+                    >
                       <DrawerCard
                         title="Resource type search"
                         description="Search and navigate Kubernetes resource types across clusters with categorized resource lists."
                         category="Search"
                         onOpen={() => openDrawerFn('resource-type-search')}
                       />
-                    </div>
+                    </FilteredGroup>
                   </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
+
+            {/* Security App Drawers */}
+            <FilteredDisclosureSection allItems={SECURITY_DISCLOSURE_ALL_ITEMS}>
+              <Disclosure open={isSearching || isSecurityOpen} onChange={setIsSecurityOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isSearching || isSecurityOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Security{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (7 drawers)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    <FilteredGroup heading="Firewall actions" items={SECURITY_FIREWALL_ITEMS}>
+                      <DrawerCard
+                        title="Create firewall"
+                        description="Create a new firewall with tenant assignment, ingress/egress policies, and admin state settings."
+                        category="Firewall"
+                        onOpen={() => openDrawerFn('create-firewall')}
+                      />
+                      <DrawerCard
+                        title="Edit firewall"
+                        description="Edit firewall name, description, ingress/egress policies, and admin state."
+                        category="Firewall"
+                        onOpen={() => openDrawerFn('edit-firewall')}
+                      />
+                      <DrawerCard
+                        title="Manage ports"
+                        description="Select ports from the list to associate with a firewall."
+                        category="Firewall"
+                        onOpen={() => openDrawerFn('manage-firewall-ports')}
+                      />
+                    </FilteredGroup>
+
+                    <FilteredGroup heading="Policy & Rule actions" items={SECURITY_POLICY_ITEMS}>
+                      <DrawerCard
+                        title="Create policy"
+                        description="Create a firewall policy with tenant assignment, shared and audited settings."
+                        category="Policy"
+                        onOpen={() => openDrawerFn('create-policy')}
+                      />
+                      <DrawerCard
+                        title="Edit policy"
+                        description="Edit policy name, description, shared and audited settings."
+                        category="Policy"
+                        onOpen={() => openDrawerFn('edit-policy')}
+                      />
+                      <DrawerCard
+                        title="Edit rule"
+                        description="Edit firewall rule with protocol, action, source/destination CIDR and port settings."
+                        category="Rule"
+                        onOpen={() => openDrawerFn('edit-rule')}
+                      />
+                    </FilteredGroup>
+
+                    <FilteredGroup heading="Security Group actions" items={SECURITY_SG_ITEMS}>
+                      <DrawerCard
+                        title="Create security group"
+                        description="Create a new security group with tenant assignment and quota management."
+                        category="Security Group"
+                        onOpen={() => openDrawerFn('create-security-group')}
+                      />
+                    </FilteredGroup>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+            </FilteredDisclosureSection>
 
             {/* Table Settings */}
-            <VStack gap={2}>
-              <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                Table settings{' '}
-              </h2>
-              <div className="flex flex-col gap-2">
-                <DrawerCard
-                  title="View preferences"
-                  description="Customize table view by showing/hiding columns, reordering columns, and adjusting rows per page."
-                  category="Table"
-                  onOpen={() => openDrawerFn('view-preferences')}
-                />
-              </div>
-            </VStack>
+            <FilteredGroup heading="Table settings" items={TABLE_SETTINGS_ITEMS}>
+              <DrawerCard
+                title="View preferences"
+                description="Customize table view by showing/hiding columns, reordering columns, and adjusting rows per page."
+                category="Table"
+                onOpen={() => openDrawerFn('view-preferences')}
+              />
+            </FilteredGroup>
           </VStack>
         </VStack>
       </DrawerSearchContext.Provider>
@@ -1682,7 +2902,7 @@ export function DrawersPage() {
         }}
       />
 
-      <LockSettingDrawer
+      <LockInstanceDrawer
         isOpen={openDrawer === 'lock-setting'}
         onClose={closeDrawer}
         instance={mockLockInstance}
@@ -1691,7 +2911,7 @@ export function DrawersPage() {
         }}
       />
 
-      <BootSettingDrawer
+      <ToggleBootableDrawer
         isOpen={openDrawer === 'boot-setting'}
         onClose={closeDrawer}
         volume={mockBootVolume}
@@ -1732,7 +2952,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CloneVolumeDrawer
+      <CreateVolumeFromResourceDrawer
         isOpen={openDrawer === 'clone-volume'}
         onClose={closeDrawer}
         volume={mockCloneVolume}
@@ -1965,7 +3185,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CreateSecurityGroupRuleDrawer
+      <CreateSGRuleDrawer
         isOpen={openDrawer === 'create-security-group-rule'}
         onClose={closeDrawer}
         ruleQuota={{ used: 2, total: 10 }}
@@ -2048,7 +3268,7 @@ export function DrawersPage() {
         }}
       />
 
-      <EditFloatingIPDrawer
+      <EditFIPDrawer
         isOpen={openDrawer === 'edit-floating-i-p'}
         onClose={closeDrawer}
         floatingIP={{
@@ -2165,7 +3385,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AllocateIPDrawer
+      <AllocateFIPDrawer
         isOpen={openDrawer === 'allocate-i-p'}
         onClose={closeDrawer}
         port={{
@@ -2194,7 +3414,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CreateHealthMonitorDrawer
+      <HealthMonitorDrawer
         isOpen={openDrawer === 'create-health-monitor'}
         onClose={closeDrawer}
         pool={{
@@ -2252,7 +3472,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AssociateFloatingIPDrawer
+      <AssociateFIPtoInstanceDrawer
         isOpen={openDrawer === 'associate-floating-i-p'}
         onClose={closeDrawer}
         port={mockAssociateFloatingIPPort}
@@ -2321,7 +3541,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CreateVolumeBackupWithSelectionDrawer
+      <CreateVolumeBackupFromListDrawer
         isOpen={openDrawer === 'create-volume-backup-with-selection'}
         onClose={closeDrawer}
         onSubmit={(volumeId, backupName, description, mode) => {
@@ -2334,7 +3554,7 @@ export function DrawersPage() {
         }}
       />
 
-      <RestoreFromSnapshotDrawer
+      <RestoreVolumeSnapshotDrawer
         isOpen={openDrawer === 'restore-from-snapshot'}
         onClose={closeDrawer}
         volume={{ id: 'vol-03', name: 'vol-03' }}
@@ -2352,7 +3572,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AttachInstanceDrawer
+      <AttachInstanceToVolumeDrawer
         isOpen={openDrawer === 'attach-instance'}
         onClose={closeDrawer}
         volume={{ id: 'vol-03', name: 'vol-03' }}
@@ -2370,7 +3590,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CreateSubnetDrawer
+      <SubnetDrawer
         isOpen={openDrawer === 'create-subnet'}
         onClose={closeDrawer}
         networkId="network-01"
@@ -2460,7 +3680,7 @@ export function DrawersPage() {
         }}
       />
 
-      <ExternalGatewaySettingDrawer
+      <ManageExternalGatewayDrawer
         isOpen={openDrawer === 'external-gateway-setting'}
         onClose={closeDrawer}
         router={{ name: 'router-01' }}
@@ -2479,7 +3699,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AssociateFloatingIPToPortDrawer
+      <AssociateFIPtoPortDrawer
         isOpen={openDrawer === 'associate-floating-i-p-to-port'}
         onClose={closeDrawer}
         port={{ name: 'port-10' }}
@@ -2497,7 +3717,7 @@ export function DrawersPage() {
         }}
       />
 
-      <ManageMembersDrawer
+      <ManageLoadBalancerMemberDrawer
         isOpen={openDrawer === 'manage-members'}
         onClose={closeDrawer}
         pool={{ name: 'pool-http' }}
@@ -2506,7 +3726,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AllocateFloatingIPDrawer
+      <AllocateFIPDrawer
         isOpen={openDrawer === 'allocate-floating-i-p'}
         onClose={closeDrawer}
         floatingIPQuota={{ used: 2, total: 10 }}
@@ -2540,9 +3760,10 @@ export function DrawersPage() {
       />
 
       {/* Move Files Drawer */}
-      <MoveFilesDrawer
+      <MoveFolderDrawer
         isOpen={openDrawer === 'move-files'}
         onClose={closeDrawer}
+        fileName="{file name}"
         currentPath="folder/~"
         onSubmit={(targetPath) => {
           console.log('Move files to:', targetPath);
@@ -2550,12 +3771,22 @@ export function DrawersPage() {
       />
 
       {/* Edit Object Drawer */}
-      <EditObjectDrawer
+      <EditFileDrawer
         isOpen={openDrawer === 'edit-object'}
         onClose={closeDrawer}
         objectName="{Current Folder Name}"
         onSubmit={(name, tags) => {
           console.log('Edit object:', name, tags);
+        }}
+      />
+
+      {/* Edit Folder Drawer */}
+      <EditFolderDrawer
+        isOpen={openDrawer === 'edit-folder'}
+        onClose={closeDrawer}
+        folderName="{Current Folder Name}"
+        onSubmit={(name) => {
+          console.log('Edit folder:', name);
         }}
       />
 
@@ -2568,8 +3799,17 @@ export function DrawersPage() {
         }}
       />
 
+      {/* Create User Drawer */}
+      <CreateUserDrawer
+        isOpen={openDrawer === 'create-user'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create user:', data);
+        }}
+      />
+
       {/* Manage User Groups Drawer */}
-      <ManageUserGroupsDrawer
+      <UserGroupsDrawer
         isOpen={openDrawer === 'manage-user-groups'}
         onClose={closeDrawer}
         userName="thaki.kim"
@@ -2579,7 +3819,7 @@ export function DrawersPage() {
       />
 
       {/* Manage Users Drawer */}
-      <ManageUsersDrawer
+      <GroupMembersDrawer
         isOpen={openDrawer === 'manage-users'}
         onClose={closeDrawer}
         userGroupName="MemberGroup"
@@ -2589,7 +3829,7 @@ export function DrawersPage() {
       />
 
       {/* Manage Roles Drawer */}
-      <ManageRolesDrawer
+      <GroupRolesDrawer
         isOpen={openDrawer === 'manage-roles'}
         onClose={closeDrawer}
         userName="thaki.kim"
@@ -2609,7 +3849,7 @@ export function DrawersPage() {
       />
 
       {/* Edit User Drawer */}
-      <EditUserDrawer
+      <UserEditDrawer
         isOpen={openDrawer === 'edit-user'}
         onClose={closeDrawer}
         userName="thaki-kim"
@@ -2620,6 +3860,35 @@ export function DrawersPage() {
         }}
         onSubmit={(data) => {
           console.log('Edit user:', data);
+        }}
+      />
+
+      {/* Attach Policies Drawer */}
+      <AttachPoliciesDrawer
+        isOpen={openDrawer === 'attach-policies'}
+        onClose={closeDrawer}
+        userName="thaki.kim"
+        onSubmit={(data) => {
+          console.log('Attach policies:', data);
+        }}
+      />
+
+      {/* Create Access Key Drawer */}
+      <CreateAccessKeyDrawer
+        isOpen={openDrawer === 'create-access-key'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create access key:', data);
+        }}
+      />
+
+      {/* Edit Access Key Drawer */}
+      <EditAccessKeyDrawer
+        isOpen={openDrawer === 'edit-access-key'}
+        onClose={closeDrawer}
+        keyId="AKIA112AK3IALQI2"
+        onSubmit={(data) => {
+          console.log('Edit access key:', data);
         }}
       />
 
@@ -2637,7 +3906,7 @@ export function DrawersPage() {
       />
 
       {/* Manage Policies Drawer */}
-      <ManagePoliciesDrawer
+      <RolePoliciesDrawer
         isOpen={openDrawer === 'manage-policies'}
         onClose={closeDrawer}
         roleName="member"
@@ -2659,8 +3928,27 @@ export function DrawersPage() {
         }}
       />
 
+      {/* Grant Access Drawer */}
+      <GrantAccessDrawer
+        isOpen={openDrawer === 'grant-access'}
+        onClose={closeDrawer}
+        roleName="admin"
+      />
+
+      {/* Manage Linked Policies Drawer */}
+      <RolePoliciesDrawer
+        isOpen={openDrawer === 'manage-linked-policies'}
+        onClose={closeDrawer}
+        roleName="admin"
+        title="Manage linked policies"
+        description="Add or remove policies linked to this role."
+        onSubmit={(data) => {
+          console.log('Manage linked policies:', data);
+        }}
+      />
+
       {/* Create Domain Drawer */}
-      <CreateDomainDrawer
+      <DomainCreateDrawer
         isOpen={openDrawer === 'create-domain'}
         onClose={closeDrawer}
         onSubmit={(data) => {
@@ -2669,13 +3957,12 @@ export function DrawersPage() {
       />
 
       {/* Edit Domain Drawer */}
-      <EditDomainDrawer
+      <DomainEditDrawer
         isOpen={openDrawer === 'edit-domain'}
         onClose={closeDrawer}
         initialData={{
           name: 'domain',
           description: '',
-          enabled: true,
         }}
         onSubmit={(data) => {
           console.log('Edit domain:', data);
@@ -2693,7 +3980,7 @@ export function DrawersPage() {
       />
 
       {/* Admin Lock Setting Drawer */}
-      <AdminLockSettingDrawer
+      <AdminLockInstanceDrawer
         isOpen={openDrawer === 'admin-lock-setting'}
         onClose={closeDrawer}
         adminUsername="thaki.kim"
@@ -2722,7 +4009,7 @@ export function DrawersPage() {
           COMPUTE ADMIN DRAWERS ============================================= */}
 
       {/* Migrate Instance Drawer */}
-      <MigrateInstanceDrawer
+      <AdminInstanceMigrateDrawer
         isOpen={openDrawer === 'migrate-instance'}
         onClose={closeDrawer}
         instance={mockMigrateInstance}
@@ -2732,7 +4019,7 @@ export function DrawersPage() {
       />
 
       {/* Live Migrate Instance Drawer */}
-      <LiveMigrateInstanceDrawer
+      <AdminInstanceLiveMigrateDrawer
         isOpen={openDrawer === 'live-migrate-instance'}
         onClose={closeDrawer}
         instance={mockLiveMigrateInstance}
@@ -2742,7 +4029,7 @@ export function DrawersPage() {
       />
 
       {/* Manage Metadata Drawer */}
-      <ManageMetadataDrawer
+      <AdminMetadataDrawer
         isOpen={openDrawer === 'manage-metadata'}
         onClose={closeDrawer}
         image={mockManageMetadataImage}
@@ -2752,12 +4039,130 @@ export function DrawersPage() {
       />
 
       {/* Migrate Volume Drawer */}
-      <MigrateVolumeDrawer
+      <AdminVolumeMigrateDrawer
         isOpen={openDrawer === 'migrate-volume'}
         onClose={closeDrawer}
         volume={mockMigrateVolume}
         onMigrate={(backendId) => {
           console.log('Migrate volume to backend:', backendId);
+        }}
+      />
+
+      {/* Update Volume Status Drawer */}
+      <UpdateVolumeStatusDrawer
+        isOpen={openDrawer === 'update-volume-status'}
+        onClose={closeDrawer}
+        volume={mockUpdateVolumeStatus}
+        onSubmit={(status) => {
+          console.log('Update volume status:', status);
+        }}
+      />
+
+      {/* Update Snapshot Status Drawer */}
+      <UpdateSnapshotStatusDrawer
+        isOpen={openDrawer === 'update-snapshot-status'}
+        onClose={closeDrawer}
+        snapshot={mockUpdateSnapshotStatus}
+        onSubmit={(status) => {
+          console.log('Update snapshot status:', status);
+        }}
+      />
+
+      {/* Create Volume Type Drawer */}
+      <CreateVolumeTypeDrawer
+        isOpen={openDrawer === 'create-volume-type'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create volume type:', data);
+        }}
+      />
+
+      {/* Edit Volume Type Drawer */}
+      <EditVolumeTypeDrawer
+        isOpen={openDrawer === 'edit-volume-type'}
+        onClose={closeDrawer}
+        volumeType={mockEditVolumeType}
+        onSubmit={(name, description) => {
+          console.log('Edit volume type:', { name, description });
+        }}
+      />
+
+      {/* Manage QoS Spec Drawer */}
+      <ManageQosSpecDrawer
+        isOpen={openDrawer === 'manage-qos-spec'}
+        onClose={closeDrawer}
+        volumeType={mockManageQosVolumeType}
+        onSubmit={(qosSpecId) => {
+          console.log('Manage QoS spec:', qosSpecId);
+        }}
+      />
+
+      {/* Manage Access Drawer */}
+      <ManageAccessDrawer
+        isOpen={openDrawer === 'manage-access'}
+        onClose={closeDrawer}
+        volumeType={mockManageAccessVolumeType}
+        onSubmit={(data) => {
+          console.log('Manage access:', data);
+        }}
+      />
+
+      {/* Create Encryption Drawer */}
+      <CreateEncryptionDrawer
+        isOpen={openDrawer === 'create-encryption'}
+        onClose={closeDrawer}
+        volumeType={mockCreateEncryptionVolumeType}
+        onSubmit={(data) => {
+          console.log('Create encryption:', data);
+        }}
+      />
+
+      {/* Create QoS Spec Drawer */}
+      <CreateQosSpecDrawer
+        isOpen={openDrawer === 'create-qos-spec'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create QoS spec:', data);
+        }}
+      />
+
+      {/* Edit Consumer Drawer */}
+      <EditConsumerDrawer
+        isOpen={openDrawer === 'edit-consumer'}
+        onClose={closeDrawer}
+        qosSpec={mockEditConsumerQosSpec}
+        onSubmit={(consumer) => {
+          console.log('Edit consumer:', consumer);
+        }}
+      />
+
+      {/* Create Extra Spec Drawer */}
+      <CreateExtraSpecDrawer
+        isOpen={openDrawer === 'create-extra-spec'}
+        onClose={closeDrawer}
+        volumeType={mockCreateExtraSpecVolumeType}
+        onSubmit={(data) => {
+          console.log('Create extra spec:', data);
+        }}
+      />
+
+      {/* Edit Extra Spec Drawer */}
+      <EditExtraSpecDrawer
+        isOpen={openDrawer === 'edit-extra-spec'}
+        onClose={closeDrawer}
+        extraSpec={mockEditExtraSpec}
+        onSubmit={(parameter, value) => {
+          console.log('Edit extra spec:', { parameter, value });
+        }}
+      />
+
+      {/* Create QoS Extra Spec Drawer */}
+      <CreateQosExtraSpecDrawer
+        isOpen={openDrawer === 'create-qos-extra-spec'}
+        onClose={closeDrawer}
+        qosSpec={mockCreateQosExtraSpec}
+        onSubmit={(data) => {
+          console.log('Create QoS extra spec:', data);
         }}
       />
 
@@ -2781,6 +4186,84 @@ export function DrawersPage() {
         }}
       />
 
+      {/* Assign Tenant to Node Drawer */}
+      <AssignTenantDrawer
+        isOpen={openDrawer === 'assign-tenant-to-node'}
+        onClose={closeDrawer}
+        node={mockAssignTenantNode}
+      />
+
+      {/* Create Subnet Drawer (Admin) */}
+      <SubnetDrawer
+        isOpen={openDrawer === 'admin-create-subnet'}
+        onClose={closeDrawer}
+        networkId="network-01"
+        networkName="private-network"
+        hideDns
+        onSubmit={(data) => {
+          console.log('Admin create subnet:', data);
+        }}
+      />
+
+      {/* Add DHCP Agent Drawer */}
+      <AddDhcpAgentDrawer
+        isOpen={openDrawer === 'add-dhcp-agent'}
+        onClose={closeDrawer}
+        networkName="private-network"
+        onSubmit={(agentId) => {
+          console.log('Add DHCP agent:', agentId);
+        }}
+      />
+
+      {/* Admin Create Router Drawer */}
+      <AdminCreateRouterDrawer
+        isOpen={openDrawer === 'admin-create-router'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Admin create router:', data);
+        }}
+      />
+
+      {/* Admin External Gateway Setting Drawer */}
+      <AdminExternalGatewayDrawer
+        isOpen={openDrawer === 'admin-external-gateway'}
+        onClose={closeDrawer}
+        routerName="my-router"
+      />
+
+      {/* Manage ACL Rules Drawer */}
+      <ManageAclRulesDrawer
+        isOpen={openDrawer === 'manage-acl-rules'}
+        onClose={closeDrawer}
+        floatingIp="172.24.4.228"
+        onSubmit={(rules) => {
+          console.log('Manage ACL rules:', rules);
+        }}
+      />
+
+      {/* Admin Create Tenant Drawer */}
+      <AdminTenantDrawer
+        isOpen={openDrawer === 'admin-create-tenant'}
+        onClose={closeDrawer}
+        mode="create"
+        onSubmit={(data) => {
+          console.log('Create tenant:', data);
+        }}
+      />
+
+      {/* Admin Edit Tenant Drawer */}
+      <AdminTenantDrawer
+        isOpen={openDrawer === 'admin-edit-tenant'}
+        onClose={closeDrawer}
+        mode="edit"
+        initialName="tenantA"
+        initialDescription=""
+        initialEnabled={true}
+        onSubmit={(data) => {
+          console.log('Edit tenant:', data);
+        }}
+      />
+
       {/* =============================================
           CONTAINER DRAWERS ============================================= */}
 
@@ -2790,6 +4273,85 @@ export function DrawersPage() {
         onClose={closeDrawer}
         onSelect={(categoryId, resourceId, resourceName) => {
           console.log('Resource selected:', { categoryId, resourceId, resourceName });
+        }}
+      />
+
+      {/* =============================================
+          SECURITY DRAWERS ============================================= */}
+
+      <CreateFirewallDrawer
+        isOpen={openDrawer === 'create-firewall'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create firewall:', data);
+        }}
+      />
+
+      <EditFirewallDrawer
+        isOpen={openDrawer === 'edit-firewall'}
+        onClose={closeDrawer}
+        firewall={mockEditFirewall}
+        onSubmit={(data) => {
+          console.log('Edit firewall:', data);
+        }}
+      />
+
+      <ManageFirewallPortsDrawer
+        isOpen={openDrawer === 'manage-firewall-ports'}
+        onClose={closeDrawer}
+        firewall={mockManagePortsFirewall}
+        onSubmit={(selectedPortIds) => {
+          console.log('Manage firewall ports:', selectedPortIds);
+        }}
+      />
+
+      <CreatePolicyDrawer
+        isOpen={openDrawer === 'create-policy'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create policy:', data);
+        }}
+      />
+
+      <EditPolicyDrawer
+        isOpen={openDrawer === 'edit-policy'}
+        onClose={closeDrawer}
+        policy={{
+          name: 'web-policy',
+          description: 'Web access policy',
+          shared: false,
+          audited: false,
+        }}
+        onSubmit={(data) => {
+          console.log('Edit policy:', data);
+        }}
+      />
+
+      <EditRuleDrawer
+        isOpen={openDrawer === 'edit-rule'}
+        onClose={closeDrawer}
+        rule={{
+          name: 'allow-http',
+          description: 'Allow HTTP traffic',
+          enabled: true,
+          shared: false,
+          protocol: 'TCP',
+          action: 'allow',
+          sourceCidr: '',
+          sourcePort: '',
+          destinationCidr: '',
+          destinationPort: '80',
+        }}
+        onSubmit={(data) => {
+          console.log('Edit rule:', data);
+        }}
+      />
+
+      <SecurityCreateSGDrawer
+        isOpen={openDrawer === 'create-security-group'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create security group:', data);
         }}
       />
 

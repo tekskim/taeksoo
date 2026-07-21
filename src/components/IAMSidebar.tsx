@@ -1,6 +1,7 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconUsers,
   IconUsersGroup,
   IconShieldLock,
@@ -12,6 +13,8 @@ import {
   IconLock,
   IconClock,
   IconHistory,
+  IconListDetails,
+  IconTestPipe,
 } from '@tabler/icons-react';
 import { useLocation } from 'react-router-dom';
 import { AppSwitcher } from './AppSwitcher';
@@ -23,9 +26,10 @@ import { AppSwitcher } from './AppSwitcher';
 interface IAMSidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  forceVisible?: boolean;
 }
 
-export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
+export function IAMSidebar({ isOpen = true, onToggle, forceVisible }: IAMSidebarProps) {
   const location = useLocation();
 
   // Check if current path matches href
@@ -41,7 +45,7 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
@@ -49,14 +53,23 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
       <AppSwitcher currentAppId="iam" onToggleSidebar={onToggle} />
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2"
+        aria-label="IAM navigation"
+      >
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
 
           {/* Home */}
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
-            label="Home"
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+            label="Dashboard"
             href="/iam"
             active={isActive('/iam')}
           />
@@ -76,6 +89,12 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
               active={isActive('/iam/user-groups')}
             />
             <MenuItem
+              icon={<IconUserCog size={16} stroke={1.5} />}
+              label="Service accounts"
+              href="/iam/service-accounts"
+              active={isActive('/iam/service-accounts')}
+            />
+            <MenuItem
               icon={<IconShieldLock size={16} stroke={1.5} />}
               label="Roles"
               href="/iam/roles"
@@ -86,6 +105,18 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
               label="Policies"
               href="/iam/policies"
               active={isActive('/iam/policies')}
+            />
+            <MenuItem
+              icon={<IconListDetails size={16} stroke={1.5} />}
+              label="Action catalog"
+              href="/iam/action-catalog"
+              active={isActive('/iam/action-catalog')}
+            />
+            <MenuItem
+              icon={<IconTestPipe size={16} stroke={1.5} />}
+              label="Policy simulator"
+              href="/iam/policy-simulator"
+              active={isActive('/iam/policy-simulator')}
             />
           </MenuSection>
 
@@ -153,7 +184,7 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

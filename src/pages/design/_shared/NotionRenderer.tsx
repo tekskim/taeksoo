@@ -168,7 +168,7 @@ function MarkdownElement({ element }: { element: MdElement }) {
       );
     case 'code':
       return (
-        <pre className="p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-x-auto">
+        <pre className="p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-x-auto">
           <code className="text-body-sm text-[var(--color-text-default)] font-mono">
             {element.content}
           </code>
@@ -185,14 +185,14 @@ function MarkdownElement({ element }: { element: MdElement }) {
     case 'table':
       if (!element.rows || element.rows.length === 0) return null;
       return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
           <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
             <thead>
-              <tr>
+              <tr className="bg-[var(--color-surface-subtle)]">
                 {element.rows[0].map((cell, j) => (
                   <th
                     key={j}
-                    className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]"
+                    className="text-left text-label-md font-medium p-2 border-b border-r last:border-r-0 border-[var(--color-border-subtle)]"
                   >
                     <InlineMarkdown text={cell} />
                   </th>
@@ -201,11 +201,11 @@ function MarkdownElement({ element }: { element: MdElement }) {
             </thead>
             <tbody>
               {element.rows.slice(1).map((row, i) => (
-                <tr key={i}>
+                <tr key={i} className="border-t border-[var(--color-border-subtle)]">
                   {row.map((cell, j) => (
                     <td
                       key={j}
-                      className="p-2 border border-[var(--color-border-default)] align-top"
+                      className="p-2 border-r last:border-r-0 border-[var(--color-border-subtle)] align-top"
                     >
                       <InlineMarkdown text={cell} />
                     </td>

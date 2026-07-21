@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -25,13 +24,8 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconCirclePlus,
-  IconBell,
-  IconTrash,
-  IconChevronDown,
-  IconEdit,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconChevronDown, IconEdit } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -92,7 +86,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'db-data',
     status: 'in-use',
     size: '1500GiB',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     volumeName: 'db-data',
     availabilityZone: 'nova',
     description: 'Database data volume',
@@ -110,7 +104,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'app-storage',
     status: 'in-use',
     size: '500GiB',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     volumeName: 'app-storage',
     availabilityZone: 'nova',
     description: 'Application storage',
@@ -128,7 +122,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'backup-vol',
     status: 'active',
     size: '2000GiB',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     volumeName: 'backup-vol',
     availabilityZone: 'nova',
     description: 'Backup storage',
@@ -146,7 +140,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'log-storage',
     status: 'in-use',
     size: '100GiB',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     volumeName: 'log-storage',
     availabilityZone: 'nova',
     description: 'Log storage volume',
@@ -164,7 +158,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'cache-vol',
     status: 'in-use',
     size: '256GiB',
-    createdAt: 'Aug 30, 2025 21:37:41',
+    createdAt: 'Aug 30, 2026 21:37:41',
     volumeName: 'cache-vol',
     availabilityZone: 'nova',
     description: 'Cache volume',
@@ -182,7 +176,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'media-storage',
     status: 'active',
     size: '5000GiB',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     volumeName: 'media-storage',
     availabilityZone: 'nova',
     description: 'Media storage volume',
@@ -200,7 +194,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'temp-vol',
     status: 'pending',
     size: '50GiB',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     volumeName: 'temp-vol',
     availabilityZone: 'nova',
     description: 'Temporary volume',
@@ -218,7 +212,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'ml-data',
     status: 'in-use',
     size: '1000GiB',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     volumeName: 'ml-data',
     availabilityZone: 'nova',
     description: 'ML Dataset volume',
@@ -236,7 +230,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'archive-vol',
     status: 'active',
     size: '10000GiB',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     volumeName: 'archive-vol',
     availabilityZone: 'nova',
     description: 'Archive storage',
@@ -254,7 +248,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'boot-vol-01',
     status: 'in-use',
     size: '100GiB',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     volumeName: 'boot-vol-01',
     availabilityZone: 'nova',
     description: 'Boot volume',
@@ -274,7 +268,7 @@ const defaultVolumeDetail: VolumeDetail = {
   name: 'volume',
   status: 'available',
   size: '0 GiB',
-  createdAt: 'Dec 25, 2025 09:12:20',
+  createdAt: 'Dec 25, 2026 09:12:20',
   volumeName: 'volume',
   availabilityZone: 'nova',
   description: '-',
@@ -294,7 +288,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = Array.from({ length: 115 }, (_, i)
   name: `vol-snap-${String(34 + i).padStart(2, '0')}`,
   status: 'available' as SnapshotStatus,
   size: '1500GiB',
-  createdAt: 'Sep 12, 2025 15:43:35',
+  createdAt: 'Sep 12, 2026 15:43:35',
 }));
 
 // Mock volume backups
@@ -304,7 +298,7 @@ const mockVolumeBackups: VolumeBackup[] = Array.from({ length: 115 }, (_, i) => 
   status: 'available' as BackupStatus,
   backupMode: 'Full Backup',
   size: '1500GiB',
-  createdAt: 'Sep 12, 2025 15:43:35',
+  createdAt: 'Sep 12, 2026 15:43:35',
 }));
 
 /* ----------------------------------------
@@ -380,9 +374,8 @@ export function ComputeAdminVolumeDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
     { label: 'Volumes', href: '/compute-admin/volumes' },
-    { label: volume.name, href: `/volumes/${volume.id}` },
+    { label: volume.name },
   ];
 
   // Filter snapshots by search query
@@ -440,7 +433,12 @@ export function ComputeAdminVolumeDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -463,6 +461,7 @@ export function ComputeAdminVolumeDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div className="flex items-center justify-center">
           <button
@@ -503,7 +502,12 @@ export function ComputeAdminVolumeDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -533,6 +537,7 @@ export function ComputeAdminVolumeDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div className="flex items-center justify-center">
           <button
@@ -569,20 +574,13 @@ export function ComputeAdminVolumeDetailPage() {
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => navigate(-1)}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Volume Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{volume.name}</DetailHeader.Title>

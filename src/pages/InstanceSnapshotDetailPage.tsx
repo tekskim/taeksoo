@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -21,13 +20,7 @@ import type { ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import {
-  IconCirclePlus,
-  IconTrash,
-  IconBell,
-  IconChevronDown,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconChevronDown, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -65,7 +58,7 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     name: 'Ubuntu-22.04-base',
     status: 'active',
     size: '16 GiB',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     description: 'Base web server snapshot',
     sourceInstance: 'web-server-01',
     os: 'Ubuntu 22.04',
@@ -101,7 +94,7 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     name: 'CentOS-8-web',
     status: 'active',
     size: '32 GiB',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     description: 'Database server backup',
     sourceInstance: 'db-server-01',
     os: 'CentOS 8',
@@ -125,7 +118,7 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     name: 'Debian-12-db',
     status: 'active',
     size: '64 GiB',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     description: 'Application server snapshot',
     sourceInstance: 'app-server-01',
     os: 'Debian 12',
@@ -203,8 +196,7 @@ export function InstanceSnapshotDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Instance snapshots', href: '/compute/instance-snapshots' },
+    { label: 'Instance Snapshots', href: '/compute/instance-snapshots' },
     { label: snapshot.name },
   ];
 
@@ -230,20 +222,13 @@ export function InstanceSnapshotDetailPage() {
           onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => navigate('/instance-snapshots')}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Snapshot Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>

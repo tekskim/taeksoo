@@ -16,6 +16,7 @@ const IAMPolicyDetailPage = lazy(() => import('@/pages/IAMPolicyDetailPage'));
 const CreatePolicyPage = lazy(() => import('@/pages/CreatePolicyPage'));
 const IAMActiveSessionsPage = lazy(() => import('@/pages/IAMActiveSessionsPage'));
 const IAMDomainsPage = lazy(() => import('@/pages/IAMDomainsPage'));
+const CreateDomainPage = lazy(() => import('@/pages/CreateDomainPage'));
 const IAMSystemAdministratorsPage = lazy(() => import('@/pages/IAMSystemAdministratorsPage'));
 const IAMSystemAdminDetailPage = lazy(() => import('@/pages/IAMSystemAdminDetailPage'));
 const CreateSystemAdministratorPage = lazy(() => import('@/pages/CreateSystemAdministratorPage'));
@@ -24,6 +25,10 @@ const IAMMFAPoliciesPage = lazy(() => import('@/pages/IAMMFAPoliciesPage'));
 const IAMSessionPoliciesPage = lazy(() => import('@/pages/IAMSessionPoliciesPage'));
 const IAMTokenPoliciesPage = lazy(() => import('@/pages/IAMTokenPoliciesPage'));
 const IAMLoginPoliciesPage = lazy(() => import('@/pages/IAMLoginPoliciesPage'));
+const IAMServiceAccountsPage = lazy(() => import('@/pages/IAMServiceAccountsPage'));
+const IAMServiceAccountDetailPage = lazy(() => import('@/pages/IAMServiceAccountDetailPage'));
+const IAMActionCatalogPage = lazy(() => import('@/pages/IAMActionCatalogPage'));
+const IAMPolicySimulatorPage = lazy(() => import('@/pages/IAMPolicySimulatorPage'));
 
 export const iamRoutes = (
   <>
@@ -46,6 +51,8 @@ export const iamRoutes = (
     <Route path="/iam/policies/:policyId" element={<IAMPolicyDetailPage />} />
     <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
     <Route path="/iam/domains" element={<IAMDomainsPage />} />
+    <Route path="/iam/domains/create" element={<CreateDomainPage />} />
+    <Route path="/iam/domains/create-v2" element={<CreateDomainPage />} />
     <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
     <Route path="/iam/system-administrators/create" element={<CreateSystemAdministratorPage />} />
     <Route
@@ -58,6 +65,10 @@ export const iamRoutes = (
     <Route path="/iam/session-policies" element={<IAMSessionPoliciesPage />} />
     <Route path="/iam/token-policies" element={<IAMTokenPoliciesPage />} />
     <Route path="/iam/login-policies" element={<IAMLoginPoliciesPage />} />
+    <Route path="/iam/service-accounts" element={<IAMServiceAccountsPage />} />
+    <Route path="/iam/service-accounts/:name" element={<IAMServiceAccountDetailPage />} />
+    <Route path="/iam/action-catalog" element={<IAMActionCatalogPage />} />
+    <Route path="/iam/policy-simulator" element={<IAMPolicySimulatorPage />} />
     <Route path="/iam/*" element={<IAMHomePage />} />
   </>
 );

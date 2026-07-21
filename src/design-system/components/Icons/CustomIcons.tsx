@@ -6734,3 +6734,65 @@ export const IconGrid = forwardRef<SVGSVGElement, CustomIconProps>(
   }
 );
 IconGrid.displayName = 'IconGrid';
+
+/**
+ * IconHardDriveFigma - Figma "Icon/Hard_drive"
+ * Datasets 메뉴용 아이콘 (하드드라이브 보관함 형태)
+ * Figma 원본 viewBox 유지 — stroke-width는 SVG 내부 좌표계 기준 1
+ */
+export const IconHardDriveFigma = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="-0.5 -0.5 13.6667 11.3333"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <path
+          d="M11.8099 5.16667H0.833374M2.83333 7.5H2.83917M5.16667 7.5H5.1725M2.5125 1.1475L0.5 5.16667V8.66667C0.5 8.97609 0.622916 9.27283 0.841709 9.49162C1.0605 9.71042 1.35725 9.83333 1.66667 9.83333H11C11.3094 9.83333 11.6062 9.71042 11.825 9.49162C12.0438 9.27283 12.1667 8.97609 12.1667 8.66667V5.16667L10.1542 1.1475C10.0576 0.953126 9.90869 0.78955 9.72422 0.675163C9.53976 0.560777 9.32705 0.500115 9.11 0.5H3.55667C3.33962 0.500115 3.1269 0.560777 2.94244 0.675163C2.75798 0.78955 2.60909 0.953126 2.5125 1.1475Z"
+          stroke={color}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+);
+IconHardDriveFigma.displayName = 'IconHardDriveFigma';
+
+/**
+ * IconPackagesFigma - Figma "Icon/packages"
+ * Packages 메뉴용 아이콘 (3D 다중 박스 형태)
+ * Figma 원본 viewBox 유지 — stroke-width는 SVG 내부 좌표계 기준 1
+ */
+export const IconPackagesFigma = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="-0.5 -0.5 14 14"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <path
+          d="M0.5 7.4L3.5 9.2V12.5M0.5 7.4L3.5 5.6L6.5 7.4M0.5 7.4V10.7L3.5 12.5M6.5 7.4V10.7M6.5 7.4L9.5 9.2M6.5 7.4L9.5 5.6M6.5 7.4V4.1M6.5 10.7L3.5 12.5M6.5 10.7L9.5 12.5M3.5 9.22701L6.5 7.40901M9.5 9.2V12.5M9.5 9.2L12.5 7.4M9.5 5.6L12.5 7.4M9.5 5.6V2.3M12.5 7.4V10.7L9.5 12.5M6.5 4.1L3.5 2.3L6.5 0.5L9.5 2.3M6.5 4.1L9.5 2.3M3.5 2.318V5.591"
+          stroke={color}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+);
+IconPackagesFigma.displayName = 'IconPackagesFigma';

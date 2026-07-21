@@ -1,11 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -18,7 +17,8 @@ import {
   ConfirmModal,
   StatusIndicator,
   PageShell,
-  CopyButton,
+  DetailHeader,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -30,9 +30,9 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconTrash,
-  IconBell,
   IconCirclePlus,
   IconDotsCircleHorizontal,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -44,6 +44,8 @@ interface SecurityGroupDetail {
   name: string;
   description: string;
   createdAt: string;
+  /** Where this security group is managed (e.g. cloud networking). */
+  origin: string;
 }
 
 type RuleDirection = 'Ingress' | 'Egress';
@@ -86,69 +88,72 @@ const mockSecurityGroupsMap: Record<string, SecurityGroupDetail> = {
     id: 'sg-001',
     name: 'sg-01',
     description: 'Web server access group',
-    createdAt: 'Jan 15, 2024 09:23:41',
+    createdAt: 'Jan 15, 2026 09:23:41',
+    origin: 'OpenStack Neutron',
   },
   'sg-002': {
     id: 'sg-002',
     name: 'default',
     description: 'Default security group',
-    createdAt: 'Jan 10, 2024 14:07:22',
+    createdAt: 'Jan 10, 2026 14:07:22',
+    origin: 'OpenStack Neutron',
   },
   'sg-003': {
     id: 'sg-003',
     name: 'db-sg',
     description: 'Database access group',
-    createdAt: 'Feb 1, 2024 11:45:33',
+    createdAt: 'Feb 1, 2026 11:45:33',
+    origin: 'OpenStack Neutron',
   },
   'sg-004': {
     id: 'sg-004',
     name: 'app-sg',
     description: 'Application server security group',
-    createdAt: 'Feb 15, 2024 16:52:08',
+    createdAt: 'Feb 15, 2026 16:52:08',
+    origin: 'OpenStack Neutron',
   },
   'sg-005': {
     id: 'sg-005',
     name: 'lb-sg',
     description: 'Load balancer security group',
-    createdAt: 'Mar 1, 2024 08:30:15',
+    createdAt: 'Mar 1, 2026 08:30:15',
+    origin: 'OpenStack Neutron',
   },
   'sg-006': {
     id: 'sg-006',
     name: 'cache-sg',
     description: 'Cache server access group',
-    createdAt: 'Mar 10, 2024 13:19:44',
+    createdAt: 'Mar 10, 2026 13:19:44',
+    origin: 'OpenStack Neutron',
   },
   'sg-007': {
     id: 'sg-007',
     name: 'monitor-sg',
     description: 'Monitoring access group',
-    createdAt: 'Apr 1, 2024 10:41:27',
+    createdAt: 'Apr 1, 2026 10:41:27',
+    origin: 'OpenStack Neutron',
   },
   'sg-008': {
     id: 'sg-008',
     name: 'vpn-sg',
     description: 'VPN access group',
-    createdAt: 'Apr 15, 2024 17:03:56',
+    createdAt: 'Apr 15, 2026 17:03:56',
+    origin: 'OpenStack Neutron',
   },
   'sg-009': {
     id: 'sg-009',
     name: 'admin-sg',
     description: 'Admin access group',
-    createdAt: 'May 1, 2024 12:28:19',
+    createdAt: 'May 1, 2026 12:28:19',
+    origin: 'OpenStack Neutron',
   },
   'sg-010': {
     id: 'sg-010',
     name: 'test-sg',
     description: 'Test environment security group',
-    createdAt: 'May 10, 2024 15:55:02',
+    createdAt: 'May 10, 2026 15:55:02',
+    origin: 'OpenStack Neutron',
   },
-};
-
-const defaultSecurityGroupDetail: SecurityGroupDetail = {
-  id: 'unknown',
-  name: 'Unknown Security group',
-  description: '-',
-  createdAt: '-',
 };
 
 const mockRules: SecurityGroupRule[] = Array.from({ length: 115 }, (_, i) => ({
@@ -174,6 +179,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
    ---------------------------------------- */
 
 export default function SecurityGroupDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -196,6 +202,7 @@ export default function SecurityGroupDetailPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [ruleToDelete, setRuleToDelete] = useState<SecurityGroupRule | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -205,18 +212,21 @@ export default function SecurityGroupDetailPage() {
     useTabs();
 
   // Get security group data based on URL ID
-  const securityGroup = id
-    ? mockSecurityGroupsMap[id] || defaultSecurityGroupDetail
-    : defaultSecurityGroupDetail;
-  const rules = mockRules;
+  const securityGroup = id ? mockSecurityGroupsMap[id] : undefined;
+  const [rules, setRules] = useState(mockRules);
   const ports = mockPorts;
+
+  const breadcrumbItems = [
+    { label: 'Security Groups', href: '/compute/security-groups' },
+    { label: securityGroup?.name ?? id ?? '—' },
+  ];
 
   // Update tab label to security group name
   useEffect(() => {
-    if (securityGroup.name) {
+    if (securityGroup?.name) {
       updateActiveTabLabel(securityGroup.name);
     }
-  }, [securityGroup.name, updateActiveTabLabel]);
+  }, [securityGroup?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -308,7 +318,7 @@ export default function SecurityGroupDetailPage() {
       minWidth: columnMinWidths.name,
       render: (_, row) => (
         <Link
-          to={`/compute/networks/${row.id}`}
+          to={`/compute/ports/${row.id}`}
           className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
@@ -340,10 +350,14 @@ export default function SecurityGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getPortContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -393,10 +407,14 @@ export default function SecurityGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -408,6 +426,53 @@ export default function SecurityGroupDetailPage() {
       ),
     },
   ];
+
+  if (!securityGroup) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Security group not found"
+          description={`The security group with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/compute/security-groups')}
+            >
+              Back to Security Groups
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell
@@ -430,87 +495,54 @@ export default function SecurityGroupDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Security groups', href: '/compute/security-groups' },
-                { label: securityGroup.name },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
-        {/* Header Card */}
-        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
-          {/* Title */}
-          <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
-            {securityGroup.name}
-          </h1>
-
-          {/* Actions */}
-          <div className="flex items-center gap-1 mb-3">
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+      <VStack gap={6}>
+        <DetailHeader>
+          <DetailHeader.Title>{securityGroup.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} />}
+              onClick={() => console.log('Create rule', securityGroup.id)}
+            >
               Create rule
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={() => console.log('Edit security group', securityGroup.id)}
+            >
               Edit
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
-          </div>
-
-          {/* Info Row */}
-          <div className="flex items-center gap-2">
-            {/* ID */}
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
-              <div className="flex items-center gap-1 mt-1.5">
-                <p className="text-body-md text-[var(--color-text-default)]">{securityGroup.id}</p>
-                <CopyButton value={securityGroup.id} size="sm" iconOnly />
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <span className="text-label-sm text-[var(--color-text-subtle)]">Description</span>
-              <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
-                {securityGroup.description}
-              </p>
-            </div>
-
-            {/* Origin */}
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <span className="text-label-sm text-[var(--color-text-subtle)]">Origin</span>
-              <p className="text-body-md text-[var(--color-text-default)] mt-1.5">Container</p>
-            </div>
-
-            {/* Created at */}
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
-              <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
-                {securityGroup.createdAt}
-              </p>
-            </div>
-          </div>
-        </div>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" status="active" />
+            <DetailHeader.InfoCard label="ID" value={securityGroup.id} copyable />
+            <DetailHeader.InfoCard label="Description" value={securityGroup.description} />
+            <DetailHeader.InfoCard label="Origin" value={securityGroup.origin} />
+            <DetailHeader.InfoCard label="Created at" value={securityGroup.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
         {/* Tabs Section */}
         <div className="w-full">
-          <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
             <TabList>
               <Tab value="rules">Rules</Tab>
             </TabList>
@@ -520,7 +552,12 @@ export default function SecurityGroupDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Rules</h3>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() => console.log('Create rule', securityGroup.id)}
+                  >
                     Create rule
                   </Button>
                 </div>
@@ -543,6 +580,7 @@ export default function SecurityGroupDetailPage() {
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedRules.length === 0}
+                    onClick={() => console.log('Delete selected rules', selectedRules)}
                   >
                     Delete
                   </Button>
@@ -562,6 +600,7 @@ export default function SecurityGroupDetailPage() {
                   columns={ruleColumns}
                   data={paginatedRules}
                   rowKey="id"
+                  emptyMessage="No rules found"
                   selectable
                   selectedKeys={selectedRules}
                   onSelectionChange={setSelectedRules}
@@ -580,13 +619,31 @@ export default function SecurityGroupDetailPage() {
           setRuleToDelete(null);
         }}
         title="Delete rule"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected rules is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
         onConfirm={() => {
+          if (ruleToDelete) {
+            setRules((prev) => prev.filter((r) => r.id !== ruleToDelete.id));
+            setSelectedRules((prev) => prev.filter((rid) => rid !== ruleToDelete.id));
+          }
           setDeleteModalOpen(false);
           setRuleToDelete(null);
+        }}
+      />
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Delete security group"
+        description="Removing this security group is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/security-groups');
         }}
       />
     </PageShell>

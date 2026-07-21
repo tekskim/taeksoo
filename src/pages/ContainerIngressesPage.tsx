@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -11,6 +11,7 @@ import {
   Pagination,
   ListToolbar,
   ContextMenu,
+  ConfirmModal,
   PageShell,
   PageHeader,
   type TableColumn,
@@ -21,20 +22,15 @@ import {
   Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconTrash,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -66,7 +62,7 @@ const ingressesData: IngressRow[] = [
     target: ['http → 80/TCP', 'https-internal → 444/TCP'],
     default: '-',
     ingressClass: 'traefik',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '2',
@@ -76,7 +72,7 @@ const ingressesData: IngressRow[] = [
     target: ['api → 8080/TCP'],
     default: '-',
     ingressClass: 'nginx',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
   },
   {
     id: '3',
@@ -86,7 +82,7 @@ const ingressesData: IngressRow[] = [
     target: ['web → 80/TCP', 'websecure → 443/TCP'],
     default: 'backend-service:80',
     ingressClass: 'traefik',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
   },
   {
     id: '4',
@@ -96,7 +92,7 @@ const ingressesData: IngressRow[] = [
     target: ['app → 3000/TCP'],
     default: '-',
     ingressClass: 'traefik',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
   },
 ];
 
@@ -106,10 +102,36 @@ const ingressesData: IngressRow[] = [
 
 export function ContainerIngressesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [ingresses, setIngresses] = useState(ingressesData);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    updateActiveTabLabel('Ingresses');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
   const navigate = useNavigate();
 
   // Create menu items
@@ -141,10 +163,35 @@ export function ContainerIngressesPage() {
     navigate(`/container/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
+  const filteredData = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return ingresses;
+    return ingresses.filter((row) => {
+      const haystack = [
+        row.name,
+        row.namespace,
+        row.status,
+        row.default,
+        row.ingressClass,
+        row.createdAt,
+        row.target.join(' '),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [searchTerm, ingresses]);
+
+  const handleBulkDeleteIngresses = () => {
+    setIngresses((prev) => prev.filter((r) => !selectedRows.includes(r.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
+
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(ingressesData.length / rowsPerPage);
-  const paginatedData = ingressesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -265,8 +312,7 @@ export function ContainerIngressesPage() {
           {
             id: 'edit-config',
             label: 'Edit config',
-            onClick: () =>
-              navigate(`/container/ingresses/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
+            onClick: () => console.log('Edit Config:', row.id),
           },
           {
             id: 'edit-yaml',
@@ -289,7 +335,10 @@ export function ContainerIngressesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -332,55 +381,20 @@ export function ContainerIngressesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Ingresses' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Ingresses' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-ingresses', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-ingresses', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -425,12 +439,16 @@ export function ContainerIngressesPage() {
                 placeholder="Search ingress by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
               />
               <Button
                 variant="secondary"
                 size="sm"
                 icon={<IconDownload size={12} stroke={1.5} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -441,6 +459,7 @@ export function ContainerIngressesPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML')}
               >
                 Download YAML
               </Button>
@@ -449,6 +468,7 @@ export function ContainerIngressesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -468,10 +488,8 @@ export function ContainerIngressesPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={ingressesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
@@ -483,8 +501,23 @@ export function ContainerIngressesPage() {
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
           onRowClick={(row) => navigate(`/container/ingresses/${row.id}`)}
+          loading={loading}
+          emptyMessage="No ingresses found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteIngresses}
+        title="Delete selected ingresses"
+        description="Removing the selected ingresses is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} ingress(es)`}
+      />
     </PageShell>
   );
 }

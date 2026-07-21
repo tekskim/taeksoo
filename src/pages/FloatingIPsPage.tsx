@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -27,20 +26,20 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
+import { AssociateFIPtoInstanceDrawer } from '@/components/AssociateFIPtoInstanceDrawer';
 import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingIPDrawer';
-import { EditFloatingIPDrawer } from '@/components/EditFloatingIPDrawer';
-import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
+import { EditFIPDrawer } from '@/components/EditFIPDrawer';
+import { AllocateFIPDrawer } from '@/components/AllocateFIPDrawer';
 import {
   IconDotsCircleHorizontal,
   IconUnlink,
   IconDownload,
-  IconBell,
   IconExternalLink,
   IconCube,
   IconBinaryTree,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -48,11 +47,15 @@ import { Link } from 'react-router-dom';
 
 type FloatingIPStatus = 'active' | 'error' | 'down';
 
+type AssociatedToResource = 'instance' | 'load-balancer';
+
 interface FloatingIP {
   id: string;
   floatingIp: string;
   associatedTo: string | null;
   associatedToId: string | null;
+  /** When set, controls detail-page routing; defaults to "instance" when associated. */
+  associatedToType?: AssociatedToResource;
   fixedIp: string;
   network: string;
   networkId: string;
@@ -73,7 +76,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.39',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: 'Oct 1, 2025 10:20:28',
+    createdAt: 'Oct 1, 2026 10:20:28',
     status: 'active',
   },
   {
@@ -84,7 +87,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.40',
     network: 'net-02',
     networkId: 'net-002',
-    createdAt: 'Oct 2, 2025 17:33:45',
+    createdAt: 'Oct 2, 2026 17:33:45',
     status: 'active',
   },
   {
@@ -95,7 +98,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '-',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: 'Oct 3, 2025 00:46:02',
+    createdAt: 'Oct 3, 2026 00:46:02',
     status: 'down',
   },
   {
@@ -106,7 +109,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.41',
     network: 'net-03',
     networkId: 'net-003',
-    createdAt: 'Sep 28, 2025 07:11:07',
+    createdAt: 'Sep 28, 2026 07:11:07',
     status: 'active',
   },
   {
@@ -114,10 +117,11 @@ const mockFloatingIPs: FloatingIP[] = [
     floatingIp: '172.24.4.232',
     associatedTo: 'load-balancer',
     associatedToId: 'lb-001',
+    associatedToType: 'load-balancer',
     fixedIp: '10.7.65.42',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: 'Sep 25, 2025 10:32:16',
+    createdAt: 'Sep 25, 2026 10:32:16',
     status: 'active',
   },
   {
@@ -128,7 +132,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '-',
     network: 'net-02',
     networkId: 'net-002',
-    createdAt: 'Sep 20, 2025 23:27:51',
+    createdAt: 'Sep 20, 2026 23:27:51',
     status: 'error',
   },
   {
@@ -139,7 +143,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.43',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
     status: 'active',
   },
   {
@@ -150,7 +154,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.44',
     network: 'net-04',
     networkId: 'net-004',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -161,7 +165,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '-',
     network: 'net-03',
     networkId: 'net-003',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     status: 'down',
   },
   {
@@ -172,7 +176,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.45',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
     status: 'active',
   },
 ];
@@ -187,18 +191,27 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'>
   down: 'down',
 };
 
+function pathForAssociatedResource(row: FloatingIP): string | null {
+  if (!row.associatedToId) return null;
+  const kind = row.associatedToType ?? 'instance';
+  if (kind === 'load-balancer') {
+    return `/compute/load-balancers/${row.associatedToId}`;
+  }
+  return `/compute/instances/${row.associatedToId}`;
+}
+
 /* ----------------------------------------
    Component
    ---------------------------------------- */
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'floatingIp', label: 'Floating IP', type: 'text' },
-  { key: 'associatedTo', label: 'Associated to', type: 'text' },
-  { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
-  { key: 'network', label: 'Network', type: 'text' },
+  { id: 'floatingIp', label: 'Floating IP', type: 'text' },
+  { id: 'associatedTo', label: 'Associated to', type: 'text' },
+  { id: 'fixedIp', label: 'Fixed IP', type: 'text' },
+  { id: 'network', label: 'Network', type: 'text' },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -210,15 +223,17 @@ const filterFields: FilterField[] = [
 ];
 
 export function FloatingIPsPage() {
+  const navigate = useNavigate();
   const [selectedFloatingIPs, setSelectedFloatingIPs] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [floatingIPs] = useState(mockFloatingIPs);
+  const [floatingIPs, setFloatingIPs] = useState(mockFloatingIPs);
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [floatingIPToDelete, setFloatingIPToDelete] = useState<FloatingIP | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // Allocate floating IP drawer state
   const [isAllocateDrawerOpen, setIsAllocateDrawerOpen] = useState(false);
@@ -261,8 +276,24 @@ export function FloatingIPsPage() {
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Floating IPs');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -305,7 +336,7 @@ export function FloatingIPsPage() {
 
     return floatingIPs.filter((fip) => {
       return appliedFilters.every((filter) => {
-        const value = String(fip[filter.field as keyof FloatingIP] || '').toLowerCase();
+        const value = String(fip[filter.fieldId as keyof FloatingIP] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -345,7 +376,12 @@ export function FloatingIPsPage() {
           >
             {row.floatingIp}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -354,13 +390,18 @@ export function FloatingIPsPage() {
       label: 'Associated to',
       flex: 1,
       minWidth: columnMinWidths.associatedTo,
-      render: (_, row) =>
-        row.associatedTo ? (
+      render: (_, row) => {
+        if (!row.associatedTo) {
+          return <span className="block text-left w-full">-</span>;
+        }
+        const to = pathForAssociatedResource(row) ?? '#';
+        const isLb = (row.associatedToType ?? 'instance') === 'load-balancer';
+        return (
           <div className="flex items-center gap-2 justify-between w-full">
             <div className="flex flex-col gap-0.5 min-w-0 text-left">
               <Tooltip content={row.associatedTo} position="top">
                 <Link
-                  to={`/compute/instances/${row.associatedToId}`}
+                  to={to}
                   className="inline-flex items-center gap-1 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -371,19 +412,29 @@ export function FloatingIPsPage() {
                   />
                 </Link>
               </Tooltip>
-              <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                ID : {row.associatedToId?.substring(0, 8)}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.associatedToId ?? undefined}>
+                  ID : {row.associatedToId?.substring(0, 8)}
+                </span>
+                <InlineCopyId value={row.associatedToId} />
               </span>
             </div>
-            <Tooltip content="Instance" position="top">
+            <Tooltip content={isLb ? 'Load balancer' : 'Instance'} position="top">
               <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] cursor-default">
-                <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                {isLb ? (
+                  <IconBinaryTree
+                    size={12}
+                    stroke={1.5}
+                    className="text-[var(--color-text-subtle)]"
+                  />
+                ) : (
+                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                )}
               </div>
             </Tooltip>
           </div>
-        ) : (
-          <span className="block text-left w-full">-</span>
-        ),
+        );
+      },
     },
     {
       key: 'fixedIp',
@@ -413,8 +464,11 @@ export function FloatingIPsPage() {
               />
             </Link>
           </Tooltip>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.networkId.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.networkId}>
+              ID : {row.networkId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.networkId} />
           </span>
         </div>
       ),
@@ -432,10 +486,14 @@ export function FloatingIPsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -461,10 +519,18 @@ export function FloatingIPsPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'release' && floatingIPToDelete) {
-      // Handle release
+      const id = floatingIPToDelete.id;
+      setFloatingIPs((prev) => prev.filter((f) => f.id !== id));
       setDeleteModalOpen(false);
       setFloatingIPToDelete(null);
+      setSelectedFloatingIPs((prev) => prev.filter((x) => x !== id));
     }
+  };
+
+  const handleBulkDelete = () => {
+    setFloatingIPs((prev) => prev.filter((f) => !selectedFloatingIPs.includes(f.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedFloatingIPs([]);
   };
 
   return (
@@ -488,22 +554,12 @@ export function FloatingIPsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Floating IPs' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Floating IPs' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -548,6 +604,7 @@ export function FloatingIPsPage() {
                 size="sm"
                 leftIcon={<IconUnlink size={12} />}
                 disabled={selectedFloatingIPs.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Release
               </Button>
@@ -574,6 +631,8 @@ export function FloatingIPsPage() {
           selectable
           selectedKeys={selectedFloatingIPs}
           onSelectionChange={setSelectedFloatingIPs}
+          loading={loading}
+          emptyMessage="No floating IPs found"
         />
       </VStack>
 
@@ -592,6 +651,19 @@ export function FloatingIPsPage() {
         onConfirm={() => handleContextMenuSelect('release')}
       />
 
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Release selected floating IPs"
+        description="Releasing the selected floating IPs is permanent and cannot be undone."
+        confirmText="Release"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedFloatingIPs.length} floating IP(s)`}
+      />
+
       {/* View Preferences Drawer */}
       <ViewPreferencesDrawer
         isOpen={isPreferencesOpen}
@@ -604,7 +676,7 @@ export function FloatingIPsPage() {
       />
 
       {/* Floating IP Drawers */}
-      <AssociateFloatingIPDrawer
+      <AssociateFIPtoInstanceDrawer
         isOpen={associateOpen}
         onClose={() => setAssociateOpen(false)}
         port={{ id: selectedFIPForDrawer?.id || '', name: selectedFIPForDrawer?.floatingIp || '' }}
@@ -623,7 +695,7 @@ export function FloatingIPsPage() {
         }
       />
 
-      <EditFloatingIPDrawer
+      <EditFIPDrawer
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
         floatingIP={{
@@ -633,7 +705,7 @@ export function FloatingIPsPage() {
       />
 
       {/* Allocate Floating IP Drawer */}
-      <AllocateFloatingIPDrawer
+      <AllocateFIPDrawer
         isOpen={isAllocateDrawerOpen}
         onClose={() => setIsAllocateDrawerOpen(false)}
       />

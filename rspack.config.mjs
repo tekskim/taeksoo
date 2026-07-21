@@ -18,7 +18,7 @@ export default defineConfig({
   output: {
     path: path.resolve(__dirname, 'docs'),
     filename: isDev ? '[name].js' : '[name].[contenthash].js',
-    publicPath: isDev ? '/' : '/taeksoo/',
+    publicPath: isDev ? '/' : '/tds_ssot/',
     clean: true,
   },
   resolve: {
@@ -26,6 +26,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    conditionNames: ['import', 'module', 'require', 'default'],
   },
   module: {
     rules: [
@@ -92,7 +93,7 @@ export default defineConfig({
     new rspack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'import.meta.env': JSON.stringify({
-        BASE_URL: isDev ? '/' : '/taeksoo/',
+        BASE_URL: isDev ? '/' : '/tds_ssot/',
         DEV: isDev,
         PROD: !isDev,
         MODE: process.env.NODE_ENV || 'development',
@@ -101,11 +102,20 @@ export default defineConfig({
     isDev && new RefreshPlugin(),
   ].filter(Boolean),
   devServer: {
-    port: 5173,
+    port: Number(process.env.PORT) || 5173,
     hot: true,
     historyApiFallback: true,
+    allowedHosts: ['local.thakicloud.net'],
     static: {
       directory: path.join(__dirname, 'public'),
+    },
+    client: {
+      overlay: {
+        runtimeErrors: (error) => {
+          if (error?.message?.includes('ResizeObserver loop')) return false;
+          return true;
+        },
+      },
     },
   },
   optimization: {

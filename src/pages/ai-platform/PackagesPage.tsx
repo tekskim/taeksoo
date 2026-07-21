@@ -1,212 +1,93 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   VStack,
-  HStack,
+  Button,
+  Tabs,
+  TabList,
+  Tab,
+  SearchInput,
+  Pagination,
+  PageShell,
+  PageHeader,
   TabBar,
   TopBar,
   Breadcrumb,
-  Button,
-  Badge,
-  PageShell,
-  PageHeader,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconSearch,
-  IconRefresh,
-  IconStar,
-  IconPackage,
-  IconLink,
-} from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
+import aiPlatformLogoSrc from '@/assets/icons/ai-platform-logo.png';
+import { IconPackage } from '@tabler/icons-react';
+import { DataTestToolbar, type DataMode } from './shared';
 
-/* ----------------------------------------
-   Thaki Image Card Component
-   ---------------------------------------- */
-
-interface ThakiImageCardProps {
-  name: string;
-  versionsCount: number;
-  tags: string[];
-  deployOptions: string[];
-  onDeploy?: (option: string) => void;
+interface PackageBadge {
+  label: string;
+  icon?: 'thaki' | 'common';
 }
 
-function ThakiImageCard({
-  name,
-  versionsCount,
-  tags,
-  deployOptions,
-  onDeploy,
-}: ThakiImageCardProps) {
-  return (
-    <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-4 flex flex-col gap-3">
-      {/* Header */}
-      <HStack gap={3} align="start">
-        <IconStar
-          size={20}
-          className="text-[var(--color-action-primary)] shrink-0 mt-0.5"
-          stroke={1.5}
-        />
-        <VStack gap={1} className="flex-1 min-w-0">
-          <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-            {name}
-          </span>
-          <span className="text-body-md text-[var(--color-text-subtle)]">
-            {versionsCount} versions available
-          </span>
-        </VStack>
-      </HStack>
-
-      {/* Tags */}
-      <HStack gap={2} className="flex-wrap">
-        {tags.map((tag) => (
-          <span
-            key={tag}
-            className="px-2 py-0.5 text-body-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] rounded"
-          >
-            {tag}
-          </span>
-        ))}
-      </HStack>
-
-      {/* Deploy Options */}
-      <HStack gap={2} className="flex-wrap">
-        {deployOptions.map((option) => (
-          <Button
-            key={option}
-            variant="secondary"
-            size="sm"
-            leftIcon={<IconLink size={12} stroke={1.5} />}
-            onClick={() => onDeploy?.(option)}
-          >
-            {option}
-          </Button>
-        ))}
-      </HStack>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   Common Image Card Component
-   ---------------------------------------- */
-
-interface CommonImageCardProps {
-  name: string;
+interface PackageCardProps {
+  title: string;
+  badges: PackageBadge[];
   onDeploy?: () => void;
 }
 
-function CommonImageCard({ name, onDeploy }: CommonImageCardProps) {
-  return (
-    <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-4 flex flex-col gap-3">
-      {/* Header */}
-      <HStack gap={3} align="start">
-        <IconPackage
-          size={20}
-          className="text-[var(--color-text-muted)] shrink-0 mt-0.5"
-          stroke={1.5}
-        />
-        <VStack gap={1} className="flex-1 min-w-0">
-          <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-            {name}
-          </span>
-          <span className="text-body-sm px-2 py-0.5 bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] rounded w-fit">
-            Common Image
-          </span>
-        </VStack>
-      </HStack>
+function ThakiBadgeIcon() {
+  return <img src={aiPlatformLogoSrc} alt="" width={12} height={12} className="shrink-0" />;
+}
 
-      {/* Deploy Button */}
-      <HStack justify="end">
-        <Button
-          variant="secondary"
-          size="sm"
-          leftIcon={<IconLink size={12} stroke={1.5} />}
-          onClick={onDeploy}
-        >
-          배포
+function PackageBadgeItem({ label, icon }: PackageBadge) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-[var(--radius-md)] bg-[#f3f4f6] px-1.5 py-0.5">
+      {icon === 'thaki' && <ThakiBadgeIcon />}
+      {icon === 'common' && (
+        <IconPackage size={12} stroke={1.5} className="shrink-0 text-[var(--color-text-muted)]" />
+      )}
+      <span className="text-label-sm text-[var(--color-text-muted)]">{label}</span>
+    </span>
+  );
+}
+
+function PackageCard({ title, badges, onDeploy }: PackageCardProps) {
+  return (
+    <div className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
+      <div className="flex flex-col gap-3">
+        <p className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+          {title}
+        </p>
+        <div className="flex flex-wrap items-center gap-1">
+          {badges.map((b, idx) => (
+            <PackageBadgeItem key={`${b.label}-${idx}`} {...b} />
+          ))}
+        </div>
+      </div>
+      <div className="flex items-center justify-end">
+        <Button variant="primary" size="sm" onClick={onDeploy}>
+          Deploy
         </Button>
-      </HStack>
+      </div>
     </div>
   );
 }
 
-/* ----------------------------------------
-   Section Header Component
-   ---------------------------------------- */
-
-interface SectionHeaderProps {
-  icon: React.ReactNode;
-  title: string;
-  count: number;
-}
-
-function SectionHeader({ icon, title, count }: SectionHeaderProps) {
-  return (
-    <HStack gap={2} align="center">
-      {icon}
-      <span className="text-heading-h5 text-[var(--color-text-default)]">{title}</span>
-      <Badge variant="info" size="sm">
-        {count}
-      </Badge>
-    </HStack>
-  );
-}
-
-/* ----------------------------------------
-   Packages Page
-   ---------------------------------------- */
-
-// Sample Thaki images data
-const thakiImages: ThakiImageCardProps[] = [
+const THAKI_PACKAGES: PackageCardProps[] = [
   {
-    name: 'codeserver',
-    versionsCount: 2,
-    tags: ['cpu', 'gpu'],
-    deployOptions: ['cpu', 'gpu'],
-  },
-  {
-    name: 'sandbox',
-    versionsCount: 2,
-    tags: ['cpu', 'gpu'],
-    deployOptions: ['cpu', 'gpu'],
-  },
-  {
-    name: 'vllm',
-    versionsCount: 2,
-    tags: ['amd64/cpu', 'amd64/gpu'],
-    deployOptions: ['amd64/cpu', 'amd64/gpu'],
-  },
-  {
-    name: 'vllm-kotaemon',
-    versionsCount: 3,
-    tags: ['amd64/cpu', 'amd64/gpu', 'arm64/cpu'],
-    deployOptions: ['amd64/cpu', 'amd64/gpu', 'arm64/cpu'],
-  },
-  {
-    name: 'vllm-openwebui',
-    versionsCount: 3,
-    tags: ['amd64/cpu', 'amd64/gpu', 'arm64/cpu'],
-    deployOptions: ['amd64/cpu', 'amd64/gpu', 'arm64/cpu'],
+    title: 'Title',
+    badges: [{ label: 'Thaki image', icon: 'thaki' }, { label: 'Label' }],
   },
 ];
 
-// Sample common images data
-const commonImages: CommonImageCardProps[] = [
-  { name: 'nginx:latest' },
-  { name: 'alpine:latest' },
-  { name: 'ubuntu:latest' },
-  { name: 'python:3.11' },
-  { name: 'node:20' },
-  { name: 'postgres:16' },
-  { name: 'redis:latest' },
-  { name: 'mysql:8' },
-  { name: 'mongo:latest' },
+const COMMON_PACKAGES: PackageCardProps[] = [
+  {
+    title: 'Title',
+    badges: [{ label: 'Common image', icon: 'common' }, { label: 'Label' }],
+  },
 ];
+
+const ITEMS_PER_PAGE = 16;
 
 export function PackagesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -216,6 +97,39 @@ export function PackagesPage() {
   }, [updateActiveTabLabel]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
+
+  const [activeTab, setActiveTab] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [dataMode, setDataMode] = useState<DataMode>('few');
+
+  const manyThaki = useMemo(() => {
+    const base = THAKI_PACKAGES[0];
+    return Array.from({ length: 30 }, (_, i) => ({ ...base, title: `Thaki Package ${i + 1}` }));
+  }, []);
+  const manyCommon = useMemo(() => {
+    const base = COMMON_PACKAGES[0];
+    return Array.from({ length: 30 }, (_, i) => ({ ...base, title: `Common Package ${i + 1}` }));
+  }, []);
+
+  const packages = useMemo(() => {
+    if (dataMode === 'empty') return [];
+    const thaki = dataMode === 'many' ? manyThaki : THAKI_PACKAGES;
+    const common = dataMode === 'many' ? manyCommon : COMMON_PACKAGES;
+    if (activeTab === 'thaki') return thaki;
+    if (activeTab === 'common') return common;
+    return [...thaki, ...common];
+  }, [activeTab, dataMode, manyThaki, manyCommon]);
+
+  const filtered = useMemo(() => {
+    if (!searchQuery) return packages;
+    return packages.filter((p) => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  }, [packages, searchQuery]);
+
+  const handleTabChange = useCallback((tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(1);
+  }, []);
 
   return (
     <PageShell
@@ -237,73 +151,63 @@ export function PackagesPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'AI Platform' }, { label: 'Hub' }, { label: 'Packages' }]}
-            />
-          }
-          actions={
-            <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Packages' }]} />}
+          actions={<AiPlatformTopBarActions />}
         />
       }
-      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6}>
-        <PageHeader
-          title="Packages Hub"
-          actions={
-            <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>
-              Refresh
-            </Button>
-          }
+      <VStack gap={3}>
+        <PageHeader title="Packages" />
+
+        <Tabs value={activeTab} onChange={handleTabChange} variant="underline" size="sm">
+          <TabList>
+            <Tab value="all">All</Tab>
+            <Tab value="thaki">Thaki images</Tab>
+            <Tab value="common">Common images</Tab>
+          </TabList>
+        </Tabs>
+
+        <SearchInput
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Find packages"
+          size="sm"
+          className="w-[280px]"
         />
 
-        {/* Thaki Images Section */}
-        <VStack gap={4}>
-          <SectionHeader
-            icon={
-              <IconStar size={20} className="text-[var(--color-action-primary)]" stroke={1.5} />
-            }
-            title="Thaki images"
-            count={thakiImages.length}
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {thakiImages.map((image) => (
-              <ThakiImageCard
-                key={image.name}
-                {...image}
-                onDeploy={(option) => console.log('Deploy', image.name, option)}
-              />
-            ))}
-          </div>
-        </VStack>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE))}
+          onPageChange={setCurrentPage}
+          totalItems={filtered.length}
+        />
 
-        {/* Common Images Section */}
-        <VStack gap={4}>
-          <SectionHeader
-            icon={<IconPackage size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />}
-            title="Common images"
-            count={commonImages.length}
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {commonImages.map((image) => (
-              <CommonImageCard
-                key={image.name}
-                {...image}
-                onDeploy={() => console.log('Deploy', image.name)}
-              />
-            ))}
+        {filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 w-full py-[120px] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              No packages available
+            </span>
+            <span className="text-body-md text-[var(--color-text-default)] text-center">
+              Packages will appear here when available for deployment.
+            </span>
           </div>
-        </VStack>
+        ) : (
+          <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] items-start gap-4">
+            {filtered
+              .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+              .map((pkg, i) => (
+                <PackageCard
+                  key={`${pkg.title}-${i}`}
+                  {...pkg}
+                  onDeploy={() => console.log('Deploy', pkg.title)}
+                />
+              ))}
+          </div>
+        )}
       </VStack>
+
+      <DataTestToolbar mode={dataMode} onChange={setDataMode} />
     </PageShell>
   );
 }

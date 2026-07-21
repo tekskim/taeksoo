@@ -1,6 +1,7 @@
 import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
-  IconHome,
+  IconLayoutDashboard,
   IconCube,
   IconTemplate,
   IconCamera,
@@ -21,7 +22,7 @@ import {
   IconActivity,
   IconServer2,
 } from '@tabler/icons-react';
-import { ChevronsLeftRightEllipsis, BrickWallFire } from 'lucide-react';
+import { ChevronsLeftRightEllipsis } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { IconRouterArrows } from '@/design-system/components/Icons/CustomIcons';
 import { AppSwitcher } from './AppSwitcher';
@@ -33,9 +34,14 @@ import { AppSwitcher } from './AppSwitcher';
 interface ComputeAdminSidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  forceVisible?: boolean;
 }
 
-export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSidebarProps) {
+export function ComputeAdminSidebar({
+  isOpen = true,
+  onToggle,
+  forceVisible,
+}: ComputeAdminSidebarProps) {
   const location = useLocation();
 
   // Check if current path matches href
@@ -74,7 +80,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
     return false;
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !forceVisible) return null;
 
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
@@ -82,14 +88,22 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
       <AppSwitcher currentAppId="compute-admin" onToggleSidebar={onToggle} />
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2"
+      >
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
 
           {/* Home */}
           <MenuItem
-            icon={<IconHome size={16} stroke={1.5} />}
-            label="Home"
+            icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+            label="Dashboard"
             href="/compute-admin"
             active={isActive('/compute-admin')}
           />
@@ -212,12 +226,6 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               href="/compute-admin/load-balancers"
               active={isActive('/compute-admin/load-balancers')}
             />
-            <MenuItem
-              icon={<BrickWallFire size={16} strokeWidth={1.5} />}
-              label="Firewall"
-              href="/compute-admin/firewall"
-              active={isActive('/compute-admin/firewall')}
-            />
           </MenuSection>
 
           {/* System Section */}
@@ -230,7 +238,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
             />
             <MenuItem
               icon={<IconFileCode size={16} stroke={1.5} />}
-              label="Metadata definition"
+              label="Metadata definitions"
               href="/compute-admin/metadata-definition"
               active={isActive('/compute-admin/metadata-definition')}
             />
@@ -252,7 +260,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
             />
           </MenuSection>
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

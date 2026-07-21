@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
@@ -18,30 +18,29 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
   Tooltip,
   Popover,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { getContainerStatusTheme } from './containerStatusUtils';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
   IconCheck,
-  IconPencilCog,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
+
+const PAGE_SIZE = 10;
 
 /* ----------------------------------------
    Types
@@ -107,7 +106,7 @@ const mockPodData: Record<string, PodData> = {
     status: 'Running',
     namespace: 'default',
     podIP: '10.11.0.11',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     workload: 'deploymentName',
     workloadType: 'Deployment',
     node: 'nodeName',
@@ -136,7 +135,7 @@ const mockPodData: Record<string, PodData> = {
     status: 'Running',
     namespace: 'default',
     podIP: '10.76.0.12',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
     workload: 'nginx-deployment',
     workloadType: 'Deployment',
     node: 'worker-node-1',
@@ -148,6 +147,15 @@ const mockPodData: Record<string, PodData> = {
   },
 };
 
+function getMockPodByRouteParam(podIdOrName: string | undefined): PodData | null {
+  if (!podIdOrName) return null;
+  const byKey = mockPodData[podIdOrName];
+  if (byKey) return byKey;
+  const byName = Object.values(mockPodData).find((p) => p.name === podIdOrName);
+  if (byName) return byName;
+  return null;
+}
+
 const mockContainersData: ContainerRow[] = [
   {
     id: '1',
@@ -157,7 +165,7 @@ const mockContainersData: ContainerRow[] = [
     image: 'imageName',
     initContainer: true,
     restarts: 1,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '2',
@@ -167,7 +175,7 @@ const mockContainersData: ContainerRow[] = [
     image: 'nginx:1.27',
     initContainer: false,
     restarts: 0,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '3',
@@ -177,7 +185,7 @@ const mockContainersData: ContainerRow[] = [
     image: 'sidecar:latest',
     initContainer: false,
     restarts: 2,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
 ];
 
@@ -188,8 +196,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'PodReady',
     message: 'Pod is ready.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
   {
     id: '2',
@@ -197,8 +205,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'ContainersReady',
     message: 'All containers are ready.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
 ];
 
@@ -242,6 +250,15 @@ interface ContainersTabProps {
 function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const totalPages = Math.max(1, Math.ceil(containers.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedContainers = containers.slice(start, start + PAGE_SIZE);
 
   const createContainerMenuItems = (row: ContainerRow): ContextMenuItem[] => {
     return [
@@ -344,9 +361,13 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: ContainerRow) => (
         <ContextMenu items={createContainerMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -362,15 +383,15 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Containers</h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={containers.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={containers}
+        data={paginatedContainers}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -391,6 +412,15 @@ interface ConditionsTabProps {
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
+  const totalPages = Math.max(1, Math.ceil(conditions.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedConditions = conditions.slice(start, start + PAGE_SIZE);
+
   const columns: TableColumn<ConditionRow>[] = [
     {
       key: 'type',
@@ -401,9 +431,9 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
+      label: 'Status',
       flex: 1,
-      minWidth: columnMinWidths.size,
+      minWidth: columnMinWidths.phase,
       sortable: true,
     },
     {
@@ -431,12 +461,12 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Conditions</h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={conditions.length}
       />
-      <Table columns={columns} data={conditions} rowKey="id" />
+      <Table columns={columns} data={paginatedConditions} rowKey="id" />
     </VStack>
   );
 }
@@ -453,6 +483,30 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const filteredEvents = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return events;
+    return events.filter((row) => {
+      const haystack = [row.name, row.type, row.reason, row.message, row.source]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [events, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredEvents.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedEvents = filteredEvents.slice(start, start + PAGE_SIZE);
 
   const createEventMenuItems = (row: EventRow): ContextMenuItem[] => {
     return [
@@ -523,9 +577,13 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -562,15 +620,15 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
         </HStack>
       </HStack>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
-        totalItems={events.length}
+        totalItems={filteredEvents.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={events}
+        data={paginatedEvents}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -592,8 +650,8 @@ export function PodDetailPage() {
   const activeTab = searchParams.get('tab') || 'containers';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
-  // Get pod data
-  const pod = mockPodData[podId || '1'] || mockPodData['1'];
+  // Get pod data (route param may be id or pod name — other pages link by name)
+  const pod = getMockPodByRouteParam(podId);
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -601,8 +659,10 @@ export function PodDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Pod: ${pod.name}`);
-  }, [updateActiveTabLabel, pod.name]);
+    if (pod) {
+      updateActiveTabLabel(`Pod: ${pod.name}`);
+    }
+  }, [updateActiveTabLabel, pod]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -615,6 +675,54 @@ export function PodDetailPage() {
 
   // Shell Panel state
   const shellPanel = useShellPanel();
+
+  if (!pod) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Pods', href: '/container/pods' }, { label: podId ?? 'Pod' }]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Pod not found"
+          description={`The pod "${podId ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/pods')}>
+              Back to Pods
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {
@@ -649,11 +757,6 @@ export function PodDetailPage() {
       id: 'view-logs',
       label: 'View logs',
       onClick: () => handleViewLogs(pod.name),
-    },
-    {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/pods/${pod.id}/edit`),
     },
     {
       id: 'edit-yaml',
@@ -694,46 +797,12 @@ export function PodDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Pods', href: '/container/pods' },
-                { label: pod.name },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'Pods', href: '/container/pods' }, { label: pod.name }]} />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton
-                value={`${pod.namespace}/${pod.name}`}
-                size="sm"
-                iconOnly
-                tooltip="Copy pod reference"
-              />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -802,7 +871,7 @@ export function PodDetailPage() {
 
           {/* Second row: Workload, Node, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Workload</span>
                 <span
@@ -813,7 +882,7 @@ export function PodDetailPage() {
                 </span>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Node</span>
                 <span
@@ -824,7 +893,7 @@ export function PodDetailPage() {
                 </span>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(pod.labels).length})
@@ -849,14 +918,14 @@ export function PodDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All labels ({Object.keys(pod.labels).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(pod.labels).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>
@@ -871,7 +940,7 @@ export function PodDetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(pod.annotations).length})
@@ -896,14 +965,14 @@ export function PodDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All annotations ({Object.keys(pod.annotations).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(pod.annotations).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>

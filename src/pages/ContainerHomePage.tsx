@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -13,23 +13,19 @@ import {
   Pagination,
   PageShell,
   ContextMenu,
+  EmptyState,
   type TableColumn,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
 } from '@/design-system';
-import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerSidebar, INITIAL_CONTAINER_CLUSTERS } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
+import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconDotsCircleHorizontal,
-  IconSettings,
-} from '@tabler/icons-react';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { IconDotsCircleHorizontal, IconSettings, IconStack2 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -56,10 +52,10 @@ interface ClusterRow {
 const clustersData: ClusterRow[] = [
   {
     id: '1',
-    name: 'ClusterName',
+    name: 'prod-cluster-01',
     status: 'Provisioned',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -68,10 +64,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '2',
-    name: 'ClusterName',
+    name: 'staging-cluster',
     status: 'Failed',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -80,10 +76,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '3',
-    name: 'ClusterName',
+    name: 'dev-cluster-kr',
     status: 'Provisioning',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -92,10 +88,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '4',
-    name: 'ClusterName',
+    name: 'monitoring-cluster',
     status: 'Processing',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -104,10 +100,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '5',
-    name: 'ClusterName',
+    name: 'data-pipeline-cluster',
     status: 'Deleting',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -116,10 +112,10 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '6',
-    name: 'ClusterName',
+    name: 'analytics-cluster',
     status: 'Unknown',
     kubernetesVersion: 'v1.34.0',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
@@ -134,14 +130,25 @@ const clustersData: ClusterRow[] = [
 
 export function ContainerHomePage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const pageSize = 10;
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return clustersData;
+    const term = searchTerm.toLowerCase();
+    return clustersData.filter((c) => c.name.toLowerCase().includes(term));
+  }, [searchTerm]);
+  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   const navigate = useNavigate();
+  const { isMetis } = useContainerMode();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
   // Update tab label on mount
   useEffect(() => {
-    updateActiveTabLabel('Home');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(isMetis ? 'Clusters' : 'Home');
+  }, [updateActiveTabLabel, isMetis]);
+
+  const shellPanel = useShellPanel();
 
   // Home page only shows icon sidebar (40px), menu sidebar is hidden
   const sidebarWidth = 48;
@@ -177,9 +184,8 @@ export function ContainerHomePage() {
       render: (value: string) => (
         <div className="min-w-0">
           <span
-            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+            className="text-body-md text-[var(--color-text-default)] font-medium truncate block"
             title={value}
-            onClick={() => navigate('/container/dashboard')}
           >
             {value}
           </span>
@@ -214,7 +220,7 @@ export function ContainerHomePage() {
           variant="outline"
           size="sm"
           leftIcon={<IconSettings size={12} />}
-          onClick={() => navigate(`/container/clusters/${row.id}`)}
+          onClick={() => navigate('/container/dashboard')}
         >
           Manage
         </Button>
@@ -225,20 +231,55 @@ export function ContainerHomePage() {
       label: 'Action',
       width: fixedColumns.actionWide,
       align: 'center',
+      sticky: 'right',
       sortable: false,
       render: (_value: string, row: ClusterRow) => (
         <ContextMenu
           items={[
-            { id: 'kubectl-shell', label: 'Kubectl Shell', onClick: () => {} },
-            { id: 'download-kubeconfig', label: 'Download KubeConfig', onClick: () => {} },
-            { id: 'copy-kubeconfig', label: 'Copy KubeConfig to Clipboard', onClick: () => {} },
-            { id: 'view-yaml', label: 'View YAML', onClick: () => {} },
-            { id: 'download-yaml', label: 'Download YAML', onClick: () => {} },
-            { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+            {
+              id: 'manage',
+              label: 'Manage',
+              onClick: () => navigate('/container/dashboard'),
+            },
+            {
+              id: 'kubectl-shell',
+              label: 'Kubectl Shell',
+              onClick: () => console.log('Kubectl Shell', row.id),
+            },
+            {
+              id: 'download-kubeconfig',
+              label: 'Download KubeConfig',
+              onClick: () => console.log('Download KubeConfig', row.id),
+            },
+            {
+              id: 'copy-kubeconfig',
+              label: 'Copy KubeConfig to Clipboard',
+              onClick: () => console.log('Copy KubeConfig to Clipboard', row.id),
+            },
+            {
+              id: 'view-yaml',
+              label: 'View YAML',
+              onClick: () => console.log('View YAML', row.id),
+            },
+            {
+              id: 'download-yaml',
+              label: 'Download YAML',
+              onClick: () => console.log('Download YAML', row.id),
+            },
+            {
+              id: 'delete',
+              label: 'Delete',
+              status: 'danger',
+              onClick: () => console.log('Delete cluster', row.id),
+            },
           ]}
           trigger="click"
         >
-          <button className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors">
+          <button
+            type="button"
+            aria-label="Row actions"
+            className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-muted)]"
@@ -249,6 +290,12 @@ export function ContainerHomePage() {
       ),
     },
   ];
+
+  // Metis Container has no Home page. When clusters exist, land on the first cluster;
+  // when none are registered, fall through to the empty state below.
+  if (isMetis && INITIAL_CONTAINER_CLUSTERS.length > 0) {
+    return <Navigate to="/container/dashboard" replace />;
+  }
 
   return (
     <PageShell
@@ -267,94 +314,109 @@ export function ContainerHomePage() {
       topBar={
         <TopBar
           showSidebarToggle={false}
-          breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: isMetis ? 'Clusters' : 'Home' }]} />}
           actions={
-            <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-home', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={true}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
       contentClassName="pt-6 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
-        {/* Welcome Header */}
-        <SectionCard className="bg-[var(--color-surface-subtle)]">
-          <SectionCard.Content>
-            <VStack gap={2}>
-              <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-                Welcome to Thaki Cloud Container
-              </h1>
-              <p className="text-body-lg text-[var(--color-text-muted)]">
-                Manage effortlessly, scale and optimize your Kubernetes clusters, workloads, and
-                resources from a single platform.
-              </p>
-            </VStack>
-          </SectionCard.Content>
-        </SectionCard>
+      <VStack gap={6}>
+        {isMetis ? (
+          <EmptyState
+            variant="inline"
+            icon={<IconStack2 size={48} stroke={1.25} />}
+            title="아직 등록된 클러스터가 없습니다"
+            description="이 플랫폼에 등록된 클러스터가 없습니다. 클러스터가 등록되면 여기에 표시됩니다."
+          />
+        ) : (
+          <>
+            {/* Clusters Section */}
+            <HStack gap={6} align="start">
+              {/* Clusters Table */}
+              <SectionCard className="flex-1">
+                <SectionCard.Header title="Clusters" />
+                <SectionCard.Content>
+                  <VStack gap={4}>
+                    <SearchInput
+                      placeholder="Search clusters by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(filteredData.length / pageSize)}
+                      onPageChange={setCurrentPage}
+                      totalItems={filteredData.length}
+                    />
+                    <Table<ClusterRow>
+                      columns={columns}
+                      data={paginatedData}
+                      rowKey="id"
+                      rowHeight="40px"
+                    />
+                  </VStack>
+                </SectionCard.Content>
+              </SectionCard>
 
-        {/* Clusters Section */}
-        <HStack gap={6} align="start">
-          {/* Clusters Table */}
-          <SectionCard className="flex-1">
-            <SectionCard.Header title="Clusters" />
-            <SectionCard.Content>
-              <VStack gap={4}>
-                <SearchInput
-                  placeholder="Search clusters by attributes"
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                />
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={Math.ceil(clustersData.length / 10)}
-                  onPageChange={setCurrentPage}
-                  totalItems={clustersData.length}
-                />
-                <Table<ClusterRow>
-                  columns={columns}
-                  data={clustersData}
-                  rowKey="id"
-                  rowHeight="40px"
-                />
-              </VStack>
-            </SectionCard.Content>
-          </SectionCard>
-
-          {/* Create Cluster Card */}
-          <SectionCard className="w-[var(--search-input-width)] shrink-0">
-            <SectionCard.Content>
-              <VStack gap={4}>
-                <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create a cluster
-                </h3>
-                <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
-                  Create a Kubernetes cluster to start running and managing your containerized
-                  workloads.
-                </p>
-                <div className="w-full flex justify-end">
-                  <Button variant="primary" size="md">
-                    Create cluster
-                  </Button>
-                </div>
-              </VStack>
-            </SectionCard.Content>
-          </SectionCard>
-        </HStack>
+              {/* Create Cluster Card */}
+              <SectionCard className="w-[var(--search-input-width)] shrink-0">
+                <SectionCard.Content>
+                  <VStack gap={4}>
+                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                      Create a cluster
+                    </h3>
+                    <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+                      Create a Kubernetes cluster to start running and managing your containerized
+                      workloads.
+                    </p>
+                    <div className="w-full flex justify-end">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => navigate('/container/cluster-management/create')}
+                      >
+                        Create cluster
+                      </Button>
+                    </div>
+                  </VStack>
+                </SectionCard.Content>
+              </SectionCard>
+            </HStack>
+          </>
+        )}
       </VStack>
     </PageShell>
   );

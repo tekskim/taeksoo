@@ -20,24 +20,16 @@ import {
   Pagination,
   Table,
   PageShell,
+  ErrorState,
   type ContextMenuItem,
   type TableColumn,
   columnMinWidths,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
-  IconChevronDown,
-  IconCirclePlus,
-  IconX,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconAlertTriangle, IconChevronDown, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -87,7 +79,7 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
     name: 'networkpolicyName',
     status: 'OK',
     namespace: 'default',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     labels: { app: 'web' },
     annotations: { description: 'Network policy for web app' },
     ingressRules: [
@@ -120,9 +112,9 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
     ],
     podSelector: { app: 'web', tier: 'frontend' },
     matchingPods: [
-      { name: 'deploymentName-77f6bb9c69-4aw7f', createdAt: 'Jul 25, 2025 10:32:16' },
-      { name: 'deploymentName-77f6bb9c69-8xk2p', createdAt: 'Jul 25, 2025 10:32:16' },
-      { name: 'deploymentName-77f6bb9c69-9m3qt', createdAt: 'Jul 25, 2025 10:32:16' },
+      { name: 'deploymentName-77f6bb9c69-4aw7f', createdAt: 'Jul 25, 2026 10:32:16' },
+      { name: 'deploymentName-77f6bb9c69-8xk2p', createdAt: 'Jul 25, 2026 10:32:16' },
+      { name: 'deploymentName-77f6bb9c69-9m3qt', createdAt: 'Jul 25, 2026 10:32:16' },
     ],
   },
   '2': {
@@ -130,7 +122,7 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
     name: 'networkpolicyName2',
     status: 'True',
     namespace: 'default',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
     labels: {},
     annotations: {},
     ingressRules: [],
@@ -169,17 +161,7 @@ export function NetworkPolicyDetailPage() {
   // Shell Panel state
   const shellPanel = useShellPanel();
 
-  // Load Network Policy data
-  const [networkPolicyData, setNetworkPolicyData] = useState<NetworkPolicyData | null>(null);
-
-  useEffect(() => {
-    if (networkPolicyId && mockNetworkPolicyData[networkPolicyId]) {
-      setNetworkPolicyData(mockNetworkPolicyData[networkPolicyId]);
-    } else {
-      // Default to first network policy if not found
-      setNetworkPolicyData(mockNetworkPolicyData['1']);
-    }
-  }, [networkPolicyId]);
+  const networkPolicyData = networkPolicyId ? mockNetworkPolicyData[networkPolicyId] : undefined;
 
   // Update tab label to match the Network Policy name (most recent breadcrumb)
   useEffect(() => {
@@ -203,23 +185,83 @@ export function NetworkPolicyDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
+  if (!networkPolicyData) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Network Policies', href: '/container/network-policies' },
+                  { label: networkPolicyId ?? 'Network policy' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Network policy not found"
+          description={`The network policy "${networkPolicyId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/container/network-policies')}
+            >
+              Back to Network Policies
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () =>
-        navigate(
-          `/container/network-policies/${networkPolicyId}/edit?name=${encodeURIComponent(networkPolicyData?.name ?? networkPolicyId)}`
-        ),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () =>
-        navigate(
-          `/container/network-policies/${networkPolicyData?.name ?? networkPolicyId}/edit-yaml`
-        ),
+      onClick: () => navigate(`/container/network-policies/${networkPolicyData.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -233,10 +275,6 @@ export function NetworkPolicyDetailPage() {
       onClick: () => console.log('Delete'),
     },
   ];
-
-  if (!networkPolicyData) {
-    return <div>Loading...</div>;
-  }
 
   // Format labels and annotations
   const labelsCount = Object.keys(networkPolicyData.labels).length;
@@ -332,56 +370,18 @@ export function NetworkPolicyDetailPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Network policies', href: '/container/network-policies' },
+                { label: 'Network Policies', href: '/container/network-policies' },
                 { label: networkPolicyData.name },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-np', `Kubectl: ${networkPolicyData.name}`);
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={networkPolicyData.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -449,7 +449,7 @@ export function NetworkPolicyDetailPage() {
                   ? Object.entries(networkPolicyData.labels)
                       .map(([k, v]) => `${k}: ${v}`)
                       .join(', ')
-                  : 'labels'
+                  : '—'
               }
             />
             <DetailHeader.InfoCard
@@ -459,7 +459,7 @@ export function NetworkPolicyDetailPage() {
                   ? Object.entries(networkPolicyData.annotations)
                       .map(([k, v]) => `${k}: ${v}`)
                       .join(', ')
-                  : 'annotations'
+                  : '—'
               }
             />
           </DetailHeader.InfoGrid>
@@ -481,13 +481,14 @@ export function NetworkPolicyDetailPage() {
                 Ingress rules
               </h3>
 
-              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
                 <HStack gap={0} className="h-full">
                   {/* Rules List (Left Panel) */}
                   <div className="w-[100px] border-r border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
                     <VStack gap={0}>
                       {networkPolicyData.ingressRules.map((rule) => (
                         <button
+                          type="button"
                           key={rule.id}
                           className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
                             selectedRule === rule.id
@@ -506,7 +507,10 @@ export function NetworkPolicyDetailPage() {
                           )}
                         </button>
                       ))}
-                      <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
+                      <button
+                        type="button"
+                        className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]"
+                      >
                         <IconCirclePlus size={12} stroke={1.5} />
                         Add rule
                       </button>
@@ -724,13 +728,14 @@ export function NetworkPolicyDetailPage() {
                 Egress rules
               </h3>
 
-              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
                 <HStack gap={0} className="h-full">
                   {/* Rules List (Left Panel) */}
                   <div className="w-[100px] border-r border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
                     <VStack gap={0}>
                       {networkPolicyData.egressRules.map((rule) => (
                         <button
+                          type="button"
                           key={rule.id}
                           className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
                             selectedEgressRule === rule.id
@@ -749,7 +754,10 @@ export function NetworkPolicyDetailPage() {
                           )}
                         </button>
                       ))}
-                      <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
+                      <button
+                        type="button"
+                        className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]"
+                      >
                         <IconCirclePlus size={12} stroke={1.5} />
                         Add rule
                       </button>
@@ -967,7 +975,7 @@ export function NetworkPolicyDetailPage() {
 
           {/* Selectors Tab */}
           <TabPanel value="selectors">
-            <div className="w-full border border-[var(--color-border-default)] rounded-[6px] p-4">
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
               <VStack gap={6}>
                 {/* Selectors Section */}
                 <VStack gap={2} className="w-full">
@@ -1068,7 +1076,7 @@ export function NetworkPolicyDetailPage() {
 
           {/* Labels & Annotations Tab */}
           <TabPanel value="labels-annotations">
-            <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
               <VStack gap={6}>
                 {/* Section Title */}
                 <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">

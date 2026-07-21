@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -26,12 +25,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconDownload,
-  IconBell,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconDownload, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -68,7 +62,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'cpu_allocation_ratio', value: '16.0' },
       { key: 'ram_allocation_ratio', value: '1.5' },
     ],
-    createdAt: 'Dec 25, 2025 09:15:33',
+    createdAt: 'Dec 25, 2026 09:15:33',
   },
   {
     id: 'ha-002',
@@ -79,7 +73,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'gpu', value: 'nvidia-a100' },
       { key: 'gpu_count', value: '8' },
     ],
-    createdAt: 'Dec 25, 2025 10:42:18',
+    createdAt: 'Dec 25, 2026 10:42:18',
   },
   {
     id: 'ha-003',
@@ -90,7 +84,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'memory', value: 'high' },
       { key: 'ram_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025 14:08:52',
+    createdAt: 'Dec 25, 2026 14:08:52',
   },
   {
     id: 'ha-004',
@@ -101,7 +95,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'storage', value: 'nvme' },
       { key: 'disk_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025 16:25:41',
+    createdAt: 'Dec 25, 2026 16:25:41',
   },
   {
     id: 'ha-005',
@@ -109,7 +103,7 @@ const mockHostAggregates: HostAggregate[] = [
     availabilityZone: 'zone-c',
     hosts: ['bm-host-1'],
     metadata: [{ key: 'bare-metal', value: 'true' }],
-    createdAt: 'Dec 25, 2025 17:53:27',
+    createdAt: 'Dec 25, 2026 17:53:27',
   },
 ];
 
@@ -136,13 +130,14 @@ const mockAvailabilityZones: AvailabilityZone[] = [
    ---------------------------------------- */
 
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'availabilityZone', label: 'Availability Zone', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'availabilityZone', label: 'Availability Zone', type: 'text' },
 ];
 
-const azFilterFields: FilterField[] = [{ key: 'name', label: 'Name', type: 'text' }];
+const azFilterFields: FilterField[] = [{ id: 'name', label: 'Name', type: 'text' }];
 
 export function ComputeAdminHostAggregatesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -163,6 +158,13 @@ export function ComputeAdminHostAggregatesPage() {
   const [azAppliedFilters, setAzAppliedFilters] = useState<AppliedFilter[]>([]);
   const [azCurrentPage, setAzCurrentPage] = useState(1);
   const [availabilityZones] = useState(mockAvailabilityZones);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
@@ -204,7 +206,7 @@ export function ComputeAdminHostAggregatesPage() {
     if (appliedFilters.length === 0) return hostAggregates;
     return hostAggregates.filter((ha) => {
       return appliedFilters.every((filter) => {
-        const value = String(ha[filter.field as keyof HostAggregate] || '').toLowerCase();
+        const value = String(ha[filter.fieldId as keyof HostAggregate] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -221,7 +223,7 @@ export function ComputeAdminHostAggregatesPage() {
     if (azAppliedFilters.length === 0) return availabilityZones;
     return availabilityZones.filter((az) => {
       return azAppliedFilters.every((filter) => {
-        const value = String(az[filter.field as keyof AvailabilityZone] || '').toLowerCase();
+        const value = String(az[filter.fieldId as keyof AvailabilityZone] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -270,25 +272,12 @@ export function ComputeAdminHostAggregatesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Host Aggregates' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Host Aggregates' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -359,8 +348,8 @@ export function ComputeAdminHostAggregatesPage() {
                         className="flex items-center gap-2 w-full"
                       >
                         <IconChevronDown
-                          size={16}
-                          stroke={1.5}
+                          size={12}
+                          strokeWidth={2}
                           className={`shrink-0 text-[var(--color-text-default)] transition-transform ${isExpanded ? '' : '-rotate-90'}`}
                         />
                         <span>{row.name}</span>
@@ -386,11 +375,11 @@ export function ComputeAdminHostAggregatesPage() {
                             delay={100}
                             hideDelay={100}
                             content={
-                              <div className="p-3 min-w-[120px] max-w-[320px]">
+                              <div className="p-3 min-w-[160px] max-w-[320px]">
                                 <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                                   All Hosts ({row.hosts.length})
                                 </div>
-                                <div className="flex flex-wrap gap-1">
+                                <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                                   {row.hosts.map((h, i) => (
                                     <Badge key={i} theme="white" size="sm">
                                       {h}
@@ -421,9 +410,13 @@ export function ComputeAdminHostAggregatesPage() {
                   label: 'Action',
                   width: '64px',
                   align: 'center' as const,
+                  sticky: 'right',
                   render: (_: unknown, row: HostAggregate) => (
                     <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-                      <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                      <button
+                        aria-label="Row actions"
+                        className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+                      >
                         <IconDotsCircleHorizontal
                           size={16}
                           stroke={1.5}
@@ -448,10 +441,12 @@ export function ComputeAdminHostAggregatesPage() {
                       ]}
                       data={row.metadata}
                       rowKey="key"
+                      loading={loading}
                     />
                   </div>
                 );
               }}
+              loading={loading}
             />
           </>
         )}
@@ -506,11 +501,11 @@ export function ComputeAdminHostAggregatesPage() {
                             delay={100}
                             hideDelay={100}
                             content={
-                              <div className="p-3 min-w-[120px] max-w-[320px]">
+                              <div className="p-3 min-w-[160px] max-w-[320px]">
                                 <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                                   All Hosts ({row.hosts.length})
                                 </div>
-                                <div className="flex flex-wrap gap-1">
+                                <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                                   {row.hosts.map((h, i) => (
                                     <Badge key={i} theme="white" size="sm">
                                       {h}
@@ -539,6 +534,7 @@ export function ComputeAdminHostAggregatesPage() {
               data={paginatedAZs}
               rowKey="id"
               emptyMessage="No availability zones found"
+              loading={loading}
             />
           </>
         )}
@@ -549,7 +545,7 @@ export function ComputeAdminHostAggregatesPage() {
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleDeleteConfirm}
         title="Delete host aggregate"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected host aggregates is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

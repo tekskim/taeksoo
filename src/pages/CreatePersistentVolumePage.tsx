@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -11,26 +11,18 @@ import {
   PageShell,
   Input,
   NumberInput,
-  Slider,
   Select,
   Checkbox,
   SectionCard,
   Disclosure,
+  WizardSummary,
 } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconCirclePlus,
-  IconX,
-  IconCheck,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -87,37 +79,6 @@ interface Annotation {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 
@@ -126,7 +87,6 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
-  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -134,27 +94,20 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
-  isEditMode = false,
 }: SummarySidebarProps) {
+  const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => {
+    const s = sectionStatus[key];
+    return {
+      key,
+      label: SECTION_LABELS[key],
+      status: (s === 'pending' ? 'pre' : s) as WizardSectionState,
+    };
+  });
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={4}>
-            <span className="text-heading-h5">Summary</span>
-            <VStack gap={0}>
-              {SECTION_ORDER.map((step) => (
-                <HStack key={step} justify="between" className="py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStatus[step]} />
-                </HStack>
-              ))}
-            </VStack>
-          </VStack>
-        </div>
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+        <WizardSummary items={summaryItems} />
 
         {/* Button row */}
         <HStack gap={2}>
@@ -167,7 +120,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            {isEditMode ? 'Save' : 'Create'}
+            Create
           </Button>
         </HStack>
       </div>
@@ -189,7 +142,6 @@ interface BasicInfoSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   isV2: boolean;
-  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -202,7 +154,6 @@ function BasicInfoSection({
   description,
   onDescriptionChange,
   isV2,
-  isEditMode = false,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -221,7 +172,6 @@ function BasicInfoSection({
                   if (pvNameError) onNamespaceNameErrorChange(null);
                 }}
                 fullWidth
-                disabled={isEditMode}
               />
             </FormField.Control>
             <FormField.ErrorMessage>{pvNameError}</FormField.ErrorMessage>
@@ -231,18 +181,15 @@ function BasicInfoSection({
           <FormField required>
             <FormField.Label>Capacity</FormField.Label>
             <FormField.Control>
-              <HStack gap={3} align="center">
-                <Slider min={1} max={1000} step={10} value={capacity} onChange={onCapacityChange} />
-                <NumberInput
-                  value={capacity}
-                  onChange={onCapacityChange}
-                  min={1}
-                  max={1000}
-                  step={1}
-                  width="xs"
-                  suffix="GiB"
-                />
-              </HStack>
+              <NumberInput
+                value={capacity}
+                onChange={onCapacityChange}
+                min={1}
+                max={1000}
+                step={1}
+                width="sm"
+                suffix="GiB"
+              />
             </FormField.Control>
           </FormField>
 
@@ -441,9 +388,9 @@ function StorageConfigSection({
             <FormField.Label>Mount Options</FormField.Label>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1.5}>
+                <VStack gap={2}>
                   {mountOptions.length > 0 && (
-                    <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
+                    <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Option
                       </span>
@@ -453,7 +400,7 @@ function StorageConfigSection({
                   {mountOptions.map((option, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
+                      className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
                         placeholder="input key"
@@ -489,14 +436,14 @@ function StorageConfigSection({
             <FormField.Label>Node Selectors</FormField.Label>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1.5} className="w-full">
+                <VStack gap={2} className="w-full">
                   {nodeSelectors.map((selector, selectorIndex) => (
                     <div
                       key={selectorIndex}
-                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                     >
-                      <VStack gap={1.5}>
-                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                      <VStack gap={2}>
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Key
                           </span>
@@ -511,7 +458,7 @@ function StorageConfigSection({
                         {selector.rules.map((rule, ruleIndex) => (
                           <div
                             key={ruleIndex}
-                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                           >
                             <Input
                               placeholder="input key"
@@ -626,9 +573,9 @@ function LabelsAnnotationsSection({
             </FormField.Description>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1.5}>
+                <VStack gap={2}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -641,7 +588,7 @@ function LabelsAnnotationsSection({
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -686,9 +633,9 @@ function LabelsAnnotationsSection({
             </FormField.Description>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1.5}>
+                <VStack gap={2}>
                   {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -701,7 +648,7 @@ function LabelsAnnotationsSection({
                   {annotations.map((annotation, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -749,10 +696,6 @@ function LabelsAnnotationsSection({
 
 export function CreatePersistentVolumePage() {
   const navigate = useNavigate();
-  const { pvName: pvNameParam } = useParams();
-  const isEditMode = !!pvNameParam;
-  const [searchParams] = useSearchParams();
-  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -788,16 +731,8 @@ export function CreatePersistentVolumePage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(
-      isEditMode ? `Persistent volume: ${nameFromQuery || pvNameParam}` : 'Create persistent volume'
-    );
-  }, [updateActiveTabLabel, isEditMode, pvNameParam]);
-
-  useEffect(() => {
-    if (isEditMode && pvNameParam) {
-      setNamespaceName(nameFromQuery || pvNameParam);
-    }
-  }, [isEditMode, pvNameParam]);
+    updateActiveTabLabel('Create persistent volume');
+  }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -812,14 +747,27 @@ export function CreatePersistentVolumePage() {
   const getSectionStatus = useCallback(
     (section: SectionStep): 'done' | 'active' | 'pending' => {
       if (section === 'basic-info') {
-        // capacity (default=1) and accessModes have defaults → some required always filled
-        // → 'active' until name is also filled
         return pvName.trim() ? 'done' : 'active';
       }
-      // storage-config, labels-annotations are optional → always done
-      return 'done';
+      if (section === 'storage-config') {
+        // Consider active if any storage config is set
+        return storageClassName || mountOptions.length > 0 || nodeSelectors.length > 0
+          ? 'done'
+          : 'pending';
+      }
+      if (section === 'labels-annotations') {
+        return labels.length > 0 || annotations.length > 0 ? 'done' : 'pending';
+      }
+      return 'pending';
     },
-    [pvName]
+    [
+      pvName,
+      storageClassName,
+      mountOptions.length,
+      nodeSelectors.length,
+      labels.length,
+      annotations.length,
+    ]
   );
 
   const sectionStatus: Record<SectionStep, 'done' | 'active' | 'pending'> = {
@@ -932,63 +880,27 @@ export function CreatePersistentVolumePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
-                ...(isEditMode
-                  ? [
-                      {
-                        label: nameFromQuery || pvNameParam!,
-                        href: `/container/persistent-volumes/${pvNameParam}`,
-                      },
-                      { label: 'Edit config' },
-                    ]
-                  : [{ label: 'Create persistent volume' }]),
+                { label: 'Create Persistent Volume' },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={3}>
+      <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={6}>
+        <VStack gap={1}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              {isEditMode
-                ? `Persistent volume: ${nameFromQuery || pvNameParam}`
-                : 'Create persistent volume'}
+              Create persistent volume
             </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -1012,7 +924,6 @@ export function CreatePersistentVolumePage() {
               description={description}
               onDescriptionChange={setDescription}
               isV2={isV2}
-              isEditMode={isEditMode}
             />
 
             {/* Storage Configuration Section */}
@@ -1046,7 +957,6 @@ export function CreatePersistentVolumePage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
-            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

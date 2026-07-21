@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -9,13 +8,13 @@ import {
   Button,
   SearchInput,
   Pagination,
-  Chip,
   ContextMenu,
   ProgressBar,
   STATUS_THRESHOLDS,
   PageShell,
   PageHeader,
   CopyButton,
+  ListToolbar,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -24,20 +23,11 @@ import {
   Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconDownload,
-  IconTrash,
-  IconDotsCircleHorizontal,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconDownload, IconTrash, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -76,7 +66,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 8,
     ramUsage: 23,
     podsUsage: 13,
-    createdAt: 'Nov 1, 2025 08:12:34',
+    createdAt: 'Nov 1, 2026 08:12:34',
   },
   {
     id: '2',
@@ -90,7 +80,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 45,
     ramUsage: 67,
     podsUsage: 42,
-    createdAt: 'Nov 1, 2025 09:45:22',
+    createdAt: 'Nov 1, 2026 09:45:22',
   },
   {
     id: '3',
@@ -104,7 +94,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 32,
     ramUsage: 51,
     podsUsage: 28,
-    createdAt: 'Nov 1, 2025 11:23:17',
+    createdAt: 'Nov 1, 2026 11:23:17',
   },
   {
     id: '4',
@@ -118,7 +108,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 78,
     ramUsage: 82,
     podsUsage: 65,
-    createdAt: 'Nov 2, 2025 14:30:41',
+    createdAt: 'Nov 2, 2026 14:30:41',
   },
   {
     id: '5',
@@ -132,7 +122,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 0,
     ramUsage: 0,
     podsUsage: 0,
-    createdAt: 'Nov 2, 2025 16:52:08',
+    createdAt: 'Nov 2, 2026 16:52:08',
   },
   {
     id: '6',
@@ -146,7 +136,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 92,
     ramUsage: 88,
     podsUsage: 75,
-    createdAt: 'Nov 3, 2025 10:17:55',
+    createdAt: 'Nov 3, 2026 10:17:55',
   },
 ];
 
@@ -185,9 +175,14 @@ export function ContainerNodesPage() {
   } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -210,10 +205,22 @@ export function ContainerNodesPage() {
     navigate(`/container/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
+  // Filter by search
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return nodesData;
+    const term = searchTerm.toLowerCase();
+    return nodesData.filter(
+      (n) => n.name.toLowerCase().includes(term) || n.role.toLowerCase().includes(term)
+    );
+  }, [nodesData, searchTerm]);
+
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(nodesData.length / rowsPerPage);
-  const paginatedData = nodesData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 248 : 48;
@@ -336,6 +343,7 @@ export function ContainerNodesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -364,7 +372,10 @@ export function ContainerNodesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -407,55 +418,20 @@ export function ContainerNodesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Nodes' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Nodes' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-nodes', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-nodes', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -483,16 +459,18 @@ export function ContainerNodesPage() {
         {/* Header */}
         <PageHeader title="Nodes" />
 
-        {/* Toolbar */}
-        <div className="flex flex-col gap-2">
-          {/* Action Bar */}
-          <HStack gap={2} align="center" className="w-full min-h-7">
-            {/* Search */}
-            <HStack gap={1} align="center">
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
               <SearchInput
                 placeholder="Search Nodes by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
               />
               <Button
                 variant="secondary"
@@ -502,13 +480,10 @@ export function ContainerNodesPage() {
               >
                 <IconDownload size={12} stroke={1.5} />
               </Button>
-            </HStack>
-
-            {/* Divider */}
-            <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-            {/* Actions */}
-            <HStack gap={1} align="center">
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
               <Button
                 variant="muted"
                 size="sm"
@@ -525,46 +500,25 @@ export function ContainerNodesPage() {
               >
                 Delete
               </Button>
-            </HStack>
-          </HStack>
-
-          {/* Filter Bar */}
-          {filters.length > 0 && (
-            <HStack
-              gap={2}
-              justify="between"
-              align="center"
-              className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
-            >
-              <HStack gap={1} align="center">
-                {filters.map((filter, index) => (
-                  <Chip
-                    key={index}
-                    label={filter.key}
-                    value={filter.value}
-                    onRemove={() => handleRemoveFilter(index)}
-                  />
-                ))}
-              </HStack>
-              <button
-                onClick={handleClearFilters}
-                className="text-label-sm text-[var(--color-action-primary)] hover:underline"
-              >
-                Clear filters
-              </button>
-            </HStack>
-          )}
-        </div>
+            </ListToolbar.Actions>
+          }
+          filters={filters.map((f, i) => ({
+            id: String(i),
+            field: f.key,
+            value: f.value,
+          }))}
+          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
+          onFiltersClear={handleClearFilters}
+          clearFiltersLabel="Clear filters"
+        />
 
         {/* Pagination */}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={nodesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
@@ -575,6 +529,8 @@ export function ContainerNodesPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          loading={loading}
+          emptyMessage="No nodes found"
         />
       </VStack>
     </PageShell>

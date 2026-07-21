@@ -1,42 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
   Table,
   TableLink,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
-  Chip,
   ContextMenu,
   PageShell,
   PageHeader,
+  ListToolbar,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
   fixedColumns,
   columnMinWidths,
   Badge,
   Tooltip,
-  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 import {
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconBell,
   IconDownload,
   IconDotsCircleHorizontal,
   IconTrash,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -44,15 +40,14 @@ import { getContainerStatusTheme } from './containerStatusUtils';
    Types
    ---------------------------------------- */
 
-interface ServiceRow {
+interface StorageClassRow {
   id: string;
-  status: string;
   name: string;
-  namespace: string;
-  target: string[];
-  selector: string[];
-  type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
-  ipAddresses: string[];
+  status: string;
+  provisioner: string;
+  reclaimPolicy: 'Delete' | 'Retain';
+  volumeBindingMode: 'Immediate' | 'WaitForFirstConsumer';
+  allowVolumeExpansion: boolean;
   createdAt: string;
 }
 
@@ -60,61 +55,112 @@ interface ServiceRow {
    Mock Data
    ---------------------------------------- */
 
-const servicesData: ServiceRow[] = [
+const storageClassesData: StorageClassRow[] = [
   {
     id: '1',
-    status: 'Active',
-    name: 'frontend-web-application-loadbalancer-service',
-    namespace: 'namespaceName',
-    target: ['http + 80/TCP', 'https-internal + 444/TCP'],
-    selector: ['key1=value1'],
-    type: 'LoadBalancer',
-    ipAddresses: ['10.96.0.1', '203.0.113.10'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    name: 'standard',
+    status: 'OK',
+    provisioner: 'ebs.csi.aws.com',
+    reclaimPolicy: 'Delete',
+    volumeBindingMode: 'WaitForFirstConsumer',
+    allowVolumeExpansion: true,
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '2',
-    status: 'Processing',
-    name: 'backend-api-gateway-cluster-internal-service',
-    namespace: 'namespaceName',
-    target: ['myport + 80/TCP'],
-    selector: ['key1=value1', 'key2=value2', 'key3=value3'],
-    type: 'ClusterIP (Headless)',
-    ipAddresses: ['None'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    name: 'fast-ssd',
+    status: 'Active',
+    provisioner: 'pd.csi.storage.gke.io',
+    reclaimPolicy: 'Delete',
+    volumeBindingMode: 'Immediate',
+    allowVolumeExpansion: true,
+    createdAt: 'Nov 9, 2026 18:04:44',
   },
   {
     id: '3',
-    status: 'Error',
-    name: 'external-database-connection-externalname-service',
-    namespace: 'namespaceName',
-    target: ['my.database.example.com'],
-    selector: ['-'],
-    type: 'ExternalName',
-    ipAddresses: ['-'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    name: 'nfs-client',
+    status: 'Active',
+    provisioner: 'nfs.csi.k8s.io',
+    reclaimPolicy: 'Delete',
+    volumeBindingMode: 'Immediate',
+    allowVolumeExpansion: false,
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '4',
-    status: 'Active',
-    name: 'ingress-nginx-loadbalancer-external-service',
-    namespace: 'namespaceName',
-    target: ['80/TCP', '443/TCP'],
-    selector: ['key1=value1', 'key2=value2'],
-    type: 'LoadBalancer',
-    ipAddresses: ['10.96.12.34', '203.0.113.50'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    name: 'ceph-rbd',
+    status: 'True',
+    provisioner: 'rbd.csi.ceph.com',
+    reclaimPolicy: 'Delete',
+    volumeBindingMode: 'Immediate',
+    allowVolumeExpansion: true,
+    createdAt: 'Nov 8, 2026 14:22:09',
   },
   {
     id: '5',
-    status: 'Processing',
-    name: 'legacy-application-nodeport-external-access-service',
-    namespace: 'namespaceName',
-    target: ['[Any Node]:31575'],
-    selector: ['key1=value1'],
-    type: 'NodePort',
-    ipAddresses: ['10.96.5.67'],
-    createdAt: 'Nov 10, 2025 01:17:01',
+    name: 'local-path',
+    status: 'Active',
+    provisioner: 'rancher.io/local-path',
+    reclaimPolicy: 'Delete',
+    volumeBindingMode: 'WaitForFirstConsumer',
+    allowVolumeExpansion: false,
+    createdAt: 'Oct 3, 2026 09:15:42',
+  },
+  {
+    id: '6',
+    name: 'premium-ssd',
+    status: 'OK',
+    provisioner: 'disk.csi.azure.com',
+    reclaimPolicy: 'Retain',
+    volumeBindingMode: 'Immediate',
+    allowVolumeExpansion: true,
+    createdAt: 'Sep 21, 2026 11:03:55',
+  },
+];
+
+/* ----------------------------------------
+   Filter fields
+   ---------------------------------------- */
+
+const storageClassFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'OK', label: 'OK' },
+      { value: 'Active', label: 'Active' },
+      { value: 'True', label: 'True' },
+    ],
+  },
+  { id: 'provisioner', label: 'Provisioner', type: 'text' },
+  {
+    id: 'reclaimPolicy',
+    label: 'Reclaim Policy',
+    type: 'select',
+    options: [
+      { value: 'Delete', label: 'Delete' },
+      { value: 'Retain', label: 'Retain' },
+    ],
+  },
+  {
+    id: 'volumeBindingMode',
+    label: 'Volume Binding Mode',
+    type: 'select',
+    options: [
+      { value: 'Immediate', label: 'Immediate' },
+      { value: 'WaitForFirstConsumer', label: 'WaitForFirstConsumer' },
+    ],
+  },
+  {
+    id: 'allowVolumeExpansion',
+    label: 'Allow Volume Expansion',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
   },
 ];
 
@@ -122,32 +168,78 @@ const servicesData: ServiceRow[] = [
    Component
    ---------------------------------------- */
 
-export function ContainerServicesPage() {
+export function StorageClassesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [storageClassRows, setStorageClassRows] = useState(storageClassesData);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    updateActiveTabLabel('Storage Classes');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
+  const filteredData = useMemo(() => {
+    if (appliedFilters.length === 0) return storageClassRows;
+
+    return storageClassRows.filter((item) => {
+      return appliedFilters.every((filter) => {
+        if (filter.fieldId === 'allowVolumeExpansion') {
+          return String(item.allowVolumeExpansion) === filter.value;
+        }
+        const value = item[filter.fieldId as keyof StorageClassRow];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(filter.value.toLowerCase());
+        }
+        return true;
+      });
+    });
+  }, [appliedFilters, storageClassRows]);
+
+  const handleBulkDeleteStorageClasses = () => {
+    setStorageClassRows((prev) => prev.filter((r) => !selectedRows.includes(r.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
+
   const navigate = useNavigate();
 
-  // Create menu items
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
       label: 'Create as form',
-      onClick: () => navigate('/container/services/create'),
+      onClick: () => navigate('/container/storage-classes/create'),
     },
     {
       id: 'create-yaml',
       label: 'Create as YAML',
-      onClick: () => navigate('/container/services/create-yaml'),
+      onClick: () => navigate('/container/storage-classes/create-yaml'),
     },
   ];
 
-  // Shell Panel state
   const shellPanel = useShellPanel();
 
-  // Handle opening shell tab in new browser tab
   const handleOpenInNewTab = (tab: ShellTab) => {
     const tabId = `console-${tab.instanceId}-${Date.now()}`;
     addTab({
@@ -159,19 +251,36 @@ export function ContainerServicesPage() {
     navigate(`/container/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
-  // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(servicesData.length / rowsPerPage);
-  const paginatedData = servicesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
-  // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
-  // Table columns configuration
-  const columns: TableColumn<ServiceRow>[] = [
+  const getRowMenuItems = (row: StorageClassRow): ContextMenuItem[] => [
+    {
+      id: 'edit-yaml',
+      label: 'Edit YAML',
+      onClick: () =>
+        navigate(`/container/storage-classes/${encodeURIComponent(row.name)}/edit-yaml`),
+    },
+    {
+      id: 'download-yaml',
+      label: 'Download YAML',
+      onClick: () => console.log('Download YAML:', row.id),
+    },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => console.log('Delete:', row.id),
+    },
+  ];
+
+  const columns: TableColumn<StorageClassRow>[] = [
     {
       key: 'status',
       label: 'Status',
@@ -198,19 +307,19 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
-      render: (value: string, row: ServiceRow) => (
+      render: (value: string, row: StorageClassRow) => (
         <div className="min-w-0">
-          <TableLink title={value} onClick={() => navigate(`/container/services/${row.id}`)}>
+          <TableLink title={value} onClick={() => navigate(`/container/storage-classes/${row.id}`)}>
             {value}
           </TableLink>
         </div>
       ),
     },
     {
-      key: 'namespace',
-      label: 'Namespace',
+      key: 'provisioner',
+      label: 'Provisioner',
       flex: 1,
-      minWidth: columnMinWidths.namespace,
+      minWidth: columnMinWidths.image,
       sortable: true,
       render: (value: string) => (
         <span className="truncate block min-w-0" title={value}>
@@ -219,10 +328,10 @@ export function ContainerServicesPage() {
       ),
     },
     {
-      key: 'type',
-      label: 'Type',
+      key: 'reclaimPolicy',
+      label: 'Reclaim Policy',
       flex: 1,
-      minWidth: columnMinWidths.type,
+      minWidth: 120,
       sortable: true,
       render: (value: string) => (
         <span className="truncate block min-w-0" title={value}>
@@ -231,128 +340,28 @@ export function ContainerServicesPage() {
       ),
     },
     {
-      key: 'target',
-      label: 'Target',
+      key: 'volumeBindingMode',
+      label: 'Volume Binding Mode',
       flex: 1,
-      minWidth: columnMinWidths.ip,
-      sortable: false,
-      render: (value: string[]) => (
-        <div className="flex w-full items-center gap-1 min-w-0">
-          <span className="truncate min-w-0 flex-1" title={value[0]}>
-            {value[0]}
-          </span>
-          {value.length > 1 && (
-            <span className="ml-auto">
-              <Popover
-                trigger="hover"
-                position="bottom"
-                delay={100}
-                hideDelay={100}
-                content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                      All targets ({value.length})
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {value.map((item, i) => (
-                        <Badge key={i} theme="white" size="sm">
-                          {item}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                }
-              >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                  +{value.length - 1}
-                </span>
-              </Popover>
-            </span>
-          )}
-        </div>
+      minWidth: 180,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
       ),
     },
     {
-      key: 'ipAddresses',
-      label: 'IP addresses',
+      key: 'allowVolumeExpansion',
+      label: 'Allow Volume Expansion',
       flex: 1,
-      minWidth: columnMinWidths.ip,
-      render: (value: string[]) => (
-        <div className="flex w-full items-center gap-1 min-w-0">
-          <span className="truncate min-w-0 flex-1" title={value[0]}>
-            {value[0]}
-          </span>
-          {value.length > 1 && (
-            <span className="ml-auto">
-              <Popover
-                trigger="hover"
-                position="bottom"
-                delay={100}
-                hideDelay={100}
-                content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                      All IP addresses ({value.length})
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {value.map((item, i) => (
-                        <Badge key={i} theme="white" size="sm">
-                          {item}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                }
-              >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                  +{value.length - 1}
-                </span>
-              </Popover>
-            </span>
-          )}
-        </div>
-      ),
-    },
-    {
-      key: 'selector',
-      label: 'Selector',
-      flex: 1,
-      minWidth: columnMinWidths.ip,
-      sortable: false,
-      render: (value: string[]) => (
-        <div className="flex w-full items-center gap-1 min-w-0">
-          <span className="truncate min-w-0 flex-1" title={value[0]}>
-            {value[0]}
-          </span>
-          {value.length > 1 && (
-            <span className="ml-auto">
-              <Popover
-                trigger="hover"
-                position="bottom"
-                delay={100}
-                hideDelay={100}
-                content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                      All selectors ({value.length})
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {value.map((item, i) => (
-                        <Badge key={i} theme="white" size="sm">
-                          {item}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                }
-              >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                  +{value.length - 1}
-                </span>
-              </Popover>
-            </span>
-          )}
-        </div>
+      minWidth: 160,
+      align: 'center',
+      sortable: true,
+      render: (value: boolean) => (
+        <Badge theme={value ? 'green' : 'gray'} type="subtle" size="sm">
+          {value ? 'Yes' : 'No'}
+        </Badge>
       ),
     },
     {
@@ -376,55 +385,25 @@ export function ContainerServicesPage() {
       width: fixedColumns.actions,
       align: 'center',
       sticky: 'right',
-      render: (_, row) => {
-        const menuItems: ContextMenuItem[] = [
-          {
-            id: 'edit-config',
-            label: 'Edit config',
-            onClick: () => console.log('Edit Config:', row.id),
-          },
-          {
-            id: 'edit-yaml',
-            label: 'Edit YAML',
-            onClick: () => navigate(`/container/services/${row.id}/edit-yaml`),
-          },
-          {
-            id: 'download-yaml',
-            label: 'Download YAML',
-            onClick: () => console.log('Download YAML:', row.id),
-          },
-          {
-            id: 'delete',
-            label: 'Delete',
-            status: 'danger',
-            onClick: () => console.log('Delete:', row.id),
-          },
-        ];
-
-        return (
-          <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
+      render: (_, row) => (
+        <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
+          <ContextMenu items={getRowMenuItems(row)} trigger="click" align="right">
+            <button
+              aria-label="Row actions"
+              type="button"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
     },
   ];
-
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
-  };
 
   return (
     <PageShell
@@ -447,55 +426,20 @@ export function ContainerServicesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Services' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Storage Classes' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-services', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-storage-classes', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -520,49 +464,48 @@ export function ContainerServicesPage() {
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
-        {/* Header */}
         <PageHeader
-          title="Services"
+          title="Storage Classes"
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button variant="primary" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
-                Create service
+                Create storage class
               </Button>
             </ContextMenu>
           }
         />
 
-        {/* Toolbar */}
-        <div className="flex flex-col gap-2">
-          {/* Action Bar */}
-          <HStack gap={2} align="center" className="w-full min-h-7">
-            {/* Search */}
-            <HStack gap={1} align="center">
-              <SearchInput
-                placeholder="Search service by attributes"
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={storageClassFilterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search storage classes by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
                 size="sm"
                 aria-label="Download"
                 className="!p-0 !w-7 !h-7 !min-w-7"
+                onClick={() => console.log('Download')}
               >
                 <IconDownload size={12} stroke={1.5} />
               </Button>
-            </HStack>
-
-            {/* Divider */}
-            <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-            {/* Actions */}
-            <HStack gap={1} align="center">
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
               <Button
                 variant="muted"
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML')}
               >
                 Download YAML
               </Button>
@@ -571,65 +514,49 @@ export function ContainerServicesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
-            </HStack>
-          </HStack>
+            </ListToolbar.Actions>
+          }
+        />
 
-          {/* Filter Bar */}
-          {filters.length > 0 && (
-            <HStack
-              gap={2}
-              justify="between"
-              align="center"
-              className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
-            >
-              <HStack gap={1} align="center">
-                {filters.map((filter, index) => (
-                  <Chip
-                    key={index}
-                    label={filter.key}
-                    value={filter.value}
-                    onRemove={() => handleRemoveFilter(index)}
-                  />
-                ))}
-              </HStack>
-              <button
-                onClick={handleClearFilters}
-                className="text-label-sm text-[var(--color-action-primary)] hover:underline"
-              >
-                Clear filters
-              </button>
-            </HStack>
-          )}
-        </div>
-
-        {/* Pagination */}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={servicesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
-        {/* Table */}
-        <Table<ServiceRow>
+        <Table<StorageClassRow>
           columns={columns}
+          loading={loading}
           data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
-          onRowClick={(row) => navigate(`/container/services/${row.id}`)}
+          onRowClick={(row) => navigate(`/container/storage-classes/${row.id}`)}
+          emptyMessage="No storage classes found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteStorageClasses}
+        title="Delete selected storage classes"
+        description="Removing the selected storage classes is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} storage class(es)`}
+      />
     </PageShell>
   );
 }
 
-export { ContainerServicesPage as StorageClassesPage };
-export default ContainerServicesPage;
+export default StorageClassesPage;

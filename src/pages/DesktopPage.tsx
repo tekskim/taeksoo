@@ -1,21 +1,44 @@
-import React, { useState, useRef, useEffect, useCallback, Suspense } from 'react';
-import SettingsPage from './SettingsPage';
+import React, { useState, useRef, useEffect, useCallback, useMemo, Suspense } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
-import { IconLayoutDashboard, IconCheck, IconSelector } from '@tabler/icons-react';
+import {
+  IconCheck,
+  IconCheckbox,
+  IconChevronUp,
+  IconChevronDown,
+  IconGridDots,
+  IconSearch,
+  IconMinus,
+  IconSquare,
+  IconSquares,
+  IconX,
+  IconBell,
+} from '@tabler/icons-react';
 import {
   Icons,
   ContextMenu,
   Modal,
   Button,
-  NotificationCenter,
-  WindowControls,
   Tooltip,
   IconWindowActive,
   IconWindowMinimized,
+  Tabs,
+  TabList,
+  Tab,
+  Select,
+  WindowControl,
+  SnackbarContainer,
+  Badge,
+  InfoBox,
+  useSnackbar,
 } from '@/design-system';
+import AppIconCompute from '@/assets/appIcon/compute.webp';
+import AppIconIAM from '@/assets/appIcon/iam.webp';
+import AppIconContainer from '@/assets/appIcon/container.webp';
+import AppIconStorage from '@/assets/appIcon/storage.webp';
+import AppIconAlerts from '@/assets/appIcon/alerts.webp';
 import { motion, Reorder, AnimatePresence } from 'framer-motion';
 import {
-  Link,
   MemoryRouter,
   Routes,
   Route,
@@ -24,35 +47,81 @@ import {
 } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { DesktopWindowProvider } from '@/contexts/DesktopWindowContext';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
+import { TabProvider } from '@/contexts/TabContext';
+import { SidebarProvider } from '@/contexts/SidebarContext';
 import DesktopBg from '@/assets/bg-01.jpg';
 import { computeRoutes } from '@/routes/compute.routes';
 import { storageRoutes } from '@/routes/storage.routes';
+import { storageDomainAdminRoutes } from '@/routes/storage-domain-admin.routes';
+import { storageMemberRoutes } from '@/routes/storage-member.routes';
 import { agentRoutes } from '@/routes/agent.routes';
 import { iamRoutes } from '@/routes/iam.routes';
 import { containerRoutes } from '@/routes/container.routes';
-import { appCatalogRoutes } from '@/routes/app-catalog.routes';
+import { containerPlatformRoutes } from '@/routes/container-platform.routes';
+import { computeAdminRoutes } from '@/routes/compute-admin.routes';
+import { logsRoutes } from '@/routes/logs.routes';
+import { alertRoutes } from '@/routes/alert.routes';
+import { auditRoutes } from '@/routes/audit.routes';
+import { kmsRoutes } from '@/routes/kms.routes';
+import { lazy } from 'react';
+import { AppCatalogModeContext } from '@/contexts/AppCatalogModeContext';
+import { ContainerModeContext, type ContainerMode } from '@/contexts/ContainerModeContext';
+const CatalogPageLazy = lazy(() => import('@/pages/CatalogPage'));
+const InstalledAppsPageLazy = lazy(() =>
+  import('@/pages/InstalledAppsPage').then((m) => ({ default: m.InstalledAppsPage }))
+);
+const InstalledOperatorsPageLazy = lazy(() => import('@/pages/InstalledOperatorsPage'));
+const AppInstallPageLazy = lazy(() => import('@/pages/AppInstallPage'));
+const InstalledAppDetailPageLazy = lazy(() => import('@/pages/InstalledAppDetailPage'));
+const InstalledOperatorDetailPageLazy = lazy(() => import('@/pages/InstalledOperatorDetailPage'));
+import { CloudBuilderConsolePage } from '@/pages/cloudbuilder/CloudBuilderConsolePage';
+import { CloudBuilderCreatePage } from '@/pages/cloudbuilder/CloudBuilderCreatePage';
+import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailPage';
+import ServePage from '@/pages/serve/ServePage';
+import MLStudioPage from '@/pages/ml-studio/MLStudioPage';
+import RunPage from '@/pages/run/RunPage';
+import FabricPage from '@/pages/fabric/FabricPage';
+import { FirewallsPage as SecurityFirewallsPage } from '@/pages/security/FirewallsPage';
 import { ComputeHomePage } from './ComputeHomePage';
 import { StorageHomePage } from './StorageHomePage';
+import { StorageDomainAdminHomePage } from './StorageDomainAdminHomePage';
+import { StorageMemberHomePage } from './StorageMemberHomePage';
 import { HomePage } from './HomePage';
 import { AIPlatformPage } from './AIPlatformPage';
+import SettingsGeneralPage from './SettingsGeneralPage';
+import SettingsNotificationsPage from './SettingsNotificationsPage';
+import SettingsInformationPage from './SettingsInformationPage';
 
 // App Icon Images
-import imgIam from '@/assets/appIcon/iam.png';
-import imgCompute from '@/assets/appIcon/compute.png';
-import imgStorage from '@/assets/appIcon/storage.png';
-import imgContainer from '@/assets/appIcon/container.png';
+import imgIam from '@/assets/appIcon/iam.webp';
+import imgCompute from '@/assets/appIcon/compute.webp';
+import imgStorage from '@/assets/appIcon/storage.webp';
+import imgContainer from '@/assets/appIcon/container.webp';
+import imgContainerPlatform from '@/assets/appIcon/container-platform.svg?url';
 import imgAi from '@/assets/appIcon/aiplatform.png';
-import imgAgent from '@/assets/appIcon/agentops.png';
-import imgSettings from '@/assets/appIcon/settings.png';
-import imgStorageAdmin from '@/assets/appIcon/storageadmin.png';
-import imgComputeAdmin from '@/assets/appIcon/computeadmin.png';
-import imgCloud from '@/assets/appIcon/cloudbuilder.png';
+import imgAgent from '@/assets/appIcon/agentops.webp';
+import imgSettings from '@/assets/appIcon/settings.webp';
+import imgStorageAdmin from '@/assets/appIcon/storageadmin.webp';
+import imgComputeAdmin from '@/assets/appIcon/computeadmin.webp';
+import imgCloud from '@/assets/appIcon/cloudbuilder.webp';
 import imgAdminCenter from '@/assets/appIcon/admincenter.png';
-import imgAppCatalog from '@/assets/appIcon/appcatalog.png';
+import imgAIPlatformAdmin from '@/assets/appIcon/aiplatformadmin.png';
+import imgLogs from '@/assets/appIcon/logs.webp';
+import imgAlert from '@/assets/appIcon/alerts.webp';
+import imgAudit from '@/assets/appIcon/audit.webp';
+import imgAppCatalog from '@/assets/appIcon/app-catalog.webp';
+import imgSecurity from '@/assets/appIcon/security.webp';
+import imgKms from '@/assets/appIcon/kms.webp';
+import imgMetisContainer from '@/assets/appIcon/metis-container.webp';
+import imgServe from '@/assets/appIcon/metis-serve.webp';
+import imgMLStudio from '@/assets/appIcon/metis-ml-studio.webp';
+import imgRun from '@/assets/appIcon/metis-run.webp';
+import imgFabric from '@/assets/appIcon/metis-fabric.webp';
+import { ThakiLogoAnimated } from '@/components/ThakiLogoAnimated';
 
 // App Icons
-import appIconAIChat from '@/assets/appIcon/chat.png';
+import appIconAIChat from '@/assets/appIcon/chat.webp';
+import appIconAIChatDark from '@/assets/appIcon/chat-dark.webp';
 
 /* ----------------------------------------
    Desktop Icon Grid System
@@ -64,7 +133,6 @@ const GRID = {
   PAD_X: 44,
   PAD_TOP: 76,
   ICON_W: 80,
-  DRAG_THRESHOLD: 5,
 } as const;
 
 interface DesktopIconItem {
@@ -82,31 +150,33 @@ function gridToPixel(col: number, row: number) {
   };
 }
 
-function pixelToGrid(px: number, py: number, maxCols: number, maxRows: number) {
-  const col = Math.round((px - GRID.PAD_X) / GRID.CELL_W);
-  const row = Math.round((py - GRID.PAD_TOP) / GRID.CELL_H);
-  return {
-    col: Math.max(0, Math.min(col, maxCols - 1)),
-    row: Math.max(0, Math.min(row, maxRows - 1)),
-  };
-}
+const DESKTOP_ICONS_META = [
+  { id: 'iam', icon: imgIam, label: 'IAM' },
+  { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
+  { id: 'compute', icon: imgCompute, label: 'Compute' },
+  { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
+  { id: 'container-platform', icon: imgContainerPlatform, label: 'Container Platform' },
+  { id: 'aegis-container', icon: imgContainer, label: 'Aegis Container' },
+  { id: 'metis-container', icon: imgMetisContainer, label: 'Metis Container' },
+  { id: 'app-catalog', icon: imgAppCatalog, label: 'App Catalog' },
+  { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
+  { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
+  { id: 'settings', icon: imgSettings, label: 'Settings' },
+  { id: 'logs', icon: imgLogs, label: 'Logs' },
+  { id: 'alert', icon: imgAlert, label: 'Alert' },
+  { id: 'audit', icon: imgAudit, label: 'Audit' },
+  { id: 'security', icon: imgSecurity, label: 'Security' },
+  { id: 'kms', icon: imgKms, label: 'KMS' },
+  { id: 'serve', icon: imgServe, label: 'Metis Serve' },
+  { id: 'ml-studio', icon: imgMLStudio, label: 'Metis ML Studio' },
+  { id: 'run', icon: imgRun, label: 'Metis Run' },
+  { id: 'fabric', icon: imgFabric, label: 'Metis Fabric' },
+];
 
 function getInitialIconLayout(): DesktopIconItem[] {
-  const icons = [
-    { id: 'iam', icon: imgIam, label: 'IAM' },
-    { id: 'compute', icon: imgCompute, label: 'Compute' },
-    { id: 'storage', icon: imgStorage, label: 'Storage' },
-    { id: 'container', icon: imgContainer, label: 'Container' },
-    { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
-    { id: 'agent', icon: imgAgent, label: 'Agent Ops' },
-    { id: 'app-catalog', icon: imgAppCatalog, label: 'App Catalog' },
-    { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
-    { id: 'settings', icon: imgSettings, label: 'Settings' },
-  ];
-  const dockHeight = 64;
-  const availableH = window.innerHeight - GRID.PAD_TOP - dockHeight;
+  const availableH = window.innerHeight - GRID.PAD_TOP;
   const maxRows = Math.max(1, Math.floor(availableH / GRID.CELL_H));
-  return icons.map((item, i) => ({
+  return DESKTOP_ICONS_META.map((item, i) => ({
     ...item,
     col: Math.floor(i / maxRows),
     row: i % maxRows,
@@ -116,154 +186,71 @@ function getInitialIconLayout(): DesktopIconItem[] {
 interface DesktopIconProps {
   icon: string;
   label: string;
+  iconSlot?: React.ReactNode;
   onClick?: () => void;
-  onMouseDown?: (e: React.MouseEvent) => void;
   style?: React.CSSProperties;
-  isDragging?: boolean;
   ref?: React.Ref<HTMLButtonElement>;
 }
 
 const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(function DesktopIcon(
-  { icon, label, onClick, onMouseDown, style, isDragging },
+  { icon, label, iconSlot, onClick, style },
   ref
 ) {
   return (
     <button
       ref={ref}
       type="button"
-      className={`
-          absolute flex flex-col items-center gap-1 w-20 bg-transparent border-none p-0 select-none
-          ${isDragging ? 'opacity-50 pointer-events-none' : 'cursor-pointer transition-transform hover:-translate-y-0.5'}
-        `}
+      className="absolute flex flex-col items-center gap-1 w-20 bg-transparent border-none p-0 select-none cursor-pointer group"
       style={style}
-      onClick={isDragging ? undefined : onClick}
-      onMouseDown={onMouseDown}
+      onClick={onClick}
       aria-label={label}
     >
-      <div className="w-20 h-20 flex items-center justify-center rounded-lg">
-        <img
-          src={icon}
-          alt={label}
-          className="w-16 h-16 object-cover object-center"
-          draggable={false}
-        />
+      <div className="w-[72px] h-[72px] flex items-center justify-center rounded-lg transition-colors duration-150 group-hover:bg-[var(--desktop-icon-hover)] group-active:bg-[var(--desktop-icon-active)]">
+        {iconSlot || (
+          <img
+            src={icon}
+            alt={label}
+            className="w-16 h-16 object-cover object-center"
+            draggable={false}
+          />
+        )}
       </div>
-      <span className="text-label-md text-white text-center whitespace-nowrap">{label}</span>
+      <span className="text-label-md text-[var(--desktop-text)] text-center max-w-[120px] px-2 py-0.5 rounded transition-colors duration-150 group-hover:bg-[var(--desktop-icon-hover)] group-active:bg-[var(--desktop-icon-active)]">
+        {label}
+      </span>
     </button>
   );
 });
 
-interface DragGhostProps {
-  icon: string;
-  label: string;
-  x: number;
-  y: number;
-}
-
-function DragGhost({ icon, label, x, y }: DragGhostProps) {
+function AdminCenterCompositeIcon() {
   return (
-    <div
-      className="fixed z-[9999] flex flex-col items-center gap-1 w-20 pointer-events-none opacity-80"
-      style={{ left: x - GRID.ICON_W / 2, top: y - 40 }}
-    >
-      <div className="w-20 h-20 flex items-center justify-center rounded-lg">
-        <img
-          src={icon}
-          alt={label}
-          className="w-16 h-16 object-cover object-center"
-          draggable={false}
-        />
-      </div>
-      <span className="text-label-md text-white text-center whitespace-nowrap">{label}</span>
+    <div className="w-14 h-14 rounded-2xl bg-[var(--desktop-glass-bg-strong)] border border-[var(--desktop-glass-border)] shadow-sm grid grid-cols-2 grid-rows-2 gap-1 p-1.5">
+      <img
+        src={imgStorageAdmin}
+        alt=""
+        className="w-full h-full object-contain rounded-md"
+        draggable={false}
+      />
+      <img
+        src={imgComputeAdmin}
+        alt=""
+        className="w-full h-full object-contain rounded-md"
+        draggable={false}
+      />
+      <img
+        src={imgAIPlatformAdmin}
+        alt=""
+        className="w-full h-full object-contain rounded-md"
+        draggable={false}
+      />
+      <img
+        src={imgCloud}
+        alt=""
+        className="w-full h-full object-contain rounded-md"
+        draggable={false}
+      />
     </div>
   );
-}
-
-function useDesktopIconDrag(
-  icons: DesktopIconItem[],
-  setIcons: React.Dispatch<React.SetStateAction<DesktopIconItem[]>>,
-  containerRef: React.RefObject<HTMLDivElement | null>
-) {
-  const [dragState, setDragState] = useState<{
-    iconId: string;
-    startX: number;
-    startY: number;
-    currentX: number;
-    currentY: number;
-    isDragging: boolean;
-  } | null>(null);
-
-  const getGridBounds = useCallback(() => {
-    if (!containerRef.current) return { maxCols: 10, maxRows: 8 };
-    const rect = containerRef.current.getBoundingClientRect();
-    const bottomPad = 64;
-    return {
-      maxCols: Math.max(1, Math.floor((rect.width - GRID.PAD_X) / GRID.CELL_W)),
-      maxRows: Math.max(1, Math.floor((rect.height - GRID.PAD_TOP - bottomPad) / GRID.CELL_H)),
-    };
-  }, [containerRef]);
-
-  const handleMouseDown = useCallback((iconId: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    setDragState({
-      iconId,
-      startX: e.clientX,
-      startY: e.clientY,
-      currentX: e.clientX,
-      currentY: e.clientY,
-      isDragging: false,
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!dragState) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const dx = e.clientX - dragState.startX;
-      const dy = e.clientY - dragState.startY;
-      const moved = Math.abs(dx) > GRID.DRAG_THRESHOLD || Math.abs(dy) > GRID.DRAG_THRESHOLD;
-
-      setDragState((prev) =>
-        prev
-          ? {
-              ...prev,
-              currentX: e.clientX,
-              currentY: e.clientY,
-              isDragging: moved || prev.isDragging,
-            }
-          : null
-      );
-    };
-
-    const handleMouseUp = (e: MouseEvent) => {
-      if (dragState.isDragging && containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const { maxCols, maxRows } = getGridBounds();
-        const target = pixelToGrid(e.clientX - rect.left, e.clientY - rect.top, maxCols, maxRows);
-
-        const occupied = icons.find(
-          (ic) => ic.id !== dragState.iconId && ic.col === target.col && ic.row === target.row
-        );
-        if (!occupied) {
-          setIcons((prev) =>
-            prev.map((ic) =>
-              ic.id === dragState.iconId ? { ...ic, col: target.col, row: target.row } : ic
-            )
-          );
-        }
-      }
-      setDragState(null);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [dragState, icons, setIcons, containerRef, getGridBounds]);
-
-  return { dragState, handleMouseDown };
 }
 
 /* ----------------------------------------
@@ -310,30 +297,28 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
     <ContextMenu trigger="contextmenu" items={getContextMenuItems(app)}>
       <Tooltip content={app.name} position="bottom">
         <motion.div
-          layoutId={app.id}
+          {...(isDragging ? { layoutId: app.id } : {})}
+          role="button"
+          tabIndex={0}
+          aria-label={app.name}
           onClick={() => onAppClick(app.id)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onAppClick(app.id);
+            }
+          }}
           className={`
-            relative cursor-pointer flex items-center justify-center
+            relative cursor-pointer flex flex-col items-center
             ${isDragging ? 'z-50' : 'z-0'}
           `}
           whileDrag={{
             scale: 1.1,
             zIndex: 50,
-            boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-          }}
-          transition={{
-            type: 'spring',
-            stiffness: 400,
-            damping: 25,
+            boxShadow: '0 10px 30px color-mix(in srgb, var(--color-text-default) 30%, transparent)',
           }}
         >
-          <div
-            className={`
-              w-7 h-7 rounded-lg overflow-hidden
-              ${isRunning ? 'p-0.5 border border-white/20 bg-white/10' : ''}
-              ${isActive ? 'border-white/40 bg-white/15' : ''}
-            `}
-          >
+          <div className="w-7 h-7 rounded-[var(--radius-lg)] overflow-hidden">
             <img
               src={app.icon}
               alt={app.name}
@@ -341,6 +326,12 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
               draggable={false}
             />
           </div>
+          {isRunning && (
+            <div
+              className="mt-0.5 rounded-full bg-[var(--desktop-text-muted)]"
+              style={{ width: 3, height: 3 }}
+            />
+          )}
         </motion.div>
       </Tooltip>
     </ContextMenu>
@@ -381,19 +372,16 @@ function DockIcons({
         // 윈도우 상태에 따른 아이콘 결정
         let windowIcon: React.ReactNode;
         if (window.isMinimized) {
-          // Minimized 상태: Window_minimized 아이콘
-          windowIcon = <IconWindowMinimized size={16} stroke={1} />;
+          windowIcon = <IconWindowMinimized size={12} />;
         } else if (window.isActive) {
-          // Normal + Focus in 상태: Check + Window_active 아이콘
           windowIcon = (
             <span className="flex items-center gap-1">
-              <IconCheck size={16} stroke={1} />
-              <IconWindowActive size={16} stroke={1} />
+              <IconCheck size={12} />
+              <IconWindowActive size={12} />
             </span>
           );
         } else {
-          // Normal + Focus out 상태: Window_active 아이콘
-          windowIcon = <IconWindowActive size={16} stroke={1} />;
+          windowIcon = <IconWindowActive size={12} />;
         }
 
         items.push({
@@ -403,32 +391,33 @@ function DockIcons({
           onClick: () => onWindowClick(window.id),
         });
       });
-      // Divider after window list
-      items.push({ id: 'divider-windows', label: '', divider: true });
+      // 마지막 윈도우 아이템에 divider 추가
+      if (items.length > 0) {
+        items[items.length - 1].divider = true;
+      }
     }
 
     // New window
     items.push({
       id: 'new-window',
       label: 'New window',
+      divider: true,
       onClick: () => onNewWindow(app.id),
     });
-
-    items.push({ id: 'divider-3', divider: true });
 
     // Pin / Unpin
     items.push({
       id: 'pin',
       label: app.isPinned ? 'Unpin' : 'Pin',
+      divider: true,
       onClick: () => onTogglePin(app.id),
     });
-
-    items.push({ id: 'divider-4', divider: true });
 
     // Quit
     items.push({
       id: 'quit',
       label: 'Quit',
+      status: 'danger',
       onClick: () => onQuitApp(app.id),
     });
 
@@ -446,37 +435,38 @@ function DockIcons({
         onReorder={handleReorder}
         className="flex items-center gap-2"
       >
-        {localApps.map((app) => (
-          <Reorder.Item
-            key={app.id}
-            value={app}
-            as="div"
-            onDragStart={() => setIsDragging(true)}
-            onDragEnd={() => setIsDragging(false)}
-            dragListener={true}
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.1}
-            layout
-            transition={{
-              type: 'spring',
-              stiffness: 400,
-              damping: 25,
-            }}
-            whileDrag={{
-              scale: 1.15,
-              zIndex: 50,
-              cursor: 'grabbing',
-            }}
-            className="cursor-grab active:cursor-grabbing"
-          >
-            <DockIconItem
-              app={app}
-              isDragging={isDragging}
-              onAppClick={onAppClick}
-              getContextMenuItems={getContextMenuItems}
-            />
-          </Reorder.Item>
-        ))}
+        <AnimatePresence initial={false}>
+          {localApps.map((app) => (
+            <Reorder.Item
+              key={app.id}
+              value={app}
+              as="div"
+              onDragStart={() => setIsDragging(true)}
+              onDragEnd={() => setIsDragging(false)}
+              dragListener={true}
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0.15}
+              layout
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.2 } }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              whileDrag={{
+                scale: 1.15,
+                zIndex: 50,
+                cursor: 'grabbing',
+              }}
+              className="cursor-grab active:cursor-grabbing"
+            >
+              <DockIconItem
+                app={app}
+                isDragging={isDragging}
+                onAppClick={onAppClick}
+                getContextMenuItems={getContextMenuItems}
+              />
+            </Reorder.Item>
+          ))}
+        </AnimatePresence>
       </Reorder.Group>
     </div>
   );
@@ -488,97 +478,52 @@ function DockIcons({
 
 interface TopBarProps {
   onChatbotToggle: () => void;
-  onOpenSettings?: (tab?: 'general' | 'account' | 'notifications' | 'information') => void;
+  onLaunchpadToggle?: () => void;
+  onOpenSettings?: () => void;
   onNotificationToggle?: () => void;
   notificationButtonRef?: React.RefObject<HTMLButtonElement>;
   dockIcons?: React.ReactNode;
+  autoHide?: boolean;
 }
 
 /* ----------------------------------------
-   Glass Domain Select (Desktop Top Bar)
+   Glass Domain Label (Desktop Top Bar) — read-only
    ---------------------------------------- */
 
-interface GlassDomainSelectProps {
-  value: string;
-  onChange: (value: string) => void;
-  options: { value: string; label: string }[];
+interface GlassDomainLabelProps {
+  label: string;
 }
 
-function GlassDomainSelect({ value, onChange, options }: GlassDomainSelectProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false);
-    };
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
-    };
-    document.addEventListener('mousedown', handleClick);
-    document.addEventListener('keydown', handleEsc);
-    return () => {
-      document.removeEventListener('mousedown', handleClick);
-      document.removeEventListener('keydown', handleEsc);
-    };
-  }, [isOpen]);
-
+function GlassDomainLabel({ label }: GlassDomainLabelProps) {
   return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 h-7 px-2.5 rounded-[var(--primitive-radius-md)] bg-white/10 border border-white/15 text-white/90 text-body-md hover:bg-white/15 transition-colors cursor-pointer select-none"
-      >
-        <span className="truncate max-w-[120px]">{selectedLabel}</span>
-        <IconSelector size={14} stroke={1.5} className="text-white/60 shrink-0" />
-      </button>
-
-      {isOpen && (
-        <div className="absolute top-full right-0 mt-1.5 min-w-[160px] py-1 bg-black/70 backdrop-blur-xl border border-white/15 rounded-[var(--primitive-radius-lg)] shadow-2xl z-[1100] overflow-hidden">
-          {options.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => {
-                onChange(opt.value);
-                setIsOpen(false);
-              }}
-              className={`w-full flex items-center gap-2 px-3 py-1.5 text-body-md transition-colors cursor-pointer ${
-                opt.value === value
-                  ? 'text-white bg-white/15'
-                  : 'text-white/75 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              <span className="w-4 shrink-0 flex items-center justify-center">
-                {opt.value === value && <IconCheck size={12} stroke={2} className="text-white" />}
-              </span>
-              <span>{opt.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+    <input
+      readOnly
+      value={label}
+      className="h-7 px-2.5 rounded-[var(--primitive-radius-md)] bg-[var(--desktop-glass-bg)] border border-[var(--desktop-glass-border)] text-[var(--desktop-text)] text-label-md select-none cursor-default w-[120px] focus:outline-none"
+    />
   );
 }
 
 function DesktopTopBar({
   onChatbotToggle,
+  onLaunchpadToggle,
   onOpenSettings,
   onNotificationToggle,
   notificationButtonRef,
   dockIcons,
+  autoHide = false,
 }: TopBarProps) {
-  const [selectedDomain, setSelectedDomain] = useState('domain-a');
-  const { theme, setTheme } = useDarkMode();
+  const { theme, isDark, setTheme } = useDarkMode();
+  const [topBarVisible, setTopBarVisible] = useState(false);
+  const [animateTransition, setAnimateTransition] = useState(false);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const [language, setLanguage] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('tds-language') || 'en';
     }
     return 'en';
   });
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
   const [showLanguageConfirmModal, setShowLanguageConfirmModal] = useState(false);
   const [pendingLanguage, setPendingLanguage] = useState<string | null>(null);
 
@@ -600,16 +545,6 @@ function DesktopTopBar({
       window.removeEventListener('language-changed', handleStorageChange);
     };
   }, [language]);
-
-  const domainOptions = [
-    { value: 'domain-a', label: 'Domain A' },
-    { value: 'domain-b', label: 'Domain B' },
-    { value: 'domain-c', label: 'Domain C' },
-    { value: 'domain-d', label: 'Domain D' },
-    { value: 'domain-e', label: 'Domain E' },
-    { value: 'domain-f', label: 'Domain F' },
-    { value: 'domain-g', label: 'Domain G' },
-  ];
 
   const handleLanguageChange = (lang: string) => {
     // Skip confirmation if selecting the same value
@@ -685,12 +620,106 @@ function DesktopTopBar({
     },
   ];
 
-  return (
-    <div className="fixed top-0 left-0 right-0 h-[52px] bg-black/40 backdrop-blur-xl flex items-center justify-between pl-4 z-[1000] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.2)] border-b border-white/10">
+  const handleWrapperMouseEnter = useCallback(() => {
+    if (!autoHide) return;
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+    setAnimateTransition(true);
+    setTopBarVisible(true);
+  }, [autoHide]);
+
+  const handleWrapperMouseLeave = useCallback(() => {
+    if (!autoHide) return;
+    hideTimeoutRef.current = setTimeout(() => {
+      setAnimateTransition(true);
+      setTopBarVisible(false);
+    }, 200);
+  }, [autoHide]);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+    };
+  }, []);
+
+  const prevAutoHideRef = useRef(autoHide);
+  const [slideIn, setSlideIn] = useState(false);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const wasAutoHide = prevAutoHideRef.current;
+    prevAutoHideRef.current = autoHide;
+
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
+
+    if (autoHide) {
+      setAnimateTransition(false);
+      setTopBarVisible(true);
+      setSlideIn(false);
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = requestAnimationFrame(() => {
+          rafRef.current = 0;
+          setAnimateTransition(true);
+          setTopBarVisible(false);
+        });
+      });
+    } else if (wasAutoHide && !autoHide) {
+      setSlideIn(true);
+      setAnimateTransition(false);
+      setTopBarVisible(false);
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = requestAnimationFrame(() => {
+          rafRef.current = 0;
+          setAnimateTransition(true);
+          setTopBarVisible(true);
+        });
+      });
+    }
+
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = 0;
+      }
+    };
+  }, [autoHide]);
+
+  const isHidden = slideIn ? !topBarVisible : autoHide && !topBarVisible;
+
+  const topBarContent = (
+    <div
+      className={`fixed top-0 left-0 right-0 h-[52px] bg-[var(--desktop-topbar-bg)] backdrop-blur-xl flex items-center justify-between pl-4 border-b border-[var(--desktop-glass-border)] ${autoHide || slideIn ? 'z-[9999]' : 'z-[1000]'}`}
+      style={{
+        boxShadow:
+          (autoHide && topBarVisible) || slideIn
+            ? '0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03)'
+            : 'none',
+        transform: isHidden ? 'translateY(-100%)' : 'translateY(0)',
+        transition: animateTransition
+          ? 'transform 300ms ease-out, box-shadow 300ms ease-out'
+          : 'none',
+      }}
+      onTransitionEnd={(e) => {
+        if (slideIn && topBarVisible && e.propertyName === 'transform') {
+          setSlideIn(false);
+        }
+      }}
+    >
       {/* Left Section - Logo + Dock Icons */}
-      <div className="flex items-center gap-8 h-full">
-        {/* THAKI Cloud Logo */}
-        <img src={ThakiLogoDark} alt="THAKI Cloud" className="h-5" />
+      <div className="flex items-center gap-1.5 h-full">
+        <ThakiLogoAnimated isDark={isDark} className="h-5 mr-3" />
+        <button
+          onClick={onLaunchpadToggle}
+          className="flex items-center justify-center w-7 h-7 rounded-md text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] transition-colors"
+          title="Launchpad"
+        >
+          <IconGridDots size={18} stroke={1.5} />
+        </button>
 
         {/* Dock Icons */}
         {dockIcons}
@@ -698,17 +727,17 @@ function DesktopTopBar({
 
       {/* Right Section */}
       <div className="flex items-center gap-4">
-        {/* Domain Selector */}
-        <GlassDomainSelect
-          value={selectedDomain}
-          onChange={setSelectedDomain}
-          options={domainOptions}
-        />
+        {/* Domain Label (read-only) */}
+        <GlassDomainLabel label="Domain A" />
 
         {/* Right Icons */}
         <div className="flex items-center gap-3">
           <ContextMenu items={contextMenuItems} trigger="click" minTop={52}>
-            <button className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white cursor-pointer transition-colors">
+            <button
+              type="button"
+              className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors"
+              aria-label="Language and theme"
+            >
               <Icons.Finetuning size={20} stroke={1.5} />
             </button>
           </ContextMenu>
@@ -718,7 +747,7 @@ function DesktopTopBar({
                 id: 'user-email',
                 label: 'thaki.kim@example.com',
                 onClick: () => {
-                  onOpenSettings?.('account');
+                  onOpenSettings?.();
                 },
                 tooltip: 'Open settings page',
                 tooltipPosition: 'left',
@@ -726,37 +755,45 @@ function DesktopTopBar({
               },
               {
                 id: 'sign-out',
-                label: 'Logout',
-                onClick: () => {
-                  // TODO: Implement logout and redirect to login page
-                  // For now, do nothing as login page doesn't exist yet
-                },
+                label: 'Sign out',
+                onClick: () => setShowSignOutModal(true),
               },
             ]}
             trigger="click"
             minTop={52}
           >
-            <button className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white cursor-pointer transition-colors">
+            <button
+              type="button"
+              className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors"
+              aria-label="User menu"
+            >
               <Icons.UserCircle size={20} stroke={1.5} />
             </button>
           </ContextMenu>
           <button
+            type="button"
             ref={notificationButtonRef}
             onClick={onNotificationToggle}
-            className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white cursor-pointer transition-colors"
+            className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors"
+            aria-label="Notifications"
           >
             <Icons.Notification size={20} stroke={1.5} />
           </button>
         </div>
 
         {/* Separator + Chatbot */}
-        <div className="flex items-center border-l border-white/20 px-2.5">
+        <div className="flex items-center border-l border-[var(--desktop-separator)] px-2.5">
           <button
             className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
             onClick={onChatbotToggle}
             title="AI Chatbot"
+            aria-label="AI Chatbot"
           >
-            <img src={appIconAIChat} alt="AI Chatbot" className="w-8 h-8 object-contain" />
+            <img
+              src={isDark ? appIconAIChatDark : appIconAIChat}
+              alt="AI Chatbot"
+              className="w-8 h-8 object-contain"
+            />
           </button>
         </div>
       </div>
@@ -784,8 +821,38 @@ function DesktopTopBar({
           </Button>
         </div>
       </Modal>
+
+      <Modal
+        isOpen={showSignOutModal}
+        onClose={() => setShowSignOutModal(false)}
+        title="Sign out"
+        size="sm"
+      >
+        <InfoBox label="Username" value="thaki.kim@example.com" />
+
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={() => setShowSignOutModal(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={() => setShowSignOutModal(false)} className="flex-1">
+            Sign out
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
+
+  if (autoHide) {
+    return (
+      <div onMouseEnter={handleWrapperMouseEnter} onMouseLeave={handleWrapperMouseLeave}>
+        {/* Hot zone: thin invisible strip at top to trigger TopBar reveal */}
+        <div className="fixed top-0 left-0 right-0 h-[6px] z-[10000]" />
+        {topBarContent}
+      </div>
+    );
+  }
+
+  return topBarContent;
 }
 
 /* ----------------------------------------
@@ -796,16 +863,17 @@ interface AdminPanelProps {
   isOpen: boolean;
   onClose: () => void;
   anchorRef: React.RefObject<HTMLButtonElement>;
+  onOpenApp?: (appId: AppId) => void;
 }
 
-function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
+function AdminCenterPanel({ isOpen, onClose, onOpenApp }: AdminPanelProps) {
   return (
     <AnimatePresence>
       {isOpen && (
         <>
           {/* Overlay backdrop */}
           <motion.div
-            className="fixed inset-0 z-[500] bg-black/40"
+            className="fixed inset-0 z-[6000] bg-black/40"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -813,35 +881,258 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
             transition={{ duration: 0.2, ease: 'easeOut' }}
           />
           {/* Panel - centered on screen */}
-          <div className="fixed inset-0 z-[501] flex items-center justify-center pointer-events-none">
+          <div className="fixed inset-0 z-[6001] flex items-center justify-center pointer-events-none">
             <motion.div
-              className="bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center border border-white/30 pointer-events-auto"
+              className="bg-[var(--desktop-glass-bg-strong)] backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center border border-[var(--desktop-glass-border-strong)] pointer-events-auto"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
             >
               <button
-                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-                onClick={() => console.log('Storage Admin clicked')}
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('storage' as AppId);
+                  onClose();
+                }}
               >
                 <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-                <span className="text-label-md text-white text-center">Storage Admin</span>
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  Storage Admin
+                </span>
               </button>
               <button
-                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-                onClick={() => console.log('Compute Admin clicked')}
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('storage-domain-admin');
+                  onClose();
+                }}
+              >
+                <img
+                  src={imgStorageAdmin}
+                  alt="Storage Domain Admin"
+                  className="w-16 h-16 object-cover"
+                />
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  Storage Domain
+                </span>
+              </button>
+              <button
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('compute-admin');
+                  onClose();
+                }}
               >
                 <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-                <span className="text-label-md text-white text-center">Compute Admin</span>
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  Compute Admin
+                </span>
               </button>
               <button
-                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-                onClick={() => console.log('Cloud Builder clicked')}
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('ai-platform' as AppId);
+                  onClose();
+                }}
+              >
+                <img
+                  src={imgAIPlatformAdmin}
+                  alt="AI Platform Admin"
+                  className="w-16 h-16 object-cover"
+                />
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  AI Platform Admin
+                </span>
+              </button>
+              <button
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer bg-transparent border-none p-0"
+                onClick={() => {
+                  onOpenApp?.('cloud-builder');
+                  onClose();
+                }}
               >
                 <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-                <span className="text-label-md text-white text-center">Cloud Builder</span>
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  Cloud Builder
+                </span>
               </button>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ----------------------------------------
+   Launchpad Panel (All Apps Launcher)
+   ---------------------------------------- */
+
+const LAUNCHPAD = {
+  CELL_W: 100,
+  GAP: 24,
+  PAD_X: 40,
+  MIN_COLS: 4,
+  MAX_COLS: 7,
+} as const;
+
+const ADMIN_APP_IDS: Set<AppId> = new Set([
+  'storage',
+  'storage-domain-admin',
+  'compute-admin',
+  'cloud-builder',
+  'security',
+  'kms',
+]);
+
+interface LaunchpadPanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+  appConfigs: Record<string, { name: string; icon: string; initialPath: string }>;
+  onOpenApp: (appId: AppId) => void;
+}
+
+function LaunchpadPanel({ isOpen, onClose, appConfigs, onOpenApp }: LaunchpadPanelProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [cols, setCols] = useState(LAUNCHPAD.MAX_COLS);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchQuery('');
+      return;
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    requestAnimationFrame(() => searchInputRef.current?.focus());
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    const computeCols = () => {
+      const available = window.innerWidth - LAUNCHPAD.PAD_X * 2;
+      const maxFit = Math.floor((available + LAUNCHPAD.GAP) / (LAUNCHPAD.CELL_W + LAUNCHPAD.GAP));
+      setCols(Math.max(LAUNCHPAD.MIN_COLS, Math.min(LAUNCHPAD.MAX_COLS, maxFit)));
+    };
+    computeCols();
+
+    let rafId = 0;
+    const handleResize = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(computeCols);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  const apps = Object.entries(appConfigs) as [
+    AppId,
+    { name: string; icon: string; initialPath: string },
+  ][];
+
+  const filteredApps = searchQuery
+    ? apps.filter(([, config]) => config.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : apps;
+
+  const generalApps = filteredApps.filter(([id]) => !ADMIN_APP_IDS.has(id));
+  const adminApps = filteredApps.filter(([id]) => ADMIN_APP_IDS.has(id));
+
+  const gridStyle = { gridTemplateColumns: `repeat(${cols}, ${LAUNCHPAD.CELL_W}px)` };
+
+  const renderAppButton = ([appId, config]: [
+    AppId,
+    { name: string; icon: string; initialPath: string },
+  ]) => (
+    <button
+      key={appId}
+      className="flex flex-col items-center gap-2.5 w-[100px] cursor-pointer bg-transparent border-none p-3 rounded-xl hover:bg-white/10 transition-colors"
+      onClick={() => {
+        onOpenApp(appId);
+        onClose();
+      }}
+    >
+      <img src={config.icon} alt={config.name} className="w-16 h-16 object-cover" />
+      <span className="text-label-md text-white text-center leading-tight whitespace-pre-line">
+        {config.name.replace(' - ', '\n')}
+      </span>
+    </button>
+  );
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            className="fixed inset-0 z-[6000] bg-black/70 backdrop-blur-xl"
+            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          />
+          <div className="fixed inset-0 z-[6001] flex items-start justify-center pointer-events-none">
+            <motion.div
+              className="pointer-events-auto flex flex-col items-center max-h-[calc(100vh-80px)] pt-10 px-10"
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
+              <div className="relative w-[320px] shrink-0 mb-8">
+                <IconSearch
+                  size={16}
+                  stroke={1.5}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50"
+                />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search apps..."
+                  className="w-full h-9 pl-9 pr-3 rounded-lg bg-white/10 border border-white/15 text-white text-body-md placeholder:text-white/40 outline-none focus:bg-white/15 focus:border-white/25 transition-colors"
+                />
+              </div>
+
+              <OverlayScrollbarsComponent
+                className="min-h-0"
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'move', autoHideDelay: 800 },
+                }}
+              >
+                <div className="pb-10">
+                  {filteredApps.length === 0 ? (
+                    <div className="text-body-md text-white/50 py-10">No apps found</div>
+                  ) : (
+                    <div className="flex flex-col gap-8">
+                      {generalApps.length > 0 && (
+                        <div className="grid gap-6" style={gridStyle}>
+                          {generalApps.map(renderAppButton)}
+                        </div>
+                      )}
+
+                      {adminApps.length > 0 && (
+                        <div className="flex flex-col gap-6">
+                          <div className="flex flex-col gap-2">
+                            <span className="text-label-sm text-white/40">Admin center</span>
+                            <div className="h-px w-full bg-white/15" />
+                          </div>
+                          <div className="grid gap-6" style={gridStyle}>
+                            {adminApps.map(renderAppButton)}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </OverlayScrollbarsComponent>
             </motion.div>
           </div>
         </>
@@ -861,12 +1152,28 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
 type AppId =
   | 'compute'
   | 'storage'
+  | 'storage-domain-admin'
+  | 'storage-member'
   | 'container'
+  | 'container-platform'
+  | 'aegis-container'
+  | 'metis-container'
   | 'agent'
   | 'ai-platform'
   | 'iam'
   | 'settings'
-  | 'app-catalog';
+  | 'compute-admin'
+  | 'cloud-builder'
+  | 'logs'
+  | 'alert'
+  | 'audit'
+  | 'app-catalog'
+  | 'security'
+  | 'kms'
+  | 'serve'
+  | 'ml-studio'
+  | 'run'
+  | 'fabric';
 
 interface WindowState {
   id: string;
@@ -876,6 +1183,8 @@ interface WindowState {
   isActive: boolean;
   zIndex: number;
   createdAt: number;
+  initialX: number;
+  initialY: number;
 }
 
 interface AppState {
@@ -890,25 +1199,35 @@ interface AppState {
    Isolated Router — resets parent router context so MemoryRouter can nest
    ---------------------------------------- */
 
-function IsolatedRouter({ initialPath, appId }: { initialPath: string; appId: AppId }) {
+function IsolatedRouter({
+  initialPath,
+  appId,
+  onClose,
+}: {
+  initialPath: string;
+  appId: AppId;
+  onClose: () => void;
+}) {
   return (
-    <DesktopWindowProvider value={true}>
-      <UNSAFE_LocationContext.Provider value={null as any}>
-        <UNSAFE_RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
-          <MemoryRouter initialEntries={[initialPath]}>
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center h-full text-[var(--color-text-muted)]">
-                  Loading...
-                </div>
-              }
-            >
-              <AppRoutes appId={appId} />
-            </Suspense>
-          </MemoryRouter>
-        </UNSAFE_RouteContext.Provider>
-      </UNSAFE_LocationContext.Provider>
-    </DesktopWindowProvider>
+    <UNSAFE_LocationContext.Provider value={null as any}>
+      <UNSAFE_RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
+        <MemoryRouter initialEntries={[initialPath]}>
+          <SidebarProvider>
+            <TabProvider onLastTabClose={onClose} persistTabs={false}>
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center h-full text-[var(--color-text-muted)]">
+                    Loading...
+                  </div>
+                }
+              >
+                <AppRoutes appId={appId} />
+              </Suspense>
+            </TabProvider>
+          </SidebarProvider>
+        </MemoryRouter>
+      </UNSAFE_RouteContext.Provider>
+    </UNSAFE_LocationContext.Provider>
   );
 }
 
@@ -929,10 +1248,36 @@ function AppRoutes({ appId }: { appId: AppId }) {
           <Route path="/storage/*" element={<StorageHomePage />} />
         </Routes>
       );
+    case 'storage-domain-admin':
+      return (
+        <Routes>
+          {storageDomainAdminRoutes}
+          <Route path="/storage-domain-admin/*" element={<StorageDomainAdminHomePage />} />
+        </Routes>
+      );
+    case 'storage-member':
+      return (
+        <Routes>
+          {storageMemberRoutes}
+          <Route path="/storage-member/*" element={<StorageMemberHomePage />} />
+        </Routes>
+      );
     case 'container':
-      return <Routes>{containerRoutes}</Routes>;
-    case 'app-catalog':
-      return <Routes>{appCatalogRoutes}</Routes>;
+    case 'aegis-container':
+    case 'metis-container': {
+      const containerMode = appId as ContainerMode;
+      return (
+        <ContainerModeContext.Provider
+          value={{ mode: containerMode, isMetis: containerMode === 'metis-container' }}
+        >
+          <AppCatalogModeContext.Provider value={{ isStandalone: false }}>
+            <Routes>{containerRoutes}</Routes>
+          </AppCatalogModeContext.Provider>
+        </ContainerModeContext.Provider>
+      );
+    }
+    case 'container-platform':
+      return <Routes>{containerPlatformRoutes}</Routes>;
     case 'agent':
       return (
         <Routes>
@@ -949,6 +1294,100 @@ function AppRoutes({ appId }: { appId: AppId }) {
       );
     case 'iam':
       return <Routes>{iamRoutes}</Routes>;
+    case 'settings':
+      return (
+        <Routes>
+          <Route path="/settings" element={<SettingsGeneralPage />} />
+          <Route path="/settings/general" element={<SettingsGeneralPage />} />
+          <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
+          <Route path="/settings/information" element={<SettingsInformationPage />} />
+          <Route path="/settings/*" element={<SettingsGeneralPage />} />
+        </Routes>
+      );
+    case 'compute-admin':
+      return <Routes>{computeAdminRoutes}</Routes>;
+    case 'cloud-builder':
+      return (
+        <Routes>
+          <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />
+          <Route path="/cloudbuilder/:slug" element={<CloudBuilderConsolePage />} />
+          <Route path="/cloudbuilder/:slug/create" element={<CloudBuilderCreatePage />} />
+          <Route path="/cloudbuilder/:slug/detail/:id" element={<CloudBuilderDetailPage />} />
+          <Route path="/cloudbuilder/*" element={<CloudBuilderConsolePage />} />
+        </Routes>
+      );
+    case 'logs':
+      return <Routes>{logsRoutes}</Routes>;
+    case 'alert':
+      return <Routes>{alertRoutes}</Routes>;
+    case 'audit':
+      return <Routes>{auditRoutes}</Routes>;
+    case 'app-catalog':
+      return (
+        <AppCatalogModeContext.Provider value={{ isStandalone: true }}>
+          <Suspense fallback={null}>
+            <Routes>
+              <Route path="/app-catalog" element={<CatalogPageLazy />} />
+              <Route path="/app-catalog/:chartName/install" element={<AppInstallPageLazy />} />
+              <Route path="/app-catalog/installed-apps" element={<InstalledAppsPageLazy />} />
+              <Route
+                path="/app-catalog/installed-apps/:appId"
+                element={<InstalledAppDetailPageLazy />}
+              />
+              <Route
+                path="/app-catalog/installed-apps/:appId/edit"
+                element={<InstalledAppsPageLazy />}
+              />
+              <Route
+                path="/app-catalog/installed-operators"
+                element={<InstalledOperatorsPageLazy />}
+              />
+              <Route
+                path="/app-catalog/installed-operators/:operatorId"
+                element={<InstalledOperatorDetailPageLazy />}
+              />
+              <Route path="/app-catalog/*" element={<CatalogPageLazy />} />
+            </Routes>
+          </Suspense>
+        </AppCatalogModeContext.Provider>
+      );
+    case 'security':
+      return (
+        <Routes>
+          <Route path="/security" element={<SecurityFirewallsPage />} />
+          <Route path="/security/*" element={<SecurityFirewallsPage />} />
+        </Routes>
+      );
+    case 'serve':
+      return (
+        <Routes>
+          <Route path="/serve" element={<ServePage />} />
+          <Route path="/serve/*" element={<ServePage />} />
+        </Routes>
+      );
+    case 'ml-studio':
+      return (
+        <Routes>
+          <Route path="/ml-studio" element={<MLStudioPage />} />
+          <Route path="/ml-studio/*" element={<MLStudioPage />} />
+        </Routes>
+      );
+    case 'run':
+      return (
+        <Routes>
+          <Route path="/run" element={<RunPage />} />
+          <Route path="/run/*" element={<RunPage />} />
+        </Routes>
+      );
+    case 'fabric':
+      return (
+        <Routes>
+          <Route path="/fabric" element={<FabricPage />} />
+          <Route path="/fabric/*" element={<FabricPage />} />
+        </Routes>
+      );
+    case 'kms':
+      return <Routes>{kmsRoutes}</Routes>;
     default:
       return null;
   }
@@ -966,14 +1405,19 @@ interface PageWindowProps {
   onClose: () => void;
   onMinimize: () => void;
   onFocus: () => void;
+  onMaximizeChange?: (windowId: string, isMaximized: boolean) => void;
   title: string;
   children: React.ReactNode;
   zIndex: number;
+  initialX: number;
+  initialY: number;
 }
 
 const TOP_BAR_HEIGHT = 52;
-const MIN_WINDOW_WIDTH = 400;
+const MIN_WINDOW_WIDTH = 520;
 const MIN_WINDOW_HEIGHT = 300;
+const SNAP_EDGE_THRESHOLD = 20;
+type SnapZone = 'left' | 'right' | null;
 
 function PageWindow({
   windowId,
@@ -983,23 +1427,50 @@ function PageWindow({
   onClose,
   onMinimize,
   onFocus,
+  onMaximizeChange,
   title,
   children,
   zIndex,
+  initialX,
+  initialY,
 }: PageWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false);
-  const [position, setPosition] = useState({ x: 100, y: 100 });
-  const [size, setSize] = useState({ width: 1200, height: 800 });
+  const [position, setPosition] = useState(() => ({
+    x: initialX,
+    y: initialY,
+  }));
+  const [size, setSize] = useState(() => ({
+    width: Math.min(1440, Math.max(960, Math.round(window.innerWidth * 0.85))),
+    height: Math.min(800, window.innerHeight - 100),
+  }));
   const [preMaxState, setPreMaxState] = useState<{
     x: number;
     y: number;
     w: number;
     h: number;
   } | null>(null);
+  const [snapZone, setSnapZone] = useState<SnapZone>(null);
+  const [preSnapState, setPreSnapState] = useState<{
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  } | null>(null);
+  const [snapPreview, setSnapPreview] = useState<SnapZone>(null);
+  const snapPreviewRef = useRef<SnapZone>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
+  const [isDraggingState, setIsDraggingState] = useState(false);
+  const [bouncing, setBouncing] = useState(false);
   const isResizing = useRef<string | null>(null);
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0, w: 0, h: 0 });
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      hasMounted.current = true;
+    });
+  }, []);
 
   useEffect(() => {
     if (isActive && windowRef.current) {
@@ -1007,39 +1478,126 @@ function PageWindow({
     }
   }, [isActive]);
 
+  const prevMinimizedRef = useRef(isMinimized);
+  useEffect(() => {
+    const wasMinimized = prevMinimizedRef.current;
+    prevMinimizedRef.current = isMinimized;
+    if (wasMinimized && !isMinimized && isMaximized) {
+      onMaximizeChange?.(windowId, true);
+    }
+  }, [isMinimized, isMaximized, onMaximizeChange, windowId]);
+
   // Drag handler
+  const DRAG_THRESHOLD = 4;
   const handleDragStart = useCallback(
     (e: React.MouseEvent) => {
       if (isMaximized) return;
       e.preventDefault();
-      isDragging.current = true;
+
+      const startX = e.clientX;
+      const startY = e.clientY;
+      let didMove = false;
+      let snapReleased = false;
+
       dragStart.current = {
-        x: e.clientX,
-        y: e.clientY,
+        x: startX,
+        y: startY,
         posX: position.x,
         posY: position.y,
-        w: 0,
-        h: 0,
+        w: size.width,
+        h: size.height,
       };
 
       const handleMouseMove = (ev: MouseEvent) => {
-        if (!isDragging.current) return;
-        const dx = ev.clientX - dragStart.current.x;
-        const dy = ev.clientY - dragStart.current.y;
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
+
+        if (!didMove) {
+          if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+          didMove = true;
+          isDragging.current = true;
+          setIsDraggingState(true);
+
+          if (snapZone && preSnapState) {
+            dragStart.current.posX = preSnapState.x;
+            dragStart.current.posY = preSnapState.y;
+            dragStart.current.w = preSnapState.w;
+            dragStart.current.h = preSnapState.h;
+            setSize({ width: preSnapState.w, height: preSnapState.h });
+            setSnapZone(null);
+            setPreSnapState(null);
+            snapReleased = true;
+          }
+        }
+
         setPosition({
           x: dragStart.current.posX + dx,
           y: Math.max(TOP_BAR_HEIGHT, dragStart.current.posY + dy),
         });
+
+        let preview: SnapZone = null;
+        if (ev.clientX <= SNAP_EDGE_THRESHOLD) {
+          preview = 'left';
+        } else if (ev.clientX >= window.innerWidth - SNAP_EDGE_THRESHOLD) {
+          preview = 'right';
+        }
+        snapPreviewRef.current = preview;
+        setSnapPreview(preview);
       };
-      const handleMouseUp = () => {
-        isDragging.current = false;
+      const handleMouseUp = (ev: MouseEvent) => {
+        if (didMove) {
+          isDragging.current = false;
+          setIsDraggingState(false);
+
+          const currentPreview = snapPreviewRef.current;
+          if (currentPreview) {
+            const halfWidth = window.innerWidth / 2;
+            const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
+            const origW = snapReleased ? dragStart.current.w : size.width;
+            const origH = snapReleased ? dragStart.current.h : size.height;
+            setPreSnapState({
+              x: dragStart.current.posX,
+              y: dragStart.current.posY,
+              w: origW,
+              h: origH,
+            });
+            setPosition({
+              x: currentPreview === 'left' ? 0 : halfWidth,
+              y: TOP_BAR_HEIGHT,
+            });
+            setSize({ width: halfWidth, height: snapHeight });
+            setSnapZone(currentPreview);
+          } else {
+            const curW = snapReleased ? dragStart.current.w : size.width;
+            const dx = ev.clientX - startX;
+            const dy = ev.clientY - startY;
+            const finalX = dragStart.current.posX + dx;
+            const finalY = Math.max(TOP_BAR_HEIGHT, dragStart.current.posY + dy);
+
+            const minVisibleX = -curW + 100;
+            const maxVisibleX = window.innerWidth - 100;
+            const maxVisibleY = window.innerHeight - 50;
+
+            const clampedX = Math.max(minVisibleX, Math.min(maxVisibleX, finalX));
+            const clampedY = Math.max(TOP_BAR_HEIGHT, Math.min(maxVisibleY, finalY));
+
+            if (clampedX !== finalX || clampedY !== finalY) {
+              setBouncing(true);
+              setPosition({ x: clampedX, y: clampedY });
+              setTimeout(() => setBouncing(false), 250);
+            }
+          }
+
+          snapPreviewRef.current = null;
+          setSnapPreview(null);
+        }
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
       };
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     },
-    [isMaximized, position]
+    [isMaximized, position, size, snapZone, preSnapState]
   );
 
   // Resize handler
@@ -1048,6 +1606,19 @@ function PageWindow({
       if (isMaximized) return;
       e.preventDefault();
       e.stopPropagation();
+
+      if (snapZone) {
+        const halfWidth = window.innerWidth / 2;
+        const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
+        setPosition({
+          x: snapZone === 'left' ? 0 : halfWidth,
+          y: TOP_BAR_HEIGHT,
+        });
+        setSize({ width: halfWidth, height: snapHeight });
+        setSnapZone(null);
+        setPreSnapState(null);
+      }
+
       isResizing.current = direction;
       dragStart.current = {
         x: e.clientX,
@@ -1097,36 +1668,109 @@ function PageWindow({
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     },
-    [isMaximized, position, size]
+    [isMaximized, position, size, snapZone]
   );
 
-  if (!isOpen) return null;
-
-  const handleMinimize = () => {
+  const handleMinimize = useCallback(() => {
     onMinimize();
-  };
+  }, [onMinimize]);
 
-  const handleMaximize = () => {
+  const handleSnapLeft = useCallback(() => {
+    if (isMaximized) {
+      setIsMaximized(false);
+      onMaximizeChange?.(windowId, false);
+    }
+    setPreSnapState({ x: position.x, y: position.y, w: size.width, h: size.height });
+    const halfWidth = window.innerWidth / 2;
+    const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
+    setPosition({ x: 0, y: TOP_BAR_HEIGHT });
+    setSize({ width: halfWidth, height: snapHeight });
+    setSnapZone('left');
+  }, [isMaximized, position, size, onMaximizeChange, windowId]);
+
+  const handleSnapRight = useCallback(() => {
+    if (isMaximized) {
+      setIsMaximized(false);
+      onMaximizeChange?.(windowId, false);
+    }
+    setPreSnapState({ x: position.x, y: position.y, w: size.width, h: size.height });
+    const halfWidth = window.innerWidth / 2;
+    const snapHeight = window.innerHeight - TOP_BAR_HEIGHT;
+    setPosition({ x: halfWidth, y: TOP_BAR_HEIGHT });
+    setSize({ width: halfWidth, height: snapHeight });
+    setSnapZone('right');
+  }, [isMaximized, position, size, onMaximizeChange, windowId]);
+
+  const handleMaximize = useCallback(() => {
     if (!isMaximized) {
       setPreMaxState({ x: position.x, y: position.y, w: size.width, h: size.height });
       setIsMaximized(true);
+      onMaximizeChange?.(windowId, true);
     } else {
       if (preMaxState) {
         setPosition({ x: preMaxState.x, y: preMaxState.y });
         setSize({ width: preMaxState.w, height: preMaxState.h });
       }
       setIsMaximized(false);
+      onMaximizeChange?.(windowId, false);
     }
-  };
+  }, [isMaximized, position, size, preMaxState, onMaximizeChange, windowId]);
+
+  useEffect(() => {
+    if (!isActive) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey && e.shiftKey && e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handleSnapLeft();
+      } else if (e.altKey && e.shiftKey && e.key === 'ArrowRight') {
+        e.preventDefault();
+        handleSnapRight();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isActive, handleSnapLeft, handleSnapRight]);
+
+  const windowControls = useMemo(
+    () => ({
+      onMinimize: handleMinimize,
+      onSnapLeft: handleSnapLeft,
+      onSnapRight: handleSnapRight,
+      onMaximize: handleMaximize,
+      onClose,
+      onDragStart: handleDragStart,
+      onDoubleClick: handleMaximize,
+      isMaximized,
+    }),
+    [
+      handleMinimize,
+      handleSnapLeft,
+      handleSnapRight,
+      handleMaximize,
+      onClose,
+      handleDragStart,
+      isMaximized,
+    ]
+  );
+
+  if (!isOpen) return null;
+
+  const isMoving = isDragging.current || !!isResizing.current;
+  const windowTransition = bouncing
+    ? 'top 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), left 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 150ms ease-out, filter 150ms ease-out'
+    : hasMounted.current && !isMoving && !isMinimized
+      ? 'width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, border-radius 250ms ease-out, opacity 200ms ease-out, filter 200ms ease-out'
+      : 'opacity 150ms ease-out, filter 150ms ease-out';
 
   const windowStyle: React.CSSProperties = isMaximized
     ? {
         width: '100vw',
-        height: `calc(100vh - ${TOP_BAR_HEIGHT}px)`,
-        top: `${TOP_BAR_HEIGHT}px`,
+        height: '100vh',
+        top: 0,
         left: 0,
         zIndex: zIndex,
         borderRadius: 0,
+        transition: windowTransition,
       }
     : {
         width: `${size.width}px`,
@@ -1134,54 +1778,139 @@ function PageWindow({
         top: `${position.y}px`,
         left: `${position.x}px`,
         zIndex: zIndex,
+        transition: windowTransition,
+        ...(snapZone ? { borderRadius: 0 } : {}),
       };
 
   const resizeHandleBase = 'absolute pointer-events-auto z-10';
   const edgeThickness = '4px';
   const cornerSize = '12px';
 
+  const dragOpacity = isDraggingState ? 0.8 : 1;
+  const minimizeAnimation = isMinimized
+    ? { scale: 0.3, opacity: 0 }
+    : { scale: 1, opacity: dragOpacity };
+
   return (
-    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2000 + zIndex }}>
+    <div
+      className="fixed inset-0 pointer-events-none"
+      style={{
+        zIndex: 2000 + zIndex,
+        ...(isMinimized ? { pointerEvents: 'none' as const } : {}),
+      }}
+    >
+      {/* Snap preview frame */}
+      {snapPreview && (
+        <div
+          className="fixed pointer-events-none"
+          style={{
+            top: TOP_BAR_HEIGHT + 6,
+            left: snapPreview === 'left' ? 6 : 'calc(50% + 2px)',
+            width: 'calc(50% - 10px)',
+            height: `calc(100vh - ${TOP_BAR_HEIGHT + 12}px)`,
+            zIndex: 9999,
+            borderRadius: 10,
+            boxShadow: 'inset 0 0 0 2.5px rgba(255,255,255,0.7), 0 0 20px rgba(0,0,0,0.08)',
+            background: 'rgba(255,255,255,0.15)',
+            backdropFilter: 'blur(20px)',
+            transition: 'all 200ms ease-out',
+          }}
+        />
+      )}
+
       <motion.div
         ref={windowRef}
         initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+        animate={minimizeAnimation}
         exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-        className={`absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-2xl flex flex-col overflow-hidden pointer-events-auto ${
-          isActive ? 'ring-2 ring-[var(--color-action-primary)]' : ''
-        }`}
-        style={windowStyle}
-        onClick={onFocus}
-        onMouseDown={onFocus}
+        transition={
+          isMinimized
+            ? { duration: 0.25, ease: 'easeIn' }
+            : { duration: 0.2, ease: 'easeOut', opacity: { duration: 0.15 } }
+        }
+        className="absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
+        style={{
+          ...windowStyle,
+          transformOrigin: isMinimized ? 'top center' : 'center',
+          ...(isMinimized ? { pointerEvents: 'none' as const } : {}),
+          filter: isDraggingState ? 'drop-shadow(0 12px 24px rgba(0,0,0,0.25))' : 'none',
+        }}
+        onClick={(e) => {
+          if (!(e.target as HTMLElement).closest('button')) onFocus();
+        }}
+        onMouseDown={(e) => {
+          if (!(e.target as HTMLElement).closest('button')) onFocus();
+        }}
       >
-        {/* Window Header — draggable */}
-        <div
-          className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)] shrink-0 select-none"
-          onMouseDown={handleDragStart}
-          onDoubleClick={handleMaximize}
-        >
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <span className="text-label-md text-[var(--color-text-default)] truncate">{title}</span>
-          </div>
-          <div
-            className="flex items-center gap-1"
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
+        {/* Window controls overlay — pinned to window frame, always visible */}
+        <div className="absolute top-0 right-0 z-50 flex items-center gap-1 px-2 h-[var(--tabbar-height)] bg-[var(--color-surface-default)]">
+          <div className="absolute top-0 bottom-0 -left-6 w-6 bg-gradient-to-r from-transparent to-[var(--color-surface-default)] pointer-events-none" />
+          <div className="absolute bottom-0 -left-6 right-0 h-px pointer-events-none z-20 bg-gradient-to-r from-transparent via-[var(--color-border-default)] via-[24px] to-[var(--color-border-default)]" />
+          <button
+            type="button"
+            onClick={windowControls.onMinimize}
+            className="
+              relative z-10 flex items-center justify-center
+              size-[24px] rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Minimize"
           >
-            <WindowControls
-              onMinimize={handleMinimize}
-              onMaximize={handleMaximize}
-              onClose={onClose}
-              isMaximized={isMaximized}
+            <IconMinus size={12} stroke={1} />
+          </button>
+          <div className="relative z-10">
+            <WindowControl
+              type="split"
+              onSnapLeft={windowControls.onSnapLeft}
+              onSnapRight={windowControls.onSnapRight}
+              className="text-[var(--color-text-muted)]"
             />
           </div>
+          <button
+            type="button"
+            onClick={windowControls.onMaximize}
+            className="
+              relative z-10 flex items-center justify-center
+              size-[24px] rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label={isMaximized ? 'Restore' : 'Maximize'}
+          >
+            {isMaximized ? (
+              <IconSquares size={12} stroke={1} />
+            ) : (
+              <IconSquare size={12} stroke={1} />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={windowControls.onClose}
+            className="
+              relative z-10 flex items-center justify-center
+              size-[24px] rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Close window"
+          >
+            <IconX size={12} stroke={1} />
+          </button>
         </div>
 
         {/* Window Content */}
-        <div className="flex-1 overflow-hidden relative" style={{ transform: 'scale(1)' }}>
-          {children}
-        </div>
+        <DesktopWindowProvider value={{ isDesktopWindow: true, controls: windowControls }}>
+          <div className="flex-1 overflow-hidden relative" style={{ transform: 'scale(1)' }}>
+            {children}
+          </div>
+        </DesktopWindowProvider>
 
         {/* Resize handles (hidden when maximized) */}
         {!isMaximized && (
@@ -1235,23 +1964,279 @@ function PageWindow({
   );
 }
 
+type GlobalNotifType = 'critical' | 'warning' | 'success' | 'failed';
+
+interface GlobalNotif {
+  id: string;
+  type: GlobalNotifType;
+  message: string;
+  time: string;
+  project?: string;
+  app: string;
+  appIcon: string;
+  isRead?: boolean;
+  isResolved?: boolean;
+  detail?: { code?: string | number; message?: string };
+}
+
+const gnpTypeBadgeMap: Record<
+  GlobalNotifType,
+  { label: string; theme: 'red' | 'yellow' | 'green' }
+> = {
+  critical: { label: 'Critical', theme: 'red' },
+  warning: { label: 'Warning', theme: 'yellow' },
+  success: { label: 'Success', theme: 'green' },
+  failed: { label: 'Failed', theme: 'red' },
+};
+
+function GlobalNotificationCard({
+  notification,
+  onMarkAsRead,
+  onResolve,
+  isAlertSection,
+}: {
+  notification: GlobalNotif;
+  onMarkAsRead: () => void;
+  onResolve?: () => void;
+  isAlertSection?: boolean;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const hasDetail =
+    notification.detail && (notification.detail.code || notification.detail.message);
+  const showDetail = hasDetail && notification.type === 'failed';
+  const isUnread = !notification.isRead;
+
+  return (
+    <div
+      className={`relative rounded-[var(--radius-lg)] flex flex-col py-3 ${
+        isAlertSection
+          ? notification.type === 'critical'
+            ? 'border border-[var(--notification-critical-border)] bg-[var(--notification-critical-bg)]'
+            : 'border border-[var(--notification-warning-border)] bg-[var(--notification-warning-bg)]'
+          : isUnread
+            ? 'border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]'
+            : 'border border-[var(--color-border-default)] bg-[var(--color-surface-default)]'
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div
+        onClick={() => {
+          if (isUnread) onMarkAsRead();
+        }}
+        className="flex items-start justify-between px-3 cursor-pointer"
+      >
+        <div className={`flex gap-2 items-start ${isAlertSection ? 'flex-1' : 'w-[256px]'}`}>
+          <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
+          <div className="flex flex-col gap-1.5 flex-1 min-w-[1px]">
+            <div className="text-label-md text-[var(--color-text-default)]">
+              {notification.message}
+            </div>
+
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Badge
+                theme={gnpTypeBadgeMap[notification.type].theme}
+                size="sm"
+                className="shrink-0"
+              >
+                {gnpTypeBadgeMap[notification.type].label}
+              </Badge>
+              {notification.project && (
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="overflow-hidden min-w-0"
+                  title={notification.project}
+                >
+                  <span className="block truncate">{notification.project}</span>
+                </Badge>
+              )}
+            </div>
+
+            {showDetail && (
+              <div
+                className="flex flex-col gap-2 rounded-[var(--radius-sm)] mt-1"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="group flex items-center gap-1"
+                >
+                  <span className="text-body-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] whitespace-nowrap">
+                    View detail
+                  </span>
+                  {isExpanded ? (
+                    <IconChevronUp
+                      size={12}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  ) : (
+                    <IconChevronDown
+                      size={12}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  )}
+                </button>
+
+                {isExpanded && (
+                  <>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <div className="flex flex-col gap-1 text-body-sm text-[var(--color-text-muted)]">
+                      {notification.detail?.code !== undefined && (
+                        <p>code: {notification.detail.code}</p>
+                      )}
+                      {notification.detail?.message && <p>{notification.detail.message}</p>}
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col items-end justify-end self-stretch shrink-0">
+          <span className="text-body-sm text-[var(--color-text-subtle)] whitespace-nowrap">
+            {notification.time}
+          </span>
+        </div>
+      </div>
+
+      {isUnread && !isAlertSection && !isHovered && (
+        <div className="absolute top-3 right-3 size-1.5 rounded-full bg-[var(--color-action-primary)]" />
+      )}
+
+      {isUnread && !isAlertSection && isHovered && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onMarkAsRead();
+          }}
+          className="absolute top-[6px] right-[8px] size-4 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-muted)] transition-colors"
+          aria-label="Mark as read"
+        >
+          <IconCheckbox size={12} stroke={1.5} />
+        </button>
+      )}
+    </div>
+  );
+}
+
+const SNACKBAR_MOCKS = [
+  {
+    type: 'success' as const,
+    message: 'Instance "web-01" created successfully.',
+    partition: 'proj-1',
+    appIcon: AppIconCompute,
+  },
+  {
+    type: 'success' as const,
+    message: 'Volume "backup-01" snapshot successfully created.',
+    partition: 'proj-2',
+    appIcon: AppIconStorage,
+  },
+  {
+    type: 'failed' as const,
+    message: 'Volume "data-vol-02" create failed.',
+    partition: 'proj-1',
+    appIcon: AppIconCompute,
+    detail: {
+      code: 400,
+      message: "Flavor's disk is smaller than the minimum size specified in image metadata.",
+    },
+  },
+  {
+    type: 'critical' as const,
+    message: 'Pod "api-gateway" crash loop detected.',
+    partition: 'default',
+    appIcon: AppIconAlerts,
+    detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
+  },
+  {
+    type: 'warning' as const,
+    message: 'CPU usage exceeded 90% on node "worker-05".',
+    appIcon: AppIconAlerts,
+  },
+  {
+    type: 'failed' as const,
+    message: 'Security group "sg-prod" rule update failed.',
+    partition: 'proj-3',
+    appIcon: AppIconCompute,
+    detail: { code: 409, message: 'Conflicting rules detected in the security group.' },
+  },
+  {
+    type: 'success' as const,
+    message: 'API key "prod-key-01" has been rotated.',
+    partition: 'proj-1',
+    appIcon: AppIconIAM,
+  },
+  {
+    type: 'warning' as const,
+    message: 'Disk usage exceeded 85% on volume "data-vol-01".',
+    partition: 'proj-2',
+    appIcon: AppIconAlerts,
+  },
+  {
+    type: 'success' as const,
+    message: 'Container "nginx-proxy" deployed to cluster.',
+    partition: 'default',
+    appIcon: AppIconContainer,
+  },
+  {
+    type: 'critical' as const,
+    message: 'Node "worker-03" is NotReady.',
+    appIcon: AppIconAlerts,
+    detail: { code: 'NODE_NOT_READY', message: 'Kubelet stopped posting node status.' },
+  },
+];
+
 export function DesktopPage() {
-  const [showSettings, setShowSettings] = useState(false);
-  const [settingsTab, setSettingsTab] = useState<
-    'general' | 'account' | 'notifications' | 'information'
-  >('general');
+  const snackbar = useSnackbar();
+  const snackbarIndexRef = useRef(0);
   const [showChatbot, setShowChatbot] = useState(false);
   const [showAdminCenter, setShowAdminCenter] = useState(false);
+  const [showLaunchpad, setShowLaunchpad] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    if (!showNotifications) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowNotifications(false);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [showNotifications]);
+
   const adminCenterIconRef = useRef<HTMLButtonElement>(null);
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
   const desktopGridRef = useRef<HTMLDivElement>(null);
   const [desktopIcons, setDesktopIcons] = useState<DesktopIconItem[]>(getInitialIconLayout);
-  const { dragState, handleMouseDown } = useDesktopIconDrag(
-    desktopIcons,
-    setDesktopIcons,
-    desktopGridRef
-  );
+
+  useEffect(() => {
+    let rafId = 0;
+    const handleResize = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const maxRows = Math.max(1, Math.floor((window.innerHeight - GRID.PAD_TOP) / GRID.CELL_H));
+        setDesktopIcons((prev) =>
+          prev.map((ic, i) => ({
+            ...ic,
+            col: Math.floor(i / maxRows),
+            row: i % maxRows,
+          }))
+        );
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   // Window Management System
   // Dock menu 시뮬레이션 모드 - 실제 앱 실행 없이 인터랙션만 테스트
@@ -1259,37 +2244,108 @@ export function DesktopPage() {
 
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [nextZIndex, setNextZIndex] = useState(1);
+  const [maximizedWindows, setMaximizedWindows] = useState<Set<string>>(new Set());
+  const hasMaximizedWindow = maximizedWindows.size > 0;
+
+  const handleMaximizeChange = useCallback((windowId: string, isMax: boolean) => {
+    setMaximizedWindows((prev) => {
+      const next = new Set(prev);
+      if (isMax) next.add(windowId);
+      else next.delete(windowId);
+      return next;
+    });
+  }, []);
   const appConfigs: Record<AppId, { name: string; icon: string; initialPath: string }> = {
     compute: { name: 'Compute', icon: imgCompute, initialPath: '/compute' },
-    storage: { name: 'Storage', icon: imgStorage, initialPath: '/storage' },
+    storage: { name: 'Storage - System admin', icon: imgStorageAdmin, initialPath: '/storage' },
+    'storage-domain-admin': {
+      name: 'Storage - Domain admin',
+      icon: imgStorageAdmin,
+      initialPath: '/storage-domain-admin',
+    },
+    'storage-member': {
+      name: 'Storage - Member',
+      icon: imgStorage,
+      initialPath: '/storage-member',
+    },
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
-    agent: { name: 'Agent Ops', icon: imgAgent, initialPath: '/agent' },
+    'container-platform': {
+      name: 'Container Platform',
+      icon: imgContainerPlatform,
+      initialPath: '/container-platform/overview',
+    },
+    'aegis-container': { name: 'Aegis Container', icon: imgContainer, initialPath: '/container' },
+    'metis-container': {
+      name: 'Metis Container',
+      icon: imgMetisContainer,
+      initialPath: '/container',
+    },
+    agent: { name: 'Agent Studio', icon: imgAgent, initialPath: '/agent' },
     'ai-platform': { name: 'AI Platform', icon: imgAi, initialPath: '/ai-platform' },
     iam: { name: 'IAM', icon: imgIam, initialPath: '/iam' },
     settings: { name: 'Settings', icon: imgSettings, initialPath: '/settings' },
-    'app-catalog': { name: 'App Catalog', icon: imgAppCatalog, initialPath: '/container/catalog' },
+    'compute-admin': {
+      name: 'Compute Admin',
+      icon: imgComputeAdmin,
+      initialPath: '/compute-admin',
+    },
+    'cloud-builder': { name: 'Cloud Builder', icon: imgCloud, initialPath: '/cloudbuilder' },
+    logs: { name: 'Logs', icon: imgLogs, initialPath: '/logs' },
+    alert: { name: 'Alert', icon: imgAlert, initialPath: '/alerts' },
+    audit: { name: 'Audit', icon: imgAudit, initialPath: '/audit' },
+    'app-catalog': { name: 'App Catalog', icon: imgAppCatalog, initialPath: '/app-catalog' },
+    security: { name: 'Security', icon: imgSecurity, initialPath: '/security' },
+    kms: { name: 'KMS', icon: imgKms, initialPath: '/kms' },
+    serve: { name: 'Metis Serve', icon: imgServe, initialPath: '/serve' },
+    'ml-studio': { name: 'Metis ML Studio', icon: imgMLStudio, initialPath: '/ml-studio' },
+    run: { name: 'Metis Run', icon: imgRun, initialPath: '/run' },
+    fabric: { name: 'Metis Fabric', icon: imgFabric, initialPath: '/fabric' },
   };
-  // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Ops, Settings는 Pin만 되어있음
-  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(
-    new Set(['ai-platform', 'agent', 'settings'])
-  );
+  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set());
   const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([
     'compute',
     'storage',
-    'container',
-    'app-catalog',
+    'aegis-container',
     'ai-platform',
     'agent',
+    'logs',
+    'alert',
+    'audit',
     'settings',
   ]);
 
+  const visibleDockApps = useMemo(() => {
+    const pinned = dockAppOrder.filter((appId) => pinnedApps.has(appId));
+    const unpinned = dockAppOrder.filter(
+      (appId) => !pinnedApps.has(appId) && windows.some((w) => w.appId === appId)
+    );
+    return [...pinned, ...unpinned];
+  }, [dockAppOrder, pinnedApps, windows]);
+
   // Window management functions
+  const CASCADE_OFFSET = 30;
+  const CASCADE_MAX = 180;
+  const WINDOW_WIDTH = 1440;
+  const WINDOW_HEIGHT = 800;
+
   const createWindow = useCallback(
     (appId: AppId) => {
       const config = appConfigs[appId];
       if (!config) return;
 
-      // 시뮬레이션 모드: 실제 UI 윈도우 없이 상태만 업데이트
+      const baseX = Math.max(0, Math.round((window.innerWidth - WINDOW_WIDTH) / 2));
+      const baseY = Math.max(
+        TOP_BAR_HEIGHT,
+        Math.round((window.innerHeight - WINDOW_HEIGHT) / 2 + TOP_BAR_HEIGHT / 2)
+      );
+
+      const openCount = windows.filter((w) => !w.isMinimized).length;
+      const offsetX = (openCount * CASCADE_OFFSET) % CASCADE_MAX;
+      const offsetY = (openCount * CASCADE_OFFSET) % CASCADE_MAX;
+
+      const maxX = window.innerWidth - 400;
+      const maxY = window.innerHeight - 200;
+
       const newWindow: WindowState = {
         id: `${appId}-${Date.now()}`,
         appId,
@@ -1298,6 +2354,8 @@ export function DesktopPage() {
         isActive: true,
         zIndex: nextZIndex,
         createdAt: Date.now(),
+        initialX: Math.min(baseX + offsetX, maxX),
+        initialY: Math.min(baseY + offsetY, maxY),
       };
 
       setWindows((prev) => prev.map((w) => ({ ...w, isActive: false })).concat(newWindow));
@@ -1306,17 +2364,28 @@ export function DesktopPage() {
       // Dock에 앱이 없으면 추가
       setDockAppOrder((prev) => (prev.includes(appId) ? prev : [...prev, appId]));
     },
-    [appConfigs, nextZIndex]
+    [appConfigs, nextZIndex, windows]
   );
 
   const closeWindow = useCallback((windowId: string) => {
     setWindows((prev) => prev.filter((w) => w.id !== windowId));
+    setMaximizedWindows((prev) => {
+      const next = new Set(prev);
+      next.delete(windowId);
+      return next;
+    });
   }, []);
 
   const minimizeWindow = useCallback((windowId: string) => {
     setWindows((prev) =>
       prev.map((w) => (w.id === windowId ? { ...w, isMinimized: true, isActive: false } : w))
     );
+    setMaximizedWindows((prev) => {
+      if (!prev.has(windowId)) return prev;
+      const next = new Set(prev);
+      next.delete(windowId);
+      return next;
+    });
   }, []);
 
   const focusWindow = useCallback(
@@ -1393,40 +2462,349 @@ export function DesktopPage() {
     });
   }, []);
 
-  // Mock notifications data
-  const [notifications, setNotifications] = useState([
+  // Global notification panel data
+  const [globalNotifications, setGlobalNotifications] = useState<GlobalNotif[]>([
     {
       id: '1',
-      type: 'info' as const,
-      message: 'System maintenance scheduled for tonight',
-      time: '2h ago',
-      project: 'Infrastructure',
+      type: 'success',
+      message: 'Instance "web-01" created.',
+      time: '10:23',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
       isRead: false,
+      detail: { code: 200, message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.' },
     },
     {
       id: '2',
-      type: 'success' as const,
-      message: 'Instance created successfully',
-      time: '5h ago',
-      project: 'Compute',
+      type: 'failed',
+      message: 'Volume "data-vol-02" create failed.',
+      time: '09:30',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
       isRead: false,
+      detail: {
+        code: 400,
+        message: "Flavor's disk is smaller than the minimum size specified in image metadata.",
+      },
     },
     {
       id: '3',
-      type: 'error' as const,
-      message: 'Failed to create volume snapshot',
-      time: '1d ago',
-      project: 'Storage',
+      type: 'success',
+      message: 'API key "prod-key-01" has been rotated.',
+      time: '08:45',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: false,
+    },
+    {
+      id: '4',
+      type: 'critical',
+      message: 'Pod "api-gateway" crash loop detected.',
+      time: '09:55',
+      project: 'default',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: false,
+      isResolved: false,
+      detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
+    },
+    {
+      id: '5',
+      type: 'success',
+      message: 'Volume "backup-01" snapshot done.',
+      time: '10:10',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: false,
+    },
+    {
+      id: '6',
+      type: 'success',
+      message: 'Deployment "frontend-app" scaled to 5 replicas.',
+      time: '08:12',
+      project: 'proj-1',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+    },
+    {
+      id: '7',
+      type: 'success',
+      message: 'Security group "sg-prod" rule updated.',
+      time: '07:58',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '8',
+      type: 'critical',
+      message: 'Node "worker-03" became NotReady.',
+      time: '07:45',
+      project: 'default',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: false,
+      isResolved: false,
+      detail: { code: 'NODE_NOT_READY', message: 'Kubelet stopped posting node status.' },
+    },
+    {
+      id: '9',
+      type: 'success',
+      message: 'Image "ubuntu-22.04" upload completed.',
+      time: '07:30',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '10',
+      type: 'warning',
+      message: 'CPU usage exceeded 90% on node "worker-05".',
+      time: '07:15',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: true,
+    },
+    {
+      id: '11',
+      type: 'success',
+      message: 'Bucket "logs-2026" created successfully.',
+      time: '06:50',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '12',
+      type: 'warning',
+      message: 'Disk usage on volume "data-vol-01" reached 75%.',
+      time: '06:30',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: true,
+    },
+    {
+      id: '13',
+      type: 'success',
+      message: 'Floating IP "203.0.113.5" associated to "web-01".',
+      time: '06:10',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '14',
+      type: 'success',
+      message: 'Volume "db-storage" resize completed.',
+      time: '05:45',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '15',
+      type: 'success',
+      message: 'Role "cluster-admin" permissions modified.',
+      time: 'May 20',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '16',
+      type: 'success',
+      message: 'Network "internal-net" subnet added.',
+      time: 'May 20',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '17',
+      type: 'failed',
+      message: 'Pod "worker-batch-07" OOMKilled.',
+      time: 'May 20',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 137, message: 'Container exceeded memory limit of 512Mi.' },
+    },
+    {
+      id: '18',
+      type: 'success',
+      message: 'Object "report-2026.pdf" uploaded to bucket "docs".',
+      time: 'May 20',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '19',
+      type: 'success',
+      message: 'MFA enabled for user "admin@thaki.io".',
+      time: 'May 20',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '20',
+      type: 'success',
+      message: 'Instance "db-primary" migrated to host "hv-12".',
+      time: 'May 20',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '21',
+      type: 'failed',
+      message: 'CronJob "daily-cleanup" execution failed.',
+      time: 'May 19',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'JOB_FAILED', message: 'Deadline exceeded after 3600s.' },
+    },
+    {
+      id: '22',
+      type: 'success',
+      message: 'Snapshot "db-snap-weekly" completed.',
+      time: 'May 19',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '23',
+      type: 'success',
+      message: 'Keypair "deploy-key-02" imported.',
+      time: 'May 19',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '24',
+      type: 'warning',
+      message: 'Memory usage on pod "cache-redis" reached 80%.',
+      time: 'May 19',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: true,
+    },
+    {
+      id: '25',
+      type: 'warning',
+      message: 'Pod restart count exceeded threshold on "scheduler-01".',
+      time: 'May 19',
+      app: 'Alerts',
+      appIcon: AppIconAlerts,
+      isRead: true,
+    },
+    {
+      id: '26',
+      type: 'success',
+      message: 'Instance "cache-01" shelved offloaded.',
+      time: 'May 18',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
+      isRead: true,
+    },
+    {
+      id: '27',
+      type: 'failed',
+      message: 'StatefulSet "postgres" rollback triggered.',
+      time: 'May 18',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: true,
+      detail: { code: 'ROLLBACK', message: 'Rollback to revision 4 due to failed health check.' },
+    },
+    {
+      id: '28',
+      type: 'success',
+      message: 'Bucket "archives" lifecycle policy applied.',
+      time: 'May 18',
+      project: 'proj-2',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: true,
+    },
+    {
+      id: '29',
+      type: 'success',
+      message: 'Service account "ci-deployer" token rotated.',
+      time: 'May 18',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: true,
+    },
+    {
+      id: '30',
+      type: 'success',
+      message: 'Instance "ml-worker-gpu" resize completed.',
+      time: 'May 18',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
       isRead: true,
     },
   ]);
+  const [gnpActiveTab, setGnpActiveTab] = useState('all');
+  const [gnpActiveApp, setGnpActiveApp] = useState('all');
 
-  const handleMarkAsRead = (id: string) => {
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
+  const gnpAppIcon = (src: string) => <img src={src} alt="" className="size-4 object-cover" />;
+  const gnpAppOptions = [
+    { value: 'all', label: 'All apps' },
+    { value: 'Alerts', label: 'Alerts', icon: gnpAppIcon(AppIconAlerts) },
+    { value: 'Compute', label: 'Compute', icon: gnpAppIcon(AppIconCompute) },
+    { value: 'IAM', label: 'IAM', icon: gnpAppIcon(AppIconIAM) },
+    { value: 'Container', label: 'Container', icon: gnpAppIcon(AppIconContainer) },
+    { value: 'Storage', label: 'Storage', icon: gnpAppIcon(AppIconStorage) },
+  ].filter((opt) => opt.value === 'all' || globalNotifications.some((n) => n.app === opt.value));
+
+  const isGnpAlert = (n: GlobalNotif) =>
+    (n.type === 'critical' || n.type === 'warning') && !n.isResolved;
+  const gnpAlertNotifications = globalNotifications.filter(isGnpAlert);
+  const gnpRegular = globalNotifications.filter((n) => !isGnpAlert(n));
+
+  const gnpFiltered = gnpRegular.filter((n) => {
+    if (gnpActiveTab === 'unread' && n.isRead) return false;
+    if (gnpActiveApp !== 'all' && n.app !== gnpActiveApp) return false;
+    return true;
+  });
+  const gnpUnreadCount = gnpRegular.filter((n) => !n.isRead).length;
+
+  const handleGnpMarkAsRead = (id: string) => {
+    setGlobalNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
   };
 
-  const handleMarkAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  const handleGnpMarkAllAsRead = () => {
+    setGlobalNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  };
+
+  const handleGnpResolve = (id: string) => {
+    setGlobalNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isResolved: true, isRead: true } : n))
+    );
   };
 
   // 데스크탑 배경 클릭 시 모든 윈도우 포커스 해제
@@ -1441,26 +2819,31 @@ export function DesktopPage() {
   );
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-black" onClick={handleDesktopClick}>
+    <div
+      className="fixed inset-0 overflow-hidden bg-[var(--desktop-bg)]"
+      onClick={handleDesktopClick}
+    >
       <img
         src={DesktopBg}
         alt=""
-        className="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{
+          opacity: 'var(--desktop-wallpaper-opacity)',
+          filter: 'var(--desktop-wallpaper-filter)',
+        }}
       />
       {/* Top Bar */}
       <DesktopTopBar
         onChatbotToggle={() => setShowChatbot(!showChatbot)}
-        onOpenSettings={(tab) => {
-          if (tab) {
-            setSettingsTab(tab);
-          }
-          setShowSettings(true);
+        onLaunchpadToggle={() => setShowLaunchpad(!showLaunchpad)}
+        onOpenSettings={() => {
+          focusApp('settings');
         }}
         onNotificationToggle={() => setShowNotifications(!showNotifications)}
         notificationButtonRef={notificationButtonRef}
         dockIcons={
           <DockIcons
-            apps={dockAppOrder.map((appId) => ({
+            apps={visibleDockApps.map((appId) => ({
               id: appId,
               name: appConfigs[appId].name,
               icon: appConfigs[appId].icon,
@@ -1493,23 +2876,29 @@ export function DesktopPage() {
               if (isSimulationMode) {
                 console.log(`[Simulation] Quit app: ${appId}`);
               }
+              const closingIds = windows.filter((w) => w.appId === appId).map((w) => w.id);
               setWindows((prev) => prev.filter((w) => w.appId !== appId));
+              if (closingIds.length > 0) {
+                setMaximizedWindows((prev) => {
+                  const next = new Set(prev);
+                  closingIds.forEach((id) => next.delete(id));
+                  return next;
+                });
+              }
             }}
             onReorderApps={setDockAppOrder}
           />
         }
+        autoHide={hasMaximizedWindow}
       />
 
       {/* Desktop Icons — absolute positioned on grid */}
       <div ref={desktopGridRef} className="absolute inset-0" onClick={handleDesktopClick}>
         {desktopIcons.map((item) => {
           const pos = gridToPixel(item.col, item.row);
-          const beingDragged = dragState?.isDragging && dragState.iconId === item.id;
 
           const handleClick = () => {
-            if (item.id === 'settings') {
-              setShowSettings(true);
-            } else if (item.id === 'admin-center') {
+            if (item.id === 'admin-center') {
               setShowAdminCenter(!showAdminCenter);
             } else {
               focusApp(item.id as AppId);
@@ -1521,28 +2910,17 @@ export function DesktopPage() {
               key={item.id}
               icon={item.icon}
               label={item.label}
-              isDragging={beingDragged}
-              style={{ left: pos.x, top: pos.y }}
+              iconSlot={item.id === 'admin-center' ? <AdminCenterCompositeIcon /> : undefined}
+              style={{
+                left: pos.x,
+                top: pos.y,
+                transition: 'left 200ms ease-out, top 200ms ease-out',
+              }}
               onClick={handleClick}
-              onMouseDown={(e) => handleMouseDown(item.id, e)}
               ref={item.id === 'admin-center' ? adminCenterIconRef : undefined}
             />
           );
         })}
-
-        {dragState?.isDragging &&
-          (() => {
-            const dragged = desktopIcons.find((ic) => ic.id === dragState.iconId);
-            if (!dragged) return null;
-            return (
-              <DragGhost
-                icon={dragged.icon}
-                label={dragged.label}
-                x={dragState.currentX}
-                y={dragState.currentY}
-              />
-            );
-          })()}
       </div>
 
       {/* Admin center Panel */}
@@ -1550,77 +2928,182 @@ export function DesktopPage() {
         isOpen={showAdminCenter}
         onClose={() => setShowAdminCenter(false)}
         anchorRef={adminCenterIconRef}
+        onOpenApp={focusApp}
       />
 
-      {/* Settings Window */}
-      <SettingsPage
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        initialTab={settingsTab}
+      {/* Launchpad Panel */}
+      <LaunchpadPanel
+        isOpen={showLaunchpad}
+        onClose={() => setShowLaunchpad(false)}
+        appConfigs={appConfigs}
+        onOpenApp={focusApp}
       />
 
       {/* Chatbot Panel */}
       <ChatbotPanel isOpen={showChatbot} onClose={() => setShowChatbot(false)} />
 
-      {/* Notification center */}
-      {showNotifications &&
-        notificationButtonRef.current &&
-        (() => {
-          return (
-            <>
-              {/* Click outside to close */}
-              <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
-              <div
-                className="fixed z-[6001] top-[52px] right-0"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <NotificationCenter
-                  notifications={notifications}
-                  onMarkAsRead={handleMarkAsRead}
-                  onMarkAllAsRead={handleMarkAllAsRead}
-                  onClose={() => setShowNotifications(false)}
+      {/* Global Notification Panel */}
+      {showNotifications && notificationButtonRef.current && (
+        <>
+          <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
+          <div
+            className="fixed z-[6001] top-[52px] right-0 bottom-0 flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden flex flex-col flex-1">
+              <div className="relative pt-3 pb-0">
+                <button
+                  type="button"
+                  onClick={handleGnpMarkAllAsRead}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] transition-colors group"
+                  aria-label="Mark all as read"
+                >
+                  <IconCheckbox size={16} stroke={1.5} />
+                  <span className="absolute top-full right-0 mt-1 px-2 py-1 bg-[var(--color-text-default)] text-[var(--color-surface-default)] text-body-sm rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                    Mark all as read
+                  </span>
+                </button>
+                <Tabs
+                  value={gnpActiveTab}
+                  onChange={setGnpActiveTab}
+                  variant="underline"
+                  size="sm"
+                  className="w-full"
+                >
+                  <TabList className="w-full px-4">
+                    <Tab value="all">All</Tab>
+                    <Tab value="unread">Unread{gnpUnreadCount > 0 && ` (${gnpUnreadCount})`}</Tab>
+                  </TabList>
+                </Tabs>
+              </div>
+
+              <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
+                <Select
+                  options={gnpAppOptions}
+                  value={gnpActiveApp}
+                  onChange={(v) => setGnpActiveApp(v)}
+                  size="md"
+                  fullWidth
                 />
               </div>
-            </>
-          );
-        })()}
+
+              {gnpFiltered.length === 0 && gnpAlertNotifications.length === 0 ? (
+                <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
+                  No notifications
+                </div>
+              ) : (
+                <OverlayScrollbarsComponent
+                  options={{
+                    overflow: { x: 'hidden', y: 'scroll' },
+                    scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                  }}
+                  defer={false}
+                  className="flex-1"
+                >
+                  <div className="flex flex-col gap-0 px-3 py-2">
+                    {/* Alert Section */}
+                    {gnpAlertNotifications.length > 0 && (
+                      <div className="pb-2">
+                        <div className="flex items-center gap-1 px-1 pb-1.5">
+                          <span className="text-label-sm text-[var(--color-text-muted)]">
+                            Alert ({gnpAlertNotifications.length})
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          {gnpAlertNotifications.map((n) => (
+                            <GlobalNotificationCard
+                              key={n.id}
+                              notification={n}
+                              onMarkAsRead={() => handleGnpMarkAsRead(n.id)}
+                              onResolve={() => handleGnpResolve(n.id)}
+                              isAlertSection
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Notification Section */}
+                    {gnpFiltered.length > 0 && (
+                      <>
+                        <div className="flex items-center gap-1 px-1 pb-1.5 pt-1">
+                          <span className="text-label-sm text-[var(--color-text-muted)]">
+                            Notification ({gnpFiltered.length})
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          {gnpFiltered.map((n) => (
+                            <GlobalNotificationCard
+                              key={n.id}
+                              notification={n}
+                              onMarkAsRead={() => handleGnpMarkAsRead(n.id)}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </OverlayScrollbarsComponent>
+              )}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* App Windows */}
       <AnimatePresence>
         {!isSimulationMode &&
-          windows
-            .filter((w) => !w.isMinimized)
-            .map((window) => {
-              const config = appConfigs[window.appId];
-              if (!config || window.appId === 'settings') return null;
+          windows.map((window) => {
+            const config = appConfigs[window.appId];
+            if (!config) return null;
 
-              return (
-                <PageWindow
-                  key={window.id}
-                  windowId={window.id}
-                  isOpen={true}
-                  isMinimized={false}
-                  isActive={window.isActive}
+            return (
+              <PageWindow
+                key={window.id}
+                windowId={window.id}
+                isOpen={true}
+                isMinimized={window.isMinimized}
+                isActive={window.isActive}
+                onClose={() => closeWindow(window.id)}
+                onMinimize={() => minimizeWindow(window.id)}
+                onFocus={() => focusWindow(window.id)}
+                onMaximizeChange={handleMaximizeChange}
+                title={window.title}
+                zIndex={window.zIndex}
+                initialX={window.initialX}
+                initialY={window.initialY}
+              >
+                <IsolatedRouter
+                  initialPath={config.initialPath}
+                  appId={window.appId}
                   onClose={() => closeWindow(window.id)}
-                  onMinimize={() => minimizeWindow(window.id)}
-                  onFocus={() => focusWindow(window.id)}
-                  title={window.title}
-                  zIndex={window.zIndex}
-                >
-                  <IsolatedRouter initialPath={config.initialPath} appId={window.appId} />
-                </PageWindow>
-              );
-            })}
+                />
+              </PageWindow>
+            );
+          })}
       </AnimatePresence>
 
+      {/* Desktop Snackbar — above app windows (z-[5000]) */}
+      <SnackbarContainer position="top-right" scope="global" className="!top-[60px] !z-[5000]" />
+
+      {/* Snackbar Test Button — hidden */}
+      {/* eslint-disable-next-line no-constant-binary-expression -- intentionally disabled test button */}
+      {false && (
+        <button
+          type="button"
+          onClick={() => {
+            const mock = SNACKBAR_MOCKS[snackbarIndexRef.current % SNACKBAR_MOCKS.length];
+            snackbarIndexRef.current++;
+            snackbar.show(mock);
+          }}
+          className="fixed bottom-6 left-6 z-[9999] size-10 flex items-center justify-center rounded-full bg-[var(--color-action-primary)] text-white shadow-lg hover:bg-[var(--color-action-primary-hover)] transition-colors"
+          aria-label="Test Snackbar"
+        >
+          <IconBell size={18} stroke={1.5} />
+        </button>
+      )}
+
       {/* Main Page Navigation Button - Bottom Left */}
-      <Link
-        to="/"
-        className="absolute bottom-6 left-6 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm font-medium transition-all hover:-translate-y-0.5"
-      >
-        <IconLayoutDashboard size={18} stroke={1.5} />
-        <span>Go to main page</span>
-      </Link>
     </div>
   );
 }

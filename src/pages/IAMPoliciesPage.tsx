@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   VStack,
   TopBar,
@@ -10,11 +10,15 @@ import {
   ContextMenu,
   TabBar,
   Badge,
-  Checkbox,
   ListToolbar,
   PageShell,
   PageHeader,
+  ConfirmModal,
+  Table,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type TableColumn,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -45,6 +49,7 @@ interface Policy {
   apps: string;
   roles: string;
   description: string;
+  assigned: boolean;
   editedAt: string;
   permissions?: PolicyPermission[];
 }
@@ -61,7 +66,8 @@ const mockPolicies: Policy[] = [
     apps: 'compute (+3)',
     roles: 'member (+2)',
     description: '-',
-    editedAt: 'Sep 12, 2025',
+    assigned: true,
+    editedAt: 'Sep 12, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -84,7 +90,8 @@ const mockPolicies: Policy[] = [
     apps: 'compute (+3)',
     roles: 'member (+2)',
     description: '-',
-    editedAt: 'Sep 12, 2025',
+    assigned: true,
+    editedAt: 'Sep 12, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -114,7 +121,8 @@ const mockPolicies: Policy[] = [
     apps: 'compute',
     roles: 'admin',
     description: 'Full access to compute resources',
-    editedAt: 'Aug 15, 2025',
+    assigned: true,
+    editedAt: 'Aug 15, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -143,7 +151,8 @@ const mockPolicies: Policy[] = [
     apps: 'storage',
     roles: 'viewer',
     description: 'Read-only access to storage',
-    editedAt: 'Aug 10, 2025',
+    assigned: false,
+    editedAt: 'Aug 10, 2026',
     permissions: [
       { application: 'Storage', partition: '*all', resource: 'Bucket', actions: ['Read', 'List'] },
       { application: 'Storage', partition: '*all', resource: 'Object', actions: ['Read', 'List'] },
@@ -156,7 +165,8 @@ const mockPolicies: Policy[] = [
     apps: 'network',
     roles: 'network-admin',
     description: 'Network administration policy',
-    editedAt: 'Jul 20, 2025',
+    assigned: true,
+    editedAt: 'Jul 20, 2026',
     permissions: [
       {
         application: 'Network',
@@ -185,7 +195,8 @@ const mockPolicies: Policy[] = [
     apps: 'container (+2)',
     roles: 'developer (+1)',
     description: 'Container deployment permissions',
-    editedAt: 'Jul 15, 2025',
+    assigned: false,
+    editedAt: 'Jul 15, 2026',
     permissions: [
       {
         application: 'Container',
@@ -214,7 +225,8 @@ const mockPolicies: Policy[] = [
     apps: 'iam',
     roles: 'viewer',
     description: 'View-only IAM permissions',
-    editedAt: 'Jun 30, 2025',
+    assigned: true,
+    editedAt: 'Jun 30, 2026',
     permissions: [
       { application: 'IAM', partition: '-', resource: 'User', actions: ['Read', 'List'] },
       { application: 'IAM', partition: '-', resource: 'Role', actions: ['Read', 'List'] },
@@ -228,7 +240,8 @@ const mockPolicies: Policy[] = [
     apps: 'security (+3)',
     roles: 'auditor',
     description: 'Security audit permissions',
-    editedAt: 'Jun 25, 2025',
+    assigned: false,
+    editedAt: 'Jun 25, 2026',
     permissions: [
       {
         application: 'Security',
@@ -252,7 +265,8 @@ const mockPolicies: Policy[] = [
     apps: 'database',
     roles: 'db-admin',
     description: 'Database administration policy',
-    editedAt: 'Jun 20, 2025',
+    assigned: true,
+    editedAt: 'Jun 20, 2026',
     permissions: [
       {
         application: 'Database',
@@ -275,12 +289,29 @@ const mockPolicies: Policy[] = [
     apps: 'logging',
     roles: 'support',
     description: 'Access to logging services',
-    editedAt: 'Jun 15, 2025',
+    assigned: false,
+    editedAt: 'Jun 15, 2026',
     permissions: [
       { application: 'Logging', partition: '*all', resource: 'Log', actions: ['Read', 'List'] },
       { application: 'Logging', partition: '*all', resource: 'Metric', actions: ['Read', 'List'] },
     ],
   },
+];
+
+const policyFilterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [
+      { value: 'Built-in', label: 'Built-in' },
+      { value: 'Custom', label: 'Custom' },
+    ],
+  },
+  { id: 'apps', label: 'Apps', type: 'text' },
+  { id: 'roles', label: 'Roles', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
 ];
 
 /* ----------------------------------------
@@ -293,7 +324,7 @@ interface PolicyDetailsProps {
 
 function PolicyDetails({ permissions }: PolicyDetailsProps) {
   return (
-    <div className="border-t border-[var(--color-border-subtle)] p-4 bg-[var(--color-surface-default)]">
+    <div className="p-4">
       <div className="flex flex-col gap-[var(--table-row-gap)]">
         {/* Table Header */}
         <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
@@ -356,25 +387,44 @@ export default function IAMPoliciesPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set(['p-002']));
+  const [policies, setPolicies] = useState<Policy[]>(mockPolicies);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
 
   useEffect(() => {
     updateActiveTabLabel('Policies');
   }, [updateActiveTabLabel]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter policies by search query
-  const filteredPolicies = mockPolicies.filter(
-    (policy) =>
-      policy.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      policy.apps.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      policy.roles.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter policies
+  const filteredPolicies = useMemo(() => {
+    if (appliedFilters.length === 0) return policies;
+    return policies.filter((policy) =>
+      appliedFilters.every((f) => {
+        if (f.fieldId === 'type') return policy.type === f.value;
+        const val = policy[f.fieldId as keyof Policy];
+        if (typeof val === 'string') {
+          return val.toLowerCase().includes(f.value.toLowerCase());
+        }
+        return true;
+      })
+    );
+  }, [appliedFilters, policies]);
 
   // Pagination
   const totalPages = Math.ceil(filteredPolicies.length / itemsPerPage);
@@ -382,6 +432,12 @@ export default function IAMPoliciesPage() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const handleBulkDeletePolicies = () => {
+    setPolicies((prev) => prev.filter((p) => !selectedRows.includes(p.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
+  };
 
   // Toggle policy expansion
   const togglePolicyExpansion = (policyId: string) => {
@@ -396,56 +452,99 @@ export default function IAMPoliciesPage() {
     });
   };
 
-  // Toggle row selection
-  const toggleRowSelection = (policyId: string) => {
-    setSelectedRows((prev) => {
-      if (prev.includes(policyId)) {
-        return prev.filter((id) => id !== policyId);
-      }
-      return [...prev, policyId];
-    });
-  };
+  const getContextMenuItems = (rowId: string): ContextMenuItem[] => [
+    { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      divider: true,
+      onClick: () => console.log('Delete', rowId),
+    },
+  ];
 
-  // Context menu items factory
-  const getContextMenuItems = (rowId: string, isBuiltIn: boolean): ContextMenuItem[] => {
-    if (isBuiltIn) {
-      // Built-in policies: Edit and Delete disabled
-      return [
-        {
-          id: 'manage-roles',
-          label: 'Manage roles',
-          onClick: () => console.log('Manage roles', rowId),
-        },
-        { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
-        { id: 'edit', label: 'Edit', disabled: true, onClick: () => console.log('Edit', rowId) },
-        {
-          id: 'delete',
-          label: 'Delete',
-          disabled: true,
-          onClick: () => console.log('Delete', rowId),
-        },
-      ];
-    }
-    // Custom policies: all items enabled
-    return [
-      {
-        id: 'manage-roles',
-        label: 'Manage roles',
-        onClick: () => console.log('Manage roles', rowId),
-      },
-      { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate', rowId) },
-      { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
-      {
-        id: 'delete',
-        label: 'Delete',
-        status: 'danger',
-        onClick: () => console.log('Delete', rowId),
-      },
-    ];
-  };
+  const columns: TableColumn<Policy>[] = [
+    {
+      key: 'name',
+      label: 'Name',
+      sortable: true,
+      render: (_value: string, row: Policy) => (
+        <div className="flex items-center gap-2 min-w-0">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (row.permissions) togglePolicyExpansion(row.id);
+            }}
+            className={`shrink-0 flex items-center justify-center w-4 h-4 hover:bg-[var(--color-surface-subtle)] rounded ${!row.permissions ? 'invisible' : ''}`}
+            aria-label={
+              expandedPolicies.has(row.id) ? `Collapse ${row.name}` : `Expand ${row.name}`
+            }
+            aria-expanded={expandedPolicies.has(row.id)}
+          >
+            {expandedPolicies.has(row.id) ? (
+              <IconChevronDown size={12} strokeWidth={2} />
+            ) : (
+              <IconChevronRight size={12} strokeWidth={2} />
+            )}
+          </button>
+          <Link
+            to={`/iam/policies/${row.id}`}
+            className="text-[var(--color-action-primary)] font-medium hover:underline truncate"
+          >
+            {row.name}
+          </Link>
+        </div>
+      ),
+    },
+    {
+      key: 'type',
+      label: 'Type',
+      render: (value: string) => (
+        <Badge theme="white" size="sm">
+          {value}
+        </Badge>
+      ),
+    },
+    { key: 'description', label: 'Description', sortable: true },
+    {
+      key: 'assigned',
+      label: 'Assigned',
+      render: (value: boolean) => (
+        <Badge theme={value ? 'green' : 'gray'} size="sm">
+          {value ? 'Assigned' : 'Unassigned'}
+        </Badge>
+      ),
+    },
+    { key: 'editedAt', label: 'Edited at', sortable: true },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: '64px',
+      align: 'center',
+      render: (_value: unknown, row: Policy) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ContextMenu items={getContextMenuItems(row.id)} trigger="click" align="right">
+            <button
+              aria-label="Row actions"
+              type="button"
+              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+            >
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
+    },
+  ];
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Policies' }];
+  const breadcrumbItems = [{ label: 'Policies' }];
 
   return (
     <PageShell
@@ -471,6 +570,7 @@ export default function IAMPoliciesPage() {
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -487,17 +587,21 @@ export default function IAMPoliciesPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
+              <FilterSearchInput
+                filters={policyFilterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
                 placeholder="Search policies by attributes"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -508,6 +612,7 @@ export default function IAMPoliciesPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -525,135 +630,35 @@ export default function IAMPoliciesPage() {
           onPageChange={setCurrentPage}
         />
 
-        {/* Table */}
-        <div className="w-full flex flex-col gap-1">
-          {/* Table Header */}
-          <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-            {/* Checkbox column */}
-            <div className="w-[40px] flex items-center justify-center px-3 py-2">
-              <Checkbox
-                checked={
-                  selectedRows.length > 0 && selectedRows.length === paginatedPolicies.length
-                }
-                indeterminate={
-                  selectedRows.length > 0 && selectedRows.length < paginatedPolicies.length
-                }
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setSelectedRows(paginatedPolicies.map((p) => p.id));
-                  } else {
-                    setSelectedRows([]);
-                  }
-                }}
-              />
-            </div>
-            <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-              Name
-            </div>
-            <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-              Type
-            </div>
-            <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-              Apps
-            </div>
-            <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-              Roles
-            </div>
-            <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-              Description
-            </div>
-            <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-              Edited at
-            </div>
-            <div className="w-[64px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-              Action
-            </div>
-          </div>
-
-          {/* Table Rows */}
-          {paginatedPolicies.map((policy) => (
-            <div
-              key={policy.id}
-              className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
-            >
-              {/* Main Row */}
-              <div
-                className={`flex items-stretch min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors`}
-              >
-                {/* Checkbox */}
-                <div className="w-[40px] flex items-center justify-center px-3 py-2">
-                  <Checkbox
-                    checked={selectedRows.includes(policy.id)}
-                    onChange={() => toggleRowSelection(policy.id)}
-                  />
-                </div>
-                {/* Name with expand icon */}
-                <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  <button
-                    onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
-                    className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
-                  >
-                    {expandedPolicies.has(policy.id) ? (
-                      <IconChevronDown size={16} stroke={1.5} />
-                    ) : (
-                      <IconChevronRight size={16} stroke={1.5} />
-                    )}
-                  </button>
-                  <Link
-                    to={`/iam/policies/${policy.id}`}
-                    className="text-[var(--color-action-primary)] font-medium hover:underline"
-                  >
-                    {policy.name}
-                  </Link>
-                </div>
-                {/* Type */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.type}
-                </div>
-                {/* Apps */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.apps}
-                </div>
-                {/* Roles */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.roles}
-                </div>
-                {/* Description */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.description}
-                </div>
-                {/* Edited at */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.editedAt}
-                </div>
-                {/* Action */}
-                <div className="w-[64px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                  <ContextMenu
-                    items={getContextMenuItems(policy.id, policy.type === 'Built-in')}
-                    trigger="click"
-                  >
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
-                    >
-                      <IconDotsCircleHorizontal
-                        size={16}
-                        stroke={1.5}
-                        className="text-[var(--color-text-default)]"
-                      />
-                    </button>
-                  </ContextMenu>
-                </div>
-              </div>
-
-              {/* Expanded Policy Details */}
-              {expandedPolicies.has(policy.id) && policy.permissions && (
-                <PolicyDetails permissions={policy.permissions} />
-              )}
-            </div>
-          ))}
-        </div>
+        <Table<Policy>
+          className="w-full"
+          columns={columns}
+          data={paginatedPolicies}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedRows}
+          onSelectionChange={setSelectedRows}
+          emptyMessage="No policies found"
+          loading={loading}
+          expandedContent={(row) => {
+            if (!expandedPolicies.has(row.id) || !row.permissions) return null;
+            return <PolicyDetails permissions={row.permissions} />;
+          }}
+        />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeletePolicies}
+        title="Delete selected policies"
+        description="Removing the selected policies is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} policy(s)`}
+      />
     </PageShell>
   );
 }

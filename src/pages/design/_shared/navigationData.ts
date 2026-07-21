@@ -44,6 +44,10 @@ import {
   IconSettings,
   IconHistory,
   IconFolder,
+  IconRobot,
+  IconSwitchHorizontal,
+  IconShieldCheck,
+  IconGridDots,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -53,6 +57,7 @@ export interface NavItem {
   icon: ComponentType<{ size?: number; stroke?: number; className?: string }>;
   path: string;
   lastUpdated?: string;
+  external?: boolean;
 }
 
 export interface NavGroup {
@@ -122,6 +127,12 @@ const formControlItems: NavItem[] = [
   },
   { id: 'select', label: 'Select', icon: IconSelector, path: '/design/components/select' },
   {
+    id: 'chained-select',
+    label: 'Chained Select',
+    icon: IconSelector,
+    path: '/design/components/chained-select',
+  },
+  {
     id: 'datepicker',
     label: 'Date Picker',
     icon: IconCalendar,
@@ -164,7 +175,7 @@ const dataDisplayItems: NavItem[] = [
   { id: 'chip', label: 'Chip', icon: IconTag, path: '/design/components/chip' },
   {
     id: 'file-list-card',
-    label: 'File List Card',
+    label: 'File Upload',
     icon: IconList,
     path: '/design/components/file-list-card',
   },
@@ -224,16 +235,16 @@ const feedbackItems: NavItem[] = [
   { id: 'toast', label: 'Toast', icon: IconBell, path: '/design/components/toast' },
   { id: 'snackbar', label: 'Snackbar', icon: IconBell, path: '/design/components/snackbar' },
   {
-    id: 'notification-center',
-    label: 'Notification Center',
-    icon: IconBell,
-    path: '/design/components/notification-center',
-  },
-  {
     id: 'global-notification-panel',
     label: 'Global Notification Panel',
     icon: IconBell,
     path: '/design/components/global-notification-panel',
+  },
+  {
+    id: 'error-boundary',
+    label: 'Error Boundary',
+    icon: IconShieldCheck,
+    path: '/design/components/error-boundary',
   },
 ];
 
@@ -270,11 +281,33 @@ const navigationItems: NavItem[] = [
     icon: IconLayoutSidebar,
     path: '/design/components/scrollbar',
   },
+  {
+    id: 'context-selector',
+    label: 'Context Selector',
+    icon: IconSwitchHorizontal,
+    path: '/design/components/context-selector',
+  },
+  {
+    id: 'project-selector',
+    label: 'Project Selector',
+    icon: IconFolder,
+    path: '/design/components/project-selector',
+  },
 ];
 
 const overlayItems: NavItem[] = [
-  { id: 'tooltip', label: 'Tooltip', icon: IconMessage2, path: '/design/components/tooltip' },
-  { id: 'popover', label: 'Popover', icon: IconMessage2, path: '/design/components/popover' },
+  {
+    id: 'tooltip',
+    label: 'Tooltip',
+    icon: IconMessage2,
+    path: '/design/components/tooltip',
+  },
+  {
+    id: 'popover',
+    label: 'Popover',
+    icon: IconMessage2,
+    path: '/design/components/popover',
+  },
   {
     id: 'context-menu',
     label: 'Context Menu',
@@ -288,6 +321,12 @@ const overlayItems: NavItem[] = [
     label: 'Floating Card',
     icon: IconLayoutGrid,
     path: '/design/components/floating-card',
+  },
+  {
+    id: 'tca',
+    label: 'TCA',
+    icon: IconRobot,
+    path: '/design/components/tca',
   },
 ];
 
@@ -370,6 +409,12 @@ const patternItems: NavItem[] = [
     path: '/design/patterns/section-card',
   },
   {
+    id: 'catalog-card',
+    label: 'Catalog Card',
+    icon: IconLayoutGrid,
+    path: '/design/components/catalog-card',
+  },
+  {
     id: 'form-field-spacing',
     label: 'Form Field Spacing',
     icon: IconLayoutGrid,
@@ -435,12 +480,6 @@ const graphItems: NavItem[] = [
 
 const etcItems: NavItem[] = [
   {
-    id: 'project-selector',
-    label: 'Project Selector',
-    icon: IconFolder,
-    path: '/design/components/project-selector',
-  },
-  {
     id: 'transitions',
     label: 'Transitions',
     icon: IconActivity,
@@ -466,6 +505,33 @@ const etcItems: NavItem[] = [
   },
 ];
 
+const desktopItems: NavItem[] = [
+  {
+    id: 'desktop-top-gnb',
+    label: 'Desktop Top GNB',
+    icon: IconDeviceDesktop,
+    path: '/design/desktop/top-gnb',
+  },
+  {
+    id: 'app-launcher',
+    label: 'App Launcher',
+    icon: IconGridDots,
+    path: '/design/desktop/app-launcher',
+  },
+  {
+    id: 'window-split',
+    label: 'Window Split',
+    icon: IconAppWindow,
+    path: '/design/desktop/window-split',
+  },
+  {
+    id: 'app-window-animation',
+    label: 'App Window Animation',
+    icon: IconActivity,
+    path: '/design/desktop/app-window-animation',
+  },
+];
+
 const changelogItems: NavItem[] = [
   {
     id: 'changelog',
@@ -485,6 +551,7 @@ export const navGroups: NavGroup[] = [
   { title: 'Overlay', items: overlayItems },
   { title: 'Patterns', items: patternItems },
   { title: 'Graphs', items: graphItems },
+  { title: 'Desktop', items: desktopItems },
   { title: 'Etc', items: etcItems },
 ];
 
@@ -512,11 +579,11 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/foundation/shadows': '2026-02-25 14:00:00',
   '/design/foundation/transitions': '2026-02-25 14:00:00',
   '/design/foundation/icons': '2026-02-25 14:00:00',
-  '/design/foundation/app-icons': '2026-03-01 10:30:00',
+  '/design/foundation/app-icons': '2026-05-22 13:40:00',
   '/design/policies/ux-writing': '2026-03-05 13:00:00',
   '/design/policies/accessibility': '2026-02-25 14:00:00',
   '/design/policies/error-alert': '2026-03-09 10:30:00',
-  '/design/policies/system-error': '2026-03-20 16:00:00',
+  '/design/policies/system-error': '2026-04-17',
   // Form Controls
   '/design/components/button': '2026-03-18 11:00:00',
   '/design/components/input': '2026-03-01 10:30:00',
@@ -527,7 +594,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/form-field': '2026-03-01 10:30:00',
   '/design/components/filter-search-input': '2026-03-18 11:00:00',
   '/design/components/select': '2026-03-18 11:00:00',
-  '/design/components/datepicker': '2026-03-09',
+  '/design/components/datepicker': '2026-04-17',
   '/design/components/slider': '2026-03-05 13:00:00',
   '/design/components/toggle': '2026-03-18 11:00:00',
   '/design/components/checkbox': '2026-03-18 11:00:00',
@@ -542,21 +609,21 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/chip': '2026-03-09',
   '/design/components/status-indicator': '2026-03-18 11:00:00',
   '/design/components/pagination': '2026-03-09',
-  '/design/components/file-list-card': '2026-03-01 10:30:00',
+  '/design/components/file-list-card': '2026-04-17',
   '/design/components/expandable-checklist': '2026-03-18 18:00:00',
   '/design/components/info-box': '2026-03-23 12:00:00',
   '/design/components/card-title': '2026-03-18 18:00:00',
   '/design/components/list-toolbar': '2026-03-13 10:00:00',
   // Feedback
   '/design/components/inline-message': '2026-03-18 11:00:00',
-  '/design/components/loading': '2026-03-09',
+  '/design/components/loading': '2026-04-17',
   '/design/components/progress-bar': '2026-03-26 09:00:00',
   '/design/components/skeleton': '2026-03-09',
-  '/design/components/spinner': '2026-03-09',
-  '/design/components/toast': '2026-03-18 11:00:00',
-  '/design/components/snackbar': '2026-03-26 10:00:00',
-  '/design/components/notification-center': '2026-03-26 10:00:00',
-  '/design/components/global-notification-panel': '2026-03-18 11:00:00',
+  '/design/components/spinner': '2026-04-17',
+  '/design/components/toast': '2026-04-17',
+  '/design/components/snackbar': '2026-04-17',
+
+  '/design/components/global-notification-panel': '2026-04-17',
   // Navigation
   '/design/components/topbar': '2026-03-09',
   '/design/components/tabbar': '2026-03-09',
@@ -564,28 +631,29 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/breadcrumb': '2026-03-05 13:00:00',
   '/design/components/project-selector': '2026-03-23 12:00:00',
   // Overlay
-  '/design/components/tooltip': '2026-03-18 11:00:00',
-  '/design/components/popover': '2026-03-01 10:30:00',
+  '/design/components/tooltip': '2026-04-14 10:00:00',
+  '/design/components/popover': '2026-04-17',
   '/design/components/menu': '2026-03-09',
   '/design/components/context-menu': '2026-03-09',
   '/design/components/modal': '2026-03-18 11:00:00',
-  '/design/components/drawer': '2026-03-09 10:30:00',
+  '/design/components/drawer': '2026-04-17',
   '/design/components/floating-card': '2026-03-05 13:00:00',
   // Layout & Patterns
-  '/design/components/disclosure': '2026-03-03 18:45:00',
+  '/design/components/disclosure': '2026-04-17',
   '/design/components/window-control': '2026-03-09',
   '/design/components/scrollbar': '2026-03-05 13:00:00',
   '/design/patterns/common': '2026-03-01 10:30:00',
   '/design/patterns/detail-header': '2026-03-09',
   '/design/patterns/section-card': '2026-03-09',
+  '/design/components/catalog-card': '2026-04-23',
   '/design/patterns/wizard': '2026-03-18 11:00:00',
   '/design/patterns/open-form': '2026-03-01 10:30:00',
   '/design/patterns/monitoring-toolbar': '2026-03-09',
   '/design/policies/csv-download': '2026-03-09 15:00:00',
-  '/design/policies/app-window': '2026-03-18 11:00:00',
+  '/design/policies/app-window': '2026-04-17',
   '/design/patterns/layout': '2026-03-01 10:30:00',
   '/design/patterns/desktop-grid': '2026-03-05 10:40:00',
-  '/design/patterns/dynamic-form-fields': '2026-03-01 10:30:00',
+  '/design/patterns/dynamic-form-fields': '2026-04-17',
   '/design/patterns/editor': '2026-03-09',
   '/design/patterns/list-page': '2026-03-09 15:00:00',
   '/design/patterns/detail-page': '2026-03-09',
@@ -595,10 +663,18 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/shell': '2026-03-09 15:00:00',
   '/design/patterns/empty-states': '2026-03-09',
   // Charts
-  '/design/charts/overview': '2026-03-18 11:00:00',
+  '/design/charts/overview': '2026-04-17',
   '/design/charts/status-colors': '2026-03-01 10:30:00',
   '/design/charts/usage-chart': '2026-03-09',
   '/design/charts/area-chart': '2026-03-09',
-  '/design/charts/pie-chart': '2026-03-09',
+  '/design/charts/pie-chart': '2026-04-17',
   '/design/charts/tooltip': '2026-03-01 10:30:00',
+  '/design/components/tca': '2026-04-17',
+  '/design/components/context-selector': '2026-04-17',
+  '/design/components/error-boundary': '2026-04-17',
+  // Desktop
+  '/design/desktop/top-gnb': '2026-04-28',
+  '/design/desktop/app-launcher': '2026-04-28',
+  '/design/desktop/window-split': '2026-04-28',
+  '/design/desktop/app-window-animation': '2026-04-28',
 };

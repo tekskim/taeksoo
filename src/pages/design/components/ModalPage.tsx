@@ -71,7 +71,7 @@ Modal은 다음 방법으로 닫을 수 있다.
 | Escape 키 | 모달 닫기 |
 | 배경화면 영역 클릭 | 모달 닫기 |
 
-> **Note**: Close(X) 버튼은 기본적으로 표시하지 않는다 (\`showCloseButton\` 기본값 \`false\`). Cancel 버튼, Escape 키, 배경 클릭으로 닫기를 제공한다.
+> **Note**: Modal 헤더에는 Close(X) 버튼이 없다. Cancel 버튼, Escape 키, 배경 클릭으로 닫기를 제공한다.
 
 ### 3) Background Interaction
 - 모달이 열려 있을 때 배경화면 영역을 클릭하면 모달이 닫힌다.
@@ -159,7 +159,7 @@ export function ModalPage() {
       tokens={
         <VStack gap={3}>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            padding: 24px · gap: 16px · radius: 16px · backdrop: black/60
+            padding: 16px · gap: 16px · radius: 16px · backdrop: black/60
           </div>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
             width: 344px

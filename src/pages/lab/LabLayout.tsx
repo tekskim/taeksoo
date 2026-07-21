@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { VStack, Disclosure } from '@/design-system';
 import { IconSearch, IconX, IconHome, IconChevronRight, IconArrowUp } from '@tabler/icons-react';
@@ -7,25 +8,28 @@ import { labNavGroups, allLabNavItems, isLabRecentlyUpdated } from './labNavigat
 export function LabLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const mainRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<React.ElementRef<typeof OverlayScrollbarsComponent>>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const getViewport = () => mainRef.current?.osInstance()?.elements().viewport;
 
   useEffect(() => {
-    mainRef.current?.scrollTo(0, 0);
+    getViewport()?.scrollTo(0, 0);
   }, [location.pathname]);
 
   useEffect(() => {
-    const mainElement = mainRef.current;
-    if (!mainElement) return;
-    const handleScroll = () => setShowScrollTop(mainElement.scrollTop > 300);
-    mainElement.addEventListener('scroll', handleScroll);
-    return () => mainElement.removeEventListener('scroll', handleScroll);
+    const viewport = getViewport();
+    if (!viewport) return;
+    const handleScroll = () => setShowScrollTop(viewport.scrollTop > 300);
+    viewport.addEventListener('scroll', handleScroll);
+    return () => viewport.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    getViewport()?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const filteredNavItems = searchQuery.trim()
@@ -48,12 +52,9 @@ export function LabLayout() {
 
   const currentPath = location.pathname;
 
-  const [openGroups, setOpenGroups] = useState<Set<string>>(() => {
-    const activeGroup = labNavGroups.find((g) =>
-      g.items.some((item) => item.path === location.pathname)
-    );
-    return new Set(activeGroup ? [activeGroup.title] : []);
-  });
+  const [openGroups, setOpenGroups] = useState<Set<string>>(
+    () => new Set(labNavGroups.map((g) => g.title))
+  );
 
   useEffect(() => {
     const activeGroup = labNavGroups.find((g) => g.items.some((item) => item.path === currentPath));
@@ -65,7 +66,15 @@ export function LabLayout() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 w-[220px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-hidden z-50 sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] z-50"
+      >
         <div className="p-4 overflow-hidden">
           {/* Logo */}
           <Link to="/lab" className="flex items-center mb-4">
@@ -91,6 +100,7 @@ export function LabLayout() {
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
               />
               <input
+                ref={searchInputRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -112,17 +122,28 @@ export function LabLayout() {
 
             {/* Search Results Dropdown */}
             {searchQuery.trim() && isSearchFocused && (
-              <div className="absolute top-full left-0 w-[188px] max-w-[188px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
+              <OverlayScrollbarsComponent
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+                className="absolute top-full left-0 w-[188px] max-w-[188px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px]"
+              >
                 {filteredNavItems.length > 0 ? (
                   <div className="p-2 min-w-0">
-                    {filteredNavItems.map(({ id, label, icon: Icon, path }) => (
+                    {filteredNavItems.map(({ id, label, icon: Icon, path, external }) => (
                       <button
                         key={id}
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          navigate(path);
+                          if (external) {
+                            window.open(path, '_blank');
+                          } else {
+                            navigate(path);
+                          }
                           setSearchQuery('');
                           setIsSearchFocused(false);
                         }}
@@ -147,7 +168,7 @@ export function LabLayout() {
                     No results found
                   </div>
                 )}
-              </div>
+              </OverlayScrollbarsComponent>
             )}
           </div>
 
@@ -179,10 +200,12 @@ export function LabLayout() {
                     </Disclosure.Trigger>
                     <Disclosure.Panel>
                       <VStack gap={0} className="mb-1">
-                        {group.items.map(({ id, label, icon: Icon, path }) => (
+                        {group.items.map(({ id, label, icon: Icon, path, external }) => (
                           <button
                             key={id}
-                            onClick={() => navigate(path)}
+                            onClick={() =>
+                              external ? window.open(path, '_blank') : navigate(path)
+                            }
                             className={`
                               w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
                               text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
@@ -210,12 +233,18 @@ export function LabLayout() {
             })}
           </VStack>
         </div>
-      </nav>
+      </OverlayScrollbarsComponent>
 
       {/* Main Content */}
-      <main
+      <OverlayScrollbarsComponent
+        element="main"
         ref={mainRef}
-        className="absolute top-0 bottom-0 right-0 overflow-y-auto sidebar-scroll bg-[var(--color-surface-default)] left-[var(--layout-sidebar-width)]"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="absolute top-0 bottom-0 right-0 bg-[var(--color-surface-default)] left-[var(--layout-sidebar-width)]"
       >
         <div className="py-12 px-8 overflow-x-auto">
           <div className="max-w-[1000px] mx-auto">
@@ -227,12 +256,13 @@ export function LabLayout() {
         {showScrollTop && (
           <button
             onClick={scrollToTop}
+            aria-label="Back to top"
             className="fixed bottom-8 right-8 z-50 w-10 h-10 rounded-full bg-[var(--color-action-primary)] text-[var(--semantic-color-on-primary)] flex items-center justify-center shadow-lg hover:bg-[var(--color-action-primary-hover)] transition-colors"
           >
             <IconArrowUp size={20} stroke={2} />
           </button>
         )}
-      </main>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }

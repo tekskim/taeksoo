@@ -29,6 +29,7 @@ import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { Label } from './HelperComponents';
 import { IconDots } from '@tabler/icons-react';
 import { IconUbuntu, IconRocky, IconGrid } from '@/design-system';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    OpenSection Demo Component (Basic Form)
@@ -335,7 +336,12 @@ function OpenSectionTableDemo() {
           <span className="text-[var(--color-action-primary)] text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium">
             {value}
           </span>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },

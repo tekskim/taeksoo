@@ -14,7 +14,8 @@ html {
 
 html,
 body {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
   height: 100%;
 }
 
@@ -174,6 +175,18 @@ html.theme-transition *::after {
   --color-green-800: #166534;
   --color-green-900: #14532d;
 
+  /* Emerald */
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+
   /* Orange (Warning) */
   --color-orange-50: #fff7ed;
   --color-orange-100: #ffedd5;
@@ -185,6 +198,18 @@ html.theme-transition *::after {
   --color-orange-700: #c2410c;
   --color-orange-800: #9a3412;
   --color-orange-900: #7c2d12;
+
+  /* Amber (Chart) */
+  --color-amber-50: #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --color-amber-700: #b45309;
+  --color-amber-800: #92400e;
+  --color-amber-900: #78350f;
 
   /* Yellow */
   --color-yellow-50: #fefce8;
@@ -339,10 +364,10 @@ html.theme-transition *::after {
      Layout Structure
      ---------------------------------------- */
   --layout-max-width: 1920px;
-  --layout-min-width: 1440px;
-  --layout-sidebar-width: 220px;
+  --layout-min-width: 960px;
+  --layout-sidebar-width: 200px;
   --layout-sidebar-width-collapsed: 40px;
-  --layout-content-min-width: calc(var(--layout-min-width) - var(--layout-sidebar-width));
+  --layout-content-min-width: 760px;
 
   /* Common widths */
   --search-input-width: 280px;
@@ -522,7 +547,6 @@ html.theme-transition *::after {
 
   /* SearchInput */
   --search-input-height-sm: 28px;
-  --search-input-height-md: 28px;
   --search-input-icon-size: 12px;
 
   /* ----------------------------------------
@@ -633,7 +657,7 @@ html.theme-transition *::after {
      Component - ContextMenu
      ---------------------------------------- */
   --context-menu-min-width: 80px;
-  --context-menu-padding-x: var(--spacing-3);
+  --context-menu-padding-x: var(--spacing-2-5);
   --context-menu-padding-y: var(--spacing-1-5);
   --context-menu-radius: var(--radius-md);
   --context-menu-hover-bg: var(--color-slate-100);
@@ -656,6 +680,7 @@ html.theme-transition *::after {
   --table-empty-padding-y: var(--spacing-8);
   --table-row-selected-bg: var(--color-state-info-bg);
   --table-row-selected-border: var(--color-action-primary);
+  --table-expanded-row-height: 42px;
   --table-resize-handle-width: 4px;
   --table-resize-handle-hover-color: var(--color-action-primary);
 
@@ -666,6 +691,7 @@ html.theme-transition *::after {
   --tabbar-tab-min-width: 100px;
   --tabbar-tab-max-width: 160px;
   --tabbar-tab-padding-x: var(--spacing-3);
+  --tabbar-tab-padding-r: var(--spacing-2);
   --tabbar-tab-gap: var(--spacing-2);
   --tabbar-font-size: var(--font-size-12);
   --tabbar-line-height: var(--line-height-16);
@@ -785,6 +811,12 @@ html.theme-transition *::after {
   --inline-message-error-bg: var(--color-red-50);
   --inline-message-error-icon: var(--color-red-600);
 
+  /* Notification alert backgrounds (stronger than inline-message for visibility) */
+  --notification-critical-bg: var(--color-red-50);
+  --notification-critical-border: var(--color-red-200);
+  --notification-warning-bg: var(--color-orange-50);
+  --notification-warning-border: var(--color-orange-200);
+
   /* InlineMessage - Info */
   --inline-message-info-bg: var(--color-blue-50);
   --inline-message-info-icon: var(--color-blue-600);
@@ -828,7 +860,7 @@ html.theme-transition *::after {
      ---------------------------------------- */
   --radio-size: 16px;
   --radio-dot-size: 6px;
-  --radio-border-width: 1.5px;
+  --radio-border-width: 1px;
   --radio-checked-border-width: 5px;
   --radio-gap: var(--spacing-1-5);
 
@@ -840,8 +872,8 @@ html.theme-transition *::after {
   --radio-checked-dot: var(--color-action-primary);
 
   /* Radio - Disabled */
-  --radio-disabled-bg: var(--color-slate-200);
-  --radio-disabled-border: var(--color-slate-200);
+  --radio-disabled-bg: var(--color-surface-muted);
+  --radio-disabled-border: var(--color-border-default);
   --radio-disabled-dot: var(--color-slate-200);
 
   /* Radio - Label */
@@ -1009,7 +1041,7 @@ html.theme-transition *::after {
      ---------------------------------------- */
   --component-chart-color-1: #22d3ee; /* cyan400 */
   --component-chart-color-2: #34d399; /* emerald400 */
-  --component-chart-color-3: #fbbf24; /* amber400 */
+  --component-chart-color-3: var(--color-amber-400); /* amber400 */
   --component-chart-color-4: #a78bfa; /* violet400 */
   --component-chart-color-5: #e879f9; /* fuchsia400 */
   --component-chart-color-6: #f472b6; /* pink400 */
@@ -1080,6 +1112,31 @@ html.theme-transition *::after {
   --color-yellow-700: #a16207;
   --color-yellow-800: #854d0e;
   --color-yellow-900: #713f12;
+
+  /* ========================================
+     Desktop Shell Tokens (Light)
+     ======================================== */
+  --desktop-bg: #f1f3f5;
+  --desktop-wallpaper-opacity: 0.59;
+  --desktop-wallpaper-filter: invert(1) brightness(1.1) contrast(1.04);
+  --desktop-text: #1e293b;
+  --desktop-text-muted: rgba(30, 41, 59, 0.6);
+  --desktop-glass-bg: rgba(255, 255, 255, 0.7);
+  --desktop-glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --desktop-glass-border: rgba(0, 0, 0, 0.08);
+  --desktop-glass-border-strong: rgba(0, 0, 0, 0.12);
+  --desktop-topbar-bg: rgba(255, 255, 255, 0.9);
+  --desktop-topbar-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.06);
+  --desktop-dropdown-bg: rgba(255, 255, 255, 0.9);
+  --desktop-hover-bg: rgba(0, 0, 0, 0.05);
+  --desktop-icon-hover: rgba(0, 0, 0, 0.04);
+  --desktop-icon-active: rgba(0, 0, 0, 0.06);
+  --desktop-active-bg: rgba(0, 0, 0, 0.08);
+  --desktop-separator: rgba(0, 0, 0, 0.1);
+  --desktop-icon-running-bg: rgba(0, 0, 0, 0.06);
+  --desktop-icon-running-border: rgba(0, 0, 0, 0.1);
+  --desktop-icon-active-border: rgba(0, 0, 0, 0.2);
+  --desktop-icon-active-bg: rgba(0, 0, 0, 0.1);
 }
 
 /* ========================================
@@ -1166,7 +1223,7 @@ html.theme-transition *::after {
   --badge-subtle-red-bg: rgba(239, 68, 68, 0.2);
   --badge-subtle-red-text: #fca5a5;
   --badge-subtle-green-bg: rgba(34, 197, 94, 0.2);
-  --badge-subtle-green-text: #86efac;
+  --badge-subtle-green-text: #6ee7b7;
   --badge-subtle-yellow-bg: rgba(249, 115, 22, 0.2);
   --badge-subtle-yellow-text: #fdba74;
   --badge-subtle-gray-bg: var(--semantic-color-surface-hover);
@@ -1204,6 +1261,10 @@ html.theme-transition *::after {
   --inline-message-warning-icon: var(--semantic-color-state-warning);
   --inline-message-error-bg: rgba(239, 68, 68, 0.12);
   --inline-message-error-icon: var(--semantic-color-state-danger);
+  --notification-critical-bg: rgba(239, 68, 68, 0.25);
+  --notification-critical-border: rgba(239, 68, 68, 0.35);
+  --notification-warning-bg: rgba(249, 115, 22, 0.18);
+  --notification-warning-border: rgba(249, 115, 22, 0.3);
   --inline-message-info-bg: rgba(59, 130, 246, 0.12);
   --inline-message-info-icon: var(--semantic-color-state-info);
 
@@ -1373,6 +1434,31 @@ html.theme-transition *::after {
   --menu-item-hover-bg: var(--color-surface-hover);
   --menu-item-active-bg: rgba(30, 58, 138, 0.5);
   --menu-item-active-text: #93c5fd;
+
+  /* ========================================
+     Desktop Shell Tokens (Dark)
+     ======================================== */
+  --desktop-bg: #000000;
+  --desktop-wallpaper-opacity: 0.5;
+  --desktop-wallpaper-filter: none;
+  --desktop-text: #ffffff;
+  --desktop-text-muted: rgba(255, 255, 255, 0.7);
+  --desktop-glass-bg: rgba(255, 255, 255, 0.1);
+  --desktop-glass-bg-strong: rgba(255, 255, 255, 0.15);
+  --desktop-glass-border: rgba(255, 255, 255, 0.15);
+  --desktop-glass-border-strong: rgba(255, 255, 255, 0.3);
+  --desktop-topbar-bg: rgba(0, 0, 0, 0.4);
+  --desktop-topbar-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.2);
+  --desktop-dropdown-bg: rgba(0, 0, 0, 0.85);
+  --desktop-hover-bg: rgba(255, 255, 255, 0.05);
+  --desktop-active-bg: rgba(255, 255, 255, 0.1);
+  --desktop-icon-hover: rgba(255, 255, 255, 0.08);
+  --desktop-icon-active: rgba(255, 255, 255, 0.14);
+  --desktop-separator: rgba(255, 255, 255, 0.2);
+  --desktop-icon-running-bg: rgba(255, 255, 255, 0.1);
+  --desktop-icon-running-border: rgba(255, 255, 255, 0.2);
+  --desktop-icon-active-border: rgba(255, 255, 255, 0.4);
+  --desktop-icon-active-bg: rgba(255, 255, 255, 0.15);
 }
 
 /* ========================================
@@ -1456,57 +1542,6 @@ html.theme-transition *::after {
 }
 
 /* ========================================
-   TDS Typography Utilities (Design System policy)
-   h4: 18px/28px, h5: 16px/24px, h6: 14px/20px
-   body.lg: 14px/20px, body.md: 12px/18px, body.sm: 11px/16px
-   ======================================== */
-
-.text-heading-h4 {
-  font-size: var(--font-size-18);
-  line-height: var(--line-height-28);
-  font-weight: var(--font-weight-semibold);
-}
-
-.text-heading-h5 {
-  font-size: var(--font-size-16);
-  line-height: var(--line-height-24);
-  font-weight: var(--font-weight-semibold);
-}
-
-.text-heading-h6 {
-  font-size: var(--font-size-14);
-  line-height: var(--line-height-20);
-  font-weight: var(--font-weight-semibold);
-}
-
-.text-body-lg {
-  font-size: var(--font-size-14);
-  line-height: var(--line-height-20);
-}
-
-.text-body-md {
-  font-size: var(--font-size-12);
-  line-height: var(--line-height-18);
-}
-
-.text-body-sm {
-  font-size: var(--font-size-11);
-  line-height: var(--line-height-16);
-}
-
-.text-label-md {
-  font-size: var(--font-size-12);
-  line-height: var(--line-height-16);
-  font-weight: var(--font-weight-medium);
-}
-
-.text-label-sm {
-  font-size: var(--font-size-11);
-  line-height: var(--line-height-16);
-  font-weight: var(--font-weight-medium);
-}
-
-/* ========================================
    Custom Utilities
    ======================================== */
 
@@ -1551,215 +1586,29 @@ html.theme-transition *::after {
 }
 
 /* ========================================
-   Table Container (no scrollbar - use pagination)
+   OverlayScrollbars — TDS global theme
    ======================================== */
 
-.table-scroll-container {
-  /* Enable horizontal scrolling when table content exceeds container width */
-  overflow-x: auto;
-  overflow-y: visible;
-  /* Thin scrollbar for Firefox */
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
+.os-theme-dark {
+  --os-handle-bg: color-mix(in srgb, var(--color-border-default) 60%, transparent);
+  --os-handle-bg-hover: var(--color-border-default);
+  --os-handle-bg-active: var(--color-border-strong);
+  --os-handle-border-radius: var(--radius-full);
+  --os-size: 6px;
+  --os-padding-perpendicular: 0px;
+  --os-padding-axis: 2px;
 }
 
-/* Webkit (Chrome, Safari, Edge) horizontal scrollbar */
-.table-scroll-container::-webkit-scrollbar {
-  height: 6px;
+/* Compact variant (4px) — modals, small containers */
+.os-compact.os-theme-dark {
+  --os-size: 4px;
 }
 
-.table-scroll-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.table-scroll-container::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
-  border-radius: var(--radius-full);
-}
-
-.table-scroll-container::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
-}
-
-/* Sidebar Scrollbar */
-.sidebar-scroll {
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
-}
-
-.sidebar-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.sidebar-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
-  border-radius: var(--radius-full);
-}
-
-.sidebar-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
-}
-
-/* Content min-width for horizontal scroll */
-.sidebar-scroll > div {
-  min-width: 1176px;
-}
-
-/* Drawer Scrollbar — overlay so left/right padding stays even */
-.drawer-scroll {
-  overflow-y: overlay;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
-}
-
-@supports not (overflow-y: overlay) {
-  .drawer-scroll {
-    overflow-y: auto;
-  }
-}
-
-.drawer-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.drawer-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.drawer-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
-  border-radius: var(--radius-full);
-}
-
-.drawer-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
-}
-
-/* Modal Scrollbar (compact for modal content) */
-.modal-scroll {
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
-}
-
-.modal-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-
-.modal-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.modal-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
-  border-radius: var(--radius-full);
-}
-
-.modal-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
-}
-
-/* Legend Scrollbar (smaller, lighter) */
-.legend-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.legend-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.legend-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
-  border-radius: var(--radius-full);
-}
-
-.legend-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
-}
-
-/* Firefox */
-.legend-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
-}
-
-/* Settings Scrollbar */
-.settings-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.settings-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.settings-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
-  border-radius: var(--radius-full);
-}
-
-.settings-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
-}
-
-/* Firefox */
-.settings-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
-}
-
-/* Shell/Console Scrollbar (dark background) */
-.shell-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.shell-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.shell-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-text-muted);
-  border-radius: var(--radius-full);
-}
-
-.shell-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-subtle);
-}
-
-/* Firefox */
-.shell-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-text-muted) transparent;
-}
-
-/* YAML Editor Scrollbar */
-.yaml-editor-scroll {
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-default) transparent;
-}
-
-.yaml-editor-scroll::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.yaml-editor-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.yaml-editor-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
-  border-radius: var(--radius-full);
-}
-
-.yaml-editor-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
+/* Shell variant — dark background terminals */
+.os-shell.os-theme-dark {
+  --os-handle-bg: var(--color-text-muted);
+  --os-handle-bg-hover: var(--color-text-subtle);
+  --os-handle-bg-active: var(--color-text-default);
 }
 
 /* Hide native search input clear button */
@@ -2833,11 +2682,12 @@ input[type='search']::-webkit-search-decoration {
   align-items: center;
   gap: 0;
   background: var(--color-surface-default);
-  box-shadow: inset 0 0 0 1px var(--color-border-default);
+  border: 1px solid var(--color-border-strong);
   border-radius: 6px;
   padding: 0;
   height: 28px;
   position: relative;
+  box-sizing: border-box;
 }
 
 .monitoring-toolbar-segment {
@@ -2846,16 +2696,17 @@ input[type='search']::-webkit-search-decoration {
   font-weight: 500;
   color: var(--color-text-muted);
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.15s ease;
   border-radius: 6px;
   position: relative;
   z-index: 1;
   margin: 0;
-  height: 28px;
+  height: 100%;
   line-height: 16px;
   width: 48px;
+  box-sizing: border-box;
 }
 
 .monitoring-toolbar-segment:hover {
@@ -2866,7 +2717,7 @@ input[type='search']::-webkit-search-decoration {
   color: var(--color-action-primary);
   background: transparent;
   font-weight: 500;
-  box-shadow: inset 0 0 0 1px var(--color-action-primary);
+  border: 1px solid var(--color-action-primary);
   border-radius: 6px;
   z-index: 2;
 }
@@ -2888,20 +2739,20 @@ input[type='search']::-webkit-search-decoration {
   font-weight: 500;
   color: var(--color-text-muted);
   background: var(--color-surface-default);
-  box-shadow: inset 0 0 0 1px var(--color-border-default);
-  border: none;
+  border: 1px solid var(--color-border-default);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
+  box-sizing: border-box;
 }
 
 .monitoring-toolbar-period-btn:hover {
-  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+  border-color: var(--color-border-strong);
   color: var(--color-text-default);
 }
 
 .monitoring-toolbar-period-btn-active {
-  box-shadow: inset 0 0 0 1px var(--color-action-primary);
+  border-color: var(--color-action-primary);
   color: var(--color-action-primary);
 }
 
@@ -2912,7 +2763,7 @@ input[type='search']::-webkit-search-decoration {
   gap: 8px;
   padding: 4px 8px 4px 12px;
   height: 28px;
-  background: #3b82f6;
+  background: var(--color-action-primary);
   color: white;
   border: none;
   border-radius: 6px;
@@ -3076,7 +2927,7 @@ input[type='search']::-webkit-search-decoration {
   width: 28px;
   height: 28px;
   background: var(--color-surface-default);
-  box-shadow: inset 0 0 0 1px var(--color-border-default);
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
   border: none;
   border-radius: 6px;
   cursor: pointer;

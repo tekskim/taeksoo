@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -24,10 +23,11 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
+import { CreateSGRuleDrawer } from '@/components/CreateSGRuleDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
-import { IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -60,7 +60,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Web server access group',
     ingressRules: 3,
     egressRules: 3,
-    createdAt: 'Jan 15, 2024 12:22:26',
+    createdAt: 'Jan 15, 2026 12:22:26',
     status: 'active',
   },
   {
@@ -71,7 +71,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Default security group',
     ingressRules: 2,
     egressRules: 2,
-    createdAt: 'Jan 10, 2024 01:17:01',
+    createdAt: 'Jan 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -82,7 +82,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Database access group',
     ingressRules: 5,
     egressRules: 1,
-    createdAt: 'Feb 1, 2024 10:20:28',
+    createdAt: 'Feb 1, 2026 10:20:28',
     status: 'active',
   },
   {
@@ -93,7 +93,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Application server security group',
     ingressRules: 8,
     egressRules: 4,
-    createdAt: 'Feb 15, 2024 12:22:26',
+    createdAt: 'Feb 15, 2026 12:22:26',
     status: 'active',
   },
   {
@@ -104,7 +104,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Load balancer security group',
     ingressRules: 4,
     egressRules: 2,
-    createdAt: 'Mar 1, 2024 10:20:28',
+    createdAt: 'Mar 1, 2026 10:20:28',
     status: 'active',
   },
   {
@@ -115,7 +115,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Cache server access group',
     ingressRules: 2,
     egressRules: 1,
-    createdAt: 'Mar 10, 2024 01:17:01',
+    createdAt: 'Mar 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -126,7 +126,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Monitoring access group',
     ingressRules: 6,
     egressRules: 3,
-    createdAt: 'Apr 1, 2024 10:20:28',
+    createdAt: 'Apr 1, 2026 10:20:28',
     status: 'error',
   },
   {
@@ -137,7 +137,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'VPN access group',
     ingressRules: 10,
     egressRules: 5,
-    createdAt: 'Apr 15, 2024 12:22:26',
+    createdAt: 'Apr 15, 2026 12:22:26',
     status: 'active',
   },
   {
@@ -148,7 +148,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Admin access group',
     ingressRules: 15,
     egressRules: 8,
-    createdAt: 'May 1, 2024 10:20:28',
+    createdAt: 'May 1, 2026 10:20:28',
     status: 'active',
   },
   {
@@ -159,7 +159,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Test environment security group',
     ingressRules: 1,
     egressRules: 1,
-    createdAt: 'May 10, 2024 01:17:01',
+    createdAt: 'May 10, 2026 01:17:01',
     status: 'active',
   },
 ];
@@ -179,12 +179,13 @@ const sgStatusMap: Record<SecurityGroupStatus, 'active' | 'error'> = {
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'tenant', label: 'Tenant', type: 'text' },
-  { key: 'description', label: 'Description', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
 ];
 
 export function ComputeAdminSecurityGroupsPage() {
+  const navigate = useNavigate();
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -259,7 +260,7 @@ export function ComputeAdminSecurityGroupsPage() {
 
     return securityGroups.filter((sg) => {
       return appliedFilters.every((filter) => {
-        const value = String(sg[filter.field as keyof SecurityGroup] || '').toLowerCase();
+        const value = String(sg[filter.fieldId as keyof SecurityGroup] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -290,7 +291,12 @@ export function ComputeAdminSecurityGroupsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -309,7 +315,12 @@ export function ComputeAdminSecurityGroupsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -347,6 +358,7 @@ export function ComputeAdminSecurityGroupsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
@@ -404,25 +416,12 @@ export function ComputeAdminSecurityGroupsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Security groups' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Security Groups' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader title="Security groups" />
@@ -480,6 +479,7 @@ export function ComputeAdminSecurityGroupsPage() {
           selectable
           selectedKeys={selectedGroups}
           onSelectionChange={setSelectedGroups}
+          emptyMessage="No security groups found"
         />
       </VStack>
 
@@ -491,7 +491,7 @@ export function ComputeAdminSecurityGroupsPage() {
           setGroupToDelete(null);
         }}
         title="Delete security group"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected security groups is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
@@ -510,7 +510,7 @@ export function ComputeAdminSecurityGroupsPage() {
       />
 
       {/* Security Group Drawers */}
-      <CreateSecurityGroupRuleDrawer
+      <CreateSGRuleDrawer
         isOpen={createRuleOpen}
         onClose={() => setCreateRuleOpen(false)}
         securityGroupId={selectedGroupForDrawer?.id}

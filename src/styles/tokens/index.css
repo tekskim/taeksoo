@@ -1,5 +1,5 @@
 /* Auto-generated from tokens - DO NOT EDIT */
-/* Generated at: 2026-04-22T04:25:07.563Z */
+/* Generated at: 2026-06-05T07:07:04.603Z */
 
 @import './light.css';
 @import './dark.css';
@@ -125,7 +125,7 @@
     --primitive-font-weight-medium: 500;
     --primitive-font-weight-semibold: 600;
     --primitive-font-family-sans: Mona Sans;
-    --primitive-font-family-mono: Menlo;
+    --primitive-font-family-mono: 'Mona Sans Variable', 'Mona Sans', sans-serif;
     --primitive-radius-none: 0;
     --primitive-radius-sm: 4px;
     --primitive-radius-md: 6px;

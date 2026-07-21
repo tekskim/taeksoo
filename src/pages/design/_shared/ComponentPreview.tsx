@@ -7,9 +7,15 @@ interface ComponentPreviewProps {
   children: ReactNode;
   code: string;
   language?: string;
+  previewClassName?: string;
 }
 
-export function ComponentPreview({ children, code, language }: ComponentPreviewProps) {
+export function ComponentPreview({
+  children,
+  code,
+  language,
+  previewClassName,
+}: ComponentPreviewProps) {
   const { isDark: isGlobalDark } = useDarkMode();
   const [showCode, setShowCode] = useState(false);
   const [previewTheme, setPreviewTheme] = useState<'light' | 'dark'>(
@@ -17,8 +23,8 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
   );
 
   return (
-    <div className="rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)]">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] rounded-t-[var(--primitive-radius-lg)]">
+    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-visible">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] rounded-t-[var(--radius-lg)]">
         <span className="text-body-xs text-[var(--color-text-subtle)] font-medium uppercase tracking-wider">
           Preview
         </span>
@@ -26,7 +32,7 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
           {!showCode && (
             <button
               onClick={() => setPreviewTheme(previewTheme === 'light' ? 'dark' : 'light')}
-              className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--primitive-radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
+              className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
               aria-label={`Switch to ${previewTheme === 'light' ? 'dark' : 'light'} theme`}
             >
               {previewTheme === 'light' ? (
@@ -39,7 +45,7 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
           )}
           <button
             onClick={() => setShowCode(!showCode)}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--primitive-radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
+            className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
             aria-label={showCode ? 'Show preview' : 'Show code'}
           >
             {showCode ? (
@@ -60,7 +66,7 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
       {!showCode && (
         <div
           data-theme={previewTheme}
-          className={`p-6 rounded-b-[var(--primitive-radius-lg)] transition-colors bg-[var(--color-surface-default)] ${previewTheme === 'dark' ? 'dark' : ''}`}
+          className={`${previewClassName ?? 'p-6'} transition-colors bg-[var(--color-surface-default)] rounded-b-[var(--radius-lg)] ${previewTheme === 'dark' ? 'dark' : ''}`}
         >
           {children}
         </div>

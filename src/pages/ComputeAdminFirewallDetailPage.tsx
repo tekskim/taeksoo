@@ -1,11 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -17,22 +16,21 @@ import {
   StatusIndicator,
   SectionCard,
   DetailHeader,
-  Tooltip,
-  Badge,
   PageShell,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
-import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
+import { SecuritySidebar } from '@/components/SecuritySidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconTrash,
-  IconBell,
   IconDownload,
-  IconRouter,
-  IconCube,
-  IconServer,
+  IconSettings,
+  IconEdit,
+  IconExternalLink,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -85,7 +83,7 @@ const mockFirewallsMap: Record<string, FirewallDetail> = {
     ingressPolicyId: 'fwp-001',
     egressPolicy: 'egress-policy-1',
     egressPolicyId: 'fwp-002',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
   },
   'fw-002': {
     id: '8394e0285f92542f04171b0ccd3deff0',
@@ -99,7 +97,7 @@ const mockFirewallsMap: Record<string, FirewallDetail> = {
     ingressPolicyId: 'fwp-003',
     egressPolicy: 'db-egress-policy',
     egressPolicyId: 'fwp-004',
-    createdAt: 'Dec 20, 2025 23:27:51',
+    createdAt: 'Dec 20, 2026 23:27:51',
   },
 };
 
@@ -122,9 +120,9 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   id: `port-${String(i + 1).padStart(3, '0')}`,
   name: `port`,
   status: ['active', 'active', 'active', 'down', 'build'][i % 5] as 'active' | 'down' | 'build',
-  attachedToType: ['Router(Interface)', 'Instance', 'Load Balancer'][i % 3],
-  attachedToName: ['router', 'instance-1', 'lb-1'][i % 3],
-  attachedToId: `${['router', 'instance', 'lb'][i % 3]}-${String(i + 1).padStart(3, '0')}`,
+  attachedToType: 'Router(Interface)',
+  attachedToName: `router-${(i % 5) + 1}`,
+  attachedToId: `router-${String(i + 1).padStart(3, '0')}`,
   network: `network`,
   networkId: `net-${String((i % 5) + 1).padStart(3, '0')}`,
   fixedIp: `10.70.0.${48 + i}`,
@@ -138,8 +136,9 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
    ---------------------------------------- */
 
 export default function ComputeAdminFirewallDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
@@ -213,73 +212,42 @@ export default function ComputeAdminFirewallDetailPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/ports/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            to={`/security/ports/${row.id}`}
+            className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
+            <IconExternalLink size={12} stroke={1.5} className="shrink-0" />
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
     {
       key: 'attachedTo',
-      label: 'Attached to',
+      label: 'Router',
       flex: 1,
-      render: (_, row) => (
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col gap-0.5 min-w-0">
-            <Link
-              to={`/compute-admin/routers/${row.attachedToId}`}
-              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.attachedToName}
-            </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.attachedToId}
-            </span>
-          </div>
-          <Tooltip
-            content={
-              row.attachedToType === 'Router(Interface)'
-                ? 'Router'
-                : row.attachedToType === 'Instance'
-                  ? 'Instance'
-                  : 'Load Balancer'
-            }
-            position="top"
-            delay={0}
-          >
-            <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
-              {row.attachedToType === 'Router(Interface)' ? (
-                <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              ) : row.attachedToType === 'Instance' ? (
-                <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              ) : (
-                <IconServer size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              )}
-            </div>
-          </Tooltip>
-        </div>
-      ),
-    },
-    {
-      key: 'network',
-      label: 'Owned Network',
-      flex: 1,
-      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/networks/${row.networkId}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            to={`/security/routers/${row.attachedToId}`}
+            className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {row.network}
+            {row.attachedToName}
+            <IconExternalLink size={12} stroke={1.5} className="shrink-0" />
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.networkId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.attachedToId}>
+              ID : {row.attachedToId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.attachedToId} />
+          </span>
         </div>
       ),
     },
@@ -289,35 +257,34 @@ export default function ComputeAdminFirewallDetailPage() {
       flex: 1,
     },
     {
-      key: 'floatingIp',
-      label: 'Floating IP',
+      key: 'network',
+      label: 'Owned Network',
       flex: 1,
-    },
-    {
-      key: 'macAddress',
-      label: 'MAC Address',
-      flex: 1,
-    },
-    {
-      key: 'adminState',
-      label: 'Admin state',
-      flex: 1,
+      sortable: true,
       render: (_, row) => (
-        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
-          {row.adminState}
-        </Badge>
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <Link
+            to={`/security/networks/${row.networkId}`}
+            className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.network}
+            <IconExternalLink size={12} stroke={1.5} className="shrink-0" />
+          </Link>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.networkId}>
+              ID : {row.networkId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.networkId} />
+          </span>
+        </div>
       ),
     },
   ];
 
   return (
     <PageShell
-      sidebar={
-        <ComputeAdminSidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen((prev) => !prev)}
-        />
-      }
+      sidebar={<SecuritySidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -334,35 +301,32 @@ export default function ComputeAdminFirewallDetailPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Firewalls', href: '/compute-admin/firewall' },
+                { label: 'Firewalls', href: '/security/firewalls' },
                 { label: firewall.name },
               ]}
             />
           }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
-      contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{firewall.name}</DetailHeader.Title>
           <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+              Manage ports
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>
@@ -401,7 +365,7 @@ export default function ComputeAdminFirewallDetailPage() {
                     value={
                       firewall.ingressPolicyId ? (
                         <Link
-                          to={`/compute-admin/firewall-policies/${firewall.ingressPolicyId}`}
+                          to={`/security/firewall-policies/${firewall.ingressPolicyId}`}
                           className="text-label-md text-[var(--color-action-primary)] hover:underline"
                         >
                           {firewall.ingressPolicy}
@@ -416,7 +380,7 @@ export default function ComputeAdminFirewallDetailPage() {
                     value={
                       firewall.egressPolicyId ? (
                         <Link
-                          to={`/compute-admin/firewall-policies/${firewall.egressPolicyId}`}
+                          to={`/security/firewall-policies/${firewall.egressPolicyId}`}
                           className="text-label-md text-[var(--color-action-primary)] hover:underline"
                         >
                           {firewall.egressPolicy}

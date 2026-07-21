@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -14,21 +14,14 @@ import {
   Radio,
   RadioGroup,
   SectionCard,
+  WizardSummary,
 } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconCirclePlus,
-  IconX,
-  IconCheck,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -60,37 +53,6 @@ interface MountOption {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 
@@ -115,38 +77,36 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
-  isEditMode = false,
 }: SummarySidebarProps) {
   // Determine section status based on form data
   const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
     if (section === 'basic-info') {
-      // StorageClass is cluster-scoped (no namespace) → name has no default
-      // if name empty: nothing required is filled → 'pending'
-      return storageClassName.trim() ? 'done' : 'pending';
+      return storageClassName.trim() ? 'done' : 'active';
     }
-    // storage-config, customize are optional → always done
-    return 'done';
+    if (section === 'storage-config') {
+      return parameters.length > 0 && parameters.some((p) => p.key.trim() || p.value.trim())
+        ? 'done'
+        : 'pending';
+    }
+    if (section === 'customize') {
+      return hasCustomizeData ? 'done' : 'pending';
+    }
+    return 'pending';
   };
+
+  const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => {
+    const s = getSectionStatus(key);
+    return {
+      key,
+      label: SECTION_LABELS[key],
+      status: (s === 'pending' ? 'pre' : s) as WizardSectionState,
+    };
+  });
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={4}>
-            <span className="text-heading-h5">Summary</span>
-            <VStack gap={0}>
-              {SECTION_ORDER.map((step) => (
-                <HStack key={step} justify="between" className="py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={getSectionStatus(step)} />
-                </HStack>
-              ))}
-            </VStack>
-          </VStack>
-        </div>
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+        <WizardSummary items={summaryItems} />
 
         {/* Button row */}
         <HStack gap={2}>
@@ -159,7 +119,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            {isEditMode ? 'Save' : 'Create'}
+            Create
           </Button>
         </HStack>
       </div>
@@ -179,7 +139,6 @@ interface BasicInfoSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   isV2: boolean;
-  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -190,7 +149,6 @@ function BasicInfoSection({
   description,
   onDescriptionChange,
   isV2,
-  isEditMode = false,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -209,7 +167,6 @@ function BasicInfoSection({
                   if (storageClassNameError) onStorageClassNameErrorChange(null);
                 }}
                 fullWidth
-                disabled={isEditMode}
               />
             </FormField.Control>
             <FormField.ErrorMessage>{storageClassNameError}</FormField.ErrorMessage>
@@ -271,12 +228,10 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
       <SectionCard.Header title="Parameters" showDivider />
       <SectionCard.Content>
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Parameter</span>
-
           <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-            <VStack gap={1.5}>
+            <VStack gap={2}>
               {parameters.length > 0 && (
-                <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                   <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
                   <span className="block text-label-sm text-[var(--color-text-default)]">
                     Value
@@ -288,7 +243,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
               {parameters.map((param, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                 >
                   <Input
                     placeholder="e.g. foo"
@@ -423,9 +378,9 @@ function CustomizeSection({
             <span className="text-label-lg text-[var(--color-text-default)]">Mount Options</span>
 
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1.5}>
+              <VStack gap={2}>
                 {mountOptions.length > 0 && (
-                  <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_20px] gap-2 w-full items-center">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
@@ -434,7 +389,7 @@ function CustomizeSection({
                 )}
 
                 {mountOptions.map((option, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_20px] gap-1 w-full items-center">
+                  <div key={index} className="grid grid-cols-[1fr_20px] gap-2 w-full items-center">
                     <Input
                       placeholder="e.g. bar"
                       value={option.value}
@@ -474,10 +429,6 @@ function CustomizeSection({
 
 export function CreateStorageClassPage() {
   const navigate = useNavigate();
-  const { storageClassName: storageClassNameParam } = useParams();
-  const isEditMode = !!storageClassNameParam;
-  const [searchParams] = useSearchParams();
-  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -503,18 +454,8 @@ export function CreateStorageClassPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(
-      isEditMode
-        ? `Storage class: ${nameFromQuery || storageClassNameParam}`
-        : 'Create storage class'
-    );
-  }, [updateActiveTabLabel, isEditMode, storageClassNameParam]);
-
-  useEffect(() => {
-    if (isEditMode && storageClassNameParam) {
-      setStorageClassName(nameFromQuery || storageClassNameParam);
-    }
-  }, [isEditMode, storageClassNameParam]);
+    updateActiveTabLabel('Create storage class');
+  }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -590,63 +531,27 @@ export function CreateStorageClassPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Storage Classes', href: '/container/storage-classes' },
-                ...(isEditMode
-                  ? [
-                      {
-                        label: nameFromQuery || storageClassNameParam!,
-                        href: `/container/storage-classes/${storageClassNameParam}`,
-                      },
-                      { label: 'Edit config' },
-                    ]
-                  : [{ label: 'Create storage class' }]),
+                { label: 'Create Storage Class' },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
+        <VStack gap={1}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              {isEditMode
-                ? `Storage class: ${nameFromQuery || storageClassNameParam}`
-                : 'Create storage class'}
+              Create storage class
             </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -669,7 +574,6 @@ export function CreateStorageClassPage() {
               description={description}
               onDescriptionChange={setDescription}
               isV2={isV2}
-              isEditMode={isEditMode}
             />
 
             {/* Parameters Section */}
@@ -696,7 +600,6 @@ export function CreateStorageClassPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
-            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

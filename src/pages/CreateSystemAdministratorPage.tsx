@@ -18,7 +18,7 @@ import {
   FormField,
   Tooltip,
   PageShell,
-  WizardSectionStatusIcon,
+  WizardSummary,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -58,31 +58,31 @@ const SECTION_ORDER: SectionStep[] = ['basic-info', 'default-domain'];
    ---------------------------------------- */
 
 const mockDomains: Domain[] = [
-  { id: 'domain-1', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-2', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-3', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-4', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-5', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-6', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-7', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-8', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-9', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-10', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-11', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-12', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-13', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-14', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-15', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-16', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-17', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-18', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-19', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-20', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-21', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-22', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-23', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-24', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'domain-25', name: 'domain', description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
+  { id: 'domain-1', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-2', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-3', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-4', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-5', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-6', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-7', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-8', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-9', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-10', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-11', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-12', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-13', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-14', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-15', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-16', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-17', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-18', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-19', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-20', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-21', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-22', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-23', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-24', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
+  { id: 'domain-25', name: 'domain', description: '-', createdAt: 'Sep 12, 2026 15:43:35' },
 ];
 
 /* ----------------------------------------
@@ -95,7 +95,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -113,7 +113,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -167,36 +167,16 @@ function SummarySidebar({
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card with Header and Status */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Header */}
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Create account</h4>
-
-            {/* Section Status List */}
-            <div className="flex flex-col">
-              {SECTION_ORDER.map((sectionKey) => {
-                const isWriting = sectionStatus[sectionKey] === 'writing';
-
-                return (
-                  <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SECTION_LABELS[sectionKey]}
-                    </span>
-                    {isWriting ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </VStack>
-        </div>
+        <WizardSummary
+          title="Create account"
+          items={SECTION_ORDER.map((key) => ({
+            key,
+            label: SECTION_LABELS[key],
+            status: sectionStatus[key],
+          }))}
+        />
 
         {/* Action Buttons */}
         <HStack gap={2}>
@@ -263,10 +243,10 @@ function PasswordSection({
         {hasMinLength ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasMinLength ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasMinLength ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           8-64 characters long
         </span>
@@ -275,10 +255,10 @@ function PasswordSection({
         {hasUppercase ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasUppercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasUppercase ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one uppercase letter (A-Z)
         </span>
@@ -287,10 +267,10 @@ function PasswordSection({
         {hasLowercase ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasLowercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasLowercase ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one lowercase letter (a-z)
         </span>
@@ -299,10 +279,10 @@ function PasswordSection({
         {hasNumber ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasNumber ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasNumber ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one number
         </span>
@@ -311,10 +291,10 @@ function PasswordSection({
         {hasSpecialChar ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasSpecialChar ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasSpecialChar ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one special character
         </span>
@@ -332,10 +312,10 @@ function PasswordSection({
       {passwordsMatch ? (
         <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
       ) : (
-        <IconCircle size={16} className="text-white/50" />
+        <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
       )}
       <span
-        className={`text-body-sm ${passwordsMatch ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+        className={`text-body-sm ${passwordsMatch ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
       >
         Passwords match.
       </span>
@@ -376,7 +356,7 @@ function PasswordSection({
 
       {/* Password inputs - shown when manual is selected */}
       {passwordOption === 'manual' && (
-        <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+        <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-2">
           <HStack gap={6} align="center">
             {/* Password */}
             <FormField required error={!!passwordError}>
@@ -399,7 +379,7 @@ function PasswordSection({
                       className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                      {showPassword ? <IconEye size={16} /> : <IconEyeOff size={16} />}
                     </button>
                   </div>
                 </Tooltip>
@@ -428,7 +408,7 @@ function PasswordSection({
                       className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                      {showConfirmPassword ? <IconEye size={16} /> : <IconEyeOff size={16} />}
                     </button>
                   </div>
                 </Tooltip>
@@ -1175,14 +1155,13 @@ export default function CreateSystemAdministratorPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'System administrators', href: '/iam/system-administrators' },
-                { label: 'Create account' },
+                { label: 'System Administrators', href: '/iam/system-administrators' },
+                { label: 'Create System Administrator' },
               ]}
             />
           }

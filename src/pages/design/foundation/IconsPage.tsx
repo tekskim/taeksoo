@@ -86,6 +86,7 @@ import {
   IconGripVertical,
   IconSelector,
   IconSquare,
+  IconSquares,
   IconTag,
   IconPhoto,
   IconSlash,
@@ -159,6 +160,7 @@ import {
   IconTerminal2,
   IconActivity,
   IconChartBar,
+  IconChartLine,
   IconGauge,
   IconDeviceDesktop,
   IconDeviceDesktopAnalytics,
@@ -234,6 +236,8 @@ import {
   IconCircleMinus,
   IconReload,
   IconRestore,
+  IconArrowBackUp,
+  IconLockCheck,
 } from '@tabler/icons-react';
 import {
   IconUbuntu2,
@@ -371,6 +375,18 @@ const iconCategories: IconCategoryData[] = [
         note: 'DS 내부',
       },
       { icon: IconRestore, name: 'IconRestore', label: 'Restore', usage: 'VolumeBackupDetail' },
+      {
+        icon: IconArrowBackUp,
+        name: 'IconArrowBackUp',
+        label: 'Revoke',
+        usage: 'IAM Roles Active Grants bulk revoke',
+      },
+      {
+        icon: IconLockCheck,
+        name: 'IconLockCheck',
+        label: 'Grant access',
+        usage: 'IAM Role Detail grant access',
+      },
       {
         icon: IconReload,
         name: 'IconReload',
@@ -724,8 +740,15 @@ const iconCategories: IconCategoryData[] = [
       {
         icon: IconSquare,
         name: 'IconSquare',
-        label: 'Square',
-        usage: 'TabBar 최대화 아이콘',
+        label: 'Maximize',
+        usage: 'WindowControl 최대화 아이콘 (Normal 상태)',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconSquares,
+        name: 'IconSquares',
+        label: 'Restore',
+        usage: 'WindowControl 복원 아이콘 (Maximized 상태)',
         note: 'DS 내부',
       },
       { icon: IconSlash, name: 'IconSlash', label: 'Separator', note: 'Storybook only' },
@@ -1173,6 +1196,12 @@ const iconCategories: IconCategoryData[] = [
         name: 'IconChartBar',
         label: 'Bar Chart',
         usage: 'Chart 관련 페이지, navigationData',
+      },
+      {
+        icon: IconChartLine,
+        name: 'IconChartLine',
+        label: 'Line Chart',
+        usage: 'Fabric Usage Trend, 시계열 트렌드 표시',
       },
       {
         icon: IconChartPie3,

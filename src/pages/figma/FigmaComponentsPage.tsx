@@ -326,7 +326,7 @@ const buttonHoverClasses: Record<string, string> = {
 };
 
 const badgeThemes = ['blue', 'red', 'green', 'yellow', 'gray', 'white'] as const;
-const badgeTypes = ['solid', 'subtle'] as const;
+const badgeTypes = ['subtle'] as const;
 const badgeSizes = ['sm', 'md', 'lg'] as const;
 
 const statusTypes = [
@@ -490,8 +490,12 @@ function ToastDemoInner() {
       >
         Warning
       </Button>
-      <Button variant="secondary" size="sm" onClick={() => toast.info('새 버전이 출시되었습니다.')}>
-        Info
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => toast.warning('새 버전이 출시되었습니다.')}
+      >
+        Warning
       </Button>
     </div>
   );
@@ -1391,7 +1395,7 @@ export function FigmaComponentsPage() {
               type: 'Variant',
               values: 'blue | red | green | yellow | gray | white',
             },
-            { name: 'Type', type: 'Variant', values: 'solid | subtle' },
+            { name: 'Type', type: 'Variant', values: 'subtle' },
             { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
             { name: 'Dot', type: 'Boolean', values: 'true | false' },
             { name: 'LeftIcon', type: 'Instance swap', values: 'icon slot' },
@@ -3088,7 +3092,7 @@ export function FigmaComponentsPage() {
         <SubTitle>Sub Elements</SubTitle>
         <div className="flex flex-col gap-4">
           <FigmaFrame name="Toast/Sub/Container">
-            <div className="w-[360px] p-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg flex gap-3">
+            <div className="w-[360px] p-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-lg flex gap-3">
               <IconCircleCheck size={20} className="shrink-0 text-[var(--color-state-success)]" />
               <div className="flex-1 flex flex-col gap-1">
                 <span className="text-label-md text-[var(--color-text-default)]">Success</span>

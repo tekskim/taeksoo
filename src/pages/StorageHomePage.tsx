@@ -1,24 +1,23 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
-import {
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  MonitoringToolbar,
-  PageShell,
-} from '@/design-system';
+import { TabBar, TopBar, Breadcrumb, MonitoringToolbar, PageShell } from '@/design-system';
 import type { TimeRangeValue } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
 } from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import { chartColors } from '@/pages/design-system-sections/ChartComponents';
+import { useNavigate } from 'react-router-dom';
+
+function resolvedChartColor(cssVar: string, chartFallback: string): string {
+  if (typeof window === 'undefined') return chartFallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  return v || chartFallback;
+}
 
 /* ----------------------------------------
    Line Chart Component (Design system Style)
@@ -81,9 +80,9 @@ function LineChart({
   // Get theme-aware colors
   const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
   const splitLineOpacity = isDarkMode ? 1 : 0.5;
-  const tooltipBg = isDarkMode ? '#1C1C1C' : 'white';
-  const tooltipBorder = isDarkMode ? '#333333' : '#e2e8f0';
-  const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
+  const tooltipBg = resolvedChartColor('--color-surface-default', '#ffffff');
+  const tooltipBorder = resolvedChartColor('--color-border-default', chartColors.slate100);
+  const tooltipTextColor = resolvedChartColor('--color-text-default', chartColors.slate800);
 
   // Calculate max value for exactly 5 Y-axis labels (4 intervals) with nice numbers
   const allData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
@@ -299,7 +298,7 @@ function InventoryStatBox({ value, label }: InventoryStatBoxProps) {
     value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
       <div className={`text-heading-h3 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
@@ -330,18 +329,18 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
   const innerRadius = radius - arcWidth;
   const outerRadius = radius;
 
-  const getColor = (cssVar: string, fallback: string) => {
+  const getColor = (cssVar: string, chartFallback: string) => {
     if (typeof window !== 'undefined') {
       const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
-      return value || fallback;
+      return value || chartFallback;
     }
-    return fallback;
+    return chartFallback;
   };
 
   const statusColor = () => {
-    if (percentage >= 95) return getColor('--color-state-danger', '#ef4444');
-    if (percentage >= 85) return getColor('--color-state-warning', '#f97316');
-    return getColor('--color-state-success', '#22c55e');
+    if (percentage >= 90) return getColor('--color-state-danger', chartColors.red400);
+    if (percentage >= 70) return getColor('--color-state-warning', chartColors.orange400);
+    return getColor('--color-state-success', chartColors.emerald400);
   };
 
   const usedColor = statusColor();
@@ -387,7 +386,7 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
             width: 16,
             color: [
               [percentage / 100, usedColor],
-              [1, getColor('--color-border-subtle', '#f1f5f9')],
+              [1, getColor('--color-border-subtle', chartColors.slate100)],
             ],
           },
         },
@@ -424,7 +423,7 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
 
         {showTooltip && (
           <div
-            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-sm px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
             style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
           >
             <div className="flex items-center gap-1.5">
@@ -457,11 +456,11 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-sm shrink-0 bg-[var(--color-state-warning)]" />
-          <span className="text-body-sm text-[var(--color-text-muted)]">Warning: 85%</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">Warning: 70%</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-sm shrink-0 bg-[var(--color-state-danger)]" />
-          <span className="text-body-sm text-[var(--color-text-muted)]">Danger: 95%</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">Danger: 90%</span>
         </div>
       </div>
     </div>
@@ -506,6 +505,7 @@ interface FullScreenChartData {
 }
 
 export function StorageHomePage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [timeRange, setTimeRange] = useState<TimeRangeValue>('30m');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
@@ -582,18 +582,9 @@ export function StorageHomePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Storage', href: '/storage' }, { label: 'Home' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
         />
       }
     >
@@ -741,7 +732,7 @@ export function StorageHomePage() {
 
       {/* Full Screen Chart Overlay */}
       {fullScreenChart && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-8">
+        <div className="fixed inset-0 z-50 bg-[color-mix(in_srgb,var(--color-text-default)_50%,transparent)] flex items-center justify-center p-8">
           <div className="w-full max-w-[90vw] h-[70vh] flex items-center justify-center">
             <LineChart
               title={fullScreenChart.title}

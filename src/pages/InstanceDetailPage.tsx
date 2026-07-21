@@ -1,11 +1,23 @@
-import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import {
+  ReactFlow,
+  Background,
+  Handle,
+  useReactFlow,
+  ReactFlowProvider,
+  Panel,
+  type Node,
+  type Edge,
+  Position,
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -19,14 +31,16 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
-  Tooltip,
+  ErrorState,
   Chip,
+  ConfirmModal,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
   MonitoringToolbar,
   type TimeRangeValue,
   CopyButton,
+  Tooltip,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
@@ -40,8 +54,9 @@ import {
   IconTrash,
   IconChevronDown,
   IconChevronUp,
+  IconAlertTriangle,
+  IconAlertCircle,
   IconChevronRight,
-  IconBell,
   IconCirclePlus,
   IconSquarePlus,
   IconLinkPlus,
@@ -52,7 +67,11 @@ import {
   IconLock,
   IconLockOpen,
   IconSettings,
+  IconPlus,
+  IconMinus,
+  IconFocusCentered,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -73,6 +92,7 @@ interface AttachedInterface {
   id: string;
   name: string;
   network: string;
+  networkId: string;
   port: string;
   portStatus: 'Active' | 'Inactive' | 'Down' | 'Build';
   fixedIp: string;
@@ -124,7 +144,7 @@ interface ActionLog {
 interface InstanceDetail {
   id: string;
   name: string;
-  status: 'active' | 'shutoff' | 'building' | 'error' | 'paused';
+  status: 'active' | 'shutoff' | 'building' | 'error' | 'paused' | 'verify-resized';
   host: string;
   createdAt: string;
   availabilityZone: string;
@@ -138,6 +158,7 @@ interface InstanceDetail {
   };
   image: string;
   os: string;
+  origin: string;
   locked: boolean;
   interfaces: number;
   keyPair: string;
@@ -146,115 +167,727 @@ interface InstanceDetail {
 }
 
 /* ----------------------------------------
+   Resource Map Component
+   ---------------------------------------- */
+
+interface ResourceMapTopology {
+  instance: string;
+  interfaces: { name: string; subnets: string[] }[];
+  subnets: { name: string; network: string }[];
+  internalNetworks: { name: string; router: string | null }[];
+  routers: { name: string; externalNetwork: string | null }[];
+  externalNetworks: string[];
+}
+
+const mockResourceMapData: Record<string, ResourceMapTopology> = {
+  '7284d9174e81431e93060a9bbcf2cdfd': {
+    instance: 'tk-prod-worker-node-01',
+    interfaces: [
+      { name: 'fa:16:3e:a1:2b:c3', subnets: ['prod-application-subnet-az1'] },
+      { name: 'fa:16:3e:d4:5e:f6', subnets: ['prod-database-private-subnet'] },
+      { name: 'fa:16:3e:78:9a:bc', subnets: ['mgmt-monitoring-subnet'] },
+      { name: 'fa:16:3e:de:f0:12', subnets: ['prod-application-subnet-az1'] },
+    ],
+    subnets: [
+      { name: 'prod-application-subnet-az1', network: 'prod-internal-network' },
+      { name: 'prod-database-private-subnet', network: 'prod-internal-network' },
+      { name: 'mgmt-monitoring-subnet', network: 'management-network-shared' },
+    ],
+    internalNetworks: [
+      { name: 'prod-internal-network', router: 'prod-gateway-router-01' },
+      { name: 'management-network-shared', router: 'prod-gateway-router-01' },
+    ],
+    routers: [{ name: 'prod-gateway-router-01', externalNetwork: 'external-public-net' }],
+    externalNetworks: ['external-public-net'],
+  },
+  a3f1e8b204c647d8b5921ac3def08712: {
+    instance: 'worker-node-02',
+    interfaces: [
+      { name: 'fa:16:3e:34:56:78', subnets: ['prod-app-subnet'] },
+      { name: 'fa:16:3e:9a:bc:de', subnets: ['prod-app-subnet'] },
+    ],
+    subnets: [{ name: 'prod-app-subnet', network: 'prod-internal' }],
+    internalNetworks: [{ name: 'prod-internal', router: 'prod-router' }],
+    routers: [{ name: 'prod-router', externalNetwork: 'public-net' }],
+    externalNetworks: ['public-net'],
+  },
+  d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9: {
+    instance: 'analytics-01',
+    interfaces: [{ name: 'fa:16:3e:f0:12:34', subnets: ['analytics-subnet'] }],
+    subnets: [{ name: 'analytics-subnet', network: 'analytics-isolated' }],
+    internalNetworks: [{ name: 'analytics-isolated', router: null }],
+    routers: [],
+    externalNetworks: [],
+  },
+  c9d2f5a63b7e4019a8e4b1d07c6e3f9a: {
+    instance: 'master-node-01',
+    interfaces: [
+      { name: 'fa:16:3e:56:78:9a', subnets: ['prod-app-subnet'] },
+      { name: 'fa:16:3e:bc:de:f0', subnets: ['cluster-subnet'] },
+    ],
+    subnets: [
+      { name: 'prod-app-subnet', network: 'prod-internal' },
+      { name: 'cluster-subnet', network: 'k8s-cluster-net' },
+    ],
+    internalNetworks: [
+      { name: 'prod-internal', router: 'prod-router' },
+      { name: 'k8s-cluster-net', router: 'prod-router' },
+    ],
+    routers: [{ name: 'prod-router', externalNetwork: 'public-net' }],
+    externalNetworks: ['public-net'],
+  },
+  e5b8c0d31f2a49e7b6d4a3c2f1e09876: {
+    instance: 'db-server-01',
+    interfaces: [{ name: 'fa:16:3e:12:34:56', subnets: ['prod-db-subnet'] }],
+    subnets: [{ name: 'prod-db-subnet', network: 'prod-internal' }],
+    internalNetworks: [{ name: 'prod-internal', router: 'prod-router' }],
+    routers: [{ name: 'prod-router', externalNetwork: 'public-net' }],
+    externalNetworks: ['public-net'],
+  },
+};
+
+const COLUMN_CONFIGS = [
+  { key: 'instance', label: 'Instance', color: '#1e3a5f' },
+  { key: 'interface', label: 'Interface', color: '#1e3a5f' },
+  { key: 'subnet', label: 'Subnet', color: '#c2710c' },
+  { key: 'internalNetwork', label: 'Internal Network', color: '#c2710c' },
+  { key: 'router', label: 'Router', color: '#c2710c' },
+  { key: 'externalNetwork', label: 'External Network', color: '#c2710c' },
+] as const;
+
+const NODE_WIDTH = 160;
+const NODE_HEIGHT = 58;
+const COL_GAP = NODE_WIDTH + 50;
+const ROW_GAP = NODE_HEIGHT + 16;
+const HEADER_HEIGHT = 40;
+const HEADER_Y = 0;
+const ITEMS_START_Y = HEADER_HEIGHT + 30;
+
+function CategoryHeaderNode({ data }: { data: { label: string; color: string } }) {
+  return (
+    <div
+      className="text-label-md"
+      style={{
+        padding: '8px 16px',
+        borderRadius: '8px',
+        background: 'var(--color-surface-subtle)',
+        color: 'var(--color-text-default)',
+        border: '1px solid var(--color-border-default)',
+        width: NODE_WIDTH,
+        textAlign: 'center',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {data.label}
+    </div>
+  );
+}
+
+function ResourceItemNode({ data }: { data: { label: string } }) {
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (el) setIsTruncated(el.scrollHeight > el.clientHeight);
+  }, [data.label]);
+
+  const handleStyle: React.CSSProperties = {
+    width: 4,
+    height: 4,
+    minWidth: 4,
+    minHeight: 4,
+    background: 'var(--color-border-default)',
+    border: 'none',
+    transition: 'background 150ms',
+  };
+
+  const content = (
+    <div
+      className="resource-item-box"
+      style={{
+        width: NODE_WIDTH,
+        height: NODE_HEIGHT,
+        padding: '12px 16px',
+        borderRadius: '8px',
+        fontSize: '12px',
+        border: '1px solid var(--color-border-default)',
+        background: 'var(--color-surface-default)',
+        color: 'var(--color-text-default)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        transition: 'opacity 150ms, border-color 150ms',
+      }}
+    >
+      <span
+        ref={textRef}
+        style={{
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          overflowWrap: 'break-word',
+          lineHeight: '16px',
+        }}
+      >
+        {data.label}
+      </span>
+      <Handle type="target" position={Position.Left} style={handleStyle} />
+      <Handle type="source" position={Position.Right} style={handleStyle} />
+    </div>
+  );
+
+  if (isTruncated) {
+    return <Tooltip content={data.label}>{content}</Tooltip>;
+  }
+  return content;
+}
+
+const resourceMapNodeTypes = {
+  categoryHeader: CategoryHeaderNode,
+  resourceItem: ResourceItemNode,
+};
+
+function buildResourceMapGraph(topo: ResourceMapTopology): { nodes: Node[]; edges: Edge[] } {
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
+
+  COLUMN_CONFIGS.forEach((col, colIdx) => {
+    nodes.push({
+      id: `header-${col.key}`,
+      type: 'categoryHeader',
+      position: { x: colIdx * COL_GAP, y: HEADER_Y },
+      data: { label: col.label, color: col.color },
+      draggable: false,
+      selectable: false,
+      connectable: false,
+    });
+  });
+
+  nodes.push({
+    id: `inst-${topo.instance}`,
+    type: 'resourceItem',
+    position: { x: 0 * COL_GAP, y: ITEMS_START_Y },
+    data: { label: topo.instance },
+  });
+
+  topo.interfaces.forEach((iface, i) => {
+    const nodeId = `iface-${iface.name}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 1 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: iface.name },
+    });
+    edges.push({
+      id: `e-inst-${iface.name}`,
+      source: `inst-${topo.instance}`,
+      target: nodeId,
+      type: 'smoothstep',
+    });
+  });
+
+  const addedSubnets = new Set<string>();
+  topo.subnets.forEach((subnet, i) => {
+    if (addedSubnets.has(subnet.name)) return;
+    addedSubnets.add(subnet.name);
+    const nodeId = `subnet-${subnet.name}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 2 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: subnet.name },
+    });
+  });
+
+  topo.interfaces.forEach((iface) => {
+    iface.subnets.forEach((subnetName) => {
+      edges.push({
+        id: `e-${iface.name}-${subnetName}`,
+        source: `iface-${iface.name}`,
+        target: `subnet-${subnetName}`,
+        type: 'smoothstep',
+      });
+    });
+  });
+
+  topo.internalNetworks.forEach((net, i) => {
+    const nodeId = `net-${net.name}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 3 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: net.name },
+    });
+  });
+
+  topo.subnets.forEach((subnet) => {
+    edges.push({
+      id: `e-${subnet.name}-${subnet.network}`,
+      source: `subnet-${subnet.name}`,
+      target: `net-${subnet.network}`,
+      type: 'smoothstep',
+    });
+  });
+
+  topo.routers.forEach((router, i) => {
+    const nodeId = `router-${router.name}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 4 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: router.name },
+    });
+  });
+
+  topo.internalNetworks.forEach((net) => {
+    if (!net.router) return;
+    edges.push({
+      id: `e-${net.name}-${net.router}`,
+      source: `net-${net.name}`,
+      target: `router-${net.router}`,
+      type: 'smoothstep',
+    });
+  });
+
+  topo.externalNetworks.forEach((extName, i) => {
+    const nodeId = `ext-${extName}`;
+    nodes.push({
+      id: nodeId,
+      type: 'resourceItem',
+      position: { x: 5 * COL_GAP, y: ITEMS_START_Y + i * ROW_GAP },
+      data: { label: extName },
+    });
+  });
+
+  topo.routers.forEach((router) => {
+    if (!router.externalNetwork) return;
+    edges.push({
+      id: `e-${router.name}-${router.externalNetwork}`,
+      source: `router-${router.name}`,
+      target: `ext-${router.externalNetwork}`,
+      type: 'smoothstep',
+    });
+  });
+
+  return { nodes, edges };
+}
+
+function getConnectedIds(topo: ResourceMapTopology, nodeId: string): Set<string> {
+  const ids = new Set<string>();
+  ids.add(nodeId);
+
+  const instId = `inst-${topo.instance}`;
+
+  if (nodeId === instId) {
+    ids.add(instId);
+    topo.interfaces.forEach((iface) => {
+      ids.add(`iface-${iface.name}`);
+      iface.subnets.forEach((s) => ids.add(`subnet-${s}`));
+    });
+    topo.subnets.forEach((s) => ids.add(`net-${s.network}`));
+    topo.internalNetworks.forEach((n) => {
+      if (n.router) ids.add(`router-${n.router}`);
+    });
+    topo.routers.forEach((r) => {
+      if (r.externalNetwork) ids.add(`ext-${r.externalNetwork}`);
+    });
+    return ids;
+  }
+
+  if (nodeId.startsWith('iface-')) {
+    const ifaceName = nodeId.replace('iface-', '');
+    const iface = topo.interfaces.find((i) => i.name === ifaceName);
+    if (iface) {
+      ids.add(instId);
+      iface.subnets.forEach((sn) => {
+        ids.add(`subnet-${sn}`);
+        const subnet = topo.subnets.find((s) => s.name === sn);
+        if (subnet) {
+          ids.add(`net-${subnet.network}`);
+          const net = topo.internalNetworks.find((n) => n.name === subnet.network);
+          if (net?.router) {
+            ids.add(`router-${net.router}`);
+            const router = topo.routers.find((r) => r.name === net.router);
+            if (router?.externalNetwork) ids.add(`ext-${router.externalNetwork}`);
+          }
+        }
+      });
+    }
+    return ids;
+  }
+
+  if (nodeId.startsWith('subnet-')) {
+    const subnetName = nodeId.replace('subnet-', '');
+    ids.add(instId);
+    topo.interfaces.forEach((iface) => {
+      if (iface.subnets.includes(subnetName)) ids.add(`iface-${iface.name}`);
+    });
+    const subnet = topo.subnets.find((s) => s.name === subnetName);
+    if (subnet) {
+      ids.add(`net-${subnet.network}`);
+      const net = topo.internalNetworks.find((n) => n.name === subnet.network);
+      if (net?.router) {
+        ids.add(`router-${net.router}`);
+        const router = topo.routers.find((r) => r.name === net.router);
+        if (router?.externalNetwork) ids.add(`ext-${router.externalNetwork}`);
+      }
+    }
+    return ids;
+  }
+
+  if (nodeId.startsWith('net-')) {
+    const netName = nodeId.replace('net-', '');
+    ids.add(instId);
+    topo.subnets
+      .filter((s) => s.network === netName)
+      .forEach((s) => {
+        ids.add(`subnet-${s.name}`);
+        topo.interfaces.forEach((iface) => {
+          if (iface.subnets.includes(s.name)) ids.add(`iface-${iface.name}`);
+        });
+      });
+    const net = topo.internalNetworks.find((n) => n.name === netName);
+    if (net?.router) {
+      ids.add(`router-${net.router}`);
+      const router = topo.routers.find((r) => r.name === net.router);
+      if (router?.externalNetwork) ids.add(`ext-${router.externalNetwork}`);
+    }
+    return ids;
+  }
+
+  if (nodeId.startsWith('router-')) {
+    const routerName = nodeId.replace('router-', '');
+    ids.add(instId);
+    const router = topo.routers.find((r) => r.name === routerName);
+    if (router?.externalNetwork) ids.add(`ext-${router.externalNetwork}`);
+    topo.internalNetworks
+      .filter((n) => n.router === routerName)
+      .forEach((n) => {
+        ids.add(`net-${n.name}`);
+        topo.subnets
+          .filter((s) => s.network === n.name)
+          .forEach((s) => {
+            ids.add(`subnet-${s.name}`);
+            topo.interfaces.forEach((iface) => {
+              if (iface.subnets.includes(s.name)) ids.add(`iface-${iface.name}`);
+            });
+          });
+      });
+    return ids;
+  }
+
+  if (nodeId.startsWith('ext-')) {
+    const extName = nodeId.replace('ext-', '');
+    ids.add(instId);
+    topo.routers
+      .filter((r) => r.externalNetwork === extName)
+      .forEach((r) => {
+        ids.add(`router-${r.name}`);
+        topo.internalNetworks
+          .filter((n) => n.router === r.name)
+          .forEach((n) => {
+            ids.add(`net-${n.name}`);
+            topo.subnets
+              .filter((s) => s.network === n.name)
+              .forEach((s) => {
+                ids.add(`subnet-${s.name}`);
+                topo.interfaces.forEach((iface) => {
+                  if (iface.subnets.includes(s.name)) ids.add(`iface-${iface.name}`);
+                });
+              });
+          });
+      });
+    return ids;
+  }
+
+  return ids;
+}
+
+function ResourceMapControls() {
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const btnClass =
+    'p-1 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] transition-colors cursor-pointer';
+  return (
+    <Panel position="top-right">
+      <div className="flex items-center gap-1">
+        <button className={btnClass} onClick={() => zoomIn()} title="Zoom In">
+          <IconPlus size={14} stroke={1.5} />
+        </button>
+        <button className={btnClass} onClick={() => zoomOut()} title="Zoom Out">
+          <IconMinus size={14} stroke={1.5} />
+        </button>
+        <button
+          className={btnClass}
+          onClick={() => fitView({ padding: 0.15, maxZoom: 1 })}
+          title="Fit View"
+        >
+          <IconFocusCentered size={14} stroke={1.5} />
+        </button>
+      </div>
+    </Panel>
+  );
+}
+
+function ResourceMapInner({
+  topo,
+  nodes,
+  edges,
+}: {
+  topo: ResourceMapTopology;
+  nodes: Node[];
+  edges: Edge[];
+}) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const applyHighlight = useCallback(
+    (nodeId: string | null) => {
+      const container = wrapperRef.current;
+      if (!container) return;
+
+      const allNodeEls = container.querySelectorAll<HTMLElement>('.react-flow__node');
+      const allEdgeEls = container.querySelectorAll<HTMLElement>('.react-flow__edge');
+
+      if (!nodeId) {
+        allNodeEls.forEach((el) => {
+          el.style.opacity = '';
+          const box = el.querySelector<HTMLElement>('.resource-item-box');
+          if (box) box.style.borderColor = '';
+          el.querySelectorAll<HTMLElement>('.react-flow__handle').forEach((handle) => {
+            handle.style.background = '';
+          });
+        });
+        allEdgeEls.forEach((el) => {
+          el.style.opacity = '';
+          el.querySelectorAll<SVGPathElement>('path').forEach((p) => {
+            p.style.stroke = '';
+          });
+        });
+        return;
+      }
+
+      const highlighted = getConnectedIds(topo, nodeId);
+
+      allNodeEls.forEach((el) => {
+        const id = el.dataset.id ?? '';
+        if (id.startsWith('header-')) return;
+        const isHighlighted = highlighted.has(id);
+        el.style.opacity = isHighlighted ? '1' : '0.25';
+        const box = el.querySelector<HTMLElement>('.resource-item-box');
+        if (box) box.style.borderColor = isHighlighted ? 'var(--color-action-primary)' : '';
+        el.querySelectorAll<HTMLElement>('.react-flow__handle').forEach((handle) => {
+          handle.style.background = isHighlighted ? 'var(--color-action-primary)' : '';
+        });
+      });
+
+      allEdgeEls.forEach((el) => {
+        const ariaLabel = el.getAttribute('aria-label') ?? '';
+        const match = ariaLabel.match(/^Edge from (.+) to (.+)$/);
+        const sourceId = match?.[1] ?? '';
+        const targetId = match?.[2] ?? '';
+        const isActive = highlighted.has(sourceId) && highlighted.has(targetId);
+        el.style.opacity = isActive ? '1' : '0.15';
+        el.querySelectorAll<SVGPathElement>('path').forEach((path) => {
+          path.style.stroke = isActive ? 'var(--color-action-primary)' : '';
+        });
+      });
+    },
+    [topo]
+  );
+
+  const onNodeMouseEnter = useCallback(
+    (_: React.MouseEvent, node: Node) => {
+      if (node.type === 'categoryHeader') return;
+      applyHighlight(node.id);
+    },
+    [applyHighlight]
+  );
+
+  const onNodeMouseLeave = useCallback(() => {
+    applyHighlight(null);
+  }, [applyHighlight]);
+
+  const { fitView } = useReactFlow();
+  const fittedRef = useRef(false);
+
+  useEffect(() => {
+    if (fittedRef.current || nodes.length === 0) return;
+    const container = wrapperRef.current;
+    if (!container) return;
+
+    const check = () => {
+      const rendered = container.querySelectorAll('.react-flow__node .resource-item-box');
+      if (rendered.length > 0) {
+        fittedRef.current = true;
+        fitView({ padding: 0.15, maxZoom: 1 });
+      }
+    };
+
+    const observer = new MutationObserver(check);
+    observer.observe(container, { childList: true, subtree: true });
+    check();
+    return () => observer.disconnect();
+  }, [nodes, fitView]);
+
+  return (
+    <div ref={wrapperRef} style={{ width: '100%', height: '100%' }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={resourceMapNodeTypes}
+        proOptions={{ hideAttribution: true }}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable={false}
+        panOnDrag={true}
+        zoomOnScroll={true}
+        minZoom={0.3}
+        maxZoom={2}
+        onNodeMouseEnter={onNodeMouseEnter}
+        onNodeMouseLeave={onNodeMouseLeave}
+      >
+        <Background gap={16} size={1} color="var(--color-border-subtle)" />
+        <ResourceMapControls />
+      </ReactFlow>
+    </div>
+  );
+}
+
+function InstanceResourceMap({ instance }: { instance: InstanceDetail }) {
+  const topo = mockResourceMapData[instance.id] ?? {
+    instance: instance.name,
+    interfaces: [],
+    subnets: [],
+    internalNetworks: [],
+    routers: [],
+    externalNetworks: [],
+  };
+
+  const { nodes, edges } = useMemo(() => buildResourceMapGraph(topo), [topo]);
+
+  return (
+    <ReactFlowProvider>
+      <ResourceMapInner topo={topo} nodes={nodes} edges={edges} />
+    </ReactFlowProvider>
+  );
+}
+
+/* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
 // Instance data map by ID
 const mockInstancesMap: Record<string, InstanceDetail> = {
-  'vm-001': {
-    id: 'vm-001',
+  '7284d9174e81431e93060a9bbcf2cdfd': {
+    id: '7284d9174e81431e93060a9bbcf2cdfd',
     name: 'worker-node-01',
     status: 'active',
     host: 'compute-03',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     availabilityZone: 'keystone',
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     image: 'CentOS 7',
     os: 'CentOS 7',
+    origin: 'Container (Cluster1)',
     locked: true,
     interfaces: 5,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
     userData: '-',
   },
-  'vm-002': {
-    id: 'vm-002',
+  a3f1e8b204c647d8b5921ac3def08712: {
+    id: 'a3f1e8b204c647d8b5921ac3def08712',
     name: 'worker-node-02',
-    status: 'active',
+    status: 'verify-resized',
     host: 'compute-03',
-    createdAt: 'Jul 24, 2025 03:19:59',
+    createdAt: 'Jul 24, 2026 03:19:59',
     availabilityZone: 'keystone',
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     image: 'CentOS 7',
     os: 'CentOS 7',
+    origin: 'Container (Cluster1)',
     locked: false,
     interfaces: 3,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
     userData: '-',
   },
-  'vm-003': {
-    id: 'vm-003',
+  d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9: {
+    id: 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9',
+    name: 'analytics-01',
+    status: 'error',
+    host: 'compute-04',
+    createdAt: 'Aug 12, 2026 14:05:33',
+    availabilityZone: 'nova',
+    description: 'Analytics processing instance',
+    flavor: { name: 'XLarge', vcpu: 16, ram: '32 GiB', disk: '500 GiB', gpu: 2 },
+    image: 'Debian 12',
+    os: 'Debian 12',
+    origin: 'Compute',
+    locked: true,
+    interfaces: 2,
+    keyPair: 'analytics-key',
+    serverGroup: 'analytics-group',
+    userData: '-',
+  },
+  c9d2f5a63b7e4019a8e4b1d07c6e3f9a: {
+    id: 'c9d2f5a63b7e4019a8e4b1d07c6e3f9a',
     name: 'master-node-01',
     status: 'active',
     host: 'compute-01',
-    createdAt: 'Jul 20, 2025 23:27:51',
+    createdAt: 'Jul 20, 2026 23:27:51',
     availabilityZone: 'nova',
     description: 'Kubernetes master node',
     flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
     image: 'Ubuntu 22.04',
     os: 'Ubuntu 22.04',
+    origin: 'Container (Cluster2)',
     locked: false,
     interfaces: 4,
     keyPair: 'master-key',
     serverGroup: 'master-group',
     userData: '-',
   },
-  'vm-004': {
-    id: 'vm-004',
+  e5b8c0d31f2a49e7b6d4a3c2f1e09876: {
+    id: 'e5b8c0d31f2a49e7b6d4a3c2f1e09876',
     name: 'db-server-01',
     status: 'stopped',
     host: 'compute-02',
-    createdAt: 'Jul 15, 2025 12:22:26',
+    createdAt: 'Jul 15, 2026 12:22:26',
     availabilityZone: 'keystone',
     description: 'Database server',
     flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
     image: 'CentOS 8',
     os: 'CentOS 8',
+    origin: 'Container (Cluster1)',
     locked: true,
     interfaces: 2,
     keyPair: 'db-key',
     serverGroup: 'db-group',
     userData: '-',
   },
-  'vm-005': {
-    id: 'vm-005',
+  '1a4b7c9d3e5f2a8b6c0d4e7f9a1b3c5d': {
+    id: '1a4b7c9d3e5f2a8b6c0d4e7f9a1b3c5d',
     name: 'gpu-node-01',
     status: 'active',
     host: 'compute-gpu-01',
-    createdAt: 'Jul 10, 2025 01:17:01',
+    createdAt: 'Jul 10, 2026 01:17:01',
     availabilityZone: 'nova',
     description: 'GPU compute node',
     flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
     image: 'Ubuntu 22.04',
     os: 'Ubuntu 22.04',
+    origin: 'Container (Cluster3)',
     locked: false,
     interfaces: 2,
     keyPair: 'gpu-key',
     serverGroup: 'gpu-group',
     userData: '-',
   },
-};
-
-// Default instance detail for unknown IDs
-const defaultInstanceDetail: InstanceDetail = {
-  id: 'unknown',
-  name: 'Unknown Instance',
-  status: 'active',
-  host: 'compute-03',
-  createdAt: 'Jul 25, 2025 10:32:16',
-  availabilityZone: 'nova',
-  description: '-',
-  flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
-  image: 'Unknown',
-  os: 'Unknown',
-  locked: false,
-  interfaces: 0,
-  keyPair: '-',
-  serverGroup: '-',
-  userData: '-',
 };
 
 const mockAttachedVolumes: AttachedVolume[] = [
@@ -266,7 +899,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'OS Disk',
     bootable: false,
-    access: 'Nov 11, 2025',
+    access: 'Nov 11, 2026',
   },
   {
     id: 'vol-002',
@@ -276,7 +909,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Data disk',
     bootable: false,
-    access: 'Nov 10, 2025',
+    access: 'Nov 10, 2026',
   },
   {
     id: 'vol-003',
@@ -286,7 +919,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Backup',
     bootable: false,
-    access: 'Nov 9, 2025',
+    access: 'Nov 9, 2026',
   },
   {
     id: 'vol-004',
@@ -296,7 +929,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'App Data',
     bootable: false,
-    access: 'Nov 8, 2025',
+    access: 'Nov 8, 2026',
   },
   {
     id: 'vol-005',
@@ -306,7 +939,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Database',
     bootable: false,
-    access: 'Nov 7, 2025',
+    access: 'Nov 7, 2026',
   },
   {
     id: 'vol-006',
@@ -316,7 +949,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Logs',
     bootable: false,
-    access: 'Nov 6, 2025',
+    access: 'Nov 6, 2026',
   },
   {
     id: 'vol-007',
@@ -326,7 +959,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Media',
     bootable: false,
-    access: 'Nov 5, 2025',
+    access: 'Nov 5, 2026',
   },
   {
     id: 'vol-008',
@@ -336,7 +969,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Cache',
     bootable: false,
-    access: 'Nov 4, 2025',
+    access: 'Nov 4, 2026',
   },
   {
     id: 'vol-009',
@@ -346,7 +979,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Temp',
     bootable: false,
-    access: 'Nov 3, 2025',
+    access: 'Nov 3, 2026',
   },
   {
     id: 'vol-010',
@@ -356,7 +989,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Shared',
     bootable: false,
-    access: 'Nov 2, 2025',
+    access: 'Nov 2, 2026',
   },
 ];
 
@@ -365,121 +998,133 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '29tgj234',
     name: 'port-01',
     network: 'net-01',
+    networkId: 'net-1',
     port: '123984734',
     portStatus: 'Inactive',
     fixedIp: '10.0.0.6',
-    macAddress: '10.0.0.2',
-    createdAt: 'Nov 11, 2025 08:30:18',
+    macAddress: 'fa:16:3e:a1:b2:c3',
+    createdAt: 'Nov 11, 2026 08:30:18',
   },
   {
     id: '38hdk456',
     name: 'port-02',
     network: 'net-02',
+    networkId: 'net-2',
     port: '987654321',
     portStatus: 'Active',
     fixedIp: '10.0.0.5',
     macAddress: 'fa:16:3e:12:34:56',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '47jfl789',
     name: 'port-03',
     network: 'net-03',
+    networkId: 'net-3',
     port: '456789123',
     portStatus: 'Active',
     fixedIp: '192.168.1.10',
     macAddress: 'fa:16:3e:ab:cd:ef',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
   },
   {
     id: '56kgm012',
     name: 'port-04',
     network: 'net-04',
+    networkId: 'net-4',
     port: '789012345',
     portStatus: 'Active',
     fixedIp: '172.16.0.10',
     macAddress: 'fa:16:3e:11:22:33',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
   },
   {
     id: '65lhn345',
     name: 'port-05',
     network: 'net-05',
+    networkId: 'net-5',
     port: '234567890',
     portStatus: 'Active',
     fixedIp: '10.10.0.5',
     macAddress: 'fa:16:3e:44:55:66',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
   },
   {
     id: '74mip678',
     name: 'port-06',
     network: 'net-06',
+    networkId: 'net-6',
     port: '345678901',
     portStatus: 'Down',
     fixedIp: '10.20.0.15',
     macAddress: 'fa:16:3e:77:88:99',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
   },
   {
     id: '83njq901',
     name: 'port-07',
     network: 'net-07',
+    networkId: 'net-7',
     port: '456789012',
     portStatus: 'Active',
     fixedIp: '10.30.0.20',
     macAddress: 'fa:16:3e:aa:bb:cc',
-    createdAt: 'Nov 5, 2025 14:12:36',
+    createdAt: 'Nov 5, 2026 14:12:36',
   },
   {
     id: '92okr234',
     name: 'port-08',
     network: 'net-08',
+    networkId: 'net-8',
     port: '567890123',
     portStatus: 'Active',
     fixedIp: '10.40.0.25',
     macAddress: 'fa:16:3e:dd:ee:ff',
-    createdAt: 'Nov 4, 2025 07:59:19',
+    createdAt: 'Nov 4, 2026 07:59:19',
   },
   {
     id: '01pls567',
     name: 'port-09',
     network: 'net-09',
+    networkId: 'net-9',
     port: '678901234',
     portStatus: 'Build',
     fixedIp: '10.50.0.30',
     macAddress: 'fa:16:3e:12:34:ab',
-    createdAt: 'Nov 3, 2025 00:46:02',
+    createdAt: 'Nov 3, 2026 00:46:02',
   },
   {
     id: '10qmt890',
     name: 'port-10',
     network: 'net-10',
+    networkId: 'net-10',
     port: '789012345',
     portStatus: 'Active',
     fixedIp: '10.60.0.35',
     macAddress: 'fa:16:3e:cd:ef:12',
-    createdAt: 'Nov 2, 2025 17:33:45',
+    createdAt: 'Nov 2, 2026 17:33:45',
   },
   {
     id: '29rnu123',
     name: 'port-11',
     network: 'net-11',
+    networkId: 'net-11',
     port: '890123456',
     portStatus: 'Active',
     fixedIp: '10.70.0.40',
     macAddress: 'fa:16:3e:34:56:78',
-    createdAt: 'Nov 1, 2025 10:20:28',
+    createdAt: 'Nov 1, 2026 10:20:28',
   },
   {
     id: '38sov456',
     name: 'port-12',
     network: 'net-12',
+    networkId: 'net-12',
     port: '901234567',
     portStatus: 'Inactive',
     fixedIp: '10.80.0.45',
     macAddress: 'fa:16:3e:9a:bc:de',
-    createdAt: 'Oct 31, 2025 04:50:58',
+    createdAt: 'Oct 31, 2026 04:50:58',
   },
 ];
 
@@ -490,7 +1135,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '10.0.0.11',
     fixedIp: '10.0.0.11',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
   },
   {
     id: '38hdk456',
@@ -498,7 +1143,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '192.168.1.100',
     fixedIp: '10.0.0.5',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
   {
     id: '47jfl789',
@@ -506,7 +1151,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'shutoff',
     floatingIp: '172.16.0.50',
     fixedIp: '10.0.0.20',
-    createdAt: 'Jul 20, 2025 23:27:51',
+    createdAt: 'Jul 20, 2026 23:27:51',
   },
   {
     id: '56kgm012',
@@ -514,7 +1159,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.10',
     fixedIp: '10.0.1.10',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
   },
   {
     id: '65lhn345',
@@ -522,7 +1167,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.20',
     fixedIp: '10.0.1.20',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: '74mip678',
@@ -530,7 +1175,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'error',
     floatingIp: '203.0.113.30',
     fixedIp: '10.0.1.30',
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
   },
   {
     id: '83njq901',
@@ -538,7 +1183,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.40',
     fixedIp: '10.0.1.40',
-    createdAt: 'Sep 18, 2025 09:01:17',
+    createdAt: 'Sep 18, 2026 09:01:17',
   },
   {
     id: '92okr234',
@@ -546,7 +1191,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.50',
     fixedIp: '10.0.1.50',
-    createdAt: 'Sep 20, 2025 23:27:51',
+    createdAt: 'Sep 20, 2026 23:27:51',
   },
   {
     id: '01pls567',
@@ -554,7 +1199,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'shutoff',
     floatingIp: '203.0.113.60',
     fixedIp: '10.0.1.60',
-    createdAt: 'Sep 22, 2025 13:53:25',
+    createdAt: 'Sep 22, 2026 13:53:25',
   },
   {
     id: '10qmt890',
@@ -562,7 +1207,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.70',
     fixedIp: '10.0.1.70',
-    createdAt: 'Sep 25, 2025 10:32:16',
+    createdAt: 'Sep 25, 2026 10:32:16',
   },
   {
     id: '29rnu123',
@@ -570,7 +1215,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.80',
     fixedIp: '10.0.1.80',
-    createdAt: 'Sep 28, 2025 07:11:07',
+    createdAt: 'Sep 28, 2026 07:11:07',
   },
   {
     id: '38sov456',
@@ -578,83 +1223,83 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'shutoff',
     floatingIp: '203.0.113.90',
     fixedIp: '10.0.1.90',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    createdAt: 'Sep 30, 2026 21:37:41',
   },
 ];
 
 const mockNetworkInterfaces: NetworkInterface[] = [
   { id: 'net-001', name: 'private-net', ip: '10.0.0.5' },
   { id: 'net-002', name: 'public-net', ip: '72.116.0.10' },
-  { id: 'net-003', name: 'public-net', ip: '72.116.0.10' },
+  { id: 'net-003', name: 'public-net', ip: '72.116.0.11' },
 ];
 
 const mockSecurityGroups: SecurityGroup[] = [
-  { id: 'sg-001', name: 'sg-02', description: '10.0.0.11', createdAt: 'Nov 11, 2025 08:30:18' },
+  { id: 'sg-001', name: 'sg-02', description: '10.0.0.11', createdAt: 'Nov 11, 2026 08:30:18' },
   {
     id: 'sg-002',
     name: 'default',
     description: 'Default security group',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: 'sg-003',
     name: 'web-servers',
     description: 'Web server security group',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
   },
   {
     id: 'sg-004',
     name: 'ssh-access',
     description: 'SSH access security group',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
   },
   {
     id: 'sg-005',
     name: 'db-servers',
     description: 'Database server security group',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
   },
   {
     id: 'sg-006',
     name: 'internal-only',
     description: 'Internal network only',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
   },
   {
     id: 'sg-007',
     name: 'load-balancer',
     description: 'Load balancer security group',
-    createdAt: 'Nov 5, 2025 14:12:36',
+    createdAt: 'Nov 5, 2026 14:12:36',
   },
   {
     id: 'sg-008',
     name: 'monitoring',
     description: 'Monitoring services access',
-    createdAt: 'Nov 4, 2025 07:59:19',
+    createdAt: 'Nov 4, 2026 07:59:19',
   },
   {
     id: 'sg-009',
     name: 'kubernetes',
     description: 'Kubernetes cluster security group',
-    createdAt: 'Nov 3, 2025 00:46:02',
+    createdAt: 'Nov 3, 2026 00:46:02',
   },
   {
     id: 'sg-010',
     name: 'api-gateway',
     description: 'API gateway security group',
-    createdAt: 'Nov 2, 2025 17:33:45',
+    createdAt: 'Nov 2, 2026 17:33:45',
   },
   {
     id: 'sg-011',
     name: 'cache-servers',
     description: 'Cache server security group',
-    createdAt: 'Nov 1, 2025 10:20:28',
+    createdAt: 'Nov 1, 2026 10:20:28',
   },
   {
     id: 'sg-012',
     name: 'message-queue',
     description: 'Message queue security group',
-    createdAt: 'Oct 31, 2025 04:50:58',
+    createdAt: 'Oct 31, 2026 04:50:58',
   },
 ];
 
@@ -665,7 +1310,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '30GiB',
     diskFormat: 'RAW',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
   },
   {
     id: 'snap-002',
@@ -673,7 +1318,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '50GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
   },
   {
     id: 'snap-003',
@@ -681,7 +1326,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '20GiB',
     diskFormat: 'RAW',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
   },
   {
     id: 'snap-004',
@@ -689,7 +1334,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '45GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
   {
     id: 'snap-005',
@@ -697,7 +1342,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '15GiB',
     diskFormat: 'RAW',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
   {
     id: 'snap-006',
@@ -705,7 +1350,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '35GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
   },
   {
     id: 'snap-007',
@@ -713,7 +1358,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '60GiB',
     diskFormat: 'RAW',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
   },
   {
     id: 'snap-008',
@@ -721,7 +1366,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'queued',
     size: '25GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Aug 1, 2025 10:20:28',
+    createdAt: 'Aug 1, 2026 10:20:28',
   },
   {
     id: 'snap-009',
@@ -729,7 +1374,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '40GiB',
     diskFormat: 'RAW',
-    createdAt: 'Jul 28, 2025 07:11:07',
+    createdAt: 'Jul 28, 2026 07:11:07',
   },
   {
     id: 'snap-010',
@@ -737,7 +1382,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '55GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: 'snap-011',
@@ -745,7 +1390,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '10GiB',
     diskFormat: 'RAW',
-    createdAt: 'Jul 20, 2025 23:27:51',
+    createdAt: 'Jul 20, 2026 23:27:51',
   },
   {
     id: 'snap-012',
@@ -753,7 +1398,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '18GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Jul 15, 2025 12:22:26',
+    createdAt: 'Jul 15, 2026 12:22:26',
   },
 ];
 
@@ -762,7 +1407,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-001',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -770,8 +1415,8 @@ const mockActionLogs: ActionLog[] = [
   {
     id: 'log-002',
     operationName: 'Create',
-    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c3',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -779,8 +1424,8 @@ const mockActionLogs: ActionLog[] = [
   {
     id: 'log-003',
     operationName: 'Create',
-    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c4',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -788,8 +1433,8 @@ const mockActionLogs: ActionLog[] = [
   {
     id: 'log-004',
     operationName: 'Create',
-    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c5',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -797,8 +1442,8 @@ const mockActionLogs: ActionLog[] = [
   {
     id: 'log-005',
     operationName: 'Create',
-    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c6',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -806,8 +1451,8 @@ const mockActionLogs: ActionLog[] = [
   {
     id: 'log-006',
     operationName: 'Create',
-    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c7',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -815,8 +1460,8 @@ const mockActionLogs: ActionLog[] = [
   {
     id: 'log-007',
     operationName: 'Create',
-    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c8',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -824,8 +1469,8 @@ const mockActionLogs: ActionLog[] = [
   {
     id: 'log-008',
     operationName: 'Create',
-    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c9',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -833,8 +1478,8 @@ const mockActionLogs: ActionLog[] = [
   {
     id: 'log-009',
     operationName: 'Create',
-    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918ca',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -842,8 +1487,8 @@ const mockActionLogs: ActionLog[] = [
   {
     id: 'log-010',
     operationName: 'Create',
-    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025 14:23:15',
+    requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918cb',
+    requestedTime: 'Sep 11, 2026 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -880,10 +1525,111 @@ const diskIOPSReadData = generateWaveData(600, 200);
 const diskIOPSWriteData = generateWaveData(420, 150);
 
 /* ----------------------------------------
+   Expandable Inline Message
+   ---------------------------------------- */
+
+const EXPANDABLE_VARIANT_STYLES: Record<
+  'error' | 'warning',
+  { bg: string; iconClass: string; icon: React.ReactNode }
+> = {
+  error: {
+    bg: 'bg-[var(--inline-message-error-bg)]',
+    iconClass: 'text-[var(--inline-message-error-icon)]',
+    icon: <IconAlertTriangle size={16} strokeWidth={1.5} />,
+  },
+  warning: {
+    bg: 'bg-[var(--inline-message-warning-bg)]',
+    iconClass: 'text-[var(--inline-message-warning-icon)]',
+    icon: <IconAlertCircle size={16} strokeWidth={1.5} />,
+  },
+};
+
+function ExpandableMessage({
+  variant = 'error',
+  timestamp,
+  children,
+}: {
+  variant?: 'error' | 'warning';
+  timestamp: string;
+  children: React.ReactNode;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [showFade, setShowFade] = useState(false);
+  const scrollRef = useRef<HTMLSpanElement>(null);
+  const styles = EXPANDABLE_VARIANT_STYLES[variant];
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 2;
+    setShowFade(!atBottom);
+  }, []);
+
+  const handleExpand = () => {
+    const next = !expanded;
+    setExpanded(next);
+    if (next) {
+      requestAnimationFrame(() => {
+        const el = scrollRef.current;
+        if (el) {
+          el.scrollTop = 0;
+          const hasOverflow = el.scrollHeight - el.clientHeight > 2;
+          setShowFade(hasOverflow);
+        }
+      });
+    } else {
+      setShowFade(false);
+    }
+  };
+
+  return (
+    <div
+      className={`flex items-start gap-[var(--inline-message-gap)] p-[var(--inline-message-padding)] rounded-[var(--inline-message-radius)] ${styles.bg}`}
+    >
+      <span className={`shrink-0 ${styles.iconClass}`}>{styles.icon}</span>
+      <span className="relative flex-1 min-w-0">
+        <span
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className={`block text-[length:var(--inline-message-font-size)] leading-[var(--inline-message-line-height)] text-[var(--inline-message-text)] ${expanded ? 'max-h-[calc(3*var(--inline-message-line-height))] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden' : 'truncate'}`}
+        >
+          {children}
+        </span>
+        {expanded && showFade && (
+          <span
+            className="pointer-events-none absolute bottom-0 left-0 right-0 h-[var(--inline-message-line-height)]"
+            style={{
+              background: `linear-gradient(to top, var(--inline-message-${variant}-bg), transparent)`,
+            }}
+          />
+        )}
+      </span>
+      <span className="text-body-xs leading-[var(--inline-message-line-height)] text-[var(--color-text-default)] whitespace-nowrap shrink-0 ml-2">
+        {timestamp}
+      </span>
+      <button
+        type="button"
+        className="shrink-0 leading-[var(--inline-message-line-height)] rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-hover)]"
+        onClick={handleExpand}
+        aria-expanded={expanded}
+        aria-label={expanded ? 'Collapse message' : 'Expand message'}
+      >
+        {expanded ? (
+          <IconChevronUp size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        ) : (
+          <IconChevronDown size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        )}
+      </button>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Instance Detail Page
    ---------------------------------------- */
 
 export function InstanceDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -894,21 +1640,123 @@ export function InstanceDetailPage() {
     mockNetworkInterfaces[0]?.id || ''
   );
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  // Interface tab pagination state
+  // Volumes tab — search & pagination
+  const [volumeSearchTerm, setVolumeSearchTerm] = useState('');
+  const [volumesPage, setVolumesPage] = useState(1);
+  const volumesPageSize = 10;
+  const filteredAttachedVolumes = useMemo(() => {
+    const q = volumeSearchTerm.trim().toLowerCase();
+    if (!q) return mockAttachedVolumes;
+    return mockAttachedVolumes.filter((v) =>
+      [v.id, v.name, v.status, v.size, v.type, v.diskTag, String(v.bootable), v.access].some(
+        (field) => String(field).toLowerCase().includes(q)
+      )
+    );
+  }, [volumeSearchTerm]);
+  const totalVolumePages = Math.ceil(filteredAttachedVolumes.length / volumesPageSize);
+  const paginatedAttachedVolumes = useMemo(
+    () =>
+      filteredAttachedVolumes.slice(
+        (volumesPage - 1) * volumesPageSize,
+        volumesPage * volumesPageSize
+      ),
+    [filteredAttachedVolumes, volumesPage, volumesPageSize]
+  );
+
+  // Interface tab — search & pagination
+  const [interfaceSearchTerm, setInterfaceSearchTerm] = useState('');
   const [interfaceCurrentPage, setInterfaceCurrentPage] = useState(1);
   const interfaceRowsPerPage = 10;
-  const interfaceTotalPages = Math.ceil(mockAttachedInterfaces.length / interfaceRowsPerPage);
+  const filteredAttachedInterfaces = useMemo(() => {
+    const q = interfaceSearchTerm.trim().toLowerCase();
+    if (!q) return mockAttachedInterfaces;
+    return mockAttachedInterfaces.filter((iface) =>
+      [
+        iface.id,
+        iface.name,
+        iface.network,
+        iface.networkId,
+        iface.port,
+        iface.portStatus,
+        iface.fixedIp,
+        iface.macAddress,
+        iface.createdAt,
+      ].some((field) => String(field).toLowerCase().includes(q))
+    );
+  }, [interfaceSearchTerm]);
+  const interfaceTotalPages = Math.ceil(filteredAttachedInterfaces.length / interfaceRowsPerPage);
+  const paginatedAttachedInterfaces = useMemo(
+    () =>
+      filteredAttachedInterfaces.slice(
+        (interfaceCurrentPage - 1) * interfaceRowsPerPage,
+        interfaceCurrentPage * interfaceRowsPerPage
+      ),
+    [filteredAttachedInterfaces, interfaceCurrentPage, interfaceRowsPerPage]
+  );
 
-  // Floating IP tab pagination state
+  // Floating IP tab — search & pagination
+  const [floatingIpSearchTerm, setFloatingIpSearchTerm] = useState('');
   const [floatingIpCurrentPage, setFloatingIpCurrentPage] = useState(1);
   const floatingIpRowsPerPage = 10;
-  const floatingIpTotalPages = Math.ceil(mockFloatingIPs.length / floatingIpRowsPerPage);
+  const filteredFloatingIPs = useMemo(() => {
+    const q = floatingIpSearchTerm.trim().toLowerCase();
+    if (!q) return mockFloatingIPs;
+    return mockFloatingIPs.filter((row) =>
+      [row.id, row.name, row.status, row.floatingIp, row.fixedIp, row.createdAt].some((field) =>
+        String(field).toLowerCase().includes(q)
+      )
+    );
+  }, [floatingIpSearchTerm]);
+  const floatingIpTotalPages = Math.ceil(filteredFloatingIPs.length / floatingIpRowsPerPage);
+  const paginatedFloatingIPs = useMemo(
+    () =>
+      filteredFloatingIPs.slice(
+        (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
+        floatingIpCurrentPage * floatingIpRowsPerPage
+      ),
+    [filteredFloatingIPs, floatingIpCurrentPage, floatingIpRowsPerPage]
+  );
 
-  // Security tab pagination state
+  // Security tab — search & pagination
+  const [securityGroupSearchTerm, setSecurityGroupSearchTerm] = useState('');
   const [securityCurrentPage, setSecurityCurrentPage] = useState(1);
   const securityRowsPerPage = 10;
-  const securityTotalPages = Math.ceil(mockSecurityGroups.length / securityRowsPerPage);
+  const filteredSecurityGroups = useMemo(() => {
+    const q = securityGroupSearchTerm.trim().toLowerCase();
+    if (!q) return mockSecurityGroups;
+    return mockSecurityGroups.filter((row) =>
+      [row.id, row.name, row.description, row.createdAt].some((field) =>
+        field.toLowerCase().includes(q)
+      )
+    );
+  }, [securityGroupSearchTerm]);
+  const securityTotalPages = Math.ceil(filteredSecurityGroups.length / securityRowsPerPage);
+  const paginatedSecurityGroups = useMemo(
+    () =>
+      filteredSecurityGroups.slice(
+        (securityCurrentPage - 1) * securityRowsPerPage,
+        securityCurrentPage * securityRowsPerPage
+      ),
+    [filteredSecurityGroups, securityCurrentPage, securityRowsPerPage]
+  );
+
+  useEffect(() => {
+    setVolumesPage(1);
+  }, [volumeSearchTerm]);
+
+  useEffect(() => {
+    setInterfaceCurrentPage(1);
+  }, [interfaceSearchTerm]);
+
+  useEffect(() => {
+    setFloatingIpCurrentPage(1);
+  }, [floatingIpSearchTerm]);
+
+  useEffect(() => {
+    setSecurityCurrentPage(1);
+  }, [securityGroupSearchTerm]);
 
   // Instance snapshots tab pagination state
   const [snapshotCurrentPage, setSnapshotCurrentPage] = useState(1);
@@ -950,17 +1798,17 @@ export function InstanceDetailPage() {
   };
 
   // Get instance data based on the ID from URL
-  const instance = id ? mockInstancesMap[id] || defaultInstanceDetail : defaultInstanceDetail;
+  const instance = id ? mockInstancesMap[id] : undefined;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
 
   // Update tab label to instance name
   useEffect(() => {
-    if (instance.name) {
+    if (instance?.name) {
       updateActiveTabLabel(instance.name);
     }
-  }, [instance.name, updateActiveTabLabel]);
+  }, [instance?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -968,6 +1816,49 @@ export function InstanceDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!instance) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Instances', href: '/compute/instances' }, { label: id ?? '—' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Instance not found"
+          description={`The instance with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/instances')}>
+              Back to instances
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell
@@ -987,60 +1878,61 @@ export function InstanceDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instances list', href: '/compute/instances' },
-                { label: instance.name },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
+              items={[{ label: 'Instances', href: '/compute/instances' }, { label: instance.name }]}
             />
           }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={4}>
         {/* Instance Header Card */}
         <DetailHeader>
-          <DetailHeader.Title>
-            <span className="inline-flex items-center gap-2">
-              {instance.locked ? (
-                <Tooltip content="This instance is locked">
-                  <IconLock size={16} className="text-[var(--color-text-muted)]" />
-                </Tooltip>
-              ) : (
-                <Tooltip content="This instance is unlocked">
-                  <IconLockOpen size={16} className="text-[var(--color-text-disabled)]" />
-                </Tooltip>
-              )}
-              {instance.name}
-            </span>
-          </DetailHeader.Title>
+          <DetailHeader.Title>{instance.name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTerminal2 size={12} />}
+              onClick={() => console.log('Action:', instance.id)}
+            >
               Console
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPlayerPlay size={12} />}
+              onClick={() => console.log('Action:', instance.id)}
+            >
               Start
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPlayerStop size={12} />}
+              onClick={() => console.log('Action:', instance.id)}
+            >
               Stop
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPower size={12} />}
+              onClick={() => console.log('Action:', instance.id)}
+            >
               Reboot
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
             <ContextMenu
@@ -1049,57 +1941,105 @@ export function InstanceDetailPage() {
                   id: 'instance-status',
                   label: 'Instance status',
                   submenu: [
-                    { id: 'soft-reboot-sub', label: 'Soft reboot', onClick: () => {} },
-                    { id: 'pause-sub', label: 'Pause', onClick: () => {} },
-                    { id: 'suspend-sub', label: 'Suspend', onClick: () => {} },
-                    { id: 'shelve-sub', label: 'Shelve', onClick: () => {} },
-                    { id: 'unpause-sub', label: 'Unpause', onClick: () => {} },
-                    { id: 'resume-sub', label: 'Resume', onClick: () => {} },
-                    { id: 'unshelve-sub', label: 'Unshelve', onClick: () => {} },
-                    { id: 'rescue-sub', label: 'Rescue', onClick: () => {} },
-                    { id: 'unrescue-sub', label: 'Unrescue', onClick: () => {} },
+                    {
+                      id: 'soft-reboot-sub',
+                      label: 'Soft reboot',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'pause-sub',
+                      label: 'Pause',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'suspend-sub',
+                      label: 'Suspend',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'shelve-sub',
+                      label: 'Shelve',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'unpause-sub',
+                      label: 'Unpause',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'resume-sub',
+                      label: 'Resume',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'unshelve-sub',
+                      label: 'Unshelve',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'rescue-sub',
+                      label: 'Rescue',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'unrescue-sub',
+                      label: 'Unrescue',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                   ],
                 },
                 {
                   id: 'storage-snapshot',
-                  label: 'Storage&Snapshot',
+                  label: 'Storage & Snapshot',
                   submenu: [
-                    { id: 'attach-volume', label: 'Attach volume', onClick: () => {} },
+                    {
+                      id: 'attach-volume',
+                      label: 'Attach volume',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                     {
                       id: 'detach-volume',
                       label: 'Detach volume',
                       status: 'danger',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
-                    { id: 'create-snapshot', label: 'Create instance snapshot', onClick: () => {} },
+                    {
+                      id: 'create-snapshot',
+                      label: 'Create instance snapshot',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                   ],
                 },
                 {
                   id: 'network',
                   label: 'Network',
                   submenu: [
-                    { id: 'attach-interface', label: 'Attach interface', onClick: () => {} },
+                    {
+                      id: 'attach-interface',
+                      label: 'Attach interface',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                     {
                       id: 'detach-interface',
                       label: 'Detach interface',
                       status: 'danger',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
                     {
                       id: 'associate-floating-ip',
                       label: 'Associate floating IP',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
                     {
                       id: 'disassociate-floating-ip',
                       label: 'Disassociate floating IP',
                       status: 'danger',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
                     {
                       id: 'manage-security-groups',
                       label: 'Manage security groups',
-                      onClick: () => {},
+                      onClick: () => console.log('Action:', instance.id),
                     },
                   ],
                 },
@@ -1107,15 +2047,44 @@ export function InstanceDetailPage() {
                   id: 'configuration',
                   label: 'Configuration',
                   submenu: [
-                    { id: 'lock-setting', label: 'Lock setting', onClick: () => {} },
-                    { id: 'rebuild', label: 'Rebuild', status: 'danger', onClick: () => {} },
-                    { id: 'resize', label: 'Resize', onClick: () => {} },
-                    { id: 'manage-tags', label: 'Manage tags', onClick: () => {} },
-                    { id: 'edit', label: 'Edit', onClick: () => {} },
+                    {
+                      id: 'lock-setting',
+                      label: 'Lock setting',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'rebuild',
+                      label: 'Rebuild',
+                      status: 'danger',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'resize',
+                      label: 'Resize',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'manage-tags',
+                      label: 'Manage tags',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
+                    {
+                      id: 'edit',
+                      label: 'Edit',
+                      onClick: () => console.log('Action:', instance.id),
+                    },
                   ],
                 },
-                { id: 'confirm-resize', label: 'Confirm resize', onClick: () => {} },
-                { id: 'revert-resize', label: 'Revert resize', onClick: () => {} },
+                {
+                  id: 'confirm-resize',
+                  label: 'Confirm resize',
+                  onClick: () => console.log('Action:', instance.id),
+                },
+                {
+                  id: 'revert-resize',
+                  label: 'Revert resize',
+                  onClick: () => console.log('Action:', instance.id),
+                },
               ]}
               trigger="click"
             >
@@ -1126,10 +2095,23 @@ export function InstanceDetailPage() {
           </DetailHeader.Actions>
 
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard
+              label="Status"
+              value={
+                {
+                  active: 'Active',
+                  shutoff: 'Shutoff',
+                  building: 'Building',
+                  error: 'Error',
+                  paused: 'Paused',
+                  'verify-resized': 'Verify Resized',
+                }[instance.status]
+              }
+              status={instance.status}
+            />
             <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
             <DetailHeader.InfoCard label="Host" value={instance.host} />
-            <DetailHeader.InfoCard label="Origin" value={instance.image} />
+            <DetailHeader.InfoCard label="Origin" value={instance.origin} />
             <DetailHeader.InfoCard
               label="Locked state"
               value={
@@ -1150,8 +2132,31 @@ export function InstanceDetailPage() {
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
+        {instance.status === 'error' && (
+          <ExpandableMessage variant="error" timestamp="Aug 12, 2026 02:05 PM">
+            Used for completed or normal operations. ERROR nova.compute.manager [instance:
+            9f3a2d1c-8ab2-44bc-9e2b-1e84f8e2a9cc] Failed to allocate the network(s). No available IP
+            addresses in subnet 192.168.10.0/24.
+          </ExpandableMessage>
+        )}
+
+        {instance.status === 'verify-resized' && (
+          <div className="flex items-start gap-[var(--inline-message-gap)] p-[var(--inline-message-padding)] rounded-[var(--inline-message-radius)] bg-[var(--inline-message-warning-bg)]">
+            <span className="shrink-0 text-[var(--inline-message-warning-icon)]">
+              <IconAlertCircle size={16} strokeWidth={1.5} />
+            </span>
+            <span className="text-[length:var(--inline-message-font-size)] leading-[var(--inline-message-line-height)] text-[var(--inline-message-text)] flex-1 min-w-0">
+              Pending Resize Confirmation. Please confirm to apply the changes, or revert to go back
+              to the previous size.
+            </span>
+            <span className="text-body-xs leading-[var(--inline-message-line-height)] text-[var(--color-text-default)] whitespace-nowrap shrink-0 ml-2">
+              Jul 24, 2026 03:19 PM
+            </span>
+          </div>
+        )}
+
         {/* Instance Tabs */}
-        <div className="w-full">
+        <div className="w-full mt-2">
           <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>
@@ -1190,7 +2195,7 @@ export function InstanceDetailPage() {
                       label="Flavor name"
                       value={instance.flavor.name}
                       isLink
-                      linkHref="/flavors"
+                      linkHref="/compute/flavors"
                     />
                     <SectionCard.DataRow
                       label="Spec"
@@ -1207,7 +2212,7 @@ export function InstanceDetailPage() {
                       label="Image"
                       value={instance.image}
                       isLink
-                      linkHref="/images"
+                      linkHref="/compute/images"
                     />
                     <SectionCard.DataRow label="OS" value={instance.os} />
                   </SectionCard.Content>
@@ -1221,7 +2226,7 @@ export function InstanceDetailPage() {
                       label="Key pair"
                       value={instance.keyPair}
                       isLink
-                      linkHref="/key-pairs"
+                      linkHref="/compute/key-pairs"
                     />
                   </SectionCard.Content>
                 </SectionCard>
@@ -1240,7 +2245,7 @@ export function InstanceDetailPage() {
                       label="Server group"
                       value={instance.serverGroup}
                       isLink
-                      linkHref="/server-groups"
+                      linkHref="/compute/server-groups"
                     />
                     <SectionCard.DataRow label="User data" value={instance.userData} />
                   </SectionCard.Content>
@@ -1254,7 +2259,12 @@ export function InstanceDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Volumes</h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSquarePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconSquarePlus size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Attach volume
                   </Button>
                 </div>
@@ -1264,14 +2274,17 @@ export function InstanceDetailPage() {
                   placeholder="Search volume by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={volumeSearchTerm}
+                  onChange={(e) => setVolumeSearchTerm(e.target.value)}
+                  onClear={() => setVolumeSearchTerm('')}
                 />
 
                 {/* Pagination */}
                 <Pagination
-                  currentPage={1}
-                  totalPages={1}
-                  totalItems={10}
-                  onPageChange={() => {}}
+                  currentPage={volumesPage}
+                  totalPages={totalVolumePages}
+                  totalItems={filteredAttachedVolumes.length}
+                  onPageChange={setVolumesPage}
                   showSettings
                   onSettingsClick={() => setIsPreferencesOpen(true)}
                 />
@@ -1301,8 +2314,11 @@ export function InstanceDetailPage() {
                           >
                             {value}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {row.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={row.id}>
+                              ID : {row.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={row.id} />
                           </span>
                         </div>
                       ),
@@ -1345,6 +2361,7 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
+                      sticky: 'right',
                       render: (_: unknown, row: AttachedVolume) => {
                         const volumeMenuItems: ContextMenuItem[] = [
                           {
@@ -1354,41 +2371,44 @@ export function InstanceDetailPage() {
                               {
                                 id: 'create-snapshot',
                                 label: 'Create volume snapshot',
-                                onClick: () => {},
+                                onClick: () => console.log('Action:', instance.id),
                               },
                               {
                                 id: 'create-backup',
                                 label: 'Create volume backup',
-                                onClick: () => {},
+                                onClick: () => console.log('Action:', instance.id),
                               },
                               {
                                 id: 'clone-volume',
                                 label: 'Clone volume',
-                                onClick: () => {},
+                                onClick: () => console.log('Action:', instance.id),
                               },
                             ],
                           },
                           {
                             id: 'extend-volume',
                             label: 'Extend volume',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'bootable',
                             label: 'Bootable',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'detach',
                             label: 'Detach',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={volumeMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}
@@ -1401,8 +2421,9 @@ export function InstanceDetailPage() {
                       },
                     },
                   ]}
-                  data={mockAttachedVolumes}
+                  data={paginatedAttachedVolumes}
                   rowKey="id"
+                  emptyMessage="No volumes attached"
                 />
               </VStack>
             </TabPanel>
@@ -1413,7 +2434,12 @@ export function InstanceDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Interfaces</h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSquarePlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconSquarePlus size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Attach interface
                   </Button>
                 </div>
@@ -1423,6 +2449,9 @@ export function InstanceDetailPage() {
                   placeholder="Search interface by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={interfaceSearchTerm}
+                  onChange={(e) => setInterfaceSearchTerm(e.target.value)}
+                  onClear={() => setInterfaceSearchTerm('')}
                 />
 
                 {/* Pagination */}
@@ -1430,7 +2459,7 @@ export function InstanceDetailPage() {
                   currentPage={interfaceCurrentPage}
                   totalPages={interfaceTotalPages}
                   onPageChange={setInterfaceCurrentPage}
-                  totalItems={mockAttachedInterfaces.length}
+                  totalItems={filteredAttachedInterfaces.length}
                   showSettings
                   onSettingsClick={() => setIsPreferencesOpen(true)}
                 />
@@ -1475,8 +2504,11 @@ export function InstanceDetailPage() {
                           >
                             {iface.name}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {iface.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={iface.id}>
+                              ID : {iface.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={iface.id} />
                           </span>
                         </div>
                       ),
@@ -1490,13 +2522,16 @@ export function InstanceDetailPage() {
                       render: (_value: string, iface: AttachedInterface) => (
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
-                            to={`/compute/networks/${iface.id}`}
+                            to={`/compute/networks/${iface.networkId}`}
                             className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {iface.network}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {iface.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={iface.networkId}>
+                              ID : {iface.networkId.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={iface.networkId} />
                           </span>
                         </div>
                       ),
@@ -1534,19 +2569,23 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center' as const,
+                      sticky: 'right',
                       render: (_: unknown, iface: AttachedInterface) => {
                         const interfaceMenuItems: ContextMenuItem[] = [
                           {
                             id: 'detach',
                             label: 'Detach',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={interfaceMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}
@@ -1559,11 +2598,9 @@ export function InstanceDetailPage() {
                       },
                     },
                   ]}
-                  data={mockAttachedInterfaces.slice(
-                    (interfaceCurrentPage - 1) * interfaceRowsPerPage,
-                    interfaceCurrentPage * interfaceRowsPerPage
-                  )}
+                  data={paginatedAttachedInterfaces}
                   rowKey="id"
+                  emptyMessage="No network interfaces found"
                 />
               </VStack>
             </TabPanel>
@@ -1574,7 +2611,12 @@ export function InstanceDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Floating IPs</h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconLinkPlus size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconLinkPlus size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Associate floating IP
                   </Button>
                 </div>
@@ -1584,6 +2626,9 @@ export function InstanceDetailPage() {
                   placeholder="Search floating IP by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={floatingIpSearchTerm}
+                  onChange={(e) => setFloatingIpSearchTerm(e.target.value)}
+                  onClear={() => setFloatingIpSearchTerm('')}
                 />
 
                 {/* Pagination */}
@@ -1591,7 +2636,7 @@ export function InstanceDetailPage() {
                   currentPage={floatingIpCurrentPage}
                   totalPages={floatingIpTotalPages}
                   onPageChange={setFloatingIpCurrentPage}
-                  totalItems={mockFloatingIPs.length}
+                  totalItems={filteredFloatingIPs.length}
                   showSettings
                   onSettingsClick={() => setIsPreferencesOpen(true)}
                 />
@@ -1641,19 +2686,23 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
+                      sticky: 'right',
                       render: (_: unknown, row: FloatingIP) => {
                         const floatingIpMenuItems: ContextMenuItem[] = [
                           {
                             id: 'disassociate',
                             label: 'Disassociate',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={floatingIpMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}
@@ -1666,11 +2715,9 @@ export function InstanceDetailPage() {
                       },
                     },
                   ]}
-                  data={mockFloatingIPs.slice(
-                    (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
-                    floatingIpCurrentPage * floatingIpRowsPerPage
-                  )}
+                  data={paginatedFloatingIPs}
                   rowKey="id"
+                  emptyMessage="No floating IPs assigned"
                 />
               </VStack>
             </TabPanel>
@@ -1683,7 +2730,12 @@ export function InstanceDetailPage() {
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Security groups
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconSettings size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Manage security group
                   </Button>
                 </div>
@@ -1709,6 +2761,9 @@ export function InstanceDetailPage() {
                   placeholder="Search security group by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={securityGroupSearchTerm}
+                  onChange={(e) => setSecurityGroupSearchTerm(e.target.value)}
+                  onClear={() => setSecurityGroupSearchTerm('')}
                 />
 
                 {/* Pagination */}
@@ -1716,7 +2771,7 @@ export function InstanceDetailPage() {
                   currentPage={securityCurrentPage}
                   totalPages={securityTotalPages}
                   onPageChange={setSecurityCurrentPage}
-                  totalItems={mockSecurityGroups.length}
+                  totalItems={filteredSecurityGroups.length}
                   showSettings
                   onSettingsClick={() => setIsPreferencesOpen(true)}
                 />
@@ -1738,8 +2793,11 @@ export function InstanceDetailPage() {
                           >
                             {row.name}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {row.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={row.id}>
+                              ID : {row.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={row.id} />
                           </span>
                         </div>
                       ),
@@ -1766,13 +2824,14 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center' as const,
+                      sticky: 'right',
                       render: (_: unknown, row: SecurityGroup) => {
                         const securityGroupMenuItems: ContextMenuItem[] = [
                           {
                             id: 'detach',
                             label: 'Detach',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
@@ -1782,7 +2841,10 @@ export function InstanceDetailPage() {
                               trigger="click"
                               align="right"
                             >
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}
@@ -1795,11 +2857,9 @@ export function InstanceDetailPage() {
                       },
                     },
                   ]}
-                  data={mockSecurityGroups.slice(
-                    (securityCurrentPage - 1) * securityRowsPerPage,
-                    securityCurrentPage * securityRowsPerPage
-                  )}
+                  data={paginatedSecurityGroups}
                   rowKey="id"
+                  emptyMessage="No security groups assigned"
                 />
               </VStack>
             </TabPanel>
@@ -1812,8 +2872,12 @@ export function InstanceDetailPage() {
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Instance snapshots
                   </h2>
-                  <Button variant="secondary" size="sm">
-                    <IconCirclePlus size={12} />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() => console.log('Action:', instance.id)}
+                  >
                     Create Snapshot
                   </Button>
                 </div>
@@ -1877,8 +2941,11 @@ export function InstanceDetailPage() {
                           >
                             {row.name}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {row.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={row.id}>
+                              ID : {row.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={row.id} />
                           </span>
                         </div>
                       ),
@@ -1910,34 +2977,38 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
+                      sticky: 'right',
                       render: (_: unknown, row: InstanceSnapshot) => {
                         const snapshotMenuItems: ContextMenuItem[] = [
                           {
                             id: 'edit',
                             label: 'Edit',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'create-instance',
                             label: 'Create instance',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'create-volume',
                             label: 'Create volume',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                           {
                             id: 'delete',
                             label: 'Delete',
                             status: 'danger',
-                            onClick: () => {},
+                            onClick: () => console.log('Action:', instance.id),
                           },
                         ];
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={snapshotMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}
@@ -2032,10 +3103,8 @@ export function InstanceDetailPage() {
 
             {/* Resource Map Tab Panel */}
             <TabPanel value="resource-map" className="pt-0">
-              <div className="pt-6">
-                <p className="text-[var(--color-text-subtle)]">
-                  Resource Map content will be displayed here.
-                </p>
+              <div className="h-[600px] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden mt-6">
+                {instance && <InstanceResourceMap instance={instance} />}
               </div>
             </TabPanel>
 
@@ -2095,9 +3164,13 @@ export function InstanceDetailPage() {
                 </div>
 
                 {/* Console Area */}
-                <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
-                  <pre className="font-mono text-body-md leading-[22px] text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
-                    {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-6 text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]"
+                >
+                  <pre className="font-mono text-label-lg leading-relaxed text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
+                    {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2026
 [    0.500123] cloud-init[101]: Starting network configuration...
 [    1.002345] cloud-init[101]: eth0: assigned 192.168.0.15 via DHCP
 [    1.456789] systemd[1]: Reached target Cloud-init Pre-Networking.
@@ -2110,7 +3183,7 @@ export function InstanceDetailPage() {
 [    9.123456] cloud-init[500]: VM boot completed in 9.12 seconds.
 [   10.000000] *** NOTICE: Unauthorized access to this system is prohibited. ***`}
                   </pre>
-                </div>
+                </OverlayScrollbarsComponent>
               </VStack>
             </TabPanel>
 
@@ -2210,6 +3283,7 @@ export function InstanceDetailPage() {
                     actionLogCurrentPage * actionLogRowsPerPage
                   )}
                   rowKey="id"
+                  emptyMessage="No action logs found"
                   onRowClick={(row) => toggleLogExpansion(row.id)}
                   expandedContent={(row) =>
                     expandedLogIds.has(row.id) ? (
@@ -2237,6 +3311,22 @@ export function InstanceDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/instances');
+        }}
+        title="Delete instance"
+        description="This will permanently delete this instance. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Instance"
+        infoValue={instance.name}
+      />
     </PageShell>
   );
 }

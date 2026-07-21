@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -6,7 +6,7 @@ import {
   Breadcrumb,
   Table,
   Button,
-  SearchInput,
+  FilterSearchInput,
   Pagination,
   ListToolbar,
   ContextMenu,
@@ -14,24 +14,23 @@ import {
   PageHeader,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
   fixedColumns,
   columnMinWidths,
+  ConfirmModal,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -54,36 +53,43 @@ const configMapsData: ConfigMapRow[] = [
     name: 'application-runtime-configuration-settings-map',
     namespace: 'default',
     data: 'config.yaml (+2)',
-    createdAt: 'Nov 10, 2025 09:18:42',
+    createdAt: 'Nov 10, 2026 09:18:42',
   },
   {
     id: '2',
     name: 'nginx-reverse-proxy-server-configuration',
     namespace: 'nginx-ingress',
     data: 'nginx.conf (+1)',
-    createdAt: 'Nov 9, 2025 14:33:27',
+    createdAt: 'Nov 9, 2026 14:33:27',
   },
   {
     id: '3',
     name: 'kube-root-ca-certificate-authority-configmap',
     namespace: 'kube-system',
     data: 'ca.crt',
-    createdAt: 'Nov 8, 2025 07:52:15',
+    createdAt: 'Nov 8, 2026 07:52:15',
   },
   {
     id: '4',
     name: 'coredns-cluster-dns-configuration-map',
     namespace: 'kube-system',
     data: 'Corefile (+3)',
-    createdAt: 'Nov 7, 2025 16:41:58',
+    createdAt: 'Nov 7, 2026 16:41:58',
   },
   {
     id: '5',
     name: 'prometheus-scrape-targets-alerting-configuration',
     namespace: 'monitoring',
     data: 'prometheus.yml (+5)',
-    createdAt: 'Nov 6, 2025 11:24:36',
+    createdAt: 'Nov 6, 2026 11:24:36',
   },
+];
+
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'namespace', label: 'Namespace', type: 'text' },
+  { id: 'data', label: 'Data', type: 'text' },
+  { id: 'createdAt', label: 'Created at', type: 'text' },
 ];
 
 /* ----------------------------------------
@@ -101,17 +107,51 @@ export function ConfigMapsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const [data, setData] = useState(configMapsData);
   const [currentPage, setCurrentPage] = useState(1);
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
     updateActiveTabLabel('ConfigMaps');
   }, [updateActiveTabLabel]);
+
+  const removeFilter = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters([]);
+  };
+
+  const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
+    id: f.id,
+    field: f.fieldLabel,
+    value: f.valueLabel || f.value,
+  }));
+
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      return appliedFilters.every((filter) => {
+        const raw = item[filter.fieldId as keyof ConfigMapRow];
+        const value = String(typeof raw === 'number' ? raw : (raw ?? '')).toLowerCase();
+        return value.includes(filter.value.toLowerCase());
+      });
+    });
+  }, [data, appliedFilters]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -130,8 +170,8 @@ export function ConfigMapsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(configMapsData.length / rowsPerPage);
-  const paginatedData = configMapsData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -142,12 +182,6 @@ export function ConfigMapsPage() {
   // Create menu items for each row
   const createMenuItems = (row: ConfigMapRow): ContextMenuItem[] => {
     return [
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () =>
-          navigate(`/container/configmaps/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
-      },
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
@@ -176,16 +210,14 @@ export function ConfigMapsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <Link
+          to={`/container/configmaps/${row.id}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate"
           title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/configmaps/${row.id}`);
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -217,10 +249,14 @@ export function ConfigMapsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -233,12 +269,10 @@ export function ConfigMapsPage() {
     },
   ];
 
-  const handleRemoveFilter = (index: number) => {
-    setFilters(filters.filter((_, i) => i !== index));
-  };
-
-  const handleClearFilters = () => {
-    setFilters([]);
+  const handleBulkDeleteConfirm = () => {
+    setData((prev) => prev.filter((row) => !selectedRows.includes(row.id)));
+    setSelectedRows([]);
+    setIsBulkDeleteOpen(false);
   };
 
   // Create menu items
@@ -276,55 +310,20 @@ export function ConfigMapsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'ConfigMaps' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'ConfigMaps' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-cm', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-cm', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -346,6 +345,7 @@ export function ConfigMapsPage() {
         />
       }
       bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Header */}
@@ -368,10 +368,14 @@ export function ConfigMapsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <SearchInput
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
                 placeholder="Search configmap by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
               <Button
                 variant="secondary"
@@ -388,6 +392,7 @@ export function ConfigMapsPage() {
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => console.log('Download YAML:', selectedRows)}
               >
                 Download YAML
               </Button>
@@ -396,18 +401,15 @@ export function ConfigMapsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
             </ListToolbar.Actions>
           }
-          filters={filters.map((filter, index) => ({
-            id: String(index),
-            field: filter.key,
-            value: filter.value,
-          }))}
-          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-          onFiltersClear={handleClearFilters}
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
         />
 
         {/* Pagination */}
@@ -415,10 +417,8 @@ export function ConfigMapsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={configMapsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
@@ -429,8 +429,23 @@ export function ConfigMapsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          loading={loading}
+          emptyMessage="No config maps found"
         />
       </VStack>
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete selected ConfigMaps"
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedRows.length} ConfigMap(s)`}
+      />
     </PageShell>
   );
 }

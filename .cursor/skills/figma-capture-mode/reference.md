@@ -153,6 +153,5 @@ Use a wrapper div for these:
 The following CloudBuilder pages are excluded from Figma capture (per user decision):
 
 - Discovery (`/cloudbuilder/discovery`)
-- Servers (`/cloudbuilder/servers`)
+- Servers list (`/cloudbuilder/servers`)
 - Switch (`/cloudbuilder/switch`)
-- Servers 0.7 (`/cloudbuilder/severs0.7`)

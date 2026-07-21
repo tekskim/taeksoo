@@ -9,7 +9,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   SectionCard,
   WizardSummary,
@@ -22,14 +21,16 @@ import {
   RadioGroup,
   Select,
   FormField,
+  ProgressBar,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
-import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
+import { SecuritySidebar } from '@/components/SecuritySidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconBell, IconEdit, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconEdit, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -89,33 +90,14 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         {/* Quota Section */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-lg p-4 flex flex-col gap-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
           <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Quota</h5>
 
-          {/* Firewall Rules Quota */}
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex items-center justify-between w-full">
-              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                Firewall rules
-              </span>
-              <span className="text-body-md leading-4 text-[var(--color-text-default)]">2/10</span>
-            </div>
-            <div className="flex h-1 w-full items-start isolate pr-1">
-              <div
-                className="bg-[var(--color-state-success)] h-1 rounded-lg shrink-0 -mr-1 z-[3]"
-                style={{ width: '20%' }}
-              />
-              <div
-                className="bg-[#bbf7d0] h-1 rounded-lg shrink-0 -mr-1 z-[2]"
-                style={{ width: '10%' }}
-              />
-              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-lg -mr-1 z-[1]" />
-            </div>
-          </div>
+          <ProgressBar variant="quota" label="Firewall rules" value={2} newValue={1} max={10} />
         </div>
 
         {/* Action Buttons */}
@@ -231,15 +213,18 @@ export default function ComputeAdminCreateFirewallRulePage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/tenants/${row.id}`}
+            to={`/security/tenants/${row.id}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-body-md leading-4"
             onClick={(e) => e.stopPropagation()}
             target="_blank"
           >
             {row.name}
           </Link>
-          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -272,7 +257,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
 
   // Handle cancel
   const handleCancel = () => {
-    navigate('/compute-admin/firewall');
+    navigate('/security/firewalls');
   };
 
   // Handle create
@@ -291,7 +276,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
       destinationIp,
       destinationPort,
     });
-    navigate('/compute-admin/firewall');
+    navigate('/security/firewalls');
   };
 
   // Get selected tenant name
@@ -312,7 +297,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
 
   return (
     <PageShell
-      sidebar={<ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebar={<SecuritySidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -334,20 +319,10 @@ export default function ComputeAdminCreateFirewallRulePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Firewall', href: '/compute-admin/firewall' },
-                { label: 'Create rule' },
+                { label: 'Firewalls', href: '/security/firewalls' },
+                { label: 'Create Firewall Rule' },
               ]}
             />
-          }
-          actions={
-            <>
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-              />
-            </>
           }
         />
       }
@@ -398,6 +373,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                               setRuleName(e.target.value);
                               setRuleNameError(null);
                             }}
+                            error={!!ruleNameError}
                             fullWidth
                           />
                         </FormField.Control>
@@ -469,7 +445,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                                   key={page}
                                   className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
                                     page === tenantPage
-                                      ? 'bg-[var(--color-action-primary)] text-white'
+                                      ? 'bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)]'
                                       : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
                                   }`}
                                   onClick={() => setTenantPage(page)}

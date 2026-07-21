@@ -11,7 +11,6 @@ import {
   TabBar,
   TopBar,
   TopBarAction,
-  Breadcrumb,
   PageHeader,
   VStack,
   type TableColumn,
@@ -27,11 +26,10 @@ import {
   IconDotsVertical,
   IconTarget,
   IconPencil,
-  IconPalette,
   IconBell,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { AgentSidebar } from '@/components/AgentSidebar';
+import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
@@ -289,10 +287,15 @@ export function AgentPage() {
     },
   ];
 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   return (
     <PageShell
-      sidebar={<AgentSidebar />}
-      sidebarWidth={60}
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
@@ -308,26 +311,15 @@ export function AgentPage() {
       }
       topBar={
         <TopBar
-          showSidebarToggle={false}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Agent' }]} />
-          }
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={false}
           actions={
-            <>
-              <TopBarAction
-                icon={<IconPalette size={16} stroke={1} />}
-                onClick={() => navigate('/design-system')}
-                aria-label="Design System"
-              />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            </>
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
           }
         />
       }

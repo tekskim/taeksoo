@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { VStack, PageHeader } from '@/design-system';
 import {
   IconServer,
@@ -62,7 +63,7 @@ const sections: CreatePageSection[] = [
       { label: 'Create Image (Admin)', path: '/compute-admin/images/create' },
       { label: 'Create Flavor (Admin)', path: '/compute-admin/flavors/create' },
       { label: 'Create Network (Admin)', path: '/compute-admin/networks/create' },
-      { label: 'Create Firewall Rule (Admin)', path: '/compute-admin/firewall/create-rule' },
+      { label: 'Create Firewall Rule (Security)', path: '/security/firewalls/create-rule' },
     ],
   },
   {
@@ -205,7 +206,11 @@ export function CreatePagesDirectoryPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-default)]">
+    <OverlayScrollbarsComponent
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+      defer={false}
+      className="fixed inset-0 bg-[var(--color-surface-default)]"
+    >
       <div className="max-w-6xl mx-auto px-8 py-8">
         <VStack gap={6}>
           {/* Back button + Header */}
@@ -271,7 +276,7 @@ export function CreatePagesDirectoryPage() {
           </div>
         </VStack>
       </div>
-    </div>
+    </OverlayScrollbarsComponent>
   );
 }
 

@@ -14,39 +14,101 @@
 
 ## 동작 절차
 
-### Step 1: 시각적 비교 (사용자에게 직접 보여줌)
+### Step 1A: Computed Style 비교 (정량 검증 — 자동 판정)
 
-1. **TDS 스크린샷 캡처**:
-   - TDS Storybook (localhost:5173) 또는 배포된 docs에서 해당 컴포넌트 페이지 접근
-   - 주요 variant/size 조합의 스크린샷 캡처 (browser MCP 사용)
+browser MCP로 양쪽 페이지에 접근하여 `getComputedStyle`을 JavaScript로 실행, 스펙에 정의된 속성을 정확한 px/hex 값으로 추출하여 비교합니다.
 
-2. **thaki-shared 스크린샷 캡처**:
-   - thaki-shared Storybook (localhost:6006)에서 해당 컴포넌트 스토리 접근
-   - 동일 variant/size 조합의 스크린샷 캡처
+> **Fallback**: browser MCP가 타임아웃되거나 사용 불가능한 경우, Step 1A와 Step 1B를 건너뛰고 **코드 레벨 검증**으로 대체합니다:
+>
+> 1. 스펙의 "주요 디자인 차이" 테이블의 각 항목을 `.styles.ts` / `.tsx` 코드에서 직접 확인
+> 2. CSS 변수 resolve chain을 따라가서 최종값이 TDS와 일치하는지 수동 검증
+> 3. Storybook 스크린샷 대신 사용자에게 Storybook URL을 제시하여 수동 확인 요청
+> 4. 리포트의 "Computed Style 비교" 섹션에 "browser MCP 불가 — 코드 레벨 검증으로 대체" 명시
 
-3. **상태별(Interactive States) 시각적 비교** (필수):
-   - 모든 인터랙티브 상태를 개별 확인:
-     - **default**: 기본 상태
-     - **hover**: 마우스 올림 (배경색, 텍스트색 변화)
-     - **focus-visible**: 키보드 포커스 (ring/outline 스타일)
-     - **active**: 클릭 중 (눌림 상태)
-     - **disabled**: 비활성 (opacity, cursor)
-     - **success/copied**: 성공 상태 (색상 변화, 아이콘 변경)
-     - **loading**: 로딩 상태 (있는 경우)
-     - **error**: 에러 상태 (있는 경우)
-   - 디자인 스펙에 명시된 상태별 색상/스타일이 실제로 적용되는지 확인
-   - 아이콘 변경이 있는 경우 아이콘 형태/크기/굵기도 비교
+**추출 대상 속성:**
 
-4. **Canvas 비교 화면 생성**:
-   - 양쪽 스크린샷을 **나란히 배치**한 비교 화면을 Canvas로 생성
-   - **상태별 비교도 포함** (default, hover, focus, active, copied 등)
-   - 사용자가 직접 시각적 차이를 확인 가능
-   - 차이점 텍스트 설명도 함께 표시
+- `height`, `padding`, `margin`
+- `font-size`, `line-height`, `font-weight`
+- `border-radius`
+- `background-color`, `color` (rgb → hex 변환)
+- `box-shadow`, `border`
+- `gap`
+- SVG 아이콘: `viewBox`, `stroke-width` (커스텀 아이콘인 경우 DOM에서 직접 읽기)
+
+**비교 방법:**
+
+1. TDS 페이지(localhost:5173)에서 해당 컴포넌트의 DOM 요소를 선택하고 computed style 추출
+2. thaki-shared Storybook(localhost:6006 등)에서 동일 요소의 computed style 추출
+3. 속성별 값을 비교하여 match/diff 테이블 생성
+
+**variant/size/theme 조합별 비교:**
+
+- 스펙에 정의된 모든 variant/size/theme 조합에 대해 반복 실행
+- 예: Badge라면 sm/md × subtle × red/blue/green/yellow/gray/white 각각 비교
+
+**상태별 비교:**
+
+- **default**: 기본 상태의 computed style 비교
+- **hover**: browser MCP의 hover 동작 후 computed style 비교
+- **focus-visible**: 키보드 포커스 상태에서 비교 (ring/outline 스타일)
+- **disabled**: 비활성 상태에서 비교 (opacity, cursor)
+- **success/copied**, **loading**, **error**: 해당 상태가 있는 경우만 비교
+
+**심각도 판정:**
+
+- **exact**: 값이 완전히 동일
+- **minor**: 1px 이내 크기 차이, 또는 동일 계열 색상의 미세 차이
+- **major**: 2px 이상 크기 차이, 다른 계열 색상, 누락된 속성
+
+### Step 1B: 시각적 비교 Canvas (사용자 확인용)
+
+Computed Style 비교가 끝난 후, 사용자가 직접 눈으로 확인할 수 있도록 **Canvas HTML 페이지**를 생성합니다.
+
+**Canvas 구성:**
+
+- 좌측: TDS 페이지 해당 컴포넌트 스크린샷 (browser MCP `browser_snapshot` 또는 `browser_take_screenshot`)
+- 우측: thaki-shared Storybook 해당 스토리 스크린샷
+- 하단: Step 1A에서 생성한 Computed Style 비교 결과 테이블 (일치/불일치 시각화)
+- 각 variant/size/theme 조합별 섹션 분리
+- 상태별(default, hover, disabled 등) 비교 섹션 포함
+
+**Canvas 생성 방법:**
+
+browser MCP의 `canvas` 도구를 사용하여 HTML 페이지를 생성합니다.
+스크린샷 이미지를 Base64로 인라인 삽입하여 iframe 제약 없이 표시합니다.
+
+사용자가 Canvas를 열면 양쪽을 나란히 보면서 시각적 일치를 직접 확인할 수 있습니다.
+Computed Style이 PASS여도 사용자가 Canvas에서 문제를 발견하면 FAIL 처리 가능합니다.
+
+### Step 1C: 아이콘 SVG 속성 검증 (커스텀 아이콘이 있는 경우)
+
+스펙에 "아이콘 불일치 (커스텀 SVG 필요)" 섹션이 있으면, 생성된 커스텀 아이콘이 Figma 원본과 **속성 수준에서 일치**하는지 검증합니다.
+
+**검증 항목**:
+
+| #   | 검증 대상    | 확인 방법                                                              | FAIL 조건                                                              |
+| --- | ------------ | ---------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| 1   | viewBox      | `CustomIcons.tsx`의 viewBox vs Figma SVG의 viewBox (±0.5 padding 허용) | viewBox가 `0 0 16 16`으로 임의 변환됨                                  |
+| 2   | stroke-width | `<path>` 태그에 `strokeWidth` 속성 여부 확인                           | Figma SVG에 stroke-width가 없는데 코드에 `strokeWidth={1.5}` 등이 있음 |
+| 3   | path d       | `<path d="...">` vs Figma SVG의 path d                                 | path 좌표가 변경됨 (스케일 재계산 등)                                  |
+| 4   | 사용부 props | `<IconCustomFigma size={16} />` 만 사용하는지                          | `stroke={1.5}` 등 불필요한 prop 전달                                   |
+
+**검증 절차**:
+
+1. Figma 원본 SVG를 다시 다운로드: `curl -s -o /tmp/verify-{name}.svg "{asset_url}"`
+2. `CustomIcons.tsx`에서 해당 아이콘의 viewBox, path d, strokeWidth를 추출
+3. 항목별 대조:
+   - viewBox: Figma 원본 viewBox에 ±0.5 padding이 추가된 형태인가?
+   - path d: Figma 원본 path d와 **문자열 동일**인가?
+   - strokeWidth: Figma SVG에 stroke-width 명시가 없으면 코드에도 strokeWidth prop이 없어야 함
+4. 사용부(`AIPlatformPage.tsx` 등)에서 `stroke` prop을 전달하지 않는지 확인
+
+> ⚠️ 이 검증을 건너뛰면 "굵기가 다르다" 피드백이 반복됩니다.
 
 ### Step 2: 금지 변경 검증 (git diff 분석)
 
 ```bash
-cd /Users/pobae/thaki-shared && git diff --name-only
+cd /path/to/thaki-shared && git diff --name-only
 ```
 
 **체크리스트**:
@@ -62,7 +124,7 @@ cd /Users/pobae/thaki-shared && git diff --name-only
 #### 2-2. 토큰 네이밍 검증
 
 ```bash
-cd /Users/pobae/thaki-shared && git diff tokens/light.json | head -100
+cd /path/to/thaki-shared && git diff tokens/light.json | head -100
 ```
 
 - [ ] JSON 키(이름)가 변경되지 않았는가? (값만 변경 허용)
@@ -74,7 +136,7 @@ cd /Users/pobae/thaki-shared && git diff tokens/light.json | head -100
 만약 `.tsx` 파일이 변경되었다면, diff를 **허용/금지로 분류**하여 검증합니다:
 
 ```bash
-cd /Users/pobae/thaki-shared && git diff src/components/{Name}/{Name}.tsx
+cd /path/to/thaki-shared && git diff src/components/{Name}/{Name}.tsx
 ```
 
 **허용되는 변경** (순수 디자인 — PASS):
@@ -98,7 +160,7 @@ cd /Users/pobae/thaki-shared && git diff src/components/{Name}/{Name}.tsx
 #### 3-1. 타입 체크
 
 ```bash
-cd /Users/pobae/thaki-shared && pnpm tsc --noEmit
+cd /path/to/thaki-shared && pnpm tsc --noEmit
 ```
 
 → 타입 에러가 없어야 함
@@ -106,7 +168,7 @@ cd /Users/pobae/thaki-shared && pnpm tsc --noEmit
 #### 3-2. 빌드 체크
 
 ```bash
-cd /Users/pobae/thaki-shared && pnpm build
+cd /path/to/thaki-shared && pnpm build
 ```
 
 → 빌드 성공해야 함
@@ -121,33 +183,32 @@ thaki-shared Storybook에서 해당 컴포넌트의 모든 stories가 정상 렌
 ```markdown
 ## Evaluation Report: {ComponentName}
 
+### Computed Style 비교
+
+| variant/size | 속성          | TDS     | thaki-shared | 일치 | 심각도 |
+| ------------ | ------------- | ------- | ------------ | ---- | ------ |
+| sm/subtle    | height        | 20px    | 20px         | ✅   | —      |
+| sm/subtle    | padding       | 2px 6px | 2px 6px      | ✅   | —      |
+| sm/subtle    | font-size     | 11px    | 11px         | ✅   | —      |
+| sm/subtle    | border-radius | 4px     | 4px          | ✅   | —      |
+| sm/subtle    | background    | #dbeafe | #dbeafe      | ✅   | —      |
+| md/subtle    | height        | 24px    | 24px         | ✅   | —      |
+
+- 일치율: {N}/{Total} ({%}%)
+- 불일치 항목: {있으면 나열, 없으면 "없음"}
+
+### 상태별 Computed Style 비교
+
+| 상태          | 속성             | TDS     | thaki-shared | 일치 |
+| ------------- | ---------------- | ------- | ------------ | ---- |
+| hover         | background-color | #f8fafc | #f8fafc      | ✅   |
+| focus-visible | box-shadow       | (ring)  | (ring)       | ✅   |
+| disabled      | opacity          | 0.5     | 0.5          | ✅   |
+
 ### 시각적 비교
 
-- Canvas 비교 링크: [비교 화면](canvas-link)
-- 일치도: ✅ 높음 / ⚠️ 부분 차이 / ❌ 불일치
-
-### 차이점 (있는 경우)
-
-| 항목             | TDS     | thaki-shared | 심각도 |
-| ---------------- | ------- | ------------ | ------ |
-| primary hover bg | #1d4ed8 | #1e40af      | minor  |
-
-### 상태별 비교
-
-| 상태           | TDS           | thaki-shared  | 일치 |
-| -------------- | ------------- | ------------- | ---- |
-| default        | (색상/배경)   | (색상/배경)   | ✅   |
-| hover          | (배경 변화)   | (배경 변화)   | ✅   |
-| focus-visible  | (ring 스타일) | (ring 스타일) | ✅   |
-| copied/success | (녹색 아이콘) | (녹색 아이콘) | ✅   |
-| disabled       | (opacity)     | (opacity)     | ✅   |
-
-### 아이콘 비교 (해당 시)
-
-| 아이콘 | TDS 구현                   | thaki-shared 구현              | 일치  |
-| ------ | -------------------------- | ------------------------------ | ----- |
-| copy   | Tabler IconCopy stroke=1.5 | inline SVG                     | ✅/⚠️ |
-| check  | Tabler IconCheck stroke=2  | inline SVG viewBox=24 stroke=2 | ✅    |
+- Canvas 비교 페이지: [비교 화면](canvas-link)
+- 사용자 확인 결과: (사용자에게 Canvas를 보여주고 최종 확인 요청)
 
 ### 금지 변경 검증
 
@@ -170,20 +231,136 @@ thaki-shared Storybook에서 해당 컴포넌트의 모든 stories가 정상 렌
 ### 최종 판정: ✅ PASS / ❌ FAIL
 ```
 
+---
+
+## 배치 모드 (통합 Evaluate)
+
+오케스트레이터의 Phase 4에서 여러 컴포넌트를 한번에 검증할 때 사용합니다.
+단일 컴포넌트 모드의 Step 1A~Step 3을 반복 실행하되, Canvas와 리포트를 통합합니다.
+
+### 배치 Computed Style 비교
+
+각 컴포넌트에 대해 Step 1A를 순차 실행합니다 (browser MCP 공유 자원).
+결과를 컴포넌트별로 수집하여 통합 리포트에 합산합니다.
+
+### 배치 금지 변경 검증
+
+전체 git diff에 대해 Step 2를 **1회** 실행합니다.
+변경 파일을 컴포넌트별로 분류하여 각 컴포넌트의 금지 변경 여부를 판정합니다.
+
+### 배치 기능 검증
+
+Step 3(tsc + build)을 **1회만** 실행합니다.
+오케스트레이터 Phase 3에서 이미 빌드를 통과한 경우, 이 단계는 건너뛸 수 있습니다.
+
+### 통합 Canvas 생성
+
+모든 컴포넌트의 비교 결과를 **하나의 Canvas HTML 페이지**에 합산합니다.
+
+**Canvas 구조:**
+
+```html
+<!-- 상단: 요약 대시보드 -->
+<header>
+  컴포넌트별 일치율 카드 (Button 100%, Badge 95%, Checkbox 100%, ...) 전체 PASS/FAIL 카운트
+</header>
+
+<!-- 탭 네비게이션 -->
+<nav>[Button] [Badge] [Checkbox] [Toggle] ...</nav>
+
+<!-- 각 탭 콘텐츠 -->
+<section id="button">
+  <!-- variant/size 조합별 비교 -->
+  <div class="comparison">
+    좌: TDS 스크린샷 (Base64 인라인) 우: thaki-shared Storybook 스크린샷 (Base64 인라인)
+  </div>
+  <!-- Computed Style 비교 테이블 -->
+  <table>
+    variant/size | 속성 | TDS | shared | 일치
+  </table>
+  <!-- 상태별 비교 -->
+  <table>
+    상태 | 속성 | TDS | shared | 일치
+  </table>
+</section>
+```
+
+**Canvas 디자인 가이드:**
+
+- 대시보드: 각 컴포넌트를 카드로 표시, PASS=초록 테두리, minor=노랑 테두리, FAIL=빨강 테두리
+- 탭: 컴포넌트명 + 일치율 뱃지 (예: "Badge 95%")
+- 비교 영역: 좌우 나란히, 동일 크기로 정규화
+- 테이블: 불일치 행만 하이라이트 (빨강 배경)
+- 스크린샷은 browser MCP `browser_take_screenshot`으로 캡처 후 Base64 인라인
+
+### 통합 Evaluate 리포트
+
+```markdown
+## Batch Evaluate Report
+
+### 요약
+
+| #   | 컴포넌트 | Computed Style 일치율 | 금지 변경 | 기능 검증 | 판정     |
+| --- | -------- | --------------------- | --------- | --------- | -------- |
+| 1   | Button   | 100% (42/42)          | ✅ Pass   | ✅ Pass   | ✅ PASS  |
+| 2   | Badge    | 95% (38/40)           | ✅ Pass   | ✅ Pass   | ⚠️ minor |
+| 3   | Checkbox | 100% (28/28)          | ✅ Pass   | ✅ Pass   | ✅ PASS  |
+
+### 통합 Canvas
+
+[통합 비교 화면](canvas-link)
+
+### 불일치 항목 (있는 경우)
+
+#### Badge
+
+| variant/size  | 속성       | TDS     | thaki-shared | 심각도 |
+| ------------- | ---------- | ------- | ------------ | ------ |
+| md/subtle/red | background | #fee2e2 | #fecaca      | minor  |
+| md/subtle/red | color      | #dc2626 | #ef4444      | minor  |
+
+### 금지 변경 검증 (전체)
+
+| 항목              | 결과    |
+| ----------------- | ------- |
+| .styles.ts 변경만 | ✅ Pass |
+| 토큰 이름 유지    | ✅ Pass |
+| .tsx 허용 범위 내 | ✅ Pass |
+| .tsx 로직 미변경  | ✅ Pass |
+| props 삭제 없음   | ✅ Pass |
+
+### 기능 검증 (1회)
+
+| 항목              | 결과    |
+| ----------------- | ------- |
+| 타입 체크 (tsc)   | ✅ Pass |
+| 빌드 (pnpm build) | ✅ Pass |
+
+### 최종 판정
+
+- ✅ PASS: {N}개
+- ⚠️ minor: {M}개
+- ❌ FAIL: {K}개
+```
+
+---
+
 ## 판정 기준
 
 ### PASS 조건 (모두 충족)
 
+- Computed Style 비교 일치율 100%, 또는 차이가 minor(1px 이내, 동일 계열 색상)
 - 금지 변경 검증 전체 Pass
 - 기능 검증 전체 Pass
-- 시각적 일치도가 "높음" 또는 "부분 차이 (minor)"
+- 사용자가 Canvas 시각적 비교에서 문제를 발견하지 않음
 
 ### FAIL 조건 (하나라도 해당)
 
+- Computed Style 비교에서 major 불일치 (2px 이상 크기 차이, 다른 계열 색상, 누락된 속성)
 - 금지 변경 위반 (`.tsx` 로직 변경, 토큰 이름 변경, props 삭제)
 - 빌드 실패
 - 타입 에러
-- 시각적 불일치 (major)
+- 사용자가 Canvas에서 시각적 문제를 발견
 
 ### FAIL 시 조치
 

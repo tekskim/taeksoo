@@ -174,15 +174,15 @@ export function DetachInterfaceDrawer({
       description="Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary."
       width={696}
       footer={
-        <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleDetach}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="flex-1"
           >
             {isSubmitting ? 'Detaching...' : 'Detach'}
           </Button>

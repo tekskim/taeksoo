@@ -157,7 +157,7 @@ function AxisTooltipDemo() {
 function PieTooltipDemo() {
   return (
     <div
-      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] shadow-sm text-[var(--color-text-default)]"
+      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-sm text-[var(--color-text-default)]"
       style={{
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',

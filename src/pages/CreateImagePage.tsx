@@ -8,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   NumberInput,
   Select,
@@ -28,7 +27,7 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconUpload } from '@tabler/icons-react';
+import { IconEdit, IconUpload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -72,7 +71,7 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
@@ -142,7 +141,7 @@ export function CreateImagePage() {
     'basic-info': 'active',
     source: isV2 ? 'active' : 'pre',
     specification: isV2 ? 'active' : 'pre',
-    advanced: 'done',
+    advanced: 'pre',
   });
 
   // Tab management
@@ -159,7 +158,7 @@ export function CreateImagePage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [{ label: 'Images', href: '/compute/images' }, { label: 'Create image' }];
+  const breadcrumbItems = [{ label: 'Images', href: '/compute/images' }, { label: 'Create Image' }];
 
   // Navigation handlers
   const handleCancel = () => {
@@ -167,7 +166,10 @@ export function CreateImagePage() {
   };
 
   const handleCreate = () => {
-    // TODO: API call to create image with form data
+    const isBasicValid = validateBasicInfo();
+    const isSourceValid = validateSource();
+    const isSpecValid = validateSpecification();
+    if (!isBasicValid || !isSourceValid || !isSpecValid) return;
     navigate('/compute/images');
   };
 
@@ -292,17 +294,9 @@ export function CreateImagePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              aria-label="Notifications"
-              badge
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
@@ -354,6 +348,7 @@ export function CreateImagePage() {
                             }}
                             placeholder="Enter image name"
                             fullWidth
+                            error={!!imageNameError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{imageNameError}</FormField.ErrorMessage>
@@ -459,7 +454,7 @@ export function CreateImagePage() {
 
                     {/* Upload type */}
                     <div className="py-6">
-                      <VStack gap={2}>
+                      <VStack gap={3}>
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Upload type
@@ -500,23 +495,26 @@ export function CreateImagePage() {
                         )}
 
                         {(isV2 || sourceType === 'url') && (
-                          <FormField
-                            label="File URL"
-                            required
-                            error={!!sourceUrlError}
-                            errorMessage={sourceUrlError || undefined}
-                            helperText="The URL must start with http:// or https://."
-                          >
-                            <Input
-                              value={sourceUrl}
-                              onChange={(e) => {
-                                setSourceUrl(e.target.value);
-                                setSourceUrlError(null);
-                              }}
-                              placeholder="e.g. https://example.com/image.qcow2"
-                              fullWidth
-                              error={!!sourceUrlError}
-                            />
+                          <FormField error={!!sourceUrlError}>
+                            <FormField.Control>
+                              <Input
+                                value={sourceUrl}
+                                onChange={(e) => {
+                                  setSourceUrl(e.target.value);
+                                  setSourceUrlError(null);
+                                }}
+                                placeholder="e.g. https://example.com/image.qcow2"
+                                fullWidth
+                                error={!!sourceUrlError}
+                              />
+                            </FormField.Control>
+                            {sourceUrlError ? (
+                              <FormField.ErrorMessage>{sourceUrlError}</FormField.ErrorMessage>
+                            ) : (
+                              <FormField.HelperText>
+                                The URL must start with http:// or https://.
+                              </FormField.HelperText>
+                            )}
                           </FormField>
                         )}
                       </VStack>
@@ -611,6 +609,7 @@ export function CreateImagePage() {
                               { value: 'iso', label: 'ISO' },
                             ]}
                             fullWidth
+                            error={!!diskFormatError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{diskFormatError}</FormField.ErrorMessage>
@@ -641,6 +640,7 @@ export function CreateImagePage() {
                               { value: 'other', label: 'Others' },
                             ]}
                             fullWidth
+                            error={!!osError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{osError}</FormField.ErrorMessage>
@@ -665,6 +665,7 @@ export function CreateImagePage() {
                             }}
                             placeholder="e.g. 22.04, 8, 2019"
                             fullWidth
+                            error={!!osVersionError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{osVersionError}</FormField.ErrorMessage>
@@ -690,6 +691,7 @@ export function CreateImagePage() {
                             }}
                             placeholder="e.g. ubuntu(ubuntu), administrator(windows)"
                             fullWidth
+                            error={!!osAdminError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{osAdminError}</FormField.ErrorMessage>

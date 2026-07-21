@@ -169,7 +169,7 @@ export function ModalUseCaseDemo({
         <div className="flex flex-col gap-2">
           {/* Info Box */}
           <div
-            className={`bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 ${'infoList' in c ? 'max-h-[96px] overflow-y-auto sidebar-scroll' : ''}`}
+            className={`bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 ${'infoList' in c ? 'max-h-[96px] overflow-y-auto' : ''}`}
           >
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
               {c.infoLabel}
@@ -727,11 +727,11 @@ export function ConnectDataSourceDrawer({
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All Tags ({row.tags.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {row.tags.map((tag, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {tag}
@@ -971,11 +971,11 @@ export function ConnectMCPServerDrawer({
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All Tags ({row.tags.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {row.tags.map((tag, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {tag}

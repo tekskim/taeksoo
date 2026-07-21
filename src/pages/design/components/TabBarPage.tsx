@@ -7,7 +7,7 @@ import { TabBar, useTabBar, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -18,7 +18,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -27,7 +27,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -60,7 +62,7 @@ function TabBarPreview() {
   });
 
   return (
-    <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden w-full">
+    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden w-full">
       <TabBar
         tabs={tabs}
         activeTab={activeTab}
@@ -102,6 +104,27 @@ function TabBarDemo() {
     initialActiveTab: 'many-1',
   });
 
+  const rapidCloseDemo = useTabBar({
+    initialTabs: [
+      { id: 'rc-1', label: 'Dashboard', closable: true },
+      { id: 'rc-2', label: 'Instances', closable: true },
+      { id: 'rc-3', label: 'Volumes', closable: true },
+      { id: 'rc-4', label: 'Networks', closable: true },
+      { id: 'rc-5', label: 'Security', closable: true },
+      { id: 'rc-6', label: 'Monitoring', closable: true },
+    ],
+    initialActiveTab: 'rc-1',
+  });
+
+  const focusDemo = useTabBar({
+    initialTabs: [
+      { id: 'focus-1', label: 'Dashboard', closable: true },
+      { id: 'focus-2', label: 'Instances', closable: true },
+      { id: 'focus-3', label: 'Volumes', closable: true },
+    ],
+    initialActiveTab: 'focus-1',
+  });
+
   const handleAddTab = () => {
     const counter = tabCounterRef.current;
     addTab({
@@ -121,17 +144,27 @@ function TabBarDemo() {
     });
   };
 
+  const handleResetRapidClose = () => {
+    rapidCloseDemo.setTabs([
+      { id: `rc-1-${Date.now()}`, label: 'Dashboard', closable: true },
+      { id: `rc-2-${Date.now()}`, label: 'Instances', closable: true },
+      { id: `rc-3-${Date.now()}`, label: 'Volumes', closable: true },
+      { id: `rc-4-${Date.now()}`, label: 'Networks', closable: true },
+      { id: `rc-5-${Date.now()}`, label: 'Security', closable: true },
+      { id: `rc-6-${Date.now()}`, label: 'Monitoring', closable: true },
+    ]);
+  };
+
   return (
     <VStack gap={8}>
       <VStack gap={3}>
         <VStack gap={1}>
           <Label>Interactive Demo (3 tabs)</Label>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
-            탭 클릭으로 전환, × 클릭으로 닫기, + 클릭으로 새 탭 추가. 기본 탭(Entry page)은 닫을 수
-            없음.
+            탭 클릭으로 전환, × 클릭으로 닫기, + 클릭으로 새 탭 추가.
           </span>
         </VStack>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
           <TabBar
             tabs={tabs}
             activeTab={activeTab}
@@ -153,7 +186,7 @@ function TabBarDemo() {
             스크롤은 발생하지 않는다.
           </span>
         </VStack>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
           <TabBar
             tabs={manyTabsDemo.tabs}
             activeTab={manyTabsDemo.activeTab}
@@ -167,6 +200,61 @@ function TabBarDemo() {
           </div>
         </div>
       </VStack>
+
+      <VStack gap={3}>
+        <VStack gap={1}>
+          <Label>Chrome-style Rapid Tab Closing</Label>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            × 버튼을 연속 클릭하여 여러 탭을 빠르게 닫을 수 있다. 닫기 버튼이 같은 위치에 유지되므로
+            마우스를 움직이지 않아도 된다. 마우스를 탭 영역 밖으로 이동하면 탭 너비가 부드럽게
+            복원된다.
+          </span>
+        </VStack>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
+          <TabBar
+            tabs={rapidCloseDemo.tabs}
+            activeTab={rapidCloseDemo.activeTab}
+            onTabChange={rapidCloseDemo.selectTab}
+            onTabClose={rapidCloseDemo.closeTab}
+            showAddButton={false}
+          />
+          <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-body-md gap-2">
+            {rapidCloseDemo.tabs.length <= 1 ? (
+              <button
+                type="button"
+                onClick={handleResetRapidClose}
+                className="text-[var(--color-action-primary)] hover:underline cursor-pointer"
+              >
+                탭 초기화
+              </button>
+            ) : (
+              <>× 버튼을 연속으로 클릭해보세요. 마우스를 움직이지 않아도 됩니다.</>
+            )}
+          </div>
+        </div>
+      </VStack>
+
+      <VStack gap={3}>
+        <VStack gap={1}>
+          <Label>Focus State (Keyboard Navigation)</Label>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            Tab 키로 탭 간 이동 시 focus ring이 표시된다. 아래 TabBar를 클릭한 뒤 Tab / Shift+Tab
+            키로 탭을 이동해보세요. Enter 또는 Space 키로 탭을 활성화할 수 있다.
+          </span>
+        </VStack>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
+          <TabBar
+            tabs={focusDemo.tabs}
+            activeTab={focusDemo.activeTab}
+            onTabChange={focusDemo.selectTab}
+            onTabClose={focusDemo.closeTab}
+            showAddButton={false}
+          />
+          <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-body-md">
+            Active: {focusDemo.tabs.find((t) => t.id === focusDemo.activeTab)?.label || '—'}
+          </div>
+        </div>
+      </VStack>
     </VStack>
   );
 }
@@ -177,7 +265,7 @@ function TabBarGuidelines() {
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[탭 영역 (a)] ···  [+ 버튼 (b)]   [— □ × (c)]`}</pre>
         </div>
 
@@ -235,31 +323,63 @@ function TabBarGuidelines() {
           <thead>
             <tr>
               <Th className="w-[200px]">속성</Th>
+              <Th className="w-[200px]">토큰</Th>
               <Th>값</Th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <Td>height</Td>
+              <Td>
+                <code className="text-body-sm">--tabbar-height</code>
+              </Td>
               <Td>36px</Td>
             </tr>
             <tr>
               <Td>max-width (탭)</Td>
+              <Td>
+                <code className="text-body-sm">--tabbar-tab-max-width</code>
+              </Td>
               <Td>160px</Td>
             </tr>
             <tr>
-              <Td>padding-x</Td>
+              <Td>padding-left</Td>
+              <Td>
+                <code className="text-body-sm">--tabbar-tab-padding-x</code>
+              </Td>
               <Td>12px</Td>
             </tr>
             <tr>
+              <Td>padding-right</Td>
+              <Td>
+                <code className="text-body-sm">--tabbar-tab-padding-r</code>
+              </Td>
+              <Td>8px</Td>
+            </tr>
+            <tr>
+              <Td>gap (label ↔ close)</Td>
+              <Td>
+                <code className="text-body-sm">--tabbar-tab-gap</code>
+              </Td>
+              <Td>8px</Td>
+            </tr>
+            <tr>
+              <Td>close button size</Td>
+              <Td>
+                <code className="text-body-sm">--tabbar-close-size</code>
+              </Td>
+              <Td>16px</Td>
+            </tr>
+            <tr>
               <Td>font-size</Td>
+              <Td>
+                <code className="text-body-sm">--tabbar-font-size</code>
+              </Td>
               <Td>12px</Td>
             </tr>
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* States */}
       <VStack gap={4}>
@@ -302,11 +422,33 @@ function TabBarGuidelines() {
               </Td>
               <Td>드래그 앤 드롭으로 탭 순서 변경 중인 상태</Td>
             </tr>
+            <tr>
+              <Td>
+                <strong>Opening</strong>
+              </Td>
+              <Td>새 탭이 추가될 때 width 0 → 160px로 펼쳐지는 애니메이션. 200ms ease-out</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Closing</strong>
+              </Td>
+              <Td>
+                탭이 닫힐 때 현재 width → 0으로 수축하는 애니메이션. 200ms ease-in. 애니메이션 완료
+                후 DOM에서 제거
+              </Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Closing Mode</strong>
+              </Td>
+              <Td>
+                빠른 연속 닫기 중. 탭 너비가 고정되고 모든 닫기 버튼이 표시됨. 마우스가 탭 영역을
+                벗어나면 해제
+              </Td>
+            </tr>
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={4}>
@@ -329,9 +471,56 @@ function TabBarGuidelines() {
           <SubSectionTitle>탭 추가 / 닫기</SubSectionTitle>
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
-              <li>+ 버튼 클릭 시 새 탭이 추가된다.</li>
-              <li>× 버튼 클릭 시 해당 탭이 닫힌다.</li>
+              <li>
+                + 버튼 클릭 시 새 탭이 추가되며, width 0에서 목표 너비까지{' '}
+                <strong>200ms ease-out</strong> 트랜지션으로 펼쳐진다.
+              </li>
+              <li>
+                × 버튼 클릭 시 해당 탭이 현재 너비에서 0까지 <strong>200ms ease-in</strong>{' '}
+                트랜지션으로 수축한 뒤 DOM에서 제거된다. opacity는 100ms로 더 빠르게 사라져 텍스트가
+                얇아지는 어색함을 방지한다.
+              </li>
               <li>활성 탭을 닫으면 인접한 탭이 자동으로 활성화된다.</li>
+              <li>애니메이션 중인 탭은 클릭 및 드래그가 비활성화된다.</li>
+              <li>
+                다음 상황에서는 애니메이션이 생략된다:
+                <ul className="list-disc pl-5 space-y-1 mt-1">
+                  <li>
+                    <strong>초기 로드 / 앱 전환</strong> — 기존 탭이 하나도 남아있지 않은 전체 탭
+                    교체 시 (새 앱 진입, 페이지 새로고침 등)
+                  </li>
+                  <li>
+                    <strong>마지막 탭 닫기</strong> — 탭이 1개일 때 닫으면 앱 종료/이동이 발생하므로
+                    닫기 애니메이션 없이 즉시 처리
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>빠른 연속 닫기 (Chrome-style)</SubSectionTitle>
+          <Prose>
+            <p>Chrome 브라우저와 동일한 빠른 연속 탭 닫기를 지원한다.</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                탭의 × 버튼을 클릭하면 <strong>Closing Mode</strong>에 진입한다.
+              </li>
+              <li>
+                Closing Mode에서는 각 탭의 너비가 현재 값으로 고정되어 닫기 버튼이 같은 X좌표에
+                유지된다.
+              </li>
+              <li>
+                다음 탭이 닫힌 탭 위치로 즉시 슬라이드하므로 마우스를 움직이지 않고 연속 클릭이
+                가능하다.
+              </li>
+              <li>Closing Mode에서는 비활성 탭의 닫기 버튼도 항상 표시된다.</li>
+              <li>
+                마우스가 탭 영역을 벗어나면 Closing Mode가 해제되며, 탭 너비가 200ms 애니메이션으로
+                부드럽게 복원된다.
+              </li>
+              <li>닫을 수 있는 탭이 1개 이하로 줄어도 자동으로 Closing Mode가 해제된다.</li>
             </ul>
           </Prose>
         </VStack>
@@ -351,13 +540,15 @@ function TabBarGuidelines() {
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
               <li>탭 레이블이 현재 탭 너비를 초과하면 말줄임(…) 처리한다.</li>
-              <li>말줄임된 레이블은 hover 시 툴팁으로 전체 이름을 표시한다.</li>
+              <li>
+                말줄임된 레이블에 호버 시 DS Tooltip 스타일의 커스텀 툴팁이 200ms 후 표시된다
+                (브라우저 네이티브 title 속성 대비 빠른 응답).
+              </li>
+              <li>텍스트가 잘리지 않은 탭에서는 툴팁이 표시되지 않는다.</li>
             </ul>
           </Prose>
         </VStack>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Usage Guidelines */}
       <VStack gap={4}>
@@ -375,8 +566,6 @@ function TabBarGuidelines() {
           ]}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Content Guidelines */}
       <VStack gap={4}>
@@ -418,32 +607,130 @@ export function TabBarPage() {
       examples={<TabBarDemo />}
       guidelines={<TabBarGuidelines />}
       tokens={
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[200px]">속성</Th>
-              <Th>값</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>height</Td>
-              <Td>36px</Td>
-            </tr>
-            <tr>
-              <Td>max-width (탭)</Td>
-              <Td>160px</Td>
-            </tr>
-            <tr>
-              <Td>padding-x</Td>
-              <Td>12px</Td>
-            </tr>
-            <tr>
-              <Td>font-size</Td>
-              <Td>12px</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
+        <VStack gap={6}>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[200px]">속성</Th>
+                <Th className="w-[240px]">토큰</Th>
+                <Th>값</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>height</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-height</code>
+                </Td>
+                <Td>36px</Td>
+              </tr>
+              <tr>
+                <Td>tab max-width</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-tab-max-width</code>
+                </Td>
+                <Td>160px</Td>
+              </tr>
+              <tr>
+                <Td>tab min-width</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-tab-min-width</code>
+                </Td>
+                <Td>100px</Td>
+              </tr>
+              <tr>
+                <Td>padding-left</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-tab-padding-x</code>
+                </Td>
+                <Td>12px</Td>
+              </tr>
+              <tr>
+                <Td>padding-right</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-tab-padding-r</code>
+                </Td>
+                <Td>8px</Td>
+              </tr>
+              <tr>
+                <Td>gap</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-tab-gap</code>
+                </Td>
+                <Td>8px</Td>
+              </tr>
+              <tr>
+                <Td>close button size</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-close-size</code>
+                </Td>
+                <Td>16px</Td>
+              </tr>
+              <tr>
+                <Td>font-size</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-font-size</code>
+                </Td>
+                <Td>12px</Td>
+              </tr>
+              <tr>
+                <Td>line-height</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-line-height</code>
+                </Td>
+                <Td>16px</Td>
+              </tr>
+              <tr>
+                <Td>add button size</Td>
+                <Td>
+                  <code className="text-body-sm">--tabbar-add-size</code>
+                </Td>
+                <Td>28px</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+
+          <SubSectionTitle>Tab Transitions</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[200px]">단계</Th>
+                <Th className="w-[200px]">transition</Th>
+                <Th>동작</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>탭 열기 (enter)</Td>
+                <Td>width, padding, opacity 200ms ease-out</Td>
+                <Td>width 0 → 160px로 좌→우 펼침. opacity는 150ms로 약간 빠르게 나타남</Td>
+              </tr>
+              <tr>
+                <Td>탭 닫기 (leave)</Td>
+                <Td>width, padding 200ms ease-in / opacity 100ms ease-in</Td>
+                <Td>
+                  현재 width → 0으로 수축. opacity가 먼저 사라진 뒤 너비가 줄어듦. 완료 후 DOM에서
+                  제거
+                </Td>
+              </tr>
+              <tr>
+                <Td>빠른 닫기 모드 (closing)</Td>
+                <Td>없음 (즉시)</Td>
+                <Td>탭 너비 고정. 다음 탭이 닫힌 탭 위치로 즉시 이동하여 닫기 버튼 X좌표 유지</Td>
+              </tr>
+              <tr>
+                <Td>마우스 이탈 (unlock)</Td>
+                <Td>width 200ms</Td>
+                <Td>고정 너비에서 원래 크기(160px 또는 축소 크기)로 부드럽게 복원</Td>
+              </tr>
+              <tr>
+                <Td>평상시</Td>
+                <Td>color만</Td>
+                <Td>hover 시 배경색 전환 (150ms)</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
       }
       relatedLinks={[
         {

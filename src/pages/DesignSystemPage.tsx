@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import {
   Section,
@@ -25,16 +26,16 @@ import {
 
 // App icons
 import AppIconAdminCenter from '@/assets/appIcon/admincenter.png';
-import AppIconAgentOps from '@/assets/appIcon/agentops.png';
+import AppIconAgentOps from '@/assets/appIcon/agentops.webp';
 import AppIconAIPlatform from '@/assets/appIcon/aiplatform.png';
-import AppIconCloudBuilder from '@/assets/appIcon/cloudbuilder.png';
-import AppIconCompute from '@/assets/appIcon/compute.png';
-import AppIconComputeAdmin from '@/assets/appIcon/computeadmin.png';
-import AppIconContainer from '@/assets/appIcon/container.png';
-import AppIconIAM from '@/assets/appIcon/iam.png';
-import AppIconSettings from '@/assets/appIcon/settings.png';
-import AppIconStorage from '@/assets/appIcon/storage.png';
-import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.png';
+import AppIconCloudBuilder from '@/assets/appIcon/cloudbuilder.webp';
+import AppIconCompute from '@/assets/appIcon/compute.webp';
+import AppIconComputeAdmin from '@/assets/appIcon/computeadmin.webp';
+import AppIconContainer from '@/assets/appIcon/container.webp';
+import AppIconIAM from '@/assets/appIcon/iam.webp';
+import AppIconSettings from '@/assets/appIcon/settings.webp';
+import AppIconStorage from '@/assets/appIcon/storage.webp';
+import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.webp';
 import {
   Button,
   Input,
@@ -99,6 +100,7 @@ import {
   CopyButton,
   fixedColumns,
   columnMinWidths,
+  CatalogCard,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import type { NotificationItem } from '@/design-system/components/NotificationCenter';
@@ -354,7 +356,6 @@ const overlayItems = [
   { id: 'context-menu', label: 'Context menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
-  { id: 'notification-center', label: 'Notification center', icon: IconBell },
   { id: 'toast', label: 'Toast', icon: IconBell },
   { id: 'global-notification-panel', label: 'Global notification panel', icon: IconBell },
   { id: 'floating-card', label: 'Floating card', icon: IconLayoutGrid },
@@ -368,6 +369,7 @@ const layoutItems = [
   { id: 'common-patterns', label: 'Common patterns', icon: IconTemplate },
   { id: 'detail-header', label: 'Detail header', icon: IconLayoutNavbar },
   { id: 'section-card', label: 'Section card', icon: IconLayoutGrid },
+  { id: 'catalog-card', label: 'Catalog card', icon: IconLayoutGrid },
   { id: 'wizard', label: 'Wizard (Create Flow)', icon: IconListNumbers },
   { id: 'monitoring-toolbar', label: 'Monitoring toolbar', icon: IconRefresh },
   { id: 'csv-download', label: 'CSV file download', icon: IconDownload },
@@ -697,7 +699,12 @@ function OpenSectionTableDemo() {
           <span className="text-[var(--color-action-primary)] text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium">
             {value}
           </span>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -751,11 +758,11 @@ function OpenSectionTableDemo() {
                           setCurrentPage(1);
                         }}
                         className={`
-                        flex items-center gap-1 px-[10px] py-[6px] rounded-[6px] text-[12px] font-medium leading-5 text-center transition-all
+                        flex items-center gap-1 px-4 py-1 rounded-[var(--radius-md)] text-[length:var(--font-size-11)] font-medium leading-[var(--line-height-16)] text-center transition-all
                         ${
                           osFilter === filter
                             ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
-                            : 'bg-transparent text-[var(--color-text-default)]'
+                            : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
                         }
                       `}
                       >
@@ -1319,65 +1326,11 @@ const summaryItems: WizardSummaryItem[] = [
 }
 
 /* ----------------------------------------
-   Notification center Section
+   DatePicker Section (with state)
    ---------------------------------------- */
 
-const initialNotifications: NotificationItem[] = [
-  {
-    id: '1',
-    type: 'success',
-    message: 'Instance "web-server-01" created successfully.',
-    time: '10:23',
-    project: 'Proj1',
-    isRead: false,
-    detail: {
-      code: 200,
-      message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
-    },
-  },
-  {
-    id: '2',
-    type: 'success',
-    message: 'Volume "data-vol-01" attached to instance.',
-    time: '10:15',
-    project: 'Proj1',
-    isRead: false,
-  },
-  {
-    id: '3',
-    type: 'error',
-    message: 'Failed to create volume "data-vol-02".',
-    time: '09:30',
-    project: 'Proj2',
-    isRead: false,
-    detail: {
-      code: 400,
-      message:
-        "Flavor's disk is smaller than the minimum size specified in image metadata. Flavor disk is 1073741824 bytes, minimum size is 10737418240 bytes.",
-    },
-  },
-  {
-    id: '4',
-    type: 'warning',
-    message: 'Instance "db-server" is running low on disk space.',
-    time: '09:15',
-    project: 'Proj1',
-    isRead: true,
-    detail: {
-      code: 'WARN_DISK_LOW',
-      message: 'Disk usage is at 92%. Consider expanding the volume or cleaning up unused files.',
-    },
-  },
-  {
-    id: '5',
-    type: 'info',
-    message: 'System maintenance scheduled for tomorrow.',
-    time: 'Yesterday',
-    isRead: true,
-  },
-];
-
 function NotificationCenterSection() {
+  const initialNotifications: NotificationItem[] = [];
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
 
   const [selectedId, setSelectedId] = useState<string | undefined>();
@@ -2334,11 +2287,11 @@ function CapsuleTabDemo() {
       <button
         onClick={() => setSelected('left')}
         className={`
-          min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
+          min-w-[80px] px-4 py-1 rounded-[var(--radius-md)] text-[length:var(--font-size-11)] font-medium leading-[var(--line-height-16)] text-center transition-all
           ${
             selected === 'left'
               ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
-              : 'bg-transparent text-[var(--color-text-default)]'
+              : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
           }
         `}
       >
@@ -2347,11 +2300,11 @@ function CapsuleTabDemo() {
       <button
         onClick={() => setSelected('right')}
         className={`
-          min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
+          min-w-[80px] px-4 py-1 rounded-[var(--radius-md)] text-[length:var(--font-size-11)] font-medium leading-[var(--line-height-16)] text-center transition-all
           ${
             selected === 'right'
               ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
-              : 'bg-transparent text-[var(--color-text-default)]'
+              : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
           }
         `}
       >
@@ -2773,8 +2726,11 @@ function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -2801,8 +2757,11 @@ function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.imageId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.imageId}>
+              ID : {row.imageId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.imageId} />
           </span>
         </div>
       ),
@@ -2818,8 +2777,11 @@ function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.flavorId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.flavorId}>
+              ID : {row.flavorId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.flavorId} />
           </span>
         </div>
       ),
@@ -2853,8 +2815,11 @@ function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -2878,8 +2843,11 @@ function TableDemo() {
                   className="flex-shrink-0 text-[var(--color-action-primary)]"
                 />
               </button>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
-                ID : {row.attachedToId}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedToId}>
+                  ID : {row.attachedToId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedToId} />
               </span>
             </div>
             <Tooltip
@@ -3840,7 +3808,15 @@ export function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-hidden z-50 sidebar-scroll">
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] z-50"
+      >
         <div className="p-4 overflow-hidden">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-4">
@@ -3882,6 +3858,8 @@ export function DesignSystemPage() {
               />
               {sidebarSearchQuery && (
                 <button
+                  type="button"
+                  aria-label="Clear search"
                   onClick={() => setSidebarSearchQuery('')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
                 >
@@ -3892,7 +3870,14 @@ export function DesignSystemPage() {
 
             {/* Search Results Dropdown */}
             {sidebarSearchQuery.trim() && isSidebarSearchFocused && (
-              <div className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
+              <OverlayScrollbarsComponent
+                options={{
+                  overflow: { x: 'hidden', y: 'scroll' },
+                  scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                }}
+                defer={false}
+                className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px]"
+              >
                 {filteredSidebarNavItems.length > 0 ? (
                   <div className="p-2 min-w-0">
                     {filteredSidebarNavItems.map(({ id, label, icon: Icon }, index) => (
@@ -3930,7 +3915,7 @@ export function DesignSystemPage() {
                     No results found
                   </div>
                 )}
-              </div>
+              </OverlayScrollbarsComponent>
             )}
           </div>
 
@@ -4145,7 +4130,7 @@ export function DesignSystemPage() {
             </VStack>
           </VStack>
         </div>
-      </nav>
+      </OverlayScrollbarsComponent>
 
       {/* Main Content */}
       <main
@@ -4203,7 +4188,14 @@ export function DesignSystemPage() {
 
                 {/* Search Results Dropdown */}
                 {mainSearchQuery.trim() && isMainSearchFocused && (
-                  <div className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
+                  <OverlayScrollbarsComponent
+                    options={{
+                      overflow: { x: 'hidden', y: 'scroll' },
+                      scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                    }}
+                    defer={false}
+                    className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px]"
+                  >
                     {filteredMainNavItems.length > 0 ? (
                       <div className="p-2 min-w-0">
                         {filteredMainNavItems.map(({ id, label, icon: Icon }, index) => (
@@ -4241,7 +4233,7 @@ export function DesignSystemPage() {
                         No results found for "{mainSearchQuery}"
                       </div>
                     )}
-                  </div>
+                  </OverlayScrollbarsComponent>
                 )}
               </div>
 
@@ -10185,15 +10177,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         onSidebarToggle={() => console.log('Toggle sidebar')}
                         onBack={() => console.log('Go back')}
                         onForward={() => console.log('Go forward')}
-                        breadcrumb={
-                          <Breadcrumb
-                            items={[
-                              { label: 'Home', onClick: () => {} },
-                              { label: 'Entry page', onClick: () => {} },
-                              { label: 'Settings' },
-                            ]}
-                          />
-                        }
+                        breadcrumb={<Breadcrumb items={[{ label: 'Design System' }]} />}
                         actions={<></>}
                       />
                     </div>
@@ -11132,7 +11116,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                       <Breadcrumb
                         items={[
-                          { label: 'Home', onClick: () => {} },
                           { label: 'Compute', onClick: () => {} },
                           { label: 'Instances', onClick: () => {} },
                           { label: 'web-large' },
@@ -11147,7 +11130,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                       <Breadcrumb
                         items={[
-                          { label: 'Home', onClick: () => {} },
                           { label: 'Instance snapshots', onClick: () => {} },
                           { label: 'Instance snapshots', onClick: () => {} },
                           { label: 'Instance snapshots', onClick: () => {} },
@@ -12225,7 +12207,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                           sidebar-scroll (6px)
                         </span>
-                        <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden sidebar-scroll bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                        <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
                           <div className="space-y-2 w-full">
                             {Array.from({ length: 15 }).map((_, i) => (
                               <div
@@ -12242,7 +12224,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                           shell-scroll (dark)
                         </span>
-                        <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden shell-scroll bg-[#1e293b] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                        <div className="w-full h-[150px] overflow-y-auto overflow-x-hidden bg-[#1e293b] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
                           <div className="space-y-1 font-mono w-full">
                             {Array.from({ length: 15 }).map((_, i) => (
                               <div
@@ -12267,7 +12249,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                           Table horizontal scrollbar (height: 6px)
                         </span>
                         <div
-                          className="w-full max-w-[500px] table-scroll-container bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
+                          className="w-full max-w-[500px] overflow-x-auto bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
                           style={{ overflowX: 'auto' }}
                         >
                           <div className="flex gap-4 p-3" style={{ width: '800px' }}>
@@ -12625,6 +12607,108 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
+                  </VStack>
+                </VStack>
+              </Section>
+
+              {/* CatalogCard Component */}
+              <Section
+                id="catalog-card"
+                title="Catalog card"
+                description="Card component for displaying application or operator catalog items with icon, description, badges, and action buttons"
+              >
+                <VStack gap={6}>
+                  <VStack gap={3}>
+                    <Label>Basic usage</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-[900px]">
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/postgresql"
+                        iconAlt="PostgreSQL"
+                        name="CNPG"
+                        version="v1.29.0"
+                        description="PostgreSQL cluster instance managed by CloudNativePG Operator. Supports HA, PgBouncer pooling, and automated backups."
+                        badges={[
+                          { label: 'Operator-managed', variant: 'info' },
+                          { label: 'Database', theme: 'white' },
+                        ]}
+                        actions={
+                          <Button variant="primary" size="sm">
+                            Install
+                          </Button>
+                        }
+                      />
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/apachekafka"
+                        iconAlt="Kafka"
+                        name="Strimzi Kafka"
+                        version="v0.44.0"
+                        description="Apache Kafka on Kubernetes powered by Strimzi operator. Provides distributed streaming platform for building real-time data pipelines."
+                        badges={[
+                          { label: 'Operator-managed', variant: 'info' },
+                          { label: 'Data processing', theme: 'white' },
+                        ]}
+                        actions={
+                          <Button variant="primary" size="sm">
+                            Install
+                          </Button>
+                        }
+                      />
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/nginx"
+                        iconAlt="NGINX"
+                        name="NGINX"
+                        version="v1.27.0"
+                        description="High-performance web server and reverse proxy. Deploy as ingress controller or standalone web server."
+                        badges={[
+                          { label: 'Helm', variant: 'info' },
+                          { label: 'Networking', theme: 'white' },
+                        ]}
+                        actions={
+                          <Button variant="outline" size="sm" disabled>
+                            Installed
+                          </Button>
+                        }
+                      />
+                    </div>
+                  </VStack>
+
+                  <VStack gap={3}>
+                    <Label>Without version</Label>
+                    <div className="max-w-[280px]">
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/milvus"
+                        iconAlt="Milvus"
+                        name="Milvus"
+                        description="Open-source vector database for scalable similarity search and AI applications."
+                        badges={[
+                          { label: 'Helm', variant: 'info' },
+                          { label: 'Vector DB', theme: 'white' },
+                        ]}
+                        actions={
+                          <Button variant="primary" size="sm">
+                            Install
+                          </Button>
+                        }
+                      />
+                    </div>
+                  </VStack>
+
+                  <VStack gap={3}>
+                    <Label>Without badges</Label>
+                    <div className="max-w-[280px]">
+                      <CatalogCard
+                        iconSrc="https://cdn.simpleicons.org/gitea"
+                        iconAlt="Gitea"
+                        name="Gitea"
+                        version="v1.23.0"
+                        description="Lightweight self-hosted Git service. Easy to install and maintain."
+                        actions={
+                          <Button variant="primary" size="sm">
+                            Install
+                          </Button>
+                        }
+                      />
+                    </div>
                   </VStack>
                 </VStack>
               </Section>
@@ -13318,7 +13402,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">
                           Scrollable List (max-h: 96px)
                         </span>
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1 max-h-[96px] overflow-y-auto sidebar-scroll">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1 max-h-[96px] overflow-y-auto">
                           <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
                             Security groups (6)
                           </span>
@@ -13940,9 +14024,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   </VStack>
                 </VStack>
               </Section>
-
-              {/* Notification center */}
-              <NotificationCenterSection />
 
               {/* Toast Section */}
               <Section
@@ -14993,12 +15074,12 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   {/* Basic Example - QuotaSidebar Style */}
                   <VStack gap={4}>
                     <Label>Basic Example (QuotaSidebar from Create Instance)</Label>
-                    <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
+                    <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-[var(--radius-lg)]">
                       {/* QuotaSidebar Container */}
                       <div className="w-[var(--wizard-summary-width)] shrink-0">
-                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
                           {/* Summary Card */}
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                             <VStack gap={3}>
                               <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                                 Summary
@@ -15076,7 +15157,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                           </div>
 
                           {/* Quota Card */}
-                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                             <VStack gap={3}>
                               <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                                 Quota
@@ -15155,7 +15236,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   {/* Status Icons */}
                   <VStack gap={4}>
                     <Label>Status icons</Label>
-                    <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
+                    <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
                       <div className="flex items-center gap-2">
                         <div
                           className="size-4 rounded-full border border-[var(--color-border-default)]"
@@ -16304,138 +16385,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     </div>
                   </VStack>
 
-                  {/* Compute thresholds */}
-                  <VStack gap={3}>
-                    <Label>Compute</Label>
-                    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-success)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            0% ~ 69%: Normal
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            70% ~ 89%: Warning
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            90%+: Danger
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                        <code>{'thresholds={STATUS_THRESHOLDS.compute}'}</code>
-                        <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 70, danger: 90 }'}
-                        </span>
-                      </div>
-                    </div>
-                  </VStack>
-
-                  {/* Compute Admin thresholds */}
-                  <VStack gap={3}>
-                    <Label>Compute Admin</Label>
-                    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-success)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            0% ~ 69%: Normal
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            70% ~ 99%: Warning
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            100%+: Danger
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                        <code>{'thresholds={STATUS_THRESHOLDS.computeAdmin}'}</code>
-                        <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 70, danger: 100 }'}
-                        </span>
-                      </div>
-                    </div>
-                  </VStack>
-
-                  {/* Storage thresholds */}
-                  <VStack gap={3}>
-                    <Label>Storage</Label>
-                    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-success)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            0% ~ 84%: Normal
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            85% ~ 94%: Warning
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            95%+: Danger
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                        <code>{'thresholds={STATUS_THRESHOLDS.storage}'}</code>
-                        <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 85, danger: 95 }'}
-                        </span>
-                      </div>
-                    </div>
-                  </VStack>
-
-                  {/* Container thresholds */}
-                  <VStack gap={3}>
-                    <Label>Container</Label>
-                    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-success)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            0% ~ 69%: Normal
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            70% ~ 94%: Warning
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            95%+: Danger
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                        <code>{'thresholds={STATUS_THRESHOLDS.container}'}</code>
-                        <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 70, danger: 95 }'}
-                        </span>
-                      </div>
-                    </div>
-                  </VStack>
-
                   {/* Default thresholds */}
                   <VStack gap={3}>
                     <Label>Default</Label>
@@ -16450,20 +16399,20 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <div className="flex items-center gap-2">
                           <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
                           <span className="text-body-md text-[var(--color-text-default)]">
-                            70% ~ 94%: Warning
+                            70-89%: Warning
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
                           <span className="text-body-md text-[var(--color-text-default)]">
-                            95%+: Danger
+                            90%+: Danger
                           </span>
                         </div>
                       </div>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
                         <code>{'thresholds={STATUS_THRESHOLDS.default}'}</code>
                         <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 70, danger: 95 }'}
+                          {'{ warning: 70, danger: 90 }'}
                         </span>
                       </div>
                     </div>
@@ -16475,13 +16424,13 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] flex flex-col gap-1">
                       <div>
                         <code>{"import { STATUS_THRESHOLDS } from '@/design-system';"}</code>
+                        import {InlineCopyId} from '@/components/InlineCopyId';
                       </div>
                       <div className="mt-1">
-                        <code>{'<ProgressBar thresholds={STATUS_THRESHOLDS.compute} ... />'}</code>
+                        <code>{'<ProgressBar thresholds={STATUS_THRESHOLDS.default} ... />'}</code>
                       </div>
                       <div className="mt-2 text-[var(--color-text-muted)]">
-                        Available presets: <code>compute</code> · <code>computeAdmin</code> ·{' '}
-                        <code>storage</code> · <code>container</code> · <code>default</code>
+                        All presets share the same thresholds: warning 70%, danger 90%
                       </div>
                     </div>
                   </VStack>

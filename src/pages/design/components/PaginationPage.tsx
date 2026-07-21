@@ -7,7 +7,7 @@ import { Pagination, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -18,7 +18,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -27,7 +27,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -155,8 +157,6 @@ function PaginationGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* States */}
       <VStack gap={4}>
         <SectionTitle>States</SectionTitle>
@@ -196,8 +196,6 @@ function PaginationGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Behavior */}
       <VStack gap={6}>
         <SectionTitle>Behavior</SectionTitle>
@@ -227,7 +225,7 @@ function PaginationGuidelines() {
               전체 페이지 수가 <strong>7 페이지 이상일 경우</strong> Ellipsis(…)로 축약 표시
             </p>
           </Prose>
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
             <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre-wrap font-[var(--font-family-mono)]">{`1 … 10 11 12 … 99
 1 2 3 4 5 … 7
 1 … 3 4 5 6 7`}</pre>
@@ -235,14 +233,14 @@ function PaginationGuidelines() {
           <Prose>
             <p>말줄임표가 없는 경우 현재 페이지가 이동해도 페이지 목록 위치 고정</p>
           </Prose>
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
             <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre-wrap font-[var(--font-family-mono)]">{`< 1 2 3 4 5 [6] >
 < 1 … 11 12 [13] 14 15 >`}</pre>
           </div>
           <Prose>
             <p>양쪽에 말줄임표가 있는 경우 현재 페이지는 항상 가운데에 위치</p>
           </Prose>
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
             <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre-wrap font-[var(--font-family-mono)]">{`< 1 … 3 4 [5] 6 7 … 15 >
 < 1 … 7 8 [9] 10 11 … 15 >`}</pre>
           </div>
@@ -281,8 +279,6 @@ function PaginationGuidelines() {
           </Prose>
         </VStack>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Usage Guidelines */}
       <VStack gap={4}>
@@ -431,11 +427,28 @@ export function PaginationPage() {
               selectedCount={3}
             />
           </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>No Items</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                테이블에 아이템이 없을때. 페이지 1만 표시되며 이전/다음 버튼이 비활성화된다.
+              </span>
+            </VStack>
+            <Pagination
+              currentPage={1}
+              totalPages={1}
+              onPageChange={() => {}}
+              showSettings
+              onSettingsClick={() => {}}
+              totalItems={0}
+            />
+          </VStack>
         </VStack>
       }
       guidelines={<PaginationGuidelines />}
       tokens={
-        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           item-size: 24px · gap: 8px · radius: 4px · font: 12px
         </div>
       }

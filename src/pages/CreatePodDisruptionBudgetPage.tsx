@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -15,21 +15,14 @@ import {
   Table,
   NumberInput,
   Disclosure,
+  WizardSummary,
 } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconCirclePlus,
-  IconX,
-  IconCheck,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -66,37 +59,6 @@ interface Annotation {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 
@@ -105,7 +67,6 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
-  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -113,39 +74,36 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
-  isEditMode = false,
 }: SummarySidebarProps) {
+  // Determine section status based on form data
   const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
-    if (section === 'basic-info') {
-      // namespace has default → 'active' until name is typed
-      return podDisruptionBudgetName.trim() ? 'done' : 'active';
+    switch (section) {
+      case 'basic-info':
+        return podDisruptionBudgetName.trim() ? 'done' : 'active';
+      case 'data':
+        return 'pending';
+      case 'selector':
+        return 'pending';
+      case 'labels-annotations':
+        return 'pending';
+      default:
+        return 'pending';
     }
-    // data (budget), selector, labels-annotations are all optional → always done
-    return 'done';
   };
+
+  const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => {
+    const s = getSectionStatus(key);
+    return {
+      key,
+      label: SECTION_LABELS[key],
+      status: (s === 'pending' ? 'pre' : s) as WizardSectionState,
+    };
+  });
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={4}>
-            <span className="text-heading-h5">Summary</span>
-            <VStack gap={0}>
-              {SECTION_ORDER.map((step) => {
-                const status = getSectionStatus(step);
-                return (
-                  <HStack key={step} justify="between" className="py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SECTION_LABELS[step]}
-                    </span>
-                    <SummaryStatusIcon status={status} />
-                  </HStack>
-                );
-              })}
-            </VStack>
-          </VStack>
-        </div>
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+        <WizardSummary items={summaryItems} />
 
         {/* Button row */}
         <HStack gap={2}>
@@ -158,7 +116,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            {isEditMode ? 'Save' : 'Create'}
+            Create
           </Button>
         </HStack>
       </div>
@@ -179,7 +137,6 @@ interface BasicInfoSectionProps {
   onNamespaceChange: (value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
-  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -191,7 +148,6 @@ function BasicInfoSection({
   onNamespaceChange,
   description,
   onDescriptionChange,
-  isEditMode = false,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -223,7 +179,6 @@ function BasicInfoSection({
                   if (podDisruptionBudgetNameError) onPodDisruptionBudgetNameErrorChange(null);
                 }}
                 fullWidth
-                disabled={isEditMode}
               />
             </FormField.Control>
             <FormField.ErrorMessage>{podDisruptionBudgetNameError}</FormField.ErrorMessage>
@@ -275,9 +230,9 @@ const OPERATOR_OPTIONS = [
 
 // Mock matching pods data
 const MOCK_MATCHING_PODS: MatchingPod[] = [
-  { id: '1', name: 'deploymentName-77f6bb9c69-4ww7f', createdAt: 'Jul 25, 2025 10:32:16' },
-  { id: '2', name: 'deploymentName-77f6bb9c69-8xyz1', createdAt: 'Jul 25, 2025 10:32:16' },
-  { id: '3', name: 'deploymentName-77f6bb9c69-2abc3', createdAt: 'Jul 25, 2025 10:32:16' },
+  { id: '1', name: 'deploymentName-77f6bb9c69-4ww7f', createdAt: 'Jul 25, 2026 10:32:16' },
+  { id: '2', name: 'deploymentName-77f6bb9c69-8xyz1', createdAt: 'Jul 25, 2026 10:32:16' },
+  { id: '3', name: 'deploymentName-77f6bb9c69-2abc3', createdAt: 'Jul 25, 2026 10:32:16' },
 ];
 
 /* ----------------------------------------
@@ -419,10 +374,10 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
           {/* Selector Rules */}
           <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Rule</span>
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {selectorRules.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -438,7 +393,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
                 {selectorRules.map((rule) => (
                   <div
                     key={rule.id}
-                    className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="input key"
@@ -493,7 +448,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
               >
                 <span className="text-[var(--color-text-default)]">‹</span>
               </button>
-              <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-white rounded-md text-label-sm">
+              <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)] rounded-md text-label-sm">
                 {currentPage}
               </span>
               <button
@@ -574,10 +529,10 @@ function LabelsAnnotationsSection({
               Specify the labels used to identify and categorize the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -590,7 +545,7 @@ function LabelsAnnotationsSection({
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -635,10 +590,10 @@ function LabelsAnnotationsSection({
               Specify the annotations used to provide additional metadata for the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -651,7 +606,7 @@ function LabelsAnnotationsSection({
                   {annotations.map((annotation, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -700,10 +655,6 @@ function LabelsAnnotationsSection({
 
 export function CreatePodDisruptionBudgetPage() {
   const navigate = useNavigate();
-  const { pdbName } = useParams();
-  const isEditMode = !!pdbName;
-  const [searchParams] = useSearchParams();
-  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -740,18 +691,8 @@ export function CreatePodDisruptionBudgetPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(
-      isEditMode
-        ? `Pod disruption budget: ${nameFromQuery || pdbName}`
-        : 'Create pod disruption budget'
-    );
-  }, [updateActiveTabLabel, isEditMode, pdbName]);
-
-  useEffect(() => {
-    if (isEditMode && pdbName) {
-      setPodDisruptionBudgetName(nameFromQuery || pdbName);
-    }
-  }, [isEditMode, pdbName]);
+    updateActiveTabLabel('Create pod disruption budget');
+  }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -862,59 +803,26 @@ export function CreatePodDisruptionBudgetPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Pod disruption budgets', href: '/container/pdb' },
-                ...(isEditMode
-                  ? [
-                      { label: nameFromQuery || pdbName!, href: `/container/pdb/{pdbName}` },
-                      { label: 'Edit config' },
-                    ]
-                  : [{ label: 'Create pod disruption budget' }]),
+                { label: 'Pod Disruption Budgets', href: '/container/pdb' },
+                { label: 'Create PDB' },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
+        <VStack gap={1}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-            {isEditMode
-              ? `Pod disruption budget: ${nameFromQuery || pdbName}`
-              : 'Create pod disruption budget'}
+            Create pod disruption budget
           </h1>
           <p className="text-body-md text-[var(--color-text-muted)]">
             Pod Disruption Budget defines the minimum number of pods that must remain available
@@ -936,7 +844,6 @@ export function CreatePodDisruptionBudgetPage() {
               onNamespaceChange={setNamespace}
               description={description}
               onDescriptionChange={setDescription}
-              isEditMode={isEditMode}
             />
 
             {/* Budget Section */}
@@ -976,7 +883,6 @@ export function CreatePodDisruptionBudgetPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
-            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

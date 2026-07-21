@@ -23,7 +23,7 @@ import {
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
-import { AgentSidebar } from '@/components/AgentSidebar';
+import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconStar,
@@ -95,6 +95,8 @@ function AgentHeader({
             <button
               onClick={onFavoriteToggle}
               className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              aria-pressed={isFavorite}
             >
               {isFavorite ? (
                 <IconStarFilled size={22} className="text-[var(--primitive-color-yellow400)]" />
@@ -123,7 +125,7 @@ function AgentHeader({
             leftIcon={<IconPlayerPause size={12} />}
             onClick={onDeactivate}
           >
-            Deactive
+            Deactivate
           </Button>
           <Button
             variant="secondary"
@@ -366,6 +368,7 @@ function DataSourcesTab() {
       label: 'Action',
       width: fixedColumns.action,
       align: 'center',
+      sticky: 'right',
       render: () => (
         <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
           <IconRefresh size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
@@ -566,6 +569,7 @@ function MCPServersTab() {
       label: 'Action',
       width: fixedColumns.action,
       align: 'center',
+      sticky: 'right',
       render: () => (
         <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
           <IconRefresh size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
@@ -874,6 +878,8 @@ export function AgentDetailPage() {
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const activeTab = searchParams.get('tab') || 'information';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
@@ -912,8 +918,10 @@ export function AgentDetailPage() {
 
   return (
     <PageShell
-      sidebar={<AgentSidebar />}
-      sidebarWidth={60}
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
@@ -929,12 +937,13 @@ export function AgentDetailPage() {
       }
       topBar={
         <TopBar
-          showSidebarToggle={false}
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
-            <Breadcrumb items={[{ label: 'Agent', href: '/agent/list' }, { label: agent.name }]} />
+            <Breadcrumb items={[{ label: 'Agents', href: '/agent/list' }, { label: agent.name }]} />
           }
           actions={
             <>

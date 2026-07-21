@@ -17,6 +17,7 @@ import {
   ContextMenu,
   TabBar,
   PageShell,
+  DetailHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -48,7 +49,7 @@ interface UserGroupDetail {
 interface GroupUser {
   id: string;
   username: string;
-  status: 'active' | 'error' | 'shutoff';
+  status: 'active' | 'deactivated';
   userGroups: string;
   lastSignIn: string;
   createdAt: string;
@@ -73,79 +74,79 @@ const mockUserGroupsMap: Record<string, UserGroupDetail> = {
     name: 'dev-admin-group',
     description: 'Development team administrators',
     type: 'Custom',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   'ops-team': {
     name: 'ops-team',
     description: 'Operations team',
     type: 'Custom',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
   },
   'qa-team': {
     name: 'qa-team',
     description: 'Quality assurance team',
     type: 'Custom',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
   },
   viewers: {
     name: 'viewers',
     description: '-',
     type: 'Built-in',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   administrators: {
     name: 'administrators',
     description: 'System administrators',
     type: 'Built-in',
-    createdAt: 'Aug 1, 2025 10:20:28',
+    createdAt: 'Aug 1, 2026 10:20:28',
   },
   developers: {
     name: 'developers',
     description: 'Development team',
     type: 'Custom',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
   'security-team': {
     name: 'security-team',
     description: 'Security operations',
     type: 'Custom',
-    createdAt: 'Jul 20, 2025 23:27:51',
+    createdAt: 'Jul 20, 2026 23:27:51',
   },
   'support-team': {
     name: 'support-team',
     description: 'Customer support team',
     type: 'Custom',
-    createdAt: 'Jul 10, 2025 01:17:01',
+    createdAt: 'Jul 10, 2026 01:17:01',
   },
   'data-analysts': {
     name: 'data-analysts',
     description: 'Data analysis team',
     type: 'Custom',
-    createdAt: 'Jun 25, 2025 10:32:16',
+    createdAt: 'Jun 25, 2026 10:32:16',
   },
   'external-users': {
     name: 'external-users',
     description: 'External partners',
     type: 'Custom',
-    createdAt: 'Jun 1, 2025 10:20:28',
+    createdAt: 'Jun 1, 2026 10:20:28',
   },
   MemberGroup: {
     name: 'MemberGroup',
     description: 'member group',
     type: 'Custom',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   'viewer-group': {
     name: 'viewer-group',
     description: 'Read-only access group',
     type: 'Custom',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
   },
   'network-admin-group': {
     name: 'network-admin-group',
     description: 'Network administrators group',
     type: 'Built-in',
-    createdAt: 'Jun 15, 2025 12:22:26',
+    createdAt: 'Jun 15, 2026 12:22:26',
   },
 };
 
@@ -155,128 +156,128 @@ const mockGroupUsers: GroupUser[] = [
     username: 'thaki-kim',
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
-    lastSignIn: 'Sep 12, 2025',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    lastSignIn: 'Sep 12, 2026',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'u-002',
     username: 'alex.johnson',
     status: 'active',
     userGroups: 'dev-admin-group',
-    lastSignIn: 'Sep 10, 2025',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    lastSignIn: 'Sep 10, 2026',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
   {
     id: 'u-003',
     username: 'sara.connor',
     status: 'active',
     userGroups: 'dev-admin-group (+1)',
-    lastSignIn: 'Sep 11, 2025',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    lastSignIn: 'Sep 11, 2026',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
   {
     id: 'u-004',
     username: 'john.smith',
-    status: 'shutoff',
+    status: 'deactivated',
     userGroups: 'dev-admin-group',
-    lastSignIn: 'Sep 5, 2025',
-    createdAt: 'Jul 1, 2025 10:20:28',
+    lastSignIn: 'Sep 5, 2026',
+    createdAt: 'Jul 1, 2026 10:20:28',
   },
   {
     id: 'u-005',
     username: 'emily.davis',
     status: 'active',
     userGroups: 'dev-admin-group (+3)',
-    lastSignIn: 'Sep 12, 2025',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    lastSignIn: 'Sep 12, 2026',
+    createdAt: 'Sep 1, 2026 10:20:28',
   },
   {
     id: 'u-006',
     username: 'michael.brown',
     status: 'active',
     userGroups: 'dev-admin-group',
-    lastSignIn: 'Sep 8, 2025',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    lastSignIn: 'Sep 8, 2026',
+    createdAt: 'Aug 5, 2026 14:12:36',
   },
   {
     id: 'u-007',
     username: 'jessica.wilson',
-    status: 'error',
+    status: 'deactivated',
     userGroups: 'dev-admin-group (+1)',
-    lastSignIn: 'Aug 30, 2025',
-    createdAt: 'Jul 15, 2025 12:22:26',
+    lastSignIn: 'Aug 30, 2026',
+    createdAt: 'Jul 15, 2026 12:22:26',
   },
   {
     id: 'u-008',
     username: 'david.lee',
     status: 'active',
     userGroups: 'dev-admin-group',
-    lastSignIn: 'Sep 11, 2025',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    lastSignIn: 'Sep 11, 2026',
+    createdAt: 'Aug 25, 2026 10:32:16',
   },
   {
     id: 'u-009',
     username: 'amanda.taylor',
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
-    lastSignIn: 'Sep 9, 2025',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    lastSignIn: 'Sep 9, 2026',
+    createdAt: 'Aug 10, 2026 01:17:01',
   },
   {
     id: 'u-010',
     username: 'chris.anderson',
     status: 'active',
     userGroups: 'dev-admin-group',
-    lastSignIn: 'Sep 7, 2025',
-    createdAt: 'Jul 20, 2025 23:27:51',
+    lastSignIn: 'Sep 7, 2026',
+    createdAt: 'Jul 20, 2026 23:27:51',
   },
   {
     id: 'u-011',
     username: 'laura.martinez',
-    status: 'shutoff',
+    status: 'deactivated',
     userGroups: 'dev-admin-group',
-    lastSignIn: 'Aug 28, 2025',
-    createdAt: 'Jun 30, 2025 21:37:41',
+    lastSignIn: 'Aug 28, 2026',
+    createdAt: 'Jun 30, 2026 21:37:41',
   },
   {
     id: 'u-012',
     username: 'ryan.thomas',
     status: 'active',
     userGroups: 'dev-admin-group (+1)',
-    lastSignIn: 'Sep 10, 2025',
-    createdAt: 'Aug 18, 2025 09:01:17',
+    lastSignIn: 'Sep 10, 2026',
+    createdAt: 'Aug 18, 2026 09:01:17',
   },
   {
     id: 'u-013',
     username: 'megan.jackson',
     status: 'active',
     userGroups: 'dev-admin-group',
-    lastSignIn: 'Sep 6, 2025',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    lastSignIn: 'Sep 6, 2026',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: 'u-014',
     username: 'kevin.white',
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
-    lastSignIn: 'Sep 11, 2025',
-    createdAt: 'Aug 22, 2025 13:53:25',
+    lastSignIn: 'Sep 11, 2026',
+    createdAt: 'Aug 22, 2026 13:53:25',
   },
   {
     id: 'u-015',
     username: 'nicole.harris',
     status: 'active',
     userGroups: 'dev-admin-group',
-    lastSignIn: 'Sep 8, 2025',
-    createdAt: 'Aug 1, 2025 10:20:28',
+    lastSignIn: 'Sep 8, 2026',
+    createdAt: 'Aug 1, 2026 10:20:28',
   },
   {
     id: 'u-016',
     username: 'daniel.clark',
     status: 'active',
     userGroups: 'dev-admin-group',
-    lastSignIn: 'Sep 12, 2025',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    lastSignIn: 'Sep 12, 2026',
+    createdAt: 'Sep 5, 2026 14:12:36',
   },
 ];
 
@@ -288,7 +289,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'ReadCompute (+2)',
     userGroupCount: 13,
     userCount: 25,
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'r-002',
@@ -297,7 +298,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'ComputeFullAccess (+2)',
     userGroupCount: 8,
     userCount: 15,
-    createdAt: 'Jan 15, 2025 12:22:26',
+    createdAt: 'Jan 15, 2026 12:22:26',
   },
   {
     id: 'r-003',
@@ -306,7 +307,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'StorageReadOnly',
     userGroupCount: 5,
     userCount: 12,
-    createdAt: 'Jan 20, 2025 23:27:51',
+    createdAt: 'Jan 20, 2026 23:27:51',
   },
   {
     id: 'r-004',
@@ -315,7 +316,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'NetworkFullAccess (+1)',
     userGroupCount: 3,
     userCount: 8,
-    createdAt: 'Feb 1, 2025 10:20:28',
+    createdAt: 'Feb 1, 2026 10:20:28',
   },
   {
     id: 'r-005',
@@ -324,7 +325,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'DevPolicy',
     userGroupCount: 2,
     userCount: 10,
-    createdAt: 'Jun 10, 2025 01:17:01',
+    createdAt: 'Jun 10, 2026 01:17:01',
   },
   {
     id: 'r-006',
@@ -333,31 +334,9 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'IAMReadOnly',
     userGroupCount: 4,
     userCount: 7,
-    createdAt: 'Mar 15, 2025 12:22:26',
+    createdAt: 'Mar 15, 2026 12:22:26',
   },
 ];
-
-/* ----------------------------------------
-   Info Card Component
-   ---------------------------------------- */
-
-interface InfoCardProps {
-  label: string;
-  value: string;
-  rightElement?: React.ReactNode;
-}
-
-function InfoCard({ label, value, rightElement }: InfoCardProps) {
-  return (
-    <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
-      <div className="flex flex-col gap-1.5">
-        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
-        <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
-      </div>
-      {rightElement}
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Main Component
@@ -445,7 +424,7 @@ export default function IAMUserGroupDetailPage() {
       width: fixedColumns.status,
       align: 'center',
       render: (value) => (
-        <StatusIndicator layout="icon-only" status={value as 'active' | 'error' | 'shutoff'} />
+        <StatusIndicator layout="icon-only" status={value as 'active' | 'deactivated'} />
       ),
     },
     {
@@ -489,12 +468,15 @@ export default function IAMUserGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu
           items={getUserContextMenuItems(row.id, row.status !== 'active')}
           trigger="click"
+          align="right"
         >
           <button
+            aria-label="Row actions"
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
@@ -546,13 +528,6 @@ export default function IAMUserGroupDetailPage() {
       sortable: true,
     },
     {
-      key: 'policies',
-      label: 'Policies',
-      flex: 1,
-      minWidth: columnMinWidths.policies,
-      render: (row) => row.policies,
-    },
-    {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
@@ -565,12 +540,15 @@ export default function IAMUserGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu
           items={getRoleContextMenuItems(row.id, row.type === 'Built-in')}
           trigger="click"
+          align="right"
         >
           <button
+            aria-label="Row actions"
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
@@ -587,8 +565,7 @@ export default function IAMUserGroupDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'User groups', href: '/iam/user-groups' },
+    { label: 'User Groups', href: '/iam/user-groups' },
     { label: userGroup?.name || groupName || '' },
   ];
 
@@ -658,56 +635,46 @@ export default function IAMUserGroupDetailPage() {
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
-        {/* Header Card */}
-        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-              {userGroup.name}
-            </h1>
-
-            {/* Action Buttons */}
-            <HStack gap={1}>
-              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
-                Edit
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
-                Delete
-              </Button>
-              <ContextMenu
-                items={[
-                  {
-                    id: 'manage-roles',
-                    label: 'Manage roles',
-                    onClick: () => console.log('Manage roles'),
-                  },
-                  {
-                    id: 'manage-users',
-                    label: 'Manage users',
-                    onClick: () => console.log('Manage users'),
-                  },
-                ]}
-                trigger="click"
-                align="right"
+        <DetailHeader>
+          <DetailHeader.Title>{userGroup.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+              Delete
+            </Button>
+            <ContextMenu
+              items={[
+                {
+                  id: 'manage-roles',
+                  label: 'Manage roles',
+                  onClick: () => console.log('Manage roles'),
+                },
+                {
+                  id: 'manage-users',
+                  label: 'Manage users',
+                  onClick: () => console.log('Manage users'),
+                },
+              ]}
+              trigger="click"
+              align="right"
+            >
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                >
-                  More actions
-                </Button>
-              </ContextMenu>
-            </HStack>
-
-            {/* Info Cards */}
-            <HStack gap={2} className="w-full">
-              <InfoCard label="Description" value={userGroup.description} />
-              <InfoCard label="Type" value={userGroup.type} />
-              <InfoCard label="Created at" value={userGroup.createdAt} />
-            </HStack>
-          </VStack>
-        </div>
+                More actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Description" value={userGroup.description} />
+            <DetailHeader.InfoCard label="Type" value={userGroup.type} />
+            <DetailHeader.InfoCard label="Created at" value={userGroup.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
         {/* Tabs Section */}
         <div className="w-full">

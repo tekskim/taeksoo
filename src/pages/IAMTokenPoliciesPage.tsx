@@ -54,7 +54,7 @@ export default function IAMTokenPoliciesPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Token policies' }];
+  const breadcrumbItems = [{ label: 'Token Policies' }];
 
   // Handle reset to default
   const handleResetToDefault = () => {

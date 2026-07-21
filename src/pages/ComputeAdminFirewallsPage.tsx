@@ -1,10 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -24,8 +23,9 @@ import {
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -106,7 +106,7 @@ const mockFirewalls: Firewall[] = Array.from({ length: 25 }, (_, i) => ({
         ]
       : [],
   adminState: i % 5 === 0 ? 'Down' : 'Up',
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025 ${String(8 + (i % 16)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:${String((i * 13) % 60).padStart(2, '0')}`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026 ${String(8 + (i % 16)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:${String((i * 13) % 60).padStart(2, '0')}`,
 }));
 
 const mockFirewallPolicies: FirewallPolicy[] = Array.from({ length: 20 }, (_, i) => ({
@@ -124,7 +124,7 @@ const mockFirewallPolicies: FirewallPolicy[] = Array.from({ length: 20 }, (_, i)
   audited: i % 2 === 0,
   shared: i % 3 === 0,
   adminState: i % 4 === 0 ? 'Down' : 'Up',
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026`,
 }));
 
 const mockFirewallRules: FirewallRule[] = Array.from({ length: 30 }, (_, i) => ({
@@ -140,7 +140,7 @@ const mockFirewallRules: FirewallRule[] = Array.from({ length: 30 }, (_, i) => (
   destinationPort: ['80', '443', '22', '3306', 'any'][i % 5],
   action: ['allow', 'deny', 'reject'][i % 3] as 'allow' | 'deny' | 'reject',
   enabled: i % 4 !== 0,
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026`,
 }));
 
 /* ----------------------------------------
@@ -182,6 +182,13 @@ export default function ComputeAdminFirewallsPage() {
   const [selectedRules, setSelectedRules] = useState<string[]>([]);
   const rulesPerPage = 10;
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
@@ -192,10 +199,7 @@ export default function ComputeAdminFirewallsPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Firewalls' },
-  ];
+  const breadcrumbItems = [{ label: 'NACL' }];
 
   // Filtered firewalls
   const filteredFirewalls = useMemo(() => {
@@ -313,7 +317,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -331,7 +340,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -350,8 +364,11 @@ export default function ComputeAdminFirewallsPage() {
             >
               {row.ingressPolicy}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.ingressPolicyId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.ingressPolicyId}>
+                ID : {row.ingressPolicyId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.ingressPolicyId} />
             </span>
           </div>
         ) : (
@@ -373,8 +390,11 @@ export default function ComputeAdminFirewallsPage() {
             >
               {row.egressPolicy}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.egressPolicyId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.egressPolicyId}>
+                ID : {row.egressPolicyId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.egressPolicyId} />
             </span>
           </div>
         ) : (
@@ -393,8 +413,11 @@ export default function ComputeAdminFirewallsPage() {
               <span className="text-[var(--color-text-default)]">
                 {row.associatedPorts[0].name}
               </span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID: {row.associatedPorts[0].id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.associatedPorts[0].id}>
+                  ID : {row.associatedPorts[0].id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.associatedPorts[0].id} />
               </span>
             </div>
             {row.associatedPorts.length > 1 && (
@@ -404,11 +427,11 @@ export default function ComputeAdminFirewallsPage() {
                 delay={100}
                 hideDelay={100}
                 content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="p-3 min-w-[160px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                       All Ports ({row.associatedPorts.length})
                     </div>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                       {row.associatedPorts.map((p, i) => (
                         <Badge key={i} theme="white" size="sm">
                           {p.name}
@@ -451,10 +474,14 @@ export default function ComputeAdminFirewallsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getFirewallMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -483,7 +510,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -501,7 +533,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -514,8 +551,11 @@ export default function ComputeAdminFirewallsPage() {
         <div className="flex items-center gap-1 min-w-0">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-[var(--color-text-default)]">{row.firstRule}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID:{row.firstRuleId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.firstRuleId}>
+                ID : {row.firstRuleId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.firstRuleId} />
             </span>
           </div>
           {row.rulesCount > 1 && (
@@ -535,8 +575,11 @@ export default function ComputeAdminFirewallsPage() {
         <div className="flex items-center gap-1 min-w-0">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-[var(--color-text-default)]">{row.firstFirewall}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID:{row.firstFirewallId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.firstFirewallId}>
+                ID : {row.firstFirewallId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.firstFirewallId} />
             </span>
           </div>
           {row.firewallsCount > 1 && (
@@ -564,10 +607,14 @@ export default function ComputeAdminFirewallsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getPolicyMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -596,7 +643,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -614,7 +666,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -664,10 +721,14 @@ export default function ComputeAdminFirewallsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -703,14 +764,12 @@ export default function ComputeAdminFirewallsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-          }
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -798,6 +857,7 @@ export default function ComputeAdminFirewallsPage() {
                 selectable
                 selectedKeys={selectedFirewalls}
                 onSelectionChange={setSelectedFirewalls}
+                loading={loading}
               />
             </VStack>
           </TabPanel>
@@ -854,6 +914,7 @@ export default function ComputeAdminFirewallsPage() {
                 selectable
                 selectedKeys={selectedPolicies}
                 onSelectionChange={setSelectedPolicies}
+                loading={loading}
               />
             </VStack>
           </TabPanel>
@@ -910,6 +971,7 @@ export default function ComputeAdminFirewallsPage() {
                 selectable
                 selectedKeys={selectedRules}
                 onSelectionChange={setSelectedRules}
+                loading={loading}
               />
             </VStack>
           </TabPanel>

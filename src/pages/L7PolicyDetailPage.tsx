@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -27,13 +26,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconBell,
-  IconCirclePlus,
-  IconDotsCircleHorizontal,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconCirclePlus, IconDotsCircleHorizontal } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -89,7 +82,7 @@ const mockL7PolicyDetail: L7PolicyDetail = {
   name: 'policy1',
   status: 'active',
   adminState: 'Up',
-  createdAt: 'Jul 25, 2025 10:32:16',
+  createdAt: 'Jul 25, 2026 10:32:16',
   // Basic information
   description: '-',
   behavior: 'Forward to Pool',
@@ -148,6 +141,7 @@ const l7RuleStatusMap: Record<L7RuleStatus, 'active' | 'building' | 'error'> = {
    ---------------------------------------- */
 
 export default function L7PolicyDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -178,13 +172,18 @@ export default function L7PolicyDetailPage() {
   }, [l7Policy?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Load balancers', href: '/compute/load-balancers' },
+    { label: 'Load Balancers', href: '/compute/load-balancers' },
     {
-      label: l7Policy.listener?.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}`,
+      label:
+        l7Policy.listener?.loadBalancer?.name ?? l7Policy.listener?.loadBalancer?.id ?? 'Unknown',
+      href: l7Policy.listener?.loadBalancer?.id
+        ? `/compute/load-balancers/${l7Policy.listener.loadBalancer.id}`
+        : undefined,
     },
-    { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
+    {
+      label: l7Policy.listener?.name ?? 'Unknown',
+      href: l7Policy.listener?.id ? `/compute/listeners/${l7Policy.listener.id}` : undefined,
+    },
     { label: l7Policy.name },
   ];
 
@@ -272,6 +271,7 @@ export default function L7PolicyDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: L7Rule) => {
         const ruleMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit rule', row.id) },
@@ -285,7 +285,10 @@ export default function L7PolicyDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={ruleMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -318,41 +321,29 @@ export default function L7PolicyDetailPage() {
       topBar={
         <TopBar
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           onSidebarToggle={openSidebar}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} align="stretch" className="min-w-[1176px]">
+      <VStack gap={6} align="stretch">
         {/* Detail header */}
         <DetailHeader>
-          <DetailHeader.Title>
-            <h1 className="text-heading-h5 text-[var(--color-text-default)] leading-6 mb-3">
-              {l7Policy.name}
-            </h1>
-            <DetailHeader.Actions>
-              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                Edit
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                Add L7 rule
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                Delete
-              </Button>
-            </DetailHeader.Actions>
-          </DetailHeader.Title>
+          <DetailHeader.Title>{l7Policy.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Add L7 rule
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
@@ -367,7 +358,7 @@ export default function L7PolicyDetailPage() {
 
         {/* Tabs */}
         <div className="w-full">
-          <Tabs value={activeDetailTab} onChange={setActiveDetailTab}>
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="l7-rules">L7 Rules</Tab>

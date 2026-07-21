@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 interface FigmaCaptureWrapperProps {
   children: ReactNode;
@@ -28,9 +29,16 @@ export function FigmaCaptureWrapper({
 
   if (!hasShell) {
     return (
-      <div className="fixed inset-0 bg-white overflow-y-auto">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="fixed inset-0 bg-white"
+      >
         <div className={contentClassName}>{children}</div>
-      </div>
+      </OverlayScrollbarsComponent>
     );
   }
 
@@ -63,11 +71,18 @@ export function FigmaCaptureWrapper({
           )}
 
           {/* Content — scrollable */}
-          <div className="flex-1 overflow-y-auto overscroll-contain">
+          <OverlayScrollbarsComponent
+            options={{
+              overflow: { x: 'hidden', y: 'scroll' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            defer={false}
+            className="flex-1 overscroll-contain"
+          >
             <div className={`bg-[var(--color-surface-default)] ${contentClassName}`.trim()}>
               {children}
             </div>
-          </div>
+          </OverlayScrollbarsComponent>
         </div>
       </div>
     </div>

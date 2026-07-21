@@ -1,0 +1,7 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Container Platform">
+  <rect width="128" height="128" rx="28" fill="#1E5FD1"/>
+  <!-- Stacked isometric layers: one read-only plane over many container sources -->
+  <path d="M64 30 L100 48 L64 66 L28 48 Z" fill="#FFFFFF"/>
+  <path d="M28 62 L64 80 L100 62 L100 68 L64 86 L28 68 Z" fill="#FFFFFF" fill-opacity="0.7"/>
+  <path d="M28 78 L64 96 L100 78 L100 84 L64 102 L28 84 Z" fill="#FFFFFF" fill-opacity="0.45"/>
+</svg>

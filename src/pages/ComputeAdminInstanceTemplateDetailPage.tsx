@@ -6,7 +6,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   SectionCard,
   WizardSummary,
@@ -15,13 +14,14 @@ import {
   Select,
   Toggle,
   FormField,
+  Modal,
+  InlineMessage,
   PageShell,
-  PageHeader,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconTrash } from '@tabler/icons-react';
+import { IconEdit } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -113,7 +113,7 @@ const mockTemplatesMap: Record<string, InstanceTemplateDetail> = {
     keyPair: 'my-keypair',
     access: 'Personal',
     favorite: true,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     createdBy: 'admin@thaki.cloud',
     availabilityZone: 'nova',
     serverGroup: '-',
@@ -143,7 +143,7 @@ const mockTemplatesMap: Record<string, InstanceTemplateDetail> = {
     keyPair: 'my-keypair',
     access: 'Project',
     favorite: false,
-    createdAt: 'Jul 24, 2025 03:19:59',
+    createdAt: 'Jul 24, 2026 03:19:59',
     createdBy: 'admin@thaki.cloud',
     availabilityZone: 'nova',
     serverGroup: '-',
@@ -173,7 +173,7 @@ const mockTemplatesMap: Record<string, InstanceTemplateDetail> = {
     keyPair: 'db-keypair',
     access: 'Personal',
     favorite: false,
-    createdAt: 'Jul 23, 2025 20:06:42',
+    createdAt: 'Jul 23, 2026 20:06:42',
     createdBy: 'admin@thaki.cloud',
     availabilityZone: 'nova',
     serverGroup: 'db-group',
@@ -303,10 +303,9 @@ interface SummarySidebarProps {
   sectionStatus: Record<SectionStep, WizardSectionState>;
   onCancel: () => void;
   onSave: () => void;
-  onDelete: () => void;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onSave, onDelete }: SummarySidebarProps) {
+function SummarySidebar({ sectionStatus, onCancel, onSave }: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
@@ -317,32 +316,19 @@ function SummarySidebar({ sectionStatus, onCancel, onSave, onDelete }: SummarySi
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card using WizardSummary */}
         <WizardSummary title="Summary" items={summaryItems} />
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel}>
+          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
           <Button variant="primary" onClick={onSave} className="flex-1" disabled={!isAllDone}>
             Save
           </Button>
         </HStack>
-      </div>
-
-      {/* Delete Action */}
-      <div className="flex justify-center mt-4">
-        <Button
-          variant="secondary"
-          size="sm"
-          leftIcon={<IconTrash size={12} />}
-          onClick={onDelete}
-          className="w-[80px] h-8"
-        >
-          Delete
-        </Button>
       </div>
     </div>
   );
@@ -365,6 +351,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
 
   // Editable form state
   const [formData, setFormData] = useState<InstanceTemplateDetail>(originalTemplate);
+
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
 
   // Track which section is being edited (null = all done)
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
@@ -397,25 +385,23 @@ export function ComputeAdminInstanceTemplateDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Instance templates', href: '/compute-admin/instance-templates' },
-    { label: 'Edit template' },
+    { label: 'Instance Templates', href: '/compute-admin/instance-templates' },
+    { label: formData.name, href: `/compute-admin/instance-templates/${id}` },
+    { label: 'Edit' },
   ];
 
   const handleCancel = () => {
-    navigate('/compute-admin/instance-templates');
+    setCancelModalOpen(true);
+  };
+
+  const handleLeave = () => {
+    setCancelModalOpen(false);
+    navigate(`/compute-admin/instance-templates/${id}`);
   };
 
   const handleSave = () => {
-    // Save logic here
     console.log('Saving template:', formData);
-    navigate('/compute-admin/instance-templates');
-  };
-
-  const handleDelete = () => {
-    if (window.confirm('Removing the selected instances is permanent and cannot be undone.')) {
-      navigate('/compute-admin/instance-templates');
-    }
+    navigate(`/compute-admin/instance-templates/${id}`);
   };
 
   const handleEdit = (section: SectionStep) => {
@@ -499,32 +485,23 @@ export function ComputeAdminInstanceTemplateDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => navigate('/compute-admin/instance-templates')}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(`/compute-admin/instance-templates/${id}`)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={3} className="min-w-[1176px]">
+      <VStack gap={3}>
         {/* Page Title with ID */}
-        <PageHeader
-          title={
-            <HStack gap={1} align="center">
-              <span>Edit template</span>
-              <span className="text-label-lg text-[var(--color-text-subtle)]">
-                (ID: {formData.id})
-              </span>
-            </HStack>
-          }
-        />
+        <div className="flex items-center h-8">
+          <HStack gap={1} align="center">
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Edit template</h1>
+            <span className="text-label-lg text-[var(--color-text-subtle)]">
+              (ID: {formData.id})
+            </span>
+          </HStack>
+        </div>
 
         <HStack gap={6} align="start" className="w-full">
           {/* Left Column - Main Content */}
@@ -839,10 +816,26 @@ export function ComputeAdminInstanceTemplateDetailPage() {
             sectionStatus={sectionStatus}
             onCancel={handleCancel}
             onSave={handleSave}
-            onDelete={handleDelete}
           />
         </HStack>
       </VStack>
+      <Modal
+        isOpen={cancelModalOpen}
+        onClose={() => setCancelModalOpen(false)}
+        title="Unsaved changes"
+        size="sm"
+      >
+        <InlineMessage variant="info">Any unsaved changes will be lost.</InlineMessage>
+
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={handleLeave} className="flex-1">
+            Leave
+          </Button>
+          <Button variant="primary" onClick={() => setCancelModalOpen(false)} className="flex-1">
+            Stay
+          </Button>
+        </div>
+      </Modal>
     </PageShell>
   );
 }

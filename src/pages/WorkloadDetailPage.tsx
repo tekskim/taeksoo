@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
+  HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -19,12 +19,16 @@ import {
   ContextMenu,
   PageShell,
   CopyButton,
+  Drawer,
+  Toggle,
+  InfoBox,
+  Select,
+  FormField,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconPlayerPause,
-  IconBell,
   IconTerminal2,
   IconWorld,
   IconNetwork,
@@ -33,6 +37,8 @@ import {
   IconAlertCircle,
   IconInfoCircle,
   IconCircleX,
+  IconLock,
+  IconExternalLink,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -43,6 +49,7 @@ interface WorkloadDetail {
   id: string;
   name: string;
   status: 'running' | 'pending' | 'failed' | 'stopped';
+  locked: boolean;
   namespace: string;
   createdAt: string;
   computeType: string;
@@ -81,8 +88,9 @@ const mockWorkloadsMap: Record<string, WorkloadDetail> = {
     id: 'presidio-pii-deid-eb9502cc',
     name: 'presidio-pii-deid-eb9502cc',
     status: 'running',
+    locked: true,
     namespace: 'default',
-    createdAt: 'Jan 8, 2025 11:51:27',
+    createdAt: 'Jan 8, 2026 11:51:27',
     computeType: 'gpu × 1',
     memory: '40960Mi',
     cost: '$0.89/hr',
@@ -109,8 +117,9 @@ const mockWorkloadsMap: Record<string, WorkloadDetail> = {
     id: 'audiocraft-f6c7d9c6',
     name: 'audiocraft-f6c7d9c6',
     status: 'running',
+    locked: false,
     namespace: 'default',
-    createdAt: 'Jan 7, 2025 04:38:10',
+    createdAt: 'Jan 7, 2026 04:38:10',
     computeType: 'gpu × 1',
     memory: '40960Mi',
     cost: '$0.89/hr',
@@ -142,6 +151,7 @@ const defaultWorkloadDetail: WorkloadDetail = {
   id: 'unknown',
   name: 'Unknown Workload',
   status: 'stopped',
+  locked: false,
   namespace: 'default',
   createdAt: '-',
   computeType: '-',
@@ -154,6 +164,12 @@ const defaultWorkloadDetail: WorkloadDetail = {
   sshOverTcp: { status: 'unavailable' },
   directTcpPorts: { status: 'unavailable' },
 };
+
+const CONNECT_PORT_OPTIONS = [
+  { value: '80', label: 'Port 80' },
+  { value: '443', label: 'Port 443' },
+  { value: '8080', label: 'Port 8080' },
+];
 
 /* ----------------------------------------
    Connection Card Component
@@ -204,8 +220,8 @@ function ConnectionCard({
       case 'setup-required':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border-default)]">
-            <IconCircleCheck size={16} />
-            Available
+            <IconSettings size={16} />
+            Setup Required
           </span>
         );
       default:
@@ -219,7 +235,7 @@ function ConnectionCard({
 
   return (
     <div
-      className={`border rounded-lg p-4 ${highlighted ? 'border-[var(--color-action-primary)] border-2' : 'border-[var(--color-border-default)]'}`}
+      className={`border rounded-[var(--radius-lg)] p-4 ${highlighted ? 'border-[var(--color-action-primary)] border-2' : 'border-[var(--color-border-default)]'}`}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-start gap-3">
@@ -316,6 +332,44 @@ export function WorkloadDetailPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
+  const [isLockOpen, setIsLockOpen] = useState(false);
+  const [isConnectOpen, setIsConnectOpen] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+  const [selectedPort, setSelectedPort] = useState('80');
+  const [detailLocked, setDetailLocked] = useState(false);
+
+  useEffect(() => {
+    setDetailLocked(workload.locked);
+  }, [id, workload.locked]);
+
+  const connectAccessUrl = useMemo(
+    () => `https://${workload.name}.ai-platform.thaki.cloud:${selectedPort}`,
+    [workload.name, selectedPort]
+  );
+
+  const openLockDrawer = () => {
+    setIsLocked(detailLocked);
+    setIsLockOpen(true);
+  };
+
+  const closeLockDrawer = () => {
+    setIsLockOpen(false);
+  };
+
+  const handleLockSave = () => {
+    setDetailLocked(isLocked);
+    setIsLockOpen(false);
+  };
+
+  const openConnectDrawer = () => {
+    setSelectedPort('80');
+    setIsConnectOpen(true);
+  };
+
+  const closeConnectDrawer = () => {
+    setIsConnectOpen(false);
+  };
+
   return (
     <PageShell
       sidebar={
@@ -328,7 +382,7 @@ export function WorkloadDetailPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={handleTabClose}
-          onTabMove={moveTab}
+          onTabReorder={moveTab}
           showWindowControls={true}
           onWindowClose={() => navigate('/')}
         />
@@ -336,30 +390,39 @@ export function WorkloadDetailPage() {
       topBar={
         <TopBar
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Pods', href: '/ai-platform/workloads' }, { label: workload.name }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Workload Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{workload.name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconWorld size={12} />}
+              onClick={openConnectDrawer}
+            >
+              Connect
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconLock size={12} />}
+              onClick={openLockDrawer}
+            >
+              Lock
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconPlayerPause size={12} />}>
               Stop
             </Button>
@@ -417,7 +480,7 @@ export function WorkloadDetailPage() {
                 {/* Quick Access Section */}
                 <div>
                   <div className="flex items-center gap-2 mb-4">
-                    <h3 className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                    <h3 className="text-heading-h6 text-[var(--color-text-default)]">
                       Quick Access
                     </h3>
                     <Badge variant="default" size="sm">
@@ -581,40 +644,129 @@ export function WorkloadDetailPage() {
             {/* Logs Tab Panel */}
             <TabPanel value="logs" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px] overflow-auto">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px]"
+                >
                   <pre className="whitespace-pre-wrap">
-                    {`[2025-01-08 14:30:00] Starting container...
-[2025-01-08 14:30:02] Pulling image presidio-pii-deid:latest
-[2025-01-08 14:30:15] Image pulled successfully
-[2025-01-08 14:30:16] Creating container...
-[2025-01-08 14:30:18] Container created
-[2025-01-08 14:30:19] Starting services...
-[2025-01-08 14:30:25] GPU initialized: NVIDIA A100 40GB
-[2025-01-08 14:30:30] Service ready on port 8080
-[2025-01-08 14:30:30] Workload is now running`}
+                    {`[2026-01-08 14:30:00] Starting container...
+[2026-01-08 14:30:02] Pulling image presidio-pii-deid:latest
+[2026-01-08 14:30:15] Image pulled successfully
+[2026-01-08 14:30:16] Creating container...
+[2026-01-08 14:30:18] Container created
+[2026-01-08 14:30:19] Starting services...
+[2026-01-08 14:30:25] GPU initialized: NVIDIA A100 40GB
+[2026-01-08 14:30:30] Service ready on port 8080
+[2026-01-08 14:30:30] Workload is now running`}
                   </pre>
-                </div>
+                </OverlayScrollbarsComponent>
               </div>
             </TabPanel>
 
             {/* Terminal Tab Panel */}
             <TabPanel value="terminal" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[#1e1e1e] rounded-lg p-4 font-mono text-body-md text-[#d4d4d4] h-[400px] overflow-auto">
+                <OverlayScrollbarsComponent
+                  options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+                  defer={false}
+                  className="bg-[var(--color-text-default)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-subtle)] h-[400px]"
+                >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[#4ec9b0]">root</span>
-                    <span className="text-[#d4d4d4]">@</span>
-                    <span className="text-[#569cd6]">{workload.name}</span>
-                    <span className="text-[#d4d4d4]">:~$</span>
+                    <span className="text-[var(--color-state-success)]">root</span>
+                    <span className="text-[var(--color-text-subtle)]">@</span>
+                    <span className="text-[var(--color-state-info)]">{workload.name}</span>
+                    <span className="text-[var(--color-text-subtle)]">:~$</span>
                     <span className="animate-pulse">▊</span>
                   </div>
-                  <p className="text-[#808080] text-center mt-20">Click to connect to terminal</p>
-                </div>
+                  <p className="text-[var(--color-text-muted)] text-center mt-20">
+                    Terminal not connected
+                  </p>
+                </OverlayScrollbarsComponent>
               </div>
             </TabPanel>
           </Tabs>
         </div>
       </VStack>
+
+      <Drawer
+        isOpen={isLockOpen}
+        onClose={closeLockDrawer}
+        title="Lock setting"
+        description="Locking an instance prevents it from being deleted or modified. You can unlock it anytime to allow changes again."
+        width={376}
+        footer={
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" onClick={closeLockDrawer} className="flex-1">
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleLockSave} className="flex-1">
+              Save
+            </Button>
+          </HStack>
+        }
+      >
+        <VStack gap={6}>
+          <InfoBox label="Workload" value={workload.name} />
+          <FormField label="Lock Status" spacing="loose">
+            <Toggle
+              checked={isLocked}
+              onChange={(e) => setIsLocked(e.target.checked)}
+              label="Locked"
+            />
+          </FormField>
+        </VStack>
+      </Drawer>
+
+      <Drawer
+        isOpen={isConnectOpen}
+        onClose={closeConnectDrawer}
+        title="Connect"
+        description="Enables external access to web services running inside a Pod via routing or by establishing a direct SSH session."
+        width={376}
+        footer={
+          <Button variant="secondary" onClick={closeConnectDrawer} className="w-full">
+            Close
+          </Button>
+        }
+      >
+        <VStack gap={6}>
+          <FormField label="HTTP service" description="Access your service through web browser">
+            <Select
+              options={CONNECT_PORT_OPTIONS}
+              value={selectedPort}
+              onChange={setSelectedPort}
+              fullWidth
+            />
+          </FormField>
+          <InfoBox label="Access URL" value={connectAccessUrl} copyable />
+          <InlineMessage variant="info">
+            This URL connects to your Pod&apos;s web service through a secure session-based proxy.
+            Most web applications like Jupyter, VS Code Server are supported.
+          </InlineMessage>
+          <Disclosure defaultOpen={false}>
+            <Disclosure.Trigger>
+              <span className="text-heading-h6 text-[var(--color-text-default)]">
+                Advanced connection options
+              </span>
+            </Disclosure.Trigger>
+            <Disclosure.Panel className="pt-2">
+              <VStack gap={2}>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Secure shell access for advanced users
+                </span>
+                <Button variant="secondary" size="sm" rightIcon={<IconExternalLink size={12} />}>
+                  Set Up SSH Connection
+                </Button>
+                <InlineMessage variant="info">
+                  SSH access requires setting up a secure connection through our bastion host. This
+                  process takes 5-10 seconds.
+                </InlineMessage>
+              </VStack>
+            </Disclosure.Panel>
+          </Disclosure>
+        </VStack>
+      </Drawer>
     </PageShell>
   );
 }

@@ -1,13 +1,13 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TopBar, TopBarAction, Breadcrumb, VStack, PageShell, TabBar } from '@/design-system';
-import { AgentSidebar } from '@/components/AgentSidebar';
+import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconMessagePlus,
   IconRobotFace,
   IconSquarePlus,
   IconPuzzle,
-  IconBell,
   IconPalette,
   IconTarget,
   IconPencil,
@@ -26,7 +26,7 @@ function StatCard({ value, label }: StatCardProps) {
     value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 border-2 border-transparent">
       <div className={`text-heading-h4 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
@@ -53,21 +53,23 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   const getStatusIcon = () => {
     if (status === 'active') {
-      return <IconTarget size={12} stroke={1.5} className="text-white" />;
+      return <IconTarget size={12} stroke={1.5} className="text-[var(--color-text-on-primary)]" />;
     } else if (status === 'inactive') {
       return (
         <div className="flex flex-col gap-0.5 items-center justify-center">
-          <div className="h-1 w-2 bg-white rounded-sm" />
-          <div className="h-1 w-2 bg-white rounded-sm" />
+          <div className="h-1 w-2 bg-[var(--color-text-on-primary)] rounded-sm" />
+          <div className="h-1 w-2 bg-[var(--color-text-on-primary)] rounded-sm" />
         </div>
       );
     } else if (status === 'draft') {
-      return <IconPencil size={12} stroke={1.5} className="text-white" />;
+      return <IconPencil size={12} stroke={1.5} className="text-[var(--color-text-on-primary)]" />;
     }
   };
 
   return (
-    <div className={`${bgColor} flex flex-1 items-center justify-between px-4 py-3 rounded-lg`}>
+    <div
+      className={`${bgColor} flex flex-1 items-center justify-between px-4 py-3 rounded-[var(--radius-lg)]`}
+    >
       <div className="flex flex-col gap-1">
         <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
         <span className="text-body-md text-[var(--color-text-default)]">{count}</span>
@@ -87,16 +89,29 @@ interface QuickActionCardProps {
   label: string;
   highlighted?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
-function QuickActionCard({ icon, label, highlighted = false, onClick }: QuickActionCardProps) {
+function QuickActionCard({
+  icon,
+  label,
+  highlighted = false,
+  onClick,
+  disabled = false,
+}: QuickActionCardProps) {
   return (
     <button
+      type="button"
+      disabled={disabled}
       onClick={onClick}
-      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 text-left transition-colors hover:bg-[var(--color-surface-muted)] ${
-        highlighted
-          ? 'border-2 border-[var(--color-action-primary)]'
-          : 'border-2 border-transparent hover:border-[var(--color-action-primary)]'
+      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] ${
+        disabled
+          ? 'opacity-60 cursor-not-allowed border-2 border-transparent'
+          : `hover:bg-[var(--color-surface-muted)] ${
+              highlighted
+                ? 'border-2 border-[var(--color-action-primary)]'
+                : 'border-2 border-transparent hover:border-[var(--color-action-primary)]'
+            }`
       }`}
     >
       <div className="pb-1">
@@ -118,18 +133,30 @@ interface ChatItemProps {
 }
 
 function ChatItem({ title, description, createdAt, onClick }: ChatItemProps) {
-  return (
-    <div
-      onClick={onClick}
-      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3 cursor-pointer transition-colors hover:border-[var(--color-border-focus)]"
-    >
+  const shellClassName =
+    'm-0 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3 cursor-pointer transition-colors hover:border-[var(--color-border-focus)] font-sans';
+
+  const inner = (
+    <>
       <div className="flex flex-col gap-1 mb-3">
-        <p className="text-label-lg text-[var(--color-text-default)]">{title}</p>
-        <p className="text-body-sm text-[var(--color-text-subtle)] line-clamp-2">{description}</p>
+        <span className="block text-label-lg text-[var(--color-text-default)]">{title}</span>
+        <span className="block text-body-sm text-[var(--color-text-subtle)] line-clamp-2">
+          {description}
+        </span>
       </div>
       <div className="text-label-sm text-[var(--color-text-subtle)]">Created at: {createdAt}</div>
-    </div>
+    </>
   );
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={shellClassName}>
+        {inner}
+      </button>
+    );
+  }
+
+  return <div className={shellClassName}>{inner}</div>;
 }
 
 /* ----------------------------------------
@@ -160,11 +187,15 @@ function SubLabel({ children }: SubLabelProps) {
 export function HomePage() {
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   return (
     <PageShell
-      sidebar={<AgentSidebar />}
-      sidebarWidth={60}
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
@@ -180,22 +211,18 @@ export function HomePage() {
       }
       topBar={
         <TopBar
-          showSidebarToggle={false}
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
           actions={
             <>
               <TopBarAction
                 icon={<IconPalette size={16} stroke={1.5} />}
                 aria-label="Design system"
                 onClick={() => navigate('/design-system')}
-              />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
               />
             </>
           }
@@ -231,12 +258,18 @@ export function HomePage() {
               icon={<IconRobotFace size={20} stroke={1.5} />}
               label="New agent"
               highlighted
+              onClick={() => navigate('/agent/create')}
             />
             <QuickActionCard
               icon={<IconSquarePlus size={20} stroke={1.5} />}
               label="New data source"
+              disabled
             />
-            <QuickActionCard icon={<IconPuzzle size={20} stroke={1.5} />} label="Manage tools" />
+            <QuickActionCard
+              icon={<IconPuzzle size={20} stroke={1.5} />}
+              label="Manage tools"
+              onClick={() => navigate('/mcp-tools')}
+            />
           </div>
         </VStack>
 
@@ -251,13 +284,13 @@ export function HomePage() {
               <ChatItem
                 title="New chat"
                 description="Analyze SQL queries and recommend optimal indexes"
-                createdAt="Sep 26, 2025"
+                createdAt="Sep 26, 2026"
                 onClick={() => navigate('/chat')}
               />
               <ChatItem
                 title="New chat"
                 description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                createdAt="Sep 26, 2025"
+                createdAt="Sep 26, 2026"
               />
             </VStack>
           </VStack>
@@ -269,52 +302,52 @@ export function HomePage() {
               <ChatItem
                 title="New chat"
                 description="Analyze SQL queries and recommend optimal indexes"
-                createdAt="Sep 26, 2025"
+                createdAt="Sep 26, 2026"
               />
               <ChatItem
                 title="New Chat 222"
                 description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                createdAt="Sep 26, 2025"
+                createdAt="Sep 26, 2026"
               />
               <ChatItem
                 title="API 최적화 분석"
                 description="REST API 응답 시간을 개선하기 위한 캐싱 전략과 데이터베이스 쿼리 최적화 방법을 검토했습니다."
-                createdAt="Sep 25, 2025"
+                createdAt="Sep 25, 2026"
               />
               <ChatItem
                 title="코드 리뷰 요청"
                 description="새로운 인증 모듈에 대한 코드 리뷰를 진행하고 보안 취약점을 분석했습니다."
-                createdAt="Sep 25, 2025"
+                createdAt="Sep 25, 2026"
               />
               <ChatItem
                 title="데이터 마이그레이션"
                 description="레거시 시스템에서 새 데이터베이스로 마이그레이션하는 스크립트를 작성하고 검증했습니다."
-                createdAt="Sep 24, 2025"
+                createdAt="Sep 24, 2026"
               />
               <ChatItem
                 title="성능 테스트 결과"
                 description="로드 테스트 결과를 분석하고 병목 현상이 발생하는 구간을 식별했습니다."
-                createdAt="Sep 24, 2025"
+                createdAt="Sep 24, 2026"
               />
               <ChatItem
                 title="UI 컴포넌트 설계"
                 description="새로운 대시보드를 위한 재사용 가능한 UI 컴포넌트 라이브러리 설계를 논의했습니다."
-                createdAt="Sep 23, 2025"
+                createdAt="Sep 23, 2026"
               />
               <ChatItem
                 title="배포 자동화"
                 description="CI/CD 파이프라인을 구성하고 자동 배포 프로세스를 설정했습니다."
-                createdAt="Sep 23, 2025"
+                createdAt="Sep 23, 2026"
               />
               <ChatItem
                 title="에러 로깅 시스템"
                 description="중앙 집중식 에러 로깅 시스템을 구축하고 알림 설정을 완료했습니다."
-                createdAt="Sep 22, 2025"
+                createdAt="Sep 22, 2026"
               />
               <ChatItem
                 title="문서화 작업"
                 description="API 문서와 사용자 가이드를 업데이트하고 예제 코드를 추가했습니다."
-                createdAt="Sep 22, 2025"
+                createdAt="Sep 22, 2026"
               />
             </VStack>
           </VStack>

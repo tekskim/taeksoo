@@ -11,7 +11,9 @@ const InstanceTemplateDetailPage = lazy(() => import('@/pages/InstanceTemplateDe
 const CreateTemplatePage = lazy(() => import('@/pages/CreateTemplatePage'));
 const InstanceSnapshotsPage = lazy(() => import('@/pages/InstanceSnapshotsPage'));
 const InstanceSnapshotDetailPage = lazy(() => import('@/pages/InstanceSnapshotDetailPage'));
-// ImagesPage & ImageDetailPage moved to storage.routes.tsx
+const ComputeImagesPage = lazy(() => import('@/pages/ComputeImagesPage'));
+const CreateImagePage = lazy(() => import('@/pages/CreateImagePage'));
+const ComputeImageDetailPage = lazy(() => import('@/pages/ComputeImageDetailPage'));
 const FlavorsPage = lazy(() => import('@/pages/FlavorsPage'));
 const FlavorDetailPage = lazy(() => import('@/pages/FlavorDetailPage'));
 const KeyPairsPage = lazy(() => import('@/pages/KeyPairsPage'));
@@ -45,6 +47,11 @@ const PoolDetailPage = lazy(() => import('@/pages/PoolDetailPage'));
 const L7PolicyDetailPage = lazy(() => import('@/pages/L7PolicyDetailPage'));
 const TopologyD3Page = lazy(() => import('@/pages/TopologyD3Page'));
 const ConsolePage = lazy(() => import('@/pages/ConsolePage'));
+const FirewallsPage = lazy(() => import('@/pages/FirewallsPage'));
+const FirewallDetailPage = lazy(() => import('@/pages/FirewallDetailPage'));
+const FirewallPolicyDetailPage = lazy(() => import('@/pages/FirewallPolicyDetailPage'));
+const FirewallRuleDetailPage = lazy(() => import('@/pages/FirewallRuleDetailPage'));
+const CreateFirewallRulePage = lazy(() => import('@/pages/CreateFirewallRulePage'));
 
 export const computeRoutes = (
   <>
@@ -58,7 +65,10 @@ export const computeRoutes = (
     <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
     <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
     <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
-    {/* Images are in storage.routes.tsx (StorageSidebar) */}
+    <Route path="/compute/images" element={<ComputeImagesPage />} />
+    <Route path="/compute/images/create" element={<CreateImagePage />} />
+    <Route path="/compute/images/create-v2" element={<CreateImagePage />} />
+    <Route path="/compute/images/:id" element={<ComputeImageDetailPage />} />
     <Route path="/compute/flavors" element={<FlavorsPage />} />
     <Route path="/compute/flavors/:id" element={<FlavorDetailPage />} />
     <Route path="/compute/key-pairs" element={<KeyPairsPage />} />
@@ -90,6 +100,13 @@ export const computeRoutes = (
     <Route path="/compute/l7-policies/:id" element={<L7PolicyDetailPage />} />
     <Route path="/compute/certificates" element={<CertificatesPage />} />
     <Route path="/compute/certificates/:id" element={<CertificateDetailPage />} />
+    <Route path="/compute/firewall" element={<FirewallsPage />} />
+    <Route path="/compute/firewalls/:id" element={<FirewallDetailPage />} />
+    <Route path="/compute/firewall-policies/:id" element={<FirewallPolicyDetailPage />} />
+    <Route path="/compute/firewall-rules/:id" element={<FirewallRuleDetailPage />} />
+    <Route path="/compute/firewall/create" element={<CreateFirewallRulePage />} />
+    <Route path="/compute/firewall/create-policy" element={<CreateFirewallRulePage />} />
+    <Route path="/compute/firewall/create-rule" element={<CreateFirewallRulePage />} />
     <Route path="/compute/topology" element={<TopologyD3Page />} />
     <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
   </>

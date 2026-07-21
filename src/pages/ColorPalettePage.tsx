@@ -2,6 +2,7 @@ import { VStack } from '@/design-system';
 import { IconCopy, IconCheck, IconArrowLeft } from '@tabler/icons-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 /* ----------------------------------------
    Linear Dark Mode Color Palette Extracted from UI Screenshot ---------------------------------------- */
@@ -435,34 +436,47 @@ export default function ColorPalettePage() {
         </Link>
       </div>
 
-      <VStack className="flex-1 overflow-auto p-6 gap-6">
-        {/* Header */}
-        <div className="mb-4">
-          <h1 className="text-3xl font-bold text-white mb-2">Linear Dark Mode Color Palette</h1>
-          <p className="text-neutral-400">Linear 앱 다크모드 UI에서 추출한 컬러 팔레트입니다.</p>
-        </div>
-
-        {/* Live Preview */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-white mb-4">Live Preview</h2>
-          <div className="flex rounded-lg overflow-hidden border border-neutral-800 max-w-3xl">
-            <PreviewSidebar />
-            <PreviewContent />
+      <OverlayScrollbarsComponent
+        options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+        defer={false}
+        className="flex-1 min-h-0 w-full"
+      >
+        <VStack className="p-6 gap-6">
+          {/* Header */}
+          <div className="mb-4">
+            <h1 className="text-3xl font-bold text-white mb-2">Linear Dark Mode Color Palette</h1>
+            <p className="text-neutral-400">Linear 앱 다크모드 UI에서 추출한 컬러 팔레트입니다.</p>
           </div>
-        </div>
 
-        {/* Color Palette Groups */}
-        {colorPalette.map((group) => (
-          <ColorGroup key={group.title} group={group} />
-        ))}
+          {/* Live Preview */}
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-white mb-4">Live Preview</h2>
+            <div className="flex rounded-lg overflow-hidden border border-neutral-800 max-w-3xl">
+              <PreviewSidebar />
+              <PreviewContent />
+            </div>
+          </div>
 
-        {/* CSS Variables */}
-        <div className="mt-8 p-6 bg-[#171717] rounded-lg border border-[#222222]">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            CSS Variables (Linear Dark Mode)
-          </h2>
-          <pre className="text-sm text-neutral-300 font-mono overflow-x-auto">
-            {`:root {
+          {/* Color Palette Groups */}
+          {colorPalette.map((group) => (
+            <ColorGroup key={group.title} group={group} />
+          ))}
+
+          {/* CSS Variables */}
+          <div className="mt-8 p-6 bg-[#171717] rounded-lg border border-[#222222]">
+            <h2 className="text-xl font-semibold text-white mb-4">
+              CSS Variables (Linear Dark Mode)
+            </h2>
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'scroll', y: 'hidden' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              className="w-full"
+            >
+              <pre className="text-sm text-neutral-300 font-mono">
+                {`:root {
   /* =========================
      LINEAR DARK MODE PALETTE ========================= */
 
@@ -519,14 +533,23 @@ export default function ColorPalettePage() {
   --linear-label-purple: #5e6ad2;
   --linear-label-pink: #f075e2;
 }`}
-          </pre>
-        </div>
+              </pre>
+            </OverlayScrollbarsComponent>
+          </div>
 
-        {/* Tailwind Config */}
-        <div className="mt-4 p-6 bg-[#171717] rounded-lg border border-[#222222]">
-          <h2 className="text-xl font-semibold text-white mb-4">Tailwind Config</h2>
-          <pre className="text-sm text-neutral-300 font-mono overflow-x-auto">
-            {`// tailwind.config.js - Linear Dark Mode Theme
+          {/* Tailwind Config */}
+          <div className="mt-4 p-6 bg-[#171717] rounded-lg border border-[#222222]">
+            <h2 className="text-xl font-semibold text-white mb-4">Tailwind Config</h2>
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'scroll', y: 'hidden' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              className="w-full"
+            >
+              <pre className="text-sm text-neutral-300 font-mono">
+                {`// tailwind.config.js - Linear Dark Mode Theme
 module.exports = {
   theme: {
     extend: {
@@ -588,9 +611,11 @@ module.exports = {
     },
   },
 }`}
-          </pre>
-        </div>
-      </VStack>
+              </pre>
+            </OverlayScrollbarsComponent>
+          </div>
+        </VStack>
+      </OverlayScrollbarsComponent>
     </VStack>
   );
 }

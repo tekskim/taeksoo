@@ -255,7 +255,7 @@ export function ListPagePatternPage() {
           {/* Components */}
           <VStack gap={4}>
             <h3 className="text-heading-h5 text-[var(--color-text-default)]">Components</h3>
-            <pre className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] text-body-sm text-[var(--color-text-muted)] overflow-x-auto whitespace-pre">
+            <pre className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] text-body-sm text-[var(--color-text-muted)] overflow-x-auto whitespace-pre">
               {`Page Title              
 
 Tabs (optional)
@@ -428,13 +428,13 @@ Table
                 <li>새로운 리소스 생성이 가능할 때 추가된다.</li>
                 <li>Primary 버튼이다.</li>
                 <li>
-                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--radius-sm)]">
                     KO
                   </span>{' '}
                   {'{리소스명} 생성'}
                 </li>
                 <li>
-                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--radius-sm)]">
                     EN
                   </span>{' '}
                   {'Create {resource}'}

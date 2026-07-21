@@ -33,15 +33,18 @@ coverage
 *storybook.log
 storybook-static
 
-# Environment variables (secrets)
+# npm auth token
+.npmrc
+
+# Environment variables
 .env
 .env.*
 !.env.example
+icon-drop/
 
-# npm auth token
-.npmrc
-thaki-shared-v2/node_modules/
-thaki-shared-v2/dist/
-thaki-shared-v2/preview/node_modules/
-thaki-shared-v2/preview/dist/
-thaki-shared-v2/visual-report/
+# local tooling / temp capture artifacts
+.claude/
+.playwright-cli/
+cap_*.cjs
+public/delete_modal_cap.png
+public/delete_modal_full_cap.png

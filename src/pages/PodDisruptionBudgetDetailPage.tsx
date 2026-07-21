@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -13,6 +13,7 @@ import {
   Button,
   ContextMenu,
   PageShell,
+  ErrorState,
   DetailHeader,
   Badge,
   Tooltip,
@@ -26,21 +27,17 @@ import {
   type TableColumn,
   fixedColumns,
   columnMinWidths,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
+  IconAlertTriangle,
   IconChevronDown,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
-  IconPencilCog,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -98,23 +95,23 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
     name: 'poddisruptionbudgetName',
     status: 'OK',
     namespace: 'default',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     labels: { app: 'web' },
     annotations: { description: 'PDB for web application' },
     minAvailable: '2',
     maxUnavailable: '',
     selector: { app: 'web', tier: 'frontend' },
     matchingPods: [
-      { name: 'web-deployment-77f6bb9c69-4aw7f', createdAt: 'Jul 25, 2025 10:32:16' },
-      { name: 'web-deployment-77f6bb9c69-8xk2p', createdAt: 'Jul 25, 2025 10:32:16' },
-      { name: 'web-deployment-77f6bb9c69-9m3qt', createdAt: 'Jul 25, 2025 10:32:16' },
+      { name: 'web-deployment-77f6bb9c69-4aw7f', createdAt: 'Jul 25, 2026 10:32:16' },
+      { name: 'web-deployment-77f6bb9c69-8xk2p', createdAt: 'Jul 25, 2026 10:32:16' },
+      { name: 'web-deployment-77f6bb9c69-9m3qt', createdAt: 'Jul 25, 2026 10:32:16' },
     ],
     conditions: [
       {
         condition: 'ConditionName',
         size: 'True',
         message: '[MessageHeader] Message text',
-        updated: 'Nov 10, 2025',
+        updated: 'Nov 10, 2026',
       },
     ],
     recentEvents: [
@@ -149,7 +146,7 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
     name: 'web-pdb',
     status: 'True',
     namespace: 'production',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
     labels: { env: 'production' },
     annotations: {},
     minAvailable: '',
@@ -167,6 +164,8 @@ const operatorOptions = [
   { value: 'Exists', label: 'Exists' },
   { value: 'Does Not Exist', label: 'Does Not Exist' },
 ];
+
+const EVENTS_PAGE_SIZE = 10;
 
 /* ----------------------------------------
    Component
@@ -192,14 +191,17 @@ export function PodDisruptionBudgetDetailPage() {
   const [matchingPodsPage, setMatchingPodsPage] = useState(1);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [eventsPage, setEventsPage] = useState(1);
+  const [eventsSearchQuery, setEventsSearchQuery] = useState('');
 
   // Get PDB data first (moved up for tab label)
-  const pdbData = mockPdbData[pdbId || '1'] || mockPdbData['1'];
+  const pdbData = pdbId ? mockPdbData[pdbId] : undefined;
 
   // Update tab label to match the PDB name (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel(pdbData.name);
-  }, [updateActiveTabLabel, pdbData.name]);
+    if (pdbData) {
+      updateActiveTabLabel(pdbData.name);
+    }
+  }, [updateActiveTabLabel, pdbData]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -219,6 +221,86 @@ export function PodDisruptionBudgetDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
+  if (!pdbData) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Pod Disruption Budgets', href: '/container/pdb' },
+                  { label: pdbId ?? 'Pod disruption budget' },
+                ]}
+              />
+            }
+            actions={
+              <ContainerTopBarActions
+                onTerminalClick={() => {
+                  if (shellPanel.isExpanded) {
+                    shellPanel.setIsExpanded(false);
+                  } else {
+                    shellPanel.openConsole('kubectl-pdb', 'Kubectl: ClusterName');
+                  }
+                }}
+                isTerminalActive={shellPanel.isExpanded}
+              />
+            }
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            minHeight={300}
+            sidebarOpen={sidebarOpen}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Pod disruption budget not found"
+          description={`The pod disruption budget "${pdbId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/pdb')}>
+              Back to Pod Disruption Budgets
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // Labels and annotations counts
   const labelsCount = Object.keys(pdbData.labels).length;
   const annotationsCount = Object.keys(pdbData.annotations).length;
@@ -231,6 +313,32 @@ export function PodDisruptionBudgetDetailPage() {
     matchingPodsPage * matchingPodsPerPage
   );
 
+  const filteredRecentEvents = (() => {
+    const q = eventsSearchQuery.trim().toLowerCase();
+    if (!q) return pdbData.recentEvents;
+    return pdbData.recentEvents.filter((event) => {
+      const fields = [
+        event.id,
+        event.lastSeen,
+        event.type,
+        event.reason,
+        event.subobject,
+        event.source,
+        event.message,
+        event.firstSeen,
+        String(event.count),
+        event.name,
+      ];
+      return fields.some((field) => String(field).toLowerCase().includes(q));
+    });
+  })();
+
+  const totalEventsPages = Math.max(1, Math.ceil(filteredRecentEvents.length / EVENTS_PAGE_SIZE));
+  const paginatedEvents = filteredRecentEvents.slice(
+    (eventsPage - 1) * EVENTS_PAGE_SIZE,
+    eventsPage * EVENTS_PAGE_SIZE
+  );
+
   // Table columns for matching pods
   const matchingPodsColumns: TableColumn<MatchingPod>[] = [
     {
@@ -239,13 +347,13 @@ export function PodDisruptionBudgetDetailPage() {
       flex: 1,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
-          onClick={() => navigate(`/container/pods/${value}`)}
+        <Link
+          to={`/container/pods/${value}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate block"
           title={value}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -363,6 +471,7 @@ export function PodDisruptionBudgetDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
@@ -377,7 +486,11 @@ export function PodDisruptionBudgetDetailPage() {
             ]}
             trigger="click"
           >
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              type="button"
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -395,8 +508,7 @@ export function PodDisruptionBudgetDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () =>
-        navigate(`/container/pdb/${pdbId}/edit?name=${encodeURIComponent(pdbData?.name ?? pdbId)}`),
+      onClick: () => console.log('Edit Config'),
     },
     {
       id: 'edit-yaml',
@@ -436,55 +548,28 @@ export function PodDisruptionBudgetDetailPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Pod disruption budgets', href: '/container/pdb' },
+                { label: 'Pod Disruption Budgets', href: '/container/pdb' },
                 { label: pdbData.name },
               ]}
             />
           }
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-pdb', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={pdbData.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-pdb', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -584,7 +669,7 @@ export function PodDisruptionBudgetDetailPage() {
 
             {/* Budget Tab */}
             <TabPanel value="budget">
-              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                 <VStack gap={6}>
                   <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                     Budget
@@ -631,7 +716,7 @@ export function PodDisruptionBudgetDetailPage() {
 
             {/* Selector Tab */}
             <TabPanel value="selector">
-              <div className="w-full border border-[var(--color-border-default)] rounded-[6px] p-4">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
                 <VStack gap={6}>
                   {/* Selectors Section */}
                   <VStack gap={2} className="w-full">
@@ -714,7 +799,7 @@ export function PodDisruptionBudgetDetailPage() {
 
                     <Pagination
                       currentPage={matchingPodsPage}
-                      totalPages={Math.max(totalMatchingPodsPages, 5)}
+                      totalPages={Math.max(1, totalMatchingPodsPages)}
                       onPageChange={setMatchingPodsPage}
                       totalItems={pdbData.matchingPods.length}
                     />
@@ -760,7 +845,7 @@ export function PodDisruptionBudgetDetailPage() {
 
             {/* Labels & Annotations Tab */}
             <TabPanel value="labels-annotations">
-              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                 <VStack gap={6}>
                   {/* Section Title */}
                   <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
@@ -885,6 +970,11 @@ export function PodDisruptionBudgetDetailPage() {
                     placeholder="Search events by attributes"
                     size="sm"
                     className="w-[280px]"
+                    value={eventsSearchQuery}
+                    onChange={(e) => {
+                      setEventsSearchQuery(e.target.value);
+                      setEventsPage(1);
+                    }}
                   />
                   <div className="w-px h-5 bg-[var(--color-border-default)]" />
                   <HStack gap={1}>
@@ -910,9 +1000,9 @@ export function PodDisruptionBudgetDetailPage() {
                 {/* Pagination */}
                 <Pagination
                   currentPage={eventsPage}
-                  totalPages={Math.max(Math.ceil(pdbData.recentEvents.length / 10), 1)}
+                  totalPages={totalEventsPages}
                   onPageChange={setEventsPage}
-                  totalItems={pdbData.recentEvents.length}
+                  totalItems={filteredRecentEvents.length}
                   selectedCount={selectedEvents.length}
                 />
 
@@ -920,11 +1010,14 @@ export function PodDisruptionBudgetDetailPage() {
                 {pdbData.recentEvents.length > 0 ? (
                   <Table<RecentEvent>
                     columns={recentEventsColumns}
-                    data={pdbData.recentEvents}
+                    data={paginatedEvents}
                     rowKey="id"
                     selectable
                     selectedKeys={selectedEvents}
                     onSelectionChange={setSelectedEvents}
+                    emptyMessage={
+                      filteredRecentEvents.length === 0 ? 'No matching events.' : undefined
+                    }
                   />
                 ) : (
                   <p className="text-body-md text-[var(--color-text-subtle)]">No recent events.</p>

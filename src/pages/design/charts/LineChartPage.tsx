@@ -1,3 +1,4 @@
+import ReactECharts from 'echarts-for-react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { AreaChartDemo, chartColors } from '../../design-system-sections/ChartComponents';
@@ -539,6 +540,105 @@ function LineChartGuidelines() {
   );
 }
 
+function LineChartNoDataDefaultDemo() {
+  const option = {
+    grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
+    graphic: {
+      type: 'text' as const,
+      left: 'center',
+      top: 'middle',
+      style: {
+        text: 'No data available',
+        fontSize: 12,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+        fill: chartColors.slate400,
+      },
+    },
+    xAxis: {
+      type: 'category' as const,
+      data: [],
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+      boundaryGap: false,
+    },
+    yAxis: {
+      type: 'value' as const,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+    },
+    series: [],
+  };
+
+  return (
+    <div className="chartCard">
+      <div className="chartHeader">
+        <span className="chartTitle">Network traffic</span>
+      </div>
+      <div className="chartBody">
+        <div className="chartWrapper">
+          <ReactECharts
+            option={option}
+            style={{ height: '100%', width: '100%' }}
+            opts={{ devicePixelRatio: window.devicePixelRatio }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LineChartLoadingDemo() {
+  const option = {
+    grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
+    xAxis: {
+      type: 'category' as const,
+      data: [],
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+      boundaryGap: false,
+    },
+    yAxis: {
+      type: 'value' as const,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+    },
+    series: [],
+  };
+
+  return (
+    <div className="chartCard">
+      <div className="chartHeader">
+        <span className="chartTitle">Network traffic</span>
+      </div>
+      <div className="chartBody">
+        <div className="chartWrapper">
+          <ReactECharts
+            option={option}
+            showLoading
+            loadingOption={{
+              text: '',
+              color: '#2563eb',
+              maskColor: 'rgba(255, 255, 255, 0.9)',
+              zlevel: 0,
+              showSpinner: true,
+              spinnerRadius: 14,
+              lineWidth: 2,
+            }}
+            style={{ height: '100%', width: '100%' }}
+            opts={{ devicePixelRatio: window.devicePixelRatio }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const PRIMARY_COLORS = [
   { name: 'cyan400', hex: chartColors.cyan400 },
   { name: 'emerald400', hex: chartColors.emerald400 },
@@ -575,7 +675,7 @@ function ColorRow({ index, name, hex }: { index: number; name: string; hex: stri
 function ChartColorTokens() {
   return (
     <VStack gap={6}>
-      <pre className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] text-body-sm text-[var(--color-text-default)] overflow-x-auto border border-[var(--color-border-subtle)]">
+      <pre className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] text-body-sm text-[var(--color-text-default)] overflow-x-auto border border-[var(--color-border-subtle)]">
         {`fill-opacity: 0.1  line-width: 1px  smooth: true  symbol-size: 6px`}
       </pre>
 
@@ -599,7 +699,7 @@ function ChartColorTokens() {
         </VStack>
       </VStack>
 
-      <div className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] border border-[var(--color-border-subtle)] text-body-sm text-[var(--color-text-muted)]">
+      <div className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] text-body-sm text-[var(--color-text-muted)]">
         <span className="text-[var(--color-text-default)] font-medium">CSS tokens:</span>{' '}
         --chart-color-1 … --chart-color-10
         {' · '}
@@ -649,12 +749,32 @@ export function LineChartPage() {
           </VStack>
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>No Data</Label>
+              <Label>With Dropdown Filter</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                데이터가 없는 경우 "No data available" 표시.
+                헤더에 Select 드롭다운을 추가하여 데이터를 필터링할 수 있다. 노드, 디바이스,
+                인터페이스 등 리소스를 전환할 때 사용.
               </span>
             </VStack>
-            <AreaChartDemo variant="nodata" />
+            <AreaChartDemo variant="dropdown" />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Loading State</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                데이터 로딩 중 ECharts 내장 스피너를 표시한다. showLoading prop을 사용하여 로딩
+                상태를 제어한다.
+              </span>
+            </VStack>
+            <LineChartLoadingDemo />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>No Data (Default ECharts)</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                Apache ECharts 기본 빈 차트 상태. 데이터와 축 라벨 없이 빈 그리드만 표시된다.
+              </span>
+            </VStack>
+            <LineChartNoDataDefaultDemo />
           </VStack>
         </VStack>
       }

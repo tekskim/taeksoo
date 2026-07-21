@@ -8,37 +8,39 @@ import {
   PageHeader,
   SearchInput,
   Button,
-  Badge,
   Tabs,
   TabList,
   Tab,
+  EmptyState,
+  TabPanel,
+  CatalogCard,
 } from '@/design-system';
+import { IconSearch } from '@tabler/icons-react';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
-import { IconBell, IconTerminal2 } from '@tabler/icons-react';
 import postgresqlLogo from '@/assets/catalog/postgresql.svg';
 import valkeyLogo from '@/assets/catalog/valkey.svg';
 import kafkaLogo from '@/assets/catalog/kafka.svg';
 import nginxLogo from '@/assets/catalog/nginx.svg';
 import milvusLogo from '@/assets/catalog/milvus.svg';
-
-function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <button
-      className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-      aria-label={label}
-    >
-      <span className="text-[var(--color-text-muted)]">{icon}</span>
-    </button>
-  );
-}
+import giteaLogo from '@/assets/catalog/gitea.svg';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-type AppCategory = 'All' | 'Database' | 'Data Processing' | 'Networking' | 'Vector DB';
+type AppCategory =
+  | 'All'
+  | 'Database'
+  | 'Data processing'
+  | 'Networking'
+  | 'Vector DB'
+  | 'Developer tools';
+type OperatorCategory = 'All' | 'Database';
 
 interface CatalogApp {
   id: string;
@@ -48,6 +50,7 @@ interface CatalogApp {
   category: AppCategory;
   iconSrc: string;
   installed: boolean;
+  deployType: 'Helm' | 'Operator-managed' | 'Operator';
 }
 
 /* ----------------------------------------
@@ -55,16 +58,6 @@ interface CatalogApp {
    ---------------------------------------- */
 
 const catalogApps: CatalogApp[] = [
-  {
-    id: 'postgresql',
-    name: 'PostgreSQL',
-    version: 'v16.2',
-    description:
-      'PostgreSQL is a powerful open-source object-relational database system with a strong reputation for reliability, feature robustness, and performance.',
-    category: 'Database',
-    iconSrc: postgresqlLogo,
-    installed: true,
-  },
   {
     id: 'valkey',
     name: 'Valkey',
@@ -74,16 +67,29 @@ const catalogApps: CatalogApp[] = [
     category: 'Database',
     iconSrc: valkeyLogo,
     installed: false,
+    deployType: 'Helm',
   },
   {
-    id: 'kafka',
-    name: 'Kafka',
-    version: '',
+    id: 'cnpg',
+    name: 'CNPG',
+    version: 'v1.29.0',
     description:
-      'Apache Kafka is an open-source distributed event streaming platform used for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.',
-    category: 'Data Processing',
-    iconSrc: kafkaLogo,
+      'PostgreSQL cluster instance managed by CloudNativePG Operator. Requires CNPG Operator to be installed first. Supports HA, PgBouncer pooling, and automated backups.',
+    category: 'Database',
+    iconSrc: postgresqlLogo,
     installed: false,
+    deployType: 'Operator-managed',
+  },
+  {
+    id: 'gitea',
+    name: 'Gitea',
+    version: 'v10.6.0',
+    description:
+      'Gitea is a lightweight self-hosted Git service. Includes embedded PostgreSQL-HA and Valkey-Cluster. No external dependencies required.',
+    category: 'Developer tools',
+    iconSrc: giteaLogo,
+    installed: false,
+    deployType: 'Helm',
   },
   {
     id: 'nginx',
@@ -93,7 +99,19 @@ const catalogApps: CatalogApp[] = [
       'NGINX Ingress Controller for Kubernetes – routes external HTTP/HTTPS traffic into cluster services using Ingress resources. Multiple instances are allowed per namespace.',
     category: 'Networking',
     iconSrc: nginxLogo,
-    installed: true,
+    installed: false,
+    deployType: 'Helm',
+  },
+  {
+    id: 'kafka',
+    name: 'Kafka',
+    version: '',
+    description:
+      'Apache Kafka is an open-source distributed event streaming platform used for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.',
+    category: 'Data processing',
+    iconSrc: kafkaLogo,
+    installed: false,
+    deployType: 'Operator-managed',
   },
   {
     id: 'milvus',
@@ -104,30 +122,51 @@ const catalogApps: CatalogApp[] = [
     category: 'Vector DB',
     iconSrc: milvusLogo,
     installed: false,
+    deployType: 'Helm',
   },
 ];
 
-const categories: AppCategory[] = ['All', 'Database', 'Data Processing', 'Networking', 'Vector DB'];
+const categories: AppCategory[] = [
+  'All',
+  'Database',
+  'Developer tools',
+  'Data processing',
+  'Networking',
+  'Vector DB',
+];
 
-const categoryBadgeVariant: Record<string, 'info' | 'success' | 'warning' | 'danger'> = {
-  Database: 'info',
-  'Data Processing': 'info',
-  Networking: 'info',
-  'Vector DB': 'info',
-};
+const operatorApps: CatalogApp[] = [
+  {
+    id: 'postgresql-operator',
+    name: 'CNPG operator',
+    version: 'v1.29.0',
+    description:
+      'CloudNativePG Operator for Kubernetes. Manages PostgreSQL clusters using the CNPG CRD. Install this first before creating PostgreSQL instances.',
+    category: 'Database',
+    iconSrc: postgresqlLogo,
+    installed: false,
+    deployType: 'Operator',
+  },
+];
+
+const operatorCategories: OperatorCategory[] = ['All', 'Database'];
 
 /* ----------------------------------------
    Component
    ---------------------------------------- */
 
 export default function CatalogPage() {
+  const { isStandalone } = useAppCatalogMode();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const sidebarWidth = sidebarOpen ? 248 : 48;
+  const sidebarWidth = isStandalone ? (sidebarOpen ? 200 : 0) : sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
 
+  const [activePageTab, setActivePageTab] = useState<'applications' | 'operators'>('applications');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<AppCategory>('All');
+  const [operatorSearchQuery, setOperatorSearchQuery] = useState('');
+  const [activeOperatorCategory, setActiveOperatorCategory] = useState<OperatorCategory>('All');
 
   const filteredApps = catalogApps.filter((app) => {
     const matchesSearch =
@@ -138,10 +177,24 @@ export default function CatalogPage() {
     return matchesSearch && matchesCategory;
   });
 
+  const filteredOperators = operatorApps.filter((app) => {
+    const matchesSearch =
+      !operatorSearchQuery ||
+      app.name.toLowerCase().includes(operatorSearchQuery.toLowerCase()) ||
+      app.description.toLowerCase().includes(operatorSearchQuery.toLowerCase());
+    const matchesCategory =
+      activeOperatorCategory === 'All' || app.category === activeOperatorCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <PageShell
       sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        isStandalone ? (
+          <AppCatalogSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        ) : (
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        )
       }
       sidebarWidth={sidebarWidth}
       tabBar={
@@ -158,100 +211,178 @@ export default function CatalogPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Catalog' },
-              ]}
-            />
-          }
-          actions={
-            <>
-              <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
-              <TopBarActionButton
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-              />
-            </>
-          }
+          showNavigation={!isStandalone}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Catalog' }]} />}
+          actions={isStandalone ? undefined : <ContainerTopBarActions />}
         />
       }
     >
       <VStack gap={4}>
         <PageHeader title="Catalog" />
 
-        <VStack gap={4}>
-          <SearchInput
-            placeholder="Search by app name"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onClear={() => setSearchQuery('')}
-            size="sm"
-            className="w-[var(--search-input-width)]"
-          />
+        <Tabs
+          value={activePageTab}
+          onChange={(val) => setActivePageTab(val as 'applications' | 'operators')}
+          variant="underline"
+          size="sm"
+        >
+          <TabList>
+            <Tab value="applications">Applications</Tab>
+            <Tab value="operators">Operators</Tab>
+          </TabList>
 
-          <Tabs
-            value={activeCategory}
-            onChange={(val) => setActiveCategory(val as AppCategory)}
-            variant="underline"
-            size="sm"
-          >
-            <TabList>
-              {categories.map((cat) => (
-                <Tab key={cat} value={cat}>
-                  {cat}
-                </Tab>
-              ))}
-            </TabList>
-          </Tabs>
-        </VStack>
+          <TabPanel value="applications" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              <SearchInput
+                placeholder="Search by app name"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery('')}
+                size="sm"
+                className="w-[var(--search-input-width)]"
+              />
 
-        <div className="grid grid-cols-3 gap-4">
-          {filteredApps.map((app) => (
-            <div
-              key={app.id}
-              className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]"
-            >
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-[var(--radius-lg)] shrink-0 border border-[var(--color-border-default)] flex items-center justify-center">
-                  <img src={app.iconSrc} alt={app.name} className="w-6 h-6 object-contain" />
+              <Tabs
+                value={activeCategory}
+                onChange={(val) => setActiveCategory(val as AppCategory)}
+                variant="boxed"
+                size="sm"
+              >
+                <TabList>
+                  {categories.map((cat) => (
+                    <Tab key={cat} value={cat} className="w-[120px]">
+                      {cat}
+                    </Tab>
+                  ))}
+                </TabList>
+              </Tabs>
+
+              {filteredApps.length === 0 ? (
+                <EmptyState
+                  variant="inline"
+                  icon={<IconSearch size={48} stroke={1} />}
+                  title="No apps found"
+                  description="Try adjusting your search or filter criteria."
+                />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredApps.map((app) => (
+                    <CatalogCard
+                      key={app.id}
+                      iconSrc={app.iconSrc}
+                      iconAlt={app.name}
+                      name={app.name}
+                      version={app.version}
+                      description={app.description}
+                      badges={[
+                        { label: app.deployType, variant: 'info' },
+                        { label: app.category, theme: 'white' },
+                      ]}
+                      actions={
+                        app.installed ? (
+                          <Button variant="outline" size="sm" disabled>
+                            Installed
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() =>
+                              navigate(
+                                isStandalone
+                                  ? `/app-catalog/${app.id}/install`
+                                  : `/container/catalog/${app.id}/install`
+                              )
+                            }
+                          >
+                            Install
+                          </Button>
+                        )
+                      }
+                    />
+                  ))}
                 </div>
-                <div className="flex flex-col gap-0.5 min-w-0">
-                  <span className="text-heading-h6 text-[var(--color-text-default)]">
-                    {app.name}
-                  </span>
-                  {app.version && (
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      {app.version}
-                    </span>
-                  )}
+              )}
+            </VStack>
+          </TabPanel>
+
+          <TabPanel value="operators" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              <SearchInput
+                placeholder="Search by operator name"
+                value={operatorSearchQuery}
+                onChange={(e) => setOperatorSearchQuery(e.target.value)}
+                onClear={() => setOperatorSearchQuery('')}
+                size="sm"
+                className="w-[var(--search-input-width)]"
+              />
+
+              <Tabs
+                value={activeOperatorCategory}
+                onChange={(val) => setActiveOperatorCategory(val as OperatorCategory)}
+                variant="boxed"
+                size="sm"
+              >
+                <TabList>
+                  {operatorCategories.map((cat) => (
+                    <Tab key={cat} value={cat} className="w-[120px]">
+                      {cat}
+                    </Tab>
+                  ))}
+                </TabList>
+              </Tabs>
+
+              {filteredOperators.length === 0 ? (
+                <EmptyState
+                  variant="inline"
+                  icon={<IconSearch size={48} stroke={1} />}
+                  title="No operators found"
+                  description="Try adjusting your search or filter criteria."
+                />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredOperators.map((app) => (
+                    <CatalogCard
+                      key={app.id}
+                      iconSrc={app.iconSrc}
+                      iconAlt={app.name}
+                      name={app.name}
+                      version={app.version}
+                      description={app.description}
+                      badges={[
+                        { label: app.deployType, variant: 'info' },
+                        { label: app.category, theme: 'white' },
+                      ]}
+                      actions={
+                        app.installed ? (
+                          <Button variant="outline" size="sm" disabled>
+                            Installed
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() =>
+                              navigate(
+                                isStandalone
+                                  ? `/app-catalog/${app.id}/install`
+                                  : `/container/catalog/${app.id}/install`
+                              )
+                            }
+                          >
+                            Install
+                          </Button>
+                        )
+                      }
+                    />
+                  ))}
                 </div>
-              </div>
-
-              <p className="text-body-md text-[var(--color-text-muted)] m-0 line-clamp-3 flex-1">
-                {app.description}
-              </p>
-
-              <div className="flex items-center justify-between mt-auto">
-                <Badge variant={categoryBadgeVariant[app.category] || 'info'} size="sm">
-                  {app.category}
-                </Badge>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => navigate(`/container/catalog/${app.id}/install`)}
-                >
-                  Install
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+              )}
+            </VStack>
+          </TabPanel>
+        </Tabs>
       </VStack>
     </PageShell>
   );

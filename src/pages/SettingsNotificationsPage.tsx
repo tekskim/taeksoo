@@ -1,246 +1,180 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
+  Badge,
+  Breadcrumb,
   VStack,
-  TabBar,
+  HStack,
   SectionCard,
-  Select,
   Toggle,
-  Radio,
-  RadioGroup,
   Disclosure,
+  FormField,
   PageShell,
+  TabBar,
+  TopBar,
+  useToast,
 } from '@/design-system';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
-import { useDarkMode } from '@/hooks/useDarkMode';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 
-/* ----------------------------------------
-   Settings Notifications Page ---------------------------------------- */
+import imgCompute from '@/assets/appIcon/compute.png';
+import imgStorage from '@/assets/appIcon/storage.png';
+import imgContainer from '@/assets/appIcon/container.png';
+import imgAgent from '@/assets/appIcon/agentops.png';
+import imgAi from '@/assets/appIcon/aiplatform.png';
+
+interface AppNotificationState {
+  notification: boolean;
+  sound: boolean;
+}
+
+const APP_LIST = [
+  { key: 'compute', label: 'Aegis Compute', icon: imgCompute },
+  { key: 'storage', label: 'Aegis Storage', icon: imgStorage },
+  { key: 'container', label: 'Aegis Container', icon: imgContainer },
+  { key: 'agent', label: 'Agent Studio', icon: imgAgent },
+  { key: 'aiPlatform', label: 'AI Platform', icon: imgAi },
+] as const;
 
 export default function SettingsNotificationsPage() {
-  const navigate = useNavigate();
-  const { isDark } = useDarkMode();
-  const sidebarWidth = 200;
+  const { success } = useToast();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Global Notifications State
-  const [globalWhatToNotify, setGlobalWhatToNotify] = useState('all');
+  const [globalNotifications, setGlobalNotifications] = useState(true);
   const [globalSound, setGlobalSound] = useState(true);
-  const [globalDuration, setGlobalDuration] = useState('3s');
 
-  // Per Service Notifications State
-  const [serviceNotifications, setServiceNotifications] = useState<
-    Record<string, { whatToNotify: string; duration: string; sound: boolean }>
-  >({
-    compute: { whatToNotify: 'all', duration: '3s', sound: true },
-    iam: { whatToNotify: 'all', duration: '3s', sound: true },
-    storage: { whatToNotify: 'all', duration: '3s', sound: true },
-    container: { whatToNotify: 'all', duration: '3s', sound: true },
-    aiPlatform: { whatToNotify: 'all', duration: '3s', sound: true },
-    agentOps: { whatToNotify: 'all', duration: '3s', sound: true },
-  });
+  const [appNotifications, setAppNotifications] = useState<Record<string, AppNotificationState>>(
+    () => Object.fromEntries(APP_LIST.map(({ key }) => [key, { notification: true, sound: true }]))
+  );
 
-  const updateServiceNotification = (
-    service: string,
-    field: 'whatToNotify' | 'duration' | 'sound',
-    value: string | boolean
-  ) => {
-    setServiceNotifications((prev) => ({
+  const updateApp = (key: string, field: keyof AppNotificationState, value: boolean) => {
+    setAppNotifications((prev) => ({
       ...prev,
-      [service]: { ...prev[service], [field]: value },
+      [key]: { ...prev[key], [field]: value },
     }));
+    success('Notification preference updated.');
   };
 
-  // Handle window close
-  const handleWindowClose = () => {
-    navigate('/');
+  const getStatusLabel = (state: AppNotificationState) => {
+    const notif = state.notification ? 'On' : 'Off';
+    const sound = state.sound ? 'Sound on' : 'Sound off';
+    return { notif, sound };
   };
-
-  // Duration options
-  const durationOptions = [
-    { value: '1s', label: '1s' },
-    { value: '2s', label: '2s' },
-    { value: '3s', label: '3s' },
-    { value: '5s', label: '5s' },
-    { value: 'keep', label: 'Keep visible' },
-  ];
-
-  // Service list
-  const services = [
-    { key: 'compute', label: 'Compute' },
-    { key: 'iam', label: 'IAM' },
-    { key: 'storage', label: 'Storage' },
-    { key: 'container', label: 'Container' },
-    { key: 'aiPlatform', label: 'AI Platform' },
-    { key: 'agentOps', label: 'Agent ops' },
-  ];
 
   return (
     <PageShell
-      sidebar={<SettingsSidebar />}
+      sidebar={
+        <SettingsSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
       sidebarWidth={sidebarWidth}
-      tabBar={null}
+      tabBar={<TabBar tabs={[]} activeTab="" onTabChange={() => {}} showAddButton={false} />}
       topBar={
-        <div className="relative flex items-center w-full h-[var(--tabbar-height)] bg-[var(--color-surface-default)] shrink-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-[var(--color-border-default)]">
-          {/* Logo Area */}
-          <div className="w-[200px] h-full px-3 flex items-center">
-            <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
-          </div>
-
-          {/* TabBar (Window controls only) */}
-          <div className="flex-1">
-            <TabBar
-              tabs={[]}
-              activeTab=""
-              onTabChange={() => {}}
-              showAddButton={false}
-              showWindowControls={true}
-              showBottomBorder={false}
-              onWindowClose={handleWindowClose}
-            />
-          </div>
-        </div>
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={false}
+          breadcrumb={<Breadcrumb items={[{ label: 'Notifications' }]} />}
+        />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
-        {/* Header */}
         <div>
           <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-            Notifications{' '}
+            Notifications
           </h1>
-          <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
-            Configure how you receive notifications.
-          </p>
         </div>
 
-        {/* Notification Preferences */}
         <SectionCard>
-          <SectionCard.Header title="Notification preferences" />
-          <SectionCard.Content gap={6}>
-            {/* Global Notification Setting */}
-            <VStack gap={4}>
-              <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
-                Global Notification Setting{' '}
-              </span>
+          <SectionCard.Header title="Global notifications" />
+          <SectionCard.Content>
+            <FormField
+              label="Enable notifications"
+              description="When turned off, all notifications and sounds are blocked. Your per-app preferences are preserved."
+              spacing="loose"
+            >
+              <Toggle
+                checked={globalNotifications}
+                onChange={(e) => {
+                  setGlobalNotifications(e.target.checked);
+                  success(e.target.checked ? 'Notifications enabled.' : 'Notifications disabled.');
+                }}
+              />
+            </FormField>
 
-              {/* What to Notify */}
-              <VStack gap={2} className="pl-2">
-                <span className="text-label-md text-[var(--color-text-default)]">
-                  What to Notify{' '}
-                </span>
-                <RadioGroup
-                  value={globalWhatToNotify}
-                  onChange={setGlobalWhatToNotify}
-                  direction="horizontal"
-                >
-                  <Radio value="all" label="All" />
-                  <Radio value="errors" label="Errors only" />
-                  <Radio value="off" label="Off" />
-                </RadioGroup>
-              </VStack>
+            <FormField
+              label="Notification sound"
+              description="Play a sound for every notification."
+              spacing="loose"
+            >
+              <Toggle
+                checked={globalSound}
+                onChange={(e) => {
+                  setGlobalSound(e.target.checked);
+                  success(
+                    e.target.checked
+                      ? 'Notification sound enabled.'
+                      : 'Notification sound disabled.'
+                  );
+                }}
+                disabled={!globalNotifications}
+              />
+            </FormField>
+          </SectionCard.Content>
+        </SectionCard>
 
-              {/* Duration */}
-              <VStack
-                gap={2}
-                className={`pl-2 ${globalWhatToNotify === 'off' ? 'opacity-50' : ''}`}
-              >
-                <span className="text-label-md text-[var(--color-text-default)]">Duration </span>
-                <Select
-                  value={globalDuration}
-                  onChange={setGlobalDuration}
-                  options={durationOptions}
-                  width="sm"
-                  disabled={globalWhatToNotify === 'off'}
-                />
-              </VStack>
-
-              {/* Sound */}
-              <VStack
-                gap={2}
-                className={`pl-2 ${globalWhatToNotify === 'off' ? 'opacity-50' : ''}`}
-              >
-                <span className="text-label-md text-[var(--color-text-default)]">Sound </span>
-                <Toggle
-                  checked={globalSound}
-                  onChange={(e) => setGlobalSound(e.target.checked)}
-                  disabled={globalWhatToNotify === 'off'}
-                />
-              </VStack>
-            </VStack>
-
-            {/* Divider */}
-            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
-            {/* In-app Notification Setting */}
-            <VStack gap={4}>
-              <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
-                In-app Notification Setting{' '}
-              </span>
-
-              {/* Service-specific settings */}
-              {services.map(({ key, label }) => (
-                <Disclosure
-                  key={key}
-                  className="border border-[var(--color-border-default)] rounded-lg overflow-hidden"
-                >
-                  <Disclosure.Trigger className="w-full py-3 px-4 bg-[var(--color-surface-subtle)]">
-                    <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel className="space-y-3 px-4 py-3 border-t border-[var(--color-border-default)]">
-                    {/* What to Notify */}
-                    <div>
-                      <span className="text-label-md text-[var(--color-text-default)] block mb-2">
-                        What to Notify{' '}
-                      </span>
-                      <RadioGroup
-                        value={serviceNotifications[key].whatToNotify}
-                        onChange={(value) => updateServiceNotification(key, 'whatToNotify', value)}
-                        direction="horizontal"
-                      >
-                        <Radio value="all" label="All" />
-                        <Radio value="errors" label="Errors only" />
-                        <Radio value="off" label="Off" />
-                      </RadioGroup>
-                    </div>
-
-                    {/* Duration */}
-                    <div
-                      className={
-                        serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''
-                      }
-                    >
-                      <span className="text-label-md text-[var(--color-text-default)] block mb-2">
-                        Duration{' '}
-                      </span>
-                      <Select
-                        value={serviceNotifications[key].duration}
-                        onChange={(value) => updateServiceNotification(key, 'duration', value)}
-                        options={durationOptions}
-                        width="sm"
-                        disabled={serviceNotifications[key].whatToNotify === 'off'}
-                      />
-                    </div>
-
-                    {/* Sound */}
-                    <div
-                      className={
-                        serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''
-                      }
-                    >
-                      <span className="text-label-md text-[var(--color-text-default)] block mb-2">
-                        Sound{' '}
-                      </span>
-                      <Toggle
-                        checked={serviceNotifications[key].sound}
-                        onChange={(e) => updateServiceNotification(key, 'sound', e.target.checked)}
-                        disabled={serviceNotifications[key].whatToNotify === 'off'}
-                      />
-                    </div>
-                  </Disclosure.Panel>
-                </Disclosure>
-              ))}
+        <SectionCard>
+          <SectionCard.Header title="App notifications" />
+          <SectionCard.Content>
+            <VStack gap={3}>
+              {APP_LIST.map(({ key, label, icon }) => {
+                const state = appNotifications[key];
+                const { notif, sound } = getStatusLabel(state);
+                return (
+                  <Disclosure
+                    key={key}
+                    className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden"
+                  >
+                    <Disclosure.Trigger className="w-full py-3 px-4 bg-[var(--color-surface-subtle)]">
+                      <HStack align="center" className="w-full">
+                        <HStack gap={2} align="center" className="flex-1 min-w-0">
+                          <img src={icon} alt={label} className="w-5 h-5 object-cover shrink-0" />
+                          <span className="text-label-md text-[var(--color-text-default)]">
+                            {label}
+                          </span>
+                        </HStack>
+                        <HStack gap={1} align="center" className="shrink-0">
+                          <Badge variant={state.notification ? 'success' : 'default'} size="sm">
+                            {notif}
+                          </Badge>
+                          {state.notification && (
+                            <Badge variant={state.sound ? 'info' : 'default'} size="sm">
+                              {sound}
+                            </Badge>
+                          )}
+                        </HStack>
+                      </HStack>
+                    </Disclosure.Trigger>
+                    <Disclosure.Panel className="px-4 py-3 border-t border-[var(--color-border-default)]">
+                      <VStack gap={4}>
+                        <FormField label="Notification" spacing="loose">
+                          <Toggle
+                            checked={state.notification}
+                            onChange={(e) => updateApp(key, 'notification', e.target.checked)}
+                            disabled={!globalNotifications}
+                          />
+                        </FormField>
+                        <FormField label="Sound" spacing="loose">
+                          <Toggle
+                            checked={state.sound}
+                            onChange={(e) => updateApp(key, 'sound', e.target.checked)}
+                            disabled={!globalNotifications || !state.notification}
+                          />
+                        </FormField>
+                      </VStack>
+                    </Disclosure.Panel>
+                  </Disclosure>
+                );
+              })}
             </VStack>
           </SectionCard.Content>
         </SectionCard>

@@ -75,61 +75,61 @@ export function SearchInputPage() {
           {/* Composition */}
           <VStack gap={6} align="stretch">
             <h3 className="text-heading-h5 text-[var(--color-text-default)]">Composition</h3>
-            <pre className="text-body-sm text-[var(--color-text-muted)] font-mono p-4 bg-[var(--color-surface-muted)] rounded-[var(--primitive-radius-md)] overflow-x-auto">
+            <pre className="text-body-sm text-[var(--color-text-muted)] font-mono p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-lg)] overflow-x-auto">
               {`[ Search / Filter field ]
 
 Status: Running   Region: Seoul   Owner: admin   ✕`}
             </pre>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
               <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
                 <thead>
                   <tr>
-                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                    <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)]">
                       요소
                     </th>
-                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                    <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-subtle)]">
                       설명
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                       Search field
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       필터 조건 입력 영역
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                       Filter key dropdown
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       필터 키 선택 메뉴
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                       Filter value input
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       필터 값 입력 또는 선택
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                       Filter chips
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       적용된 필터 목록
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                       Clear action
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       전체 필터 초기화
                     </td>
                   </tr>
@@ -144,51 +144,51 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
             <p className="text-body-md text-[var(--color-text-muted)]">
               기본적으로 필터가 없으면 Keyword search로 사용된다.
             </p>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
               <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
                 <thead>
                   <tr>
-                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                    <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r border-[var(--color-border-subtle)]">
                       Variant
                     </th>
-                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                    <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r border-[var(--color-border-subtle)]">
                       컴포넌트
                     </th>
-                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                    <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r border-[var(--color-border-subtle)]">
                       설명
                     </th>
-                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                    <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-subtle)]">
                       사용 시점
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                       Keyword search
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                       <span className="font-mono text-body-sm">SearchInput</span>
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       텍스트 기반 검색. 입력된 키워드로 전체 데이터를 필터링한다.
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       단순 이름/키워드 검색만 필요한 경우
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                       Filter search
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                       <span className="font-mono text-body-sm">FilterSearchInput</span>
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       필터 키 기반 구조화된 검색. 필터 키를 선택한 후 값을 입력 또는 선택하여 조건을
                       생성한다.
                     </td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       여러 속성(Status, Type 등)으로 복합 필터링이 필요한 경우
                     </td>
                   </tr>
@@ -200,34 +200,40 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
           {/* States */}
           <VStack gap={6} align="stretch">
             <h3 className="text-heading-h5 text-[var(--color-text-default)]">States</h3>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
               <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
                 <thead>
                   <tr>
-                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                    <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r border-[var(--color-border-subtle)]">
                       State
                     </th>
-                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                    <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-subtle)]">
                       설명
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">Default</td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
+                      Default
+                    </td>
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       기본 상태
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">Focus</td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
+                      Focus
+                    </td>
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       입력 중
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-2 border border-[var(--color-border-default)]">Active</td>
-                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                    <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
+                      Active
+                    </td>
+                    <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                       필터 키 입력 완료 + 필터 값 입력 중
                     </td>
                   </tr>
@@ -253,46 +259,56 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">
                 2) Filter value input types
               </h4>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
                 <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
                   <thead>
                     <tr>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r border-[var(--color-border-subtle)]">
                         타입
                       </th>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-subtle)]">
                         입력 방식
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">text</td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
+                        text
+                      </td>
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         Text input
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">enum</td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
+                        enum
+                      </td>
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         Select
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">boolean</td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
+                        boolean
+                      </td>
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         Select
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">number</td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
+                        number
+                      </td>
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         Text input
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">tag</td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
+                        tag
+                      </td>
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         Select
                       </td>
                     </tr>
@@ -311,30 +327,32 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
                 <li>Chip에는 제거 버튼이 포함된다.</li>
                 <li>Filter chip은 다음 시점에 생성된다.</li>
               </ul>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
                 <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
                   <thead>
                     <tr>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r border-[var(--color-border-subtle)]">
                         동작
                       </th>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-subtle)]">
                         동작
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">Enter</td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
+                        Enter
+                      </td>
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         필터 생성
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                         Value 선택
                       </td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         필터 생성
                       </td>
                     </tr>
@@ -344,32 +362,32 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
             </VStack>
             <VStack gap={3} align="stretch">
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">4) Chip removal</h4>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
                 <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
                   <thead>
                     <tr>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r border-[var(--color-border-subtle)]">
                         동작
                       </th>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-subtle)]">
                         결과
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                         Chip ✕ 버튼 클릭
                       </td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         해당 필터 제거
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                         Clear 클릭
                       </td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         모든 필터 제거
                       </td>
                     </tr>
@@ -384,32 +402,32 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
               <p className="text-body-md text-[var(--color-text-muted)]">
                 여러 필터를 동시에 사용할 수 있다.
               </p>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
                 <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
                   <thead>
                     <tr>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r border-[var(--color-border-subtle)]">
                         조건
                       </th>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-subtle)]">
                         로직
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                         같은 필터 키
                       </td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         OR
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">
+                      <td className="px-3 py-2 border-t border-r border-[var(--color-border-subtle)]">
                         다른 필터 키
                       </td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      <td className="px-3 py-2 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
                         AND
                       </td>
                     </tr>
@@ -450,32 +468,8 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
             <span className="text-body-sm text-[var(--color-text-subtle)]">
               일반 텍스트 기반 검색. 필터 키 없이 자유 텍스트로 검색.
             </span>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <SearchInput placeholder="Search resources" size="sm" className="w-[320px]" />
-            </div>
-          </VStack>
-          <VStack gap={3}>
-            <span className="text-label-md text-[var(--color-text-default)]">Different Sizes</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              sm, md 사이즈를 지원한다.
-            </span>
-            <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Small</span>
-                <SearchInput
-                  placeholder="Search resources by attributes"
-                  size="sm"
-                  className="w-[320px]"
-                />
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Medium</span>
-                <SearchInput
-                  placeholder="Search resources by attributes"
-                  size="md"
-                  className="w-[320px]"
-                />
-              </VStack>
             </div>
           </VStack>
         </VStack>

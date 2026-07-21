@@ -20,7 +20,7 @@ export function FigmaLayout() {
               to={item.path}
               className={`px-3 py-1.5 rounded-md text-label-sm transition-colors ${
                 pathname === item.path
-                  ? 'bg-[var(--color-action-primary)] text-white'
+                  ? 'bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)]'
                   : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
               }`}
             >

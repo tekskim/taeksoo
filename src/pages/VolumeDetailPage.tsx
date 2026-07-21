@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -19,6 +18,8 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
+  ErrorState,
+  ConfirmModal,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -29,13 +30,13 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconCirclePlus,
-  IconBell,
   IconTrash,
   IconChevronDown,
   IconDotsCircleHorizontal,
   IconDownload,
   IconEdit,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -94,7 +95,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'db-data',
     status: 'in-use',
     size: '1500GiB',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     volumeName: 'db-data',
     availabilityZone: 'nova',
     description: 'Database data volume',
@@ -110,7 +111,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'app-storage',
     status: 'in-use',
     size: '500GiB',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     volumeName: 'app-storage',
     availabilityZone: 'nova',
     description: 'Application storage',
@@ -124,9 +125,9 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   'vol-003': {
     id: 'vol-003',
     name: 'backup-vol',
-    status: 'active',
+    status: 'available',
     size: '2000GiB',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     volumeName: 'backup-vol',
     availabilityZone: 'nova',
     description: 'Backup storage',
@@ -142,7 +143,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'log-storage',
     status: 'in-use',
     size: '100GiB',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     volumeName: 'log-storage',
     availabilityZone: 'nova',
     description: 'Log storage volume',
@@ -158,7 +159,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'cache-vol',
     status: 'in-use',
     size: '256GiB',
-    createdAt: 'Aug 30, 2025 21:37:41',
+    createdAt: 'Aug 30, 2026 21:37:41',
     volumeName: 'cache-vol',
     availabilityZone: 'nova',
     description: 'Cache volume',
@@ -172,9 +173,9 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   'vol-006': {
     id: 'vol-006',
     name: 'media-storage',
-    status: 'active',
+    status: 'available',
     size: '5000GiB',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     volumeName: 'media-storage',
     availabilityZone: 'nova',
     description: 'Media storage volume',
@@ -188,9 +189,9 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   'vol-007': {
     id: 'vol-007',
     name: 'temp-vol',
-    status: 'pending',
+    status: 'creating',
     size: '50GiB',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     volumeName: 'temp-vol',
     availabilityZone: 'nova',
     description: 'Temporary volume',
@@ -206,7 +207,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'ml-data',
     status: 'in-use',
     size: '1000GiB',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     volumeName: 'ml-data',
     availabilityZone: 'nova',
     description: 'ML Dataset volume',
@@ -220,9 +221,9 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   'vol-009': {
     id: 'vol-009',
     name: 'archive-vol',
-    status: 'active',
+    status: 'available',
     size: '10000GiB',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     volumeName: 'archive-vol',
     availabilityZone: 'nova',
     description: 'Archive storage',
@@ -238,7 +239,7 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     name: 'boot-vol-01',
     status: 'in-use',
     size: '100GiB',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     volumeName: 'boot-vol-01',
     availabilityZone: 'nova',
     description: 'Boot volume',
@@ -251,30 +252,13 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
   },
 };
 
-const defaultVolumeDetail: VolumeDetail = {
-  id: 'unknown',
-  name: 'Unknown Volume',
-  status: 'available',
-  size: '0 GiB',
-  createdAt: '-',
-  volumeName: '-',
-  availabilityZone: '-',
-  description: '-',
-  attachedTo: null,
-  attachedToId: null,
-  dataSourceType: '-',
-  volumeType: '-',
-  bootable: false,
-  encryption: false,
-};
-
 // Mock volume snapshots
 const mockVolumeSnapshots: VolumeSnapshot[] = Array.from({ length: 115 }, (_, i) => ({
   id: `snap-${String(i + 1).padStart(3, '0')}`,
   name: `vol-snap-${String(34 + i).padStart(2, '0')}`,
   status: 'available' as SnapshotStatus,
   size: '1500GiB',
-  createdAt: 'Sep 12, 2025 15:43:35',
+  createdAt: 'Sep 12, 2026 15:43:35',
 }));
 
 // Mock volume backups
@@ -284,7 +268,7 @@ const mockVolumeBackups: VolumeBackup[] = Array.from({ length: 115 }, (_, i) => 
   status: 'available' as BackupStatus,
   backupMode: 'Full Backup',
   size: '1500GiB',
-  createdAt: 'Sep 12, 2025 15:43:35',
+  createdAt: 'Sep 12, 2026 15:43:35',
 }));
 
 /* ----------------------------------------
@@ -319,7 +303,7 @@ const backupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'p
 
 export function VolumeDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const volume = id ? mockVolumesMap[id] || defaultVolumeDetail : defaultVolumeDetail;
+  const volume = id ? mockVolumesMap[id] : undefined;
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -339,6 +323,7 @@ export function VolumeDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Volume data is already fetched based on ID above
   const snapshots = mockVolumeSnapshots;
@@ -348,10 +333,10 @@ export function VolumeDetailPage() {
 
   // Update tab label to volume name
   useEffect(() => {
-    if (volume.name) {
+    if (volume?.name) {
       updateActiveTabLabel(volume.name);
     }
-  }, [volume.name, updateActiveTabLabel]);
+  }, [volume?.name, updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -360,9 +345,8 @@ export function VolumeDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '#' },
     { label: 'Volumes', href: '/compute/volumes' },
-    { label: volume.name, href: `/volumes/${volume.id}` },
+    { label: volume?.name ?? id ?? '—' },
   ];
 
   // Filter snapshots by search query
@@ -398,17 +382,29 @@ export function VolumeDetailPage() {
 
   // Context menu items for snapshot actions
   const getSnapshotContextMenuItems = (_snapshot: VolumeSnapshot): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
-    { id: 'edit', label: 'Edit', onClick: () => {} },
-    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
+    {
+      id: 'create-volume',
+      label: 'Create volume',
+      onClick: () => console.log('Action:', id),
+    },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Action:', id) },
+    { id: 'delete', label: 'Delete', onClick: () => console.log('Action:', id), status: 'danger' },
   ];
 
   // Context menu items for backup actions
   const getBackupContextMenuItems = (_backup: VolumeBackup): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
-    { id: 'restore-backup', label: 'Restore backup', onClick: () => {} },
-    { id: 'edit', label: 'Edit', onClick: () => {} },
-    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
+    {
+      id: 'create-volume',
+      label: 'Create volume',
+      onClick: () => console.log('Action:', id),
+    },
+    {
+      id: 'restore-backup',
+      label: 'Restore backup',
+      onClick: () => console.log('Action:', id),
+    },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Action:', id) },
+    { id: 'delete', label: 'Delete', onClick: () => console.log('Action:', id), status: 'danger' },
   ];
 
   // Snapshot table columns
@@ -436,7 +432,12 @@ export function VolumeDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -461,10 +462,13 @@ export function VolumeDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div className="flex items-center justify-center">
           <ContextMenu items={getSnapshotContextMenuItems(row)} trigger="click" align="right">
             <button
+              type="button"
+              aria-label="Row actions"
               className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
               onClick={(e) => e.stopPropagation()}
             >
@@ -505,7 +509,12 @@ export function VolumeDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -538,10 +547,13 @@ export function VolumeDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div className="flex items-center justify-center">
           <ContextMenu items={getBackupContextMenuItems(row)} trigger="click" align="right">
             <button
+              type="button"
+              aria-label="Row actions"
               className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
               onClick={(e) => e.stopPropagation()}
             >
@@ -556,6 +568,44 @@ export function VolumeDetailPage() {
       ),
     },
   ];
+
+  if (!volume) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Volume not found"
+          description={`The volume with ID "${id ?? ''}" does not exist.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/volumes')}>
+              Back to volumes
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell
@@ -575,30 +625,33 @@ export function VolumeDetailPage() {
           onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => navigate(-1)}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Volume Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{volume.name}</DetailHeader.Title>
           <DetailHeader.Actions>
             {activeDetailTab === 'details' ? (
               <>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={() => console.log('Action:', volume.id)}
+                >
                   Create transfer
                 </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsDeleteOpen(true)}
+                >
                   Delete
                 </Button>
                 <ContextMenu
@@ -638,13 +691,28 @@ export function VolumeDetailPage() {
               </>
             ) : (
               <>
-                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={() => console.log('Action:', volume.id)}
+                >
                   Update status
                 </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconEdit size={12} />}
+                  onClick={() => console.log('Action:', volume.id)}
+                >
                   Edit
                 </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  onClick={() => setIsDeleteOpen(true)}
+                >
                   Delete
                 </Button>
                 <ContextMenu
@@ -736,7 +804,11 @@ export function VolumeDetailPage() {
 
                 {/* Source */}
                 <SectionCard>
-                  <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
+                  <SectionCard.Header
+                    title="Source"
+                    showEditButton
+                    onEdit={() => console.log('Action:', volume.id)}
+                  />
                   <SectionCard.Content>
                     <SectionCard.DataRow
                       label="Volume snapshot"
@@ -765,7 +837,11 @@ export function VolumeDetailPage() {
 
                 {/* Specifications */}
                 <SectionCard>
-                  <SectionCard.Header title="Specifications" showEditButton onEdit={() => {}} />
+                  <SectionCard.Header
+                    title="Specifications"
+                    showEditButton
+                    onEdit={() => console.log('Action:', volume.id)}
+                  />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Size" value={volume.size} />
                     <SectionCard.DataRow label="Volume type" value={volume.volumeType} />
@@ -780,7 +856,8 @@ export function VolumeDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Metadata" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="{metadata}" value="{value}" />
+                    <SectionCard.DataRow label="os_type" value="linux" />
+                    <SectionCard.DataRow label="attached_mode" value="rw" />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>
@@ -814,6 +891,7 @@ export function VolumeDetailPage() {
                     iconOnly
                     icon={<IconDownload size={12} stroke={1.5} />}
                     aria-label="Download"
+                    onClick={() => console.log('Action:', volume.id)}
                   />
                 </div>
 
@@ -863,6 +941,7 @@ export function VolumeDetailPage() {
                     iconOnly
                     icon={<IconDownload size={12} stroke={1.5} />}
                     aria-label="Download"
+                    onClick={() => console.log('Action:', volume.id)}
                   />
                 </div>
 
@@ -886,6 +965,22 @@ export function VolumeDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/compute/volumes');
+        }}
+        title="Delete volume"
+        description="This will permanently delete this volume. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Volume"
+        infoValue={volume.name}
+      />
     </PageShell>
   );
 }

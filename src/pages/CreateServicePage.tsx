@@ -21,20 +21,14 @@ import {
   TableLink,
   Pagination,
   PageShell,
+  WizardSummary,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconSearch,
-  IconX,
-  IconCheck,
-  IconCirclePlus,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -149,40 +143,9 @@ const MOCK_MATCHING_PODS: MatchingPod[] = [
   {
     id: '1',
     name: 'deploymentName-77f6bb9c69-4ww7f',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
 ];
-
-/* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
 
 /* ----------------------------------------
    Summary Sidebar Component
@@ -209,36 +172,16 @@ function SummarySidebar({
     return 'done';
   };
 
+  const summaryItems: WizardSummaryItem[] = SERVICE_SECTION_ORDER.map((key) => ({
+    key,
+    label: SERVICE_SECTION_LABELS[key],
+    status: mapState(sectionStatus[key]),
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Summary Content */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
-
-            <VStack gap={0}>
-              {SERVICE_SECTION_ORDER.map((key) => {
-                const status = mapState(sectionStatus[key]);
-                return (
-                  <HStack key={key} justify="between" align="center" className="py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SERVICE_SECTION_LABELS[key]}
-                    </span>
-                    {status === 'writing' ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <SummaryStatusIcon status={status} />
-                    )}
-                  </HStack>
-                );
-              })}
-            </VStack>
-          </VStack>
-        </div>
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+        <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
         <HStack gap={2}>
@@ -275,9 +218,7 @@ export function CreateServicePage() {
   const [description, setDescription] = useState('');
 
   // Ports state
-  const [ports, setPorts] = useState<Port[]>([
-    { id: '1', name: '', listeningPort: '', protocol: 'TCP', targetPort: '', nodePort: '' },
-  ]);
+  const [ports, setPorts] = useState<Port[]>([]);
 
   // External traffic policy state
   const [externalTrafficPolicy, setExternalTrafficPolicy] = useState('Cluster');
@@ -304,16 +245,19 @@ export function CreateServicePage() {
     isV2 ? [{ key: '', value: '' }] : []
   );
 
-  // Section states
-  const [sectionStatus, setSectionStatus] = useState<Record<ServiceSectionStep, SectionState>>({
-    'basic-info': 'active',
-    'external-name': 'done',
-    'service-ports': 'done',
-    'ip-addresses': 'done',
-    selectors: 'done',
-    'session-affinity': 'done',
-    'labels-annotations': 'done',
+  // Section states (computed dynamically)
+  const getSectionStatus = (): Record<ServiceSectionStep, SectionState> => ({
+    'basic-info': namespace && name ? 'done' : 'active',
+    'external-name': name ? 'done' : 'pre',
+    'service-ports': ports.length > 0 ? 'done' : 'pre',
+    'ip-addresses':
+      clusterIP || loadBalancerIP || externalIPs.some((ip) => ip.value) ? 'done' : 'pre',
+    selectors: selectors.some((s) => s.key) ? 'done' : 'pre',
+    'session-affinity': sessionAffinity === 'ClientIP' ? 'done' : 'pre',
+    'labels-annotations':
+      labels.some((l) => l.key) || annotations.some((a) => a.key) ? 'done' : 'pre',
   });
+  const sectionStatus = getSectionStatus();
 
   // Validation errors
   const [nameError, setNameError] = useState<string | null>(null);
@@ -513,8 +457,8 @@ export function CreateServicePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -524,33 +468,14 @@ export function CreateServicePage() {
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
+        <VStack gap={1}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create service</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Services allow you to define a logical set of Pods that can be accessed with a single IP
@@ -660,16 +585,13 @@ export function CreateServicePage() {
               <SectionCard.Header title="Service ports" />
               <SectionCard.Content>
                 <VStack gap={6}>
-                  <VStack gap={2}>
-                    <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Cluster IP, Headless
-                    </span>
+                  {(isV2 || serviceType === 'ClusterIP' || serviceType === 'Headless') && (
                     <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1.5}>
+                      <VStack gap={2}>
                         {/* Header row */}
                         {ports.length > 0 && (
                           <div
-                            className={`grid gap-1 w-full ${
+                            className={`grid gap-2 w-full ${
                               showNodePort
                                 ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
                                 : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
@@ -700,7 +622,7 @@ export function CreateServicePage() {
                         {ports.map((port) => (
                           <div
                             key={port.id}
-                            className={`grid gap-1 w-full items-center ${
+                            className={`grid gap-2 w-full items-center ${
                               showNodePort
                                 ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
                                 : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
@@ -769,282 +691,264 @@ export function CreateServicePage() {
                         </div>
                       </VStack>
                     </div>
-                  </VStack>
+                  )}
 
-                  <VStack gap={2}>
-                    <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Load Balancer
-                    </span>
-                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                      <VStack gap={6}>
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1.5}>
-                            {/* Header row */}
-                            {ports.length > 0 && (
-                              <div
-                                className={`grid gap-1 w-full ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Port name <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Listening port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Protocol
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Target port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                {showNodePort && (
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Node port
-                                  </span>
-                                )}
-                                <div className="w-5" />
-                              </div>
-                            )}
-
-                            {/* Port rows */}
-                            {ports.map((port) => (
-                              <div
-                                key={port.id}
-                                className={`grid gap-1 w-full items-center ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <Input
-                                  placeholder="e.g. myport"
-                                  value={port.name}
-                                  onChange={(e) => updatePort(port.id, 'name', e.target.value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. 8080"
-                                  value={port.listeningPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'listeningPort', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <Select
-                                  options={PROTOCOL_OPTIONS}
-                                  value={port.protocol}
-                                  onChange={(value) => updatePort(port.id, 'protocol', value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. 80 or http"
-                                  value={port.targetPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'targetPort', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                {showNodePort && (
-                                  <Input
-                                    placeholder="e.g. 30000"
-                                    value={port.nodePort || ''}
-                                    onChange={(e) =>
-                                      updatePort(port.id, 'nodePort', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                )}
-                                <button
-                                  onClick={() => removePort(port.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  disabled={ports.length <= 1}
-                                >
-                                  <IconX
-                                    size={16}
-                                    className={
-                                      ports.length <= 1
-                                        ? 'text-[var(--color-text-disabled)]'
-                                        : 'text-[var(--color-text-muted)]'
-                                    }
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
-                            {/* Add port Button */}
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={addPort}
-                              >
-                                Add port
-                              </Button>
-                            </div>
-                          </VStack>
-                        </div>
-
-                        {/* External traffic policy */}
+                  {(isV2 || serviceType === 'LoadBalancer') && (
+                    <VStack gap={6}>
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                         <VStack gap={2}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            External traffic policy{' '}
-                            <span className="text-[var(--color-state-danger)]">*</span>
-                          </span>
-                          <RadioGroup
-                            value={externalTrafficPolicy}
-                            onChange={setExternalTrafficPolicy}
-                          >
-                            <VStack gap={2}>
-                              <Radio value="Cluster" label="Cluster" />
-                              <Radio value="Local" label="Local" />
-                            </VStack>
-                          </RadioGroup>
-                          <InlineMessage variant="warning">
-                            In Cluster mode, health checks may not accurately reflect pod
-                            availability on individual nodes.
-                          </InlineMessage>
-                        </VStack>
-                      </VStack>
-                    </div>
-                  </VStack>
-
-                  <VStack gap={2}>
-                    <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Node port
-                    </span>
-                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                      <VStack gap={6}>
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1.5}>
-                            {/* Header row */}
-                            {ports.length > 0 && (
-                              <div
-                                className={`grid gap-1 w-full ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_20px]'
-                                }`}
-                              >
+                          {/* Header row */}
+                          {ports.length > 0 && (
+                            <div
+                              className={`grid gap-2 w-full ${
+                                showNodePort
+                                  ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
+                                  : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                              }`}
+                            >
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Port name <span className="text-[#ea580c]">*</span>
+                              </span>
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Listening port <span className="text-[#ea580c]">*</span>
+                              </span>
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Protocol
+                              </span>
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Target port <span className="text-[#ea580c]">*</span>
+                              </span>
+                              {showNodePort && (
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Port name <span className="text-[#ea580c]">*</span>
+                                  Node port
                                 </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Listening port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Target port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                {showNodePort && (
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Node port
-                                  </span>
-                                )}
-                                <div className="w-5" />
-                              </div>
-                            )}
-
-                            {/* Port rows */}
-                            {ports.map((port) => (
-                              <div
-                                key={port.id}
-                                className={`grid gap-1 w-full items-center ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <Input
-                                  placeholder="e.g. myport"
-                                  value={port.name}
-                                  onChange={(e) => updatePort(port.id, 'name', e.target.value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. 8080"
-                                  value={port.listeningPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'listeningPort', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. 80 or http"
-                                  value={port.targetPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'targetPort', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                {showNodePort && (
-                                  <Input
-                                    placeholder="e.g. 30000"
-                                    value={port.nodePort || ''}
-                                    onChange={(e) =>
-                                      updatePort(port.id, 'nodePort', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                )}
-                                <button
-                                  onClick={() => removePort(port.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  disabled={ports.length <= 1}
-                                >
-                                  <IconX
-                                    size={16}
-                                    className={
-                                      ports.length <= 1
-                                        ? 'text-[var(--color-text-disabled)]'
-                                        : 'text-[var(--color-text-muted)]'
-                                    }
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
-                            {/* Add port Button */}
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={addPort}
-                              >
-                                Add port
-                              </Button>
+                              )}
+                              <div className="w-5" />
                             </div>
-                          </VStack>
-                        </div>
+                          )}
 
-                        {/* External traffic policy */}
-                        <VStack gap={2}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            External traffic policy{' '}
-                            <span className="text-[var(--color-state-danger)]">*</span>
-                          </span>
-                          <RadioGroup
-                            value={externalTrafficPolicy}
-                            onChange={setExternalTrafficPolicy}
-                          >
-                            <VStack gap={2}>
-                              <Radio value="Cluster" label="Cluster" />
-                              <Radio value="Local" label="Local" />
-                            </VStack>
-                          </RadioGroup>
-                          <InlineMessage variant="warning">
-                            In Cluster mode, health checks may not accurately reflect pod
-                            availability on individual nodes.
-                          </InlineMessage>
+                          {/* Port rows */}
+                          {ports.map((port) => (
+                            <div
+                              key={port.id}
+                              className={`grid gap-2 w-full items-center ${
+                                showNodePort
+                                  ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
+                                  : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                              }`}
+                            >
+                              <Input
+                                placeholder="e.g. myport"
+                                value={port.name}
+                                onChange={(e) => updatePort(port.id, 'name', e.target.value)}
+                                fullWidth
+                              />
+                              <Input
+                                placeholder="e.g. 8080"
+                                value={port.listeningPort}
+                                onChange={(e) =>
+                                  updatePort(port.id, 'listeningPort', e.target.value)
+                                }
+                                fullWidth
+                              />
+                              <Select
+                                options={PROTOCOL_OPTIONS}
+                                value={port.protocol}
+                                onChange={(value) => updatePort(port.id, 'protocol', value)}
+                                fullWidth
+                              />
+                              <Input
+                                placeholder="e.g. 80 or http"
+                                value={port.targetPort}
+                                onChange={(e) => updatePort(port.id, 'targetPort', e.target.value)}
+                                fullWidth
+                              />
+                              {showNodePort && (
+                                <Input
+                                  placeholder="e.g. 30000"
+                                  value={port.nodePort || ''}
+                                  onChange={(e) => updatePort(port.id, 'nodePort', e.target.value)}
+                                  fullWidth
+                                />
+                              )}
+                              <button
+                                onClick={() => removePort(port.id)}
+                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                disabled={ports.length <= 1}
+                              >
+                                <IconX
+                                  size={16}
+                                  className={
+                                    ports.length <= 1
+                                      ? 'text-[var(--color-text-disabled)]'
+                                      : 'text-[var(--color-text-muted)]'
+                                  }
+                                  stroke={1.5}
+                                />
+                              </button>
+                            </div>
+                          ))}
+
+                          {/* Add port Button */}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addPort}
+                            >
+                              Add port
+                            </Button>
+                          </div>
                         </VStack>
+                      </div>
+
+                      {/* External traffic policy */}
+                      <VStack gap={2}>
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          External traffic policy{' '}
+                          <span className="text-[var(--color-state-danger)]">*</span>
+                        </span>
+                        <RadioGroup
+                          value={externalTrafficPolicy}
+                          onChange={setExternalTrafficPolicy}
+                        >
+                          <VStack gap={2}>
+                            <Radio value="Cluster" label="Cluster" />
+                            <Radio value="Local" label="Local" />
+                          </VStack>
+                        </RadioGroup>
+                        <InlineMessage variant="warning">
+                          In Cluster mode, health checks may not accurately reflect pod availability
+                          on individual nodes.
+                        </InlineMessage>
                       </VStack>
-                    </div>
-                  </VStack>
+                    </VStack>
+                  )}
+
+                  {(isV2 || serviceType === 'NodePort') && (
+                    <VStack gap={6}>
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <VStack gap={2}>
+                          {/* Header row */}
+                          {ports.length > 0 && (
+                            <div
+                              className={`grid gap-2 w-full ${
+                                showNodePort
+                                  ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                                  : 'grid-cols-[1fr_1fr_1fr_20px]'
+                              }`}
+                            >
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Port name <span className="text-[#ea580c]">*</span>
+                              </span>
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Listening port <span className="text-[#ea580c]">*</span>
+                              </span>
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Target port <span className="text-[#ea580c]">*</span>
+                              </span>
+                              {showNodePort && (
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                  Node port
+                                </span>
+                              )}
+                              <div className="w-5" />
+                            </div>
+                          )}
+
+                          {/* Port rows */}
+                          {ports.map((port) => (
+                            <div
+                              key={port.id}
+                              className={`grid gap-2 w-full items-center ${
+                                showNodePort
+                                  ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                                  : 'grid-cols-[1fr_1fr_1fr_20px]'
+                              }`}
+                            >
+                              <Input
+                                placeholder="e.g. myport"
+                                value={port.name}
+                                onChange={(e) => updatePort(port.id, 'name', e.target.value)}
+                                fullWidth
+                              />
+                              <Input
+                                placeholder="e.g. 8080"
+                                value={port.listeningPort}
+                                onChange={(e) =>
+                                  updatePort(port.id, 'listeningPort', e.target.value)
+                                }
+                                fullWidth
+                              />
+                              <Input
+                                placeholder="e.g. 80 or http"
+                                value={port.targetPort}
+                                onChange={(e) => updatePort(port.id, 'targetPort', e.target.value)}
+                                fullWidth
+                              />
+                              {showNodePort && (
+                                <Input
+                                  placeholder="e.g. 30000"
+                                  value={port.nodePort || ''}
+                                  onChange={(e) => updatePort(port.id, 'nodePort', e.target.value)}
+                                  fullWidth
+                                />
+                              )}
+                              <button
+                                onClick={() => removePort(port.id)}
+                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                disabled={ports.length <= 1}
+                              >
+                                <IconX
+                                  size={16}
+                                  className={
+                                    ports.length <= 1
+                                      ? 'text-[var(--color-text-disabled)]'
+                                      : 'text-[var(--color-text-muted)]'
+                                  }
+                                  stroke={1.5}
+                                />
+                              </button>
+                            </div>
+                          ))}
+
+                          {/* Add port Button */}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addPort}
+                            >
+                              Add port
+                            </Button>
+                          </div>
+                        </VStack>
+                      </div>
+
+                      {/* External traffic policy */}
+                      <VStack gap={2}>
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          External traffic policy{' '}
+                          <span className="text-[var(--color-state-danger)]">*</span>
+                        </span>
+                        <RadioGroup
+                          value={externalTrafficPolicy}
+                          onChange={setExternalTrafficPolicy}
+                        >
+                          <VStack gap={2}>
+                            <Radio value="Cluster" label="Cluster" />
+                            <Radio value="Local" label="Local" />
+                          </VStack>
+                        </RadioGroup>
+                        <InlineMessage variant="warning">
+                          In Cluster mode, health checks may not accurately reflect pod availability
+                          on individual nodes.
+                        </InlineMessage>
+                      </VStack>
+                    </VStack>
+                  )}
                 </VStack>
               </SectionCard.Content>
             </SectionCard>
@@ -1080,9 +984,9 @@ export function CreateServicePage() {
                       External IPs
                     </label>
                     <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1.5}>
+                      <VStack gap={2}>
                         {externalIPs.length > 0 && (
-                          <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
+                          <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               External IP
                             </span>
@@ -1092,7 +996,7 @@ export function CreateServicePage() {
                         {externalIPs.map((ip) => (
                           <div
                             key={ip.id}
-                            className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
+                            className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
                           >
                             <Input
                               placeholder="e.g. 1.1.1.1"
@@ -1142,7 +1046,7 @@ export function CreateServicePage() {
                       Keys and values
                     </span>
                     {selectors.length === 0 ? (
-                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                         <HStack gap={2}>
                           <Button
                             variant="secondary"
@@ -1159,9 +1063,9 @@ export function CreateServicePage() {
                       </div>
                     ) : (
                       <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                        <VStack gap={1.5}>
+                        <VStack gap={2}>
                           {selectors.length > 0 && (
-                            <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                            <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                               <span className="block text-label-sm text-[var(--color-text-default)]">
                                 Key
                               </span>
@@ -1174,7 +1078,7 @@ export function CreateServicePage() {
                           {selectors.map((selector, index) => (
                             <div
                               key={index}
-                              className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                              className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                             >
                               <Input
                                 placeholder="e.g. key"
@@ -1222,15 +1126,13 @@ export function CreateServicePage() {
                   {/* Matching Pods Table */}
                   <VStack gap={2}>
                     <span className="text-label-lg text-[var(--color-text-default)]">
-                      Matching Pods (1/10)
+                      Matching Pods
                     </span>
                     <Pagination
                       currentPage={1}
                       totalPages={1}
                       onPageChange={() => {}}
                       totalItems={1}
-                      showSettings
-                      onSettingsClick={() => {}}
                     />
                     <Table<MatchingPod>
                       columns={[
@@ -1295,7 +1197,9 @@ export function CreateServicePage() {
                           suffix="Seconds"
                         />
                       </HStack>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">1–86400</span>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        1–86400 Seconds
+                      </span>
                     </VStack>
                   )}
                 </VStack>
@@ -1318,9 +1222,9 @@ export function CreateServicePage() {
 
                     {/* Bordered container for labels */}
                     <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1.5}>
+                      <VStack gap={2}>
                         {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -1333,7 +1237,7 @@ export function CreateServicePage() {
                         {labels.map((label, index) => (
                           <div
                             key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                           >
                             <Input
                               placeholder="label key"
@@ -1388,9 +1292,9 @@ export function CreateServicePage() {
 
                     {/* Bordered container for annotations */}
                     <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1.5}>
+                      <VStack gap={2}>
                         {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -1403,7 +1307,7 @@ export function CreateServicePage() {
                         {annotations.map((annotation, index) => (
                           <div
                             key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                           >
                             <Input
                               placeholder="annotation key"

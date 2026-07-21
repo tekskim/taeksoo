@@ -88,7 +88,7 @@ export default function IAMLoginPoliciesPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Login policies' }];
+  const breadcrumbItems = [{ label: 'Login Policies' }];
 
   // Handle reset to default for password policy
   const handleResetPasswordPolicy = () => {
@@ -248,7 +248,7 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Requirements */}
                       <div className="py-6">
-                        <FormField required>
+                        <FormField required spacing="loose">
                           <FormField.Label>Requirements</FormField.Label>
                           <FormField.Description>
                             Specifies the character types that must be included in the password.
@@ -284,7 +284,7 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Exclusion rules */}
                       <div className="py-6">
-                        <FormField required>
+                        <FormField required spacing="loose">
                           <FormField.Label>Exclusion rules</FormField.Label>
                           <FormField.Description>
                             Defines words or patterns that cannot be used in passwords.
@@ -310,7 +310,7 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Password expiration */}
                       <div className="py-6">
-                        <FormField required>
+                        <FormField required spacing="loose">
                           <FormField.Label>Password expiration</FormField.Label>
                           <FormField.Description>
                             Sets the validity period for passwords. After the specified duration,
@@ -320,7 +320,7 @@ export default function IAMLoginPoliciesPage() {
                             <VStack gap={3}>
                               <Toggle
                                 checked={passwordExpirationEnabled}
-                                onChange={setPasswordExpirationEnabled}
+                                onChange={(e) => setPasswordExpirationEnabled(e.target.checked)}
                                 label={passwordExpirationEnabled ? 'On' : 'Off'}
                               />
                               <HStack gap={2} align="center">
@@ -348,23 +348,19 @@ export default function IAMLoginPoliciesPage() {
                       {/* Prevent password reuse */}
                       <div className="py-6">
                         <VStack gap={6}>
-                          <VStack gap={3}>
-                            <VStack gap={1}>
-                              <span className="text-heading-h6 text-[var(--color-text-default)]">
-                                Prevent password reuse{' '}
-                                <span className="text-[var(--color-state-danger)]">*</span>
-                              </span>
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
-                                Prevents users from reusing previously used passwords.
-                              </p>
-                            </VStack>
-
-                            <Toggle
-                              checked={preventReuseEnabled}
-                              onChange={setPreventReuseEnabled}
-                              label={preventReuseEnabled ? 'On' : 'Off'}
-                            />
-                          </VStack>
+                          <FormField required spacing="loose">
+                            <FormField.Label>Prevent password reuse</FormField.Label>
+                            <FormField.Description>
+                              Prevents users from reusing previously used passwords.
+                            </FormField.Description>
+                            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                              <Toggle
+                                checked={preventReuseEnabled}
+                                onChange={(e) => setPreventReuseEnabled(e.target.checked)}
+                                label={preventReuseEnabled ? 'On' : 'Off'}
+                              />
+                            </FormField.Control>
+                          </FormField>
 
                           <VStack gap={6}>
                             <FormField>
@@ -373,7 +369,7 @@ export default function IAMLoginPoliciesPage() {
                                   align="center"
                                   className="gap-[var(--primitive-spacing-1-5)]"
                                 >
-                                  By recent history
+                                  By resent history
                                   <Tooltip content="Prevents reusing the last 'N' passwords.">
                                     <IconInfoCircle
                                       size={14}
@@ -437,14 +433,15 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Action Buttons */}
                       <HStack gap={2} justify="end" className="w-full pt-3">
-                        <button
-                          type="button"
+                        <Button
+                          variant="link"
+                          size="md"
+                          leftIcon={<IconRefresh size={12} />}
                           onClick={handleResetPasswordPolicy}
-                          className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                          className="mr-4"
                         >
-                          <IconRefresh size={12} stroke={1.5} />
                           Reset to default
-                        </button>
+                        </Button>
                         <Button variant="secondary" size="md" onClick={handleResetPasswordPolicy}>
                           Reload
                         </Button>
@@ -469,11 +466,16 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Enable Toggle */}
                       <div className="py-6">
-                        <Toggle
-                          checked={lockoutEnabled}
-                          onChange={(e) => setLockoutEnabled(e.target.checked)}
-                          label={lockoutEnabled ? 'On' : 'Off'}
-                        />
+                        <FormField spacing="loose">
+                          <FormField.Label>Account lockout</FormField.Label>
+                          <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                            <Toggle
+                              checked={lockoutEnabled}
+                              onChange={(e) => setLockoutEnabled(e.target.checked)}
+                              label={lockoutEnabled ? 'On' : 'Off'}
+                            />
+                          </FormField.Control>
+                        </FormField>
                       </div>
 
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -558,7 +560,7 @@ export default function IAMLoginPoliciesPage() {
 
                           {/* Strategy to increase wait time */}
                           <div className="py-6">
-                            <FormField required>
+                            <FormField required spacing="loose">
                               <FormField.Label>Strategy to increase wait time</FormField.Label>
                               <FormField.Description>
                                 Defines how the wait time increases after repeated failed login
@@ -566,44 +568,46 @@ export default function IAMLoginPoliciesPage() {
                               </FormField.Description>
                               <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                                 <VStack className="gap-[var(--radio-group-item-gap)]">
-                                  <HStack
-                                    className="gap-[var(--primitive-spacing-1-5)]"
-                                    align="center"
-                                  >
-                                    <Radio
-                                      checked={waitTimeStrategy === 'linear'}
-                                      onChange={() => setWaitTimeStrategy('linear')}
-                                      disabled={!lockoutEnabled}
-                                    />
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      Linear
-                                    </span>
-                                    <Tooltip content="Wait time increases only when failures are multiples of factor">
-                                      <IconInfoCircle
-                                        size={14}
-                                        className="text-[var(--color-text-subtle)]"
-                                      />
-                                    </Tooltip>
-                                  </HStack>
-                                  <HStack
-                                    className="gap-[var(--primitive-spacing-1-5)]"
-                                    align="center"
-                                  >
-                                    <Radio
-                                      checked={waitTimeStrategy === 'multiple'}
-                                      onChange={() => setWaitTimeStrategy('multiple')}
-                                      disabled={!lockoutEnabled}
-                                    />
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      Multiple
-                                    </span>
-                                    <Tooltip content="Wait time increases after every failure starting from factor">
-                                      <IconInfoCircle
-                                        size={14}
-                                        className="text-[var(--color-text-subtle)]"
-                                      />
-                                    </Tooltip>
-                                  </HStack>
+                                  <Radio
+                                    name="wait-time-strategy"
+                                    value="linear"
+                                    checked={waitTimeStrategy === 'linear'}
+                                    onChange={() => setWaitTimeStrategy('linear')}
+                                    disabled={!lockoutEnabled}
+                                    label={
+                                      <span className="inline-flex items-center gap-[var(--primitive-spacing-1-5)]">
+                                        <span className="text-body-md text-[var(--color-text-default)]">
+                                          Linear
+                                        </span>
+                                        <Tooltip content="Wait time increases only when failures are multiples of factor">
+                                          <IconInfoCircle
+                                            size={14}
+                                            className="text-[var(--color-text-subtle)]"
+                                          />
+                                        </Tooltip>
+                                      </span>
+                                    }
+                                  />
+                                  <Radio
+                                    name="wait-time-strategy"
+                                    value="multiple"
+                                    checked={waitTimeStrategy === 'multiple'}
+                                    onChange={() => setWaitTimeStrategy('multiple')}
+                                    disabled={!lockoutEnabled}
+                                    label={
+                                      <span className="inline-flex items-center gap-[var(--primitive-spacing-1-5)]">
+                                        <span className="text-body-md text-[var(--color-text-default)]">
+                                          Multiple
+                                        </span>
+                                        <Tooltip content="Wait time increases after every failure starting from factor">
+                                          <IconInfoCircle
+                                            size={14}
+                                            className="text-[var(--color-text-subtle)]"
+                                          />
+                                        </Tooltip>
+                                      </span>
+                                    }
+                                  />
                                 </VStack>
                               </FormField.Control>
                             </FormField>
@@ -701,14 +705,15 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Action Buttons */}
                       <HStack gap={2} justify="end" className="w-full pt-3">
-                        <button
-                          type="button"
+                        <Button
+                          variant="link"
+                          size="md"
+                          leftIcon={<IconRefresh size={12} />}
                           onClick={handleResetLockoutPolicy}
-                          className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                          className="mr-4"
                         >
-                          <IconRefresh size={12} stroke={1.5} />
                           Reset to default
-                        </button>
+                        </Button>
                         <Button variant="secondary" size="md" onClick={handleResetLockoutPolicy}>
                           Reload
                         </Button>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   StatusIndicator,
   ListToolbar,
@@ -26,8 +25,9 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -62,9 +62,9 @@ const mockSnapshots: InstanceSnapshot[] = [
     size: '16GiB',
     diskFormat: 'RAW',
     sourceInstance: 'web-server-01',
-    sourceInstanceId: 'vm-001',
+    sourceInstanceId: '2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e',
     description: 'Base web server snapshot',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     tenant: 'Tenant A',
     tenantId: 'tenant-001',
   },
@@ -75,9 +75,9 @@ const mockSnapshots: InstanceSnapshot[] = [
     size: '32GiB',
     diskFormat: 'QCOW2',
     sourceInstance: 'db-server-01',
-    sourceInstanceId: 'vm-002',
+    sourceInstanceId: 'e5b8c0d31f2a49e7b6d4a3c2f1e09876',
     description: 'Database server backup',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     tenant: 'Tenant B',
     tenantId: 'tenant-002',
   },
@@ -87,10 +87,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '64GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'app-server-01',
-    sourceInstanceId: 'vm-003',
+    sourceInstance: 'analytics-01',
+    sourceInstanceId: 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9',
     description: 'Application server snapshot',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     tenant: 'Tenant A',
     tenantId: 'tenant-001',
   },
@@ -100,10 +100,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'creating',
     size: '128GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'ml-worker-01',
-    sourceInstanceId: 'vm-004',
+    sourceInstance: 'worker-node-01',
+    sourceInstanceId: '7284d9174e81431e93060a9bbcf2cdfd',
     description: 'ML worker with GPU config',
-    createdAt: 'Sep 7, 2025 04:38:10',
+    createdAt: 'Sep 7, 2026 04:38:10',
     tenant: 'Tenant C',
     tenantId: 'tenant-003',
   },
@@ -113,10 +113,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '24GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'k8s-node-01',
-    sourceInstanceId: 'vm-005',
+    sourceInstance: 'worker-node-02',
+    sourceInstanceId: 'a3f1e8b204c647d8b5921ac3def08712',
     description: 'Kubernetes node snapshot',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     tenant: 'Tenant B',
     tenantId: 'tenant-002',
   },
@@ -126,10 +126,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '8GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'gateway-01',
-    sourceInstanceId: 'vm-006',
+    sourceInstance: 'api-gateway-01',
+    sourceInstanceId: '3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
     description: 'Gateway server backup',
-    createdAt: 'Sep 3, 2025 00:46:02',
+    createdAt: 'Sep 3, 2026 00:46:02',
     tenant: 'Tenant A',
     tenantId: 'tenant-001',
   },
@@ -139,10 +139,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '80GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'win-server-01',
-    sourceInstanceId: 'vm-007',
+    sourceInstance: 'web-server-02',
+    sourceInstanceId: '8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d',
     description: 'Windows server snapshot',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
     tenant: 'Tenant D',
     tenantId: 'tenant-004',
   },
@@ -152,10 +152,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'error',
     size: '48GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'enterprise-01',
-    sourceInstanceId: 'vm-008',
+    sourceInstance: 'master-node-01',
+    sourceInstanceId: 'c9d2f5a63b7e4019a8e4b1d07c6e3f9a',
     description: 'Enterprise app backup',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
     tenant: 'Tenant C',
     tenantId: 'tenant-003',
   },
@@ -165,10 +165,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '20GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'dev-server-01',
-    sourceInstanceId: 'vm-009',
+    sourceInstance: 'gpu-node-01',
+    sourceInstanceId: '1a4b7c9d3e5f2a8b6c0d4e7f9a1b3c5d',
     description: 'Development environment',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     tenant: 'Tenant B',
     tenantId: 'tenant-002',
   },
@@ -178,10 +178,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '40GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'legacy-app-01',
-    sourceInstanceId: 'vm-010',
+    sourceInstance: 'gpu-node-02',
+    sourceInstanceId: 'f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5',
     description: 'Legacy application backup',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     tenant: 'Tenant A',
     tenantId: 'tenant-001',
   },
@@ -191,10 +191,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '12GiB',
     diskFormat: 'RAW',
-    sourceInstance: 'custom-build-01',
-    sourceInstanceId: 'vm-011',
+    sourceInstance: 'cache-server-01',
+    sourceInstanceId: 'b0a1c2d3e4f5a6b7c8d9e0f1a2b3c4d5',
     description: 'Custom build environment',
-    createdAt: 'Aug 18, 2025 09:01:17',
+    createdAt: 'Aug 18, 2026 09:01:17',
     tenant: 'Tenant D',
     tenantId: 'tenant-004',
   },
@@ -204,10 +204,10 @@ const mockSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '36GiB',
     diskFormat: 'QCOW2',
-    sourceInstance: 'prod-server-01',
-    sourceInstanceId: 'vm-012',
+    sourceInstance: 'api-gateway-02',
+    sourceInstanceId: '4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c',
     description: 'Production server snapshot',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     tenant: 'Tenant C',
     tenantId: 'tenant-003',
   },
@@ -219,10 +219,10 @@ const mockSnapshots: InstanceSnapshot[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'sourceInstance', label: 'Source instance', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'sourceInstance', label: 'Source instance', type: 'text' },
   {
-    key: 'diskFormat',
+    id: 'diskFormat',
     label: 'Disk Format',
     type: 'select',
     options: [
@@ -231,7 +231,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -244,6 +244,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminInstanceSnapshotsPage() {
+  const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -258,6 +259,13 @@ export function ComputeAdminInstanceSnapshotsPage() {
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
@@ -288,7 +296,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
 
     return snapshots.filter((s) => {
       return appliedFilters.every((filter) => {
-        const value = String(s[filter.field as keyof InstanceSnapshot] || '').toLowerCase();
+        const value = String(s[filter.fieldId as keyof InstanceSnapshot] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -383,7 +391,12 @@ export function ComputeAdminInstanceSnapshotsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -402,7 +415,12 @@ export function ComputeAdminInstanceSnapshotsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -435,8 +453,11 @@ export function ComputeAdminInstanceSnapshotsPage() {
           >
             {row.sourceInstance}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.sourceInstanceId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.sourceInstanceId}>
+              ID : {row.sourceInstanceId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.sourceInstanceId} />
           </span>
         </div>
       ),
@@ -454,6 +475,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -472,7 +494,10 @@ export function ComputeAdminInstanceSnapshotsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -518,23 +543,9 @@ export function ComputeAdminInstanceSnapshotsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Instance snapshots' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Instance Snapshots' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -599,6 +610,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
           selectable
           selectedKeys={selectedSnapshots}
           onSelectionChange={setSelectedSnapshots}
+          loading={loading}
         />
       </VStack>
 
@@ -608,7 +620,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete snapshot"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected instance snapshots is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

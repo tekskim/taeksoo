@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -24,7 +23,8 @@ import {
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconBell, IconDownload, IconExternalLink } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconDownload, IconExternalLink } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -97,15 +97,15 @@ const mockServerCertificate: ServerCertificateDetail = {
   certificateType: 'server',
   type: 'Wildcard',
   domain: '.domain.com',
-  expiresAt: 'Sep 25, 2025',
-  createdAt: 'Jul 25, 2025 10:32:16',
+  expiresAt: 'Sep 25, 2026',
+  createdAt: 'Jul 25, 2026 10:32:16',
   description: '-',
   // Certificate Metadata
   classification: 'Server Certificate',
   issuer: "Let's Encrypt Authority X3",
   san: 'www.domain.com, api.domain.com',
   signatureType: 'SHA256withRSA',
-  validFrom: 'Feb 10, 2025',
+  validFrom: 'Feb 10, 2026',
   validTo: 'Feb 10, 2026',
 };
 
@@ -114,15 +114,15 @@ const mockCACertificate: CACertificateDetail = {
   name: 'root-ca',
   status: 'valid',
   certificateType: 'ca',
-  expiresAt: 'Sep 25, 2025',
-  createdAt: 'Jul 25, 2025 10:32:16',
+  expiresAt: 'Sep 25, 2026',
+  createdAt: 'Jul 25, 2026 10:32:16',
   description: '-',
   // Certificate Metadata
   classification: 'CA Certificate',
   authority: 'Sectigo Root CA',
   issuer: 'Sectigo Root CA',
   signatureType: 'SHA256withRSA',
-  validFrom: 'Feb 10, 2025',
+  validFrom: 'Feb 10, 2026',
   validTo: 'Feb 10, 2026',
 };
 
@@ -216,7 +216,6 @@ export default function CertificateDetailPage() {
   }, [certificate.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Certificates', href: '/compute-admin/certificates' },
     { label: certificate.name },
   ];
@@ -279,7 +278,12 @@ export default function CertificateDetailPage() {
             {row.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -310,8 +314,11 @@ export default function CertificateDetailPage() {
             {row.loadBalancer.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.loadBalancer.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.loadBalancer.id}>
+              ID : {row.loadBalancer.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.loadBalancer.id} />
           </span>
         </div>
       ),
@@ -351,21 +358,14 @@ export default function CertificateDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              aria-label="Notifications"
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{certificate.name}</DetailHeader.Title>

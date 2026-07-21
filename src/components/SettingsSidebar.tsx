@@ -1,50 +1,57 @@
 import { VStack, MenuItem } from '@/design-system';
-import { IconSettings, IconUser, IconBell, IconInfoCircle } from '@tabler/icons-react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { IconSettings, IconBell, IconInfoCircle } from '@tabler/icons-react';
 import { useLocation } from 'react-router-dom';
+import { AppSwitcher } from './AppSwitcher';
 
 /* ----------------------------------------
    Settings Sidebar Component
    ---------------------------------------- */
 
-export function SettingsSidebar() {
+interface SettingsSidebarProps {
+  isOpen?: boolean;
+  onToggle?: () => void;
+  forceVisible?: boolean;
+}
+
+export function SettingsSidebar({ isOpen = true, onToggle, forceVisible }: SettingsSidebarProps) {
   const location = useLocation();
 
-  // Check if current path matches href
   const isActive = (href: string) => {
-    // Exact match
     if (location.pathname === href) {
       return true;
     }
-    // For /settings root, only match exact
     if (href === '/settings/general') {
       return location.pathname === '/settings' || location.pathname === '/settings/general';
     }
-    // Match detail pages
     if (location.pathname.startsWith(href + '/')) {
       return true;
     }
     return false;
   };
 
-  return (
-    <aside className="w-[200px] bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
-        <VStack gap={2} className="w-full min-w-0">
-          {/* Back to Entry */}
+  if (!isOpen && !forceVisible) return null;
 
-          {/* Menu Items */}
+  return (
+    <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
+      <AppSwitcher currentAppId="settings" onToggleSidebar={onToggle} />
+
+      <OverlayScrollbarsComponent
+        element="nav"
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 px-3 py-2 pb-6"
+        aria-label="Settings navigation"
+      >
+        <VStack gap={0} className="w-full min-w-0">
           <MenuItem
             icon={<IconSettings size={16} stroke={1.5} />}
             label="General"
             href="/settings/general"
             active={isActive('/settings/general')}
-          />
-          <MenuItem
-            icon={<IconUser size={16} stroke={1.5} />}
-            label="Account"
-            href="/settings/account"
-            active={isActive('/settings/account')}
           />
           <MenuItem
             icon={<IconBell size={16} stroke={1.5} />}
@@ -59,7 +66,7 @@ export function SettingsSidebar() {
             active={isActive('/settings/information')}
           />
         </VStack>
-      </nav>
+      </OverlayScrollbarsComponent>
     </aside>
   );
 }

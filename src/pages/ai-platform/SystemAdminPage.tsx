@@ -9,9 +9,10 @@ import {
   PageHeader,
   EmptyState,
 } from '@/design-system';
-import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { AIPlatformSidebar } from '@/pages/AIPlatformPage';
+import { AiPlatformTopBarActions } from './AiPlatformTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconSearch, IconRefresh, IconUserCog } from '@tabler/icons-react';
+import { IconRefresh, IconUserCog } from '@tabler/icons-react';
 
 export function SystemAdminPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -45,27 +46,12 @@ export function SystemAdminPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'AI Platform' },
-                { label: 'Operations' },
-                { label: 'System administration' },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'Operations' }, { label: 'System administration' }]} />
           }
-          actions={
-            <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<AiPlatformTopBarActions />}
         />
       }
-      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-subtle)]"
     >
       <VStack gap={6}>
         <PageHeader

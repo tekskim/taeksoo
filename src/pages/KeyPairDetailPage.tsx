@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -15,11 +14,12 @@ import {
   DetailHeader,
   SectionCard,
   CopyButton,
+  ErrorState,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconTrash, IconBell } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -46,7 +46,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDk...',
-    createdAt: 'Sep 10, 2025 09:23:41',
+    createdAt: 'Sep 10, 2026 09:23:41',
   },
   'kp-002': {
     id: 'kp-002',
@@ -54,7 +54,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDl...',
-    createdAt: 'Sep 8, 2025 14:07:22',
+    createdAt: 'Sep 8, 2026 14:07:22',
   },
   'kp-003': {
     id: 'kp-003',
@@ -62,7 +62,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDm...',
-    createdAt: 'Sep 5, 2025 11:45:33',
+    createdAt: 'Sep 5, 2026 11:45:33',
   },
   'kp-004': {
     id: 'kp-004',
@@ -70,7 +70,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'ff:ee:dd:cc:bb:aa:99:88:77:66:55:44:33:22:11:00',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDn...',
-    createdAt: 'Aug 30, 2025 16:52:08',
+    createdAt: 'Aug 30, 2026 16:52:08',
   },
   'kp-005': {
     id: 'kp-005',
@@ -78,7 +78,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '12:34:56:78:9a:bc:de:f0:12:34:56:78:9a:bc:de:f0',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDo...',
-    createdAt: 'Aug 25, 2025 08:30:15',
+    createdAt: 'Aug 25, 2026 08:30:15',
   },
   'kp-006': {
     id: 'kp-006',
@@ -86,7 +86,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67:89',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDp...',
-    createdAt: 'Aug 20, 2025 13:19:44',
+    createdAt: 'Aug 20, 2026 13:19:44',
   },
   'kp-007': {
     id: 'kp-007',
@@ -94,7 +94,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '98:76:54:32:10:fe:dc:ba:98:76:54:32:10:fe:dc:ba',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq...',
-    createdAt: 'Aug 15, 2025 10:41:27',
+    createdAt: 'Aug 15, 2026 10:41:27',
   },
   'kp-008': {
     id: 'kp-008',
@@ -102,7 +102,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f:10',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDr...',
-    createdAt: 'Aug 10, 2025 17:03:56',
+    createdAt: 'Aug 10, 2026 17:03:56',
   },
   'kp-009': {
     id: 'kp-009',
@@ -110,7 +110,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'f0:e1:d2:c3:b4:a5:96:87:78:69:5a:4b:3c:2d:1e:0f',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDs...',
-    createdAt: 'Aug 5, 2025 12:28:19',
+    createdAt: 'Aug 5, 2026 12:28:19',
   },
   'kp-010': {
     id: 'kp-010',
@@ -118,17 +118,8 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDt...',
-    createdAt: 'Aug 1, 2025 15:55:02',
+    createdAt: 'Aug 1, 2026 15:55:02',
   },
-};
-
-const defaultKeyPairDetail: KeyPairDetail = {
-  id: 'unknown',
-  name: 'Unknown Key pair',
-  userId: '-',
-  fingerprint: '-',
-  publicKey: '-',
-  createdAt: '-',
 };
 
 /* ----------------------------------------
@@ -145,7 +136,7 @@ export function KeyPairDetailPage() {
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get key pair data based on URL ID
-  const keyPair = id ? mockKeyPairsMap[id] || defaultKeyPairDetail : defaultKeyPairDetail;
+  const keyPair = id ? mockKeyPairsMap[id] : undefined;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -153,10 +144,10 @@ export function KeyPairDetailPage() {
 
   // Update tab label to key pair name
   useEffect(() => {
-    if (keyPair.name) {
+    if (keyPair?.name) {
       updateActiveTabLabel(keyPair.name);
     }
-  }, [keyPair.name, updateActiveTabLabel]);
+  }, [keyPair, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -165,10 +156,55 @@ export function KeyPairDetailPage() {
     closable: tab.closable,
   }));
 
+  if (!keyPair) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Key Pairs', href: '/compute/key-pairs' }, { label: id ?? '—' }]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Key pair not found"
+          description={`The key pair "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/key-pairs')}>
+              Back to Key Pairs
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Key pairs', href: '/compute/key-pairs' },
+    { label: 'Key Pairs', href: '/compute/key-pairs' },
     { label: keyPair.name },
   ];
 
@@ -196,18 +232,11 @@ export function KeyPairDetailPage() {
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{keyPair.name}</DetailHeader.Title>
@@ -244,7 +273,12 @@ export function KeyPairDetailPage() {
                         <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                           {keyPair.userId}
                         </span>
-                        <CopyButton value={keyPair.userId} size="sm" iconOnly />
+                        <CopyButton
+                          value={keyPair.userId}
+                          size="sm"
+                          iconOnly
+                          label="Copy user ID"
+                        />
                       </div>
                     </div>
                   </SectionCard.Content>
@@ -262,7 +296,12 @@ export function KeyPairDetailPage() {
                         <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                           {keyPair.fingerprint}
                         </span>
-                        <CopyButton value={keyPair.fingerprint} size="sm" iconOnly />
+                        <CopyButton
+                          value={keyPair.fingerprint}
+                          size="sm"
+                          iconOnly
+                          label="Copy fingerprint"
+                        />
                       </div>
                     </div>
                     <div className="flex flex-col gap-1.5 w-full">
@@ -273,7 +312,12 @@ export function KeyPairDetailPage() {
                         <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                           {keyPair.publicKey}
                         </span>
-                        <CopyButton value={keyPair.publicKey} size="sm" iconOnly />
+                        <CopyButton
+                          value={keyPair.publicKey}
+                          size="sm"
+                          iconOnly
+                          label="Copy public key"
+                        />
                       </div>
                     </div>
                   </SectionCard.Content>

@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -9,10 +8,10 @@ import {
   Button,
   SearchInput,
   Pagination,
-  Chip,
   ContextMenu,
   PageShell,
   PageHeader,
+  ListToolbar,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -21,21 +20,16 @@ import {
   Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { getContainerStatusTheme } from './containerStatusUtils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconTrash,
   IconChevronDown,
   IconDotsCircleHorizontal,
-  IconPencilCog,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -60,84 +54,84 @@ const namespacesData: NamespaceRow[] = [
     status: 'Active',
     name: 'production-microservices-platform-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 08:12:33',
+    createdAt: 'Nov 10, 2026 08:12:33',
   },
   {
     id: '2',
     status: 'Active',
     name: 'staging-integration-testing-environment',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 09:25:17',
+    createdAt: 'Nov 10, 2026 09:25:17',
   },
   {
     id: '3',
     status: 'Active',
     name: 'development-sandbox-experimental-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 10:38:42',
+    createdAt: 'Nov 10, 2026 10:38:42',
   },
   {
     id: '4',
     status: 'Active',
     name: 'shared-global-data-persistence-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 11:52:08',
+    createdAt: 'Nov 10, 2026 11:52:08',
   },
   {
     id: '5',
     status: 'Active',
     name: 'cattle-impersonation-system-rbac-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 13:05:25',
+    createdAt: 'Nov 10, 2026 13:05:25',
   },
   {
     id: '6',
     status: 'Active',
     name: 'cattle-provisioning-capi-cluster-api-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 14:18:51',
+    createdAt: 'Nov 10, 2026 14:18:51',
   },
   {
     id: '7',
     status: 'Processing',
     name: 'monitoring-observability-stack-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 15:31:14',
+    createdAt: 'Nov 10, 2026 15:31:14',
   },
   {
     id: '8',
     status: 'Active',
     name: 'default-system-resources-default-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 16:44:38',
+    createdAt: 'Nov 10, 2026 16:44:38',
   },
   {
     id: '9',
     status: 'Terminating',
     name: 'kube-public-cluster-info-public-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 17:57:02',
+    createdAt: 'Nov 10, 2026 17:57:02',
   },
   {
     id: '10',
-    status: 'CreateContainerConfigError',
+    status: 'Active',
     name: 'kube-system-cluster-components-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 18:09:45',
+    createdAt: 'Nov 10, 2026 18:09:45',
   },
   {
     id: '11',
-    status: 'InvalidImageName',
+    status: 'Active',
     name: 'local-development-single-node-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 19:22:18',
+    createdAt: 'Nov 10, 2026 19:22:18',
   },
   {
     id: '12',
-    status: 'ImagePullBackOff',
+    status: 'Terminating',
     name: 'kube-node-lease-heartbeat-lease-namespace',
     description: 'description text',
-    createdAt: 'Nov 10, 2025 20:35:52',
+    createdAt: 'Nov 10, 2026 20:35:52',
   },
 ];
 
@@ -150,9 +144,14 @@ export function ContainerNamespacesPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Shell Panel state
@@ -171,9 +170,15 @@ export function ContainerNamespacesPage() {
   };
 
   // Pagination
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return namespacesData;
+    const term = searchTerm.toLowerCase();
+    return namespacesData.filter((n) => n.name.toLowerCase().includes(term));
+  }, [namespacesData, searchTerm]);
+
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(namespacesData.length / rowsPerPage);
-  const paginatedData = namespacesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -208,16 +213,14 @@ export function ContainerNamespacesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+        <Link
+          to={`/container/namespaces/${value}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate block min-w-0"
           title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/namespaces/${value}`);
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -240,6 +243,7 @@ export function ContainerNamespacesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -268,7 +272,10 @@ export function ContainerNamespacesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -311,56 +318,20 @@ export function ContainerNamespacesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Namespaces' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Namespaces' }]} />}
           actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    // Open console with a default kubectl session
-                    shellPanel.openConsole('kubectl-namespaces', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
+            <ContainerTopBarActions
+              onTerminalClick={() => {
+                if (shellPanel.isExpanded) {
+                  shellPanel.setIsExpanded(false);
+                } else {
+                  shellPanel.openConsole('kubectl-namespaces', 'Kubectl: ClusterName');
+                }
+              }}
+              isTerminalActive={shellPanel.isExpanded}
+            />
           }
         />
       }
@@ -416,16 +387,18 @@ export function ContainerNamespacesPage() {
           }
         />
 
-        {/* Toolbar */}
-        <div className="flex flex-col gap-2">
-          {/* Action Bar */}
-          <HStack gap={2} align="center" className="w-full min-h-7">
-            {/* Search */}
-            <HStack gap={1} align="center">
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
               <SearchInput
                 placeholder="Search namespaces by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
               />
               <Button
                 variant="secondary"
@@ -435,13 +408,10 @@ export function ContainerNamespacesPage() {
               >
                 <IconDownload size={12} stroke={1.5} />
               </Button>
-            </HStack>
-
-            {/* Divider */}
-            <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-            {/* Actions */}
-            <HStack gap={1} align="center">
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
               <Button
                 variant="muted"
                 size="sm"
@@ -458,46 +428,25 @@ export function ContainerNamespacesPage() {
               >
                 Delete
               </Button>
-            </HStack>
-          </HStack>
-
-          {/* Filter Bar */}
-          {filters.length > 0 && (
-            <HStack
-              gap={2}
-              justify="between"
-              align="center"
-              className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
-            >
-              <HStack gap={1} align="center">
-                {filters.map((filter, index) => (
-                  <Chip
-                    key={index}
-                    label={filter.key}
-                    value={filter.value}
-                    onRemove={() => handleRemoveFilter(index)}
-                  />
-                ))}
-              </HStack>
-              <button
-                onClick={handleClearFilters}
-                className="text-label-sm text-[var(--color-action-primary)] hover:underline"
-              >
-                Clear filters
-              </button>
-            </HStack>
-          )}
-        </div>
+            </ListToolbar.Actions>
+          }
+          filters={filters.map((f, i) => ({
+            id: String(i),
+            field: f.key,
+            value: f.value,
+          }))}
+          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
+          onFiltersClear={handleClearFilters}
+          clearFiltersLabel="Clear filters"
+        />
 
         {/* Pagination */}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={namespacesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}
@@ -508,6 +457,8 @@ export function ContainerNamespacesPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          loading={loading}
+          emptyMessage="No namespaces found"
         />
       </VStack>
     </PageShell>

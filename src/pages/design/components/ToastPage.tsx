@@ -6,13 +6,21 @@ import { Toast, VStack } from '@/design-system';
 
 const TOAST_GUIDELINES = `## Overview
 
-Toast는 사용자의 작업에 대한 **짧고 즉각적인 피드백을 제공하는 비기록형 알림 컴포넌트**이다.
-Toast는 지정된 알림 영역에 **짧은 시간 동안 표시된 후 자동으로 사라지며**, 사용자의 현재 작업 흐름을 방해하지 않고 상태 변화를 빠르게 전달한다.
+Toast Message는 사용자의 작업에 대한 **짧고 즉각적인 피드백을 제공하는 비기록형 알림 컴포넌트**이다.
+
+Toast는 지정된 알림 영역에 **짧은 시간 동안 표시된 후 자동으로 사라지며**, 사용자의 현재 작업 흐름을 방해하지 않고 상태 변화를 빠르게 전달하는 목적을 가진다.
+
 Toast는 **알림센터나 글로벌 알림 패널에 기록되지 않는다.**
+
+따라서 사용자가 반드시 확인하거나 추후 추적해야 하는 알림에는 사용하지 않는다.
 
 ---
 
 ## Composition
+
+\`\`\`
+[Icon] Message
+\`\`\`
 
 | 요소 | 설명 |
 | --- | --- |
@@ -23,12 +31,12 @@ Toast는 **알림센터나 글로벌 알림 패널에 기록되지 않는다.**
 
 ## Variants
 
+Toast는 **Success**와 **Info**의 두 가지 변형만 사용한다.
+
 | 유형 | 설명 |
 | --- | --- |
 | Success | 작업이 성공적으로 완료됨 |
 | Info | 일반적인 상태 알림 |
-
-> **Note**: Toast는 Success와 Info만 지원한다. Error/Warning 수준의 알림은 사용자의 확인이나 후속 액션이 필요하므로, Snackbar(기록형 알림) 또는 Inline Message(영속적 경고)를 사용한다.
 
 ---
 
@@ -44,22 +52,32 @@ Toast는 **알림센터나 글로벌 알림 패널에 기록되지 않는다.**
 ## Behavior
 
 ### 1) 표시 위치
-- Toast는 사용자의 시야에 들어오되 화면 작업을 방해하지 않는 위치에 표시되어야 한다.
-- 토스트는 화면 하단 중앙에 표시된다.
+
+- Toast는 **개별 앱(PageShell)의 main 영역 우측 하단**에 표시된다. (사이드바 제외)
+- 사용자의 시야에 들어오되 작업을 방해하지 않는 위치이다.
 
 ### 2) 동시 노출 규칙
-- Toast는 동시에 최대 1개만 표시된다.
+
+- Toast는 동시에 **최대 1개만** 표시된다.
 - 새로운 Toast가 발생하면 이전 Toast는 즉시 교체된다.
 
 ### 3) 표시 시간
-- 토스트는 5초간 표시된다.
-- 토스트는 자동으로 종료된다.
+
+- Toast는 **2초**간 표시된다.
+- Toast는 자동으로 종료된다.
 
 ### 4) 종료 조건
-- 토스트는 다음 상황에서 종료된다.
+
+- Toast는 다음 상황에서 종료된다.
   - 표시 시간이 만료된 경우
   - 새로운 Toast가 발생한 경우
-- 사용자가 직접 닫는 버튼을 제공하지 않는다.
+- **사용자가 직접 닫는 버튼은 제공하지 않는다.**
+
+### 5) 애니메이션
+
+- **진입**: 우측 밖에서 좌측으로 슬라이드 인 (300ms, ease-out)
+- **퇴장**: 좌측에서 우측 밖으로 슬라이드 아웃 (300ms, ease-out)
+- 페이드 인/아웃이 함께 적용된다.
 
 ---
 
@@ -80,7 +98,7 @@ export function ToastPage() {
   return (
     <ComponentPageTemplate
       title="Toast"
-      description="사용자의 작업에 대한 짧고 즉각적인 피드백을 제공하는 비기록형 알림 컴포넌트. 지정된 알림 영역에 짧은 시간 동안 표시된 후 자동으로 사라지며, 사용자의 현재 작업 흐름을 방해하지 않고 상태 변화를 빠르게 전달한다."
+      description="사용자의 작업에 대한 짧고 즉각적인 피드백을 제공하는 비기록형 알림 컴포넌트. 짧은 시간 동안 표시된 후 자동으로 사라지며 작업 흐름을 방해하지 않는다. 알림센터나 글로벌 알림 패널에 기록되지 않으며, 반드시 확인하거나 추후 추적해야 하는 알림에는 사용하지 않는다."
       whenToUse={[
         '사용자의 간단한 UI 액션이 완료된 경우',
         '작업 결과를 빠르게 전달하면 충분한 경우',
@@ -92,14 +110,11 @@ export function ToastPage() {
         '입력 오류 안내 (→ Validation)',
       ]}
       preview={
-        <ComponentPreview
-          code={`toast.success('Instance created successfully.');
-toast.info('Snapshot scheduled.', { title: 'Snapshot' });`}
-        >
-          <VStack gap={3} className="items-center pointer-events-none">
+        <ComponentPreview code={`toast('Instance created successfully.');`} previewClassName="p-3">
+          <VStack gap={3} className="items-start pointer-events-none">
             <Toast
               toast={{
-                id: 'preview-success',
+                id: 'preview-default',
                 variant: 'success',
                 message: 'Instance created successfully.',
                 duration: 0,
@@ -114,38 +129,17 @@ toast.info('Snapshot scheduled.', { title: 'Snapshot' });`}
         <VStack gap={8}>
           <VStack gap={3}>
             <VStack gap={1}>
-              <span className="text-label-md text-[var(--color-text-default)]">SUCCESS</span>
+              <span className="text-label-md text-[var(--color-text-default)]">Default</span>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                작업이 성공적으로 완료되었을 때 사용.
+                작업 완료 또는 상태 변화를 짧은 메시지로 전달한다.
               </span>
             </VStack>
             <div className="pointer-events-none">
               <Toast
                 toast={{
-                  id: 'ex-success',
+                  id: 'ex-default',
                   variant: 'success',
                   message: 'Instance created successfully.',
-                  duration: 0,
-                  dismissible: false,
-                }}
-                onDismiss={NOOP}
-              />
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-label-md text-[var(--color-text-default)]">INFO</span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                일반적인 상태 알림에 사용.
-              </span>
-            </VStack>
-            <div className="pointer-events-none">
-              <Toast
-                toast={{
-                  id: 'ex-info',
-                  variant: 'info',
-                  message: 'Snapshot has been scheduled.',
                   duration: 0,
                   dismissible: false,
                 }}
@@ -176,6 +170,8 @@ toast.info('Snapshot scheduled.', { title: 'Snapshot' });`}
         { label: 'Snackbar', path: '/design/components/snackbar' },
         { label: 'Inline Message', path: '/design/components/inline-message' },
         { label: 'Modal', path: '/design/components/modal' },
+        { label: 'Notification Center', path: '/design/components/global-notification-panel' },
+        { label: 'UX Writing Guide', path: '/design/policies/ux-writing' },
       ]}
     />
   );

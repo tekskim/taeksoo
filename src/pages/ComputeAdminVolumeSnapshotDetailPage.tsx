@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -17,7 +16,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconTrash, IconBell, IconSettings } from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -46,7 +45,7 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     name: 'db-data-snap',
     status: 'available',
     size: '1500 GiB',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     description: '-',
     sourceVolume: 'web-server-10',
     sourceVolumeId: 'vol-001',
@@ -56,7 +55,7 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     name: 'app-storage-snap',
     status: 'available',
     size: '500 GiB',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     description: 'Application storage snapshot',
     sourceVolume: 'app-volume-1',
     sourceVolumeId: 'vol-002',
@@ -66,7 +65,7 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     name: 'backup-vol-snap',
     status: 'available',
     size: '2000 GiB',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     description: 'Backup volume snapshot',
     sourceVolume: 'backup-storage',
     sourceVolumeId: 'vol-003',
@@ -79,7 +78,7 @@ const defaultSnapshot: VolumeSnapshotDetail = {
   name: 'vol-snap-1',
   status: 'available',
   size: '1500 GiB',
-  createdAt: 'Jul 25, 2025 10:32:16',
+  createdAt: 'Jul 25, 2026 10:32:16',
   description: '-',
   sourceVolume: 'web-server-10',
   sourceVolumeId: 'vol-001',
@@ -139,8 +138,7 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Volume snapshots', href: '/compute-admin/volume-snapshots' },
+    { label: 'Volume Snapshots', href: '/compute-admin/volume-snapshots' },
     { label: snapshot.name },
   ];
 
@@ -168,20 +166,13 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => navigate('/volume-snapshots')}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Snapshot Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>

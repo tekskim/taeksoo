@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { createPortal } from 'react-dom';
 import {
   VStack,
@@ -13,6 +14,7 @@ import {
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
+  IconLayoutDashboard,
   IconAffiliate,
   IconShieldLock,
   IconPlus,
@@ -20,27 +22,28 @@ import {
   IconClock,
   IconCalendarTime,
   IconLayoutSidebar,
+  IconFolders,
   IconRocket,
   IconRefresh,
   IconStack3,
   IconFileSettings,
   IconKey,
+  IconTopologyStar,
+  IconTimelineEvent,
   IconArrowsShuffle,
   IconDatabase,
   IconReorder,
   IconChartPie3,
   IconRulerMeasure,
-  IconFolders,
-  IconTopologyStar,
-  IconTimelineEvent,
   IconApps,
   IconPackage,
 } from '@tabler/icons-react';
 import { FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import containerIcon from '@/assets/appIcon/container.png';
+import containerIcon from '@/assets/appIcon/container.webp';
+import metisContainerIcon from '@/assets/appIcon/metis-container.webp';
+import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
 
 /* ----------------------------------------
    Container Sidebar Component
@@ -55,11 +58,18 @@ interface ContainerSidebarProps {
 }
 
 // Cluster data
-interface ClusterItem {
+export interface ClusterItem {
   id: string;
   name: string;
   iconText?: string;
 }
+
+// Clusters registered on the platform.
+// Empty this array to exercise the "no clusters" empty state (Metis Container).
+export const INITIAL_CONTAINER_CLUSTERS: ClusterItem[] = [
+  { id: 'cluster-001', name: 'Cluster', iconText: '' },
+  { id: 'cluster-002', name: 'Cluster', iconText: '' },
+];
 
 // Icon sidebar item component
 interface IconSidebarItemProps {
@@ -74,7 +84,7 @@ function IconSidebarItem({ icon, iconText, active, onClick, tooltip }: IconSideb
   const renderContent = () => {
     if (iconText) {
       return (
-        <span className="text-[11px] font-semibold leading-none select-none uppercase">
+        <span className="text-body-sm font-semibold leading-none select-none uppercase">
           {iconText}
         </span>
       );
@@ -85,6 +95,7 @@ function IconSidebarItem({ icon, iconText, active, onClick, tooltip }: IconSideb
   return (
     <button
       type="button"
+      aria-label={tooltip}
       onClick={onClick}
       className={`
         w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)]
@@ -139,7 +150,7 @@ function ClusterAppearanceDrawer({
       isOpen={isOpen}
       onClose={onClose}
       title="Cluster appearance"
-      width={420}
+      width={280}
       footer={
         <HStack gap={2} className="w-full">
           <Button variant="secondary" onClick={onClose} className="flex-1">
@@ -161,7 +172,7 @@ function ClusterAppearanceDrawer({
             <div className="mt-3 flex items-center">
               <div className="w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
                 {previewText ? (
-                  <span className="text-[11px] font-semibold leading-none select-none text-[var(--color-text-default)]">
+                  <span className="text-body-sm font-semibold leading-none select-none text-[var(--color-text-default)]">
                     {previewText}
                   </span>
                 ) : (
@@ -196,15 +207,23 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
   const { isDark } = useDarkMode();
   const location = useLocation();
   const navigate = useNavigate();
-  const navRef = useRef<HTMLElement>(null);
+  const isDesktopWindow = useIsDesktopWindow();
+  const desktopControls = useDesktopWindowControls();
+  const { mode, isMetis } = useContainerMode();
+  const appTitle =
+    mode === 'aegis-container'
+      ? 'Aegis Container'
+      : mode === 'metis-container'
+        ? 'Metis Container'
+        : 'Container';
+  const appIcon = mode === 'metis-container' ? metisContainerIcon : containerIcon;
+  const osRef = useRef<React.ComponentRef<typeof OverlayScrollbarsComponent>>(null);
 
   // Cluster state
-  const [clusters, setClusters] = useState<ClusterItem[]>([
-    { id: 'cluster-001', name: 'Cluster1', iconText: '' },
-    { id: 'cluster-002', name: 'Cluster2', iconText: '' },
-  ]);
+  const [clusters, setClusters] = useState<ClusterItem[]>(INITIAL_CONTAINER_CLUSTERS);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
   const [editingCluster, setEditingCluster] = useState<ClusterItem | null>(null);
+
   const openAppearance = (cluster: ClusterItem) => {
     setEditingCluster(cluster);
     setAppearanceOpen(true);
@@ -212,6 +231,9 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
   const handleSaveAppearance = (clusterId: string, iconText: string) => {
     setClusters((prev) => prev.map((c) => (c.id === clusterId ? { ...c, iconText } : c)));
+    window.dispatchEvent(
+      new CustomEvent('cluster-appearance-changed', { detail: { clusterId, iconText } })
+    );
   };
 
   // Listen for external "open appearance" events from other pages
@@ -229,32 +251,29 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
     return () => window.removeEventListener('open-cluster-appearance', handler);
   }, [clusters]);
 
-  // Restore scroll position after route change - use useLayoutEffect for synchronous update
+  const getViewport = () =>
+    osRef.current?.osInstance()?.elements().viewport as HTMLElement | undefined;
+
+  // Restore scroll position after route change
   useLayoutEffect(() => {
-    const nav = navRef.current;
-    if (nav && savedScrollPosition > 0) {
-      nav.scrollTop = savedScrollPosition;
+    const vp = getViewport();
+    if (vp && savedScrollPosition > 0) {
+      vp.scrollTop = savedScrollPosition;
     }
-  });
+  }, [location.pathname]);
 
   // Also restore on mount with a slight delay as backup
   useEffect(() => {
-    const nav = navRef.current;
-    if (nav && savedScrollPosition > 0) {
-      // Immediate restore
-      nav.scrollTop = savedScrollPosition;
-      // Backup restore after a short delay
+    const vp = getViewport();
+    if (vp && savedScrollPosition > 0) {
+      vp.scrollTop = savedScrollPosition;
       const timeoutId = setTimeout(() => {
-        if (nav) nav.scrollTop = savedScrollPosition;
+        const vp2 = getViewport();
+        if (vp2) vp2.scrollTop = savedScrollPosition;
       }, 50);
       return () => clearTimeout(timeoutId);
     }
   }, []);
-
-  // Save scroll position on scroll
-  const handleNavScroll = (e: React.UIEvent<HTMLElement>) => {
-    savedScrollPosition = e.currentTarget.scrollTop;
-  };
 
   // Check if current path matches href
   const isActive = (href: string) => {
@@ -290,24 +309,34 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       {/* Icon Sidebar (48px) - Always visible */}
       <aside className="w-[48px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] flex flex-col">
         {/* App Icon */}
-        <div className="h-[36px] flex items-center justify-center border-b border-[var(--color-border-subtle)]">
-          <img src={containerIcon} alt="Container" className="w-[24px] h-[24px]" />
+        <div
+          className="h-[36px] flex items-center justify-center border-b border-[var(--color-border-subtle)] select-none"
+          onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+          onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+        >
+          <img src={appIcon} alt={appTitle} className="w-[24px] h-[24px]" />
         </div>
 
         {/* Icon Navigation */}
         <div className="flex-1 flex flex-col items-center py-3 gap-1">
-          <IconSidebarItem
-            icon={<IconHome size={16} stroke={1.5} />}
-            active={activeIconSection === 'home'}
-            onClick={() => navigate('/container')}
-            tooltip="Home"
-          />
-          <IconSidebarItem
-            icon={<FolderCog size={16} strokeWidth={1.5} />}
-            active={location.pathname.startsWith('/container/cluster-management')}
-            onClick={() => navigate('/container/cluster-management')}
-            tooltip="Cluster management"
-          />
+          {/* Metis Container has no Home — only cluster menus */}
+          {!isMetis && (
+            <IconSidebarItem
+              icon={<IconHome size={16} stroke={1.5} />}
+              active={activeIconSection === 'home'}
+              onClick={() => navigate('/container')}
+              tooltip="Home"
+            />
+          )}
+          {/* Metis Container has no Cluster Management page */}
+          {!isMetis && (
+            <IconSidebarItem
+              icon={<FolderCog size={16} strokeWidth={1.5} />}
+              active={location.pathname.startsWith('/container/cluster-management')}
+              onClick={() => navigate('/container/cluster-management')}
+              tooltip="Cluster management"
+            />
+          )}
           {clusters.map((cluster, idx) => (
             <IconSidebarItem
               key={cluster.id}
@@ -318,11 +347,14 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
               tooltip={cluster.name}
             />
           ))}
-          <IconSidebarItem
-            icon={<IconPlus size={16} stroke={1.5} />}
-            active={false}
-            tooltip="Add new"
-          />
+          {!isMetis && (
+            <IconSidebarItem
+              icon={<IconPlus size={16} stroke={1.5} />}
+              active={false}
+              tooltip="Add new"
+              onClick={() => navigate('/container/cluster-management/create')}
+            />
+          )}
         </div>
       </aside>
 
@@ -330,19 +362,16 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       {isOpen && activeIconSection !== 'home' && (
         <aside className="w-[200px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
           {/* Logo / Title */}
-          <div className="h-[33px] px-3 flex items-center justify-between">
-            {activeIconSection === 'cluster-management' ? (
-              <img
-                src={isDark ? ThakiLogoDark : ThakiLogoLight}
-                alt="THAKI Cloud"
-                className="h-4"
-              />
-            ) : (
-              <span className="text-label-lg text-[var(--color-text-default)]">Container</span>
-            )}
+          <div
+            className="h-[33px] px-3 flex items-center justify-between select-none"
+            onMouseDown={isDesktopWindow ? desktopControls?.onDragStart : undefined}
+            onDoubleClick={isDesktopWindow ? desktopControls?.onDoubleClick : undefined}
+          >
+            <span className="text-label-lg text-[var(--color-text-default)]">{appTitle}</span>
             <button
               type="button"
               onClick={onToggle}
+              onMouseDown={(e) => e.stopPropagation()}
               className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
               aria-label="Toggle sidebar"
             >
@@ -355,10 +384,21 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           </div>
 
           {/* Navigation */}
-          <nav
-            ref={navRef}
-            onScroll={handleNavScroll}
-            className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll [&>div]:!min-w-0"
+          <OverlayScrollbarsComponent
+            ref={osRef}
+            element="nav"
+            options={{
+              overflow: { x: 'hidden', y: 'scroll' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            events={{
+              scroll: () => {
+                const vp = getViewport();
+                if (vp) savedScrollPosition = vp.scrollTop;
+              },
+            }}
+            defer={false}
+            className="flex-1 px-3 py-3 [&>div]:!min-w-0"
           >
             <VStack gap={4} className="w-full min-w-0">
               {activeIconSection === 'cluster-management' ? (
@@ -378,7 +418,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   {/* Cluster Section */}
                   <MenuSection title="Cluster" defaultOpen={true}>
                     <MenuItem
-                      icon={<IconHome size={16} stroke={1.5} />}
+                      icon={<IconLayoutDashboard size={16} stroke={1.5} />}
                       label="Dashboard"
                       href="/container/dashboard"
                       active={isActive('/container/dashboard')}
@@ -443,27 +483,29 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                     />
                   </MenuSection>
 
-                  {/* App Catalog Section */}
-                  <MenuSection title="App Catalog" defaultOpen={true}>
-                    <MenuItem
-                      icon={<IconApps size={16} stroke={1.5} />}
-                      label="Catalog"
-                      href="/container/appcatalog/catalog"
-                      active={isActive('/container/appcatalog/catalog')}
-                    />
-                    <MenuItem
-                      icon={<IconPackage size={16} stroke={1.5} />}
-                      label="Installed Apps"
-                      href="/container/appcatalog/installed-apps"
-                      active={isActive('/container/appcatalog/installed-apps')}
-                    />
-                    <MenuItem
-                      icon={<IconShieldLock size={16} stroke={1.5} />}
-                      label="Installed Operators"
-                      href="/container/appcatalog/installed-operators"
-                      active={isActive('/container/appcatalog/installed-operators')}
-                    />
-                  </MenuSection>
+                  {/* App Catalog Section - Metis 모드에서 미노출 */}
+                  {!isMetis && (
+                    <MenuSection title="App Catalog" defaultOpen={true}>
+                      <MenuItem
+                        icon={<IconApps size={16} stroke={1.5} />}
+                        label="Catalog"
+                        href="/container/catalog"
+                        active={isActive('/container/catalog')}
+                      />
+                      <MenuItem
+                        icon={<IconPackage size={16} stroke={1.5} />}
+                        label="Installed apps"
+                        href="/container/installed-apps"
+                        active={isActive('/container/installed-apps')}
+                      />
+                      <MenuItem
+                        icon={<IconShieldLock size={16} stroke={1.5} />}
+                        label="Installed operators"
+                        href="/container/installed-operators"
+                        active={isActive('/container/installed-operators')}
+                      />
+                    </MenuSection>
+                  )}
 
                   {/* Service Discovery Section */}
                   <MenuSection title="Service discovery" defaultOpen={true}>
@@ -551,7 +593,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 </>
               )}
             </VStack>
-          </nav>
+          </OverlayScrollbarsComponent>
         </aside>
       )}
       {createPortal(

@@ -18,27 +18,24 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  ErrorState,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
   Tooltip,
   Popover,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
+  IconAlertTriangle,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -105,7 +102,7 @@ const mockJobData: Record<string, JobData> = {
     status: 'Succeeded',
     namespace: 'default',
     image: 'nginx:1.27',
-    createdAt: 'Jul 25, 2025 16:45:11',
+    createdAt: 'Jul 25, 2026 16:45:11',
     duration: '36 days',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
@@ -124,7 +121,7 @@ const mockJobData: Record<string, JobData> = {
     status: 'Succeeded',
     namespace: 'database',
     image: 'migration-tool:v2.1',
-    createdAt: 'Nov 9, 2025 09:12:33',
+    createdAt: 'Nov 9, 2026 09:12:33',
     duration: '2h 15m',
     labels: {
       'app.kubernetes.io/name': 'migration',
@@ -146,7 +143,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 16:45:11',
+    createdAt: 'Jul 25, 2026 16:45:11',
     containers: [
       'container-0',
       'container-1',
@@ -165,7 +162,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.11.0.12',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 16:49:33',
+    createdAt: 'Jul 25, 2026 16:49:33',
     containers: ['container-0'],
   },
   {
@@ -177,7 +174,7 @@ const mockPodsData: PodRow[] = [
     restarts: 2,
     ip: '10.11.0.13',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 16:45:11',
+    createdAt: 'Jul 25, 2026 16:45:11',
     containers: ['container-0'],
   },
 ];
@@ -189,8 +186,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'JobCompleted',
     message: 'Job completed successfully.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
 ];
 
@@ -231,11 +228,6 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
         id: 'view-logs',
         label: 'View logs',
         onClick: () => onViewLogs(row.name),
-      },
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/pods/${row.id}/edit`),
       },
       {
         id: 'edit-yaml',
@@ -358,9 +350,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -575,9 +571,13 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -647,7 +647,7 @@ export function JobDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get job data
-  const job = mockJobData[jobId || '1'] || mockJobData['1'];
+  const job = jobId ? mockJobData[jobId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -655,8 +655,10 @@ export function JobDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Job: ${job.name}`);
-  }, [updateActiveTabLabel, job.name]);
+    if (job) {
+      updateActiveTabLabel(`Job: ${job.name}`);
+    }
+  }, [updateActiveTabLabel, job]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -685,14 +687,72 @@ export function JobDetailPage() {
     shellPanel.openConsole(podName, `Shell: ${podName}`);
   };
 
+  if (!job) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Jobs', href: '/container/jobs' }, { label: jobId ?? 'Job' }]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Job not found"
+          description={`The job "${jobId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/jobs')}>
+              Back to Jobs
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
-    {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () =>
-        navigate(`/container/jobs/${job.id}/edit?name=${encodeURIComponent(job.name)}`),
-    },
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
@@ -732,41 +792,12 @@ export function JobDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Jobs', href: '/container/jobs' },
-                { label: job.name },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'Jobs', href: '/container/jobs' }, { label: job.name }]} />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={job.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -828,7 +859,7 @@ export function JobDetailPage() {
 
           {/* Second row: Duration, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Duration</span>
                 <span className="text-body-md text-[var(--color-text-default)]">
@@ -836,7 +867,7 @@ export function JobDetailPage() {
                 </span>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(job.labels).length})
@@ -861,14 +892,14 @@ export function JobDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All labels ({Object.keys(job.labels).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(job.labels).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>
@@ -883,7 +914,7 @@ export function JobDetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(job.annotations).length})
@@ -908,14 +939,14 @@ export function JobDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[160px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All annotations ({Object.keys(job.annotations).length})
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1 items-start min-w-[136px]">
                             {Object.entries(job.annotations).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                {`${k}: ${v}`}
                               </Badge>
                             ))}
                           </div>

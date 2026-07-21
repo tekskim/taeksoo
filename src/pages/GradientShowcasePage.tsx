@@ -3,6 +3,7 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { VStack } from '@/design-system';
 import { IconCopy, IconCheck } from '@tabler/icons-react';
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 /* ----------------------------------------
    HUMAIN-inspired Gradient Colors
@@ -200,7 +201,11 @@ export function GradientShowcasePage() {
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
       <div className="flex flex-col items-stretch justify-start gap-4 flex-1 overflow-hidden ml-[200px]">
-        <div className="flex-1 overflow-auto p-6 space-y-8">
+        <OverlayScrollbarsComponent
+          options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 800 } }}
+          defer={false}
+          className="flex-1 min-h-0 p-6 space-y-8"
+        >
           {/* Hero Section with Selected Gradient */}
           <div
             className="relative rounded-3xl overflow-hidden h-64 flex items-center justify-center transition-all duration-500"
@@ -306,7 +311,14 @@ export function GradientShowcasePage() {
           {/* CSS Code Block */}
           <VStack gap={4}>
             <h2 className="text-2xl font-bold text-slate-900">CSS Variables</h2>
-            <div className="bg-slate-900 rounded-xl p-6 overflow-x-auto">
+            <OverlayScrollbarsComponent
+              options={{
+                overflow: { x: 'scroll', y: 'hidden' },
+                scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+              }}
+              defer={false}
+              className="bg-slate-900 rounded-xl p-6"
+            >
               <pre className="text-sm text-slate-300">
                 {`:root {
 ${GRADIENTS.map((g, idx) => `  --gradient-${idx + 1}: ${g.css};`).join('\n')}
@@ -323,9 +335,9 @@ ${GRADIENTS.map((g, idx) => `  --gradient-${idx + 1}: ${g.css};`).join('\n')}
   -webkit-text-fill-color: transparent;
 }`}
               </pre>
-            </div>
+            </OverlayScrollbarsComponent>
           </VStack>
-        </div>
+        </OverlayScrollbarsComponent>
       </div>
     </div>
   );

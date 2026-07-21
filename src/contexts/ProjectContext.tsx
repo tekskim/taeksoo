@@ -9,6 +9,7 @@ export interface Project {
   name: string;
   description: string;
   createdAt: string;
+  group?: string;
   disabled?: boolean;
 }
 
@@ -17,25 +18,29 @@ export const mockProjects: Project[] = [
     id: '04ebfa43',
     name: 'Project-01',
     description: "Development environment for the 'service' backend services.",
-    createdAt: 'Oct 22, 2025 10:15:33',
+    createdAt: '2025-10-22',
+    group: 'Group A',
   },
   {
     id: '14ebfa44',
     name: 'Project-02',
     description: "Development environment for the 'service' backend services.",
-    createdAt: 'Oct 22, 2025 13:53:25',
+    createdAt: '2025-10-22',
+    group: 'Group B',
   },
   {
     id: '24ebfa45',
     name: 'Project-03',
     description: "Development environment for the 'service' backend services.",
-    createdAt: 'Oct 22, 2025 13:53:25',
+    createdAt: '2025-10-22',
+    group: 'Group A',
   },
   {
     id: '34ebfa46',
     name: 'Project-04',
     description: "Development environment for the 'service' backend services.",
-    createdAt: 'Oct 22, 2025 13:53:25',
+    createdAt: '2025-10-22',
+    group: 'Group C',
     disabled: true,
   },
 ];
@@ -45,6 +50,8 @@ interface ProjectContextType {
   selectedProjectId: string;
   selectedProject: Project | undefined;
   setSelectedProjectId: (projectId: string) => void;
+  primaryProjectId: string;
+  setPrimaryProject: (projectId: string) => void;
 }
 
 /* ----------------------------------------
@@ -63,9 +70,14 @@ interface ProjectProviderProps {
 
 export function ProjectProvider({ children }: ProjectProviderProps) {
   const [selectedProjectId, setSelectedProjectIdState] = useState<string>(mockProjects[0].id);
+  const [primaryProjectId, setPrimaryProjectIdState] = useState<string>(mockProjects[0].id);
 
   const setSelectedProjectId = useCallback((projectId: string) => {
     setSelectedProjectIdState(projectId);
+  }, []);
+
+  const setPrimaryProject = useCallback((projectId: string) => {
+    setPrimaryProjectIdState((prev) => (prev === projectId ? '' : projectId));
   }, []);
 
   const selectedProject = mockProjects.find((p) => p.id === selectedProjectId);
@@ -75,6 +87,8 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     selectedProjectId,
     selectedProject,
     setSelectedProjectId,
+    primaryProjectId,
+    setPrimaryProject,
   };
 
   return <ProjectContext.Provider value={value}>{children}</ProjectContext.Provider>;

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -15,22 +15,14 @@ import {
   Checkbox,
   Table,
   Disclosure,
+  WizardSummary,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconX,
-  IconCheck,
-  IconCirclePlus,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -137,7 +129,7 @@ interface MatchingPod {
 }
 
 const MOCK_MATCHING_PODS: MatchingPod[] = [
-  { id: '1', name: 'default', createdAt: 'Jul 25, 2025 09:12:20' },
+  { id: '1', name: 'default', createdAt: 'Jul 25, 2026 09:12:20' },
 ];
 
 const MATCHING_PODS_COLUMNS = [
@@ -153,60 +145,29 @@ const MATCHING_PODS_COLUMNS = [
 ];
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 function SummarySidebar({
   sectionStates,
+  onCreate,
+  createDisabled,
 }: {
   sectionStates: Record<NetworkPolicySectionStep, WizardSectionState>;
+  onCreate: () => void;
+  createDisabled: boolean;
 }) {
   const navigate = useNavigate();
 
+  const summaryItems: WizardSummaryItem[] = NETWORK_POLICY_SECTION_ORDER.map((key) => ({
+    key,
+    label: NETWORK_POLICY_SECTION_LABELS[key],
+    status: sectionStates[key],
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={4}>
-            <span className="text-heading-h5">Summary</span>
-            <VStack gap={0}>
-              {NETWORK_POLICY_SECTION_ORDER.map((step) => (
-                <HStack key={step} justify="between" className="py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {NETWORK_POLICY_SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStates[step]} />
-                </HStack>
-              ))}
-            </VStack>
-          </VStack>
-        </div>
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+        <WizardSummary items={summaryItems} />
 
         <HStack gap={2}>
           <Button
@@ -216,8 +177,14 @@ function SummarySidebar({
           >
             Cancel
           </Button>
-          <Button variant="primary" size="md" className="flex-1">
-            {isEditMode ? 'Save' : 'Create'}
+          <Button
+            variant="primary"
+            size="md"
+            className="flex-1"
+            onClick={onCreate}
+            disabled={createDisabled}
+          >
+            Create
           </Button>
         </HStack>
       </div>
@@ -469,7 +436,7 @@ function TrafficRulesSection({
             <VStack gap={3}>
               <label className="text-label-lg text-[var(--color-text-default)]">Rules</label>
 
-              <div className="border border-[var(--color-border-default)] rounded-[6px] w-full overflow-hidden">
+              <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] w-full overflow-hidden">
                 <div className="flex w-full">
                   {/* Left tabs */}
                   <div className="flex flex-col border-r border-[var(--color-border-default)] shrink-0 min-w-[100px]">
@@ -520,17 +487,17 @@ function TrafficRulesSection({
                             Targets
                           </label>
 
-                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                             <VStack gap={1.5} className="w-full">
                               {activeRule.targets.map((target) => (
                                 <div
                                   key={target.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                                 >
                                   <VStack gap={3}>
                                     {/* Rule type + CIDR row */}
                                     <VStack gap={2}>
-                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
+                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                                         <span className="block text-label-sm text-[var(--color-text-default)]">
                                           Rule type
                                         </span>
@@ -552,7 +519,7 @@ function TrafficRulesSection({
                                           />
                                         </button>
                                       </div>
-                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
+                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                                         <Select
                                           options={RULE_TYPE_OPTIONS}
                                           value={target.ruleType}
@@ -580,10 +547,10 @@ function TrafficRulesSection({
                                     {/* Namespace Label Selectors (namespace-label-selector only) */}
                                     {target.ruleType === 'namespace-label-selector' && (
                                       <>
-                                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                                           <VStack gap={1.5}>
                                             {(target.namespaceSelectors || []).length > 0 && (
-                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                                   Key
                                                 </span>
@@ -599,7 +566,7 @@ function TrafficRulesSection({
                                             {(target.namespaceSelectors || []).map((sel) => (
                                               <div
                                                 key={sel.id}
-                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                               >
                                                 <Input
                                                   placeholder="input key"
@@ -690,7 +657,7 @@ function TrafficRulesSection({
                                                 ‹
                                               </span>
                                             </button>
-                                            <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-white rounded-md text-label-sm">
+                                            <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)] rounded-md text-label-sm">
                                               1
                                             </span>
                                             <button
@@ -719,7 +686,7 @@ function TrafficRulesSection({
                                     {/* Combined Namespace + Pod Selectors (namespace-pod-label-selector) */}
                                     {target.ruleType === 'namespace-pod-label-selector' && (
                                       <>
-                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full">
+                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 pt-3 pb-4 w-full">
                                           <VStack gap={2}>
                                             {/* Namespaces section */}
                                             <VStack gap={2}>
@@ -729,7 +696,7 @@ function TrafficRulesSection({
                                               {(target.namespaceSelectors || []).map((sel) => (
                                                 <div
                                                   key={sel.id}
-                                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3 w-full"
                                                 >
                                                   <div className="flex gap-1 w-full">
                                                     <VStack gap={2} className="flex-1 min-w-0">
@@ -802,7 +769,7 @@ function TrafficRulesSection({
                                               {(target.podSelectors || []).map((sel) => (
                                                 <div
                                                   key={sel.id}
-                                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3 w-full"
                                                 >
                                                   <div className="flex gap-1 w-full">
                                                     <VStack gap={2} className="flex-1 min-w-0">
@@ -883,7 +850,7 @@ function TrafficRulesSection({
                                                 ‹
                                               </span>
                                             </button>
-                                            <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-white rounded-md text-label-sm">
+                                            <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)] rounded-md text-label-sm">
                                               1
                                             </span>
                                             <button
@@ -912,10 +879,10 @@ function TrafficRulesSection({
                                     {/* Pod Label Selectors (shown for pod type only) */}
                                     {target.ruleType === 'pod-label-selector' && (
                                       <>
-                                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                                           <VStack gap={1.5}>
                                             {(target.podSelectors || []).length > 0 && (
-                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                                   Key
                                                 </span>
@@ -931,7 +898,7 @@ function TrafficRulesSection({
                                             {(target.podSelectors || []).map((sel) => (
                                               <div
                                                 key={sel.id}
-                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                               >
                                                 <Input
                                                   placeholder="input key"
@@ -1022,7 +989,7 @@ function TrafficRulesSection({
                                                   ‹
                                                 </span>
                                               </button>
-                                              <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-white rounded-md text-label-sm">
+                                              <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)] rounded-md text-label-sm">
                                                 1
                                               </span>
                                               <button
@@ -1051,10 +1018,10 @@ function TrafficRulesSection({
 
                                     {/* Exceptions list (shown for IP block) */}
                                     {target.ruleType === 'ip-block' && (
-                                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                                         <VStack gap={1.5}>
                                           {target.exceptions.length > 0 && (
-                                            <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
+                                            <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
                                               <span className="block text-label-sm text-[var(--color-text-default)]">
                                                 Exception CIDR
                                               </span>
@@ -1064,7 +1031,7 @@ function TrafficRulesSection({
                                           {target.exceptions.map((ex, exIdx) => (
                                             <div
                                               key={exIdx}
-                                              className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
+                                              className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
                                             >
                                               <Input
                                                 placeholder="e.g. 1.1.1.1/32"
@@ -1122,15 +1089,15 @@ function TrafficRulesSection({
                             Allowed Ports
                           </label>
 
-                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                             <VStack gap={1.5} className="w-full">
                               {activeRule.allowedPorts.map((port) => (
                                 <div
                                   key={port.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                                 >
                                   <VStack gap={2}>
-                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                                       <span className="block text-label-sm text-[var(--color-text-default)]">
                                         Port
                                       </span>
@@ -1148,7 +1115,7 @@ function TrafficRulesSection({
                                         />
                                       </button>
                                     </div>
-                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                                       <Input
                                         placeholder="e.g. 8080"
                                         value={port.port}
@@ -1201,25 +1168,13 @@ function TrafficRulesSection({
    ---------------------------------------- */
 export function CreateNetworkPolicyPage() {
   const navigate = useNavigate();
-  const { networkPolicyName } = useParams();
-  const isEditMode = !!networkPolicyName;
-  const [searchParams] = useSearchParams();
-  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
     useTabs();
 
   useEffect(() => {
-    updateActiveTabLabel(
-      isEditMode ? `Network policy: ${nameFromQuery || networkPolicyName}` : 'Create network policy'
-    );
-  }, [updateActiveTabLabel, isEditMode, networkPolicyName]);
-
-  useEffect(() => {
-    if (isEditMode && networkPolicyName) {
-      setPolicyName(nameFromQuery || networkPolicyName);
-    }
-  }, [isEditMode, networkPolicyName]);
+    updateActiveTabLabel('Create network policy');
+  }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -1237,90 +1192,24 @@ export function CreateNetworkPolicyPage() {
   const [description, setDescription] = useState('');
 
   // Ingress Rules state
-  const [ingressEnabled, setIngressEnabled] = useState(true);
+  const [ingressEnabled, setIngressEnabled] = useState(false);
   const [ingressRules, setIngressRules] = useState<TrafficRule[]>([
     {
       id: 'ingress-rule-1',
       name: 'Rule 1',
-      targets: [
-        {
-          id: 'target-i1',
-          ruleType: 'ip-block',
-          cidr: '',
-          exceptions: [''],
-          namespaceSelectors: [],
-          podSelectors: [],
-        },
-        {
-          id: 'target-i2',
-          ruleType: 'namespace-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [{ id: 'ls-i2-ns', key: '', operator: 'in', values: '' }],
-          podSelectors: [],
-        },
-        {
-          id: 'target-i3',
-          ruleType: 'pod-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [],
-          podSelectors: [{ id: 'ls-i3-pod', key: '', operator: 'in', values: '' }],
-        },
-        {
-          id: 'target-i4',
-          ruleType: 'namespace-pod-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [{ id: 'ls-i4-ns', key: '', operator: 'in', values: '' }],
-          podSelectors: [{ id: 'ls-i4-pod', key: '', operator: 'in', values: '' }],
-        },
-      ],
-      allowedPorts: [{ id: 'port-i1', port: '', protocol: 'TCP' }],
+      targets: [],
+      allowedPorts: [],
     },
   ]);
 
   // Egress Rules state
-  const [egressEnabled, setEgressEnabled] = useState(true);
+  const [egressEnabled, setEgressEnabled] = useState(false);
   const [egressRules, setEgressRules] = useState<TrafficRule[]>([
     {
       id: 'egress-rule-1',
       name: 'Rule 1',
-      targets: [
-        {
-          id: 'target-e1',
-          ruleType: 'ip-block',
-          cidr: '',
-          exceptions: [''],
-          namespaceSelectors: [],
-          podSelectors: [],
-        },
-        {
-          id: 'target-e2',
-          ruleType: 'namespace-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [{ id: 'ls-e2-ns', key: '', operator: 'in', values: '' }],
-          podSelectors: [],
-        },
-        {
-          id: 'target-e3',
-          ruleType: 'pod-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [],
-          podSelectors: [{ id: 'ls-e3-pod', key: '', operator: 'in', values: '' }],
-        },
-        {
-          id: 'target-e4',
-          ruleType: 'namespace-pod-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [{ id: 'ls-e4-ns', key: '', operator: 'in', values: '' }],
-          podSelectors: [{ id: 'ls-e4-pod', key: '', operator: 'in', values: '' }],
-        },
-      ],
-      allowedPorts: [{ id: 'port-e1', port: '', protocol: 'TCP' }],
+      targets: [],
+      allowedPorts: [],
     },
   ]);
 
@@ -1338,13 +1227,11 @@ export function CreateNetworkPolicyPage() {
   // Section states for summary
   const getSectionStates = (): Record<NetworkPolicySectionStep, WizardSectionState> => {
     return {
-      // namespace has default → 'active' until name is typed
-      'basic-info': policyName.trim() ? 'done' : 'active',
-      // all other sections are optional → always done
-      'ingress-rules': 'done',
-      'egress-rules': 'done',
-      selector: 'done',
-      'labels-annotations': 'done',
+      'basic-info': policyName ? 'done' : 'active',
+      'ingress-rules': ingressEnabled && ingressRules.length > 0 ? 'done' : 'pending',
+      'egress-rules': egressEnabled && egressRules.length > 0 ? 'done' : 'pending',
+      selector: selectorRules.length > 0 ? 'done' : 'pending',
+      'labels-annotations': labels.length > 0 || annotations.length > 0 ? 'done' : 'pending',
     };
   };
 
@@ -1390,6 +1277,11 @@ export function CreateNetworkPolicyPage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
+  const handleCreate = useCallback(() => {
+    if (!policyName.trim()) return;
+    navigate('/container/network-policies');
+  }, [policyName, navigate]);
+
   return (
     <PageShell
       sidebar={
@@ -1411,63 +1303,25 @@ export function CreateNetworkPolicyPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Network Policies', href: '/container/network-policies' },
-                ...(isEditMode
-                  ? [
-                      {
-                        label: nameFromQuery || networkPolicyName!,
-                        href: `/container/network-policies/{networkPolicyName}`,
-                      },
-                      { label: 'Edit config' },
-                    ]
-                  : [{ label: 'Create network policy' }]),
+                { label: 'Create Network Policy' },
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
-          <h1 className="text-heading-h4">
-            {isEditMode
-              ? `Network policy: ${nameFromQuery || networkPolicyName}`
-              : 'Create network policy'}
-          </h1>
+        <VStack gap={1}>
+          <h1 className="text-heading-h4">Create network policy</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Network policies are used to control the traffic flow between pods within the cluster
             based on defined rules for ingress and egress.
@@ -1490,7 +1344,6 @@ export function CreateNetworkPolicyPage() {
                       value={namespace}
                       onChange={setNamespace}
                       fullWidth
-                      disabled={isEditMode}
                     />
                   </FormField>
 
@@ -1501,7 +1354,6 @@ export function CreateNetworkPolicyPage() {
                       value={policyName}
                       onChange={(e) => setPolicyName(e.target.value)}
                       fullWidth
-                      disabled={isEditMode}
                     />
                   </FormField>
 
@@ -1552,10 +1404,10 @@ export function CreateNetworkPolicyPage() {
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Selector Rules */}
-                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                     <VStack gap={1.5}>
                       {selectorRules.length > 0 && (
-                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Key
                           </span>
@@ -1572,7 +1424,7 @@ export function CreateNetworkPolicyPage() {
                       {selectorRules.map((rule) => (
                         <div
                           key={rule.id}
-                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                         >
                           <Input
                             placeholder="input key"
@@ -1664,10 +1516,10 @@ export function CreateNetworkPolicyPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -1680,7 +1532,7 @@ export function CreateNetworkPolicyPage() {
                         {labels.map((label) => (
                           <div
                             key={label.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                           >
                             <Input
                               placeholder="label key"
@@ -1732,10 +1584,10 @@ export function CreateNetworkPolicyPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -1748,7 +1600,7 @@ export function CreateNetworkPolicyPage() {
                         {annotations.map((annotation) => (
                           <div
                             key={annotation.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                           >
                             <Input
                               placeholder="annotation key"
@@ -1797,7 +1649,11 @@ export function CreateNetworkPolicyPage() {
           </VStack>
 
           {/* Summary Sidebar */}
-          <SummarySidebar sectionStates={getSectionStates()} />
+          <SummarySidebar
+            sectionStates={getSectionStates()}
+            onCreate={handleCreate}
+            createDisabled={!policyName.trim()}
+          />
         </HStack>
       </VStack>
     </PageShell>

@@ -1,25 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { IconDownload, IconLock, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconDownload, IconDotsCircleHorizontal, IconTrash } from '@tabler/icons-react';
 import {
+  Badge,
   Button,
   Pagination,
   Table,
-  SearchInput,
+  FilterSearchInput,
   TopBar,
   Breadcrumb,
   VStack,
-  HStack,
+  ListToolbar,
   ContextMenu,
   TabBar,
   StatusIndicator,
   PageShell,
+  PageHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { InlineCopyId } from '@/components/InlineCopyId';
+import { CreateUserDrawer } from '@/components/CreateUserDrawer';
 import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
@@ -28,7 +34,7 @@ import { useTabs } from '@/contexts/TabContext';
 interface SystemAdmin {
   id: string;
   username: string;
-  status: 'active' | 'inactive' | 'pending';
+  status: 'active' | 'deactivated';
   locked: boolean;
   lastSignIn: string;
   mfa: string;
@@ -44,91 +50,114 @@ const mockSystemAdmins: SystemAdmin[] = [
     username: 'thaki-kim',
     status: 'active',
     locked: true,
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     mfa: 'OTP / Email',
-    createdAt: 'Sep 12, 2025 08:15:22',
+    createdAt: 'Sep 12, 2026 08:15:22',
   },
   {
     id: 'admin-002',
     username: 'alex-jones',
     status: 'active',
     locked: false,
-    lastSignIn: 'Sep 11, 2025',
+    lastSignIn: 'Sep 11, 2026',
     mfa: 'OTP',
-    createdAt: 'Aug 15, 2025 10:42:38',
+    createdAt: 'Aug 15, 2026 10:42:38',
   },
   {
     id: 'admin-003',
     username: 'sarah-lee',
     status: 'active',
     locked: false,
-    lastSignIn: 'Sep 10, 2025',
+    lastSignIn: 'Sep 10, 2026',
     mfa: 'Email',
-    createdAt: 'Jul 20, 2025 14:28:15',
+    createdAt: 'Jul 20, 2026 14:28:15',
   },
   {
     id: 'admin-004',
     username: 'john-doe',
-    status: 'inactive',
+    status: 'deactivated',
     locked: true,
-    lastSignIn: 'Aug 25, 2025',
+    lastSignIn: 'Aug 25, 2026',
     mfa: '-',
-    createdAt: 'Jun 10, 2025 09:55:42',
+    createdAt: 'Jun 10, 2026 09:55:42',
   },
   {
     id: 'admin-005',
     username: 'jane-smith',
     status: 'active',
     locked: false,
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     mfa: 'OTP / Email',
-    createdAt: 'Sep 1, 2025 16:18:33',
+    createdAt: 'Sep 1, 2026 16:18:33',
   },
   {
     id: 'admin-006',
     username: 'mike-wilson',
     status: 'active',
     locked: false,
-    lastSignIn: 'Sep 8, 2025',
+    lastSignIn: 'Sep 8, 2026',
     mfa: 'OTP',
-    createdAt: 'Aug 25, 2025 11:32:47',
+    createdAt: 'Aug 25, 2026 11:32:47',
   },
   {
     id: 'admin-007',
     username: 'emily-davis',
-    status: 'pending',
+    status: 'deactivated',
     locked: false,
     lastSignIn: '-',
     mfa: '-',
-    createdAt: 'Sep 10, 2025 13:45:21',
+    createdAt: 'Sep 10, 2026 13:45:21',
   },
   {
     id: 'admin-008',
     username: 'chris-martin',
     status: 'active',
     locked: true,
-    lastSignIn: 'Sep 5, 2025',
+    lastSignIn: 'Sep 5, 2026',
     mfa: 'Email',
-    createdAt: 'Jul 5, 2025 10:22:55',
+    createdAt: 'Jul 5, 2026 10:22:55',
   },
   {
     id: 'admin-009',
     username: 'lisa-anderson',
     status: 'active',
     locked: false,
-    lastSignIn: 'Sep 12, 2025',
+    lastSignIn: 'Sep 12, 2026',
     mfa: 'OTP',
-    createdAt: 'Jun 1, 2025 15:48:12',
+    createdAt: 'Jun 1, 2026 15:48:12',
   },
   {
     id: 'admin-010',
     username: 'david-brown',
     status: 'active',
     locked: false,
-    lastSignIn: 'Sep 11, 2025',
+    lastSignIn: 'Sep 11, 2026',
     mfa: 'OTP / Email',
-    createdAt: 'May 15, 2025 08:35:39',
+    createdAt: 'May 15, 2026 08:35:39',
   },
+];
+
+const systemAdminFilterFields: FilterField[] = [
+  { id: 'username', label: 'Username', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'deactivated', label: 'Deactivated' },
+    ],
+  },
+  {
+    id: 'locked',
+    label: 'Locked',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+  { id: 'mfa', label: 'MFA', type: 'text' },
 ];
 
 /* ----------------------------------------
@@ -137,9 +166,11 @@ const mockSystemAdmins: SystemAdmin[] = [
 export default function IAMSystemAdministratorsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
   const itemsPerPage = 10;
@@ -149,15 +180,35 @@ export default function IAMSystemAdministratorsPage() {
     updateActiveTabLabel('System administrators');
   }, [updateActiveTabLabel]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters]);
+
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
-  // Filter admins by search query
-  const filteredAdmins = mockSystemAdmins.filter(
-    (admin) =>
-      admin.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      admin.mfa.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter admins
+  const filteredAdmins = useMemo(() => {
+    if (appliedFilters.length === 0) return mockSystemAdmins;
+    return mockSystemAdmins.filter((admin) =>
+      appliedFilters.every((f) => {
+        if (f.fieldId === 'status') return admin.status === f.value;
+        if (f.fieldId === 'locked') return String(admin.locked) === f.value;
+        if (f.fieldId === 'username') {
+          return admin.username.toLowerCase().includes(f.value.toLowerCase());
+        }
+        if (f.fieldId === 'mfa') {
+          return admin.mfa.toLowerCase().includes(f.value.toLowerCase());
+        }
+        return true;
+      })
+    );
+  }, [appliedFilters]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAdmins.length / itemsPerPage);
@@ -167,13 +218,20 @@ export default function IAMSystemAdministratorsPage() {
   );
 
   // Context menu items
-  const contextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { id: 'edit', label: 'Edit account' },
-    { id: 'reset-password', label: 'Reset password' },
-    { id: 'lock', label: 'Lock account' },
-    { id: 'unlock', label: 'Unlock account' },
-    { id: 'delete', label: 'Delete account', status: 'danger' },
+  const getContextMenuItems = (row: SystemAdmin): ContextMenuItem[] => [
+    {
+      id: 'reset-password',
+      label: 'Reset password',
+      onClick: () => console.log('reset-password', row.id),
+    },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('edit', row.id) },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      divider: true,
+      onClick: () => console.log('delete', row.id),
+    },
   ];
 
   // Table columns (using fixedColumns / columnMinWidths preset)
@@ -186,7 +244,7 @@ export default function IAMSystemAdministratorsPage() {
       render: (value) => (
         <StatusIndicator
           layout="icon-only"
-          status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'}
+          status={value === 'active' ? 'active' : 'deactivated'}
         />
       ),
     },
@@ -196,26 +254,21 @@ export default function IAMSystemAdministratorsPage() {
       flex: 1,
       minWidth: columnMinWidths.username,
       sortable: true,
-      render: (value) => (
-        <Link
-          to={`/iam/system-administrators/${value}`}
-          className="text-[var(--color-action-primary)] font-medium hover:underline"
-        >
-          {value}
-        </Link>
-      ),
-    },
-    {
-      key: 'locked',
-      label: 'Locked',
-      width: fixedColumns.locked,
-      align: 'center',
-      render: (value) => (
-        <div className="flex items-center justify-center w-full">
-          {value ? (
-            <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-          ) : null}
-        </div>
+      render: (value, row) => (
+        <VStack gap={0.5} align="start">
+          <Link
+            to={`/iam/system-administrators/${value}`}
+            className="text-[var(--color-action-primary)] font-medium hover:underline"
+          >
+            {value}
+          </Link>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </VStack>
       ),
     },
     {
@@ -230,6 +283,19 @@ export default function IAMSystemAdministratorsPage() {
       label: 'MFA',
       flex: 1,
       minWidth: columnMinWidths.mfa,
+      render: (value: string) => {
+        if (!value || value === '-') return <span>-</span>;
+        const methods = value.split(' / ');
+        return (
+          <div className="flex items-center gap-1">
+            {methods.map((method) => (
+              <Badge key={method} theme="white" size="sm">
+                {method}
+              </Badge>
+            ))}
+          </div>
+        );
+      },
     },
     {
       key: 'createdAt',
@@ -244,11 +310,13 @@ export default function IAMSystemAdministratorsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
-        <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
           <button
+            aria-label="Row actions"
             type="button"
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
             <IconDotsCircleHorizontal
               size={16}
@@ -280,52 +348,59 @@ export default function IAMSystemAdministratorsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'IAM', href: '/iam' }, { label: 'System administrators' }]}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'System Administrators' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
-        {/* Header */}
-        <HStack justify="between" align="center" className="w-full">
-          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-            System administrators
-          </h1>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => navigate('/iam/system-administrators/create')}
-          >
-            Create account
-          </Button>
-        </HStack>
+        <PageHeader
+          title="System administrators"
+          actions={
+            <Button variant="primary" size="md" onClick={() => setIsCreateDrawerOpen(true)}>
+              Create account
+            </Button>
+          }
+        />
 
         {/* Table Content */}
         <VStack gap={3} className="w-full">
-          {/* Action Bar */}
-          <HStack gap={2} align="center">
-            {/* Search */}
-            <HStack gap={1} align="center">
-              <SearchInput
-                placeholder="Search accounts by attributes"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-[var(--search-input-width)]"
-              />
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<IconDownload size={12} />}
-                aria-label="Download"
-              />
-            </HStack>
-          </HStack>
+          <ListToolbar
+            primaryActions={
+              <>
+                <ListToolbar.Actions>
+                  <FilterSearchInput
+                    filters={systemAdminFilterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search system administrators by attributes"
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                    hideAppliedFilters
+                  />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconDownload size={12} />}
+                    aria-label="Download"
+                    onClick={() => console.log('Download')}
+                  />
+                </ListToolbar.Actions>
+                <div className="w-px h-4 bg-[var(--color-border-default)] self-center" />
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selectedItems.length === 0}
+                  onClick={() => console.log('Delete')}
+                >
+                  Delete
+                </Button>
+              </>
+            }
+          />
 
           {/* Pagination */}
           <Pagination
@@ -334,13 +409,30 @@ export default function IAMSystemAdministratorsPage() {
             onPageChange={setCurrentPage}
             showSettings
             totalItems={filteredAdmins.length}
-            selectedCount={selectedRows.length}
           />
 
           {/* Table */}
-          <Table<SystemAdmin> columns={columns} data={paginatedAdmins} rowKey="id" />
+          <Table<SystemAdmin>
+            columns={columns}
+            data={paginatedAdmins}
+            rowKey="id"
+            selectable
+            selectedKeys={selectedItems}
+            onSelectionChange={setSelectedItems}
+            emptyMessage="No system administrators found"
+            loading={loading}
+          />
         </VStack>
       </VStack>
+
+      {/* Create User Drawer */}
+      <CreateUserDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        onSubmit={(data) => {
+          console.log('Create user:', data);
+        }}
+      />
     </PageShell>
   );
 }

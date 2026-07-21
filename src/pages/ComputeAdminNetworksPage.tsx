@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Badge,
@@ -9,7 +9,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -27,10 +26,11 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
+import { SubnetDrawer } from '@/components/SubnetDrawer';
 import { EditNetworkDrawer } from '@/components/EditNetworkDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -68,7 +68,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 25, 2025 09:22:14',
+    createdAt: 'Dec 25, 2026 09:22:14',
   },
   {
     id: 'net-002',
@@ -81,7 +81,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 24, 2025 14:38:57',
+    createdAt: 'Dec 24, 2026 14:38:57',
   },
   {
     id: 'net-003',
@@ -94,7 +94,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 23, 2025 07:51:26',
+    createdAt: 'Dec 23, 2026 07:51:26',
   },
   {
     id: 'net-004',
@@ -107,7 +107,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'building',
-    createdAt: 'Dec 22, 2025 16:04:43',
+    createdAt: 'Dec 22, 2026 16:04:43',
   },
   {
     id: 'net-005',
@@ -120,7 +120,7 @@ const mockNetworks: Network[] = [
     adminState: 'Down',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 21, 2025 10:19:08',
+    createdAt: 'Dec 21, 2026 10:19:08',
   },
   {
     id: 'net-006',
@@ -133,7 +133,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 20, 2025 13:45:32',
+    createdAt: 'Dec 20, 2026 13:45:32',
   },
   {
     id: 'net-007',
@@ -146,7 +146,7 @@ const mockNetworks: Network[] = [
     adminState: 'Down',
     diskTag: 'Project',
     status: 'error',
-    createdAt: 'Dec 19, 2025 08:27:51',
+    createdAt: 'Dec 19, 2026 08:27:51',
   },
   {
     id: 'net-008',
@@ -159,7 +159,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 18, 2025 11:56:39',
+    createdAt: 'Dec 18, 2026 11:56:39',
   },
   {
     id: 'net-009',
@@ -172,7 +172,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Shared',
     status: 'active',
-    createdAt: 'Dec 17, 2025 15:12:24',
+    createdAt: 'Dec 17, 2026 15:12:24',
   },
   {
     id: 'net-010',
@@ -185,7 +185,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'External',
     status: 'active',
-    createdAt: 'Dec 16, 2025 17:33:47',
+    createdAt: 'Dec 16, 2026 17:33:47',
   },
 ];
 
@@ -205,10 +205,10 @@ const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> =
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'subnetCidr', label: 'Subnet CIDR', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'subnetCidr', label: 'Subnet CIDR', type: 'text' },
   {
-    key: 'external',
+    id: 'external',
     label: 'External',
     type: 'select',
     options: [
@@ -217,7 +217,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'shared',
+    id: 'shared',
     label: 'Shared',
     type: 'select',
     options: [
@@ -226,7 +226,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'adminState',
+    id: 'adminState',
     label: 'Admin state',
     type: 'select',
     options: [
@@ -235,7 +235,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -267,6 +267,13 @@ export function ComputeAdminNetworksPage() {
   const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
   const [editNetworkOpen, setEditNetworkOpen] = useState(false);
   const [selectedNetworkForDrawer, setSelectedNetworkForDrawer] = useState<Network | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleCreateSubnet = (network: Network) => {
@@ -326,7 +333,7 @@ export function ComputeAdminNetworksPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((n) => {
         return appliedFilters.every((filter) => {
-          const value = String(n[filter.field as keyof Network] || '').toLowerCase();
+          const value = String(n[filter.fieldId as keyof Network] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });
@@ -370,8 +377,11 @@ export function ComputeAdminNetworksPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -391,8 +401,11 @@ export function ComputeAdminNetworksPage() {
           >
             {row.tenantName}
           </Link>
-          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">
-            ID: {row.tenantId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
           </span>
         </div>
       ),
@@ -445,10 +458,14 @@ export function ComputeAdminNetworksPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -506,22 +523,12 @@ export function ComputeAdminNetworksPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Networks' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Networks' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader
@@ -590,6 +597,8 @@ export function ComputeAdminNetworksPage() {
           selectable
           selectedKeys={selectedNetworks}
           onSelectionChange={setSelectedNetworks}
+          emptyMessage="No networks found"
+          loading={loading}
         />
       </VStack>
 
@@ -601,7 +610,7 @@ export function ComputeAdminNetworksPage() {
           setNetworkToDelete(null);
         }}
         title="Delete network"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected networks is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
@@ -620,7 +629,7 @@ export function ComputeAdminNetworksPage() {
       />
 
       {/* Network Drawers */}
-      <CreateSubnetDrawer
+      <SubnetDrawer
         isOpen={createSubnetOpen}
         onClose={() => setCreateSubnetOpen(false)}
         networkId={selectedNetworkForDrawer?.id}

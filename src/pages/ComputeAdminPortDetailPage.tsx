@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -24,7 +23,14 @@ import {
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconExternalLink, IconDownload } from '@tabler/icons-react';
+import {
+  IconTrash,
+  IconExternalLink,
+  IconDownload,
+  IconCirclePlus,
+  IconSettings,
+} from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -45,14 +51,6 @@ interface PortDetail {
   macAddress: string;
   // Attachments
   attachedTo: { name: string; id: string; type: 'instance' | 'router' } | null;
-}
-
-interface FixedIP {
-  id: string;
-  fixedIp: string;
-  floatingIp: { address: string; id: string } | null;
-  ownedSubnet: { name: string; id: string };
-  createdAt: string;
 }
 
 interface AllowedAddressPair {
@@ -78,7 +76,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-001',
     name: 'port-01',
     status: 'active',
-    createdAt: 'Sep 15, 2025 09:18:42',
+    createdAt: 'Sep 15, 2026 09:18:42',
     description: '-',
     portSecurity: true,
     ownedNetwork: { name: 'net-01', id: 'net-001' },
@@ -90,7 +88,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-002',
     name: 'port-02',
     status: 'active',
-    createdAt: 'Sep 10, 2025 14:35:27',
+    createdAt: 'Sep 10, 2026 14:35:27',
     description: '-',
     portSecurity: true,
     ownedNetwork: { name: 'net-02', id: 'net-002' },
@@ -102,7 +100,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-003',
     name: 'port-03',
     status: 'down',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     description: '-',
     portSecurity: true,
     ownedNetwork: { name: 'net-03', id: 'net-003' },
@@ -114,7 +112,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-004',
     name: 'db-port',
     status: 'active',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     description: 'Database port',
     portSecurity: true,
     ownedNetwork: { name: 'net-01', id: 'net-001' },
@@ -126,7 +124,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-005',
     name: 'router-port-1',
     status: 'active',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
     description: 'Router port',
     portSecurity: false,
     ownedNetwork: { name: 'net-01', id: 'net-001' },
@@ -138,7 +136,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-006',
     name: 'lb-port',
     status: 'active',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
     description: 'Load balancer port',
     portSecurity: true,
     ownedNetwork: { name: 'net-02', id: 'net-002' },
@@ -150,7 +148,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-007',
     name: 'cache-port',
     status: 'active',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     description: 'Cache port',
     portSecurity: true,
     ownedNetwork: { name: 'net-01', id: 'net-001' },
@@ -162,7 +160,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-008',
     name: 'monitor-port',
     status: 'build',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     description: 'Monitoring port',
     portSecurity: true,
     ownedNetwork: { name: 'net-03', id: 'net-003' },
@@ -174,7 +172,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-009',
     name: 'test-port',
     status: 'down',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     description: 'Test port',
     portSecurity: true,
     ownedNetwork: { name: 'net-04', id: 'net-004' },
@@ -186,7 +184,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     id: 'port-010',
     name: 'vpn-port',
     status: 'active',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     description: 'VPN port',
     portSecurity: true,
     ownedNetwork: { name: 'net-01', id: 'net-001' },
@@ -209,14 +207,6 @@ const defaultPortDetail: PortDetail = {
   attachedTo: null,
 };
 
-const mockFixedIPs: FixedIP[] = Array.from({ length: 115 }, (_, i) => ({
-  id: `fixed-ip-${String(i + 1).padStart(3, '0')}`,
-  fixedIp: `10.0.0.${5 + i}`,
-  floatingIp: i % 3 === 0 ? { address: `10.0.0.${5 + i}`, id: '29tgj234' } : null,
-  ownedSubnet: { name: 'subnet-01', id: '29tgj234' },
-  createdAt: 'Sep 1, 2025 09:12:43',
-}));
-
 const mockAllowedAddressPairs: AllowedAddressPair[] = Array.from({ length: 115 }, (_, i) => ({
   id: `aap-${String(i + 1).padStart(3, '0')}`,
   ipAddress: `10.0.0.${5 + (i % 250)}`,
@@ -227,7 +217,7 @@ const mockSecurityGroups: SecurityGroup[] = Array.from({ length: 115 }, (_, i) =
   id: '29tgj234',
   name: `10.0.0.${5 + (i % 250)}`,
   description: '-',
-  createdAt: 'Sep 3, 2025 14:38:29',
+  createdAt: 'Sep 3, 2026 14:38:29',
 }));
 
 /* ----------------------------------------
@@ -256,11 +246,6 @@ export default function PortDetailPage() {
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [copiedMac, setCopiedMac] = useState(false);
 
-  // Fixed IPs tab state
-  const [fixedIpSearchTerm, setFixedIpSearchTerm] = useState('');
-  const [fixedIpCurrentPage, setFixedIpCurrentPage] = useState(1);
-  const fixedIpsPerPage = 10;
-
   // Allowed Address Pairs tab state
   const [aapSearchTerm, setAapSearchTerm] = useState('');
   const [aapCurrentPage, setAapCurrentPage] = useState(1);
@@ -272,7 +257,6 @@ export default function PortDetailPage() {
   const sgPerPage = 10;
 
   // Selection state
-  const [selectedFixedIPs, setSelectedFixedIPs] = useState<string[]>([]);
   const [selectedAaps, setSelectedAaps] = useState<string[]>([]);
   const [selectedSgs, setSelectedSgs] = useState<string[]>([]);
 
@@ -285,7 +269,6 @@ export default function PortDetailPage() {
 
   // Get port data based on URL ID
   const port = id ? mockPortsMap[id] || defaultPortDetail : defaultPortDetail;
-  const fixedIPs = mockFixedIPs;
   const allowedAddressPairs = mockAllowedAddressPairs;
   const securityGroups = mockSecurityGroups;
 
@@ -295,23 +278,6 @@ export default function PortDetailPage() {
       updateActiveTabLabel(port.name);
     }
   }, [port.name, updateActiveTabLabel]);
-
-  // Filter and paginate Fixed IPs
-  const filteredFixedIPs = useMemo(() => {
-    return fixedIPs.filter(
-      (ip) =>
-        ip.fixedIp.toLowerCase().includes(fixedIpSearchTerm.toLowerCase()) ||
-        ip.ownedSubnet.name.toLowerCase().includes(fixedIpSearchTerm.toLowerCase()) ||
-        (ip.floatingIp?.address.toLowerCase().includes(fixedIpSearchTerm.toLowerCase()) ?? false)
-    );
-  }, [fixedIPs, fixedIpSearchTerm]);
-
-  const totalFixedIpPages = Math.ceil(filteredFixedIPs.length / fixedIpsPerPage);
-
-  const paginatedFixedIPs = useMemo(() => {
-    const start = (fixedIpCurrentPage - 1) * fixedIpsPerPage;
-    return filteredFixedIPs.slice(start, start + fixedIpsPerPage);
-  }, [filteredFixedIPs, fixedIpCurrentPage, fixedIpsPerPage]);
 
   // Filter and paginate Allowed Address Pairs
   const filteredAaps = useMemo(() => {
@@ -345,70 +311,6 @@ export default function PortDetailPage() {
     return filteredSgs.slice(start, start + sgPerPage);
   }, [filteredSgs, sgCurrentPage, sgPerPage]);
 
-  // Fixed IP columns
-  const fixedIpColumns: TableColumn<FixedIP>[] = [
-    {
-      key: 'fixedIp',
-      label: 'Fixed IP',
-      flex: 1,
-    },
-    {
-      key: 'floatingIp',
-      label: 'Floating IP',
-      flex: 1,
-      render: (_, row) =>
-        row.floatingIp ? (
-          <Link
-            to={`/compute-admin/floating-ips/${row.floatingIp.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.floatingIp.address}
-          </Link>
-        ) : (
-          <span className="text-[var(--color-text-subtle)]">-</span>
-        ),
-    },
-    {
-      key: 'ownedSubnet',
-      label: 'Owned subnet',
-      flex: 1,
-      sortable: true,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute-admin/subnets/${row.ownedSubnet.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.ownedSubnet.name}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.ownedSubnet.id}
-          </span>
-        </div>
-      ),
-    },
-    {
-      key: 'actions',
-      label: 'Action',
-      width: fixedColumns.actions,
-      align: 'center',
-      render: (_: unknown, row: FixedIP) => {
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <button
-              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
-              onClick={() => console.log('Delete fixed IP', row.id)}
-            >
-              <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-            </button>
-          </div>
-        );
-      },
-    },
-  ];
-
   // Allowed Address Pairs columns
   const aapColumns: TableColumn<AllowedAddressPair>[] = [
     {
@@ -426,6 +328,7 @@ export default function PortDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: AllowedAddressPair) => {
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -458,7 +361,12 @@ export default function PortDetailPage() {
             {row.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -486,11 +394,7 @@ export default function PortDetailPage() {
     }
   };
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Ports', href: '/compute-admin/ports' },
-    { label: port.name },
-  ];
+  const breadcrumbItems = [{ label: 'Ports', href: '/compute-admin/ports' }, { label: port.name }];
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -533,21 +437,14 @@ export default function PortDetailPage() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
           />
         }
         contentClassName="pt-4 px-8 pb-20"
       >
-        <VStack gap={8} className="min-w-[1176px]">
+        <VStack gap={6}>
           {/* Header Card */}
           <DetailHeader>
             {/* Title */}
@@ -584,7 +481,6 @@ export default function PortDetailPage() {
             <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
               <TabList>
                 <Tab value="details">Details</Tab>
-                <Tab value="fixed-ips">Fixed IPs</Tab>
                 {port.status === 'active' && (
                   <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
                 )}
@@ -610,16 +506,30 @@ export default function PortDetailPage() {
                     <SectionCard.Content>
                       <SectionCard.DataRow
                         label="Network"
+                        value={port.ownedNetwork.name}
+                        isLink={!!port.ownedNetwork.id}
+                        linkHref={`/compute-admin/networks/${port.ownedNetwork.id}`}
+                      />
+                      <SectionCard.DataRow
+                        label="MAC Address"
                         value={
-                          <Link
-                            to={`/compute-admin/networks/${port.ownedNetwork.id}`}
-                            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                          >
-                            {port.ownedNetwork.name}
-                          </Link>
+                          <span className="flex items-center gap-1">
+                            {port.macAddress}
+                            {port.macAddress !== '-' && <InlineCopyId value={port.macAddress} />}
+                          </span>
                         }
                       />
-                      <SectionCard.DataRow label="MAC Address" value={port.macAddress} />
+                      <SectionCard.DataRow
+                        label="Fixed IP Address"
+                        value={
+                          <span className="flex items-center gap-1">
+                            {port.fixedIp || '-'}
+                            {port.fixedIp && port.fixedIp !== '-' && (
+                              <InlineCopyId value={port.fixedIp} />
+                            )}
+                          </span>
+                        }
+                      />
                     </SectionCard.Content>
                   </SectionCard>
 
@@ -639,21 +549,14 @@ export default function PortDetailPage() {
                       />
                       <SectionCard.DataRow
                         label="Bind device"
-                        value={
-                          port.attachedTo ? (
-                            <Link
-                              to={
-                                port.attachedTo.type === 'instance'
-                                  ? `/instances/${port.attachedTo.id}`
-                                  : `/routers/${port.attachedTo.id}`
-                              }
-                              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                            >
-                              {port.attachedTo.name}
-                            </Link>
-                          ) : (
-                            '-'
-                          )
+                        value={port.attachedTo ? port.attachedTo.name : '-'}
+                        isLink={!!port.attachedTo}
+                        linkHref={
+                          port.attachedTo
+                            ? port.attachedTo.type === 'instance'
+                              ? `/compute-admin/instances/${port.attachedTo.id}`
+                              : `/compute-admin/routers/${port.attachedTo.id}`
+                            : undefined
                         }
                       />
                     </SectionCard.Content>
@@ -662,50 +565,6 @@ export default function PortDetailPage() {
               </TabPanel>
 
               {/* Fixed IPs Tab */}
-              <TabPanel value="fixed-ips" className="pt-0">
-                <VStack gap={4} className="pt-4">
-                  {/* Header */}
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">Fixed IPs</h3>
-                  </div>
-
-                  {/* Search */}
-                  <div className="flex items-center gap-1">
-                    <div className="w-[var(--search-input-width)]">
-                      <SearchInput
-                        value={fixedIpSearchTerm}
-                        onChange={(e) => {
-                          setFixedIpSearchTerm(e.target.value);
-                          setFixedIpCurrentPage(1);
-                        }}
-                        placeholder="Search fixed IP by attributes"
-                      />
-                    </div>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      iconOnly
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </div>
-
-                  {/* Pagination */}
-                  <div className="flex items-center gap-2">
-                    <Pagination
-                      currentPage={fixedIpCurrentPage}
-                      totalPages={totalFixedIpPages}
-                      onPageChange={setFixedIpCurrentPage}
-                      totalItems={filteredFixedIPs.length}
-                      selectedCount={selectedFixedIPs.length}
-                    />
-                  </div>
-
-                  {/* Table */}
-                  <Table columns={fixedIpColumns} data={paginatedFixedIPs} rowKey="id" />
-                </VStack>
-              </TabPanel>
-
               {/* Allowed Address Pairs Tab */}
               {port.status === 'active' && (
                 <TabPanel value="allowed-address-pairs" className="pt-0">
@@ -715,6 +574,9 @@ export default function PortDetailPage() {
                       <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                         Allowed Address Pairs
                       </h3>
+                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        Create allowed address pair
+                      </Button>
                     </div>
 
                     {/* Search */}
@@ -764,6 +626,9 @@ export default function PortDetailPage() {
                       <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                         Security groups
                       </h3>
+                      <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                        Manage security groups
+                      </Button>
                     </div>
 
                     {/* Search */}

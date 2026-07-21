@@ -1,6 +1,12 @@
+import ReactECharts from 'echarts-for-react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import { PieChartDemo, chartColors } from '../../design-system-sections/ChartComponents';
+import {
+  PieChartDemo,
+  MultiDonutChartDemo,
+  MultiHalfDonutChartDemo,
+  chartColors,
+} from '../../design-system-sections/ChartComponents';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { VStack } from '@/design-system';
 
@@ -51,6 +57,30 @@ function Prose({ children }: { children: React.ReactNode }) {
 function PieChartGuidelines() {
   return (
     <VStack gap={10}>
+      {/* Overview */}
+      <VStack gap={4}>
+        <SectionTitle>Overview</SectionTitle>
+        <Prose>
+          <p>
+            Pie Chart는{' '}
+            <strong>
+              하나의 카테고리 내에서 여러 데이터 항목의 구성 비율을 시각적으로 표현하는 차트
+              컴포넌트
+            </strong>
+            이다. 데이터의 <strong>전체 대비 비율 관계</strong>를 빠르게 이해할 수 있도록 설계되며,
+            특정 시점의 상태를 표현하는 <strong>Non-time-series Chart</strong>에 해당한다.
+          </p>
+          <p>Pie Chart는 다음 목적을 가진다.</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>데이터 구성 비율 파악</li>
+            <li>카테고리 분포 비교</li>
+            <li>리소스 사용 분포 확인</li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
@@ -149,7 +179,7 @@ function PieChartGuidelines() {
               <li>Tooltip 표시</li>
             </ol>
             <p>
-              <strong>Tooltip 정보:</strong> category label, value, percentage
+              <strong>Tooltip 정보:</strong> timestamp, series label, value
             </p>
             <p>
               <strong>정책:</strong>
@@ -327,6 +357,44 @@ function PieChartGuidelines() {
   );
 }
 
+function PieChartLoadingDemo() {
+  const option = {
+    series: [
+      {
+        type: 'pie',
+        radius: '80%',
+        center: ['50%', '50%'],
+        label: { show: false },
+        labelLine: { show: false },
+        data: [],
+      },
+    ],
+  };
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
+      <span className="text-label-md text-[var(--color-text-default)]">OSD Objectstore Types</span>
+      <div className="flex justify-center">
+        <ReactECharts
+          option={option}
+          showLoading
+          loadingOption={{
+            text: '',
+            color: '#2563eb',
+            maskColor: 'rgba(255, 255, 255, 0.9)',
+            zlevel: 0,
+            showSpinner: true,
+            spinnerRadius: 14,
+            lineWidth: 2,
+          }}
+          style={{ height: '180px', width: '180px' }}
+          opts={{ devicePixelRatio: window.devicePixelRatio }}
+        />
+      </div>
+    </div>
+  );
+}
+
 const PIE_PRIMARY = [
   { name: 'cyan400', hex: chartColors.cyan400 },
   { name: 'emerald400', hex: chartColors.emerald400 },
@@ -383,7 +451,7 @@ function PieChartColorTokens() {
         </VStack>
       </VStack>
 
-      <div className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] border border-[var(--color-border-subtle)] text-body-sm text-[var(--color-text-muted)]">
+      <div className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] text-body-sm text-[var(--color-text-muted)]">
         <span className="text-[var(--color-text-default)] font-medium">CSS tokens:</span>{' '}
         --chart-color-1 … --chart-color-10
         {' · '}
@@ -398,7 +466,7 @@ export function PieChartPage() {
   return (
     <ComponentPageTemplate
       title="Pie Chart"
-      description="Pie Chart는 하나의 카테고리 내에서 여러 데이터 항목의 구성 비율을 시각적으로 표현하는 차트 컴포넌트이다. 데이터의 전체 대비 비율 관계를 빠르게 이해할 수 있도록 설계되며, 특정 시점의 상태를 표현하는 Non-time-series Chart에 해당한다."
+      description="Pie Chart는 하나의 카테고리 내에서 여러 데이터 항목의 구성 비율을 시각적으로 표현하는 차트 컴포넌트이다. 데이터의 전체 대비 비율 관계를 빠르게 이해할 수 있도록 설계되며, 특정 시점의 상태를 표현하는 Non-time-series Chart에 해당한다. 데이터 구성 비율 파악, 카테고리 분포 비교, 리소스 사용 분포 확인에 사용한다."
       whenToUse={[
         '하나의 카테고리 내에서 데이터 구성 비율을 보여줘야 하는 경우',
         '전체 대비 상대적인 비중을 빠르게 이해해야 하는 경우',
@@ -439,6 +507,50 @@ export function PieChartPage() {
           </VStack>
           <VStack gap={3}>
             <VStack gap={1}>
+              <Label>Loading State</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                데이터 로딩 중 ECharts 내장 스피너를 표시한다. showLoading prop을 사용하여 로딩
+                상태를 제어한다.
+              </span>
+            </VStack>
+            <PieChartLoadingDemo />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Donut Chart (multi-value)</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                중앙이 비어있는 도넛 형태. 총합을 중앙에 표시하며, 각 항목의 비율을 링 세그먼트로
+                나타낸다.
+              </span>
+            </VStack>
+            <MultiDonutChartDemo
+              title="Instance Status"
+              data={[
+                { name: 'Running', value: 42 },
+                { name: 'Stopped', value: 15 },
+                { name: 'Error', value: 8 },
+                { name: 'Building', value: 5 },
+              ]}
+            />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Half-Donut Chart (multi-value)</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                반원(180°) 형태의 도넛 차트. 대시보드 카드처럼 세로 공간이 제한된 경우에 적합하다.
+              </span>
+            </VStack>
+            <MultiHalfDonutChartDemo
+              title="Storage Distribution"
+              data={[
+                { name: 'SSD', value: 480 },
+                { name: 'HDD', value: 320 },
+                { name: 'NVMe', value: 200 },
+              ]}
+            />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
               <Label>Many Items (8+, Others grouping recommended)</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 항목이 8개 이상일 경우 Others 그룹화를 권장한다.
@@ -465,9 +577,18 @@ export function PieChartPage() {
       tokens={<PieChartColorTokens />}
       relatedLinks={[
         { label: 'Chart Overview', path: '/design/charts/overview', description: '상위 차트 패턴' },
-        { label: 'Usage Chart', path: '/design/charts/usage-chart', description: '사용률 차트' },
+        {
+          label: 'Usage Chart',
+          path: '/design/charts/usage-chart',
+          description: 'Gauge Bar Chart / Donut Chart',
+        },
         { label: 'Line Chart', path: '/design/charts/area-chart', description: '시계열 데이터' },
         { label: 'Tooltip', path: '/design/components/tooltip', description: '데이터 설명' },
+        {
+          label: 'UX Writing Guide',
+          path: '/design/policies/ux-writing',
+          description: '숫자 및 단위 표기 규칙',
+        },
       ]}
     />
   );

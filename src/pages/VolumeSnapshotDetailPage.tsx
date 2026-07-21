@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -14,11 +13,12 @@ import {
   DetailHeader,
   SectionCard,
   PageShell,
+  ErrorState,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconTrash, IconEdit, IconBell, IconSettings } from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -47,7 +47,7 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     name: 'db-data-snap',
     status: 'available',
     size: '1500 GiB',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     description: '-',
     sourceVolume: 'web-server-10',
     sourceVolumeId: 'vol-001',
@@ -57,7 +57,7 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     name: 'app-storage-snap',
     status: 'available',
     size: '500 GiB',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     description: 'Application storage snapshot',
     sourceVolume: 'app-volume-1',
     sourceVolumeId: 'vol-002',
@@ -67,23 +67,11 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     name: 'backup-vol-snap',
     status: 'available',
     size: '2000 GiB',
-    createdAt: 'Sep 8, 2025 16:55:10',
+    createdAt: 'Sep 8, 2026 16:55:10',
     description: 'Backup volume snapshot',
     sourceVolume: 'backup-storage',
     sourceVolumeId: 'vol-003',
   },
-};
-
-// Default snapshot for unknown IDs
-const defaultSnapshot: VolumeSnapshotDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
-  name: 'vol-snap-1',
-  status: 'available',
-  size: '1500 GiB',
-  createdAt: 'Jul 25, 2025 10:32:16',
-  description: '-',
-  sourceVolume: 'web-server-10',
-  sourceVolumeId: 'vol-001',
 };
 
 /* ----------------------------------------
@@ -118,7 +106,7 @@ export function VolumeSnapshotDetailPage() {
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get snapshot data based on the ID
-  const snapshot = id && mockSnapshotDetails[id] ? mockSnapshotDetails[id] : defaultSnapshot;
+  const snapshot = id && mockSnapshotDetails[id] ? mockSnapshotDetails[id] : undefined;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -126,10 +114,10 @@ export function VolumeSnapshotDetailPage() {
 
   // Update tab label when snapshot name changes
   useEffect(() => {
-    if (snapshot.name) {
+    if (snapshot?.name) {
       updateActiveTabLabel(snapshot.name);
     }
-  }, [snapshot.name, updateActiveTabLabel]);
+  }, [snapshot?.name, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -138,10 +126,62 @@ export function VolumeSnapshotDetailPage() {
     closable: tab.closable,
   }));
 
+  if (!snapshot) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Volume Snapshots', href: '/compute/volume-snapshots' },
+                  { label: id ?? '—' },
+                ]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Volume snapshot not found"
+          description={`The volume snapshot "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/compute/volume-snapshots')}
+            >
+              Back to Volume Snapshots
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Volume snapshots', href: '/compute/volume-snapshots' },
+    { label: 'Volume Snapshots', href: '/compute/volume-snapshots' },
     { label: snapshot.name },
   ];
 
@@ -166,21 +206,14 @@ export function VolumeSnapshotDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => navigate('/volume-snapshots')}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Snapshot Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>
@@ -256,7 +289,8 @@ export function VolumeSnapshotDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Metadata" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="{metadata}" value="{value}" />
+                    <SectionCard.DataRow label="os_type" value="linux" />
+                    <SectionCard.DataRow label="hw_disk_bus" value="virtio" />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -8,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -32,18 +31,18 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
-import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingIPToPortDrawer';
+import { AssociateFIPtoPortDrawer } from '@/components/AssociateFIPtoPortDrawer';
 import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
 import { EditPortDrawer } from '@/components/EditPortDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
-  IconBell,
   IconCube,
   IconRouter,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -230,14 +229,14 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'attachedTo', label: 'Attached to', type: 'text' },
-  { key: 'ownedNetwork', label: 'Network', type: 'text' },
-  { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
-  { key: 'floatingIp', label: 'Floating IP', type: 'text' },
-  { key: 'macAddress', label: 'MAC Address', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'attachedTo', label: 'Attached to', type: 'text' },
+  { id: 'ownedNetwork', label: 'Network', type: 'text' },
+  { id: 'fixedIp', label: 'Fixed IP', type: 'text' },
+  { id: 'floatingIp', label: 'Floating IP', type: 'text' },
+  { id: 'macAddress', label: 'MAC Address', type: 'text' },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -255,7 +254,7 @@ export function PortsPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [ports] = useState(mockPorts);
+  const [ports, setPorts] = useState(mockPorts);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'all';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -263,6 +262,7 @@ export function PortsPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [portToDelete, setPortToDelete] = useState<Port | null>(null);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -304,14 +304,30 @@ export function PortsPage() {
     { id: 'securityGroups', label: 'SG', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
-    { id: 'macAddress', label: 'Mac address', visible: true },
+    { id: 'macAddress', label: 'MAC Address', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+
+  useEffect(() => {
+    updateActiveTabLabel('Ports');
+  }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedFilters, activeTab]);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -340,13 +356,13 @@ export function PortsPage() {
       id: 'associate-floating-ip',
       label: 'Associate floating IP',
       onClick: () => handleAssociateFloatingIP(port),
-      disabled: !!port.floatingIp,
+      disabled: !!port.floatingIp && port.floatingIp !== '-',
     },
     {
       id: 'disassociate-floating-ip',
       label: 'Disassociate floating IP',
       onClick: () => console.log('Disassociate floating IP:', port.id),
-      disabled: !port.floatingIp,
+      disabled: !port.floatingIp || port.floatingIp === '-',
     },
     {
       id: 'allocate-ip',
@@ -383,7 +399,7 @@ export function PortsPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((p) => {
         return appliedFilters.every((filter) => {
-          const value = String(p[filter.field as keyof Port] || '').toLowerCase();
+          const value = String(p[filter.fieldId as keyof Port] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });
@@ -424,7 +440,12 @@ export function PortsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -441,8 +462,8 @@ export function PortsPage() {
                 <Link
                   to={
                     row.attachedType === 'router'
-                      ? `/routers/${row.attachedToId}`
-                      : `/instances/${row.attachedToId}`
+                      ? `/compute/routers/${row.attachedToId}`
+                      : `/compute/instances/${row.attachedToId}`
                   }
                   className="inline-flex items-center gap-1 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
@@ -450,8 +471,11 @@ export function PortsPage() {
                   <span className="truncate">{row.attachedTo}</span>
                 </Link>
               </Tooltip>
-              <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                ID : {row.attachedToId?.substring(0, 8)}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedToId?.substring(0, 8)}>
+                  ID : {row.attachedToId?.substring(0, 8).slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedToId?.substring(0, 8)} />
               </span>
             </div>
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
@@ -485,8 +509,11 @@ export function PortsPage() {
               <span className="truncate">{row.ownedNetwork}</span>
             </Link>
           </Tooltip>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.ownedNetworkId.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetworkId.substring(0, 8)}>
+              ID : {row.ownedNetworkId.substring(0, 8).slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetworkId.substring(0, 8)} />
           </span>
         </div>
       ),
@@ -520,10 +547,14 @@ export function PortsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -549,10 +580,18 @@ export function PortsPage() {
 
   const handleContextMenuSelect = (itemId: string) => {
     if (itemId === 'delete' && portToDelete) {
-      // Handle delete
+      const id = portToDelete.id;
+      setPorts((prev) => prev.filter((p) => p.id !== id));
       setDeleteModalOpen(false);
       setPortToDelete(null);
+      setSelectedPorts((prev) => prev.filter((x) => x !== id));
     }
+  };
+
+  const handleBulkDelete = () => {
+    setPorts((prev) => prev.filter((p) => !selectedPorts.includes(p.id)));
+    setIsBulkDeleteOpen(false);
+    setSelectedPorts([]);
   };
 
   return (
@@ -576,20 +615,12 @@ export function PortsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Ports' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Ports' }]} />}
         />
       }
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         {/* Page Header */}
@@ -627,6 +658,7 @@ export function PortsPage() {
                 iconOnly
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                onClick={() => console.log('Download')}
               />
             </ListToolbar.Actions>
           }
@@ -637,6 +669,7 @@ export function PortsPage() {
                 size="sm"
                 leftIcon={<IconTrash size={12} />}
                 disabled={selectedPorts.length === 0}
+                onClick={() => setIsBulkDeleteOpen(true)}
               >
                 Delete
               </Button>
@@ -660,9 +693,11 @@ export function PortsPage() {
           columns={visibleColumns}
           data={paginatedPorts}
           rowKey="id"
+          emptyMessage="No ports found"
           selectable
           selectedKeys={selectedPorts}
           onSelectionChange={setSelectedPorts}
+          loading={loading}
         />
       </VStack>
 
@@ -674,7 +709,7 @@ export function PortsPage() {
           setPortToDelete(null);
         }}
         title="Delete port"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected ports is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
@@ -700,7 +735,7 @@ export function PortsPage() {
         portName={selectedPortForDrawer?.name || ''}
       />
 
-      <AssociateFloatingIPToPortDrawer
+      <AssociateFIPtoPortDrawer
         isOpen={associateFIPOpen}
         onClose={() => setAssociateFIPOpen(false)}
         port={{ name: selectedPortForDrawer?.name || '' }}
@@ -722,6 +757,19 @@ export function PortsPage() {
           id: selectedPortForDrawer?.id || '',
           name: selectedPortForDrawer?.name || '',
         }}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete selected ports"
+        description="Removing the selected ports is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Selected count"
+        infoValue={`${selectedPorts.length} port(s)`}
       />
     </PageShell>
   );

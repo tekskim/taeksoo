@@ -2,84 +2,83 @@
 
 > Extracted from TDS `src/design-system/components/CopyButton/CopyButton.tsx`
 > thaki-shared target: `src/components/CopyButton/`
-> Mapping: 1:1 대응 (구조 차이 큼)
 
-## 구조 차이
+## Base Styles
 
-| 항목        | TDS                                      | thaki-shared                     |
-| ----------- | ---------------------------------------- | -------------------------------- |
-| 스타일 파일 | 인라인 (variantStyles, sizeStyles)       | 인라인 (copyButtonStyles 문자열) |
-| .styles.ts  | 없음                                     | 없음                             |
-| variant     | 3종 (default, ghost, outline)            | 없음 (ghost 유사 단일)           |
-| size        | 3종 (sm/md/lg)                           | 없음 (12x12 고정)                |
-| props       | value, variant, size, label, iconOnly 등 | text, children                   |
-| icon        | Tabler (IconCopy, IconCheck)             | 인라인 SVG (12x12)               |
-| Copyable    | 별도 컴포넌트 export                     | 없음                             |
+| Property      | TDS Value                             | TDS Token       |
+| ------------- | ------------------------------------- | --------------- |
+| display       | inline-flex                           | —               |
+| align         | items-center justify-center           | —               |
+| border        | 1px (always present)                  | border          |
+| border-radius | 4px                                   | --radius-sm     |
+| font-weight   | 500                                   | font-medium     |
+| transition    | colors 150ms                          | --duration-fast |
+| focus-visible | ring-2, ring-[--color-action-primary] | ring-2          |
+| disabled      | opacity-50, cursor-not-allowed        | —               |
 
-## TDS CopyButton 디자인
+## Variants
 
-### Base Styles
+### variant="default"
 
-| Property      | Value                                   | Token                  |
-| ------------- | --------------------------------------- | ---------------------- |
-| display       | inline-flex items-center justify-center | —                      |
-| border        | 1px solid (variant별 색상)              | —                      |
-| border-radius | 4px                                     | --radius-sm            |
-| font-weight   | 500 (medium)                            | font-medium            |
-| transition    | colors 150ms                            | --duration-fast        |
-| focus ring    | ring-2 #2563eb                          | --color-action-primary |
-| disabled      | opacity-50, cursor-not-allowed          | —                      |
+| State   | Background                       | Text                           | Border      |
+| ------- | -------------------------------- | ------------------------------ | ----------- |
+| default | --color-surface-muted (#f1f5f9)  | --color-text-default (#0f172a) | transparent |
+| hover   | --color-surface-subtle (#f8fafc) | --color-text-default           | transparent |
 
-### Variant: ghost (shared 대응 variant)
+### variant="ghost" (default)
 
-| State   | Background                       | Text                            | Border      |
-| ------- | -------------------------------- | ------------------------------- | ----------- |
-| default | transparent                      | #0f172a (--color-text-default)  | transparent |
-| hover   | #f8fafc (--color-surface-subtle) | #0f172a                         | transparent |
-| copied  | —                                | #22c55e (--color-state-success) | —           |
+| State   | Background                       | Text                           | Border      |
+| ------- | -------------------------------- | ------------------------------ | ----------- |
+| default | transparent                      | --color-text-default (#0f172a) | transparent |
+| hover   | --color-surface-subtle (#f8fafc) | --color-text-default           | transparent |
 
-### Variant: default
+### variant="outline"
 
-| State   | Background                       | Text    | Border      |
-| ------- | -------------------------------- | ------- | ----------- |
-| default | #f1f5f9 (--color-surface-muted)  | #0f172a | transparent |
-| hover   | #f8fafc (--color-surface-subtle) | #0f172a | transparent |
+| State   | Background                       | Text                           | Border                           |
+| ------- | -------------------------------- | ------------------------------ | -------------------------------- |
+| default | transparent                      | --color-text-default (#0f172a) | --color-border-default (#e2e8f0) |
+| hover   | --color-surface-subtle (#f8fafc) | --color-text-default           | --color-border-default           |
 
-### Variant: outline
+## Sizes
 
-| State   | Background                       | Text    | Border                           |
-| ------- | -------------------------------- | ------- | -------------------------------- |
-| default | transparent                      | #0f172a | #e2e8f0 (--color-border-default) |
-| hover   | #f8fafc (--color-surface-subtle) | #0f172a | #e2e8f0                          |
+| Size | Height | Padding X | Typography               | Gap | Icon Size |
+| ---- | ------ | --------- | ------------------------ | --- | --------- |
+| sm   | 24px   | 6px       | text-body-sm (11px/16px) | 4px | 12px      |
+| md   | 32px   | 8px       | text-body-md (12px/18px) | 6px | 14px      |
+| lg   | 36px   | 10px      | text-body-md (12px/18px) | 8px | 16px      |
 
-### Sizes
+Icon-only: extra `px-1.5` (6px horizontal padding).
 
-| Size | Height     | Padding X     | Font                | Icon Size | Gap |
-| ---- | ---------- | ------------- | ------------------- | --------- | --- |
-| sm   | 24px (h-6) | 6px (px-1.5)  | text-body-sm (11px) | 12px      | 4px |
-| md   | 32px (h-8) | 8px (px-2)    | text-body-md (12px) | 14px      | 6px |
-| lg   | 36px (h-9) | 10px (px-2.5) | text-body-md (12px) | 16px      | 8px |
+## Interactive States (동적)
 
-## thaki-shared 현재 디자인
+| State          | 조건              | 적용 스타일                          | 색상    |
+| -------------- | ----------------- | ------------------------------------ | ------- |
+| copied         | `copied === true` | text-[var(--color-state-success)]    | #10b981 |
+| default labels | —                 | label='Copy', successLabel='Copied!' | —       |
+| duration       | —                 | successDuration=2000ms               | —       |
 
-| Property      | 현재 값                           | 비고                    |
-| ------------- | --------------------------------- | ----------------------- |
-| size          | 12x12px (size-3)                  | 아이콘 크기 = 버튼 크기 |
-| padding       | 0                                 | 패딩 없음               |
-| background    | transparent                       | —                       |
-| text          | text-muted (#475569)              | —                       |
-| hover bg      | surface-hover (#f1f5f9)           | —                       |
-| hover text    | text (#0f172a)                    | —                       |
-| active text   | text-strong                       | —                       |
-| border-radius | rounded-sm (2px)                  | TDS: 4px                |
-| focus         | outline 2px border-focus offset-2 | TDS: ring-2             |
-| transition    | duration-control                  | TDS: 150ms              |
-| icon          | 인라인 SVG 12x12                  | TDS: Tabler Icons       |
+## 아이콘 비교
+
+| 아이콘 | TDS 구현           | size    | stroke | thaki-shared 구현 | viewBox | strokeWidth |
+| ------ | ------------------ | ------- | ------ | ----------------- | ------- | ----------- |
+| copy   | IconCopy (Tabler)  | dynamic | 1.5    | inline SVG        | 12x12   | 1           |
+| check  | IconCheck (Tabler) | dynamic | 2      | inline SVG        | 12x12   | 1.5         |
 
 ## 주요 디자인 차이
 
-1. **크기**: shared 12x12 (icon-only) vs TDS 24px+ (패딩 포함)
-2. **기본 텍스트색**: shared text-muted(#475569) vs TDS text-default(#0f172a)
-3. **border-radius**: shared rounded-sm(2px) vs TDS 4px (--radius-sm)
-4. **hover bg**: shared surface-hover(#f1f5f9) vs TDS surface-subtle(#f8fafc)
-5. **focus 스타일**: shared outline-based vs TDS ring-based
+| #   | 항목                 | TDS                            | thaki-shared                  | 유형  |
+| --- | -------------------- | ------------------------------ | ----------------------------- | ----- |
+| 1   | Variants             | 3개 (default, ghost, outline)  | 1개 (ghost-like only)         | style |
+| 2   | Sizes                | 3개 (sm/md/lg) with stepped    | Fixed 12×12px                 | style |
+| 3   | Border radius        | 4px (--radius-sm)              | 2px (--semantic-radius-sm)    | style |
+| 4   | Default text color   | text-default (#0f172a)         | text-muted (#475569)          | style |
+| 5   | Hover bg             | surface-subtle (#f8fafc)       | surface-muted (#f1f5f9)       | style |
+| 6   | Border               | 1px always (transparent/token) | border-none                   | style |
+| 7   | Success/copied color | Entire button green (#10b981)  | No success color applied      | style |
+| 8   | Icon stroke          | copy: 1.5, check: 2            | copy: 1, check: 1.5           | style |
+| 9   | Font weight          | font-medium (500)              | inherited                     | style |
+| 10  | Focus style          | ring-2 primary                 | outline 2px + 2px offset      | style |
+| 11  | Disabled             | opacity-50, cursor-not-allowed | Not implemented               | style |
+| 12  | Typography           | text-body-sm / text-body-md    | None                          | style |
+| 13  | Label support        | Yes (Copy / Copied!)           | children only                 | style |
+| 14  | Transition           | duration-fast (150ms)          | duration-control (undefined?) | style |

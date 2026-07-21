@@ -116,7 +116,7 @@
   --primitive-font-weight-medium: 500;
   --primitive-font-weight-semibold: 600;
   --primitive-font-family-sans: Mona Sans;
-  --primitive-font-family-mono: Menlo;
+  --primitive-font-family-mono: 'Mona Sans Variable', 'Mona Sans', sans-serif;
   --primitive-radius-none: 0;
   --primitive-radius-sm: 4px;
   --primitive-radius-md: 6px;

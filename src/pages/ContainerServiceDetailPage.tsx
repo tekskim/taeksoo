@@ -23,20 +23,13 @@ import {
   Tooltip,
   BadgeList,
   SearchInput,
-  CopyButton,
+  ErrorState,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
-  IconDotsCircleHorizontal,
-  IconChevronDown,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconAlertTriangle, IconDotsCircleHorizontal, IconChevronDown } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -52,6 +45,7 @@ interface ServiceData {
   clusterIP: string;
   loadBalancerIP: string;
   externalIP: string;
+  externalName?: string;
   externalTrafficPolicy: string;
   sessionAffinity: string;
   createdAt: string;
@@ -103,16 +97,16 @@ interface ConditionRow {
 const mockServiceData: Record<string, ServiceData> = {
   '1': {
     id: '1',
-    name: 'capi-webhook-service',
+    name: 'serviceName',
     status: 'Active',
-    namespace: 'default',
+    namespace: 'default:1:27',
     type: 'LoadBalancer',
-    clusterIP: '10.11.111.10',
-    loadBalancerIP: '203.0.113.10',
-    externalIP: '198.51.100.5',
+    clusterIP: '10.100.12.210',
+    loadBalancerIP: '198.51.10.3',
+    externalIP: '199.51.10.4 (+2)',
     externalTrafficPolicy: 'Local',
     sessionAffinity: 'None',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Nov 11, 2026',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -126,22 +120,118 @@ const mockServiceData: Record<string, ServiceData> = {
   },
   '2': {
     id: '2',
-    name: 'nginx-service',
-    status: 'Processing',
-    namespace: 'ingress-nginx',
-    type: 'LoadBalancer',
-    clusterIP: '10.43.136.100',
-    loadBalancerIP: '203.0.113.50',
-    externalIP: '198.51.100.10',
-    externalTrafficPolicy: 'Cluster',
-    sessionAffinity: 'ClientIP',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'ClusterIP (Headless)',
+    clusterIP: '-',
+    loadBalancerIP: '',
+    externalIP: '',
+    externalTrafficPolicy: '',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2026',
     labels: {
-      'app.kubernetes.io/name': 'nginx',
-      'app.kubernetes.io/component': 'controller',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
     },
     annotations: {
-      'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
+    },
+  },
+  '3': {
+    id: '3',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'ExternalName',
+    clusterIP: '',
+    loadBalancerIP: '',
+    externalIP: '',
+    externalName: 'my.database.example.com',
+    externalTrafficPolicy: '',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2026',
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
+    },
+    annotations: {
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
+    },
+  },
+  '4': {
+    id: '4',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'LoadBalancer',
+    clusterIP: '10.100.12.210',
+    loadBalancerIP: '198.51.10.3',
+    externalIP: '199.51.10.4 (+2)',
+    externalTrafficPolicy: 'Local',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2026',
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
+    },
+    annotations: {
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
+    },
+  },
+  '5': {
+    id: '5',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'NodePort',
+    clusterIP: '10.100.12.210',
+    loadBalancerIP: '',
+    externalIP: '199.51.10.4 (+2)',
+    externalTrafficPolicy: 'Cluster',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2026',
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
+    },
+    annotations: {
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
+    },
+  },
+  '6': {
+    id: '6',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'ClusterIP',
+    clusterIP: '10.100.12.210',
+    loadBalancerIP: '',
+    externalIP: '199.51.10.4 (+2)',
+    externalTrafficPolicy: '',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2026',
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
+    },
+    annotations: {
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
     },
   },
 };
@@ -156,7 +246,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '2',
@@ -167,7 +257,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.11.0.12',
     node: 'nodeName-2',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '3',
@@ -178,7 +268,7 @@ const mockPodsData: PodRow[] = [
     restarts: 2,
     ip: '10.11.0.13',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '4',
@@ -189,7 +279,7 @@ const mockPodsData: PodRow[] = [
     restarts: 3,
     ip: '10.11.0.14',
     node: 'nodeName-2',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
 ];
 
@@ -227,6 +317,8 @@ const mockSelectorsData: SelectorRow[] = [
   },
 ];
 
+const TAB_TABLE_PAGE_SIZE = 10;
+
 const mockConditionsData: ConditionRow[] = [
   {
     id: '1',
@@ -234,7 +326,7 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'MinimumReplicasAvailable',
     message: 'Service has minimum availability.',
-    lastTransition: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
   },
   {
     id: '2',
@@ -242,7 +334,7 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet has successfully progressed.',
-    lastTransition: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
   },
 ];
 
@@ -269,6 +361,21 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       pod.node.toLowerCase().includes(podSearch.toLowerCase())
   );
 
+  const podsTotalPages = Math.max(1, Math.ceil(filteredPods.length / TAB_TABLE_PAGE_SIZE));
+  const podsPage = Math.min(currentPage, podsTotalPages);
+  const paginatedPods = filteredPods.slice(
+    (podsPage - 1) * TAB_TABLE_PAGE_SIZE,
+    podsPage * TAB_TABLE_PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [podSearch]);
+
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, podsTotalPages));
+  }, [podsTotalPages]);
+
   const createPodMenuItems = (row: PodRow): ContextMenuItem[] => {
     return [
       {
@@ -280,11 +387,6 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
         id: 'view-logs',
         label: 'View logs',
         onClick: () => onViewLogs(row.name),
-      },
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/pods/${row.id}/edit`),
       },
       {
         id: 'edit-yaml',
@@ -375,7 +477,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0"
+          className="text-[var(--color-text-default)] font-medium truncate min-w-0"
           title={value}
         >
           {value}
@@ -402,9 +504,14 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            type="button"
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -428,17 +535,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
         className="w-[var(--search-input-width)]"
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={Math.max(1, Math.ceil(filteredPods.length / 10))}
+        currentPage={podsPage}
+        totalPages={podsTotalPages}
         onPageChange={setCurrentPage}
         totalItems={filteredPods.length}
         selectedCount={selectedKeys.length}
-        showSettings
-        onSettingsClick={() => {}}
       />
       <Table
         columns={columns}
-        data={filteredPods}
+        data={paginatedPods}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -466,6 +571,21 @@ function PortsTab({ ports }: PortsTabProps) {
       port.protocol.toLowerCase().includes(portSearch.toLowerCase()) ||
       String(port.port).includes(portSearch)
   );
+
+  const portsTotalPages = Math.max(1, Math.ceil(filteredPorts.length / TAB_TABLE_PAGE_SIZE));
+  const portsPage = Math.min(currentPage, portsTotalPages);
+  const paginatedPorts = filteredPorts.slice(
+    (portsPage - 1) * TAB_TABLE_PAGE_SIZE,
+    portsPage * TAB_TABLE_PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [portSearch]);
+
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, portsTotalPages));
+  }, [portsTotalPages]);
 
   const columns: TableColumn<PortRow>[] = [
     {
@@ -509,13 +629,7 @@ function PortsTab({ ports }: PortsTabProps) {
       flex: 1,
       sortable: true,
       render: (value: string | undefined) =>
-        value ? (
-          <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
-            {value}
-          </span>
-        ) : (
-          '-'
-        ),
+        value ? <span className="text-[var(--color-text-default)]">{value}</span> : '-',
     },
   ];
 
@@ -531,14 +645,12 @@ function PortsTab({ ports }: PortsTabProps) {
         className="w-[var(--search-input-width)]"
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={Math.max(1, Math.ceil(filteredPorts.length / 10))}
+        currentPage={portsPage}
+        totalPages={portsTotalPages}
         onPageChange={setCurrentPage}
         totalItems={filteredPorts.length}
-        showSettings
-        onSettingsClick={() => {}}
       />
-      <Table columns={columns} data={filteredPorts} rowKey="id" />
+      <Table columns={columns} data={paginatedPorts} rowKey="id" />
     </VStack>
   );
 }
@@ -560,6 +672,24 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
       sel.key.toLowerCase().includes(selectorSearch.toLowerCase()) ||
       sel.value.toLowerCase().includes(selectorSearch.toLowerCase())
   );
+
+  const selectorsTotalPages = Math.max(
+    1,
+    Math.ceil(filteredSelectors.length / TAB_TABLE_PAGE_SIZE)
+  );
+  const selectorsPage = Math.min(currentPage, selectorsTotalPages);
+  const paginatedSelectors = filteredSelectors.slice(
+    (selectorsPage - 1) * TAB_TABLE_PAGE_SIZE,
+    selectorsPage * TAB_TABLE_PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectorSearch]);
+
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, selectorsTotalPages));
+  }, [selectorsTotalPages]);
 
   const columns: TableColumn<SelectorRow>[] = [
     {
@@ -590,14 +720,12 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
         className="w-[var(--search-input-width)]"
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={Math.max(1, Math.ceil(filteredSelectors.length / 10))}
+        currentPage={selectorsPage}
+        totalPages={selectorsTotalPages}
         onPageChange={setCurrentPage}
         totalItems={filteredSelectors.length}
-        showSettings
-        onSettingsClick={() => {}}
       />
-      <Table columns={columns} data={filteredSelectors} rowKey="id" />
+      <Table columns={columns} data={paginatedSelectors} rowKey="id" />
     </VStack>
   );
 }
@@ -622,6 +750,24 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       cond.reason.toLowerCase().includes(conditionSearch.toLowerCase())
   );
 
+  const conditionsTotalPages = Math.max(
+    1,
+    Math.ceil(filteredConditions.length / TAB_TABLE_PAGE_SIZE)
+  );
+  const conditionsPage = Math.min(currentPage, conditionsTotalPages);
+  const paginatedConditions = filteredConditions.slice(
+    (conditionsPage - 1) * TAB_TABLE_PAGE_SIZE,
+    conditionsPage * TAB_TABLE_PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [conditionSearch]);
+
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, conditionsTotalPages));
+  }, [conditionsTotalPages]);
+
   const columns: TableColumn<ConditionRow>[] = [
     {
       key: 'type',
@@ -632,7 +778,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
+      label: 'Status',
       flex: 1,
       minWidth: columnMinWidths.size,
       sortable: true,
@@ -670,14 +816,12 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
         className="w-[var(--search-input-width)]"
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={Math.max(1, Math.ceil(filteredConditions.length / 10))}
+        currentPage={conditionsPage}
+        totalPages={conditionsTotalPages}
         onPageChange={setCurrentPage}
         totalItems={filteredConditions.length}
-        showSettings
-        onSettingsClick={() => {}}
       />
-      <Table columns={columns} data={filteredConditions} rowKey="id" />
+      <Table columns={columns} data={paginatedConditions} rowKey="id" />
     </VStack>
   );
 }
@@ -695,7 +839,7 @@ export function ContainerServiceDetailPage() {
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get service data
-  const service = mockServiceData[serviceId || ''] || mockServiceData['1'];
+  const service = serviceId ? mockServiceData[serviceId] : undefined;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
@@ -703,8 +847,10 @@ export function ContainerServiceDetailPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Service: ${service.name}`);
-  }, [updateActiveTabLabel, service.name]);
+    if (service) {
+      updateActiveTabLabel(`Service: ${service.name}`);
+    }
+  }, [updateActiveTabLabel, service]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -733,13 +879,75 @@ export function ContainerServiceDetailPage() {
     shellPanel.openConsole(podName, `Shell: ${podName}`);
   };
 
+  if (!service) {
+    return (
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabReorder={moveTab}
+            onTabAdd={addNewTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Services', href: '/container/services' },
+                  { label: serviceId ?? 'Service' },
+                ]}
+              />
+            }
+            actions={<ContainerTopBarActions />}
+          />
+        }
+        bottomPanel={
+          <ShellPanel
+            isExpanded={shellPanel.isExpanded}
+            onExpandedChange={shellPanel.setIsExpanded}
+            tabs={shellPanel.tabs}
+            activeTabId={shellPanel.activeTabId}
+            onActiveTabChange={shellPanel.setActiveTabId}
+            onCloseTab={shellPanel.closeTab}
+            onContentChange={shellPanel.updateContent}
+            onClear={shellPanel.clearContent}
+            onOpenInNewTab={handleOpenInNewTab}
+            initialHeight={350}
+            sidebarWidth={sidebarWidth}
+          />
+        }
+        bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        <ErrorState
+          icon={<IconAlertTriangle size={16} strokeWidth={1.5} />}
+          title="Service not found"
+          description={`The service "${serviceId ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/container/services')}>
+              Back to Services
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
   // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
-    {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/services/${service.id}/edit`),
-    },
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
@@ -779,41 +987,14 @@ export function ContainerServiceDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Services', href: '/container/services' },
-                { label: service.name },
-              ]}
+              items={[{ label: 'Services', href: '/container/services' }, { label: service.name }]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={service.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -850,6 +1031,7 @@ export function ContainerServiceDetailPage() {
             </ContextMenu>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
+            {/* Row 1: Common across all types */}
             <DetailHeader.InfoCard
               label="Status"
               value={
@@ -870,19 +1052,47 @@ export function ContainerServiceDetailPage() {
             />
             <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
             <DetailHeader.InfoCard label="Type" value={service.type} />
-            <DetailHeader.InfoCard label="Cluster IP" value={service.clusterIP} copyable />
-            <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
-            <DetailHeader.InfoCard
-              label="Load balancer IP"
-              value={service.loadBalancerIP}
-              copyable
-            />
-            <DetailHeader.InfoCard
-              label="External Traffic Policy"
-              value={service.externalTrafficPolicy}
-            />
-            <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
-            <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
+            <DetailHeader.InfoCard label="Created At" value={service.createdAt} />
+
+            {/* Row 2+: Type-specific fields */}
+            <DetailHeader.InfoCard label="Session Affinity" value={service.sessionAffinity} />
+
+            {(service.type === 'ClusterIP' ||
+              service.type === 'ClusterIP (Headless)' ||
+              service.type === 'NodePort' ||
+              service.type === 'LoadBalancer') && (
+              <DetailHeader.InfoCard label="Cluster IP" value={service.clusterIP} copyable />
+            )}
+
+            {service.type === 'LoadBalancer' && (
+              <DetailHeader.InfoCard
+                label="Load Balancer IP"
+                value={service.loadBalancerIP}
+                copyable
+              />
+            )}
+
+            {(service.type === 'ClusterIP' ||
+              service.type === 'NodePort' ||
+              service.type === 'LoadBalancer') && (
+              <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
+            )}
+
+            {service.type === 'ExternalName' && (
+              <DetailHeader.InfoCard
+                label="External Name"
+                value={service.externalName || '-'}
+                copyable
+              />
+            )}
+
+            {(service.type === 'NodePort' || service.type === 'LoadBalancer') && (
+              <DetailHeader.InfoCard
+                label="External Traffic Policy"
+                value={service.externalTrafficPolicy}
+              />
+            )}
+
             <DetailHeader.InfoCard
               label={`Labels (${Object.keys(service.labels).length})`}
               value={

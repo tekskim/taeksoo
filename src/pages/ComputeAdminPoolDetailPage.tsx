@@ -1,12 +1,11 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -25,7 +24,7 @@ import {
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconCircleMinus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -85,7 +84,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     description: '-',
     algorithm: 'Round Robin',
     protocol: 'HTTP',
@@ -97,7 +96,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
-    createdAt: 'Jul 24, 2025 03:19:59',
+    createdAt: 'Jul 24, 2026 03:19:59',
     description: 'HTTP connection pool',
     algorithm: 'Round Robin',
     protocol: 'HTTP',
@@ -109,7 +108,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
-    createdAt: 'Jul 23, 2025 20:06:42',
+    createdAt: 'Jul 23, 2026 20:06:42',
     description: 'HTTP connection pool',
     algorithm: 'Round Robin',
     protocol: 'HTTP',
@@ -216,10 +215,17 @@ export default function PoolDetailPage() {
   const healthMonitor = mockHealthMonitor;
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Load balancers', href: '/compute-admin/load-balancers' },
-    { label: 'web-lb-01', href: '/compute-admin/load-balancers/lb-001' },
-    { label: 'listener-http-80', href: '/listeners/listener-001' },
+    { label: 'Load Balancers', href: '/compute-admin/load-balancers' },
+    {
+      label: pool.loadBalancer?.name ?? 'Unknown',
+      href: pool.loadBalancer?.id
+        ? `/compute-admin/load-balancers/${pool.loadBalancer.id}`
+        : undefined,
+    },
+    {
+      label: pool.listener?.name ?? pool.listener?.id ?? '-',
+      href: pool.listener?.id ? `/compute-admin/listeners/${pool.listener.id}` : undefined,
+    },
     { label: pool.name },
   ];
 
@@ -304,6 +310,7 @@ export default function PoolDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit member', row.id) },
@@ -318,7 +325,11 @@ export default function PoolDetailPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={memberMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconCircleMinus
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -351,21 +362,14 @@ export default function PoolDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              hasNotification
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{pool.name}</DetailHeader.Title>
@@ -410,7 +414,7 @@ export default function PoolDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Name" value={pool.name} />
+                    <SectionCard.DataRow label="Pool name" value={pool.name} />
                     <SectionCard.DataRow label="Description" value={pool.description} />
                     <SectionCard.DataRow label="Admin state" value={pool.adminState} />
                     <SectionCard.DataRow label="Algorithm" value={pool.algorithm} />
@@ -426,26 +430,16 @@ export default function PoolDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Association" />
                   <SectionCard.Content>
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Listener
-                        </span>
-                        {pool.listener && pool.listener.id ? (
-                          <Link
-                            to={`/compute-admin/listeners/${pool.listener.id}`}
-                            className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                          >
-                            {pool.listener.name}
-                          </Link>
-                        ) : (
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                            -
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                    <SectionCard.DataRow
+                      label="Listener"
+                      value={pool.listener?.name ?? '-'}
+                      isLink={!!(pool.listener && pool.listener.id)}
+                      linkHref={
+                        pool.listener?.id
+                          ? `/compute-admin/listeners/${pool.listener.id}`
+                          : undefined
+                      }
+                    />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

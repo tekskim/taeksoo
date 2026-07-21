@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -16,21 +16,35 @@ import {
   ContextMenu,
   TabBar,
   Badge,
+  BadgeList,
+  Tooltip,
+  ListToolbar,
   PageShell,
+  DetailHeader,
+  ConfirmModal,
+  ErrorState,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { GrantAccessDrawer } from '@/components/GrantAccessDrawer';
+import { RolePoliciesDrawer } from '@/components/RolePoliciesDrawer';
+import { InlineCopyId } from '@/components/InlineCopyId';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconTrash,
   IconChevronDown,
   IconChevronRight,
+  IconChevronUp,
+  IconSelector,
   IconSettings,
+  IconLockCheck,
   IconDotsCircleHorizontal,
+  IconAlertCircle,
+  IconArrowBackUp,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -39,6 +53,7 @@ import { Link } from 'react-router-dom';
    ---------------------------------------- */
 
 interface RoleDetail {
+  id: string;
   name: string;
   description: string;
   type: 'Built-in' | 'Custom';
@@ -62,20 +77,14 @@ interface RolePolicy {
   permissions?: PolicyPermission[];
 }
 
-interface AttachedUserGroup {
+interface ActiveGrant {
   id: string;
-  name: string;
-  type: 'Built-in' | 'Custom';
-  userCount: number;
-  createdAt: string;
-}
-
-interface AttachedUser {
-  id: string;
-  name: string;
-  type: 'Built-in' | 'Custom';
-  lastSignIn: string;
-  createdAt: string;
+  principalName: string;
+  principalId: string;
+  starts: string;
+  ends: string;
+  expiringSoon?: boolean;
+  reason: string;
 }
 
 /* ----------------------------------------
@@ -84,40 +93,46 @@ interface AttachedUser {
 
 const mockRolesMap: Record<string, RoleDetail> = {
   admin: {
+    id: '7284d9174e81431e93060a9bbcf2cdfd',
     name: 'admin',
     description: 'Full administrative access',
     type: 'Built-in',
-    createdAt: 'Jun 1, 2025 10:20:28',
+    createdAt: 'Jun 1, 2026 10:20:28',
   },
   Member: {
+    id: 'a3b1c9d8e7f64520b1a2d3e4f5061728',
     name: 'Member',
     description: 'member role',
     type: 'Custom',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   viewer: {
+    id: 'b4c2d0e9f8a75631c2b3e4f5a6172839',
     name: 'viewer',
     description: 'Read-only access',
     type: 'Built-in',
-    createdAt: 'Jun 1, 2025 10:20:28',
+    createdAt: 'Jun 1, 2026 10:20:28',
   },
   'compute-admin': {
+    id: 'c5d3e1f0a9b86742d3c4f5a6b728394a',
     name: 'compute-admin',
     description: 'Compute administration access',
     type: 'Built-in',
-    createdAt: 'Jun 15, 2025 12:22:26',
+    createdAt: 'Jun 15, 2026 12:22:26',
   },
   'storage-admin': {
+    id: 'd6e4f2a1b0c97853e4d5a6b7c8394a5b',
     name: 'storage-admin',
     description: 'Storage administration access',
     type: 'Built-in',
-    createdAt: 'Jun 20, 2025 23:27:51',
+    createdAt: 'Jun 20, 2026 23:27:51',
   },
   'network-admin': {
+    id: 'e7f5a3b2c1d08964f5e6b7c8d9405a6c',
     name: 'network-admin',
     description: 'Network administration access',
     type: 'Built-in',
-    createdAt: 'Jun 25, 2025 10:32:16',
+    createdAt: 'Jun 25, 2026 10:32:16',
   },
 };
 
@@ -128,7 +143,7 @@ const mockRolePolicies: RolePolicy[] = [
     type: 'Built-in',
     apps: 'compute:tenantA (+3)',
     description: '-',
-    editedAt: 'Sep 12, 2025',
+    editedAt: 'Sep 12, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -150,7 +165,7 @@ const mockRolePolicies: RolePolicy[] = [
     type: 'Built-in',
     apps: 'compute (+3)',
     description: '-',
-    editedAt: 'Sep 12, 2025',
+    editedAt: 'Sep 12, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -179,7 +194,7 @@ const mockRolePolicies: RolePolicy[] = [
     type: 'Custom',
     apps: 'network (+2)',
     description: 'Network management policy',
-    editedAt: 'Sep 15, 2025',
+    editedAt: 'Sep 15, 2026',
     permissions: [
       {
         application: 'Network',
@@ -203,94 +218,89 @@ const mockRolePolicies: RolePolicy[] = [
   },
 ];
 
-const mockAttachedUserGroups: AttachedUserGroup[] = [
+const mockActiveGrants: ActiveGrant[] = [
   {
-    id: 'ug-001',
-    name: 'dev-admin-group',
-    type: 'Built-in',
-    userCount: 130,
-    createdAt: 'Sep 12, 2025 15:43:35',
+    id: 'grant-001',
+    principalName: 'account id',
+    principalId: '12345678',
+    starts: 'Mar 15, 2026 09:00:00 (UTC+N)',
+    ends: 'Apr 20, 2026 09:00:00 (UTC+N)',
+    expiringSoon: true,
+    reason: 'Incident response',
   },
   {
-    id: 'ug-002',
-    name: 'ops-team',
-    type: 'Custom',
-    userCount: 45,
-    createdAt: 'Aug 15, 2025 12:22:26',
+    id: 'grant-002',
+    principalName: 'account id',
+    principalId: '23456789',
+    starts: 'Feb 01, 2026 10:30:00 (UTC+N)',
+    ends: 'May 01, 2026 10:30:00 (UTC+N)',
+    reason: 'Incident response',
   },
   {
-    id: 'ug-003',
-    name: 'security-group',
-    type: 'Built-in',
-    userCount: 22,
-    createdAt: 'Jul 20, 2025 23:27:51',
+    id: 'grant-003',
+    principalName: 'account id',
+    principalId: '34567890',
+    starts: 'Jan 10, 2026 14:00:00 (UTC+N)',
+    ends: 'Jul 10, 2026 14:00:00 (UTC+N)',
+    reason: 'Incident response',
   },
   {
-    id: 'ug-004',
-    name: 'data-analysts',
-    type: 'Custom',
-    userCount: 67,
-    createdAt: 'Jun 10, 2025 01:17:01',
+    id: 'grant-004',
+    principalName: 'account id',
+    principalId: '45678901',
+    starts: 'Mar 01, 2026 08:00:00 (UTC+N)',
+    ends: 'Jun 01, 2026 08:00:00 (UTC+N)',
+    reason: 'Incident response',
+  },
+  {
+    id: 'grant-005',
+    principalName: 'account id',
+    principalId: '56789012',
+    starts: 'Feb 20, 2026 12:00:00 (UTC+N)',
+    ends: 'Aug 20, 2026 12:00:00 (UTC+N)',
+    reason: 'Incident response',
+  },
+  {
+    id: 'grant-006',
+    principalName: 'account id',
+    principalId: '67890123',
+    starts: 'Mar 05, 2026 16:00:00 (UTC+N)',
+    ends: 'Sep 05, 2026 16:00:00 (UTC+N)',
+    reason: 'Incident response',
+  },
+  {
+    id: 'grant-007',
+    principalName: 'account id',
+    principalId: '78901234',
+    starts: 'Jan 15, 2026 11:00:00 (UTC+N)',
+    ends: 'Apr 15, 2026 11:00:00 (UTC+N)',
+    reason: 'Incident response',
+  },
+  {
+    id: 'grant-008',
+    principalName: 'account id',
+    principalId: '89012345',
+    starts: 'Feb 10, 2026 09:30:00 (UTC+N)',
+    ends: 'May 10, 2026 09:30:00 (UTC+N)',
+    reason: 'Incident response',
+  },
+  {
+    id: 'grant-009',
+    principalName: 'account id',
+    principalId: '90123456',
+    starts: 'Mar 20, 2026 14:00:00 (UTC+N)',
+    ends: 'Jun 20, 2026 14:00:00 (UTC+N)',
+    reason: 'Incident response',
+  },
+  {
+    id: 'grant-010',
+    principalName: 'account id',
+    principalId: '01234567',
+    starts: 'Jan 01, 2026 08:00:00 (UTC+N)',
+    ends: 'Apr 01, 2026 08:00:00 (UTC+N)',
+    reason: 'Incident response',
   },
 ];
-
-const mockAttachedUsers: AttachedUser[] = [
-  {
-    id: 'u-001',
-    name: 'thaki-kim',
-    type: 'Built-in',
-    lastSignIn: 'Dec 10, 2025',
-    createdAt: 'Sep 12, 2025 15:43:35',
-  },
-  {
-    id: 'u-002',
-    name: 'alex.johnson',
-    type: 'Custom',
-    lastSignIn: 'Dec 9, 2025',
-    createdAt: 'Aug 15, 2025 12:22:26',
-  },
-  {
-    id: 'u-003',
-    name: 'maria.garcia',
-    type: 'Built-in',
-    lastSignIn: 'Dec 8, 2025',
-    createdAt: 'Jul 20, 2025 23:27:51',
-  },
-  {
-    id: 'u-004',
-    name: 'john.doe',
-    type: 'Custom',
-    lastSignIn: 'Dec 7, 2025',
-    createdAt: 'Jun 10, 2025 01:17:01',
-  },
-  {
-    id: 'u-005',
-    name: 'emma.wilson',
-    type: 'Built-in',
-    lastSignIn: 'Dec 5, 2025',
-    createdAt: 'May 5, 2025 14:12:36',
-  },
-];
-
-/* ----------------------------------------
-   Info Card Component
-   ---------------------------------------- */
-
-interface InfoCardProps {
-  label: string;
-  value: string;
-}
-
-function InfoCard({ label, value }: InfoCardProps) {
-  return (
-    <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
-      <div className="flex flex-col gap-1.5">
-        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
-        <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
-      </div>
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Policy Details Component
@@ -362,17 +372,24 @@ function PolicyDetails({ permissions }: PolicyDetailsProps) {
 export default function IAMRoleDetailPage() {
   const { roleName } = useParams<{ roleName: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'policies';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState<string>('policies');
   const [policiesSearchQuery, setPoliciesSearchQuery] = useState('');
-  const [entitiesSearchQuery, setEntitiesSearchQuery] = useState('');
+  const [grantsSearchQuery, setGrantsSearchQuery] = useState('');
   const [policiesCurrentPage, setPoliciesCurrentPage] = useState(1);
-  const [entitiesCurrentPage, setEntitiesCurrentPage] = useState(1);
-  const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set(['p-002']));
-  const [entitiesSubTab, setEntitiesSubTab] = useState<'user-groups' | 'users'>('user-groups');
+  const [grantsCurrentPage, setGrantsCurrentPage] = useState(1);
+  const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set());
+  const [selectedGrants, setSelectedGrants] = useState<string[]>([]);
+  const [isGrantDrawerOpen, setIsGrantDrawerOpen] = useState(false);
+  const [isManageLinkedPoliciesOpen, setIsManageLinkedPoliciesOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [policySortKey, setPolicySortKey] = useState<keyof RolePolicy | null>(null);
+  const [policySortDir, setPolicySortDir] = useState<'asc' | 'desc' | null>(null);
   const itemsPerPage = 10;
 
   // Get role data
@@ -389,33 +406,50 @@ export default function IAMRoleDetailPage() {
     policy.name.toLowerCase().includes(policiesSearchQuery.toLowerCase())
   );
 
-  // Filter user groups by search query
-  const filteredUserGroups = mockAttachedUserGroups.filter((group) =>
-    group.name.toLowerCase().includes(entitiesSearchQuery.toLowerCase())
+  // Filter active grants by search query
+  const filteredGrants = mockActiveGrants.filter(
+    (grant) =>
+      grant.principalName.toLowerCase().includes(grantsSearchQuery.toLowerCase()) ||
+      grant.reason.toLowerCase().includes(grantsSearchQuery.toLowerCase())
   );
 
-  // Filter users by search query
-  const filteredUsers = mockAttachedUsers.filter((user) =>
-    user.name.toLowerCase().includes(entitiesSearchQuery.toLowerCase())
-  );
+  const handlePolicySort = (key: keyof RolePolicy) => {
+    if (policySortKey === key) {
+      if (policySortDir === 'asc') setPolicySortDir('desc');
+      else {
+        setPolicySortKey(null);
+        setPolicySortDir(null);
+      }
+    } else {
+      setPolicySortKey(key);
+      setPolicySortDir('asc');
+    }
+  };
+
+  const sortedPolicies = (() => {
+    if (!policySortKey || !policySortDir) return filteredPolicies;
+    return [...filteredPolicies].sort((a, b) => {
+      const aVal = a[policySortKey];
+      const bVal = b[policySortKey];
+      if (aVal === bVal) return 0;
+      if (aVal == null) return 1;
+      if (bVal == null) return -1;
+      const cmp = aVal < bVal ? -1 : 1;
+      return policySortDir === 'asc' ? cmp : -cmp;
+    });
+  })();
 
   // Pagination
-  const policiesTotalPages = Math.ceil(filteredPolicies.length / itemsPerPage);
-  const paginatedPolicies = filteredPolicies.slice(
+  const policiesTotalPages = Math.ceil(sortedPolicies.length / itemsPerPage);
+  const paginatedPolicies = sortedPolicies.slice(
     (policiesCurrentPage - 1) * itemsPerPage,
     policiesCurrentPage * itemsPerPage
   );
 
-  const userGroupsTotalPages = Math.ceil(filteredUserGroups.length / itemsPerPage);
-  const paginatedUserGroups = filteredUserGroups.slice(
-    (entitiesCurrentPage - 1) * itemsPerPage,
-    entitiesCurrentPage * itemsPerPage
-  );
-
-  const usersTotalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-  const paginatedUsers = filteredUsers.slice(
-    (entitiesCurrentPage - 1) * itemsPerPage,
-    entitiesCurrentPage * itemsPerPage
+  const grantsTotalPages = Math.ceil(filteredGrants.length / itemsPerPage);
+  const paginatedGrants = filteredGrants.slice(
+    (grantsCurrentPage - 1) * itemsPerPage,
+    grantsCurrentPage * itemsPerPage
   );
 
   // Toggle policy expansion
@@ -444,7 +478,6 @@ export default function IAMRoleDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
     { label: 'Roles', href: '/iam/roles' },
     { label: role?.name || 'Role details' },
   ];
@@ -453,7 +486,7 @@ export default function IAMRoleDetailPage() {
   const policyColumns: TableColumn<RolePolicy>[] = [
     {
       key: 'name',
-      label: 'Status',
+      label: 'Name',
       flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
@@ -467,13 +500,13 @@ export default function IAMRoleDetailPage() {
             className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
           >
             {expandedPolicies.has(row.id) ? (
-              <IconChevronDown size={16} stroke={1.5} />
+              <IconChevronDown size={12} strokeWidth={2} />
             ) : (
-              <IconChevronRight size={16} stroke={1.5} />
+              <IconChevronRight size={12} strokeWidth={2} />
             )}
           </button>
           <Link
-            to={`/iam/policies/${value}`}
+            to={`/iam/policies/${row.id}`}
             className="text-[var(--color-action-primary)] font-medium hover:underline"
           >
             {value}
@@ -513,10 +546,103 @@ export default function IAMRoleDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu
           items={getPolicyContextMenuItems(row.id, row.type === 'Built-in')}
           trigger="click"
+          align="right"
+        >
+          <button
+            aria-label="Row actions"
+            type="button"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
+          >
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--color-text-default)]"
+            />
+          </button>
+        </ContextMenu>
+      ),
+    },
+  ];
+
+  // Table columns for active grants
+  const grantColumns: TableColumn<ActiveGrant>[] = [
+    {
+      key: 'principalName',
+      label: 'Principal',
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      sortable: true,
+      render: (_value, row) => (
+        <VStack gap={0.5} align="start">
+          <span className="text-[var(--color-action-primary)] font-medium">
+            {row.principalName}
+          </span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.principalId}>
+              ID:{row.principalId}
+            </span>
+            <InlineCopyId value={row.principalId} />
+          </span>
+        </VStack>
+      ),
+    },
+    {
+      key: 'starts',
+      label: 'Starts',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+    },
+    {
+      key: 'ends',
+      label: 'Ends',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+      render: (_value, row) => (
+        <HStack gap={1.5} align="center" className="flex-nowrap">
+          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+            {row.ends}
+          </span>
+          {row.expiringSoon && (
+            <Tooltip content="Expiring soon">
+              <IconAlertCircle size={14} className="shrink-0 text-[var(--color-state-warning)]" />
+            </Tooltip>
+          )}
+        </HStack>
+      ),
+    },
+    {
+      key: 'reason',
+      label: 'Reason',
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      sortable: true,
+    },
+    {
+      key: 'id',
+      label: 'Action',
+      width: fixedColumns.actions,
+      align: 'center' as const,
+      sticky: 'right',
+      render: (_value, row) => (
+        <ContextMenu
+          items={[
+            { id: 'extend', label: 'Extend', onClick: () => console.log('Extend', row.id) },
+            {
+              id: 'revoke',
+              label: 'Revoke',
+              status: 'danger',
+              onClick: () => console.log('Revoke', row.id),
+            },
+          ]}
+          trigger="click"
+          align="right"
         >
           <button
             type="button"
@@ -533,368 +659,419 @@ export default function IAMRoleDetailPage() {
     },
   ];
 
-  // Table columns for user groups
-  const userGroupColumns: TableColumn<AttachedUserGroup>[] = [
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      minWidth: columnMinWidths.name,
-      sortable: true,
-      render: (value) => (
-        <Link
-          to={`/iam/user-groups/${value}`}
-          className="text-[var(--color-action-primary)] font-medium hover:underline"
-        >
-          {value}
-        </Link>
-      ),
-    },
-    {
-      key: 'type',
-      label: 'Type',
-      flex: 1,
-      minWidth: columnMinWidths.typeLg,
-    },
-    {
-      key: 'userCount',
-      label: 'User count',
-      flex: 1,
-      minWidth: columnMinWidths.userCount,
-      sortable: true,
-    },
-    {
-      key: 'createdAt',
-      label: 'Created at',
-      flex: 1,
-      minWidth: columnMinWidths.createdAt,
-      sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
-    },
-  ];
-
-  // Table columns for users
-  const userColumns: TableColumn<AttachedUser>[] = [
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      minWidth: columnMinWidths.name,
-      sortable: true,
-      render: (value) => (
-        <Link
-          to={`/iam/users/${value}`}
-          className="text-[var(--color-action-primary)] font-medium hover:underline"
-        >
-          {value}
-        </Link>
-      ),
-    },
-    {
-      key: 'type',
-      label: 'User groups',
-      flex: 1,
-      minWidth: columnMinWidths.userGroups,
-    },
-    {
-      key: 'lastSignIn',
-      label: 'Last sign-in',
-      flex: 1,
-      minWidth: columnMinWidths.lastSignIn,
-      sortable: true,
-    },
-    {
-      key: 'createdAt',
-      label: 'Created at',
-      flex: 1,
-      minWidth: columnMinWidths.createdAt,
-      sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
-    },
-  ];
-
   if (!role) {
     return (
       <PageShell
         sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
         sidebarWidth={sidebarWidth}
-        tabBar={null}
-        topBar={null}
-        contentClassName="flex items-center justify-center"
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={[{ label: 'Roles', href: '/iam/roles' }]} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-6"
       >
-        <p className="text-[var(--color-text-muted)]">Role not found</p>
+        <ErrorState
+          title="Role not found"
+          description="The requested role could not be found."
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/iam/roles')}>
+              Back to Roles
+            </Button>
+          }
+        />
       </PageShell>
     );
   }
 
   return (
-    <PageShell
-      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
-      sidebarWidth={sidebarWidth}
-      tabBar={
-        <TabBar
-          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
-          onTabReorder={moveTab}
-        />
-      }
-      topBar={
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation
-          onBack={() => navigate(-1)}
-          onForward={() => navigate(1)}
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-        />
-      }
-      contentClassName="pt-4 px-8 pb-6"
-    >
-      <VStack gap={6}>
-        {/* Header Card */}
-        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-              {role.name}
-            </h1>
-
-            {/* Action Buttons */}
-            <HStack gap={1}>
-              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+    <>
+      <PageShell
+        sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          />
+        }
+        contentClassName="pt-4 px-8 pb-6"
+      >
+        <VStack gap={6}>
+          <DetailHeader>
+            <DetailHeader.Title>{role.name}</DetailHeader.Title>
+            <DetailHeader.Actions>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconLockCheck size={12} stroke={1.5} />}
+                onClick={() => setIsGrantDrawerOpen(true)}
+              >
+                Grant access
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconSettings size={12} stroke={1.5} />}
+                onClick={() => setIsManageLinkedPoliciesOpen(true)}
+              >
+                Manage linked policies
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconEdit size={12} stroke={1.5} />}
+                onClick={() => console.log('Edit role', role.id)}
+              >
                 Edit
               </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconTrash size={12} stroke={1.5} />}
+                onClick={() => setIsDeleteOpen(true)}
+              >
                 Delete
               </Button>
-              <ContextMenu
-                items={[
-                  {
-                    id: 'manage-policies',
-                    label: 'Manage policies',
-                    onClick: () => console.log('Manage policies'),
-                  },
-                  { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate') },
-                ]}
-                trigger="click"
-                align="right"
-              >
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                >
-                  More actions
-                </Button>
-              </ContextMenu>
-            </HStack>
+            </DetailHeader.Actions>
+            <DetailHeader.InfoGrid>
+              <DetailHeader.InfoCard label="ID" value={role.id} copyable />
+              <DetailHeader.InfoCard label="Description" value={role.description} />
+              <DetailHeader.InfoCard label="Created at" value={role.createdAt} />
+            </DetailHeader.InfoGrid>
+          </DetailHeader>
 
-            {/* Info Cards */}
-            <HStack gap={2} className="w-full">
-              <InfoCard label="Description" value={role.description} />
-              <InfoCard label="Type" value={role.type} />
-              <InfoCard label="Created at" value={role.createdAt} />
-            </HStack>
-          </VStack>
-        </div>
+          {/* Tabs */}
+          <div className="w-full">
+            <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+              <TabList>
+                <Tab value="policies">Attached policies</Tab>
+                <Tab value="entities">Active grants</Tab>
+              </TabList>
 
-        {/* Tabs */}
-        <div className="w-full">
-          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-            <TabList>
-              <Tab value="policies">Policies</Tab>
-              <Tab value="entities">Entities attached</Tab>
-            </TabList>
-
-            {/* Policies Tab */}
-            <TabPanel value="policies" className="pt-0">
-              <VStack gap={4} className="pt-4">
-                {/* Section Header */}
-                <HStack justify="between" align="center" className="w-full">
-                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    Policies
-                  </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
-                    Manage policies
-                  </Button>
-                </HStack>
-
-                {/* Search */}
-                <SearchInput
-                  placeholder="Search policies by attributes"
-                  value={policiesSearchQuery}
-                  onChange={(e) => setPoliciesSearchQuery(e.target.value)}
-                  className="w-[var(--search-input-width)]"
-                />
-
-                {/* Pagination */}
-                <Pagination
-                  currentPage={policiesCurrentPage}
-                  totalPages={policiesTotalPages}
-                  totalItems={filteredPolicies.length}
-                  onPageChange={setPoliciesCurrentPage}
-                />
-
-                {/* Policies Table with Expandable Rows */}
-                <div className="w-full flex flex-col gap-1">
-                  {/* Table Header */}
-                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                      Status
-                    </div>
-                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                      Type
-                    </div>
-                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                      Apps
-                    </div>
-                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                      Description
-                    </div>
-                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                      Edited at
-                    </div>
-                    <div className="w-[72px] flex items-center justify-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                      Action
-                    </div>
-                  </div>
-
-                  {/* Table Rows */}
-                  {paginatedPolicies.map((policy) => (
-                    <div
-                      key={policy.id}
-                      className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
+              {/* Policies Tab */}
+              <TabPanel value="policies" className="pt-0">
+                <VStack gap={4} className="pt-4">
+                  {/* Section Header */}
+                  <HStack justify="between" align="center" className="w-full">
+                    <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                      Attached policies
+                    </h2>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconSettings size={12} />}
+                      onClick={() => console.log('Manage policies', role.id)}
                     >
-                      {/* Main Row */}
-                      <div className="flex items-center min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors">
-                        <div className="flex-1 flex items-center gap-2 px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                          <button
-                            onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
-                            className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
-                          >
-                            {expandedPolicies.has(policy.id) ? (
-                              <IconChevronDown size={16} stroke={1.5} />
-                            ) : (
-                              <IconChevronRight size={16} stroke={1.5} />
-                            )}
-                          </button>
-                          <Link
-                            to={`/iam/policies/${policy.name}`}
-                            className="text-[var(--color-action-primary)] font-medium hover:underline"
-                          >
-                            {policy.name}
-                          </Link>
-                        </div>
-                        <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                          {policy.type}
-                        </div>
-                        <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                          {policy.apps}
-                        </div>
-                        <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                          {policy.description}
-                        </div>
-                        <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                          {policy.editedAt}
-                        </div>
-                        <div className="w-[72px] flex items-center justify-center px-3 py-2 border-l border-transparent">
-                          <ContextMenu
-                            items={getPolicyContextMenuItems(policy.id, policy.type === 'Built-in')}
-                            trigger="click"
-                          >
-                            <button
-                              type="button"
-                              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
-                            >
-                              <IconDotsCircleHorizontal
-                                size={16}
-                                stroke={1.5}
-                                className="text-[var(--color-text-default)]"
-                              />
-                            </button>
-                          </ContextMenu>
-                        </div>
-                      </div>
+                      Manage policies
+                    </Button>
+                  </HStack>
 
-                      {/* Expanded Policy Details */}
-                      {expandedPolicies.has(policy.id) && policy.permissions && (
-                        <PolicyDetails permissions={policy.permissions} />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </VStack>
-            </TabPanel>
-
-            {/* Entities Attached Tab */}
-            <TabPanel value="entities" className="pt-0">
-              <VStack gap={4} className="pt-4">
-                {/* Section Header */}
-                <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  Entities attached
-                </h2>
-
-                {/* Sub Tab Container */}
-                <Tabs
-                  value={entitiesSubTab}
-                  onChange={(val) => {
-                    setEntitiesSubTab(val as 'user-groups' | 'users');
-                    setEntitiesCurrentPage(1);
-                    setEntitiesSearchQuery('');
-                  }}
-                  variant="boxed"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="user-groups">User groups</Tab>
-                    <Tab value="users">Users</Tab>
-                  </TabList>
-                </Tabs>
-
-                {/* Search */}
-                <SearchInput
-                  placeholder={
-                    entitiesSubTab === 'user-groups'
-                      ? 'Search user groups by attributes'
-                      : 'Search users by attributes'
-                  }
-                  value={entitiesSearchQuery}
-                  onChange={(e) => setEntitiesSearchQuery(e.target.value)}
-                  className="w-[var(--search-input-width)]"
-                />
-
-                {/* Pagination */}
-                <Pagination
-                  currentPage={entitiesCurrentPage}
-                  totalPages={
-                    entitiesSubTab === 'user-groups' ? userGroupsTotalPages : usersTotalPages
-                  }
-                  totalItems={
-                    entitiesSubTab === 'user-groups'
-                      ? filteredUserGroups.length
-                      : filteredUsers.length
-                  }
-                  onPageChange={setEntitiesCurrentPage}
-                />
-
-                {/* Table */}
-                {entitiesSubTab === 'user-groups' ? (
-                  <Table<AttachedUserGroup>
-                    columns={userGroupColumns}
-                    data={paginatedUserGroups}
-                    rowKey="id"
+                  {/* Search */}
+                  <SearchInput
+                    placeholder="Search policies by attributes"
+                    value={policiesSearchQuery}
+                    onChange={(e) => setPoliciesSearchQuery(e.target.value)}
+                    className="w-[var(--search-input-width)]"
                   />
-                ) : (
-                  <Table<AttachedUser> columns={userColumns} data={paginatedUsers} rowKey="id" />
-                )}
-              </VStack>
-            </TabPanel>
-          </Tabs>
-        </div>
-      </VStack>
-    </PageShell>
+
+                  {/* Pagination */}
+                  <Pagination
+                    currentPage={policiesCurrentPage}
+                    totalPages={policiesTotalPages}
+                    totalItems={filteredPolicies.length}
+                    onPageChange={setPoliciesCurrentPage}
+                  />
+
+                  {/* Policies Table with Expandable Rows */}
+                  <div className="w-full flex flex-col gap-1">
+                    {/* Table Header */}
+                    <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                      <div
+                        className="flex-1 flex items-center gap-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                        onClick={() => handlePolicySort('name')}
+                      >
+                        <span>Name</span>
+                        {policySortKey === 'name' ? (
+                          policySortDir === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          )
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-text-subtle)]"
+                          />
+                        )}
+                      </div>
+                      <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                        Type
+                      </div>
+                      <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                        Apps
+                      </div>
+                      <div
+                        className="flex-1 flex items-center gap-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                        onClick={() => handlePolicySort('description')}
+                      >
+                        <span>Description</span>
+                        {policySortKey === 'description' ? (
+                          policySortDir === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          )
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-text-subtle)]"
+                          />
+                        )}
+                      </div>
+                      <div
+                        className="flex-1 flex items-center gap-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                        onClick={() => handlePolicySort('editedAt')}
+                      >
+                        <span>Edited at</span>
+                        {policySortKey === 'editedAt' ? (
+                          policySortDir === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          )
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-text-subtle)]"
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Table Rows */}
+                    {paginatedPolicies.map((policy) => (
+                      <div
+                        key={policy.id}
+                        className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
+                      >
+                        {/* Main Row */}
+                        <div className="flex items-center min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors">
+                          <div className="flex-1 flex items-center gap-2 px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                            <button
+                              onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
+                              className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
+                            >
+                              {expandedPolicies.has(policy.id) ? (
+                                <IconChevronDown size={12} strokeWidth={2} />
+                              ) : (
+                                <IconChevronRight size={12} strokeWidth={2} />
+                              )}
+                            </button>
+                            <Link
+                              to={`/iam/policies/${policy.id}`}
+                              className="text-[var(--color-action-primary)] font-medium hover:underline"
+                            >
+                              {policy.name}
+                            </Link>
+                          </div>
+                          <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
+                            <Badge theme="white" size="sm">
+                              {policy.type}
+                            </Badge>
+                          </div>
+                          <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
+                            <BadgeList
+                              items={
+                                policy.permissions
+                                  ? [
+                                      ...new Set(
+                                        policy.permissions.map((p) =>
+                                          p.partition !== '-'
+                                            ? `${p.application}:${p.partition}`
+                                            : p.application
+                                        )
+                                      ),
+                                    ]
+                                  : [policy.apps]
+                              }
+                              maxVisible={1}
+                              maxBadgeWidth="140px"
+                              popoverTitle={`All Apps (${policy.permissions ? new Set(policy.permissions.map((p) => (p.partition !== '-' ? `${p.application}:${p.partition}` : p.application))).size : 1})`}
+                              overflowAlign="right"
+                            />
+                          </div>
+                          <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
+                            {policy.description}
+                          </div>
+                          <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
+                            {policy.editedAt}
+                          </div>
+                        </div>
+
+                        {/* Expanded Policy Details */}
+                        {expandedPolicies.has(policy.id) && policy.permissions && (
+                          <PolicyDetails permissions={policy.permissions} />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </VStack>
+              </TabPanel>
+
+              {/* Active Grants Tab */}
+              <TabPanel value="entities" className="pt-0">
+                <VStack gap={4} className="w-full pt-4">
+                  <HStack justify="between" align="center" className="w-full">
+                    <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                      Active grants
+                    </h2>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconLockCheck size={12} />}
+                      onClick={() => setIsGrantDrawerOpen(true)}
+                    >
+                      Grant access
+                    </Button>
+                  </HStack>
+
+                  <ListToolbar
+                    primaryActions={
+                      <ListToolbar.Actions>
+                        <SearchInput
+                          placeholder="Search grants by attributes"
+                          value={grantsSearchQuery}
+                          onChange={(e) => setGrantsSearchQuery(e.target.value)}
+                          className="w-[var(--search-input-width)]"
+                        />
+                      </ListToolbar.Actions>
+                    }
+                    bulkActions={
+                      <ListToolbar.Actions>
+                        <Button
+                          variant="muted"
+                          size="sm"
+                          leftIcon={<IconArrowBackUp size={12} />}
+                          disabled={selectedGrants.length === 0}
+                          onClick={() => console.log('Revoke grants', selectedGrants)}
+                        >
+                          Revoke
+                        </Button>
+                      </ListToolbar.Actions>
+                    }
+                  />
+
+                  <Pagination
+                    currentPage={grantsCurrentPage}
+                    totalPages={grantsTotalPages}
+                    totalItems={filteredGrants.length}
+                    onPageChange={setGrantsCurrentPage}
+                    selectedCount={selectedGrants.length}
+                  />
+
+                  <Table<ActiveGrant>
+                    columns={grantColumns}
+                    data={paginatedGrants}
+                    rowKey="id"
+                    emptyMessage="No grants found"
+                    selectable
+                    selectedKeys={selectedGrants}
+                    onSelectionChange={setSelectedGrants}
+                  />
+                </VStack>
+              </TabPanel>
+            </Tabs>
+          </div>
+        </VStack>
+      </PageShell>
+
+      <GrantAccessDrawer
+        isOpen={isGrantDrawerOpen}
+        onClose={() => setIsGrantDrawerOpen(false)}
+        roleName={role.name}
+      />
+
+      <RolePoliciesDrawer
+        isOpen={isManageLinkedPoliciesOpen}
+        onClose={() => setIsManageLinkedPoliciesOpen(false)}
+        roleName={role.name}
+        title="Manage linked policies"
+        description="Add or remove policies linked to this role."
+        onSubmit={(data) => {
+          console.log('Manage linked policies:', data);
+        }}
+      />
+
+      <ConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Delete role"
+        description="Removing this role is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          setIsDeleteOpen(false);
+          navigate('/iam/roles');
+        }}
+      />
+    </>
   );
 }

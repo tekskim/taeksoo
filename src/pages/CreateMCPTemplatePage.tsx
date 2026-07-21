@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   PageShell,
   TabBar,
@@ -25,8 +26,8 @@ import {
   Toggle,
   Badge,
 } from '@/design-system';
-import { AgentSidebar } from '@/components/AgentSidebar';
-import { IconBell, IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
+import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
+import { IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
@@ -64,6 +65,8 @@ export function CreateMCPTemplatePage() {
   const navigate = useNavigate();
   const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeStep, setActiveStep] = useState<'configuration' | 'publish'>('configuration');
 
   // Configuration Tab State
@@ -215,8 +218,10 @@ export function CreateMCPTemplatePage() {
 
   return (
     <PageShell
-      sidebar={<AgentSidebar />}
-      sidebarWidth={60}
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
@@ -232,10 +237,11 @@ export function CreateMCPTemplatePage() {
       }
       topBar={
         <TopBar
-          showSidebarToggle={false}
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'MCP Tools', href: '/mcp-tools' }, { label: 'Create MCP Template' }]}
@@ -248,18 +254,20 @@ export function CreateMCPTemplatePage() {
                 onClick={() => navigate('/design-system')}
                 aria-label="Design System"
               />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
-                aria-label="Notifications"
-                badge={true}
-              />
             </>
           }
         />
       }
     >
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-auto min-h-0 overscroll-contain sidebar-scroll">
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className="flex-1 min-h-0 overscroll-contain"
+      >
         <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
           <div className="flex flex-col gap-3 items-start min-w-[1176px] relative shrink-0 w-full">
             <div className="flex items-center justify-between h-8 w-full">
@@ -407,7 +415,7 @@ export function CreateMCPTemplatePage() {
                           <VStack gap={2} className="w-full">
                             {/* STDIO Option */}
                             <div
-                              className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
+                              className={`w-full p-4 border rounded-[var(--radius-lg)] cursor-pointer transition-colors ${
                                 templateType === 'stdio'
                                   ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
                                   : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
@@ -439,7 +447,7 @@ export function CreateMCPTemplatePage() {
 
                             {/* HTTP Option */}
                             <div
-                              className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
+                              className={`w-full p-4 border rounded-[var(--radius-lg)] cursor-pointer transition-colors ${
                                 templateType === 'http'
                                   ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
                                   : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
@@ -668,7 +676,7 @@ export function CreateMCPTemplatePage() {
                             {envVariables.map((env, index) => (
                               <div
                                 key={env.id}
-                                className="w-full border border-[var(--color-border-default)] rounded-lg p-4"
+                                className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4"
                               >
                                 <VStack gap={4}>
                                   <div className="grid grid-cols-2 gap-4">
@@ -789,7 +797,7 @@ export function CreateMCPTemplatePage() {
                             {availableTools.map((tool) => (
                               <div
                                 key={tool.id}
-                                className="w-full border border-[var(--color-border-default)] rounded-lg p-4"
+                                className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4"
                               >
                                 <VStack gap={4}>
                                   {/* Tool Tags */}
@@ -868,7 +876,7 @@ export function CreateMCPTemplatePage() {
                                     {tool.parameters.map((param, paramIndex) => (
                                       <div
                                         key={paramIndex}
-                                        className="w-full bg-[var(--color-surface-subtle)] rounded-lg p-4"
+                                        className="w-full bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4"
                                       >
                                         <VStack gap={3}>
                                           <div className="grid grid-cols-2 gap-4">
@@ -925,7 +933,7 @@ export function CreateMCPTemplatePage() {
                                     <label className="text-label-lg text-[var(--color-text-default)]">
                                       Preview (JSON Schema)
                                     </label>
-                                    <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-3 font-mono text-body-md text-[var(--color-text-subtle)]">
+                                    <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-3 font-mono text-body-md text-[var(--color-text-subtle)]">
                                       <pre className="whitespace-pre-wrap">
                                         {`{
   "tool": 10,
@@ -1100,7 +1108,7 @@ export function CreateMCPTemplatePage() {
             </div>
           </div>
         </div>
-      </div>
+      </OverlayScrollbarsComponent>
     </PageShell>
   );
 }

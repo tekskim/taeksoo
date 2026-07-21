@@ -1,11 +1,28 @@
+import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { WindowControl, WindowControls, VStack } from '@/design-system';
 
+function InteractiveTitleBar() {
+  const [maximized, setMaximized] = useState(false);
+  return (
+    <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
+      <span className="text-body-md font-medium text-[var(--color-text-default)]">
+        Application Title
+      </span>
+      <WindowControls
+        showSplit
+        isMaximized={maximized}
+        onMaximize={() => setMaximized((v) => !v)}
+      />
+    </div>
+  );
+}
+
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -16,7 +33,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -25,7 +42,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -74,13 +93,19 @@ function WindowControlGuidelines() {
             </tr>
             <tr>
               <Td>
-                <strong>② Maximize/Restore Button</strong>
+                <strong>② Split Button</strong>
+              </Td>
+              <Td>호버/클릭 시 드롭다운 메뉴 표시 → Left Half (⌥⇧←) / Right Half (⌥⇧→)</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>③ Maximize/Restore Button</strong>
               </Td>
               <Td>창을 최대화/일반(이전 크기) 상태로 전환 → 토글</Td>
             </tr>
             <tr>
               <Td>
-                <strong>③ Close Button</strong>
+                <strong>④ Close Button</strong>
               </Td>
               <Td>현재 창을 닫음</Td>
             </tr>
@@ -102,7 +127,23 @@ function WindowControlGuidelines() {
             </tr>
             <tr>
               <Td>icon</Td>
-              <Td>12px</Td>
+              <Td>12px, stroke: 1</Td>
+            </tr>
+            <tr>
+              <Td>Minimize icon</Td>
+              <Td>IconMinus</Td>
+            </tr>
+            <tr>
+              <Td>Maximize icon</Td>
+              <Td>IconSquare (Normal) / IconSquares (Maximized → Restore)</Td>
+            </tr>
+            <tr>
+              <Td>Split icon</Td>
+              <Td>IconColumns</Td>
+            </tr>
+            <tr>
+              <Td>Close icon</Td>
+              <Td>IconX</Td>
             </tr>
             <tr>
               <Td>radius</Td>
@@ -115,8 +156,6 @@ function WindowControlGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* States */}
       <VStack gap={4}>
@@ -163,8 +202,6 @@ function WindowControlGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Behavior */}
       <VStack gap={6}>
         <SectionTitle>Behavior</SectionTitle>
@@ -208,16 +245,36 @@ function WindowControlGuidelines() {
               <tr>
                 <Th className="w-[200px]">상태</Th>
                 <Th>아이콘</Th>
+                <Th>aria-label</Th>
+                <Th className="w-[80px]">미리보기</Th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <Td>Normal</Td>
-                <Td>Maximize icon</Td>
+                <Td>
+                  <code className="text-body-sm bg-[var(--color-surface-muted)] px-1.5 py-0.5 rounded">
+                    IconSquare
+                  </code>{' '}
+                  — 단일 사각형
+                </Td>
+                <Td>Maximize</Td>
+                <Td>
+                  <WindowControl type="maximize" />
+                </Td>
               </tr>
               <tr>
                 <Td>Maximized</Td>
-                <Td>Restore icon</Td>
+                <Td>
+                  <code className="text-body-sm bg-[var(--color-surface-muted)] px-1.5 py-0.5 rounded">
+                    IconSquares
+                  </code>{' '}
+                  — 겹친 사각형
+                </Td>
+                <Td>Restore</Td>
+                <Td>
+                  <WindowControl type="maximize" isMaximized />
+                </Td>
               </tr>
             </tbody>
           </TableWrapper>
@@ -240,9 +297,53 @@ function WindowControlGuidelines() {
             </ul>
           </Prose>
         </VStack>
-      </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
+        <VStack gap={3}>
+          <SubSectionTitle>4) 반응형 위치 정책</SubSectionTitle>
+          <Prose>
+            <p>
+              <strong>역할</strong>: 윈도우 크기와 관계없이 컨트롤을 항상 접근 가능하게 한다.
+            </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                데스크탑 모드에서 윈도우 컨트롤은{' '}
+                <strong>콘텐츠 영역이 아닌 윈도우 프레임 레벨</strong>에 고정된다.
+              </li>
+              <li>
+                콘텐츠가{' '}
+                <code className="text-body-sm bg-[var(--color-surface-muted)] px-1.5 py-0.5 rounded">
+                  min-width: 960px
+                </code>
+                로 고정되어 가로 스크롤이 발생하더라도, 컨트롤은 항상 윈도우 우상단에 표시된다.
+              </li>
+              <li>이는 실제 OS 윈도우의 동작과 동일한 패턴이다.</li>
+              <li>
+                컨트롤 영역 좌측에는 그라데이션 페이드가 적용되어 콘텐츠와 자연스럽게 전환된다.
+              </li>
+            </ul>
+          </Prose>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[200px]">조건</Th>
+                <Th>동작</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>윈도우 &gt;= 960px</Td>
+                <Td>컨트롤이 TabBar 우측에 자연스럽게 위치 (기존과 동일)</Td>
+              </tr>
+              <tr>
+                <Td>윈도우 &lt; 960px</Td>
+                <Td>
+                  콘텐츠는 960px 고정 + 가로 스크롤, 컨트롤은 윈도우 프레임 우상단에 오버레이로 표시
+                </Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
+      </VStack>
 
       {/* Usage Guidelines */}
       <VStack gap={4}>
@@ -267,13 +368,10 @@ export function WindowControlPage() {
       whenToUse={['Desktop UI 내에서 앱이 "독립 창" 형태로 동작하는 경우(멀티 윈도우 포함)']}
       whenNotToUse={['OS 네이티브 창을 그대로 사용하는 경우(이 문서는 불필요)']}
       preview={
-        <ComponentPreview code={`<WindowControls />`}>
-          <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]">
-            <span className="text-body-md font-medium text-[var(--color-text-default)]">
-              Application Title
-            </span>
-            <WindowControls />
-          </div>
+        <ComponentPreview
+          code={`<WindowControls showSplit isMaximized={maximized} onMaximize={() => setMaximized(v => !v)} />`}
+        >
+          <InteractiveTitleBar />
         </ComponentPreview>
       }
       examples={
@@ -293,8 +391,20 @@ export function WindowControlPage() {
                 <WindowControl type="minimize" />
               </VStack>
               <VStack gap={1} align="center">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Split</span>
+                <WindowControl
+                  type="split"
+                  onSnapLeft={() => alert('Snap Left')}
+                  onSnapRight={() => alert('Snap Right')}
+                />
+              </VStack>
+              <VStack gap={1} align="center">
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Maximize</span>
                 <WindowControl type="maximize" />
+              </VStack>
+              <VStack gap={1} align="center">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Restore</span>
+                <WindowControl type="maximize" isMaximized />
               </VStack>
               <VStack gap={1} align="center">
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Close</span>
@@ -310,30 +420,81 @@ export function WindowControlPage() {
                 3개 버튼이 gap: 4px 간격으로 그룹 배치. Title Bar 우측에 위치.
               </span>
             </VStack>
-            <WindowControls />
+            <WindowControls
+              showSplit
+              onSnapLeft={() => alert('Snap Left')}
+              onSnapRight={() => alert('Snap Right')}
+            />
           </VStack>
 
           <VStack gap={3}>
             <VStack gap={1}>
               <span className="text-label-md text-[var(--color-text-default)]">
-                Title Bar 컨텍스트
+                Title Bar — Normal 상태
               </span>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                실제 사용 시 Title Bar 영역에 앱 타이틀과 함께 그룹으로 배치된다.
+                일반 상태의 창. Maximize 버튼은 단일 사각형(IconSquare) 아이콘을 표시한다.
               </span>
             </VStack>
-            <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]">
+            <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
               <span className="text-body-md font-medium text-[var(--color-text-default)]">
                 Application Title
               </span>
-              <WindowControls />
+              <WindowControls
+                showSplit
+                onSnapLeft={() => alert('Snap Left')}
+                onSnapRight={() => alert('Snap Right')}
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-md text-[var(--color-text-default)]">
+                Title Bar — Maximized 상태
+              </span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                최대화된 창. Restore 버튼은 겹친 사각형(IconSquares) 아이콘으로 전환된다.
+              </span>
+            </VStack>
+            <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
+              <span className="text-body-md font-medium text-[var(--color-text-default)]">
+                Application Title
+              </span>
+              <WindowControls
+                isMaximized
+                showSplit
+                onSnapLeft={() => alert('Snap Left')}
+                onSnapRight={() => alert('Snap Right')}
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-md text-[var(--color-text-default)]">
+                Title Bar — Split 포함
+              </span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                Split 버튼이 포함된 컨트롤 그룹. 호버 시 Left Half / Right Half 드롭다운이 나타난다.
+              </span>
+            </VStack>
+            <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
+              <span className="text-body-md font-medium text-[var(--color-text-default)]">
+                Application Title
+              </span>
+              <WindowControls
+                showSplit
+                onSnapLeft={() => alert('Snap Left')}
+                onSnapRight={() => alert('Snap Right')}
+              />
             </div>
           </VStack>
         </VStack>
       }
       guidelines={<WindowControlGuidelines />}
       tokens={
-        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           size: 24×24px · icon: 12px · radius: 4px · gap: 4px
         </div>
       }

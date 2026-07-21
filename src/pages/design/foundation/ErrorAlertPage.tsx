@@ -616,7 +616,7 @@ function ErrorAlertGuidelines() {
               기록 데이터 흐름
             </p>
           </Prose>
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-4 font-mono text-body-sm text-[var(--color-text-default)] leading-relaxed whitespace-pre">
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 font-mono text-body-sm text-[var(--color-text-default)] leading-relaxed whitespace-pre">
             {`Event 발생
   ↓
 App Notification Center 기록
@@ -652,11 +652,9 @@ export function ErrorAlertPage() {
       guidelines={<ErrorAlertGuidelines />}
       relatedLinks={[
         { label: 'Toast', path: '/design/components/toast' },
-        { label: 'Notification Center', path: '/design/components/notification-center' },
         { label: 'Input Field', path: '/design/components/input' },
         { label: 'Modal', path: '/design/components/modal' },
         { label: 'Inline Message', path: '/design/components/inline-message' },
-        { label: 'Notification Center', path: '/design/components/notification-center' },
         {
           label: 'Global Notification Panel',
           path: '/design/components/global-notification-panel',

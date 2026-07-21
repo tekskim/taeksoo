@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -28,8 +27,9 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateVolumeFromBackupDrawer } from '@/components/CreateVolumeFromBackupDrawer';
 import { CreateVolumeBackupDrawer } from '@/components/CreateVolumeBackupDrawer';
 import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -65,7 +65,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-1',
     sourceVolumeId: 'vol-001',
     backupMode: 'Full Backup',
-    createdAt: 'Sep 12, 2025 10:15:33',
+    createdAt: 'Sep 12, 2026 10:15:33',
     status: 'active',
   },
   {
@@ -77,7 +77,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-2',
     sourceVolumeId: 'vol-002',
     backupMode: 'Incremental',
-    createdAt: 'Sep 10, 2025 14:28:47',
+    createdAt: 'Sep 10, 2026 14:28:47',
     status: 'active',
   },
   {
@@ -89,7 +89,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-3',
     sourceVolumeId: 'vol-003',
     backupMode: 'Full Backup',
-    createdAt: 'Sep 8, 2025 08:52:19',
+    createdAt: 'Sep 8, 2026 08:52:19',
     status: 'active',
   },
   {
@@ -101,7 +101,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-4',
     sourceVolumeId: 'vol-004',
     backupMode: 'Incremental',
-    createdAt: 'Sep 5, 2025 16:41:04',
+    createdAt: 'Sep 5, 2026 16:41:04',
     status: 'creating',
   },
   {
@@ -113,7 +113,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-5',
     sourceVolumeId: 'vol-005',
     backupMode: 'Full Backup',
-    createdAt: 'Aug 30, 2025 11:33:26',
+    createdAt: 'Aug 30, 2026 11:33:26',
     status: 'active',
   },
   {
@@ -125,7 +125,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-6',
     sourceVolumeId: 'vol-006',
     backupMode: 'Full Backup',
-    createdAt: 'Aug 25, 2025 09:17:52',
+    createdAt: 'Aug 25, 2026 09:17:52',
     status: 'restoring',
   },
   {
@@ -137,7 +137,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-7',
     sourceVolumeId: 'vol-007',
     backupMode: 'Incremental',
-    createdAt: 'Aug 20, 2025 13:45:38',
+    createdAt: 'Aug 20, 2026 13:45:38',
     status: 'error',
   },
   {
@@ -149,7 +149,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-8',
     sourceVolumeId: 'vol-008',
     backupMode: 'Full Backup',
-    createdAt: 'Aug 15, 2025 07:29:14',
+    createdAt: 'Aug 15, 2026 07:29:14',
     status: 'active',
   },
   {
@@ -161,7 +161,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-9',
     sourceVolumeId: 'vol-009',
     backupMode: 'Full Backup',
-    createdAt: 'Aug 10, 2025 15:56:41',
+    createdAt: 'Aug 10, 2026 15:56:41',
     status: 'active',
   },
   {
@@ -173,7 +173,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-10',
     sourceVolumeId: 'vol-010',
     backupMode: 'Incremental',
-    createdAt: 'Aug 5, 2025 17:22:09',
+    createdAt: 'Aug 5, 2026 17:22:09',
     status: 'deleting',
   },
 ];
@@ -222,6 +222,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminVolumeBackupsPage() {
+  const navigate = useNavigate();
   const [selectedBackups, setSelectedBackups] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -275,6 +276,13 @@ export function ComputeAdminVolumeBackupsPage() {
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -354,7 +362,12 @@ export function ComputeAdminVolumeBackupsPage() {
           >
             {value}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -372,7 +385,12 @@ export function ComputeAdminVolumeBackupsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -402,8 +420,11 @@ export function ComputeAdminVolumeBackupsPage() {
           >
             {row.sourceVolume}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">
-            ID: {row.sourceVolumeId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.sourceVolumeId}>
+              ID : {row.sourceVolumeId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.sourceVolumeId} />
           </span>
         </div>
       ),
@@ -420,6 +441,7 @@ export function ComputeAdminVolumeBackupsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -438,7 +460,10 @@ export function ComputeAdminVolumeBackupsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -484,23 +509,9 @@ export function ComputeAdminVolumeBackupsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Volume backups' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={[{ label: 'Volume Backups' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -571,6 +582,8 @@ export function ComputeAdminVolumeBackupsPage() {
           selectable
           selectedKeys={selectedBackups}
           onSelectionChange={setSelectedBackups}
+          emptyMessage="No volume backups found"
+          loading={loading}
         />
       </VStack>
 
@@ -579,7 +592,7 @@ export function ComputeAdminVolumeBackupsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         title="Delete volume backup"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected volume backups is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

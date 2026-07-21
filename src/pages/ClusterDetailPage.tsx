@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   VStack,
+  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -14,24 +15,28 @@ import {
   TabPanel,
   ContextMenu,
   PageShell,
-  CopyButton,
-  Loading,
   InfoBox,
   InlineMessage,
+  Modal,
+  FormField,
+  Select,
+  CopyButton,
+  ConfirmModal,
   type ContextMenuItem,
   type StatusType,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
-import { AccessTokenTab } from '@/components/AccessTokenTab';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
   IconChevronDown,
-  IconPencilCog,
+  IconLoader2,
+  IconExternalLink,
+  IconRefresh,
+  IconTrash,
+  IconCirclePlus,
+  IconAffiliate,
 } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
 import { getContainerStatusTheme } from './containerStatusUtils';
@@ -71,67 +76,6 @@ interface ClusterDetail {
 }
 
 /* ----------------------------------------
-   Status Policy Helpers
-   ---------------------------------------- */
-
-// Progress Bar: Provisioning, Processing, Deleting 상태에서만 표시
-const PROGRESS_BAR_STATUSES = new Set(['Provisioning', 'Processing', 'Deleting']);
-
-const getProgressBarLabel = (status: string): string => {
-  switch (status) {
-    case 'Provisioning':
-      return 'Control plane initializing...';
-    case 'Processing':
-      return 'Processing operation...';
-    case 'Deleting':
-      return 'Removing worker nodes...';
-    default:
-      return '';
-  }
-};
-
-// Inline Message: 상태별 variant 및 문구 정의
-interface InlineMessageConfig {
-  variant: 'info' | 'error' | 'warning' | 'success';
-  message: string;
-}
-
-const getInlineMessageConfig = (status: string): InlineMessageConfig | null => {
-  switch (status) {
-    case 'Provisioning':
-      return {
-        variant: 'info',
-        message:
-          "Cluster provisioning is in progress. This typically takes a few minutes. Status will become 'Provisioned' when provisioning is complete.",
-      };
-    case 'Deleting':
-      return {
-        variant: 'info',
-        message: 'Cluster deletion is in progress. All resources will be cleaned up automatically.',
-      };
-    case 'Processing':
-      return {
-        variant: 'info',
-        message:
-          "A cluster operation is in progress. Some actions may be temporarily unavailable. Status will return to 'Provisioned' once the operation is complete.",
-      };
-    case 'Failed':
-      return {
-        variant: 'error',
-        message:
-          'Cluster provisioning failed at Control plane initializing. View error logs in Logs for details.',
-      };
-    default:
-      return null;
-  }
-};
-
-// Section Card 표시 정책: Provisioned 이외 상태에서는 모든 값을 —(em dash)로 표시
-const getDisplayValue = (value: string, status: string): string => {
-  return status === 'Provisioned' ? value : '\u2014';
-};
-
-/* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
@@ -142,7 +86,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'Provisioned',
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Nov 11, 2025 08:30:18',
+    createdAt: 'Nov 11, 2026 08:30:18',
     networking: {
       externalNetwork: 'extnet-01',
       tenantNetwork: 'net-01',
@@ -169,7 +113,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'Failed',
     kubernetesVersion: 'v1.33.4',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Oct 6, 2025 21:25:53',
+    createdAt: 'Oct 6, 2026 21:25:53',
     networking: {
       externalNetwork: 'extnet-02',
       tenantNetwork: 'net-02',
@@ -196,7 +140,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'Provisioning',
     kubernetesVersion: 'v1.33.4',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Oct 5, 2025 14:12:36',
+    createdAt: 'Oct 5, 2026 14:12:36',
     networking: {
       externalNetwork: 'extnet-03',
       tenantNetwork: 'net-03',
@@ -220,10 +164,10 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
   'cluster-004': {
     id: 'cluster-004',
     name: 'Cluster4',
-    status: 'Processing',
-    kubernetesVersion: 'v1.33.4',
+    status: 'Deleting',
+    kubernetesVersion: 'v1.33.1',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Oct 4, 2025 09:00:00',
+    createdAt: 'Sep 20, 2026 09:15:42',
     networking: {
       externalNetwork: 'extnet-04',
       tenantNetwork: 'net-04',
@@ -234,23 +178,23 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     },
     controlPlanes: {
       image: 'ubuntu-24.04-tk-base',
-      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
+      flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
       nodeCount: 3,
-      etcd: 'External (20GiB)',
+      etcd: 'External (10GiB)',
     },
     nodes: {
       image: 'ubuntu-24.04-tk-base',
-      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
+      flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
       nodeCount: 2,
     },
   },
   'cluster-005': {
     id: 'cluster-005',
     name: 'Cluster5',
-    status: 'Deleting',
-    kubernetesVersion: 'v1.33.4',
+    status: 'Unknown',
+    kubernetesVersion: 'v1.31.0',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Oct 3, 2025 16:45:00',
+    createdAt: 'Aug 14, 2026 16:45:10',
     networking: {
       externalNetwork: 'extnet-05',
       tenantNetwork: 'net-05',
@@ -261,14 +205,41 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     },
     controlPlanes: {
       image: 'ubuntu-24.04-tk-base',
-      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
+      flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
+      nodeCount: 1,
+      etcd: 'External (10GiB)',
+    },
+    nodes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
+      nodeCount: 1,
+    },
+  },
+  'cluster-006': {
+    id: 'cluster-006',
+    name: 'Cluster6',
+    status: 'Updating',
+    kubernetesVersion: 'v1.33.4',
+    containerNetwork: 'Kube OVN',
+    createdAt: 'Jun 5, 2026 15:42:33',
+    networking: {
+      externalNetwork: 'extnet-06',
+      tenantNetwork: 'net-06',
+      subnet: 'subnet-06 (10.62.6.0/28)',
+    },
+    nodeConfiguration: {
+      nodeType: 'Instance',
+    },
+    controlPlanes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.medium (4vCPU, 8.00 GiB RAM, 40.00 GiB Disk)',
       nodeCount: 3,
       etcd: 'External (20GiB)',
     },
     nodes: {
       image: 'ubuntu-24.04-tk-base',
-      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
-      nodeCount: 3,
+      flavor: 'th.medium (4vCPU, 8.00 GiB RAM, 40.00 GiB Disk)',
+      nodeCount: 4,
     },
   },
 };
@@ -295,9 +266,47 @@ export function ClusterDetailPage() {
   const navigate = useNavigate();
   const { clusterId } = useParams<{ clusterId: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isDeleteTokenOpen, setIsDeleteTokenOpen] = useState(false);
+  const [isGenerateTokenOpen, setIsGenerateTokenOpen] = useState(false);
+  const [tokenExpiration, setTokenExpiration] = useState('24h');
+  const [generatedToken, setGeneratedToken] = useState<string | null>(null);
+  const [hasToken, setHasToken] = useState(false);
+  const [tokenCreatedAt, setTokenCreatedAt] = useState('');
+  const [tokenExpiresAt, setTokenExpiresAt] = useState('');
+  const [isRegenerateTokenOpen, setIsRegenerateTokenOpen] = useState(false);
+  const [regeneratedToken, setRegeneratedToken] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'networking';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  const computeTokenDates = (expiration: string) => {
+    const now = new Date();
+    const dateOnly: Intl.DateTimeFormatOptions = {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    };
+    const dateTime: Intl.DateTimeFormatOptions = {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    };
+    const isHours = ['1h', '6h', '24h'].includes(expiration);
+    const created = now.toLocaleDateString('en-US', isHours ? dateTime : dateOnly);
+    const durationMs: Record<string, number> = {
+      '1h': 60 * 60 * 1000,
+      '6h': 6 * 60 * 60 * 1000,
+      '24h': 24 * 60 * 60 * 1000,
+      '7d': 7 * 24 * 60 * 60 * 1000,
+      '30d': 30 * 24 * 60 * 60 * 1000,
+    };
+    const expiresDate = new Date(now.getTime() + (durationMs[expiration] || 0));
+    const expires = expiresDate.toLocaleDateString('en-US', isHours ? dateTime : dateOnly);
+    setTokenCreatedAt(created);
+    setTokenExpiresAt(expires);
+  };
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
 
@@ -311,7 +320,7 @@ export function ClusterDetailPage() {
     status: 'Provisioned',
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     networking: {
       externalNetwork: 'extnet-01',
       tenantNetwork: 'net-01',
@@ -331,7 +340,22 @@ export function ClusterDetailPage() {
       flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
       nodeCount: 1,
     },
+    iconText: '',
   };
+
+  const [clusterIconText, setClusterIconText] = useState(clusterData.iconText || '');
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { clusterId, iconText } = (e as CustomEvent<{ clusterId: string; iconText: string }>)
+        .detail;
+      if (clusterId === clusterData.id) {
+        setClusterIconText(iconText);
+      }
+    };
+    window.addEventListener('cluster-appearance-changed', handler);
+    return () => window.removeEventListener('cluster-appearance-changed', handler);
+  }, [clusterData.id]);
 
   // Update tab label to match the cluster name
   useEffect(() => {
@@ -341,28 +365,52 @@ export function ClusterDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
-  // More actions menu items
+  const isProvisioned = clusterData.status === 'Provisioned';
+  const isProvisioning = clusterData.status === 'Provisioning';
+  const isFailed = clusterData.status === 'Failed';
+  const isDeleting = clusterData.status === 'Deleting';
+  const isUnknown = clusterData.status === 'Unknown';
+  const isUpdating = clusterData.status === 'Updating';
+
+  // More actions menu items — vary by status
   const moreActionsItems: ContextMenuItem[] = [
-    {
-      id: 'kubectl-shell',
-      label: 'Kubectl shell',
-      onClick: () => console.log('Kubectl Shell'),
-    },
-    {
-      id: 'download-kubeconfig',
-      label: 'Download KubeConfig',
-      onClick: () => console.log('Download KubeConfig'),
-    },
-    {
-      id: 'copy-kubeconfig',
-      label: 'Copy KubeConfig to clipboard',
-      onClick: () => console.log('Copy KubeConfig'),
-    },
-    {
-      id: 'edit',
-      label: 'Edit cluster',
-      onClick: () => navigate(`/container/cluster-management/${clusterData.id}/edit`),
-    },
+    ...(isProvisioned
+      ? [
+          {
+            id: 'kubectl-shell',
+            label: 'Kubectl shell',
+            onClick: () => console.log('Kubectl Shell'),
+          },
+          {
+            id: 'download-kubeconfig',
+            label: 'Download KubeConfig',
+            onClick: () => console.log('Download KubeConfig'),
+          },
+          {
+            id: 'copy-kubeconfig',
+            label: 'Copy KubeConfig to clipboard',
+            onClick: () => console.log('Copy KubeConfig'),
+          },
+        ]
+      : []),
+    ...(isProvisioned || isFailed || isUnknown
+      ? [
+          {
+            id: 'edit',
+            label: 'Edit cluster',
+            onClick: () => navigate(`/container/cluster-management/${clusterData.id}/edit`),
+          },
+        ]
+      : []),
+    ...(isFailed
+      ? [
+          {
+            id: 'reprovision',
+            label: 'Reprovision',
+            onClick: () => console.log('Reprovision'),
+          },
+        ]
+      : []),
     {
       id: 'customize-appearance',
       label: 'Customize appearance',
@@ -374,16 +422,17 @@ export function ClusterDetailPage() {
           )
         ),
     },
-    {
-      id: 'delete',
-      label: 'Delete',
-      status: 'danger',
-      onClick: () => console.log('Delete'),
-    },
+    ...(!isDeleting
+      ? [
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger' as const,
+            onClick: () => console.log('Delete'),
+          },
+        ]
+      : []),
   ];
-
-  const showProgressBar = PROGRESS_BAR_STATUSES.has(clusterData.status);
-  const inlineMessageConfig = getInlineMessageConfig(clusterData.status);
 
   return (
     <PageShell
@@ -406,8 +455,8 @@ export function ClusterDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -417,106 +466,136 @@ export function ClusterDetailPage() {
               ]}
             />
           }
-          actions={
-            <>
-              <Tooltip content="Customize appearance" position="bottom">
-                <button
-                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                  onClick={() =>
-                    window.dispatchEvent(
-                      new CustomEvent('open-cluster-appearance', { detail: clusterData.id })
-                    )
-                  }
-                  aria-label="Customize cluster appearance"
-                >
-                  <IconPencilCog
-                    size={16}
-                    className="text-[var(--color-text-muted)]"
-                    stroke={1.5}
-                  />
-                </button>
-              </Tooltip>
-
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={clusterData.id} size="sm" iconOnly tooltip="Copy cluster ID" />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
-      <VStack gap={8}>
-        <DetailHeader>
-          <DetailHeader.Title>{clusterData.name}</DetailHeader.Title>
+      <VStack gap={6}>
+        <VStack gap={4}>
+          <DetailHeader>
+            <DetailHeader.Title>{clusterData.name}</DetailHeader.Title>
 
-          <DetailHeader.Actions>
-            <ContextMenu items={moreActionsItems} trigger="click" align="right">
-              <Button
-                variant="secondary"
-                size="sm"
-                rightIcon={<IconChevronDown size={16} stroke={1.5} />}
-              >
-                More actions
-              </Button>
-            </ContextMenu>
-          </DetailHeader.Actions>
+            <DetailHeader.Actions>
+              <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  rightIcon={<IconChevronDown size={16} stroke={1.5} />}
+                >
+                  More actions
+                </Button>
+              </ContextMenu>
+            </DetailHeader.Actions>
 
-          <DetailHeader.InfoGrid>
-            <InfoBox label="Status" className="flex-1">
-              <div className="flex items-center gap-3 w-full">
-                <Tooltip content={clusterData.status}>
-                  <span className="shrink-0">
-                    <Badge
-                      theme={getContainerStatusTheme(clusterData.status)}
-                      type="subtle"
-                      size="sm"
-                    >
-                      {clusterData.status}
-                    </Badge>
-                  </span>
-                </Tooltip>
-                {showProgressBar && (
-                  <span className="flex items-center gap-1.5 min-w-0">
-                    <Loading variant="spinner" size="sm" text="" />
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      {getProgressBarLabel(clusterData.status)}
+            <DetailHeader.InfoGrid>
+              <InfoBox label="Status" className="flex-1">
+                <div className="flex items-center gap-3 w-full">
+                  <Tooltip content={clusterData.status}>
+                    <span className="shrink-0">
+                      <Badge
+                        theme={getContainerStatusTheme(clusterData.status)}
+                        type="subtle"
+                        size="sm"
+                      >
+                        {clusterData.status}
+                      </Badge>
                     </span>
-                  </span>
-                )}
-              </div>
-            </InfoBox>
-            <DetailHeader.InfoCard
-              label="Kubernetes version"
-              value={clusterData.kubernetesVersion}
-            />
-            <DetailHeader.InfoCard label="Container network" value={clusterData.containerNetwork} />
-            <DetailHeader.InfoCard label="Created at" value={clusterData.createdAt} />
-          </DetailHeader.InfoGrid>
-        </DetailHeader>
+                  </Tooltip>
+                  {isProvisioning && (
+                    <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                      <IconLoader2
+                        size={14}
+                        stroke={1.5}
+                        className="text-[var(--color-action-primary)] animate-spin shrink-0"
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        Control plane initializing
+                      </span>
+                    </span>
+                  )}
+                  {isDeleting && (
+                    <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                      <IconLoader2
+                        size={14}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)] animate-spin shrink-0"
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        Removing cluster resources
+                      </span>
+                    </span>
+                  )}
+                  {isUpdating && (
+                    <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                      <IconLoader2
+                        size={14}
+                        stroke={1.5}
+                        className="text-[var(--color-action-primary)] animate-spin shrink-0"
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        Updating cluster
+                      </span>
+                    </span>
+                  )}
+                </div>
+              </InfoBox>
+              <DetailHeader.InfoCard
+                label="Kubernetes version"
+                value={clusterData.kubernetesVersion}
+              />
+              <DetailHeader.InfoCard
+                label="Container network"
+                value={clusterData.containerNetwork}
+              />
+              <DetailHeader.InfoCard label="Created at" value={clusterData.createdAt} />
+            </DetailHeader.InfoGrid>
+          </DetailHeader>
 
-        {inlineMessageConfig && (
-          <InlineMessage variant={inlineMessageConfig.variant}>
-            {inlineMessageConfig.message}
-          </InlineMessage>
-        )}
+          {isProvisioning && (
+            <InlineMessage variant="info">
+              A cluster operation is in progress. Some actions may be temporarily unavailable.
+              Status will return to &apos;Provisioned&apos; once the operation is complete.
+            </InlineMessage>
+          )}
+
+          {isFailed && (
+            <InlineMessage variant="error">
+              Cluster provisioning failed at control plane initializing.{' '}
+              <a
+                href="#logs"
+                className="inline-flex items-center gap-0.5 underline hover:no-underline text-[var(--color-action-primary)] font-medium"
+              >
+                View error logs in Logs
+                <IconExternalLink
+                  size={12}
+                  stroke={2}
+                  className="inline-block text-[var(--color-action-primary)]"
+                />
+              </a>
+            </InlineMessage>
+          )}
+
+          {isUpdating && (
+            <InlineMessage variant="info">
+              A cluster operation is in progress. Some actions may be temporarily unavailable.
+              Status will return to &apos;Provisioned&apos; once the operation is complete.
+            </InlineMessage>
+          )}
+
+          {isDeleting && (
+            <InlineMessage variant="info">
+              Cluster deletion is in progress. All resources will be cleaned up automatically.
+            </InlineMessage>
+          )}
+        </VStack>
 
         {/* Tabs Section */}
         <Tabs value={activeTab} onChange={setActiveTab}>
           <TabList>
             <Tab value="networking">Networking</Tab>
             <Tab value="node-config">Node configuration</Tab>
-            <Tab value="access-token">Access token</Tab>
+            <Tab value="service-account-token">Access token</Tab>
           </TabList>
 
           <TabPanel value="networking">
@@ -526,22 +605,13 @@ export function ClusterDetailPage() {
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="External network"
-                    value={getDisplayValue(
-                      clusterData.networking.externalNetwork,
-                      clusterData.status
-                    )}
+                    value={clusterData.networking.externalNetwork}
                   />
                   <SectionCard.DataRow
                     label="Tenant network"
-                    value={getDisplayValue(
-                      clusterData.networking.tenantNetwork,
-                      clusterData.status
-                    )}
+                    value={clusterData.networking.tenantNetwork}
                   />
-                  <SectionCard.DataRow
-                    label="Subnet"
-                    value={getDisplayValue(clusterData.networking.subnet, clusterData.status)}
-                  />
+                  <SectionCard.DataRow label="Subnet" value={clusterData.networking.subnet} />
                 </SectionCard.Content>
               </SectionCard>
             </div>
@@ -555,10 +625,7 @@ export function ClusterDetailPage() {
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Node type"
-                    value={getDisplayValue(
-                      clusterData.nodeConfiguration.nodeType,
-                      clusterData.status
-                    )}
+                    value={clusterData.nodeConfiguration.nodeType}
                   />
                 </SectionCard.Content>
               </SectionCard>
@@ -567,25 +634,13 @@ export function ClusterDetailPage() {
               <SectionCard>
                 <SectionCard.Header title="Control planes" />
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Image"
-                    value={getDisplayValue(clusterData.controlPlanes.image, clusterData.status)}
-                  />
-                  <SectionCard.DataRow
-                    label="Flavor"
-                    value={getDisplayValue(clusterData.controlPlanes.flavor, clusterData.status)}
-                  />
+                  <SectionCard.DataRow label="Image" value={clusterData.controlPlanes.image} />
+                  <SectionCard.DataRow label="Flavor" value={clusterData.controlPlanes.flavor} />
                   <SectionCard.DataRow
                     label="Node count"
-                    value={getDisplayValue(
-                      clusterData.controlPlanes.nodeCount.toString(),
-                      clusterData.status
-                    )}
+                    value={clusterData.controlPlanes.nodeCount.toString()}
                   />
-                  <SectionCard.DataRow
-                    label="etcd"
-                    value={getDisplayValue(clusterData.controlPlanes.etcd, clusterData.status)}
-                  />
+                  <SectionCard.DataRow label="etcd" value={clusterData.controlPlanes.etcd} />
                 </SectionCard.Content>
               </SectionCard>
 
@@ -593,31 +648,293 @@ export function ClusterDetailPage() {
               <SectionCard>
                 <SectionCard.Header title="Nodes" />
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Image"
-                    value={getDisplayValue(clusterData.nodes.image, clusterData.status)}
-                  />
-                  <SectionCard.DataRow
-                    label="Flavor"
-                    value={getDisplayValue(clusterData.nodes.flavor, clusterData.status)}
-                  />
+                  <SectionCard.DataRow label="Image" value={clusterData.nodes.image} />
+                  <SectionCard.DataRow label="Flavor" value={clusterData.nodes.flavor} />
                   <SectionCard.DataRow
                     label="Node count"
-                    value={getDisplayValue(
-                      clusterData.nodes.nodeCount.toString(),
-                      clusterData.status
-                    )}
+                    value={clusterData.nodes.nodeCount.toString()}
                   />
                 </SectionCard.Content>
               </SectionCard>
             </VStack>
           </TabPanel>
 
-          <TabPanel value="access-token">
-            <AccessTokenTab clusterName={clusterData.name} clusterStatus={clusterData.status} />
+          <TabPanel value="service-account-token">
+            <VStack gap={4}>
+              <div className="flex items-center justify-between w-full p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center size-9 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                    {clusterIconText ? (
+                      <span className="text-body-sm font-semibold text-[var(--color-text-default)] uppercase">
+                        {clusterIconText}
+                      </span>
+                    ) : (
+                      <IconAffiliate
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)]"
+                      />
+                    )}
+                  </div>
+                  {hasToken ? (
+                    <div className="flex flex-col gap-1">
+                      <span className="text-label-sm text-[var(--color-text-default)]">
+                        {clusterData.name}
+                      </span>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        Created on: {tokenCreatedAt} | Expires on: {tokenExpiresAt}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-label-sm text-[var(--color-text-default)]">
+                      {clusterData.name}
+                    </span>
+                  )}
+                </div>
+                {hasToken ? (
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      onClick={() => setIsDeleteTokenOpen(true)}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconRefresh size={12} />}
+                      onClick={() => {
+                        setTokenExpiration('24h');
+                        setRegeneratedToken(null);
+                        setIsRegenerateTokenOpen(true);
+                      }}
+                    >
+                      Regenerate token
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() => {
+                      setTokenExpiration('24h');
+                      setGeneratedToken(null);
+                      setIsGenerateTokenOpen(true);
+                    }}
+                  >
+                    Generate new token
+                  </Button>
+                )}
+              </div>
+            </VStack>
           </TabPanel>
         </Tabs>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteTokenOpen}
+        onClose={() => setIsDeleteTokenOpen(false)}
+        onConfirm={() => {
+          console.log('Delete access token');
+          setHasToken(false);
+          setIsDeleteTokenOpen(false);
+        }}
+        title="Delete token"
+        description="Any kubectl sessions or scripts using this token will lose access immediately."
+        infoLabel="Cluster"
+        infoValue={clusterData.name}
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+
+      <Modal
+        isOpen={isGenerateTokenOpen}
+        onClose={() => {
+          if (generatedToken) setHasToken(true);
+          setIsGenerateTokenOpen(false);
+          setGeneratedToken(null);
+        }}
+        title="Generate new token"
+        size="sm"
+      >
+        {generatedToken ? (
+          <>
+            <VStack gap={2}>
+              <InfoBox label="Cluster" value={clusterData.name} />
+              <InlineMessage variant="warning">
+                Make sure to copy your token now as you will not be able to see it again.
+              </InlineMessage>
+              <div className="flex items-center gap-2 px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] w-full">
+                <span className="flex-1 min-w-0 truncate font-mono text-body-sm text-[var(--color-text-default)]">
+                  {generatedToken}
+                </span>
+                <CopyButton value={generatedToken} size="sm" variant="ghost" iconOnly />
+              </div>
+            </VStack>
+
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setHasToken(true);
+                setIsGenerateTokenOpen(false);
+                setGeneratedToken(null);
+              }}
+              className="w-full"
+            >
+              Close
+            </Button>
+          </>
+        ) : (
+          <>
+            <VStack gap={2}>
+              <InfoBox label="Cluster" value={clusterData.name} />
+              <InlineMessage variant="info">
+                Generating a new token grants kubectl access to this cluster for the selected
+                period.
+              </InlineMessage>
+            </VStack>
+
+            <FormField
+              label="Expiration"
+              helperText="Expired tokens cannot be renewed — generate a new token instead."
+            >
+              <Select
+                options={[
+                  { value: '1h', label: '1 hour' },
+                  { value: '6h', label: '6 hours' },
+                  { value: '24h', label: '24 hours (recommended)' },
+                  { value: '7d', label: '7 days' },
+                  { value: '30d', label: '30 days' },
+                ]}
+                value={tokenExpiration}
+                onChange={(val) => setTokenExpiration(val)}
+                fullWidth
+              />
+            </FormField>
+
+            <HStack gap={2} className="w-full">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setIsGenerateTokenOpen(false);
+                  setGeneratedToken(null);
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  computeTokenDates(tokenExpiration);
+                  setGeneratedToken(
+                    'tk-demo-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.mock-signature'
+                  );
+                }}
+                className="flex-1"
+              >
+                Generate
+              </Button>
+            </HStack>
+          </>
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={isRegenerateTokenOpen}
+        onClose={() => {
+          if (regeneratedToken) setHasToken(true);
+          setIsRegenerateTokenOpen(false);
+          setRegeneratedToken(null);
+        }}
+        title="Regenerate token"
+        size="sm"
+      >
+        {regeneratedToken ? (
+          <>
+            <VStack gap={2}>
+              <InfoBox label="Cluster" value={clusterData.name} />
+              <InlineMessage variant="warning">
+                Make sure to copy your token now as you will not be able to see it again.
+              </InlineMessage>
+              <div className="flex items-center gap-2 px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] w-full">
+                <span className="flex-1 min-w-0 truncate font-mono text-body-sm text-[var(--color-text-default)]">
+                  {regeneratedToken}
+                </span>
+                <CopyButton value={regeneratedToken} size="sm" variant="ghost" iconOnly />
+              </div>
+            </VStack>
+
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setHasToken(true);
+                setIsRegenerateTokenOpen(false);
+                setRegeneratedToken(null);
+              }}
+              className="w-full"
+            >
+              Close
+            </Button>
+          </>
+        ) : (
+          <>
+            <VStack gap={2}>
+              <InfoBox label="Cluster" value={clusterData.name} />
+              <InlineMessage variant="warning">
+                The existing token will be revoked immediately. Any kubectl sessions using it will
+                lose access.
+              </InlineMessage>
+            </VStack>
+
+            <FormField
+              label="Expiration"
+              helperText="Expired tokens cannot be renewed — generate a new token instead."
+            >
+              <Select
+                options={[
+                  { value: '1h', label: '1 hour' },
+                  { value: '6h', label: '6 hours' },
+                  { value: '24h', label: '24 hours (recommended)' },
+                  { value: '7d', label: '7 days' },
+                  { value: '30d', label: '30 days' },
+                ]}
+                value={tokenExpiration}
+                onChange={(val) => setTokenExpiration(val)}
+                fullWidth
+              />
+            </FormField>
+
+            <HStack gap={2} className="w-full">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setIsRegenerateTokenOpen(false);
+                  setRegeneratedToken(null);
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  computeTokenDates(tokenExpiration);
+                  setRegeneratedToken(
+                    'tk-demo-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.regen-signature'
+                  );
+                }}
+                className="flex-1"
+              >
+                Regenerate
+              </Button>
+            </HStack>
+          </>
+        )}
+      </Modal>
     </PageShell>
   );
 }

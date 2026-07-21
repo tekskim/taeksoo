@@ -730,7 +730,7 @@ function CopyButton({ text, label, className = '' }: CopyButtonProps) {
   return (
     <button
       onClick={handleCopy}
-      className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-mono bg-[var(--color-surface-muted)] hover:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] transition-colors cursor-pointer ${className}`}
+      className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-body-xs font-mono bg-[var(--color-surface-muted)] hover:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] transition-colors cursor-pointer ${className}`}
       title={`Copy ${label}`}
     >
       {copied ? (
@@ -824,7 +824,7 @@ function IconCard({ item, sidebarFile }: IconCardProps) {
   }, [item.slug, isCustom, item.customIcon]);
 
   return (
-    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
       {/* Header: Icon + Label */}
       <div className="flex items-center gap-3">
         <div
@@ -890,7 +890,7 @@ function IconCard({ item, sidebarFile }: IconCardProps) {
       </div>
 
       {/* File path */}
-      <div className="flex items-center gap-1.5 text-[10px] text-[var(--color-text-subtle)]">
+      <div className="flex items-center gap-1.5 text-body-xs text-[var(--color-text-subtle)]">
         <IconFile size={10} stroke={1.5} />
         <span className="font-mono truncate">{sidebarFile}</span>
       </div>
@@ -1034,7 +1034,8 @@ export function SidebarIconsPage() {
               <SearchInput
                 placeholder="Search icons..."
                 value={searchQuery}
-                onChange={setSearchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery('')}
                 size="sm"
               />
             </div>
@@ -1054,7 +1055,7 @@ export function SidebarIconsPage() {
 
         {/* Quick Reference */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
+          <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
             <h3 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
               Tabler Icons
             </h3>
@@ -1065,7 +1066,7 @@ export function SidebarIconsPage() {
               {'<IconName size={16} stroke={1.5} />'}
             </code>
           </div>
-          <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
+          <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
             <h3 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
               Lucide Icons
             </h3>

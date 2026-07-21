@@ -7,7 +7,7 @@ import {
   DoughnutChartDemo,
   HalfDoughnutChartDemo,
 } from '../../design-system-sections/ChartComponents';
-import { ProgressBar, VStack } from '@/design-system';
+import { Loading, ProgressBar, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -64,7 +64,7 @@ function getCSSVar(name: string, fallback: string) {
 function statusColor(pct: number) {
   if (pct >= 95) return getCSSVar('--color-state-danger', '#dc2626');
   if (pct >= 70) return getCSSVar('--color-state-warning', '#ea580c');
-  return getCSSVar('--color-state-success', '#22c55e');
+  return getCSSVar('--color-state-success', '#10b981');
 }
 
 function GaugeHoverTooltip({
@@ -210,7 +210,7 @@ function UsageChartGuidelines() {
         </TableWrapper>
 
         <SubSectionTitle>Composition</SubSectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[Label]        [Value]
 [██████░░░░░░░░]`}</pre>
         </div>
@@ -505,7 +505,7 @@ export function UsageChartPage() {
       ]}
       preview={
         <div className="flex gap-8 items-start flex-wrap">
-          <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+          <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
             <GaugeHoverTooltip used={2} max={10}>
               <ProgressBar variant="quota" label="Instance" value={2} max={10} />
             </GaugeHoverTooltip>
@@ -534,7 +534,7 @@ export function UsageChartPage() {
                 Label과 Value(사용량/총량)를 함께 표시. 복수 리소스 비교에 적합.
               </span>
             </VStack>
-            <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <GaugeHoverTooltip used={2} max={10}>
                 <ProgressBar variant="quota" label="Instance" value={2} max={10} />
               </GaugeHoverTooltip>
@@ -552,21 +552,13 @@ export function UsageChartPage() {
 
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Gauge Bar Chart — Default Variant</Label>
+              <Label>Gauge Bar Chart — Loading State</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                수치 레이블만 표시. 공간이 제한적인 컨텍스트에서 사용.
+                데이터를 불러오는 동안 스피너를 중앙에 표시한다.
               </span>
             </VStack>
-            <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]">
-              <GaugeHoverTooltip used={30} max={100} unit="MB">
-                <ProgressBar label="30 MB (30%)" value={30} max={100} showValue={false} />
-              </GaugeHoverTooltip>
-              <GaugeHoverTooltip used={75} max={100} unit="MB">
-                <ProgressBar label="60 MB (75%)" value={75} max={100} showValue={false} />
-              </GaugeHoverTooltip>
-              <GaugeHoverTooltip used={100} max={100} unit="MB">
-                <ProgressBar label="100 MB (100%)" value={100} max={100} showValue={false} />
-              </GaugeHoverTooltip>
+            <div className="w-[280px] flex items-center justify-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] h-[176px]">
+              <Loading size="md" text="" />
             </div>
           </VStack>
 
@@ -613,7 +605,7 @@ export function UsageChartPage() {
             </VStack>
             <div className="flex gap-6 flex-wrap items-start">
               {/* Safe — 사용량 낮고 추가해도 여유 */}
-              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                 <div className="text-body-sm text-[var(--color-text-muted)] font-medium">
                   Safe (used + new &lt; 70%)
                 </div>
@@ -644,7 +636,7 @@ export function UsageChartPage() {
               </div>
 
               {/* Warning — 추가하면 경고 영역 진입 */}
-              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                 <div className="text-body-sm text-[var(--color-text-muted)] font-medium">
                   Warning (used + new ≥ 70%)
                 </div>
@@ -675,7 +667,7 @@ export function UsageChartPage() {
               </div>
 
               {/* Danger — 추가하면 위험 영역 진입 */}
-              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                 <div className="text-body-sm text-[var(--color-text-muted)] font-medium">
                   Danger (used + new ≥ 90%)
                 </div>
@@ -716,7 +708,7 @@ export function UsageChartPage() {
               </span>
             </VStack>
             <div className="flex gap-6 flex-wrap">
-              <DoughnutChartDemo title="Capacity Used" value={35} color="#22c55e" />
+              <DoughnutChartDemo title="Capacity Used" value={35} color="#10b981" />
               <DoughnutChartDemo title="OSD onode Hits Ratio" value={88} color="#ea580c" />
               <DoughnutChartDemo title="Memory Usage" value={98.3} color="#ef4444" />
             </div>

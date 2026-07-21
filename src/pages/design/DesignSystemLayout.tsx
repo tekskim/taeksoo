@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type RefObject } from 'react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import {
   Outlet,
   Link,
@@ -7,16 +8,8 @@ import {
   useSearchParams,
   useOutletContext,
 } from 'react-router-dom';
-import { VStack, Disclosure } from '@/design-system';
-import {
-  IconSearch,
-  IconX,
-  IconHome,
-  IconChevronRight,
-  IconArrowUp,
-  IconListDetails,
-  IconHistory,
-} from '@tabler/icons-react';
+import { VStack, Disclosure, Button } from '@/design-system';
+import { IconSearch, IconX, IconHome, IconArrowUp } from '@tabler/icons-react';
 import { navGroups, allNavItems, isRecentlyUpdated } from './_shared/navigationData';
 
 interface DesignLayoutContext {
@@ -33,25 +26,28 @@ export function DesignSystemLayout() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isCaptureMode = searchParams.get('capture') === 'true';
-  const mainRef = useRef<HTMLDivElement>(null);
+  const mainOsRef = useRef<React.ComponentRef<typeof OverlayScrollbarsComponent>>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  const getViewport = () => mainOsRef.current?.osInstance()?.elements().viewport;
+
   useEffect(() => {
-    mainRef.current?.scrollTo(0, 0);
+    getViewport()?.scrollTo(0, 0);
   }, [location.pathname]);
 
   useEffect(() => {
-    const mainElement = mainRef.current;
-    if (!mainElement) return;
-    const handleScroll = () => setShowScrollTop(mainElement.scrollTop > 300);
-    mainElement.addEventListener('scroll', handleScroll);
-    return () => mainElement.removeEventListener('scroll', handleScroll);
+    const viewport = getViewport();
+    if (!viewport) return;
+    const handleScroll = () => setShowScrollTop(viewport.scrollTop > 300);
+    viewport.addEventListener('scroll', handleScroll);
+    return () => viewport.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    getViewport()?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const filteredNavItems = searchQuery.trim()
@@ -92,24 +88,9 @@ export function DesignSystemLayout() {
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
       {!isCaptureMode && (
-        <nav className="fixed left-0 top-0 w-[220px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-hidden z-50 sidebar-scroll">
-          <div className="p-4 overflow-hidden">
-            {/* Logo */}
-            <Link to="/design" className="flex items-center mb-4">
-              <span className="text-heading-h5 text-[var(--color-text-default)]">TDS</span>
-            </Link>
-
-            {/* EntryPage Link */}
-            <Link
-              to="/"
-              className="flex items-center gap-2 w-[188px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
-            >
-              <IconHome size={16} stroke={1.5} className="shrink-0" />
-              <span className="truncate flex-1 min-w-0">Entry page</span>
-              <IconChevronRight size={14} stroke={1.5} className="shrink-0" />
-            </Link>
-
-            {/* Search Bar */}
+        <nav className="fixed left-0 top-0 w-[200px] max-w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] z-50 flex flex-col">
+          {/* Search Bar — fixed at top */}
+          <div className="shrink-0 p-4 pb-0">
             <div className="relative mb-4">
               <div className="relative">
                 <IconSearch
@@ -118,6 +99,8 @@ export function DesignSystemLayout() {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
                 />
                 <input
+                  ref={searchRef}
+                  autoFocus
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -125,7 +108,7 @@ export function DesignSystemLayout() {
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setIsSearchFocused(false)}
                   placeholder="Search"
-                  className="w-[188px] pl-9 pr-8 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-11)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
+                  className="w-full pl-9 pr-8 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-11)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
                 />
                 {searchQuery && (
                   <button
@@ -139,7 +122,14 @@ export function DesignSystemLayout() {
 
               {/* Search Results Dropdown */}
               {searchQuery.trim() && isSearchFocused && (
-                <div className="absolute top-full left-0 w-[188px] max-w-[188px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
+                <OverlayScrollbarsComponent
+                  options={{
+                    overflow: { x: 'hidden', y: 'scroll' },
+                    scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+                  }}
+                  defer={false}
+                  className="absolute top-full left-0 w-full max-w-[168px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px]"
+                >
                   {filteredNavItems.length > 0 ? (
                     <div className="p-2 min-w-0">
                       {filteredNavItems.map(({ id, label, icon: Icon, path }) => (
@@ -174,78 +164,54 @@ export function DesignSystemLayout() {
                       No results found
                     </div>
                   )}
-                </div>
+                </OverlayScrollbarsComponent>
               )}
             </div>
+          </div>
 
-            {/* All Components Link */}
-            <button
-              onClick={() => navigate('/design/all')}
-              className={`
-              w-[188px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] flex items-center gap-2
-              text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer border
-              ${
-                currentPath === '/design/all'
-                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium border-transparent'
-                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]'
-              }
-            `}
-            >
-              <IconListDetails size={16} stroke={1.5} className="shrink-0" />
-              <span className="truncate flex-1 min-w-0">All Components</span>
-            </button>
-
-            {/* Changelog Link */}
-            <button
-              onClick={() => navigate('/design/changelog')}
-              className={`
-              w-[188px] box-border px-3 py-2 mb-3 rounded-[var(--radius-button)] flex items-center gap-2
-              text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer border
-              ${
-                currentPath === '/design/changelog'
-                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium border-transparent'
-                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]'
-              }
-            `}
-            >
-              <IconHistory size={16} stroke={1.5} className="shrink-0" />
-              <span className="truncate flex-1 min-w-0">Changelog</span>
-            </button>
-
-            {/* Navigation Groups */}
-            <VStack gap={1} className="w-[188px]">
-              {navGroups.map((group) => {
-                const isOpen = openGroups.has(group.title);
-                return (
-                  <div key={group.title}>
-                    <Disclosure
-                      open={isOpen}
-                      onChange={(open) => {
-                        setOpenGroups((prev) => {
-                          const next = new Set(prev);
-                          if (open) next.add(group.title);
-                          else next.delete(group.title);
-                          return next;
-                        });
-                      }}
-                    >
-                      <Disclosure.Trigger className="w-full py-1.5 items-center gap-1.5 text-label-sm font-semibold !text-[var(--color-text-default)] tracking-wide hover:!text-[var(--color-text-muted)]">
-                        {group.title}
-                        {group.items.some((item) => isRecentlyUpdated(item.path)) && (
-                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-action-primary)]" />
-                        )}
-                        <span className="text-body-xs text-[var(--color-text-disabled)] ml-auto font-normal normal-case tracking-normal">
-                          {group.items.length}
-                        </span>
-                      </Disclosure.Trigger>
-                      <Disclosure.Panel>
-                        <VStack gap={0} className="mb-1">
-                          {group.items.map(({ id, label, icon: Icon, path }) => (
-                            <button
-                              key={id}
-                              onClick={() => navigate(path)}
-                              className={`
-                              w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
+          <OverlayScrollbarsComponent
+            options={{
+              overflow: { x: 'hidden', y: 'scroll' },
+              scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+            }}
+            defer={false}
+            className="flex-1 min-h-0"
+          >
+            <div className="max-w-[200px] box-border px-4 pb-4 overflow-hidden">
+              {/* Navigation Groups */}
+              <VStack gap={1} className="w-[168px]">
+                {navGroups.map((group) => {
+                  const isOpen = openGroups.has(group.title);
+                  return (
+                    <div key={group.title}>
+                      <Disclosure
+                        open={isOpen}
+                        onChange={(open) => {
+                          setOpenGroups((prev) => {
+                            const next = new Set(prev);
+                            if (open) next.add(group.title);
+                            else next.delete(group.title);
+                            return next;
+                          });
+                        }}
+                      >
+                        <Disclosure.Trigger className="w-full py-1.5 items-center gap-1.5 text-label-sm font-semibold !text-[var(--color-text-default)] tracking-wide hover:!text-[var(--color-text-muted)]">
+                          {group.title}
+                          <span className="text-body-xs text-[var(--color-text-disabled)] font-normal normal-case tracking-normal">
+                            {group.items.length}
+                          </span>
+                          {group.items.some((item) => isRecentlyUpdated(item.path)) && (
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-action-primary)] ml-auto" />
+                          )}
+                        </Disclosure.Trigger>
+                        <Disclosure.Panel>
+                          <VStack gap={0} className="mb-1">
+                            {group.items.map(({ id, label, icon: Icon, path }) => (
+                              <button
+                                key={id}
+                                onClick={() => navigate(path)}
+                                className={`
+                              w-full px-3 py-2 flex items-center gap-2
                               text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                               ${
                                 currentPath === path
@@ -253,37 +219,55 @@ export function DesignSystemLayout() {
                                   : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
                               }
                             `}
-                            >
-                              <Icon size={16} stroke={1.5} className="shrink-0" />
-                              <span className="truncate flex-1 min-w-0">{label}</span>
-                              {isRecentlyUpdated(path) && (
-                                <span className="shrink-0 px-[5px] py-[1px] rounded-[var(--radius-sm)] text-[9px] font-bold leading-[12px] bg-[var(--color-action-primary)] text-white">
-                                  N
-                                </span>
-                              )}
-                            </button>
-                          ))}
-                        </VStack>
-                      </Disclosure.Panel>
-                    </Disclosure>
-                    {group.title === 'Etc' && (
-                      <div className="w-full h-px bg-[var(--color-border-subtle)] my-2" />
-                    )}
-                  </div>
-                );
-              })}
-            </VStack>
+                              >
+                                <Icon size={16} stroke={1.5} className="shrink-0" />
+                                <span className="truncate flex-1 min-w-0">{label}</span>
+                                {isRecentlyUpdated(path) && (
+                                  <span className="shrink-0 px-[5px] py-[1px] rounded-[var(--radius-sm)] text-[9px] font-bold leading-[12px] bg-[var(--color-action-primary)] text-white">
+                                    N
+                                  </span>
+                                )}
+                              </button>
+                            ))}
+                          </VStack>
+                        </Disclosure.Panel>
+                      </Disclosure>
+                    </div>
+                  );
+                })}
+              </VStack>
+            </div>
+          </OverlayScrollbarsComponent>
+
+          {/* Entry Page Button — fixed at bottom */}
+          <div className="shrink-0 px-4 py-4 border-t border-[var(--color-border-subtle)]">
+            <Link to="/">
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconHome size={12} />}
+                className="w-full"
+              >
+                Entry page
+              </Button>
+            </Link>
           </div>
         </nav>
       )}
 
       {/* Main Content */}
-      <main
-        ref={mainRef}
-        className={`absolute top-0 bottom-0 right-0 overflow-y-auto sidebar-scroll bg-[var(--color-surface-default)] ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
+      <OverlayScrollbarsComponent
+        element="main"
+        ref={mainOsRef}
+        options={{
+          overflow: { x: 'hidden', y: 'scroll' },
+          scrollbars: { autoHide: 'scroll', autoHideDelay: 800 },
+        }}
+        defer={false}
+        className={`absolute top-0 bottom-0 right-0 bg-[var(--color-surface-default)] ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
       >
         <div className="py-12 px-12 overflow-x-auto">
-          <Outlet context={{ mainRef }} />
+          <Outlet context={{ mainRef: { current: getViewport() ?? null } }} />
         </div>
 
         {/* Scroll to Top Button */}
@@ -295,7 +279,7 @@ export function DesignSystemLayout() {
             <IconArrowUp size={20} stroke={2} />
           </button>
         )}
-      </main>
+      </OverlayScrollbarsComponent>
     </div>
   );
 }

@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -14,11 +13,12 @@ import {
   DetailHeader,
   SectionCard,
   PageShell,
+  ErrorState,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconLinkOff, IconUnlink } from '@tabler/icons-react';
+import { IconEdit, IconLinkOff, IconUnlink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -52,7 +52,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-001',
     floatingIp: '172.24.4.228',
     status: 'active',
-    createdAt: 'Oct 1, 2025 10:20:28',
+    createdAt: 'Oct 1, 2026 10:20:28',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'web-01', id: 'inst-001' },
@@ -64,7 +64,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-002',
     floatingIp: '172.24.4.229',
     status: 'active',
-    createdAt: 'Oct 2, 2025 17:33:45',
+    createdAt: 'Oct 2, 2026 17:33:45',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'app-server', id: 'inst-002' },
@@ -76,7 +76,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-003',
     floatingIp: '172.24.4.230',
     status: 'down',
-    createdAt: 'Oct 3, 2025 00:46:02',
+    createdAt: 'Oct 3, 2026 00:46:02',
     description: 'Unassociated',
     resourceType: null,
     resource: null,
@@ -88,7 +88,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-004',
     floatingIp: '172.24.4.231',
     status: 'active',
-    createdAt: 'Sep 28, 2025 07:11:07',
+    createdAt: 'Sep 28, 2026 07:11:07',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'db-server', id: 'inst-003' },
@@ -100,7 +100,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-005',
     floatingIp: '172.24.4.232',
     status: 'active',
-    createdAt: 'Sep 25, 2025 10:32:16',
+    createdAt: 'Sep 25, 2026 10:32:16',
     description: '-',
     resourceType: 'Load balancer',
     resource: { name: 'load-balancer', id: 'lb-001' },
@@ -112,7 +112,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-006',
     floatingIp: '172.24.4.233',
     status: 'error',
-    createdAt: 'Sep 20, 2025 23:27:51',
+    createdAt: 'Sep 20, 2026 23:27:51',
     description: 'Error state',
     resourceType: null,
     resource: null,
@@ -124,7 +124,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-007',
     floatingIp: '172.24.4.234',
     status: 'active',
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'monitoring', id: 'inst-004' },
@@ -136,7 +136,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-008',
     floatingIp: '172.24.4.235',
     status: 'active',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     description: '-',
     resourceType: 'VPN Gateway',
     resource: { name: 'vpn-gateway', id: 'vpn-001' },
@@ -148,7 +148,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-009',
     floatingIp: '172.24.4.236',
     status: 'down',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     description: 'Unassociated',
     resourceType: null,
     resource: null,
@@ -160,7 +160,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-010',
     floatingIp: '172.24.4.237',
     status: 'active',
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'backup-server', id: 'inst-005' },
@@ -168,19 +168,6 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     router: { name: 'backup-router', id: 'router-003' },
     fqdn: 'backup.thakicloud.com',
   },
-};
-
-const defaultFloatingIPDetail: FloatingIPDetail = {
-  id: 'unknown',
-  floatingIp: 'Unknown',
-  status: 'active',
-  createdAt: '-',
-  description: '-',
-  resourceType: null,
-  resource: null,
-  fixedIp: '-',
-  router: { name: '-', id: '' },
-  fqdn: '-',
 };
 
 /* ----------------------------------------
@@ -198,6 +185,7 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'shutoff' | 'erro
    ---------------------------------------- */
 
 export default function FloatingIPDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -210,22 +198,14 @@ export default function FloatingIPDetailPage() {
   const [copiedFqdn, setCopiedFqdn] = useState(false);
 
   // Get floating IP data based on URL ID
-  const floatingIP = id
-    ? mockFloatingIPsMap[id] || defaultFloatingIPDetail
-    : defaultFloatingIPDetail;
+  const floatingIP = id ? mockFloatingIPsMap[id] : undefined;
 
   // Update tab label to floating IP address
   useEffect(() => {
-    if (floatingIP.floatingIp) {
+    if (floatingIP?.floatingIp) {
       updateActiveTabLabel(floatingIP.floatingIp);
     }
-  }, [floatingIP.floatingIp, updateActiveTabLabel]);
-
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Floating IPs', href: '/compute/floating-ips' },
-    { label: floatingIP.floatingIp },
-  ];
+  }, [floatingIP, updateActiveTabLabel]);
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -233,6 +213,60 @@ export default function FloatingIPDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  if (!floatingIP) {
+    return (
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+            showAddButton={true}
+            showWindowControls={true}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Floating IPs', href: '/compute/floating-ips' },
+                  { label: id ?? '—' },
+                ]}
+              />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-20"
+      >
+        <ErrorState
+          title="Floating IP not found"
+          description={`The floating IP "${id ?? ''}" does not exist or has been deleted.`}
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/compute/floating-ips')}>
+              Back to Floating IPs
+            </Button>
+          }
+        />
+      </PageShell>
+    );
+  }
+
+  const breadcrumbItems = [
+    { label: 'Floating IPs', href: '/compute/floating-ips' },
+    { label: floatingIP.floatingIp },
+  ];
 
   const handleCopyFqdn = () => {
     if (floatingIP.fqdn) {
@@ -263,21 +297,14 @@ export default function FloatingIPDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Floating IP Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{floatingIP.floatingIp}</DetailHeader.Title>
