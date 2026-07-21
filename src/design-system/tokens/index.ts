@@ -8,6 +8,9 @@
  * 3. component - Component-specific tokens
  */
 
+// Chart palette (차트 계열 색 — getChartColorByIndex 등)
+export * from './chartColors';
+
 /* ========================================
    PRIMITIVE TOKENS
    ======================================== */

@@ -6,7 +6,7 @@ import { ContainerModeFromUrlProvider } from '@/contexts/ContainerModeContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
 import { ProjectProvider } from '@/contexts/ProjectContext';
-import { ToastProvider, SnackbarProvider } from '@/design-system';
+import { ToastProvider, ToastContainer, SnackbarProvider } from '@/design-system';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Entry Page
@@ -322,11 +322,16 @@ import LiveTailPage from '@/pages/LiveTailPage';
 
 // Alert pages
 import AlertsListPage from '@/pages/AlertsListPage';
+import { kmsRoutes } from '@/routes/kms.routes';
 import AlertDetailPage from '@/pages/AlertDetailPage';
 import AlertDeliverySettingsPage from '@/pages/AlertDeliverySettingsPage';
 
 // Audit pages
+import AuditDashboardPage from '@/pages/AuditDashboardPage';
 import AuditLogsPage from '@/pages/AuditLogsPage';
+import AuditLogDetailPage from '@/pages/AuditLogDetailPage';
+import AuditReportsPage from '@/pages/AuditReportsPage';
+import AuditReportDetailPage from '@/pages/AuditReportDetailPage';
 
 // Pages - Security
 import { FirewallsPage as SecurityFirewallsPage } from '@/pages/security/FirewallsPage';
@@ -1107,8 +1112,15 @@ function AppRoutes() {
         <Route path="/container/catalog/:appId/install" element={<CatalogInstallPage />} />
         {/* App Catalog standalone — Desktop App 진입점 */}
         <Route path="/app-catalog" element={<AppCatalogPage />} />
-        <Route path="/app-catalog/:appId/install" element={<AppInstallPage />} />
+        <Route path="/app-catalog/:chartName/install" element={<AppInstallPage />} />
+        <Route path="/app-catalog/installed-apps" element={<InstalledAppsPage />} />
+        <Route path="/app-catalog/installed-apps/:appId" element={<InstalledAppDetailPage />} />
         <Route path="/app-catalog/installed-apps/:appId/edit" element={<AppEditPage />} />
+        <Route path="/app-catalog/installed-operators" element={<InstalledOperatorsPage />} />
+        <Route
+          path="/app-catalog/installed-operators/:operatorId"
+          element={<InstalledOperatorDetailPage />}
+        />
         <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
         <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
         <Route path="/container/installed-apps/:appId/edit" element={<InstalledAppEditPage />} />
@@ -1135,9 +1147,16 @@ function AppRoutes() {
         <Route path="/alerts/delivery-settings" element={<AlertDeliverySettingsPage />} />
         <Route path="/alerts" element={<Navigate to="/alerts/board" replace />} />
 
-        {/* Audit Routes */}
+        {/* Audit Routes — 정책서 §0-1: 대시보드 / 감사 로그(목록·상세) / 리포트(목록·상세) */}
+        <Route path="/audit/dashboard" element={<AuditDashboardPage />} />
         <Route path="/audit/logs" element={<AuditLogsPage />} />
-        <Route path="/audit" element={<Navigate to="/audit/logs" replace />} />
+        <Route path="/audit/logs/:id" element={<AuditLogDetailPage />} />
+        <Route path="/audit/reports" element={<AuditReportsPage />} />
+        <Route path="/audit/reports/:id" element={<AuditReportDetailPage />} />
+        <Route path="/audit" element={<Navigate to="/audit/dashboard" replace />} />
+
+        {/* KMS Routes */}
+        {kmsRoutes}
 
         {/* Security Routes */}
         <Route path="/security" element={<SecurityFirewallsPage />} />
@@ -1481,6 +1500,8 @@ function App() {
               <SnackbarProvider>
                 <AppWithTabs />
               </SnackbarProvider>
+              {/* 전역 토스트 렌더러 — useToast()로 띄운 토스트가 실제로 표시되도록 마운트 */}
+              <ToastContainer position="top-right" maxToasts={3} />
             </ToastProvider>
           </SidebarProvider>
         </ProjectProvider>

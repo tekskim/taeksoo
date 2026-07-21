@@ -3,7 +3,6 @@ import {
   Badge,
   Breadcrumb,
   Button,
-  ConfirmModal,
   ContextMenu,
   EmptyState,
   FilterSearchInput,
@@ -36,15 +35,29 @@ import EditSavedQueryDrawer from '@/components/logs/EditSavedQueryDrawer';
 const toDisplay = (value: string): string => (value.trim().length > 0 ? value : '-');
 const DEFAULT_PAGE_SIZE = 10;
 
+// TDS UX writing(영문) — 테이블 datetime: Mth DD, YYYY HH:mm (24시간, UTC·초 생략)
+const MONTH_ABBR = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 const formatDateTime = (isoString: string): string => {
   const d = new Date(isoString);
-  const y = d.getFullYear();
-  const mo = d.getMonth() + 1;
-  const day = d.getDate();
+  if (Number.isNaN(d.getTime())) return isoString;
+  const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const mi = String(d.getMinutes()).padStart(2, '0');
-  const s = String(d.getSeconds()).padStart(2, '0');
-  return `${y}. ${mo}. ${day}. ${h}:${mi}:${s}`;
+  return `${MONTH_ABBR[d.getMonth()]} ${day}, ${d.getFullYear()} ${h}:${mi}`;
 };
 
 const getLevelBadgeTheme = (level: string): 'red' | 'ylw' | 'blu' | 'gre' | 'gry' => {
@@ -306,16 +319,14 @@ const SavedQueriesListPage = (): ReactElement => {
               size="sm"
               className="flex-1 min-w-[240px]"
             />
-            {selectedRows.length > 0 && (
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={() => setBulkDeleteOpen(true)}
-                disabled={!canBulkDelete}
-              >
-                Delete ({selectedRows.length})
-              </Button>
-            )}
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => setBulkDeleteOpen(true)}
+              disabled={!canBulkDelete}
+            >
+              {selectedRows.length > 0 ? `Delete (${selectedRows.length})` : 'Delete'}
+            </Button>
           </HStack>
 
           <Pagination
@@ -342,6 +353,8 @@ const SavedQueriesListPage = (): ReactElement => {
               columns={columns}
               data={pagedSavedQueries}
               rowKey="id"
+              selectable
+              isRowSelectable={(row) => canManageSavedQuery(row)}
               selectedKeys={selectedRows}
               onSelectionChange={(keys) => setSelectedRows(keys.map(String))}
             />
@@ -396,16 +409,45 @@ const SavedQueriesListPage = (): ReactElement => {
           </div>
         </Modal>
 
-        {/* Bulk delete confirm */}
-        <ConfirmModal
+        {/* Bulk delete confirm — TDS Delete (Multiple) template */}
+        <Modal
           isOpen={bulkDeleteOpen}
           onClose={() => setBulkDeleteOpen(false)}
-          onConfirm={handleBulkDeleteConfirm}
-          title={`Delete ${selectedSavedQueries.length} Saved Queries`}
-          description="Are you sure you want to delete the selected saved queries? This action cannot be undone."
-          confirmText="Delete"
-          confirmVariant="danger"
-        />
+          title="Delete Saved Queries"
+        >
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-label-sm text-[var(--color-text-subtle)]">Saved query names</span>
+            <ul className="flex flex-col gap-1 list-disc pl-5">
+              {selectedSavedQueries.map((item) => (
+                <li key={item.id} className="text-body-md text-[var(--color-text-default)]">
+                  {toDisplay(item.name)}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] px-4 py-3 flex gap-3 items-start">
+            <IconAlertTriangle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+            />
+            <span className="text-body-md text-[var(--color-text-default)]">
+              Removing the selected instances is permanent and cannot be undone.
+            </span>
+          </div>
+          <div className="flex gap-2 w-full">
+            <Button
+              variant="outline"
+              size="md"
+              onClick={() => setBulkDeleteOpen(false)}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button variant="danger" size="md" onClick={handleBulkDeleteConfirm} className="flex-1">
+              Delete
+            </Button>
+          </div>
+        </Modal>
       </div>
     </PageShell>
   );

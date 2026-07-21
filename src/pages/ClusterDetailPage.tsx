@@ -489,8 +489,24 @@ export function ClusterDetailPage() {
             </DetailHeader.Actions>
 
             <DetailHeader.InfoGrid>
-              <InfoBox label="Status" className="flex-1">
-                <div className="flex items-center gap-3 w-full">
+              <InfoBox
+                label="Status"
+                className="flex-1"
+                accessory={
+                  isProvisioning || isDeleting || isUpdating ? (
+                    <IconLoader2
+                      size={16}
+                      stroke={1.5}
+                      className={`animate-spin ${
+                        isDeleting
+                          ? 'text-[var(--color-text-muted)]'
+                          : 'text-[var(--color-action-primary)]'
+                      }`}
+                    />
+                  ) : undefined
+                }
+              >
+                <div className="flex items-center gap-2 min-w-0">
                   <Tooltip content={clusterData.status}>
                     <span className="shrink-0">
                       <Badge
@@ -503,39 +519,18 @@ export function ClusterDetailPage() {
                     </span>
                   </Tooltip>
                   {isProvisioning && (
-                    <span className="flex-1 min-w-0 flex items-center gap-1.5">
-                      <IconLoader2
-                        size={14}
-                        stroke={1.5}
-                        className="text-[var(--color-action-primary)] animate-spin shrink-0"
-                      />
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Control plane initializing
-                      </span>
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                      Control plane initializing
                     </span>
                   )}
                   {isDeleting && (
-                    <span className="flex-1 min-w-0 flex items-center gap-1.5">
-                      <IconLoader2
-                        size={14}
-                        stroke={1.5}
-                        className="text-[var(--color-text-muted)] animate-spin shrink-0"
-                      />
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Removing cluster resources
-                      </span>
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                      Removing cluster resources
                     </span>
                   )}
                   {isUpdating && (
-                    <span className="flex-1 min-w-0 flex items-center gap-1.5">
-                      <IconLoader2
-                        size={14}
-                        stroke={1.5}
-                        className="text-[var(--color-action-primary)] animate-spin shrink-0"
-                      />
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Updating cluster
-                      </span>
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                      Updating cluster
                     </span>
                   )}
                 </div>

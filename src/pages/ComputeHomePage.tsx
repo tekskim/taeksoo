@@ -11,10 +11,12 @@ import {
   STATUS_THRESHOLDS,
   CopyButton,
   useToast,
+  EmptyState,
   type TableColumn,
 } from '@/design-system';
-import { IconBread } from '@tabler/icons-react';
+import { IconBread, IconStack2 } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
+import { useProject } from '@/contexts/ProjectContext';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { IconChevronRight } from '@tabler/icons-react';
@@ -209,6 +211,9 @@ export function ComputeHomePage() {
     useTabs();
   const navigate = useNavigate();
   const toast = useToast();
+  const { projects } = useProject();
+  // 선택 가능한 Tenant가 없으면 TopBar·메뉴 트리를 숨기고 page-level Empty State만 표시.
+  const hasTenant = projects.length > 0;
 
   useEffect(() => {
     updateActiveTabLabel('Dashboard');
@@ -336,166 +341,187 @@ export function ComputeHomePage() {
         />
       }
       topBar={
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={openSidebar}
-          showNavigation={true}
-          onBack={() => navigate(-1)}
-          onForward={() => navigate(1)}
-          canGoBack={false}
-          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
-          actions={
-            <>
-              <TopBarAction
-                icon={<IconBread size={16} stroke={1.5} />}
-                aria-label="Toast test"
-                onClick={() => toast.success('Instance "web-01" created successfully.')}
-              />
-            </>
-          }
-        />
+        hasTenant ? (
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={openSidebar}
+            showNavigation={true}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
+            canGoBack={false}
+            breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
+            actions={
+              <>
+                <TopBarAction
+                  icon={<IconBread size={16} stroke={1.5} />}
+                  aria-label="Toast test"
+                  onClick={() => toast.success('Instance "web-01" created successfully.')}
+                />
+              </>
+            }
+          />
+        ) : undefined
       }
       contentClassName="px-8 py-6"
     >
-      {/* Top Row - 4 Cards */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
-        {/* Tenant Info */}
-        <Card
-          title="Tenant Info"
-          bgColor="bg-[var(--color-surface-subtle)]"
-          className="flex flex-col"
-        >
-          <h3 className="text-heading-h5 text-[var(--color-text-default)] break-all line-clamp-3">
-            my-very-long-project-name-for-the-development-environment-of-backend-microservices-and-infrastructure-testing-purpose-2026-v1
-          </h3>
-          <div className="space-y-4 mt-auto">
-            <div>
-              <div className="text-body-xs text-[var(--color-text-muted)] mb-1">Description</div>
-              <p className="text-body-md text-[var(--color-text-default)]">
-                Development environment for the 'service' backend services.
-              </p>
+      {!hasTenant ? (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <EmptyState
+            icon={<IconStack2 size={48} stroke={1.25} />}
+            title="No tenant available"
+            description="No tenant is assigned to your account yet. Resources will appear here once a tenant becomes available."
+          />
+        </div>
+      ) : (
+        <>
+          {/* Top Row - 4 Cards */}
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+            {/* Tenant Info */}
+            <Card
+              title="Tenant Info"
+              bgColor="bg-[var(--color-surface-subtle)]"
+              className="flex flex-col"
+            >
+              <h3 className="text-heading-h5 text-[var(--color-text-default)] break-all line-clamp-3">
+                my-very-long-project-name-for-the-development-environment-of-backend-microservices-and-infrastructure-testing-purpose-2026-v1
+              </h3>
+              <div className="space-y-4 mt-auto">
+                <div>
+                  <div className="text-body-xs text-[var(--color-text-muted)] mb-1">
+                    Description
+                  </div>
+                  <p className="text-body-md text-[var(--color-text-default)]">
+                    Development environment for the 'service' backend services.
+                  </p>
+                </div>
+                <div>
+                  <div className="text-body-xs text-[var(--color-text-muted)] mb-1">ID</div>
+                  <div className="flex items-center gap-1 min-w-0">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
+                      {projectId}
+                    </span>
+                    <CopyButton value={projectId} size="sm" iconOnly tooltip="Copy ID" />
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Compute Quota */}
+            <Card title="Compute quota" className="flex flex-col">
+              <div className="space-y-6 mt-auto">
+                <ComputeQuotaBar label="vCPU" used={38} total={64} unit="vCPU" />
+                <ComputeQuotaBar label="RAM" used={86} total={128} unit="GiB" />
+                <ComputeQuotaBar label="GPU (A100)" used={6} total={8} unit="GPU" />
+                <ComputeQuotaBar label="NPU (Gaudi 2)" used={2} total={4} unit="NPU" />
+              </div>
+            </Card>
+
+            {/* VM Summary */}
+            <Card title="VM Summary" className="flex flex-col">
+              <div className="mb-4">
+                <div className="text-heading-h2 text-[var(--color-text-default)]">21</div>
+                <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
+              </div>
+              <div className="space-y-2 mt-auto">
+                <div className="flex gap-2">
+                  <SummaryStatBox
+                    value={15}
+                    label="Active"
+                    onClick={() => navigate('/compute/instances?tab=vm')}
+                  />
+                  <SummaryStatBox
+                    value={2}
+                    label="Error"
+                    onClick={() => navigate('/compute/instances?tab=vm')}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <SummaryStatBox
+                    value={3}
+                    label="Stopped"
+                    onClick={() => navigate('/compute/instances?tab=vm')}
+                  />
+                  <SummaryStatBox value={1} label="Others" />
+                </div>
+              </div>
+            </Card>
+
+            {/* Bare Metal Summary */}
+            <Card title="Bare metal summary" className="flex flex-col">
+              <div className="mb-4">
+                <div className="text-heading-h2 text-[var(--color-text-default)]">5</div>
+                <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
+              </div>
+              <div className="space-y-2 mt-auto">
+                <div className="flex gap-2">
+                  <SummaryStatBox
+                    value={4}
+                    label="Active"
+                    onClick={() => navigate('/compute/instances?tab=bare-metal')}
+                  />
+                  <SummaryStatBox
+                    value={1}
+                    label="Error"
+                    onClick={() => navigate('/compute/instances?tab=bare-metal')}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <SummaryStatBox
+                    value={0}
+                    label="Stopped"
+                    onClick={() => navigate('/compute/instances?tab=bare-metal')}
+                  />
+                  <SummaryStatBox value={0} label="Others" />
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Bottom Row - Recent Activities + Infrastructure Quota */}
+          <div className="grid grid-cols-2 gap-6">
+            {/* Recent Activities */}
+            <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+              <SectionHeader title="Recent Activities" />
+              <Table<RecentActivity>
+                columns={recentActivityColumns}
+                data={recentActivities}
+                rowKey="id"
+                emptyMessage="No recent activities"
+              />
             </div>
-            <div>
-              <div className="text-body-xs text-[var(--color-text-muted)] mb-1">ID</div>
-              <div className="flex items-center gap-1 min-w-0">
-                <span className="text-body-md text-[var(--color-text-default)] truncate">
-                  {projectId}
-                </span>
-                <CopyButton value={projectId} size="sm" iconOnly tooltip="Copy ID" />
+
+            {/* Infrastructure Quota */}
+            <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col">
+              <SectionHeader title="Infrastructure Quota" />
+              <div className="grid grid-cols-2 gap-2 flex-1" style={{ gridAutoRows: '1fr' }}>
+                <InfraQuotaRow label="Volumes" used={18} total={50} href="/compute/volumes" />
+                <InfraQuotaRow label="Networks" used={4} total={10} href="/compute/networks" />
+                <InfraQuotaRow label="Routers" used={3} total={10} href="/compute/routers" />
+                <InfraQuotaRow label="Ports" used={47} total={200} href="/compute/ports" />
+                <InfraQuotaRow
+                  label="Floating IPs"
+                  used={8}
+                  total={10}
+                  href="/compute/floating-ips"
+                />
+                <InfraQuotaRow
+                  label="Security groups"
+                  used={12}
+                  total={20}
+                  href="/compute/security-groups"
+                />
+                <InfraQuotaRow
+                  label="Server groups"
+                  used={2}
+                  total={10}
+                  href="/compute/server-groups"
+                />
+                <InfraQuotaRow label="Key pairs" used={5} total={50} href="/compute/key-pairs" />
               </div>
             </div>
           </div>
-        </Card>
-
-        {/* Compute Quota */}
-        <Card title="Compute quota" className="flex flex-col">
-          <div className="space-y-6 mt-auto">
-            <ComputeQuotaBar label="vCPU" used={38} total={64} unit="vCPU" />
-            <ComputeQuotaBar label="RAM" used={86} total={128} unit="GiB" />
-            <ComputeQuotaBar label="GPU (A100)" used={6} total={8} unit="GPU" />
-            <ComputeQuotaBar label="NPU (Gaudi 2)" used={2} total={4} unit="NPU" />
-          </div>
-        </Card>
-
-        {/* VM Summary */}
-        <Card title="VM Summary" className="flex flex-col">
-          <div className="mb-4">
-            <div className="text-heading-h2 text-[var(--color-text-default)]">21</div>
-            <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
-          </div>
-          <div className="space-y-2 mt-auto">
-            <div className="flex gap-2">
-              <SummaryStatBox
-                value={15}
-                label="Active"
-                onClick={() => navigate('/compute/instances?tab=vm')}
-              />
-              <SummaryStatBox
-                value={2}
-                label="Error"
-                onClick={() => navigate('/compute/instances?tab=vm')}
-              />
-            </div>
-            <div className="flex gap-2">
-              <SummaryStatBox
-                value={3}
-                label="Stopped"
-                onClick={() => navigate('/compute/instances?tab=vm')}
-              />
-              <SummaryStatBox value={1} label="Others" />
-            </div>
-          </div>
-        </Card>
-
-        {/* Bare Metal Summary */}
-        <Card title="Bare metal summary" className="flex flex-col">
-          <div className="mb-4">
-            <div className="text-heading-h2 text-[var(--color-text-default)]">5</div>
-            <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
-          </div>
-          <div className="space-y-2 mt-auto">
-            <div className="flex gap-2">
-              <SummaryStatBox
-                value={4}
-                label="Active"
-                onClick={() => navigate('/compute/instances?tab=bare-metal')}
-              />
-              <SummaryStatBox
-                value={1}
-                label="Error"
-                onClick={() => navigate('/compute/instances?tab=bare-metal')}
-              />
-            </div>
-            <div className="flex gap-2">
-              <SummaryStatBox
-                value={0}
-                label="Stopped"
-                onClick={() => navigate('/compute/instances?tab=bare-metal')}
-              />
-              <SummaryStatBox value={0} label="Others" />
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* Bottom Row - Recent Activities + Infrastructure Quota */}
-      <div className="grid grid-cols-2 gap-6">
-        {/* Recent Activities */}
-        <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-          <SectionHeader title="Recent Activities" />
-          <Table<RecentActivity>
-            columns={recentActivityColumns}
-            data={recentActivities}
-            rowKey="id"
-            emptyMessage="No recent activities"
-          />
-        </div>
-
-        {/* Infrastructure Quota */}
-        <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col">
-          <SectionHeader title="Infrastructure Quota" />
-          <div className="grid grid-cols-2 gap-2 flex-1" style={{ gridAutoRows: '1fr' }}>
-            <InfraQuotaRow label="Volumes" used={18} total={50} href="/compute/volumes" />
-            <InfraQuotaRow label="Networks" used={4} total={10} href="/compute/networks" />
-            <InfraQuotaRow label="Routers" used={3} total={10} href="/compute/routers" />
-            <InfraQuotaRow label="Ports" used={47} total={200} href="/compute/ports" />
-            <InfraQuotaRow label="Floating IPs" used={8} total={10} href="/compute/floating-ips" />
-            <InfraQuotaRow
-              label="Security groups"
-              used={12}
-              total={20}
-              href="/compute/security-groups"
-            />
-            <InfraQuotaRow
-              label="Server groups"
-              used={2}
-              total={10}
-              href="/compute/server-groups"
-            />
-            <InfraQuotaRow label="Key pairs" used={5} total={50} href="/compute/key-pairs" />
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </PageShell>
   );
 }

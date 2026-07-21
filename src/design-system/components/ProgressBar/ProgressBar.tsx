@@ -244,7 +244,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
             }}
           />
 
-          {/* New (estimate) segment — same color at 50% opacity */}
+          {/* New (estimate) segment — same color at 30% opacity */}
           {newValue > 0 && (
             <div
               className="absolute inset-y-0 rounded-r-[var(--progress-bar-radius)] z-[2]"

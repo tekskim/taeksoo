@@ -29,13 +29,20 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
 import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconAlertTriangle, IconChevronLeft } from '@tabler/icons-react';
+import {
+  IconBell,
+  IconAlertTriangle,
+  IconChevronLeft,
+  IconCircleCheck,
+  IconCircleX,
+} from '@tabler/icons-react';
 import {
   catalogCharts,
   installedAppsMock,
-  installedOperatorsMock,
   namespaceOptions,
   clusterOptions,
+  getOperatorRequirements,
+  hasUnmetOperatorDependency,
 } from '@/pages/apps/appsMockData';
 import { isChartInstalledInTarget } from '@/pages/apps/appsTypes';
 import { ModeSelectTable } from '@/pages/apps/ModeSelectTable';
@@ -245,14 +252,13 @@ export function AppInstallPage() {
     };
   }, [captureMode]);
 
-  // Check dependency is installed
-  const dependencyInstalled = useMemo(() => {
-    if (!chart?.dependsOn) return true;
-    return (
-      installedAppsMock.some((a) => a.name === chart.dependsOn) ||
-      installedOperatorsMock.some((op) => op.name === chart.dependsOn)
-    );
-  }, [chart]);
+  // 선행 Operator 의존성 (복수 지원 — requiredOperatorChartNames 배열 기반)
+  const operatorRequirements = useMemo(
+    () => (chart ? getOperatorRequirements(chart) : []),
+    [chart]
+  );
+  const metOperatorCount = operatorRequirements.filter((r) => r.installed).length;
+  const dependencyInstalled = chart ? !hasUnmetOperatorDependency(chart) : true;
 
   // ── Tab state ──
   const [activeInstallTab, setActiveInstallTab] = useState<InstallTab>(captureTab ?? 'basic');
@@ -578,14 +584,108 @@ export function AppInstallPage() {
                     <SectionCard isActive>
                       <SectionCard.Header title={SECTION_LABELS.configuration} showDivider />
                       <SectionCard.Content gap={6} showDividers={false}>
-                        {!dependencyInstalled && chart?.dependsOn && (
-                          <InlineMessage
-                            variant="warning"
-                            icon={<IconAlertTriangle size={16} stroke={1.5} />}
-                          >
-                            <strong>{chart.dependsOn}</strong> must be installed before this app.
-                            Please install the Operator first from the App Catalog.
-                          </InlineMessage>
+                        {operatorRequirements.length > 0 && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            {!dependencyInstalled && (
+                              <InlineMessage
+                                variant="warning"
+                                icon={<IconAlertTriangle size={16} stroke={1.5} />}
+                              >
+                                이 앱은 선행 Operator{' '}
+                                <strong>{operatorRequirements.length}개</strong>가 필요합니다. 현재{' '}
+                                <strong>
+                                  {metOperatorCount} / {operatorRequirements.length}
+                                </strong>{' '}
+                                충족 — 누락된 Operator를 먼저 설치하세요. (설치 순서 무관)
+                              </InlineMessage>
+                            )}
+                            <div
+                              style={{
+                                border: '0.5px solid var(--color-border-tertiary, #e5e5e5)',
+                                borderRadius: 8,
+                                overflow: 'hidden',
+                              }}
+                            >
+                              {operatorRequirements.map((req, idx) => (
+                                <div
+                                  key={req.chartName}
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    gap: 12,
+                                    padding: '10px 14px',
+                                    borderTop:
+                                      idx === 0
+                                        ? 'none'
+                                        : '0.5px solid var(--color-border-tertiary, #eee)',
+                                  }}
+                                >
+                                  <div style={{ minWidth: 0 }}>
+                                    <div style={{ fontSize: 14, fontWeight: 500 }}>
+                                      {req.displayName}
+                                    </div>
+                                    <div
+                                      style={{
+                                        fontSize: 12,
+                                        fontFamily: 'var(--font-mono, monospace)',
+                                        color: 'var(--color-text-tertiary, #888)',
+                                      }}
+                                    >
+                                      {req.chartName}
+                                    </div>
+                                  </div>
+                                  {req.installed ? (
+                                    <span
+                                      style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: 4,
+                                        color: 'var(--color-text-success, #1d9e75)',
+                                        whiteSpace: 'nowrap',
+                                      }}
+                                    >
+                                      <IconCircleCheck size={16} stroke={1.5} />
+                                      <span style={{ fontSize: 12, fontWeight: 500 }}>설치됨</span>
+                                    </span>
+                                  ) : (
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 10,
+                                        whiteSpace: 'nowrap',
+                                      }}
+                                    >
+                                      <span
+                                        style={{
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          gap: 4,
+                                          color: 'var(--color-text-danger, #e24b4a)',
+                                        }}
+                                      >
+                                        <IconCircleX size={16} stroke={1.5} />
+                                        <span style={{ fontSize: 12, fontWeight: 500 }}>
+                                          미설치
+                                        </span>
+                                      </span>
+                                      <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        disabled={!req.available}
+                                        onClick={() =>
+                                          navigate(`/app-catalog/${req.chartName}/install`)
+                                        }
+                                      >
+                                        설치
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         )}
 
                         <FormField required>

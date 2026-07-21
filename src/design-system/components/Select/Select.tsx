@@ -301,9 +301,14 @@ export function Select({
     'border border-[var(--select-menu-border)]',
     'rounded-[var(--select-menu-radius)]',
     'shadow-[var(--select-menu-shadow)]',
-    'overflow-hidden',
+    'overflow-y-auto overflow-x-hidden',
     'focus:outline-none'
   );
+
+  // Cap the dropdown at 10 visible options; scroll beyond that.
+  // Item height = line-height + 2 × vertical padding (kept in sync with item tokens).
+  const dropdownMaxHeight =
+    'calc(10 * (var(--select-item-line-height) + 2 * var(--select-item-padding-y)))';
 
   return (
     <div ref={containerRef} className={wrapperClasses} data-figma-name="[TDS] Dropdown.Select">
@@ -393,6 +398,7 @@ export function Select({
                 top: dropdownPosition.top,
                 left: dropdownPosition.left,
                 width: dropdownPosition.width,
+                maxHeight: dropdownMaxHeight,
               }}
             >
               {/* Clear option */}

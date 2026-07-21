@@ -42,6 +42,8 @@ export interface TableProps<T = any> extends Omit<
   rows?: T[];
   rowKey: keyof T | ((row: T) => string);
   selectable?: boolean;
+  /** Per-row selectability. Rows returning false render a disabled checkbox and are excluded from select-all. Defaults to all rows selectable. */
+  isRowSelectable?: (row: T) => boolean;
   selectionType?: 'checkbox' | 'radio';
   selectedKeys?: string[];
   onSelectionChange?: (keys: string[]) => void;
@@ -95,6 +97,7 @@ export function Table<T extends Record<string, any>>({
   rows,
   rowKey,
   selectable = false,
+  isRowSelectable,
   selectionType = 'checkbox',
   selectedKeys = [],
   onSelectionChange,
@@ -199,17 +202,24 @@ export function Table<T extends Record<string, any>>({
     }
   };
 
+  // 선택 가능한 행만 select-all 대상으로 본다 (isRowSelectable=false인 행 제외)
+  const selectableKeys = useMemo(
+    () =>
+      sortedData.filter((row) => (isRowSelectable ? isRowSelectable(row) : true)).map(getRowKey),
+    [sortedData, isRowSelectable, getRowKey]
+  );
+
   const handleSelectAll = () => {
-    const allKeys = sortedData.map(getRowKey);
-    if (selectedKeys.length === sortedData.length && sortedData.length > 0) {
+    if (selectableKeys.length > 0 && selectableKeys.every((k) => selectedKeys.includes(k))) {
       onSelectionChange?.([]);
     } else {
-      onSelectionChange?.(allKeys);
+      onSelectionChange?.(selectableKeys);
     }
   };
 
-  const allSelected = sortedData.length > 0 && selectedKeys.length === sortedData.length;
-  const someSelected = selectedKeys.length > 0 && selectedKeys.length < sortedData.length;
+  const allSelected =
+    selectableKeys.length > 0 && selectableKeys.every((k) => selectedKeys.includes(k));
+  const someSelected = selectedKeys.length > 0 && !allSelected;
 
   const renderSortIcon = (columnKey: string) => {
     if (sortKey !== columnKey) {
@@ -450,12 +460,14 @@ export function Table<T extends Record<string, any>>({
                             {selectionType === 'radio' ? (
                               <Radio
                                 checked={isSelected}
+                                disabled={isRowSelectable ? !isRowSelectable(row) : false}
                                 onChange={() => handleSelectRow(key)}
                                 aria-label={`Select row ${rowIndex + 1}`}
                               />
                             ) : (
                               <Checkbox
                                 checked={isSelected}
+                                disabled={isRowSelectable ? !isRowSelectable(row) : false}
                                 onChange={() => handleSelectRow(key)}
                                 aria-label={`Select row ${rowIndex + 1}`}
                               />
@@ -617,12 +629,14 @@ export function Table<T extends Record<string, any>>({
                           {selectionType === 'radio' ? (
                             <Radio
                               checked={isSelected}
+                              disabled={isRowSelectable ? !isRowSelectable(row) : false}
                               onChange={() => handleSelectRow(key)}
                               aria-label={`Select row ${rowIndex + 1}`}
                             />
                           ) : (
                             <Checkbox
                               checked={isSelected}
+                              disabled={isRowSelectable ? !isRowSelectable(row) : false}
                               onChange={() => handleSelectRow(key)}
                               aria-label={`Select row ${rowIndex + 1}`}
                             />

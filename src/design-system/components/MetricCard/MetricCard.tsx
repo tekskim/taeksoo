@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { IconInfoCircle } from '@tabler/icons-react';
+import { IconHelpCircle } from '@tabler/icons-react';
 import { twMerge } from '../../utils/cn';
 import { Tooltip } from '../Tooltip';
 
@@ -53,7 +53,7 @@ function MetricCardBase({ title, value, tooltip, accent, className = '' }: Metri
           <span className="text-label-sm text-[var(--color-text-subtle)]">{title}</span>
           {tooltip && (
             <Tooltip content={tooltip}>
-              <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+              <IconHelpCircle size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
             </Tooltip>
           )}
         </div>

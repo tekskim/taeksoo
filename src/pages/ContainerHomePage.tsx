@@ -350,12 +350,13 @@ export function ContainerHomePage() {
     >
       <VStack gap={6}>
         {isMetis ? (
-          <EmptyState
-            variant="inline"
-            icon={<IconStack2 size={48} stroke={1.25} />}
-            title="아직 등록된 클러스터가 없습니다"
-            description="이 플랫폼에 등록된 클러스터가 없습니다. 클러스터가 등록되면 여기에 표시됩니다."
-          />
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <EmptyState
+              icon={<IconStack2 size={48} stroke={1.25} />}
+              title="No cluster available"
+              description="There is no cluster available yet. It will appear here once a cluster becomes available."
+            />
+          </div>
         ) : (
           <>
             {/* Clusters Section */}

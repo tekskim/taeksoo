@@ -196,7 +196,7 @@ function UsageChartGuidelines() {
               </Td>
               <Td>
                 Create 페이지 등에서 리소스 할당 시 현재 사용량 + 추가 예정량을 함께 시각화.
-                Estimate 구간은 동일 Status Color의 <strong>opacity 50%</strong>로 표시하여 기존
+                Estimate 구간은 동일 Status Color의 <strong>opacity 30%</strong>로 표시하여 기존
                 사용량과 시각적으로 구분
               </Td>
             </tr>
@@ -242,7 +242,7 @@ function UsageChartGuidelines() {
                 <strong>b-1. Estimate Fill</strong>
               </Td>
               <Td>
-                추가 예정량에 비례한 Bar. Fill과 동일 색상의 opacity 50%로 표시.{' '}
+                추가 예정량에 비례한 Bar. Fill과 동일 색상의 opacity 30%로 표시.{' '}
                 <code className="text-body-sm bg-[var(--color-surface-muted)] px-1 rounded">
                   newValue
                 </code>{' '}
@@ -600,7 +600,7 @@ export function UsageChartPage() {
               <Label>Gauge Bar Chart — Estimate Variant</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 Create 페이지에서 리소스 할당 시, 현재 사용량 + 추가 예정량(estimate)을 시각화.
-                Estimate 구간은 동일 색상의 opacity 50%로 표시.
+                Estimate 구간은 동일 색상의 opacity 30%로 표시.
               </span>
             </VStack>
             <div className="flex gap-6 flex-wrap items-start">

@@ -196,16 +196,16 @@ export function ContainerConsolePage() {
 
 function generateSampleLogs(_instanceName: string): string {
   const now = new Date();
+  // TDS UX writing(영문): 일자 축약형 Mth DD, YYYY + 24시간제(AM/PM·weekday 제거)
   const formatDate = (d: Date) =>
     d.toLocaleDateString('en-US', {
-      weekday: 'short',
       month: 'short',
       day: '2-digit',
       year: 'numeric',
     });
   const formatTime = (d: Date) =>
     d.toLocaleTimeString('en-US', {
-      hour12: true,
+      hour12: false,
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',

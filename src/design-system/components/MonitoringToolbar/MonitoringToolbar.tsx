@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { IconRefresh, IconX, IconCalendar } from '@tabler/icons-react';
+import { IconRefresh, IconCalendar } from '@tabler/icons-react';
 import { DatePicker } from '../DatePicker';
 
 /* ----------------------------------------
@@ -186,27 +186,6 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
     }
   };
 
-  const handleClearCustomPeriod = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!isCustomPeriodControlled) {
-      setInternalCustomPeriod(null);
-    }
-    if (!isTimeRangeControlled) {
-      setInternalTimeRange(defaultTimeRange);
-    }
-    onCustomPeriodChange?.(null);
-    onTimeRangeChange?.(defaultTimeRange);
-  };
-
-  const handlePeriodTextClick = () => {
-    if (customPeriod) {
-      setTempStartDate(customPeriod.start);
-      setTempEndDate(customPeriod.end);
-    }
-    setSelectingStart(true);
-    setShowDatePicker(true);
-  };
-
   const handleRangeChange = (range: { start: Date | null; end: Date | null }) => {
     setTempStartDate(range.start);
     setTempEndDate(range.end);
@@ -238,21 +217,20 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
       {/* Period Selector */}
       <div className="monitoring-toolbar-period" ref={datePickerRef}>
         {hasCustomPeriod ? (
-          <div className="monitoring-toolbar-period-tag">
-            <span className="monitoring-toolbar-period-tag-text" onClick={handlePeriodTextClick}>
+          // SSOT(audit/compute): 커스텀 기간 적용 시 outline 버튼 — 클릭하면 DatePicker 재오픈.
+          // 세그먼트(30m/1h…)를 누르면 해제되므로 별도 X 버튼은 두지 않는다.
+          <button
+            type="button"
+            className="monitoring-toolbar-period-tag"
+            onClick={handleCustomPeriodClick}
+          >
+            <IconCalendar size={12} stroke={2} />
+            <span>
               {formatDateForDisplay(customPeriod.start)}
               <span className="monitoring-toolbar-period-tag-divider">—</span>
               {formatDateForDisplay(customPeriod.end)}
             </span>
-            <button
-              type="button"
-              className="monitoring-toolbar-period-tag-close"
-              onClick={handleClearCustomPeriod}
-              aria-label="Clear custom period"
-            >
-              <IconX size={12} stroke={2} />
-            </button>
-          </div>
+          </button>
         ) : (
           <button
             type="button"

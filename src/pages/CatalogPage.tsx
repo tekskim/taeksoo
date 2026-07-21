@@ -18,6 +18,7 @@ import {
 import { IconSearch } from '@tabler/icons-react';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { AppCatalogTopBarActions } from '@/components/AppCatalogTopBarActions';
 import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
@@ -25,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import postgresqlLogo from '@/assets/catalog/postgresql.svg';
 import valkeyLogo from '@/assets/catalog/valkey.svg';
 import kafkaLogo from '@/assets/catalog/kafka.svg';
-import nginxLogo from '@/assets/catalog/nginx.svg';
+import seaweedfsLogo from '@/assets/catalog/seaweedfs.png';
 import milvusLogo from '@/assets/catalog/milvus.svg';
 import giteaLogo from '@/assets/catalog/gitea.svg';
 
@@ -37,7 +38,7 @@ type AppCategory =
   | 'All'
   | 'Database'
   | 'Data processing'
-  | 'Networking'
+  | 'Storage'
   | 'Vector DB'
   | 'Developer tools';
 type OperatorCategory = 'All' | 'Database';
@@ -92,13 +93,13 @@ const catalogApps: CatalogApp[] = [
     deployType: 'Helm',
   },
   {
-    id: 'nginx',
-    name: 'Nginx',
-    version: 'v4.11.0',
+    id: 'seaweedfs',
+    name: 'SeaweedFS',
+    version: 'v4.0.0',
     description:
-      'NGINX Ingress Controller for Kubernetes – routes external HTTP/HTTPS traffic into cluster services using Ingress resources. Multiple instances are allowed per namespace.',
-    category: 'Networking',
-    iconSrc: nginxLogo,
+      'SeaweedFS is a fast, S3-compatible distributed object storage system. Provides scalable blob, object, and file storage with automatic replication. Commonly used as the S3 backend for apps such as Milvus.',
+    category: 'Storage',
+    iconSrc: seaweedfsLogo,
     installed: false,
     deployType: 'Helm',
   },
@@ -131,7 +132,7 @@ const categories: AppCategory[] = [
   'Database',
   'Developer tools',
   'Data processing',
-  'Networking',
+  'Storage',
   'Vector DB',
 ];
 
@@ -215,7 +216,7 @@ export default function CatalogPage() {
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Catalog' }]} />}
-          actions={isStandalone ? undefined : <ContainerTopBarActions />}
+          actions={isStandalone ? <AppCatalogTopBarActions /> : <ContainerTopBarActions />}
         />
       }
     >

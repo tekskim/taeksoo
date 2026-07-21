@@ -20,6 +20,7 @@ import { IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { AppCatalogTopBarActions } from '@/components/AppCatalogTopBarActions';
 import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
@@ -191,7 +192,7 @@ export default function InstalledOperatorsPage() {
               }
             />
           }
-          actions={isStandalone ? undefined : <ContainerTopBarActions />}
+          actions={isStandalone ? <AppCatalogTopBarActions /> : <ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"

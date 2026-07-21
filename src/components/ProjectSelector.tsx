@@ -121,7 +121,7 @@ export function ProjectSelector({
     <button
       ref={buttonRef}
       type="button"
-      onClick={() => setIsOpen(!isOpen)}
+      onClick={() => projects.length > 0 && setIsOpen(!isOpen)}
       className={buttonClass}
       aria-expanded={isOpen}
       aria-haspopup="listbox"
@@ -133,7 +133,8 @@ export function ProjectSelector({
           <span
             className={`font-medium text-[var(--color-text-default)] ${variant === 'compact' ? 'text-label-md' : 'text-label-sm'}`}
           >
-            {selectedProject?.name || 'Select Project'}
+            {selectedProject?.name ||
+              (projects.length > 0 ? 'Select Project' : 'No tenant available')}
           </span>
           <ArrowRightLeft
             size={variant === 'compact' ? 14 : 12}

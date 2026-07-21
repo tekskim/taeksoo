@@ -52,8 +52,12 @@ export interface CatalogChart {
   iconText?: string;
   /** 설치 시 설정 항목 목록 */
   configurationFields: ConfigurationField[];
-  /** Operator-managed 앱의 선행 Operator chartName */
-  requiredOperatorChartName?: string;
+  /**
+   * Operator-managed 앱의 선행 Operator chartName 목록.
+   * 하나의 App이 복수 Operator에 의존할 수 있으므로 배열로 관리한다.
+   * (설치 순서 의존성은 현재 가정하지 않음 — 각 Operator를 독립적으로 설치)
+   */
+  requiredOperatorChartNames?: string[];
   /** 기본 values.yaml (YAML 에디터용) */
   defaultValuesYaml?: string;
 }

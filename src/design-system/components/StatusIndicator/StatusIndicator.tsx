@@ -206,6 +206,8 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
   size?: StatusSize;
   /** Custom label (overrides default) */
   label?: string;
+  /** Label-only badge: hide the icon and show only the label (layout="badge" only) */
+  hideIcon?: boolean;
   /** @deprecated thaki-ui compatibility - custom color scheme */
   colorScheme?: ThakiColorScheme;
   /** @deprecated thaki-ui compatibility - custom icon */
@@ -223,6 +225,7 @@ export const StatusIndicator = memo(function StatusIndicator({
   layout: rawLayout = 'default',
   size = 'md',
   label,
+  hideIcon = false,
   className = '',
   // thaki-ui compatibility props
   colorScheme,
@@ -302,18 +305,20 @@ export const StatusIndicator = memo(function StatusIndicator({
     );
   }
 
-  // Badge layout - square-ish with icon and text
+  // Badge layout - square-ish with icon and text (hideIcon → label-only)
   if (layout === 'badge') {
     const baseStyles = [
       'inline-flex items-center',
-      'gap-1.5',
+      hideIcon ? '' : 'gap-1.5',
       'font-medium',
       'rounded-md',
       'px-2 py-0.5',
       'text-[var(--status-text)]',
       'text-body-sm',
       'leading-4',
-    ].join(' ');
+    ]
+      .filter(Boolean)
+      .join(' ');
 
     const classes = twMerge(baseStyles, config.bgColor, className);
 
@@ -325,7 +330,7 @@ export const StatusIndicator = memo(function StatusIndicator({
         aria-label={displayLabel}
         {...props}
       >
-        <span className="shrink-0">{displayIcon}</span>
+        {!hideIcon && <span className="shrink-0">{displayIcon}</span>}
         <span>{displayLabel}</span>
       </span>
     );

@@ -23,6 +23,7 @@ import LogsIcon from '@/assets/appIcon/logs.webp';
 import AlertIcon from '@/assets/appIcon/alerts.webp';
 import AuditIcon from '@/assets/appIcon/audit.webp';
 import AppCatalogIcon from '@/assets/appIcon/app-catalog.webp';
+import KmsIcon from '@/assets/appIcon/kms.webp';
 
 /* ----------------------------------------
    Types
@@ -73,6 +74,7 @@ const apps: AppItem[] = [
   { id: 'alert', title: 'Alert', icon: AlertIcon, path: '/alerts' },
   { id: 'audit', title: 'Audit', icon: AuditIcon, path: '/audit' },
   { id: 'app-catalog', title: 'App Catalog', icon: AppCatalogIcon, path: '/app-catalog' },
+  { id: 'kms', title: 'KMS', icon: KmsIcon, path: '/kms' },
 ];
 
 /* ----------------------------------------

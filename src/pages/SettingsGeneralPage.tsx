@@ -28,20 +28,40 @@ const themeOptions = [
 ];
 
 // Timezone options
+// Curated IANA zones, sorted by standard (non-DST) offset ascending.
+// Labels use the UTC standard offset notation (ISO 8601, two-digit HH:MM)
+// and English IANA identifiers.
 const timezoneOptions = [
-  { value: 'Pacific/Honolulu', label: '(GMT-10:00) Pacific/Honolulu' },
-  { value: 'America/Los_Angeles', label: '(GMT-8:00) America/Los_Angeles' },
-  { value: 'America/Denver', label: '(GMT-7:00) America/Denver' },
-  { value: 'America/Chicago', label: '(GMT-6:00) America/Chicago' },
-  { value: 'America/New_York', label: '(GMT-5:00) America/New_York' },
-  { value: 'UTC', label: '(GMT+0:00) UTC' },
-  { value: 'Europe/London', label: '(GMT+0:00) Europe/London' },
-  { value: 'Europe/Paris', label: '(GMT+1:00) Europe/Paris' },
-  { value: 'Asia/Dubai', label: '(GMT+4:00) Asia/Dubai' },
-  { value: 'Asia/Singapore', label: '(GMT+8:00) Asia/Singapore' },
-  { value: 'Asia/Tokyo', label: '(GMT+9:00) Asia/Tokyo' },
-  { value: 'Asia/Seoul', label: '(GMT+9:00) Asia/Seoul' },
-  { value: 'Australia/Sydney', label: '(GMT+10:00) Australia/Sydney' },
+  { value: 'Pacific/Honolulu', label: '(UTC-10:00) Pacific/Honolulu' },
+  { value: 'America/Anchorage', label: '(UTC-09:00) America/Anchorage' },
+  { value: 'America/Los_Angeles', label: '(UTC-08:00) America/Los_Angeles' },
+  { value: 'America/Denver', label: '(UTC-07:00) America/Denver' },
+  { value: 'America/Chicago', label: '(UTC-06:00) America/Chicago' },
+  { value: 'America/New_York', label: '(UTC-05:00) America/New_York' },
+  { value: 'America/Sao_Paulo', label: '(UTC-03:00) America/Sao_Paulo' },
+  { value: 'UTC', label: '(UTC+00:00) UTC' },
+  { value: 'Europe/London', label: '(UTC+00:00) Europe/London' },
+  { value: 'Europe/Paris', label: '(UTC+01:00) Europe/Paris' },
+  { value: 'Europe/Berlin', label: '(UTC+01:00) Europe/Berlin' },
+  { value: 'Africa/Cairo', label: '(UTC+02:00) Africa/Cairo' },
+  { value: 'Europe/Athens', label: '(UTC+02:00) Europe/Athens' },
+  { value: 'Europe/Moscow', label: '(UTC+03:00) Europe/Moscow' },
+  { value: 'Asia/Riyadh', label: '(UTC+03:00) Asia/Riyadh' },
+  { value: 'Asia/Tehran', label: '(UTC+03:30) Asia/Tehran' },
+  { value: 'Asia/Dubai', label: '(UTC+04:00) Asia/Dubai' },
+  { value: 'Asia/Karachi', label: '(UTC+05:00) Asia/Karachi' },
+  { value: 'Asia/Kolkata', label: '(UTC+05:30) Asia/Kolkata' },
+  { value: 'Asia/Kathmandu', label: '(UTC+05:45) Asia/Kathmandu' },
+  { value: 'Asia/Dhaka', label: '(UTC+06:00) Asia/Dhaka' },
+  { value: 'Asia/Bangkok', label: '(UTC+07:00) Asia/Bangkok' },
+  { value: 'Asia/Jakarta', label: '(UTC+07:00) Asia/Jakarta' },
+  { value: 'Asia/Hong_Kong', label: '(UTC+08:00) Asia/Hong_Kong' },
+  { value: 'Asia/Shanghai', label: '(UTC+08:00) Asia/Shanghai' },
+  { value: 'Asia/Singapore', label: '(UTC+08:00) Asia/Singapore' },
+  { value: 'Asia/Seoul', label: '(UTC+09:00) Asia/Seoul' },
+  { value: 'Asia/Tokyo', label: '(UTC+09:00) Asia/Tokyo' },
+  { value: 'Australia/Sydney', label: '(UTC+10:00) Australia/Sydney' },
+  { value: 'Pacific/Auckland', label: '(UTC+12:00) Pacific/Auckland' },
 ];
 
 /* ----------------------------------------

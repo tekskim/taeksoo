@@ -141,9 +141,63 @@ const generateMockHistogramBins = (): LogHistogramBucket[] => {
 
 const MOCK_HISTOGRAM_BINS: LogHistogramBucket[] = generateMockHistogramBins();
 
+// Custom Period(드래그/커스텀 기간) 재버킷팅 — 선택 기간 "길이"에 따라 구간 크기(step)를
+// 매핑한다. 정책서 "Period(커스텀 기간) 선택 시 구간 크기 결정 규칙"과 동일.
+const CUSTOM_PERIOD_STEP_RULES: ReadonlyArray<readonly [number, number]> = [
+  [15 * 60_000, 30_000], // ≤ 15분 → 30초
+  [60 * 60_000, 2 * 60_000], // ≤ 1시간 → 2분
+  [6 * 60 * 60_000, 10 * 60_000], // ≤ 6시간 → 10분
+  [24 * 60 * 60_000, 60 * 60_000], // ≤ 24시간 → 60분
+];
+const FALLBACK_STEP_MS = 6 * 60 * 60_000; // > 24시간 → 6시간
+const MAX_HISTOGRAM_BARS = 60;
+
+const resolveStepMsForWindow = (durationMs: number): number => {
+  const matched = CUSTOM_PERIOD_STEP_RULES.find(([maxDuration]) => durationMs <= maxDuration);
+  return matched ? matched[1] : FALLBACK_STEP_MS;
+};
+
+const formatBucketLabel = (date: Date, stepMs: number): string => {
+  const hh = String(date.getHours()).padStart(2, '0');
+  const mm = String(date.getMinutes()).padStart(2, '0');
+  if (stepMs < 60_000) {
+    const ss = String(date.getSeconds()).padStart(2, '0');
+    return `${hh}:${mm}:${ss}`;
+  }
+  if (stepMs >= 24 * 60 * 60_000) {
+    const mo = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${mo}/${dd}`;
+  }
+  return `${hh}:${mm}`;
+};
+
+// 선택한 기간 [start, end)을 step 단위로 재버킷팅한다(경계 정렬, 최대 60개).
+const generateHistogramBinsForWindow = (
+  startMs: number,
+  endMs: number,
+  stepMs: number
+): LogHistogramBucket[] => {
+  const bins: LogHistogramBucket[] = [];
+  const alignedStart = Math.floor(startMs / stepMs) * stepMs;
+  for (let t = alignedStart; t < endMs && bins.length < MAX_HISTOGRAM_BARS; t += stepMs) {
+    const date = new Date(t);
+    bins.push({
+      isoTime: date.toISOString(),
+      timeLabel: formatBucketLabel(date, stepMs),
+      count: Math.floor(Math.random() * 30) + 1,
+    });
+  }
+  return bins;
+};
+
+const parseRowTimeMs = (time: string): number => new Date(time.replace(' ', 'T')).getTime();
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const LOG_PAGE_SIZE = 20;
+// 무한 스크롤 1회 로드 단위. 뷰포트(520px / 16px ≈ 32행)를 넘겨야 스크롤이 생겨
+// 하단 근접 로드가 동작하므로 페이지 크기를 뷰포트보다 크게 둔다.
+const LOG_PAGE_SIZE = 40;
 const LOG_VIEWPORT_HEIGHT = 520;
 const LOG_ROW_HEIGHT = 16;
 const VIRTUAL_OVERSCAN = 8;
@@ -182,19 +236,6 @@ const FILTER_FIELDS: FilterField[] = [
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-const extractTimeLabel = (fullTimestamp: string): string => {
-  if (!fullTimestamp) return '';
-  const timePart = fullTimestamp.includes(' ')
-    ? (fullTimestamp.split(' ')[1] ?? '')
-    : fullTimestamp;
-  return timePart.split(':').slice(0, 2).join(':');
-};
-
-const getBinIndexByTimeLabel = (
-  timeLabel: string,
-  histogramBins: readonly LogHistogramBucket[]
-): number => histogramBins.findIndex((bin) => bin.timeLabel === timeLabel);
 
 const clampRange = (
   candidate: RangeSelection,
@@ -357,8 +398,6 @@ const LogExplorerPage = (): ReactElement => {
   const [retentionDays, setRetentionDays] = useState<number>(() => readRetentionDays());
   const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>(null);
   const [resultCursor, setResultCursor] = useState<string | null>(null);
-  const [selectedRange, setSelectedRange] = useState<RangeSelection | null>(null);
-  const [selectedHistogramIndices, setSelectedHistogramIndices] = useState<number[] | null>(null);
   const [selectedCodeLineId, setSelectedCodeLineId] = useState<string | null>(null);
   const [logScrollTop, setLogScrollTop] = useState<number>(0);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -394,7 +433,14 @@ const LogExplorerPage = (): ReactElement => {
     [filtersByField]
   );
 
-  const histogramBins = MOCK_HISTOGRAM_BINS;
+  // Custom Period가 적용되면(드래그/커스텀 기간) 선택 기간 길이에 맞춰 재버킷팅한다.
+  const histogramBins = useMemo<LogHistogramBucket[]>(() => {
+    if (!customPeriod) return MOCK_HISTOGRAM_BINS;
+    const startMs = customPeriod.start.getTime();
+    const endMs = customPeriod.end.getTime();
+    if (!(endMs > startMs)) return MOCK_HISTOGRAM_BINS;
+    return generateHistogramBinsForWindow(startMs, endMs, resolveStepMsForWindow(endMs - startMs));
+  }, [customPeriod]);
 
   const filteredRows = useMemo(() => {
     const queryFilter = (filtersByField.query?.[0] ?? '').toLowerCase();
@@ -442,22 +488,16 @@ const LogExplorerPage = (): ReactElement => {
     );
   }, [visibleHistogramBins]);
 
-  const selectedHistogramIndexSet = useMemo(
-    () =>
-      selectedHistogramIndices && selectedHistogramIndices.length > 0
-        ? new Set(selectedHistogramIndices)
-        : null,
-    [selectedHistogramIndices]
-  );
-
+  // Custom Period가 적용되면 선택 기간 [start, end)으로 행을 필터링한다.
   const rangeFilteredRows = useMemo(() => {
-    if (!selectedHistogramIndexSet) return filteredRows;
+    if (!customPeriod) return filteredRows;
+    const startMs = customPeriod.start.getTime();
+    const endMs = customPeriod.end.getTime();
     return filteredRows.filter((row) => {
-      const binIndex = getBinIndexByTimeLabel(extractTimeLabel(row.time), visibleHistogramBins);
-      if (binIndex < 0) return false;
-      return selectedHistogramIndexSet.has(binIndex);
+      const t = parseRowTimeMs(row.time);
+      return t >= startMs && t < endMs;
     });
-  }, [filteredRows, selectedHistogramIndexSet, visibleHistogramBins]);
+  }, [filteredRows, customPeriod]);
 
   const paginatedResult = useMemo(() => {
     const total = rangeFilteredRows.length;
@@ -483,22 +523,6 @@ const LogExplorerPage = (): ReactElement => {
   const visibleResultRows = paginatedResult.visibleRows;
   const hasMoreResults = paginatedResult.hasMore;
   const displayedResultCount = visibleResultRows.length;
-
-  const selectedRangeLabel = useMemo(() => {
-    if (!selectedRange) return '-';
-    const start = visibleHistogramBins[selectedRange.startIndex];
-    const end = visibleHistogramBins[selectedRange.endIndex];
-    if (!start || !end) return '-';
-
-    const selectedTotal = visibleHistogramBins
-      .slice(selectedRange.startIndex, selectedRange.endIndex + 1)
-      .reduce((sum, bin) => sum + bin.count, 0);
-    const ratioStr =
-      histogramTotalCount > 0
-        ? ` (${((selectedTotal / histogramTotalCount) * 100).toFixed(1)}%)`
-        : '';
-    return `${start.timeLabel} ~ ${end.timeLabel} · ${selectedTotal.toLocaleString()}${ratioStr}`;
-  }, [selectedRange, visibleHistogramBins, histogramTotalCount]);
 
   const filteredRowMap = useMemo(
     () => new Map(visibleResultRows.map((row) => [row.id, row])),
@@ -569,16 +593,6 @@ const LogExplorerPage = (): ReactElement => {
   const histogramPeakHover = isDark ? '#fed7aa' : '#fdba74'; // state.warning +2 lightness steps
 
   const histogramChartOptions = useMemo<EChartsOption>(() => {
-    const markAreaHalfBand = HISTOGRAM_BAR_WIDTH_RATIO / 2 + 0.02;
-    const markAreaData: Array<[{ xAxis: number }, { xAxis: number }]> = selectedRange
-      ? [
-          [
-            { xAxis: selectedRange.startIndex - markAreaHalfBand },
-            { xAxis: selectedRange.endIndex + markAreaHalfBand },
-          ],
-        ]
-      : [];
-
     const peakIndex = peakBucket
       ? visibleHistogramBins.findIndex((b) => b.isoTime === peakBucket.isoTime)
       : -1;
@@ -677,15 +691,6 @@ const LogExplorerPage = (): ReactElement => {
             borderRadius: 0,
           },
           selectedMode: false,
-          markArea: {
-            silent: true,
-            itemStyle: {
-              color: isDark ? 'rgba(96, 165, 250, 0.12)' : 'rgba(37, 99, 235, 0.12)',
-              borderColor: isDark ? 'rgba(96, 165, 250, 0.5)' : 'rgba(37, 99, 235, 0.5)',
-              borderWidth: 1,
-            },
-            data: markAreaData,
-          },
         },
       ],
     };
@@ -698,7 +703,6 @@ const LogExplorerPage = (): ReactElement => {
     histogramStepMs,
     histogramTotalCount,
     peakBucket,
-    selectedRange,
     visibleHistogramBins,
   ]);
 
@@ -716,41 +720,34 @@ const LogExplorerPage = (): ReactElement => {
     [visibleHistogramBins]
   );
 
-  const applyHistogramSelection = useCallback(
+  // 선택한 버킷 구간(클릭·드래그)을 Custom Period({start, end})로 환산해 적용한다.
+  // 적용되면 histogramBins가 선택 기간 길이에 맞춰 재버킷팅된다(별도 오버레이 없음).
+  const applyCustomPeriodFromIndices = useCallback(
     (indices: number[]): void => {
-      if (indices.length === 0) {
-        setSelectedHistogramIndices(null);
-        setSelectedRange(null);
-        return;
-      }
       const range = toRangeFromIndices(indices);
       if (!range) return;
-      setSelectedHistogramIndices(indices);
-      setSelectedRange(range);
+      const startBucket = visibleHistogramBins[range.startIndex];
+      const endBucket = visibleHistogramBins[range.endIndex];
+      if (!startBucket || !endBucket) return;
+      const start = new Date(startBucket.isoTime);
+      // 마지막 버킷의 끝까지 포함하도록 step만큼 더한다
+      const end = new Date(new Date(endBucket.isoTime).getTime() + histogramStepMs);
+      setCustomPeriod({ start, end });
     },
-    [toRangeFromIndices]
+    [toRangeFromIndices, visibleHistogramBins, histogramStepMs]
   );
 
-  const clearHistogramSelection = useCallback((): void => {
-    setSelectedHistogramIndices(null);
-    setSelectedRange(null);
-    suppressNextHistogramClickRef.current = false;
+  const handleTimeRangeChange = useCallback((nextTimeRange: TimeRangeValue): void => {
+    // 시간 범위 프리셋 선택 시 Custom Period(드래그 선택)를 해제한다.
+    setTimeRange(nextTimeRange);
+    setCustomPeriod(null);
   }, []);
-
-  const handleTimeRangeChange = useCallback(
-    (nextTimeRange: TimeRangeValue): void => {
-      setTimeRange(nextTimeRange);
-      clearHistogramSelection();
-    },
-    [clearHistogramSelection]
-  );
 
   const handleCustomPeriodChange = useCallback(
     (nextPeriod: { start: Date; end: Date } | null): void => {
       setCustomPeriod(nextPeriod);
-      clearHistogramSelection();
     },
-    [clearHistogramSelection]
+    []
   );
 
   const handleResetFilters = (): void => {
@@ -758,7 +755,6 @@ const LogExplorerPage = (): ReactElement => {
     setCustomPeriod(null);
     setResultCursor(null);
     setAppliedFilters([]);
-    clearHistogramSelection();
   };
 
   // ─── Effects ────────────────────────────────────────────────────────────────
@@ -775,33 +771,6 @@ const LogExplorerPage = (): ReactElement => {
     }
   }, [retentionDays]);
 
-  useEffect(() => {
-    if (visibleHistogramBins.length === 0) {
-      clearHistogramSelection();
-      return;
-    }
-    if (!selectedRange) return;
-    if (
-      selectedRange.startIndex >= visibleHistogramBins.length ||
-      selectedRange.endIndex >= visibleHistogramBins.length
-    ) {
-      clearHistogramSelection();
-    }
-  }, [clearHistogramSelection, selectedRange, visibleHistogramBins.length]);
-
-  useEffect(() => {
-    if (!selectedRange) return;
-    const handleDocumentMouseDown = (event: MouseEvent): void => {
-      const container = histogramContainerRef.current;
-      if (!container) return;
-      if (!container.contains(event.target as Node)) {
-        clearHistogramSelection();
-      }
-    };
-    document.addEventListener('mousedown', handleDocumentMouseDown);
-    return () => document.removeEventListener('mousedown', handleDocumentMouseDown);
-  }, [selectedRange, clearHistogramSelection]);
-
   const handleHistogramClick = useCallback(
     (event: unknown): void => {
       if (suppressNextHistogramClickRef.current) {
@@ -810,9 +779,10 @@ const LogExplorerPage = (): ReactElement => {
       }
       const index = parseChartClickIndex(event);
       if (index === null) return;
-      applyHistogramSelection([index]);
+      // 단일 막대 클릭 → 해당 구간을 Custom Period로 적용(재버킷팅).
+      applyCustomPeriodFromIndices([index]);
     },
-    [applyHistogramSelection]
+    [applyCustomPeriodFromIndices]
   );
 
   const clickHandlerRef = useRef(handleHistogramClick);
@@ -943,7 +913,7 @@ const LogExplorerPage = (): ReactElement => {
         Math.max(minCoord, maxCoord),
         visibleHistogramBins
       );
-      applyHistogramSelection(overlapped);
+      applyCustomPeriodFromIndices(overlapped);
     };
 
     container.addEventListener('mousedown', handleMouseDown);
@@ -956,7 +926,7 @@ const LogExplorerPage = (): ReactElement => {
       window.removeEventListener('mouseup', handleMouseUp);
       if (dragFrame !== null) window.cancelAnimationFrame(dragFrame);
     };
-  }, [applyHistogramSelection, visibleHistogramBins]);
+  }, [applyCustomPeriodFromIndices, visibleHistogramBins]);
 
   // ─── SaveQuery handler ────────────────────────────────────────────────────
 
@@ -1014,7 +984,7 @@ const LogExplorerPage = (): ReactElement => {
       });
     }
     setResultCursor(null);
-    clearHistogramSelection();
+    setCustomPeriod(null);
     setAppliedFilters(nextFilters);
   };
 
@@ -1066,8 +1036,8 @@ const LogExplorerPage = (): ReactElement => {
         <div className="flex flex-col gap-4 w-full pt-6">
           <PageHeader title="Log Explorer" />
 
-          <div className="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3">
-            {/* Toolbar row */}
+          <div className="flex flex-col gap-2">
+            {/* Toolbar row — Audit Logs 상단 패턴: 박스 테두리/배경/패딩 없이 인라인 배치 */}
             <div className="flex w-full flex-wrap items-center gap-2">
               <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 overflow-visible">
                 <FilterSearchInput
@@ -1084,6 +1054,8 @@ const LogExplorerPage = (): ReactElement => {
                   onTimeRangeChange={handleTimeRangeChange}
                   customPeriod={customPeriod}
                   onCustomPeriodChange={handleCustomPeriodChange}
+                  onRefresh={handleResetFilters}
+                  showRefresh
                 />
               </div>
               <HStack gap={2} className="ml-auto shrink-0">
@@ -1182,23 +1154,6 @@ const LogExplorerPage = (): ReactElement => {
                 </div>
               </div>
             </div>
-
-            {selectedRange && (
-              <div className="border-t border-[var(--color-border-default)] px-4 py-2">
-                <HStack gap={2} align="center">
-                  <Badge theme="blu" size="sm" type="subtle">
-                    Selected: {selectedRangeLabel}
-                  </Badge>
-                  <button
-                    type="button"
-                    className="text-body-sm text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                    onClick={clearHistogramSelection}
-                  >
-                    ✕ Clear
-                  </button>
-                </HStack>
-              </div>
-            )}
           </div>
         </div>
 
@@ -1226,7 +1181,19 @@ const LogExplorerPage = (): ReactElement => {
                   <div
                     className="w-full overflow-y-auto bg-[#020617]"
                     style={{ height: `${LOG_VIEWPORT_HEIGHT}px` }}
-                    onScroll={(event) => setLogScrollTop(event.currentTarget.scrollTop)}
+                    onScroll={(event) => {
+                      const el = event.currentTarget;
+                      setLogScrollTop(el.scrollTop);
+                      // 무한 스크롤: 하단 근접 시 다음 페이지 자동 로드
+                      const distanceToBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+                      if (
+                        hasMoreResults &&
+                        paginatedResult.nextCursor &&
+                        distanceToBottom <= LOG_ROW_HEIGHT * VIRTUAL_OVERSCAN
+                      ) {
+                        setResultCursor(paginatedResult.nextCursor);
+                      }
+                    }}
                   >
                     <SelectableLogCodeBlock
                       lines={codeBlockLines}
@@ -1252,18 +1219,6 @@ const LogExplorerPage = (): ReactElement => {
                     />
                   </div>
                 </div>
-                {hasMoreResults && (
-                  <div className="mt-3 flex justify-center">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setResultCursor(paginatedResult.nextCursor)}
-                      disabled={!paginatedResult.nextCursor}
-                    >
-                      Load More
-                    </Button>
-                  </div>
-                )}
               </div>
             )}
           </div>

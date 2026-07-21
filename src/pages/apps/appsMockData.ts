@@ -224,7 +224,7 @@ resources:
     duplicateInstallable: true,
     iconText: 'C',
     configurationFields: CNPG_FIELDS,
-    requiredOperatorChartName: 'cnpg-operator',
+    requiredOperatorChartNames: ['cnpg-operator'],
     defaultValuesYaml: `instanceName: "postgres"
 instanceCount: 3
 storageClass: "standard"
@@ -267,33 +267,39 @@ persistence:
 `,
   },
 
-  /* ── Networking ── */
+  /* ── Storage ── */
   {
-    id: 'nginx',
-    name: 'nginx',
-    displayName: 'Nginx',
-    category: 'Networking',
+    id: 'seaweedfs',
+    name: 'seaweedfs',
+    displayName: 'SeaweedFS',
+    category: 'Storage',
     packageType: 'application',
     packageLabel: 'Helm',
-    availableVersions: ['4.10.0'],
-    version: '4.10.0',
+    availableVersions: ['4.0.0'],
+    version: '4.0.0',
     description:
-      'NGINX Ingress Controller for Kubernetes routes external HTTP/HTTPS traffic into cluster services using Ingress resources. Multiple instances are allowed per namespace.',
+      'SeaweedFS is a fast, S3-compatible distributed object storage system. Provides scalable blob, object, and file storage with automatic replication. Commonly used as the S3 backend for apps such as Milvus.',
     installScope: 'namespace',
     duplicateInstallable: true,
-    iconText: 'N',
+    iconText: 'S',
     configurationFields: [],
-    defaultValuesYaml: `controller:
-  replicaCount: 2
-  service:
-    type: LoadBalancer
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "90Mi"
-    limits:
-      cpu: "500m"
-      memory: "256Mi"
+    defaultValuesYaml: `master:
+  replicas: 1
+
+volume:
+  replicas: 1
+  dataDirs:
+    - name: data
+      type: persistentVolumeClaim
+      size: 10Gi
+      storageClass: standard
+
+filer:
+  replicas: 1
+
+s3:
+  enabled: true
+  port: 8333
 `,
   },
 
@@ -301,40 +307,65 @@ persistence:
   {
     id: 'kafka',
     name: 'kafka',
-    displayName: 'Kafka',
+    displayName: 'Kafka Instance',
     category: 'Data Processing',
     packageType: 'application',
     packageLabel: 'Operator-managed',
-    availableVersions: ['28.3.0'],
-    version: '28.3.0',
+    availableVersions: ['4.2.0'],
+    version: '4.2.0',
     description:
-      'Apache Kafka is an open-source distributed event streaming platform used for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.',
+      'Apache Kafka cluster instance managed by the Strimzi Operator. Runs in KRaft mode (no ZooKeeper) — controller + broker roles via KafkaNodePool. Requires the Strimzi Kafka Operator to be installed first.',
     installScope: 'namespace',
     duplicateInstallable: false,
     iconText: 'K',
     configurationFields: [],
+    // 실제 chart(app-catalog-chart) 기준: Kafka Instance는 Strimzi Operator 1개에만 의존.
+    // Strimzi는 KRaft 모드라 ZooKeeper를 쓰지 않는다 (별도 ZooKeeper Operator 의존 없음).
+    requiredOperatorChartNames: ['strimzi-kafka-operator'],
     defaultValuesYaml: `replicas: 3
 storage:
-  type: persistent-claim
-  size: 10Gi
-  class: standard
+  type: jbod
+  volumes:
+    - id: 0
+      type: persistent-claim
+      size: 50Gi
 `,
   },
   {
-    id: 'hadoop-ecosystem',
-    name: 'hadoop-ecosystem',
-    displayName: 'Hadoop ecosystem',
+    id: 'hdfs',
+    name: 'hdfs',
+    displayName: 'HDFS Instance',
     category: 'Data Processing',
     packageType: 'application',
-    packageLabel: 'Helm',
-    availableVersions: ['[unknown]'],
-    version: '[unknown]',
+    packageLabel: 'Operator-managed',
+    availableVersions: ['3.3.6'],
+    version: '3.3.6',
     description:
-      'Hadoop ecosystem chart for large-scale data processing. Includes HDFS, YARN, and MapReduce components.',
+      'Apache Hadoop HDFS cluster (NameNode HA) managed by the Kubedoop operator set. Creates ZookeeperCluster + ZookeeperZnode + HdfsCluster CRs. Requires the Kubedoop HDFS operator umbrella (5 operators) to be installed first.',
     installScope: 'namespace',
     duplicateInstallable: true,
     iconText: 'H',
     configurationFields: [],
+    // 실제 chart 기준 "2개 이상 Operator" 케이스.
+    // HDFS Operator는 umbrella 차트로 5개 operator를 번들한다
+    // (commons / secret / listener / zookeeper / hdfs — apps/hdfs/operator/helm/Chart.yaml).
+    // 추상 복수의존 모델로 5개를 행 단위 의존성으로 노출한다.
+    requiredOperatorChartNames: [
+      'commons-operator',
+      'secret-operator',
+      'listener-operator',
+      'zookeeper-operator',
+      'hdfs-operator',
+    ],
+    defaultValuesYaml: `zookeeper:
+  enabled: true
+nameNode:
+  replicas: 2
+journalNode:
+  replicas: 1  # operator 0.3.0 제약: JN=1 고정
+dataNode:
+  replicas: 3
+`,
   },
 
   /* ── Vector DB ── */
@@ -388,6 +419,103 @@ pulsar:
     installScope: 'cluster',
     duplicateInstallable: false,
     iconText: 'CO',
+    configurationFields: [],
+  },
+  {
+    id: 'strimzi-kafka-operator',
+    name: 'strimzi-kafka-operator',
+    displayName: 'Strimzi Kafka Operator',
+    category: 'Data Processing',
+    packageType: 'operator',
+    packageLabel: 'Operator',
+    availableVersions: ['0.51.0'],
+    version: '0.51.0',
+    description:
+      'Strimzi Operator manages Apache Kafka clusters on Kubernetes via the Kafka CRD (KRaft mode). Required to provision Kafka instances.',
+    installScope: 'cluster',
+    duplicateInstallable: false,
+    iconText: 'SO',
+    configurationFields: [],
+  },
+  // ── Kubedoop HDFS operator set (umbrella v0.3.0) — apps/hdfs/operator/helm/Chart.yaml ──
+  {
+    id: 'commons-operator',
+    name: 'commons-operator',
+    displayName: 'Commons Operator',
+    category: 'Data Processing',
+    packageType: 'operator',
+    packageLabel: 'Operator',
+    availableVersions: ['0.3.0'],
+    version: '0.3.0',
+    description:
+      'Kubedoop commons operator. Provides shared CRDs and controllers used by the Kubedoop operator set (HDFS, ZooKeeper, etc.).',
+    installScope: 'cluster',
+    duplicateInstallable: false,
+    iconText: 'CO',
+    configurationFields: [],
+  },
+  {
+    id: 'secret-operator',
+    name: 'secret-operator',
+    displayName: 'Secret Operator',
+    category: 'Data Processing',
+    packageType: 'operator',
+    packageLabel: 'Operator',
+    availableVersions: ['0.3.0'],
+    version: '0.3.0',
+    description:
+      'Kubedoop secret operator. Provides a CSI driver for TLS/credential provisioning to Kubedoop workloads.',
+    installScope: 'cluster',
+    duplicateInstallable: false,
+    iconText: 'SE',
+    configurationFields: [],
+  },
+  {
+    id: 'listener-operator',
+    name: 'listener-operator',
+    displayName: 'Listener Operator',
+    category: 'Data Processing',
+    packageType: 'operator',
+    packageLabel: 'Operator',
+    availableVersions: ['0.3.0'],
+    version: '0.3.0',
+    description:
+      'Kubedoop listener operator. Provides a CSI driver and ListenerClass presets for exposing services (ClusterIP / NodePort / LoadBalancer).',
+    installScope: 'cluster',
+    duplicateInstallable: false,
+    iconText: 'LO',
+    configurationFields: [],
+  },
+  {
+    id: 'zookeeper-operator',
+    name: 'zookeeper-operator',
+    displayName: 'ZooKeeper Operator',
+    category: 'Data Processing',
+    packageType: 'operator',
+    packageLabel: 'Operator',
+    availableVersions: ['0.3.0'],
+    version: '0.3.0',
+    description:
+      'Kubedoop ZooKeeper operator. Manages ZookeeperCluster / ZookeeperZnode CRs used for HDFS NameNode HA coordination.',
+    installScope: 'cluster',
+    duplicateInstallable: false,
+    iconText: 'ZO',
+    configurationFields: [],
+  },
+  {
+    id: 'hdfs-operator',
+    name: 'hdfs-operator',
+    displayName: 'HDFS Operator',
+    category: 'Data Processing',
+    packageType: 'operator',
+    packageLabel: 'Operator',
+    availableVersions: ['0.3.0'],
+    version: '0.3.0',
+    description:
+      'Kubedoop HDFS operator. Manages HdfsCluster CRs (NameNode HA / JournalNode / DataNode). Headline operator of the HDFS umbrella set.',
+    installScope: 'cluster',
+    duplicateInstallable: false,
+    iconText: 'HO',
     configurationFields: [],
   },
 ];
@@ -558,6 +686,61 @@ export const installedOperatorsMock: InstalledOperator[] = [
       { kind: 'CustomResourceDefinition', name: 'clusters.postgresql.cnpg.io' },
     ],
   },
+  // ── Kubedoop HDFS operator set: 5종 중 4종 설치됨 / hdfs-operator 미설치 (부분 충족 4/5 데모) ──
+  {
+    id: 'op-commons-operator-system',
+    name: 'commons-operator',
+    displayName: 'Commons Operator',
+    version: '0.3.0',
+    status: 'Deployed',
+    namespace: 'kubedoop-operators',
+    installedAt: '2026-05-20 10:00',
+    dependentApplicationCount: 0,
+    resources: [{ kind: 'Deployment', name: 'commons-operator', namespace: 'kubedoop-operators' }],
+  },
+  {
+    id: 'op-secret-operator-system',
+    name: 'secret-operator',
+    displayName: 'Secret Operator',
+    version: '0.3.0',
+    status: 'Deployed',
+    namespace: 'kubedoop-operators',
+    installedAt: '2026-05-20 10:01',
+    dependentApplicationCount: 0,
+    resources: [
+      { kind: 'Deployment', name: 'secret-operator', namespace: 'kubedoop-operators' },
+      { kind: 'DaemonSet', name: 'secret-operator-csi', namespace: 'kubedoop-operators' },
+    ],
+  },
+  {
+    id: 'op-listener-operator-system',
+    name: 'listener-operator',
+    displayName: 'Listener Operator',
+    version: '0.3.0',
+    status: 'Deployed',
+    namespace: 'kubedoop-operators',
+    installedAt: '2026-05-20 10:02',
+    dependentApplicationCount: 0,
+    resources: [
+      { kind: 'Deployment', name: 'listener-operator', namespace: 'kubedoop-operators' },
+      { kind: 'DaemonSet', name: 'listener-operator-csi', namespace: 'kubedoop-operators' },
+    ],
+  },
+  {
+    id: 'op-zookeeper-operator-system',
+    name: 'zookeeper-operator',
+    displayName: 'ZooKeeper Operator',
+    version: '0.3.0',
+    status: 'Deployed',
+    namespace: 'kubedoop-operators',
+    installedAt: '2026-05-20 10:03',
+    dependentApplicationCount: 0,
+    resources: [
+      { kind: 'Deployment', name: 'zookeeper-operator', namespace: 'kubedoop-operators' },
+      { kind: 'CustomResourceDefinition', name: 'zookeeperclusters.zookeeper.kubedoop.dev' },
+    ],
+  },
+  // hdfs-operator 는 의도적으로 미설치 → HDFS Instance 설치 시 4/5 충족, 1개 누락
 ];
 
 /** Operator 의존 App 목록 (operatorId → InstalledApp[]) */
@@ -576,3 +759,46 @@ export const namespaceOptions = [
   { value: 'ai', label: 'ai' },
   { value: 'cnpg-system', label: 'cnpg-system' },
 ];
+
+/* ============================================================
+   Operator 의존성 해석 (App Catalog Install 게이팅)
+   ============================================================ */
+
+/** 해당 Operator chartName이 현재 클러스터에 설치되어 있는지 */
+export function isOperatorInstalled(operatorChartName: string): boolean {
+  return installedOperatorsMock.some((op) => op.name === operatorChartName);
+}
+
+/** App이 의존하는 Operator 1건의 충족 상태 */
+export interface OperatorRequirement {
+  /** Operator chartName (install 페이지 라우트 키) */
+  chartName: string;
+  /** 표시용 이름 */
+  displayName: string;
+  /** 카탈로그에 Operator 차트가 존재하는지 (redirect 가능 여부) */
+  available: boolean;
+  /** 설치 완료 여부 */
+  installed: boolean;
+}
+
+/**
+ * App의 선행 Operator 의존성을 각각의 설치 상태와 함께 반환한다.
+ * 복수 의존성을 행 단위로 노출/리다이렉트하기 위한 기준 데이터.
+ */
+export function getOperatorRequirements(app: CatalogChart): OperatorRequirement[] {
+  const names = app.requiredOperatorChartNames ?? [];
+  return names.map((chartName) => {
+    const operatorChart = catalogCharts.find((c) => c.name === chartName);
+    return {
+      chartName,
+      displayName: operatorChart?.displayName ?? chartName,
+      available: Boolean(operatorChart),
+      installed: isOperatorInstalled(chartName),
+    };
+  });
+}
+
+/** App 설치 전 선행 Operator가 모두 충족되었는지 (미설치 의존성 0개) */
+export function hasUnmetOperatorDependency(app: CatalogChart): boolean {
+  return getOperatorRequirements(app).some((req) => !req.installed);
+}

@@ -47,6 +47,8 @@ interface SidebarProps {
 export function Sidebar({ isOpen = true, onToggle, currentAppId, forceVisible }: SidebarProps) {
   const { projects, selectedProjectId, setSelectedProjectId, primaryProjectId, setPrimaryProject } =
     useProject();
+  // 선택 가능한 Tenant가 없으면(초기 상태) 사용자 Compute 메뉴 트리를 숨긴다. (Selector는 유지)
+  const hasTenant = projects.length > 0;
   const location = useLocation();
   const isCloudBuilder =
     location.pathname.startsWith('/cloudbuilder') || location.pathname.startsWith('/cloud-builder');
@@ -349,7 +351,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId, forceVisible }:
                 />
               </MenuSection>
             </>
-          ) : (
+          ) : hasTenant ? (
             <>
               {/* Home */}
               <MenuItem
@@ -485,7 +487,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId, forceVisible }:
                 />
               </MenuSection>
             </>
-          )}
+          ) : null}
         </VStack>
       </OverlayScrollbarsComponent>
     </aside>

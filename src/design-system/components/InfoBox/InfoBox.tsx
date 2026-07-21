@@ -22,6 +22,8 @@ export interface InfoBoxProps {
   copyable?: boolean;
   /** 우측 StatusIndicator 표시 */
   status?: StatusType;
+  /** 우측 accessory 노드 (spinner 등). status와 동일한 우측 슬롯에 렌더 */
+  accessory?: ReactNode;
   /** 추가 CSS 클래스 */
   className?: string;
 }
@@ -44,6 +46,7 @@ export function InfoBox({
   tooltip,
   copyable = false,
   status,
+  accessory,
   className = '',
 }: InfoBoxProps) {
   const isStringValue = typeof value === 'string';
@@ -79,7 +82,13 @@ export function InfoBox({
         </div>
       )}
 
-      <div className={twMerge('flex flex-col gap-[6px] min-w-0', status && 'pr-6')}>
+      {!status && accessory && (
+        <div className="absolute top-1/2 right-3 -translate-y-1/2 flex items-center">
+          {accessory}
+        </div>
+      )}
+
+      <div className={twMerge('flex flex-col gap-[6px] min-w-0', (status || accessory) && 'pr-6')}>
         <div className="flex items-center gap-[4px]">
           <span className="text-label-sm text-[var(--color-text-subtle)] whitespace-nowrap">
             {label}

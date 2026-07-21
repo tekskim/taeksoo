@@ -59,10 +59,10 @@ const appCatalog: Record<string, { name: string; description: string }> = {
     description:
       'Apache Kafka is a distributed event streaming platform used for high-performance data pipelines, streaming analytics, and mission-critical applications.',
   },
-  nginx: {
-    name: 'Nginx',
+  seaweedfs: {
+    name: 'SeaweedFS',
     description:
-      'NGINX Ingress Controller is a production-grade ingress controller for Kubernetes that provides load balancing, SSL termination, and URI rewriting.',
+      'SeaweedFS is a fast, S3-compatible distributed object storage system that provides scalable blob, object, and file storage with automatic replication.',
   },
   milvus: {
     name: 'Milvus',
@@ -76,7 +76,7 @@ const namespaceOptions = [
   { value: 'data', label: 'data' },
   { value: 'cache', label: 'cache' },
   { value: 'ai', label: 'ai' },
-  { value: 'ingress-nginx', label: 'ingress-nginx' },
+  { value: 'storage', label: 'storage' },
 ];
 
 const versionOptions: Record<string, { value: string; label: string }[]> = {
@@ -93,9 +93,9 @@ const versionOptions: Record<string, { value: string; label: string }[]> = {
     { value: '3.7.0', label: '3.7.0 (latest)' },
     { value: '3.6.1', label: '3.6.1' },
   ],
-  nginx: [
-    { value: '4.11.0', label: '4.11.0 (latest)' },
-    { value: '4.10.1', label: '4.10.1' },
+  seaweedfs: [
+    { value: '4.0.0', label: '4.0.0 (latest)' },
+    { value: '3.80.0', label: '3.80.0' },
   ],
   milvus: [
     { value: '4.2.7', label: '4.2.7 (latest)' },

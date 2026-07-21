@@ -11,7 +11,7 @@ import {
   PageShell,
   PageHeader,
   ConfirmModal,
-  StatusIndicator,
+  Badge,
   Tooltip,
   EmptyState,
   ContextMenu,
@@ -20,6 +20,8 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { AppCatalogSidebar } from '@/components/AppCatalogSidebar';
+import { AppCatalogTopBarActions } from '@/components/AppCatalogTopBarActions';
+import { getContainerStatusTheme } from './containerStatusUtils';
 import { useAppCatalogMode } from '@/contexts/AppCatalogModeContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -40,12 +42,6 @@ function toTitleCase(s: string): string {
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(' ');
 }
-
-const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error'> = {
-  Deployed: 'active',
-  Pending: 'building',
-  Failed: 'error',
-};
 
 /* ----------------------------------------
    Apps > Installed Apps (Cluster-scoped)
@@ -105,11 +101,19 @@ export function InstalledAppsPage() {
       label: 'Status',
       width: '120px',
       minWidth: 120,
-      render: (value: InstalledAppStatus, row) => (
-        <Tooltip content={row.status === 'Failed' && row.errorMessage ? row.errorMessage : value}>
-          <StatusIndicator status={statusMap[value]} label={value} layout="default" />
-        </Tooltip>
-      ),
+      render: (value: InstalledAppStatus, row) => {
+        // TDS Container Status 기준 — Badge(subtle/sm) + 상태별 테마. (Installed Operators와 동일 패턴)
+        const badge = (
+          <Badge theme={getContainerStatusTheme(value)} type="subtle" size="sm">
+            {value}
+          </Badge>
+        );
+        return row.status === 'Failed' && row.errorMessage ? (
+          <Tooltip content={row.errorMessage}>{badge}</Tooltip>
+        ) : (
+          badge
+        );
+      },
     },
     {
       key: 'name',
@@ -229,9 +233,13 @@ export function InstalledAppsPage() {
             />
           }
           actions={
-            <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-              <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-            </button>
+            isStandalone ? (
+              <AppCatalogTopBarActions />
+            ) : (
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+            )
           }
         />
       }

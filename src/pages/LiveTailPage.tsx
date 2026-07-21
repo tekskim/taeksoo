@@ -15,7 +15,6 @@ import {
   FilterSearchInput,
   HStack,
   Input,
-  MonitoringToolbar,
   PageHeader,
   PageShell,
   TabBar,
@@ -23,7 +22,6 @@ import {
   VStack,
   type AppliedFilter,
   type FilterField,
-  type TimeRangeValue,
 } from '@/design-system';
 import { LogSidebar } from '@/components/LogSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -190,8 +188,6 @@ const LiveTailPage = (): ReactElement => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const [timeRange, setTimeRange] = useState<TimeRangeValue>('30m');
-  const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>(null);
   const [isStreaming, setIsStreaming] = useState<boolean>(true);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('connected');
   const [streamRows, setStreamRows] = useState<LiveTailRow[]>([]);
@@ -419,8 +415,6 @@ const LiveTailPage = (): ReactElement => {
   const isHighlightAtMaxLength = highlightKeyword.length >= HIGHLIGHT_MAX_LENGTH;
 
   const handleClearFilters = (): void => {
-    setTimeRange('30m');
-    setCustomPeriod(null);
     setAppliedFilters([]);
   };
 
@@ -541,14 +535,6 @@ const LiveTailPage = (): ReactElement => {
                 <IconTrash size={14} stroke={1.5} />
                 Clear
               </Button>
-              <MonitoringToolbar
-                timeRange={timeRange}
-                onTimeRangeChange={setTimeRange}
-                customPeriod={customPeriod}
-                onCustomPeriodChange={setCustomPeriod}
-                onRefresh={handleClearFilters}
-                showRefresh={true}
-              />
             </div>
           </div>
         </div>

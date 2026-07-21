@@ -18,8 +18,11 @@ import {
   Tab,
   TabPanel,
   Table,
+  Pagination,
   type TableColumn,
   SectionCard,
+  StatusIndicator,
+  type StatusType,
 } from '@/design-system';
 import { AlertSidebar } from '@/components/AlertSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -90,16 +93,16 @@ const FIXTURE: AlertDetail = {
   resolveType: null,
   timeline: [
     {
-      time: '08:55:12',
+      time: '2026-06-05 08:55:12',
       type: 'Firing',
       actor: 'system',
       comment: 'Alert triggered: log rate exceeded 500 req/s threshold for 3 consecutive minutes.',
     },
-    { time: '09:00:05', type: 'Acknowledged', actor: 'Park' },
+    { time: '2026-06-05 09:00:05', type: 'Acknowledged', actor: 'Park' },
   ],
   deliveryHistory: [
     {
-      sentAt: '08:55:14',
+      sentAt: '2026-06-05 08:55:14',
       channel: 'Slack',
       target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
@@ -107,7 +110,7 @@ const FIXTURE: AlertDetail = {
       status: 'Success',
     },
     {
-      sentAt: '08:55:15',
+      sentAt: '2026-06-05 08:55:15',
       channel: 'Email',
       target: 'ops@thakicloud.net',
       ruleName: 'Ops Email',
@@ -115,7 +118,7 @@ const FIXTURE: AlertDetail = {
       status: 'Failed',
     },
     {
-      sentAt: '09:00:15',
+      sentAt: '2026-06-05 09:00:15',
       channel: 'Slack',
       target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
@@ -123,7 +126,7 @@ const FIXTURE: AlertDetail = {
       status: 'Success',
     },
     {
-      sentAt: '09:05:15',
+      sentAt: '2026-06-05 09:05:15',
       channel: 'Email',
       target: 'ops@thakicloud.net',
       ruleName: 'Ops Email',
@@ -150,20 +153,20 @@ const FIXTURE_RESOLVED: AlertDetail = {
   resolveType: 'Manual',
   timeline: [
     {
-      time: '18:45:00',
+      time: '2026-06-04 18:45:00',
       type: 'Firing',
       actor: 'system',
       comment: 'Memory usage exceeded 85% threshold for 3 consecutive minutes on compute-worker.',
     },
     {
-      time: '18:47:00',
+      time: '2026-06-04 18:47:00',
       type: 'Firing',
       actor: 'system',
       comment: 'Memory usage still above threshold (88%). Escalating repeat notification.',
     },
-    { time: '18:50:10', type: 'Acknowledged', actor: 'Kim' },
+    { time: '2026-06-04 18:50:10', type: 'Acknowledged', actor: 'Kim' },
     {
-      time: '19:10:00',
+      time: '2026-06-04 19:10:00',
       type: 'Resolved',
       actor: 'Kim',
       comment: 'Scaled out the worker pool and memory pressure normalized.',
@@ -171,7 +174,7 @@ const FIXTURE_RESOLVED: AlertDetail = {
   ],
   deliveryHistory: [
     {
-      sentAt: '18:45:02',
+      sentAt: '2026-06-04 18:45:02',
       channel: 'Slack',
       target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
@@ -179,7 +182,7 @@ const FIXTURE_RESOLVED: AlertDetail = {
       status: 'Success',
     },
     {
-      sentAt: '18:47:02',
+      sentAt: '2026-06-04 18:47:02',
       channel: 'Slack',
       target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
@@ -187,7 +190,7 @@ const FIXTURE_RESOLVED: AlertDetail = {
       status: 'Success',
     },
     {
-      sentAt: '19:10:05',
+      sentAt: '2026-06-04 19:10:05',
       channel: 'Slack',
       target: 'https://hooks.slack.com/services/T024BE7LD/B4QQ8KF9R',
       ruleName: 'Ops Slack',
@@ -218,52 +221,41 @@ function SeverityBadge({ severity }: { severity: AlertSeverity }) {
   );
 }
 
+// 정책(Status 정의): TDS StatusIndicator label-only badge + 시맨틱 색상.
+// status는 색상 계열만 결정(label-only), 라벨은 도메인 값으로 override.
+const ALERT_STATE_STATUS: Record<AlertState, StatusType> = {
+  Firing: 'error', // Danger(Red)
+  Acknowledged: 'degraded', // Warning(Orange)
+  Resolved: 'active', // Success(Green)
+};
 function StateBadge({ state, pulse = true }: { state: AlertState; pulse?: boolean }) {
   // pulse: 현재 상태 표시(헤더 등)에서만 Firing 깜빡임. 타임라인 같은 과거 이력엔 끈다.
-  const styles: Record<AlertState, string> = {
-    Firing: `text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]${pulse ? ' animate-pulse' : ''}`,
-    Acknowledged: 'text-[var(--color-state-warning)] bg-[var(--color-state-warning-bg)]',
-    Resolved: 'text-[var(--color-state-success)] bg-[var(--color-state-success-bg)]',
-  };
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm font-medium ${styles[state]}`}
-    >
-      {state}
-    </span>
+    <StatusIndicator
+      status={ALERT_STATE_STATUS[state]}
+      label={state}
+      layout="badge"
+      hideIcon
+      className={pulse && state === 'Firing' ? 'animate-pulse' : ''}
+    />
   );
 }
 
+// Delivery History 발송 상태: Success→Success(Green) / Failed→Danger(Red) / Pending→Muted(Gray).
+// ⚠️ Pending은 정책상 Gray(Muted) — TDS 기본 'pending'(Blue) 대신 muted 계열 status를 쓴다.
+const DELIVERY_STATUS_STATUS: Record<DeliveryRecord['status'], StatusType> = {
+  Success: 'active',
+  Failed: 'error',
+  Pending: 'suspended',
+};
 function DeliveryStatusBadge({ status }: { status: DeliveryRecord['status'] }) {
-  const styles: Record<DeliveryRecord['status'], string> = {
-    Success: 'text-[var(--color-state-success)] bg-[var(--color-state-success-bg)]',
-    Failed: 'text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]',
-    Pending: 'text-[var(--color-text-subtle)] bg-[var(--color-surface-subtle)]',
-  };
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm font-medium ${styles[status]}`}
-    >
-      {status}
-    </span>
-  );
-}
-
-function DeliveryKindBadge({ kind }: { kind: DeliveryKind }) {
-  const styles: Record<DeliveryKind, string> = {
-    Initial:
-      'text-[var(--color-text-subtle)] bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]',
-    Retry:
-      'text-[var(--color-state-warning)] bg-[var(--color-state-warning-bg)] border-transparent',
-    Repeat:
-      'text-[var(--color-action-primary)] bg-[var(--color-action-primary-subtle)] border-transparent',
-  };
-  return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-[var(--radius-sm)] text-body-sm font-medium border ${styles[kind]}`}
-    >
-      {kind}
-    </span>
+    <StatusIndicator
+      status={DELIVERY_STATUS_STATUS[status]}
+      label={status}
+      layout="badge"
+      hideIcon
+    />
   );
 }
 
@@ -280,12 +272,43 @@ export default function AlertDetailPage() {
   const [resolveComment, setResolveComment] = useState('');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
+  // Timeline / Delivery History 테이블 페이지네이션 (정책: 테이블 상단 고정, AlertsListPage와 동일 패턴)
+  const PAGE_SIZE = 10;
+  const [timelinePage, setTimelinePage] = useState(1);
+  const [deliveryPage, setDeliveryPage] = useState(1);
+
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
   const now = () => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
   };
+
+  // UX-writing 3-2 시간 표기
+  // 상세 화면(정확한 시각) → 표준형 + UTC: YYYY-MM-DD HH:mm:ss (UTC+9)
+  // TDS UX writing(영문) 일자 표준형 — 상세/로그 정확 시각: Mth DD, YYYY HH:mm:ss (UTC+9)
+  const fmtFull = (v: string | null) => {
+    if (!v) return '-';
+    const d = new Date(v.replace(' ', 'T'));
+    if (Number.isNaN(d.getTime())) return `${v} (UTC+9)`;
+    const MONTH_ABBR = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const p = (n: number) => String(n).padStart(2, '0');
+    return `${MONTH_ABBR[d.getMonth()]} ${p(d.getDate())}, ${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())} (UTC+9)`;
+  };
+  // 당일 즉각 화면(타임라인·발송 이력) → 시각: HH:mm
 
   const handleAcknowledge = () => {
     const ts = now();
@@ -294,7 +317,7 @@ export default function AlertDetailPage() {
       state: 'Acknowledged',
       acknowledgedBy: 'Me',
       acknowledgedAt: ts,
-      timeline: [...prev.timeline, { time: ts.slice(11), type: 'Acknowledged', actor: 'Me' }],
+      timeline: [...prev.timeline, { time: ts, type: 'Acknowledged', actor: 'Me' }],
     }));
   };
 
@@ -310,7 +333,7 @@ export default function AlertDetailPage() {
       timeline: [
         ...prev.timeline,
         {
-          time: ts.slice(11),
+          time: ts,
           type: 'Resolved',
           actor: 'Me',
           comment: resolveComment.trim(),
@@ -337,11 +360,11 @@ export default function AlertDetailPage() {
       ),
     },
     { label: 'Acknowledged By', value: alertDetail.acknowledgedBy ?? '-' },
-    { label: 'Acknowledged At', value: alertDetail.acknowledgedAt ?? '-' },
+    { label: 'Acknowledged At', value: fmtFull(alertDetail.acknowledgedAt) },
     ...(alertDetail.state !== 'Resolved'
       ? [
           { label: 'Resolved By', value: alertDetail.resolvedBy ?? '-' },
-          { label: 'Resolved At', value: alertDetail.resolvedAt ?? '-' },
+          { label: 'Resolved At', value: fmtFull(alertDetail.resolvedAt) },
         ]
       : []),
     // 정책 2-5 #15: Manual / Auto. Resolved 전이면 '-'
@@ -353,10 +376,10 @@ export default function AlertDetailPage() {
     {
       key: 'time',
       label: 'Time',
-      width: '100px',
+      width: '230px',
       resizable: false,
       render: (v: any) => (
-        <span className="text-body-sm font-mono text-[var(--color-text-subtle)]">{v}</span>
+        <span className="text-body-sm font-mono text-[var(--color-text-subtle)]">{fmtFull(v)}</span>
       ),
     },
     {
@@ -383,15 +406,19 @@ export default function AlertDetailPage() {
   ];
 
   // ── Delivery History table columns ────────────────────────────────────────
+  // 컬럼 순서는 와이어프레임(ALERT-002-DELIVERY) 기준: Status → Rule Name → Channel → Target → Sent At
   const deliveryColumns: TableColumn<DeliveryRecord>[] = [
     {
-      key: 'sentAt',
-      label: 'Sent At',
-      width: '100px',
+      key: 'status',
+      label: 'Status',
+      width: '110px',
       resizable: false,
-      render: (v: any) => (
-        <span className="text-body-sm font-mono text-[var(--color-text-subtle)]">{v}</span>
-      ),
+      render: (_: any, row: DeliveryRecord) => <DeliveryStatusBadge status={row.status} />,
+    },
+    {
+      key: 'ruleName',
+      label: 'Rule Name',
+      render: (v: any) => <span className="text-body-sm text-[var(--color-text-subtle)]">{v}</span>,
     },
     {
       key: 'channel',
@@ -408,39 +435,31 @@ export default function AlertDetailPage() {
       ),
     },
     {
-      key: 'ruleName',
-      label: 'Rule Name',
-      render: (v: any) => <span className="text-body-sm text-[var(--color-text-subtle)]">{v}</span>,
-    },
-    {
-      key: 'kind',
-      label: 'Kind',
-      width: '90px',
+      // 시각 표기: TDS 표준형 Mth DD, YYYY HH:mm:ss (UTC+9) — Timeline·헤더 카드와 동일
+      key: 'sentAt',
+      label: 'Sent At',
+      width: '230px',
       resizable: false,
-      render: (_: any, row: DeliveryRecord) => <DeliveryKindBadge kind={row.kind} />,
+      render: (v: any) => (
+        <span className="text-body-sm text-[var(--color-text-subtle)]">{fmtFull(v)}</span>
+      ),
     },
-    {
-      key: 'status',
-      label: 'Status',
-      width: '90px',
-      resizable: false,
-      render: (_: any, row: DeliveryRecord) => <DeliveryStatusBadge status={row.status} />,
-    },
-    {
-      key: '_detail',
-      label: 'Detail',
-      width: '100px',
-      resizable: false,
-      render: (_: any, row: DeliveryRecord) =>
-        row.status === 'Failed' ? (
-          <button className="text-body-sm text-[var(--color-action-primary)] hover:underline">
-            View Error
-          </button>
-        ) : (
-          <span className="text-body-sm text-[var(--color-text-subtle)]">-</span>
-        ),
-    },
+    // Kind / Detail(View Error) 컬럼 제외 (정책 결정)
   ];
+
+  // 페이지네이션 파생값 — 표시 데이터 슬라이스
+  const timelineTotalPages = Math.max(1, Math.ceil(alertDetail.timeline.length / PAGE_SIZE));
+  const timelineSafePage = Math.min(timelinePage, timelineTotalPages);
+  const pagedTimeline = alertDetail.timeline.slice(
+    (timelineSafePage - 1) * PAGE_SIZE,
+    timelineSafePage * PAGE_SIZE
+  );
+  const deliveryTotalPages = Math.max(1, Math.ceil(alertDetail.deliveryHistory.length / PAGE_SIZE));
+  const deliverySafePage = Math.min(deliveryPage, deliveryTotalPages);
+  const pagedDelivery = alertDetail.deliveryHistory.slice(
+    (deliverySafePage - 1) * PAGE_SIZE,
+    deliverySafePage * PAGE_SIZE
+  );
 
   return (
     <PageShell
@@ -507,8 +526,8 @@ export default function AlertDetailPage() {
             />
             <DetailHeader.InfoCard label="Target" value={alertDetail.target} />
             <DetailHeader.InfoCard label="Alert Rule" value={alertDetail.alertRule} />
-            <DetailHeader.InfoCard label="Started At" value={alertDetail.startedAt} />
-            <DetailHeader.InfoCard label="Last Fired At" value={alertDetail.lastFiredAt} />
+            <DetailHeader.InfoCard label="Started At" value={fmtFull(alertDetail.startedAt)} />
+            <DetailHeader.InfoCard label="Last Fired At" value={fmtFull(alertDetail.lastFiredAt)} />
             <DetailHeader.InfoCard
               label="Occurrence Count"
               value={String(alertDetail.occurrenceCount)}
@@ -516,7 +535,10 @@ export default function AlertDetailPage() {
             {alertDetail.state === 'Resolved' && (
               <>
                 <DetailHeader.InfoCard label="Resolved By" value={alertDetail.resolvedBy ?? '-'} />
-                <DetailHeader.InfoCard label="Resolved At" value={alertDetail.resolvedAt ?? '-'} />
+                <DetailHeader.InfoCard
+                  label="Resolved At"
+                  value={fmtFull(alertDetail.resolvedAt)}
+                />
               </>
             )}
           </DetailHeader.InfoGrid>
@@ -544,24 +566,40 @@ export default function AlertDetailPage() {
             </SectionCard>
           </TabPanel>
 
-          {/* Timeline tab — TDS Table 패턴 */}
+          {/* Timeline tab — TDS Table 패턴 + 상단 Pagination */}
           <TabPanel value="timeline">
-            <Table<TimelineEvent>
-              columns={timelineColumns}
-              data={alertDetail.timeline}
-              rowKey="time"
-              resizable={false}
-            />
+            <VStack gap={3}>
+              <Pagination
+                currentPage={timelineSafePage}
+                totalPages={timelineTotalPages}
+                onPageChange={setTimelinePage}
+                totalItems={alertDetail.timeline.length}
+              />
+              <Table<TimelineEvent>
+                columns={timelineColumns}
+                data={pagedTimeline}
+                rowKey="time"
+                resizable={false}
+              />
+            </VStack>
           </TabPanel>
 
-          {/* Delivery History tab — 정책 2-7, Kind 컬럼 (정책 0-8) */}
+          {/* Delivery History tab — 정책 2-7, 상단 Pagination */}
           <TabPanel value="delivery">
-            <Table<DeliveryRecord>
-              columns={deliveryColumns}
-              data={alertDetail.deliveryHistory}
-              rowKey="sentAt"
-              resizable={false}
-            />
+            <VStack gap={3}>
+              <Pagination
+                currentPage={deliverySafePage}
+                totalPages={deliveryTotalPages}
+                onPageChange={setDeliveryPage}
+                totalItems={alertDetail.deliveryHistory.length}
+              />
+              <Table<DeliveryRecord>
+                columns={deliveryColumns}
+                data={pagedDelivery}
+                rowKey="sentAt"
+                resizable={false}
+              />
+            </VStack>
           </TabPanel>
         </Tabs>
       </VStack>

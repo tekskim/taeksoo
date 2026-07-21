@@ -34,8 +34,8 @@ export const BadgeList = memo(function BadgeList({
   maxVisible = 2,
   maxBadgeWidth,
   size = 'sm',
-  theme,
-  type,
+  theme = 'gray',
+  type = 'subtle',
   popoverTitle,
   renderItem,
 }: BadgeListProps) {

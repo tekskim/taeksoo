@@ -69,8 +69,10 @@ interface ProjectProviderProps {
 }
 
 export function ProjectProvider({ children }: ProjectProviderProps) {
-  const [selectedProjectId, setSelectedProjectIdState] = useState<string>(mockProjects[0].id);
-  const [primaryProjectId, setPrimaryProjectIdState] = useState<string>(mockProjects[0].id);
+  const [selectedProjectId, setSelectedProjectIdState] = useState<string>(
+    mockProjects[0]?.id ?? ''
+  );
+  const [primaryProjectId, setPrimaryProjectIdState] = useState<string>(mockProjects[0]?.id ?? '');
 
   const setSelectedProjectId = useCallback((projectId: string) => {
     setSelectedProjectIdState(projectId);

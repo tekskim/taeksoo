@@ -141,7 +141,7 @@ export function Drawer({
         aria-labelledby={title ? 'drawer-title' : undefined}
       >
         {/* Content */}
-        <div className="flex-1 px-6 pt-4 pb-8 drawer-scroll">
+        <div className="flex-1 min-h-0 overflow-y-auto px-6 pt-4 pb-8 drawer-scroll">
           {title && (
             <>
               <h2 id="drawer-title" className="text-heading-h5 text-[var(--color-text-default)]">
