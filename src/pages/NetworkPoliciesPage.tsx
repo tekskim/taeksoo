@@ -35,6 +35,8 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 
 /* ----------------------------------------
    Types
@@ -120,6 +122,9 @@ export function NetworkPoliciesPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
   const [data, setData] = useState(networkPoliciesData);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -413,15 +418,17 @@ export function NetworkPoliciesPage() {
         <PageHeader
           title="Network policies"
           actions={
-            <ContextMenu items={createDropdownItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create network policy
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createDropdownItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create network policy
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

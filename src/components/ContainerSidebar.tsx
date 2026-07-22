@@ -10,6 +10,7 @@ import {
   HStack,
   FormField,
   Input,
+  Badge,
 } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
@@ -42,8 +43,14 @@ import { FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import containerIcon from '@/assets/appIcon/container.webp';
 import metisContainerIcon from '@/assets/appIcon/metis-container.webp';
+import containerPlatformIcon from '@/assets/appIcon/container-platform.svg?url';
 import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 import { useContainerMode } from '@/contexts/ContainerModeContext';
+import {
+  CP_CLUSTERS,
+  getActiveCpCluster,
+  setActiveCpClusterId,
+} from '@/pages/containerActiveCluster';
 
 /* ----------------------------------------
    Container Sidebar Component
@@ -209,14 +216,21 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
   const navigate = useNavigate();
   const isDesktopWindow = useIsDesktopWindow();
   const desktopControls = useDesktopWindowControls();
-  const { mode, isMetis } = useContainerMode();
+  const { mode, isMetis, isPlatform } = useContainerMode();
   const appTitle =
     mode === 'aegis-container'
       ? 'Aegis Container'
       : mode === 'metis-container'
         ? 'Metis Container'
-        : 'Container';
-  const appIcon = mode === 'metis-container' ? metisContainerIcon : containerIcon;
+        : mode === 'container-platform'
+          ? 'Container Platform'
+          : 'Container';
+  const appIcon =
+    mode === 'metis-container'
+      ? metisContainerIcon
+      : mode === 'container-platform'
+        ? containerPlatformIcon
+        : containerIcon;
   const osRef = useRef<React.ComponentRef<typeof OverlayScrollbarsComponent>>(null);
 
   // Cluster state
@@ -337,16 +351,33 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
               tooltip="Cluster management"
             />
           )}
-          {clusters.map((cluster, idx) => (
-            <IconSidebarItem
-              key={cluster.id}
-              icon={<IconAffiliate size={16} stroke={1.5} />}
-              iconText={cluster.iconText || undefined}
-              active={idx === 0 && activeIconSection === 'cluster'}
-              onClick={() => navigate('/container/dashboard')}
-              tooltip={cluster.name}
-            />
-          ))}
+          {isPlatform
+            ? // Container Platform: General 클러스터 + Metis/Maxis 전용(등록형) 클러스터 (D-27)
+              CP_CLUSTERS.map((cluster) => (
+                <IconSidebarItem
+                  key={cluster.id}
+                  icon={<IconAffiliate size={16} stroke={1.5} />}
+                  iconText={cluster.iconText || undefined}
+                  active={cluster.id === getActiveCpCluster().id && activeIconSection === 'cluster'}
+                  onClick={() => {
+                    setActiveCpClusterId(cluster.id);
+                    navigate('/container/dashboard');
+                  }}
+                  tooltip={
+                    cluster.dedicated ? `${cluster.name} (Metis/Maxis dedicated)` : cluster.name
+                  }
+                />
+              ))
+            : clusters.map((cluster, idx) => (
+                <IconSidebarItem
+                  key={cluster.id}
+                  icon={<IconAffiliate size={16} stroke={1.5} />}
+                  iconText={cluster.iconText || undefined}
+                  active={idx === 0 && activeIconSection === 'cluster'}
+                  onClick={() => navigate('/container/dashboard')}
+                  tooltip={cluster.name}
+                />
+              ))}
           {!isMetis && (
             <IconSidebarItem
               icon={<IconPlus size={16} stroke={1.5} />}
@@ -382,6 +413,25 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
               />
             </button>
           </div>
+
+          {/* Active cluster identity (Container Platform mode, D-27) */}
+          {isPlatform && activeIconSection === 'cluster' && (
+            <div className="px-3 pb-1 flex items-center gap-1.5 min-w-0">
+              <span
+                className="text-body-xs text-[var(--color-text-subtle)] truncate"
+                title={getActiveCpCluster().name}
+              >
+                {getActiveCpCluster().name}
+              </span>
+              <Badge
+                theme={getActiveCpCluster().dedicated ? 'gray' : 'blue'}
+                type="subtle"
+                size="sm"
+              >
+                {getActiveCpCluster().dedicated ? 'Metis/Maxis' : 'General'}
+              </Badge>
+            </div>
+          )}
 
           {/* Navigation */}
           <OverlayScrollbarsComponent
@@ -483,8 +533,8 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                     />
                   </MenuSection>
 
-                  {/* App Catalog Section - Metis 모드에서 미노출 */}
-                  {!isMetis && (
+                  {/* App Catalog Section - Metis 모드·Container Platform(→ Hub, D-25)에서 미노출 */}
+                  {!isMetis && !isPlatform && (
                     <MenuSection title="App Catalog" defaultOpen={true}>
                       <MenuItem
                         icon={<IconApps size={16} stroke={1.5} />}

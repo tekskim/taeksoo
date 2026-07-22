@@ -57,7 +57,6 @@ import { storageMemberRoutes } from '@/routes/storage-member.routes';
 import { agentRoutes } from '@/routes/agent.routes';
 import { iamRoutes } from '@/routes/iam.routes';
 import { containerRoutes } from '@/routes/container.routes';
-import { containerPlatformRoutes } from '@/routes/container-platform.routes';
 import { computeAdminRoutes } from '@/routes/compute-admin.routes';
 import { logsRoutes } from '@/routes/logs.routes';
 import { alertRoutes } from '@/routes/alert.routes';
@@ -1264,11 +1263,16 @@ function AppRoutes({ appId }: { appId: AppId }) {
       );
     case 'container':
     case 'aegis-container':
-    case 'metis-container': {
+    case 'metis-container':
+    case 'container-platform': {
       const containerMode = appId as ContainerMode;
       return (
         <ContainerModeContext.Provider
-          value={{ mode: containerMode, isMetis: containerMode === 'metis-container' }}
+          value={{
+            mode: containerMode,
+            isMetis: containerMode === 'metis-container',
+            isPlatform: containerMode === 'container-platform',
+          }}
         >
           <AppCatalogModeContext.Provider value={{ isStandalone: false }}>
             <Routes>{containerRoutes}</Routes>
@@ -1276,8 +1280,6 @@ function AppRoutes({ appId }: { appId: AppId }) {
         </ContainerModeContext.Provider>
       );
     }
-    case 'container-platform':
-      return <Routes>{containerPlatformRoutes}</Routes>;
     case 'agent':
       return (
         <Routes>
@@ -2272,7 +2274,7 @@ export function DesktopPage() {
     'container-platform': {
       name: 'Container Platform',
       icon: imgContainerPlatform,
-      initialPath: '/container-platform/overview',
+      initialPath: '/container',
     },
     'aegis-container': { name: 'Aegis Container', icon: imgContainer, initialPath: '/container' },
     'metis-container': {

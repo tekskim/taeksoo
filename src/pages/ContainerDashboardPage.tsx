@@ -25,6 +25,9 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
+import { InlineMessage } from '@/design-system';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { IconInfoCircle, IconKey } from '@tabler/icons-react';
@@ -357,6 +360,8 @@ export function ContainerDashboardPage() {
   const [eventSearchQuery, setEventSearchQuery] = useState('');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
+  const { isPlatform } = useContainerMode();
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
 
   const filteredEvents = useMemo(() => {
     const q = eventSearchQuery.trim().toLowerCase();
@@ -423,6 +428,17 @@ export function ContainerDashboardPage() {
       }
       contentClassName="px-8 py-6"
     >
+      {/* 전용(등록형) 클러스터 안내 (Container Platform 모드, D-27/D-28) */}
+      {dedicated && (
+        <div className="mb-6">
+          <InlineMessage variant="info">
+            Metis/Maxis dedicated cluster — workloads are created by the products. You can view and
+            operate resources here (Edit YAML, delete); creating resources is disabled. The agent
+            stack runs in tkai-* namespaces.
+          </InlineMessage>
+        </div>
+      )}
+
       {/* Top Row - 2 Cards */}
       <div className="grid grid-cols-2 gap-6 mb-6">
         {/* Basic information Card */}
@@ -431,7 +447,9 @@ export function ContainerDashboardPage() {
           bgColor="bg-[var(--color-surface-subtle)]"
           className="flex flex-col"
         >
-          <h3 className="text-heading-h2 text-[var(--color-text-default)]">k3s-cluster</h3>
+          <h3 className="text-heading-h2 text-[var(--color-text-default)]">
+            {isPlatform ? getActiveCpCluster().name : 'k3s-cluster'}
+          </h3>
           <div className="space-y-4 mt-auto">
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">

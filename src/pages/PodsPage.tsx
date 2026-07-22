@@ -35,6 +35,9 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { managedByColumn, type WorkloadManagedBy } from './containerManagedBy';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -44,6 +47,7 @@ interface PodRow {
   status: string;
   name: string;
   namespace: string;
+  managedBy?: WorkloadManagedBy;
   image: string;
   ready: string;
   restarts: number;
@@ -53,6 +57,68 @@ interface PodRow {
 
 /* ----------------------------------------
    Mock Data ---------------------------------------- */
+
+// 전용(등록형) 클러스터의 파드(D-26·D-27): 상위 제품이 만든 워크로드(managed-by 배지)와
+// Metis/Maxis Agent 스택(tkai-* 네임스페이스, 배지 없음)만 존재한다.
+const dedicatedPods: PodRow[] = [
+  {
+    id: 'cp-1',
+    status: 'Running',
+    name: 'devspace-taeksoo-workbench-0',
+    namespace: 'ml-dev',
+    managedBy: 'Maxis',
+    image: 'maxis/devspace-base:24.06',
+    ready: '1/1',
+    restarts: 0,
+    ip: '10.76.3.21',
+    createdAt: 'Nov 10, 2026 09:12:40',
+  },
+  {
+    id: 'cp-2',
+    status: 'Running',
+    name: 'llama3-70b-vllm-serving-6c9d8f-q4wz1',
+    namespace: 'ml-serving',
+    managedBy: 'Metis',
+    image: 'vllm/vllm-openai:v0.5.4',
+    ready: '1/1',
+    restarts: 0,
+    ip: '10.76.3.35',
+    createdAt: 'Nov 9, 2026 22:47:03',
+  },
+  {
+    id: 'cp-3',
+    status: 'Running',
+    name: 'kube-agent-7d5b9c6f4-h2s8k',
+    namespace: 'tkai-system',
+    image: 'thaki/kube-agent:1.4.2',
+    ready: '1/1',
+    restarts: 0,
+    ip: '10.76.9.2',
+    createdAt: 'Nov 8, 2026 08:00:11',
+  },
+  {
+    id: 'cp-4',
+    status: 'Running',
+    name: 'keda-operator-59f8d7c6b-m3x7p',
+    namespace: 'tkai-keda',
+    image: 'kedacore/keda:2.14.0',
+    ready: '1/1',
+    restarts: 0,
+    ip: '10.76.9.14',
+    createdAt: 'Nov 8, 2026 08:01:27',
+  },
+  {
+    id: 'cp-5',
+    status: 'Running',
+    name: 'kai-kueue-controller-6b8c5d9e2-r9t4v',
+    namespace: 'tkai-kueue',
+    image: 'thaki/kai-kueue:0.9.1',
+    ready: '1/1',
+    restarts: 0,
+    ip: '10.76.9.20',
+    createdAt: 'Nov 8, 2026 08:02:05',
+  },
+];
 
 const podsData: PodRow[] = [
   {
@@ -181,7 +247,11 @@ export function PodsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [data, setData] = useState(podsData);
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단, 조회+운영 조치만 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
+  const initialPods = dedicated ? dedicatedPods : podsData;
+  const [data, setData] = useState(initialPods);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
@@ -343,6 +413,8 @@ export function PodsPage() {
         </span>
       ),
     },
+    // Container Platform 전용(D-26): 담당 제품 표시
+    ...(isPlatform ? [managedByColumn<PodRow>()] : []),
     {
       key: 'image',
       label: 'Image',
@@ -505,15 +577,17 @@ export function PodsPage() {
         <PageHeader
           title="Pods"
           actions={
-            <ContextMenu items={createDropdownItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create pod
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createDropdownItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create pod
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

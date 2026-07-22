@@ -26,6 +26,8 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 import {
   IconDownload,
   IconTrash,
@@ -114,6 +116,9 @@ export function SecretsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
   const [data, setData] = useState(secretsData);
   const [currentPage, setCurrentPage] = useState(1);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -417,15 +422,17 @@ export function SecretsPage() {
         <PageHeader
           title="Secrets"
           actions={
-            <ContextMenu items={createDropdownItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create secret
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createDropdownItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create secret
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

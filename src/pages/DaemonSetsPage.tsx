@@ -36,6 +36,9 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { managedByColumn, type WorkloadManagedBy } from './containerManagedBy';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -45,6 +48,7 @@ interface DaemonSetRow {
   status: string;
   name: string;
   namespace: string;
+  managedBy?: WorkloadManagedBy;
   image: string;
   ready: number;
   current: number;
@@ -54,6 +58,32 @@ interface DaemonSetRow {
 
 /* ----------------------------------------
    Mock Data ---------------------------------------- */
+
+// 전용(등록형) 클러스터의 DaemonSet(D-27) — GPU 노드 지원용 Agent 스택(tkai-*, 배지 없음).
+const dedicatedDaemonSets: DaemonSetRow[] = [
+  {
+    id: 'cp-1',
+    status: 'Active',
+    name: 'nvidia-device-plugin-daemonset',
+    namespace: 'tkai-gpu',
+    image: 'nvidia/k8s-device-plugin:v0.15.0',
+    ready: 8,
+    current: 8,
+    desired: 8,
+    createdAt: 'Nov 8, 2026 08:03:12',
+  },
+  {
+    id: 'cp-2',
+    status: 'Active',
+    name: 'dcgm-exporter-daemonset',
+    namespace: 'tkai-gpu',
+    image: 'nvidia/dcgm-exporter:3.3.5',
+    ready: 8,
+    current: 8,
+    desired: 8,
+    createdAt: 'Nov 8, 2026 08:04:40',
+  },
+];
 
 const daemonSetsData: DaemonSetRow[] = [
   {
@@ -182,7 +212,11 @@ export function DaemonSetsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [data, setData] = useState(daemonSetsData);
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단, 조회+운영 조치만 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
+  const initialRows = dedicated ? dedicatedDaemonSets : daemonSetsData;
+  const [data, setData] = useState(initialRows);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
@@ -298,6 +332,8 @@ export function DaemonSetsPage() {
       minWidth: columnMinWidths.namespace,
       sortable: true,
     },
+    // Container Platform 전용(D-26): 담당 제품 표시
+    ...(isPlatform ? [managedByColumn<DaemonSetRow>()] : []),
     {
       key: 'image',
       label: 'Image',
@@ -476,15 +512,17 @@ export function DaemonSetsPage() {
         <PageHeader
           title="DaemonSets"
           actions={
-            <ContextMenu items={createMenuItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create DaemonSet
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createMenuItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create DaemonSet
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

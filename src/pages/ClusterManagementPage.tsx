@@ -19,6 +19,8 @@ import {
   columnMinWidths,
   Badge,
   Tooltip,
+  Modal,
+  InlineMessage,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
@@ -46,6 +48,8 @@ interface Cluster {
   memory: string;
   pods: string;
   createdAt: string;
+  /** Container Platform 모드 전용(D-27): created = CP에서 생성/삭제, registered = 등록으로 편입. */
+  type?: 'created' | 'registered';
 }
 
 /* ----------------------------------------
@@ -115,6 +119,47 @@ const mockClusters: Cluster[] = [
   },
 ];
 
+// Container Platform(D-27)에서만 보이는 등록형 클러스터 — Metis/Maxis 워크로드 전용.
+// 생성/삭제 대신 등록(수동/자동)·등록 해제만 가능하고, Agent 스택이 tkai-* 네임스페이스에 배포된다.
+const registeredClusters: Cluster[] = [
+  {
+    id: 'cluster-reg-001',
+    name: 'metis-train-a100',
+    status: 'Provisioned',
+    kubernetesVersion: 'v1.28.9',
+    cpu: '256 cores',
+    memory: '2048 GiB',
+    pods: '24/110',
+    createdAt: 'May 2, 2026 10:12:44',
+    type: 'registered',
+  },
+  {
+    id: 'cluster-reg-002',
+    name: 'metis-serving',
+    status: 'Provisioned',
+    kubernetesVersion: 'v1.28.9',
+    cpu: '128 cores',
+    memory: '1024 GiB',
+    pods: '15/110',
+    createdAt: 'Apr 18, 2026 16:40:02',
+    type: 'registered',
+  },
+  {
+    id: 'cluster-reg-003',
+    name: 'metis-dev',
+    status: 'Unknown',
+    kubernetesVersion: 'v1.30.1',
+    cpu: '48 cores',
+    memory: '256 GiB',
+    pods: '9/110',
+    createdAt: 'Jun 30, 2026 09:05:19',
+    type: 'registered',
+  },
+];
+
+const AGENT_INSTALL_COMMAND =
+  'curl -sfL https://cp.thakicloud.io/agent/install.sh | sh -s -- --token <registration-token>';
+
 /* ----------------------------------------
    Component
    ---------------------------------------- */
@@ -124,20 +169,24 @@ export function ClusterManagementPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
-  const { isMetis } = useContainerMode();
+  const { isMetis, isPlatform } = useContainerMode();
   const [selectedClusters, setSelectedClusters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [registerOpen, setRegisterOpen] = useState(false);
 
   // Update tab label to match the page title
   useEffect(() => {
     updateActiveTabLabel('Clusters');
   }, [updateActiveTabLabel]);
 
+  // Container Platform은 생성형 + 등록형이 한 목록(D-27); 다른 모드는 기존 그대로.
+  const allClusters = isPlatform ? [...mockClusters, ...registeredClusters] : mockClusters;
+
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(mockClusters.length / rowsPerPage);
-  const paginatedClusters = mockClusters.slice(
+  const totalPages = Math.ceil(allClusters.length / rowsPerPage);
+  const paginatedClusters = allClusters.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -182,6 +231,31 @@ export function ClusterManagementPage() {
         </Link>
       ),
     },
+    // Container Platform 전용(D-27): 생성형/등록형 구분
+    ...(isPlatform
+      ? ([
+          {
+            key: 'type',
+            label: 'Type',
+            width: fixedColumns.statusLabel,
+            sortable: false,
+            // 표기는 용도 기준(D-28): General = 자체 생성·범용, Metis/Maxis = 전용(등록형)
+            render: (value: Cluster['type']) => (
+              <Tooltip
+                content={
+                  value === 'registered'
+                    ? 'Dedicated to Metis/Maxis — registered, cannot be created or deleted here'
+                    : 'Created and managed in Container Platform'
+                }
+              >
+                <Badge theme={value === 'registered' ? 'gray' : 'blue'} type="subtle" size="sm">
+                  {value === 'registered' ? 'Metis/Maxis' : 'General'}
+                </Badge>
+              </Tooltip>
+            ),
+          },
+        ] as TableColumn<Cluster>[])
+      : []),
     {
       key: 'kubernetesVersion',
       label: 'Kubernetes version',
@@ -242,12 +316,20 @@ export function ClusterManagementPage() {
                 window.dispatchEvent(new CustomEvent('open-cluster-appearance', { detail: row.id }))
               ),
           },
-          {
-            id: 'delete',
-            label: 'Delete',
-            status: 'danger',
-            onClick: () => console.log('Delete', row.name),
-          },
+          // 등록형은 삭제 대신 등록 해제(D-27) — 클러스터 자체는 CP 밖에서 만들고 지운다.
+          row.type === 'registered'
+            ? {
+                id: 'deregister',
+                label: 'Deregister',
+                status: 'danger' as const,
+                onClick: () => console.log('Deregister', row.name),
+              }
+            : {
+                id: 'delete',
+                label: 'Delete',
+                status: 'danger' as const,
+                onClick: () => console.log('Delete', row.name),
+              },
         ];
 
         return (
@@ -336,15 +418,22 @@ export function ClusterManagementPage() {
           title="Clusters"
           actions={
             !isMetis ? (
-              <ContextMenu items={createMenuItems} trigger="click" align="right">
-                <Button
-                  variant="primary"
-                  size="md"
-                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-                >
-                  Create cluster
-                </Button>
-              </ContextMenu>
+              <>
+                {isPlatform && (
+                  <Button variant="secondary" size="md" onClick={() => setRegisterOpen(true)}>
+                    Register cluster
+                  </Button>
+                )}
+                <ContextMenu items={createMenuItems} trigger="click" align="right">
+                  <Button
+                    variant="primary"
+                    size="md"
+                    rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                  >
+                    Create cluster
+                  </Button>
+                </ContextMenu>
+              </>
             ) : undefined
           }
         />
@@ -437,7 +526,7 @@ export function ClusterManagementPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={mockClusters.length}
+          totalItems={allClusters.length}
           selectedCount={selectedClusters.length}
         />
 
@@ -451,6 +540,45 @@ export function ClusterManagementPage() {
           onSelectionChange={isMetis ? undefined : setSelectedClusters}
         />
       </VStack>
+
+      {/* Register cluster — 등록형 편입 진입점 (Container Platform 전용, D-27) */}
+      {isPlatform && (
+        <Modal
+          isOpen={registerOpen}
+          onClose={() => setRegisterOpen(false)}
+          title="Register cluster"
+          description="Bring an existing cluster under Container Platform management. Registered clusters are dedicated to Metis/Maxis workloads and cannot be created or deleted here."
+        >
+          <VStack gap={3} className="w-[520px] max-w-full">
+            <VStack gap={1}>
+              <span className="text-label-md text-[var(--color-text-default)]">Manual</span>
+              <span className="text-body-sm text-[var(--color-text-muted)]">
+                Run the agent install command on the target cluster. The agent reports facts
+                (version, nodes, capacity); you only declare intent metadata.
+              </span>
+              <code className="text-body-sm font-mono bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] rounded-md px-3 py-2 break-all">
+                {AGENT_INSTALL_COMMAND}
+              </code>
+            </VStack>
+            <VStack gap={1}>
+              <span className="text-label-md text-[var(--color-text-default)]">Automated</span>
+              <span className="text-body-sm text-[var(--color-text-muted)]">
+                Provisioning pipelines can register clusters automatically with the same agent, no
+                manual step required.
+              </span>
+            </VStack>
+            <InlineMessage variant="info">
+              The Metis/Maxis agent stack deploys into tkai-* namespaces and appears in workload
+              lists like any other resource.
+            </InlineMessage>
+            <div className="flex justify-end gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setRegisterOpen(false)}>
+                Close
+              </Button>
+            </div>
+          </VStack>
+        </Modal>
+      )}
     </PageShell>
   );
 }

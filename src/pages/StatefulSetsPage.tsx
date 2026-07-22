@@ -36,6 +36,9 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { managedByColumn, type WorkloadManagedBy } from './containerManagedBy';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -45,6 +48,7 @@ interface StatefulSetRow {
   status: string;
   name: string;
   namespace: string;
+  managedBy?: WorkloadManagedBy;
   image: string;
   ready: string;
   createdAt: string;
@@ -52,6 +56,30 @@ interface StatefulSetRow {
 
 /* ----------------------------------------
    Mock Data ---------------------------------------- */
+
+// 전용(등록형) 클러스터의 StatefulSet(D-26·D-27) — 상위 제품이 만들어 관리한다.
+const dedicatedStatefulSets: StatefulSetRow[] = [
+  {
+    id: 'cp-1',
+    status: 'Active',
+    name: 'mlflow-tracking-postgres-statefulset',
+    namespace: 'ml-pipeline',
+    managedBy: 'Maxis',
+    image: 'postgres:15',
+    ready: '1/1',
+    createdAt: 'Nov 8, 2026 17:22:10',
+  },
+  {
+    id: 'cp-2',
+    status: 'Active',
+    name: 'triton-model-cache-redis-statefulset',
+    namespace: 'ml-serving',
+    managedBy: 'Metis',
+    image: 'redis:7.2-alpine',
+    ready: '2/2',
+    createdAt: 'Nov 9, 2026 22:50:31',
+  },
+];
 
 const statefulSetsData: StatefulSetRow[] = [
   {
@@ -162,7 +190,11 @@ export function StatefulSetsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [data, setData] = useState(statefulSetsData);
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단, 조회+운영 조치만 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
+  const initialRows = dedicated ? dedicatedStatefulSets : statefulSetsData;
+  const [data, setData] = useState(initialRows);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
@@ -278,6 +310,8 @@ export function StatefulSetsPage() {
       minWidth: columnMinWidths.namespace,
       sortable: true,
     },
+    // Container Platform 전용(D-26): 담당 제품 표시
+    ...(isPlatform ? [managedByColumn<StatefulSetRow>()] : []),
     {
       key: 'image',
       label: 'Image',
@@ -443,15 +477,17 @@ export function StatefulSetsPage() {
         <PageHeader
           title="StatefulSets"
           actions={
-            <ContextMenu items={createMenuItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create StatefulSet
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createMenuItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create StatefulSet
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

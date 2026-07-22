@@ -36,6 +36,9 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { managedByColumn, type WorkloadManagedBy } from './containerManagedBy';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -45,6 +48,7 @@ interface DeploymentRow {
   status: string;
   name: string;
   namespace: string;
+  managedBy?: WorkloadManagedBy;
   image: string;
   ready: string;
   upToDate: number;
@@ -54,6 +58,34 @@ interface DeploymentRow {
 
 /* ----------------------------------------
    Mock Data ---------------------------------------- */
+
+// 전용(등록형) 클러스터의 배포(D-26·D-27): 상위 제품이 만들어 관리하는 워크로드만 존재한다.
+const dedicatedDeployments: DeploymentRow[] = [
+  {
+    id: 'cp-1',
+    status: 'Active',
+    name: 'llama3-70b-vllm-serving-deployment',
+    namespace: 'ml-serving',
+    managedBy: 'Metis',
+    image: 'vllm/vllm-openai:v0.5.4',
+    ready: '2/2',
+    upToDate: 2,
+    available: 2,
+    createdAt: 'Nov 9, 2026 22:45:12',
+  },
+  {
+    id: 'cp-2',
+    status: 'Active',
+    name: 'kubeflow-pipelines-ui-deployment',
+    namespace: 'ml-pipeline',
+    managedBy: 'Maxis',
+    image: 'kubeflow/pipelines-frontend:2.2.0',
+    ready: '1/1',
+    upToDate: 1,
+    available: 1,
+    createdAt: 'Nov 8, 2026 17:20:38',
+  },
+];
 
 const deploymentsData: DeploymentRow[] = [
   {
@@ -182,7 +214,11 @@ export function DeploymentsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [data, setData] = useState(deploymentsData);
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단, 조회+운영 조치만 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
+  const initialDeployments = dedicated ? dedicatedDeployments : deploymentsData;
+  const [data, setData] = useState(initialDeployments);
   const [currentPage, setCurrentPage] = useState(1);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -303,6 +339,8 @@ export function DeploymentsPage() {
         </span>
       ),
     },
+    // Container Platform 전용(D-26): 담당 제품 표시
+    ...(isPlatform ? [managedByColumn<DeploymentRow>()] : []),
     {
       key: 'image',
       label: 'Image',
@@ -497,15 +535,17 @@ export function DeploymentsPage() {
         <PageHeader
           title="Deployments"
           actions={
-            <ContextMenu items={createMenuItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create deployment
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createMenuItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create deployment
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

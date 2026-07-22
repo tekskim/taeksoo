@@ -28,6 +28,8 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 import {
   IconDownload,
   IconTrash,
@@ -133,6 +135,9 @@ export function PodDisruptionBudgetsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
   const [data, setData] = useState(podDisruptionBudgetsData);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -457,15 +462,17 @@ export function PodDisruptionBudgetsPage() {
         <PageHeader
           title="Pod disruption budgets"
           actions={
-            <ContextMenu items={createDropdownItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create pod disruption budget
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createDropdownItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create pod disruption budget
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

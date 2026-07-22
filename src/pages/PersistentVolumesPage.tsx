@@ -35,6 +35,8 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 
 /* ----------------------------------------
    Types
@@ -154,6 +156,9 @@ export function PersistentVolumesPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
   const [data, setData] = useState(persistentVolumesData);
   const [currentPage, setCurrentPage] = useState(1);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -478,15 +483,17 @@ export function PersistentVolumesPage() {
         <PageHeader
           title="Persistent volumes"
           actions={
-            <ContextMenu items={createDropdownItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create persistent volume
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createDropdownItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create persistent volume
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

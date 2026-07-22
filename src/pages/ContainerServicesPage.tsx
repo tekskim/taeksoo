@@ -34,6 +34,8 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 
 /* ----------------------------------------
    Types
@@ -140,6 +142,9 @@ export function ContainerServicesPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -552,11 +557,13 @@ export function ContainerServicesPage() {
         <PageHeader
           title="Services"
           actions={
-            <ContextMenu items={createDropdownItems} trigger="click" align="right">
-              <Button variant="primary" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
-                Create service
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createDropdownItems} trigger="click" align="right">
+                <Button variant="primary" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
+                  Create service
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

@@ -38,6 +38,9 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { managedByColumn, type WorkloadManagedBy } from './containerManagedBy';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -47,6 +50,7 @@ interface CronJobRow {
   status: string;
   name: string;
   namespace: string;
+  managedBy?: WorkloadManagedBy;
   image: string;
   schedule: string;
   lastSchedule: string;
@@ -55,6 +59,32 @@ interface CronJobRow {
 
 /* ----------------------------------------
    Mock Data ---------------------------------------- */
+
+// 전용(등록형) 클러스터의 CronJob(D-26) — 상위 제품이 만들어 관리한다.
+const dedicatedCronJobs: CronJobRow[] = [
+  {
+    id: 'cp-1',
+    status: 'Active',
+    name: 'checkpoint-retention-cleanup-cronjob',
+    namespace: 'ml-training',
+    managedBy: 'Maxis',
+    image: 'maxis/checkpoint-gc:24.06',
+    schedule: '0 3 * * *',
+    lastSchedule: 'Nov 10, 2026 03:00:00',
+    createdAt: 'Nov 1, 2026 09:00:00',
+  },
+  {
+    id: 'cp-2',
+    status: 'Active',
+    name: 'model-registry-sync-cronjob',
+    namespace: 'ml-serving',
+    managedBy: 'Metis',
+    image: 'metis/registry-sync:1.2.0',
+    schedule: '*/30 * * * *',
+    lastSchedule: 'Nov 10, 2026 10:30:00',
+    createdAt: 'Nov 2, 2026 14:00:00',
+  },
+];
 
 const cronJobsData: CronJobRow[] = [
   {
@@ -174,7 +204,11 @@ export function CronJobsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [data, setData] = useState(cronJobsData);
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단, 조회+운영 조치만 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
+  const initialRows = dedicated ? dedicatedCronJobs : cronJobsData;
+  const [data, setData] = useState(initialRows);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
@@ -327,6 +361,8 @@ export function CronJobsPage() {
         </span>
       ),
     },
+    // Container Platform 전용(D-26): 담당 제품 표시
+    ...(isPlatform ? [managedByColumn<CronJobRow>()] : []),
     {
       key: 'image',
       label: 'Image',
@@ -486,15 +522,17 @@ export function CronJobsPage() {
         <PageHeader
           title="CronJobs"
           actions={
-            <ContextMenu items={createDropdownItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create CronJob
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createDropdownItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create CronJob
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 

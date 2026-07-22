@@ -35,6 +35,9 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { managedByColumn, type WorkloadManagedBy } from './containerManagedBy';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { getActiveCpCluster } from './containerActiveCluster';
 
 /* ----------------------------------------
    Types
@@ -45,6 +48,7 @@ interface JobRow {
   status: string;
   name: string;
   namespace: string;
+  managedBy?: WorkloadManagedBy;
   image: string;
   completions: string;
   duration: string;
@@ -54,6 +58,32 @@ interface JobRow {
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
+
+// 전용(등록형) 클러스터의 Job(D-26) — 학습 실행은 Maxis가 만든다.
+const dedicatedJobs: JobRow[] = [
+  {
+    id: 'cp-1',
+    status: 'Succeeded',
+    name: 'llama3-70b-finetune-20260722-job',
+    namespace: 'ml-training',
+    managedBy: 'Maxis',
+    image: 'maxis/trainer:24.06',
+    completions: '1/1',
+    duration: '6h 12m',
+    createdAt: 'Nov 9, 2026 03:40:55',
+  },
+  {
+    id: 'cp-2',
+    status: 'Running',
+    name: 'model-eval-benchmark-suite-job',
+    namespace: 'ml-training',
+    managedBy: 'Maxis',
+    image: 'maxis/evaluator:24.06',
+    completions: '0/1',
+    duration: '48m',
+    createdAt: 'Nov 10, 2026 10:02:19',
+  },
+];
 
 const jobsData: JobRow[] = [
   {
@@ -173,7 +203,11 @@ export function JobsPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [data, setData] = useState(jobsData);
+  const { isPlatform } = useContainerMode();
+  // 전용(등록형) 클러스터: 생성 차단, 조회+운영 조치만 (D-28)
+  const dedicated = isPlatform && getActiveCpCluster().dedicated;
+  const initialRows = dedicated ? dedicatedJobs : jobsData;
+  const [data, setData] = useState(initialRows);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
@@ -296,6 +330,8 @@ export function JobsPage() {
         </span>
       ),
     },
+    // Container Platform 전용(D-26): 담당 제품 표시
+    ...(isPlatform ? [managedByColumn<JobRow>()] : []),
     {
       key: 'image',
       label: 'Image',
@@ -476,15 +512,17 @@ export function JobsPage() {
         <PageHeader
           title="Jobs"
           actions={
-            <ContextMenu items={createMenuItems} trigger="click" align="right">
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-              >
-                Create job
-              </Button>
-            </ContextMenu>
+            dedicated ? undefined : (
+              <ContextMenu items={createMenuItems} trigger="click" align="right">
+                <Button
+                  variant="primary"
+                  size="md"
+                  rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+                >
+                  Create job
+                </Button>
+              </ContextMenu>
+            )
           }
         />
 
