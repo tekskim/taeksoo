@@ -34,6 +34,7 @@ import {
   IconArrowsShuffle,
   IconDatabase,
   IconReorder,
+  IconCategory,
   IconChartPie3,
   IconRulerMeasure,
   IconApps,
@@ -640,6 +641,20 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                       active={isActive('/container/pdb')}
                     />
                   </MenuSection>
+
+                  {/* Administration — Container Platform 전용(D-35).
+                      상위 제품이 만든 커스텀 리소스도 CP가 조회한다(D-24 유지).
+                      Aegis/Metis 모드는 무변경(D-26 ②). */}
+                  {isPlatform && (
+                    <MenuSection title="Administration" defaultOpen={true}>
+                      <MenuItem
+                        icon={<IconCategory size={16} stroke={1.5} />}
+                        label="Resource types"
+                        href="/container/resource-types"
+                        active={isActive('/container/resource-types')}
+                      />
+                    </MenuSection>
+                  )}
                 </>
               )}
             </VStack>

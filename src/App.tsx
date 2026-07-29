@@ -302,6 +302,9 @@ import { CreatePodDisruptionBudgetPage } from '@/pages/CreatePodDisruptionBudget
 import { PodDisruptionBudgetDetailPage } from '@/pages/PodDisruptionBudgetDetailPage';
 import { ClusterManagementPage } from '@/pages/ClusterManagementPage';
 import { ClusterDetailPage } from '@/pages/ClusterDetailPage';
+import { ImportYamlPage } from '@/pages/ImportYamlPage';
+import { ResourceTypesPage } from '@/pages/ResourceTypesPage';
+import { ResourceTypeInstancesPage } from '@/pages/ResourceTypeInstancesPage';
 import { CreateClusterPage } from '@/pages/CreateClusterPage';
 import CatalogPage from '@/pages/CatalogPage';
 import InstalledAppsPage from '@/pages/InstalledAppsPage';
@@ -1133,6 +1136,9 @@ function AppRoutes() {
         <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
         <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
         <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
+        <Route path="/container/import-yaml" element={<ImportYamlPage />} />
+        <Route path="/container/resource-types" element={<ResourceTypesPage />} />
+        <Route path="/container/resource-types/:typeId" element={<ResourceTypeInstancesPage />} />
         <Route path="/container/*" element={<NotFoundPage />} />
 
         {/* Log Routes */}

@@ -27,7 +27,13 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
+import {
+  ClusterOverviewTab,
+  type ClusterUsage,
+  type ClusterOverviewData,
+} from '@/components/ClusterOverviewTab';
 import { useTabs } from '@/contexts/TabContext';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   IconChevronDown,
@@ -276,8 +282,21 @@ export function ClusterDetailPage() {
   const [isRegenerateTokenOpen, setIsRegenerateTokenOpen] = useState(false);
   const [regeneratedToken, setRegeneratedToken] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'networking';
+  /* Overview is a Container Platform addition (D-34). Aegis/Metis mode screens
+     stay unchanged (D-26), so those modes keep landing on Networking. */
+  const { isPlatform } = useContainerMode();
+  const activeTab = searchParams.get('tab') || (isPlatform ? 'overview' : 'networking');
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  // Usage assignment (D-30) — the list row action already exists; the detail
+  // screen offers the same thing so it lives next to the rest of the cluster.
+  const [assignedUsage, setAssignedUsage] = useState<ClusterUsage | undefined>(undefined);
+  const [isAssignUsageOpen, setIsAssignUsageOpen] = useState(false);
+  const [pendingUsage, setPendingUsage] = useState<ClusterUsage>('General');
+  const [isChannelOpen, setIsChannelOpen] = useState(false);
+  const [updateChannel, setUpdateChannel] = useState('stable-1.34');
+  const [pendingChannel, setPendingChannel] = useState('stable-1.34');
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
 
   const computeTokenDates = (expiration: string) => {
     const now = new Date();
@@ -371,6 +390,40 @@ export function ClusterDetailPage() {
   const isDeleting = clusterData.status === 'Deleting';
   const isUnknown = clusterData.status === 'Unknown';
   const isUpdating = clusterData.status === 'Updating';
+
+  /* Overview tab data (D-34). Inline mock — reachableVersions is what the
+     channel exposes above the current version; an empty list means "latest"
+     and the screen says so instead of just disabling the button ([CCONT-03]). */
+  const overviewData: ClusterOverviewData = {
+    version: clusterData.kubernetesVersion,
+    reachableVersions: isProvisioned ? ['v1.34.5'] : [],
+    channel: updateChannel,
+    status: clusterData.status,
+    usage: assignedUsage,
+    controlPlaneHealthy: isProvisioned,
+    nodesReady: isProvisioned ? 4 : 0,
+    nodesTotal: 4,
+    agentHealthy: true,
+    inventory: {
+      nodes: 4,
+      namespaces: 12,
+      workloads: 37,
+      persistentVolumeClaims: 8,
+    },
+    ongoingActivity: isProvisioning
+      ? 'Control plane initializing'
+      : isUpdating
+        ? 'Updating cluster'
+        : isDeleting
+          ? 'Removing cluster resources'
+          : undefined,
+    recentEvents: [
+      { at: '11:24', message: 'Node worker-03 became Ready' },
+      { at: '11:18', message: 'Pulled image "registry.thakicloud.io/agent:1.4.0"' },
+      { at: '10:52', message: 'Scaled deployment nginx-ingress to 3 replicas' },
+      { at: '10:31', message: 'Namespace tkai-metis created' },
+    ],
+  };
 
   // More actions menu items — vary by status
   const moreActionsItems: ContextMenuItem[] = [
@@ -588,10 +641,26 @@ export function ClusterDetailPage() {
         {/* Tabs Section */}
         <Tabs value={activeTab} onChange={setActiveTab}>
           <TabList>
+            {isPlatform && <Tab value="overview">Overview</Tab>}
             <Tab value="networking">Networking</Tab>
             <Tab value="node-config">Node configuration</Tab>
             <Tab value="service-account-token">Access token</Tab>
           </TabList>
+
+          <TabPanel value="overview">
+            <ClusterOverviewTab
+              data={overviewData}
+              onAssignUsage={() => {
+                setPendingUsage('General');
+                setIsAssignUsageOpen(true);
+              }}
+              onEditChannel={() => {
+                setPendingChannel(updateChannel);
+                setIsChannelOpen(true);
+              }}
+              onUpdate={() => setIsUpdateOpen(true)}
+            />
+          </TabPanel>
 
           <TabPanel value="networking">
             <div>
@@ -930,6 +999,102 @@ export function ClusterDetailPage() {
           </>
         )}
       </Modal>
+
+      {/* ---------- Assign usage (D-30) ---------- */}
+      <Modal
+        isOpen={isAssignUsageOpen}
+        onClose={() => setIsAssignUsageOpen(false)}
+        title="Assign usage"
+        description="Choose what this cluster is used for. The agent installs and registers the required packages for the selected usage."
+      >
+        <VStack gap={4}>
+          <FormField label="Usage" required>
+            <Select
+              value={pendingUsage}
+              onChange={(value) => setPendingUsage(value as ClusterUsage)}
+              options={[
+                { value: 'General', label: 'General — general purpose workloads' },
+                { value: 'Metis', label: 'Metis — inference and serving' },
+                { value: 'Maxis', label: 'Maxis — training' },
+              ]}
+            />
+          </FormField>
+          {pendingUsage !== 'General' && (
+            <InlineMessage variant="info">
+              Dedicated clusters are view and operate only. Resource creation is disabled and
+              editing is available through Edit YAML.
+            </InlineMessage>
+          )}
+          <HStack gap={2} className="w-full">
+            <Button
+              variant="secondary"
+              className="flex-1"
+              onClick={() => setIsAssignUsageOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              className="flex-1"
+              onClick={() => {
+                setAssignedUsage(pendingUsage);
+                setIsAssignUsageOpen(false);
+              }}
+            >
+              Assign
+            </Button>
+          </HStack>
+        </VStack>
+      </Modal>
+
+      {/* ---------- Change update channel ---------- */}
+      <Modal
+        isOpen={isChannelOpen}
+        onClose={() => setIsChannelOpen(false)}
+        title="Change update channel"
+        description="The channel decides which versions this cluster can move to."
+      >
+        <VStack gap={4}>
+          <FormField label="Update channel" required>
+            <Select
+              value={pendingChannel}
+              onChange={setPendingChannel}
+              options={[
+                { value: 'stable-1.34', label: 'stable-1.34' },
+                { value: 'stable-1.35', label: 'stable-1.35' },
+              ]}
+            />
+          </FormField>
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" className="flex-1" onClick={() => setIsChannelOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              className="flex-1"
+              onClick={() => {
+                setUpdateChannel(pendingChannel);
+                setIsChannelOpen(false);
+              }}
+            >
+              Save
+            </Button>
+          </HStack>
+        </VStack>
+      </Modal>
+
+      {/* ---------- Update cluster ([CCONT-01]) ---------- */}
+      <ConfirmModal
+        isOpen={isUpdateOpen}
+        onClose={() => setIsUpdateOpen(false)}
+        onConfirm={() => setIsUpdateOpen(false)}
+        title="Update cluster"
+        description={`This cluster will move from ${clusterData.kubernetesVersion} to ${
+          overviewData.reachableVersions[overviewData.reachableVersions.length - 1] ?? '-'
+        } on the ${updateChannel} channel. Workloads keep running while nodes are updated one at a time.`}
+        confirmText="Update"
+        cancelText="Cancel"
+      />
     </PageShell>
   );
 }
