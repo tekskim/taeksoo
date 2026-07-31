@@ -27,7 +27,7 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   IconDownload,
   IconDotsCircleHorizontal,
@@ -108,7 +108,25 @@ export function ContainerVolumeSnapshotsPage() {
   // 전용(등록형) 클러스터: 생성 차단 (D-28)
   const dedicated = isPlatform && getActiveCpCluster().dedicated;
   const [currentPage, setCurrentPage] = useState(1);
-  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+  // CCONT-12: 목록의 필터 조건을 화면 주소(쿼리)에 담는다 — 저장된 뷰(D-36 ②)가 이 주소를
+  // 저장하고 복원한다. 마운트 시 주소에서 필터를 복원하고, 필터가 바뀌면 주소를 갱신한다.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>(() =>
+    Array.from(searchParams.entries()).map(([fieldId, value], i) => ({
+      id: `sv-filter-${i}`,
+      fieldId,
+      fieldLabel:
+        containerVolumeSnapshotFilterFields.find((f) => f.id === fieldId)?.label ?? fieldId,
+      value,
+    }))
+  );
+  useEffect(() => {
+    const params: Record<string, string> = {};
+    appliedFilters.forEach((f) => {
+      params[f.fieldId] = f.value;
+    });
+    setSearchParams(params, { replace: true });
+  }, [appliedFilters, setSearchParams]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [snapshotRows, setSnapshotRows] = useState(containerVolumeSnapshotsData);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);

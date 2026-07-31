@@ -16,6 +16,7 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
   IconLayoutDashboard,
+  IconStar,
   IconAffiliate,
   IconShieldLock,
   IconPlus,
@@ -54,6 +55,7 @@ import {
   getActiveCpCluster,
   setActiveCpClusterId,
 } from '@/pages/containerActiveCluster';
+import { useSavedViews } from '@/pages/containerSavedViews';
 
 /* ----------------------------------------
    Container Sidebar Component
@@ -217,6 +219,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
   const { isDark } = useDarkMode();
   const location = useLocation();
   const navigate = useNavigate();
+  const savedViews = useSavedViews();
   const isDesktopWindow = useIsDesktopWindow();
   const desktopControls = useDesktopWindowControls();
   const { mode, isMetis, isPlatform } = useContainerMode();
@@ -468,6 +471,24 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 </>
               ) : (
                 <>
+                  {/* Saved views — 저장된 화면 상태 복원 (CorePlan D-36 ② · CCONT-13).
+                      클러스터별 뷰라 복원 시 해당 클러스터로 전환한 뒤 이동한다. */}
+                  {isPlatform && savedViews.length > 0 && (
+                    <MenuSection title="Saved views" defaultOpen={true}>
+                      {savedViews.map((view) => (
+                        <MenuItem
+                          key={view.id}
+                          icon={<IconStar size={16} stroke={1.5} />}
+                          label={view.name}
+                          badge={view.screenLabel}
+                          onClick={() => {
+                            setActiveCpClusterId(view.clusterId);
+                            navigate(`${view.path}${view.search}`);
+                          }}
+                        />
+                      ))}
+                    </MenuSection>
+                  )}
                   {/* Cluster Section */}
                   <MenuSection title="Cluster" defaultOpen={true}>
                     <MenuItem

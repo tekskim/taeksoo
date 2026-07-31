@@ -8,11 +8,21 @@ import {
   IconCopy,
   IconSearch,
   IconFileImport,
+  IconStar,
 } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
 import { getActiveCpCluster } from '@/pages/containerActiveCluster';
+import { SaveViewModal } from '@/components/SaveViewModal';
+
+function screenLabelFromPath(pathname: string): string {
+  const seg = pathname.split('/').filter(Boolean).pop() ?? 'view';
+  return seg
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
 import { useContainerMode } from '@/contexts/ContainerModeContext';
 
 /* 리소스 종류 → 목록 화면 경로.
@@ -80,6 +90,8 @@ export function ContainerTopBarActions({
   const sidebarWidth = useMainSidebarWidth();
   const navigate = useNavigate();
   const { isPlatform } = useContainerMode();
+  const location = useLocation();
+  const [saveOpen, setSaveOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
   const handleTerminalClick = useCallback(() => {
@@ -108,6 +120,16 @@ export function ContainerTopBarActions({
             aria-label="Import YAML"
           >
             <IconFileImport size={16} className={iconClass} stroke={1.5} />
+          </button>
+        </Tooltip>
+      )}
+
+      {/* Save view — 현재 화면의 필터·정렬을 이름 붙여 저장 (CorePlan D-36 ② · CCONT-11).
+          모든 화면에서 저장 가능. dedicated 클러스터에서도 저장은 조회 동작이라 노출한다. */}
+      {isPlatform && (
+        <Tooltip content="Save view" position="bottom">
+          <button className={btnClass} onClick={() => setSaveOpen(true)} aria-label="Save view">
+            <IconStar size={16} className={iconClass} stroke={1.5} />
           </button>
         </Tooltip>
       )}
@@ -154,6 +176,18 @@ export function ContainerTopBarActions({
           <IconSearch size={16} className={iconClass} stroke={1.5} />
         </button>
       </Tooltip>
+
+      {isPlatform && (
+        <SaveViewModal
+          isOpen={saveOpen}
+          onClose={() => setSaveOpen(false)}
+          path={location.pathname}
+          search={location.search}
+          clusterId={getActiveCpCluster().id}
+          clusterName={getActiveCpCluster().name}
+          screenLabel={screenLabelFromPath(location.pathname)}
+        />
+      )}
 
       <ResourceTypeSearchDrawer
         isOpen={searchOpen}
