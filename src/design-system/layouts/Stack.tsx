@@ -20,6 +20,8 @@ export interface StackProps extends HTMLAttributes<HTMLDivElement> {
   gap?: StackSpacing;
   /** 줄바꿈 여부 */
   wrap?: boolean;
+  /** FormField가 자식에게 자동 주입하는 prop — 레이아웃에는 의미가 없어 DOM에 넘기지 않는다 */
+  error?: boolean;
   /** 스택 내용 */
   children: ReactNode;
 }
@@ -78,6 +80,7 @@ export function Stack({
   justify = 'start',
   gap = 6,
   wrap = false,
+  error: _error,
   children,
   className = '',
   ...props

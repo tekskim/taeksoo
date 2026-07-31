@@ -7,7 +7,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconFileImport,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
@@ -107,7 +107,7 @@ export function ContainerTopBarActions({
             onClick={() => navigate('/container/import-yaml')}
             aria-label="Import YAML"
           >
-            <IconPlus size={16} className={iconClass} stroke={1.5} />
+            <IconFileImport size={16} className={iconClass} stroke={1.5} />
           </button>
         </Tooltip>
       )}

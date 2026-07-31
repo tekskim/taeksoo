@@ -12,6 +12,8 @@ export interface SliderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onCha
   max?: number;
   /** Step increment */
   step?: number;
+  /** Error state — FormField가 자동 주입. 시각 처리는 없고 DOM으로 흘리지 않기 위해 받는다 */
+  error?: boolean;
   /** Current value (controlled) */
   value?: number;
   /** Default value (uncontrolled) */
@@ -42,6 +44,7 @@ export function Slider({
   defaultValue = 0,
   onChange,
   disabled = false,
+  error: _error,
   showValue = false,
   formatValue = (v) => String(v),
   fullWidth = false,

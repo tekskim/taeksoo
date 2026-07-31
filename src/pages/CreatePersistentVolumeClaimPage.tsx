@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -17,6 +17,7 @@ import {
   RadioGroup,
   SectionCard,
   Disclosure,
+  InlineMessage,
   WizardSummary,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
@@ -25,6 +26,11 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { IconCirclePlus, IconX } from '@tabler/icons-react';
+import {
+  findSnapshotByName,
+  restorableSnapshots,
+  restoreSizeInGi,
+} from './containerVolumeSnapshotsData';
 
 /* ----------------------------------------
    Types
@@ -55,6 +61,11 @@ const NAMESPACE_OPTIONS = [
   { value: 'kube-public', label: 'kube-public' },
   { value: 'monitoring', label: 'monitoring' },
   { value: 'production', label: 'production' },
+  // 스냅샷이 있는 네임스페이스 — 복원은 원본과 같은 네임스페이스에서만 된다.
+  { value: 'database', label: 'database' },
+  { value: 'devtools', label: 'devtools' },
+  { value: 'metis-training', label: 'metis-training' },
+  { value: 'maxis', label: 'maxis' },
 ];
 
 // Storage class options for Volume Claim
@@ -245,7 +256,7 @@ function BasicInfoSection({
    VolumeClaimSection Component
    ---------------------------------------- */
 
-type VolumeSourceType = 'storage-class' | 'existing-pv';
+type VolumeSourceType = 'storage-class' | 'existing-pv' | 'snapshot';
 
 interface VolumeClaimSectionProps {
   sourceType: VolumeSourceType;
@@ -254,6 +265,9 @@ interface VolumeClaimSectionProps {
   onStorageClassChange: (value: string) => void;
   requestStorage: string;
   onRequestStorageChange: (value: string) => void;
+  /** 복원할 스냅샷 이름. sourceType이 'snapshot'일 때만 쓴다. */
+  sourceSnapshot: string;
+  onSourceSnapshotChange: (value: string) => void;
 }
 
 function VolumeClaimSection({
@@ -263,7 +277,13 @@ function VolumeClaimSection({
   onStorageClassChange,
   requestStorage,
   onRequestStorageChange,
+  sourceSnapshot,
+  onSourceSnapshotChange,
 }: VolumeClaimSectionProps) {
+  const snapshot = findSnapshotByName(sourceSnapshot);
+  // 새 볼륨은 스냅샷보다 작을 수 없다. 그래서 최솟값을 스냅샷 크기로 올린다.
+  const minStorage = sourceType === 'snapshot' && snapshot ? restoreSizeInGi(snapshot) : 1;
+  const maxStorage = Math.max(1000, minStorage * 4);
   return (
     <SectionCard className="pb-4">
       <SectionCard.Header title="Volume claim" showDivider />
@@ -283,27 +303,58 @@ function VolumeClaimSection({
                     label="Use a Storage Class to provision a new Persistent Volume"
                   />
                   <Radio value="existing-pv" label="Use an existing Persistent Volume" />
+                  {/* 복원은 원본을 덮어쓰는 것이 아니라 새 볼륨을 만드는 것이라
+                      여기, 즉 "무엇으로부터 만들 것인가" 자리에 온다. */}
+                  <Radio value="snapshot" label="Restore from a volume snapshot" />
                 </VStack>
               </RadioGroup>
             </FormField.Control>
           </FormField>
 
-          {/* Storage Class / Persistent Volume */}
-          <FormField>
-            <FormField.Label>
-              {sourceType === 'existing-pv' ? 'Persistent volume' : 'Storage Class'}
-            </FormField.Label>
-            <FormField.Control>
-              <Select
-                options={
-                  sourceType === 'existing-pv' ? PERSISTENT_VOLUME_OPTIONS : STORAGE_CLASS_OPTIONS
-                }
-                value={storageClass}
-                onChange={(value) => onStorageClassChange(value)}
-                fullWidth
-              />
-            </FormField.Control>
-          </FormField>
+          {/* Storage Class / Persistent Volume / Snapshot */}
+          {sourceType === 'snapshot' ? (
+            <FormField required>
+              <FormField.Label>Volume snapshot</FormField.Label>
+              <FormField.Control>
+                <Select
+                  options={restorableSnapshots().map((s) => ({
+                    value: s.name,
+                    label: `${s.name} — ${s.namespace} · ${s.restoreSize}`,
+                  }))}
+                  value={sourceSnapshot}
+                  onChange={(value) => onSourceSnapshotChange(value)}
+                  placeholder="Select a snapshot"
+                  fullWidth
+                />
+              </FormField.Control>
+            </FormField>
+          ) : (
+            <FormField>
+              <FormField.Label>
+                {sourceType === 'existing-pv' ? 'Persistent volume' : 'Storage Class'}
+              </FormField.Label>
+              <FormField.Control>
+                <Select
+                  options={
+                    sourceType === 'existing-pv' ? PERSISTENT_VOLUME_OPTIONS : STORAGE_CLASS_OPTIONS
+                  }
+                  value={storageClass}
+                  onChange={(value) => onStorageClassChange(value)}
+                  fullWidth
+                />
+              </FormField.Control>
+            </FormField>
+          )}
+
+          {snapshot && sourceType === 'snapshot' && (
+            <InlineMessage variant="info">
+              This creates a <strong>new</strong> volume from{' '}
+              <span className="font-mono">{snapshot.name}</span>. The source volume{' '}
+              <span className="font-mono">{snapshot.sourcePvc}</span> is not touched. The new volume
+              must be at least <strong>{snapshot.restoreSize}</strong>, and it has to live in the{' '}
+              <span className="font-mono">{snapshot.namespace}</span> namespace.
+            </InlineMessage>
+          )}
 
           {/* Request Storage */}
           <FormField required>
@@ -312,8 +363,8 @@ function VolumeClaimSection({
               <NumberInput
                 value={requestStorage}
                 onChange={(value) => onRequestStorageChange(value)}
-                min={1}
-                max={1000}
+                min={minStorage}
+                max={maxStorage}
                 step={1}
                 width="sm"
                 suffix="GiB"
@@ -587,6 +638,33 @@ export function CreatePersistentVolumeClaimPage() {
   const [sourceType, setSourceType] = useState<VolumeSourceType>('storage-class');
   const [storageClass, setStorageClass] = useState('default');
   const [requestStorage, setRequestStorage] = useState('10');
+  const [sourceSnapshot, setSourceSnapshot] = useState('');
+
+  /* 스냅샷을 고르면 네임스페이스와 크기가 따라온다.
+     복원한 볼륨은 원본 스냅샷과 같은 네임스페이스에만 만들 수 있고,
+     스냅샷보다 작게는 만들 수 없다. 사용자가 따로 맞추게 두지 않는다. */
+  const applySnapshotSelection = useCallback((snapshotName: string) => {
+    setSourceSnapshot(snapshotName);
+    const snapshot = findSnapshotByName(snapshotName);
+    if (!snapshot) return;
+    setNamespace(snapshot.namespace);
+    setRequestStorage(String(restoreSizeInGi(snapshot)));
+  }, []);
+
+  /* 스냅샷 상세·목록의 "Restore as new PVC"로 넘어온 경우.
+     최초 1회만 적용한다. */
+  const [searchParams] = useSearchParams();
+  const fromSnapshot = searchParams.get('fromSnapshot');
+  const restorePrefillDone = useRef(false);
+  useEffect(() => {
+    if (!fromSnapshot || restorePrefillDone.current) return;
+    const snapshot = findSnapshotByName(fromSnapshot);
+    if (!snapshot) return;
+    restorePrefillDone.current = true;
+    setSourceType('snapshot');
+    applySnapshotSelection(snapshot.name);
+    setNamespaceName(`${snapshot.name}-restored`);
+  }, [fromSnapshot, applySnapshotSelection]);
 
   // Storage Configuration state
   const [accessModes, setAccessModes] = useState({
@@ -646,10 +724,21 @@ export function CreatePersistentVolumeClaimPage() {
     console.log('Creating persistent volume claim:', {
       pvcName,
       description,
+      namespace,
       volumeClaim: {
         sourceType,
         storageClass,
         requestStorage: `${requestStorage}GiB`,
+        // 스냅샷 복원은 spec.dataSource로 내려간다.
+        ...(sourceType === 'snapshot' && sourceSnapshot
+          ? {
+              dataSource: {
+                apiGroup: 'snapshot.storage.k8s.io',
+                kind: 'VolumeSnapshot',
+                name: sourceSnapshot,
+              },
+            }
+          : {}),
       },
       storageConfig: {
         accessModes,
@@ -661,9 +750,11 @@ export function CreatePersistentVolumeClaimPage() {
   }, [
     pvcName,
     description,
+    namespace,
     sourceType,
     storageClass,
     requestStorage,
+    sourceSnapshot,
     accessModes,
     labels,
     annotations,
@@ -791,6 +882,8 @@ export function CreatePersistentVolumeClaimPage() {
               onStorageClassChange={setStorageClass}
               requestStorage={requestStorage}
               onRequestStorageChange={setRequestStorage}
+              sourceSnapshot={sourceSnapshot}
+              onSourceSnapshotChange={applySnapshotSelection}
             />
 
             {/* Storage Configuration Section */}

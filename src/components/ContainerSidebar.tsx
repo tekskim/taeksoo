@@ -39,6 +39,8 @@ import {
   IconRulerMeasure,
   IconApps,
   IconPackage,
+  IconCamera,
+  IconBoxMultiple,
 } from '@tabler/icons-react';
 import { FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -578,6 +580,16 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                       href="/container/hpa"
                       active={isActive('/container/hpa')}
                     />
+                    {/* 사용자 정의 네트워크 — CNI가 OVN-Kubernetes일 때만 존재하는 리소스다.
+                        다른 CNI에서는 메뉴를 숨긴다. */}
+                    {isPlatform && (
+                      <MenuItem
+                        icon={<IconTopologyStar size={16} stroke={1.5} />}
+                        label="User defined networks"
+                        href="/container/user-defined-networks"
+                        active={isActive('/container/user-defined-networks')}
+                      />
+                    )}
                   </MenuSection>
 
                   {/* Storage Section */}
@@ -600,6 +612,16 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                       href="/container/storage-classes"
                       active={isActive('/container/storage-classes')}
                     />
+                    {/* 볼륨 스냅샷 — CSI 드라이버가 스냅샷을 지원할 때만 노출한다.
+                        지원하지 않으면 메뉴를 숨긴다(OpenShift처럼 오류 화면을 보여주지 않는다). */}
+                    {isPlatform && (
+                      <MenuItem
+                        icon={<IconCamera size={16} stroke={1.5} />}
+                        label="Volume snapshots"
+                        href="/container/volume-snapshots"
+                        active={isActive('/container/volume-snapshots')}
+                      />
+                    )}
                     <MenuItem
                       icon={<IconFileSettings size={16} stroke={1.5} />}
                       label="ConfigMaps"
@@ -641,6 +663,20 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                       active={isActive('/container/pdb')}
                     />
                   </MenuSection>
+
+                  {/* Registry — 여기만 데이터 출처가 클러스터가 아니라 레지스트리다.
+                      컨테이너 이미지는 K8s API 객체가 아니라서 클러스터에 물어볼 수 없다.
+                      레지스트리 채택이 정해지지 않으면 노출하지 않는다. */}
+                  {isPlatform && (
+                    <MenuSection title="Registry" defaultOpen={true}>
+                      <MenuItem
+                        icon={<IconBoxMultiple size={16} stroke={1.5} />}
+                        label="Container images"
+                        href="/container/container-images"
+                        active={isActive('/container/container-images')}
+                      />
+                    </MenuSection>
+                  )}
 
                   {/* Administration — Container Platform 전용(D-35).
                       상위 제품이 만든 커스텀 리소스도 CP가 조회한다(D-24 유지).
