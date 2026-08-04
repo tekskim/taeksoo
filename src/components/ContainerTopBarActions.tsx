@@ -1,8 +1,56 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Tooltip } from '@/design-system';
-import { IconPencilCog, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
+import {
+  IconPencilCog,
+  IconTerminal2,
+  IconFile,
+  IconCopy,
+  IconSearch,
+  IconFileImport,
+  IconStar,
+} from '@tabler/icons-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
+import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
+import { getActiveCpCluster } from '@/pages/containerActiveCluster';
+import { SaveViewModal } from '@/components/SaveViewModal';
+
+function screenLabelFromPath(pathname: string): string {
+  const seg = pathname.split('/').filter(Boolean).pop() ?? 'view';
+  return seg
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+import { useContainerMode } from '@/contexts/ContainerModeContext';
+
+/* 리소스 종류 → 목록 화면 경로.
+   드로어에서 종류를 고르면 그 목록으로 이동한다. */
+const RESOURCE_ROUTES: Record<string, string> = {
+  clusters: '/container/cluster-management',
+  namespaces: '/container/namespaces',
+  nodes: '/container/nodes',
+  events: '/container/events',
+  deployments: '/container/deployments',
+  statefulsets: '/container/statefulsets',
+  daemonsets: '/container/daemonsets',
+  jobs: '/container/jobs',
+  cronjobs: '/container/cronjobs',
+  pods: '/container/pods',
+  services: '/container/services',
+  ingresses: '/container/ingresses',
+  hpa: '/container/hpa',
+  pv: '/container/persistent-volumes',
+  pvc: '/container/persistent-volume-claims',
+  storageclasses: '/container/storage-classes',
+  configmaps: '/container/configmaps',
+  secrets: '/container/secrets',
+  limitranges: '/container/limit-ranges',
+  resourcequotas: '/container/resource-quotas',
+  networkpolicies: '/container/network-policies',
+  pdb: '/container/pdb',
+};
 
 interface ContainerTopBarActionsProps {
   onTerminalClick?: () => void;
@@ -40,6 +88,11 @@ export function ContainerTopBarActions({
   const ownShellPanel = useShellPanel();
   const useBuiltIn = !onTerminalClick;
   const sidebarWidth = useMainSidebarWidth();
+  const navigate = useNavigate();
+  const { isPlatform } = useContainerMode();
+  const location = useLocation();
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const handleTerminalClick = useCallback(() => {
     if (onTerminalClick) {
@@ -55,6 +108,31 @@ export function ContainerTopBarActions({
 
   return (
     <>
+      {/* Quick create — Import YAML (CorePlan D-34).
+          Container Platform mode only: D-26 keeps the Aegis/Metis mode screens
+          unchanged. Hidden on dedicated clusters too, since D-28 ② says a
+          dedicated cluster shows no creation entry point ([CCONT-04] [CCONT-05]). */}
+      {isPlatform && !getActiveCpCluster().dedicated && (
+        <Tooltip content="Import YAML" position="bottom">
+          <button
+            className={btnClass}
+            onClick={() => navigate('/container/import-yaml')}
+            aria-label="Import YAML"
+          >
+            <IconFileImport size={16} className={iconClass} stroke={1.5} />
+          </button>
+        </Tooltip>
+      )}
+
+      {/* Save view — 현재 화면의 필터·정렬을 이름 붙여 저장 (CorePlan D-36 ② · CCONT-11).
+          모든 화면에서 저장 가능. dedicated 클러스터에서도 저장은 조회 동작이라 노출한다. */}
+      {isPlatform && (
+        <Tooltip content="Save view" position="bottom">
+          <button className={btnClass} onClick={() => setSaveOpen(true)} aria-label="Save view">
+            <IconStar size={16} className={iconClass} stroke={1.5} />
+          </button>
+        </Tooltip>
+      )}
       <Tooltip content="Cluster appearance" position="bottom">
         <button
           className={btnClass}
@@ -87,11 +165,41 @@ export function ContainerTopBarActions({
           <IconCopy size={16} className={iconClass} stroke={1.5} />
         </button>
       </Tooltip>
-      <Tooltip content="Resource search" position="bottom">
-        <button className={btnClass} aria-label="Resource search">
+      {/* Resource type search — 드로어는 이미 있었는데 상단바 버튼에 연결되지
+          않아 데모 페이지에서만 열렸다. 종류를 고르면 그 목록으로 이동한다. */}
+      <Tooltip content="Resource type search" position="bottom">
+        <button
+          className={btnClass}
+          onClick={() => setSearchOpen(true)}
+          aria-label="Resource type search"
+        >
           <IconSearch size={16} className={iconClass} stroke={1.5} />
         </button>
       </Tooltip>
+
+      {isPlatform && (
+        <SaveViewModal
+          isOpen={saveOpen}
+          onClose={() => setSaveOpen(false)}
+          path={location.pathname}
+          search={location.search}
+          clusterId={getActiveCpCluster().id}
+          clusterName={getActiveCpCluster().name}
+          screenLabel={screenLabelFromPath(location.pathname)}
+        />
+      )}
+
+      <ResourceTypeSearchDrawer
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        onSelect={(_categoryId, resourceId) => {
+          const path = RESOURCE_ROUTES[resourceId];
+          if (path) {
+            setSearchOpen(false);
+            navigate(path);
+          }
+        }}
+      />
 
       {useBuiltIn &&
         createPortal(

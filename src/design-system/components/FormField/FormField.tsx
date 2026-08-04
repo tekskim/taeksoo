@@ -162,12 +162,18 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
             <FormFieldControl>
               {Children.map(children, (child) => {
                 if (isValidElement(child)) {
-                  // Auto-inject id, error, disabled props to form controls
-                  return cloneElement(child as React.ReactElement<any>, {
-                    id: (child.props as any).id || id,
-                    error: (child.props as any).error ?? error,
-                    disabled: (child.props as any).disabled ?? disabled,
-                  });
+                  const childProps = child.props as any;
+                  // Auto-inject id, error, disabled props to form controls.
+                  // `error` is not a DOM attribute — never inject it into host
+                  // elements (div 등), only into component children.
+                  const injected: Record<string, unknown> = {
+                    id: childProps.id || id,
+                    disabled: childProps.disabled ?? disabled,
+                  };
+                  if (typeof child.type !== 'string') {
+                    injected.error = childProps.error ?? error;
+                  }
+                  return cloneElement(child as React.ReactElement<any>, injected);
                 }
                 return child;
               })}

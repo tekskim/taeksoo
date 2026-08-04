@@ -38,6 +38,7 @@ import {
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useContainerMode } from '@/contexts/ContainerModeContext';
 
 /* ----------------------------------------
    Types
@@ -249,6 +250,7 @@ const mockKeyPairs: KeyPairRow[] = [
 export function CreateClusterPage() {
   const navigate = useNavigate();
   const isV2 = useIsV2();
+  const { isPlatform } = useContainerMode();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
@@ -627,9 +629,16 @@ export function CreateClusterPage() {
                   </FormField.Control>
                 </FormField>
 
-                {/* Cluster Type */}
+                {/* Cluster Type — CP 모드에서는 기반 선택 안내(D-29): VM=CPU 중심, BM=GPU·CPU */}
                 <FormField required>
                   <FormField.Label>Cluster type</FormField.Label>
+                  {isPlatform && (
+                    <FormField.Description>
+                      Choose the foundation the cluster runs on. Instance (VM) suits CPU workloads,
+                      while BareMetal supports GPU as well as CPU. Everything else in this form is
+                      the same for both — only the background provisioning differs.
+                    </FormField.Description>
+                  )}
                   <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                     <RadioGroup
                       value={nodeType}

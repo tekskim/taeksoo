@@ -38,7 +38,9 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
-import { IconCirclePlus, IconX, IconPlus, IconInfoCircle } from '@tabler/icons-react';
+import { IconCirclePlus, IconX, IconPlus, IconInfoCircle, IconSearch } from '@tabler/icons-react';
+import { ImagePickerDrawer, type ImagePickerResult } from '@/components/ImagePickerDrawer';
+import { pullSecretForReference } from '@/pages/containerImagesData';
 
 /* ----------------------------------------
    Types
@@ -1335,6 +1337,23 @@ export function CreateDeploymentPage() {
     []
   );
 
+  /* 이미지 선택기 — 어느 컨테이너 탭에서 열었는지 기억한다.
+     null이면 닫힌 상태. */
+  const [imagePickerFor, setImagePickerFor] = useState<string | null>(null);
+
+  /* 이미지를 고르면 주소와 pull secret을 함께 채운다.
+     사설 레지스트리는 pull secret이 없으면 ImagePullBackOff로 배포가 실패하므로
+     둘을 따로 두지 않는다. */
+  const applyPickedImage = useCallback(
+    (containerId: string, result: ImagePickerResult) => {
+      updateContainerConfig(containerId, {
+        image: result.reference,
+        ...(result.pullSecret ? { pullSecrets: result.pullSecret } : {}),
+      });
+    },
+    [updateContainerConfig]
+  );
+
   // Validation errors
   const [nameError, setNameError] = useState<string | null>(null);
 
@@ -1357,6 +1376,22 @@ export function CreateDeploymentPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'deployment';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  /* Container Images 목록에서 "Deploy this image"로 넘어온 경우.
+     주소를 첫 컨테이너에 미리 채운다. 최초 1회만 적용한다.
+     사설 레지스트리면 pull secret도 같이 채운다 — 주소만 있으면 배포가
+     ImagePullBackOff로 실패하므로 둘을 떼어놓지 않는다. */
+  const prefilledImage = searchParams.get('image');
+  const imagePrefillDone = useRef(false);
+  useEffect(() => {
+    if (!prefilledImage || imagePrefillDone.current) return;
+    imagePrefillDone.current = true;
+    const secret = pullSecretForReference(prefilledImage);
+    updateContainerConfig('container-0', {
+      image: prefilledImage,
+      ...(secret ? { pullSecrets: secret } : {}),
+    });
+  }, [prefilledImage, updateContainerConfig]);
   const tabListRef = useRef<HTMLDivElement>(null);
 
   // Build inner tabs for the form
@@ -4681,20 +4716,32 @@ export function CreateDeploymentPage() {
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
+                                Pick an image from the connected registry, or type the full
+                                reference of any image the cluster can reach.
                               </span>
                             </VStack>
-                            <Input
-                              placeholder="nginx:latest"
-                              fullWidth
-                              value={config.image || ''}
-                              onChange={(e) =>
-                                updateContainerConfig(containerId, {
-                                  image: e.target.value,
-                                })
-                              }
-                            />
+                            {/* 목록에서 고르기와 직접 입력을 함께 둔다.
+                                레지스트리에 없는 공용 이미지를 써야 하는 경우가 반드시 생긴다. */}
+                            <HStack gap={2} align="center" className="w-full">
+                              <Input
+                                placeholder="nginx:latest"
+                                fullWidth
+                                value={config.image || ''}
+                                onChange={(e) =>
+                                  updateContainerConfig(containerId, {
+                                    image: e.target.value,
+                                  })
+                                }
+                              />
+                              <Button
+                                variant="secondary"
+                                leftIcon={<IconSearch size={14} stroke={1.5} />}
+                                onClick={() => setImagePickerFor(containerId)}
+                                className="shrink-0"
+                              >
+                                Browse
+                              </Button>
+                            </HStack>
                           </VStack>
                           <VStack gap={2}>
                             <VStack gap={1}>
@@ -4734,6 +4781,8 @@ export function CreateDeploymentPage() {
                             <Select
                               options={[
                                 { value: '', label: 'Select a secret...' },
+                                // 이미지 선택기가 사설 레지스트리를 고르면 이 값이 자동으로 채워진다.
+                                { value: 'harbor-thakicloud', label: 'harbor-thakicloud' },
                                 { value: 'docker-registry', label: 'docker-registry' },
                                 { value: 'gcr-secret', label: 'gcr-secret' },
                               ]}
@@ -7513,6 +7562,17 @@ export function CreateDeploymentPage() {
           />
         </HStack>
       </VStack>
+
+      <ImagePickerDrawer
+        isOpen={imagePickerFor !== null}
+        onClose={() => setImagePickerFor(null)}
+        currentReference={
+          imagePickerFor ? containerConfigs[imagePickerFor]?.image || undefined : undefined
+        }
+        onSelect={(result) => {
+          if (imagePickerFor) applyPickedImage(imagePickerFor, result);
+        }}
+      />
     </PageShell>
   );
 }

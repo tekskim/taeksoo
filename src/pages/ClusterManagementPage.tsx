@@ -21,6 +21,8 @@ import {
   Tooltip,
   Modal,
   InlineMessage,
+  Radio,
+  RadioGroup,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
@@ -50,7 +52,20 @@ interface Cluster {
   createdAt: string;
   /** Container Platform 모드 전용(D-27): created = CP에서 생성/삭제, registered = 등록으로 편입. */
   type?: 'created' | 'registered';
+  /** Container Platform 전용(D-29): 생성 시 선택한 기반. */
+  foundation?: 'VM' | 'Bare metal';
+  /** Container Platform 전용(D-30): 생성 후 사용자가 선택하는 용도. 미지정이면 undefined. */
+  usage?: 'General' | 'Metis' | 'Maxis';
 }
+
+type ClusterUsage = NonNullable<Cluster['usage']>;
+
+const USAGE_THEME: Record<ClusterUsage, 'blue' | 'green' | 'yellow'> = {
+  General: 'blue',
+  // managed-by 배지(containerManagedBy.tsx)와 같은 색: Maxis=green, Metis=yellow
+  Maxis: 'green',
+  Metis: 'yellow',
+};
 
 /* ----------------------------------------
    Mock Data
@@ -66,6 +81,8 @@ const mockClusters: Cluster[] = [
     memory: '16 GiB',
     pods: '46/110',
     createdAt: 'Nov 11, 2026 08:30:18',
+    foundation: 'VM',
+    usage: 'General',
   },
   {
     id: 'cluster-002',
@@ -76,6 +93,8 @@ const mockClusters: Cluster[] = [
     memory: '8 GiB',
     pods: '23/110',
     createdAt: 'Oct 6, 2026 21:25:53',
+    foundation: 'VM',
+    usage: 'General',
   },
   {
     id: 'cluster-003',
@@ -86,6 +105,8 @@ const mockClusters: Cluster[] = [
     memory: '32 GiB',
     pods: '89/110',
     createdAt: 'Sep 15, 2026 12:22:26',
+    // 방금 생성한 클러스터 — 용도 미지정(D-30: 용도는 생성 후 선택)
+    foundation: 'Bare metal',
   },
   {
     id: 'cluster-004',
@@ -96,6 +117,8 @@ const mockClusters: Cluster[] = [
     memory: '8 GiB',
     pods: '12/110',
     createdAt: 'Aug 20, 2026 23:27:51',
+    foundation: 'VM',
+    usage: 'General',
   },
   {
     id: 'cluster-005',
@@ -106,6 +129,7 @@ const mockClusters: Cluster[] = [
     memory: '4 GiB',
     pods: '5/110',
     createdAt: 'Jul 10, 2026 01:17:01',
+    foundation: 'VM',
   },
   {
     id: 'cluster-006',
@@ -116,11 +140,14 @@ const mockClusters: Cluster[] = [
     memory: '24 GiB',
     pods: '67/110',
     createdAt: 'Jun 5, 2026 15:42:33',
+    foundation: 'Bare metal',
+    usage: 'General',
   },
 ];
 
-// Container Platform(D-27)에서만 보이는 등록형 클러스터 — Metis/Maxis 워크로드 전용.
-// 생성/삭제 대신 등록(수동/자동)·등록 해제만 가능하고, Agent 스택이 tkai-* 네임스페이스에 배포된다.
+// Container Platform에서만 보이는 Metis/Maxis 전용 클러스터.
+// D-30(소륜님 미팅): 전용 클러스터도 CP가 직접 프로비저닝하고, 용도는 생성 후 선택한다.
+// 등록(registered)으로 편입된 행도 존치 — 외부 클러스터 등록 절차(D-27)의 존치 여부는 미결(GAP).
 const registeredClusters: Cluster[] = [
   {
     id: 'cluster-reg-001',
@@ -131,7 +158,8 @@ const registeredClusters: Cluster[] = [
     memory: '2048 GiB',
     pods: '24/110',
     createdAt: 'May 2, 2026 10:12:44',
-    type: 'registered',
+    foundation: 'Bare metal',
+    usage: 'Maxis',
   },
   {
     id: 'cluster-reg-002',
@@ -142,7 +170,8 @@ const registeredClusters: Cluster[] = [
     memory: '1024 GiB',
     pods: '15/110',
     createdAt: 'Apr 18, 2026 16:40:02',
-    type: 'registered',
+    foundation: 'Bare metal',
+    usage: 'Metis',
   },
   {
     id: 'cluster-reg-003',
@@ -154,6 +183,8 @@ const registeredClusters: Cluster[] = [
     pods: '9/110',
     createdAt: 'Jun 30, 2026 09:05:19',
     type: 'registered',
+    foundation: 'VM',
+    usage: 'Maxis',
   },
 ];
 
@@ -174,14 +205,20 @@ export function ClusterManagementPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const [registerOpen, setRegisterOpen] = useState(false);
+  // 용도 지정(D-30): 생성 후 선택. 목업에서는 지정 결과를 로컬 상태로 반영한다.
+  const [usageOverrides, setUsageOverrides] = useState<Record<string, ClusterUsage>>({});
+  const [assignTarget, setAssignTarget] = useState<Cluster | null>(null);
+  const [assignChoice, setAssignChoice] = useState<ClusterUsage>('General');
 
   // Update tab label to match the page title
   useEffect(() => {
     updateActiveTabLabel('Clusters');
   }, [updateActiveTabLabel]);
 
-  // Container Platform은 생성형 + 등록형이 한 목록(D-27); 다른 모드는 기존 그대로.
-  const allClusters = isPlatform ? [...mockClusters, ...registeredClusters] : mockClusters;
+  // Container Platform은 CP 프로비저닝 + 등록 편입이 한 목록; 다른 모드는 기존 그대로.
+  const allClusters = (isPlatform ? [...mockClusters, ...registeredClusters] : mockClusters).map(
+    (c) => (usageOverrides[c.id] ? { ...c, usage: usageOverrides[c.id] } : c)
+  );
 
   // Pagination
   const rowsPerPage = 10;
@@ -231,27 +268,44 @@ export function ClusterManagementPage() {
         </Link>
       ),
     },
-    // Container Platform 전용(D-27): 생성형/등록형 구분
+    // Container Platform 전용: 용도(D-30)·기반(D-29) 구분
     ...(isPlatform
       ? ([
           {
-            key: 'type',
+            key: 'usage',
             label: 'Type',
             width: fixedColumns.statusLabel,
             sortable: false,
-            // 표기는 용도 기준(D-28): General = 자체 생성·범용, Metis/Maxis = 전용(등록형)
-            render: (value: Cluster['type']) => (
+            // 표기는 용도 기준(D-28 유지): General = 범용, Metis/Maxis = 전용.
+            // 용도는 생성 후 선택하므로(D-30) 지정 전에는 Unassigned.
+            render: (value: Cluster['usage']) => (
               <Tooltip
                 content={
-                  value === 'registered'
-                    ? 'Dedicated to Metis/Maxis — registered, cannot be created or deleted here'
-                    : 'Created and managed in Container Platform'
+                  value === undefined
+                    ? 'Usage not assigned yet — choose General, Metis, or Maxis after creation'
+                    : value === 'General'
+                      ? 'General-purpose cluster, managed in Container Platform'
+                      : `Dedicated to ${value} workloads — required packages are installed by the in-cluster agent`
                 }
               >
-                <Badge theme={value === 'registered' ? 'gray' : 'blue'} type="subtle" size="sm">
-                  {value === 'registered' ? 'Metis/Maxis' : 'General'}
+                <Badge
+                  theme={value === undefined ? 'gray' : USAGE_THEME[value]}
+                  type="subtle"
+                  size="sm"
+                >
+                  {value ?? 'Unassigned'}
                 </Badge>
               </Tooltip>
+            ),
+          },
+          {
+            key: 'foundation',
+            label: 'Foundation',
+            width: fixedColumns.statusLabel,
+            sortable: false,
+            // D-29: 생성 시 VM/BM 중 선택 — 인터페이스는 동일, 백그라운드만 다름.
+            render: (value: Cluster['foundation']) => (
+              <span className="text-body-sm text-[var(--color-text-default)]">{value ?? '—'}</span>
             ),
           },
         ] as TableColumn<Cluster>[])
@@ -307,6 +361,19 @@ export function ClusterManagementPage() {
             label: 'Download YAML',
             onClick: () => console.log('Download YAML for', row.name),
           },
+          // 용도 지정(D-30): 생성 후 선택 — 미지정 클러스터에만 노출. 지정 후 변경 가능 여부는 미결(GAP).
+          ...(isPlatform && row.usage === undefined
+            ? [
+                {
+                  id: 'assign-usage',
+                  label: 'Assign usage',
+                  onClick: () => {
+                    setAssignChoice('General');
+                    setAssignTarget(row);
+                  },
+                },
+              ]
+            : []),
           {
             id: 'customize-appearance',
             label: 'Customize appearance',
@@ -547,7 +614,7 @@ export function ClusterManagementPage() {
           isOpen={registerOpen}
           onClose={() => setRegisterOpen(false)}
           title="Register cluster"
-          description="Bring an existing cluster under Container Platform management. Registered clusters are dedicated to Metis/Maxis workloads and cannot be created or deleted here."
+          description="Bring an existing cluster under Container Platform management. Registered clusters join the list alongside clusters provisioned here."
         >
           <VStack gap={3} className="w-[520px] max-w-full">
             <VStack gap={1}>
@@ -574,6 +641,52 @@ export function ClusterManagementPage() {
             <div className="flex justify-end gap-2">
               <Button variant="secondary" size="sm" onClick={() => setRegisterOpen(false)}>
                 Close
+              </Button>
+            </div>
+          </VStack>
+        </Modal>
+      )}
+
+      {/* Assign usage — 용도는 생성 후 선택(D-30, Container Platform 전용) */}
+      {isPlatform && (
+        <Modal
+          isOpen={assignTarget !== null}
+          onClose={() => setAssignTarget(null)}
+          title="Assign usage"
+          description={`Choose how ${assignTarget?.name ?? ''} will be used. Usage is assigned after the cluster is created.`}
+        >
+          <VStack gap={3} className="w-[520px] max-w-full">
+            <RadioGroup
+              value={assignChoice}
+              onChange={(value) => setAssignChoice(value as ClusterUsage)}
+            >
+              <Radio value="General" label="General — use it freely for any workload" />
+              <Radio
+                value="Metis"
+                label="Metis — dedicated to Metis (inference serving) workloads"
+              />
+              <Radio value="Maxis" label="Maxis — dedicated to Maxis (training) workloads" />
+            </RadioGroup>
+            <InlineMessage variant="info">
+              {assignChoice === 'General'
+                ? 'No additional packages are required for a general-purpose cluster.'
+                : `The in-cluster agent pulls and installs the packages ${assignChoice} needs, and the deployed components are registered. The agent stack runs in tkai-* namespaces.`}
+            </InlineMessage>
+            <div className="flex justify-end gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setAssignTarget(null)}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  if (assignTarget) {
+                    setUsageOverrides((prev) => ({ ...prev, [assignTarget.id]: assignChoice }));
+                  }
+                  setAssignTarget(null);
+                }}
+              >
+                Assign
               </Button>
             </div>
           </VStack>

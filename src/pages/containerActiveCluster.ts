@@ -1,11 +1,13 @@
 /* ----------------------------------------
-   Active cluster (Container Platform mode only, CorePlan D-27/D-28)
+   Active cluster (Container Platform mode only, CorePlan D-27/D-28/D-30)
 
    The merged app keeps the existing icon-sidebar cluster switching. In CP mode
-   the icons represent one General cluster (created via CP) and one Metis/Maxis
-   dedicated cluster (registered). Workload pages read the active cluster to
-   decide which mock data to show and whether creation is available —
-   dedicated clusters are view + operate only (no create, edit via YAML).
+   the icons represent one General cluster and one Metis/Maxis dedicated
+   cluster. Since D-30, dedicated clusters are provisioned by CP itself and
+   their usage is assigned after creation. Workload pages read the active
+   cluster to decide which mock data to show and whether creation is
+   available — dedicated clusters are view + operate only (no create, edit
+   via YAML; D-28, 유지 여부는 GAP).
 
    Module-level state survives route changes the same way the sidebar's
    savedScrollPosition does; switching clusters always navigates, so pages
@@ -15,7 +17,7 @@
 export interface CpCluster {
   id: string;
   name: string;
-  /** true = registered, Metis/Maxis dedicated (D-27) */
+  /** true = usage assigned to Metis/Maxis (dedicated, D-30) */
   dedicated: boolean;
   iconText?: string;
 }

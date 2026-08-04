@@ -18,6 +18,8 @@ export interface SearchInputProps extends Omit<
   label?: string;
   /** Full width */
   fullWidth?: boolean;
+  /** Error state — FormField가 자동 주입. 시각 처리는 없고 DOM으로 흘리지 않기 위해 받는다 */
+  error?: boolean;
   /** Show clear button when has value */
   clearable?: boolean;
   /** Callback when clear button is clicked */
@@ -44,6 +46,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       label,
       fullWidth = false,
       clearable = true,
+      error: _error,
       onClear,
       className = '',
       id,

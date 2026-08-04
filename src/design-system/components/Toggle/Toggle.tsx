@@ -16,6 +16,8 @@ export interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
   defaultChecked?: boolean;
   /** Disabled state */
   disabled?: boolean;
+  /** Error state — FormField가 자동 주입. 시각 처리는 없고 DOM으로 흘리지 않기 위해 받는다 */
+  error?: boolean;
   /** @deprecated thaki-ui compatibility - label when checked */
   checkedLabel?: string;
   /** @deprecated thaki-ui compatibility - label when unchecked */
@@ -34,6 +36,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       checked,
       defaultChecked,
       disabled = false,
+      error: _error,
       onChange,
       className = '',
       id,

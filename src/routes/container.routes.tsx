@@ -78,6 +78,25 @@ const PersistentVolumeClaimDetailPage = lazy(
   () => import('@/pages/PersistentVolumeClaimDetailPage')
 );
 const StorageClassesPage = lazy(() => import('@/pages/StorageClassesPage'));
+// OpenShift 4.22 벤치마크 후속 — 프로토타입 반영 3종
+const ContainerVolumeSnapshotsPage = lazy(() => import('@/pages/ContainerVolumeSnapshotsPage'));
+const ContainerUserDefinedNetworksPage = lazy(
+  () => import('@/pages/ContainerUserDefinedNetworksPage')
+);
+const ContainerImagesPage = lazy(() => import('@/pages/ContainerImagesPage'));
+const ContainerVolumeSnapshotDetailPage = lazy(
+  () => import('@/pages/ContainerVolumeSnapshotDetailPage')
+);
+const ContainerUserDefinedNetworkDetailPage = lazy(
+  () => import('@/pages/ContainerUserDefinedNetworkDetailPage')
+);
+const ContainerImageDetailPage = lazy(() => import('@/pages/ContainerImageDetailPage'));
+const CreateVolumeSnapshotPage = lazy(() => import('@/pages/CreateVolumeSnapshotPage'));
+const CreateVolumeSnapshotYamlPage = lazy(() => import('@/pages/CreateVolumeSnapshotYamlPage'));
+const CreateUserDefinedNetworkPage = lazy(() => import('@/pages/CreateUserDefinedNetworkPage'));
+const CreateUserDefinedNetworkYamlPage = lazy(
+  () => import('@/pages/CreateUserDefinedNetworkYamlPage')
+);
 const CreateStorageClassPage = lazy(() => import('@/pages/CreateStorageClassPage'));
 const CreateStorageClassYamlPage = lazy(() => import('@/pages/CreateStorageClassYamlPage'));
 const EditStorageClassYamlPage = lazy(() => import('@/pages/EditStorageClassYamlPage'));
@@ -247,6 +266,31 @@ export const containerRoutes = (
       element={<EditPersistentVolumeClaimYamlPage />}
     />
     <Route path="/container/pvc/:pvcId" element={<PersistentVolumeClaimDetailPage />} />
+    <Route path="/container/volume-snapshots" element={<ContainerVolumeSnapshotsPage />} />
+    <Route path="/container/volume-snapshots/create" element={<CreateVolumeSnapshotPage />} />
+    <Route
+      path="/container/volume-snapshots/create-yaml"
+      element={<CreateVolumeSnapshotYamlPage />}
+    />
+    <Route
+      path="/container/volume-snapshots/:snapshotId"
+      element={<ContainerVolumeSnapshotDetailPage />}
+    />
+    <Route path="/container/user-defined-networks" element={<ContainerUserDefinedNetworksPage />} />
+    <Route
+      path="/container/user-defined-networks/create"
+      element={<CreateUserDefinedNetworkPage />}
+    />
+    <Route
+      path="/container/user-defined-networks/create-yaml"
+      element={<CreateUserDefinedNetworkYamlPage />}
+    />
+    <Route
+      path="/container/user-defined-networks/:networkId"
+      element={<ContainerUserDefinedNetworkDetailPage />}
+    />
+    <Route path="/container/container-images" element={<ContainerImagesPage />} />
+    <Route path="/container/container-images/:imageId" element={<ContainerImageDetailPage />} />
     <Route path="/container/storage-classes" element={<StorageClassesPage />} />
     <Route path="/container/storage-classes/create" element={<CreateStorageClassPage />} />
     <Route path="/container/storage-classes/create-v2" element={<CreateStorageClassPage />} />
