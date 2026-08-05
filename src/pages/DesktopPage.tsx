@@ -154,7 +154,7 @@ const DESKTOP_ICONS_META = [
   { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
   { id: 'compute', icon: imgCompute, label: 'Compute' },
   { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
-  { id: 'container-platform', icon: imgContainerPlatform, label: 'Container Platform' },
+  { id: 'container-platform', icon: imgContainerPlatform, label: 'Capsis' },
   { id: 'aegis-container', icon: imgContainer, label: 'Aegis Container' },
   { id: 'metis-container', icon: imgMetisContainer, label: 'Metis Container' },
   { id: 'app-catalog', icon: imgAppCatalog, label: 'App Catalog' },
@@ -2272,7 +2272,7 @@ export function DesktopPage() {
     },
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
     'container-platform': {
-      name: 'Container Platform',
+      name: 'Capsis',
       icon: imgContainerPlatform,
       initialPath: '/container',
     },
