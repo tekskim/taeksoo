@@ -197,9 +197,16 @@ export function ClusterOverviewTab({ data, onAssignUsage, onEditChannel, onUpdat
           label="Usage"
           value={
             data.usage ? (
-              <Badge theme={USAGE_THEME[data.usage]} type="subtle" size="sm">
-                {data.usage}
-              </Badge>
+              /* 지정한 뒤 바꾸는 경로 — 킥오프 방향("만들 때 고르되 나중에 바꿀 수도 있다")을
+                 화면으로 확인하려고 둔다. 정본 CAPSIS-D-30과 어긋나 리뷰 판정 대상이다. */
+              <HStack gap={2} className="items-center">
+                <Badge theme={USAGE_THEME[data.usage]} type="subtle" size="sm">
+                  {data.usage}
+                </Badge>
+                <Button variant="tertiary" size="sm" onClick={onAssignUsage}>
+                  Change usage
+                </Button>
+              </HStack>
             ) : (
               <HStack gap={2} className="items-center">
                 <Badge theme="gray" type="subtle" size="sm">

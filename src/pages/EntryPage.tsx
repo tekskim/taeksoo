@@ -51,6 +51,12 @@ const appCards: AppCard[] = [
     path: '/container?mode=container-platform',
   },
   {
+    id: 'capsis-neo',
+    title: 'Capsis (Neo)',
+    iconSrc: ContainerPlatformIcon,
+    path: '/container?mode=capsis-neo',
+  },
+  {
     id: 'aegis-container',
     title: 'Aegis Container',
     iconSrc: ContainerIcon,

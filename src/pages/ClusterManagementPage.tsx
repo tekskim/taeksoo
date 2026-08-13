@@ -200,7 +200,7 @@ export function ClusterManagementPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
-  const { isMetis, isPlatform } = useContainerMode();
+  const { isMetis, isPlatform, isNeo } = useContainerMode();
   const [selectedClusters, setSelectedClusters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
@@ -215,10 +215,11 @@ export function ClusterManagementPage() {
     updateActiveTabLabel('Clusters');
   }, [updateActiveTabLabel]);
 
-  // Container Platform은 CP 프로비저닝 + 등록 편입이 한 목록; 다른 모드는 기존 그대로.
-  const allClusters = (isPlatform ? [...mockClusters, ...registeredClusters] : mockClusters).map(
-    (c) => (usageOverrides[c.id] ? { ...c, usage: usageOverrides[c.id] } : c)
-  );
+  // Capsis는 자체 프로비저닝 + 등록 편입이 한 목록; 다른 모드는 기존 그대로.
+  // Neo Cloud는 베어메탈 위에만 올라가므로(CAPSIS-D-45) VM 기반 클러스터는 나올 수 없다.
+  const allClusters = (isPlatform ? [...mockClusters, ...registeredClusters] : mockClusters)
+    .filter((c) => !isNeo || c.foundation === 'Bare metal')
+    .map((c) => (usageOverrides[c.id] ? { ...c, usage: usageOverrides[c.id] } : c));
 
   // Pagination
   const rowsPerPage = 10;
@@ -361,17 +362,28 @@ export function ClusterManagementPage() {
             label: 'Download YAML',
             onClick: () => console.log('Download YAML for', row.name),
           },
-          // 용도 지정(D-30): 생성 후 선택 — 미지정 클러스터에만 노출. 지정 후 변경 가능 여부는 미결(GAP).
-          ...(isPlatform && row.usage === undefined
+          // 용도 지정(D-30): 생성 후 선택 — 미지정 클러스터.
+          // 지정한 뒤 바꾸는 경로(Change usage)는 킥오프 방향("둘 다 지원")을 화면으로 확인하려고 함께 둔다.
+          // 정본 CAPSIS-D-30과 어긋나므로 리뷰에서 판정을 받는다.
+          ...(isPlatform
             ? [
-                {
-                  id: 'assign-usage',
-                  label: 'Assign usage',
-                  onClick: () => {
-                    setAssignChoice('General');
-                    setAssignTarget(row);
-                  },
-                },
+                row.usage === undefined
+                  ? {
+                      id: 'assign-usage',
+                      label: 'Assign usage',
+                      onClick: () => {
+                        setAssignChoice('General');
+                        setAssignTarget(row);
+                      },
+                    }
+                  : {
+                      id: 'change-usage',
+                      label: 'Change usage',
+                      onClick: () => {
+                        setAssignChoice(row.usage as ClusterUsage);
+                        setAssignTarget(row);
+                      },
+                    },
               ]
             : []),
           {
@@ -647,13 +659,18 @@ export function ClusterManagementPage() {
         </Modal>
       )}
 
-      {/* Assign usage — 용도는 생성 후 선택(D-30, Container Platform 전용) */}
+      {/* Assign usage — 용도는 생성 후 선택(D-30, Capsis 전용).
+          이미 지정된 클러스터에서는 같은 모달을 Change usage로 연다(킥오프 방향 확인용). */}
       {isPlatform && (
         <Modal
           isOpen={assignTarget !== null}
           onClose={() => setAssignTarget(null)}
-          title="Assign usage"
-          description={`Choose how ${assignTarget?.name ?? ''} will be used. Usage is assigned after the cluster is created.`}
+          title={assignTarget?.usage === undefined ? 'Assign usage' : 'Change usage'}
+          description={
+            assignTarget?.usage === undefined
+              ? `Choose how ${assignTarget?.name ?? ''} will be used.`
+              : `${assignTarget?.name ?? ''} is currently used for ${assignTarget?.usage}. Changing it makes the agent install a different set of packages.`
+          }
         >
           <VStack gap={3} className="w-[520px] max-w-full">
             <RadioGroup
@@ -672,6 +689,12 @@ export function ClusterManagementPage() {
                 ? 'No additional packages are required for a general-purpose cluster.'
                 : `The in-cluster agent pulls and installs the packages ${assignChoice} needs, and the deployed components are registered. The agent stack runs in tkai-* namespaces.`}
             </InlineMessage>
+            {assignTarget?.usage !== undefined && assignChoice !== assignTarget?.usage && (
+              <InlineMessage variant="warning">
+                Whether the packages installed for {assignTarget?.usage} are removed, and what
+                happens to workloads already running on them, is not decided yet.
+              </InlineMessage>
+            )}
             <div className="flex justify-end gap-2">
               <Button variant="secondary" size="sm" onClick={() => setAssignTarget(null)}>
                 Cancel
@@ -686,7 +709,7 @@ export function ClusterManagementPage() {
                   setAssignTarget(null);
                 }}
               >
-                Assign
+                {assignTarget?.usage === undefined ? 'Assign' : 'Change'}
               </Button>
             </div>
           </VStack>

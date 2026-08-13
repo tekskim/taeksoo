@@ -155,6 +155,7 @@ const DESKTOP_ICONS_META = [
   { id: 'compute', icon: imgCompute, label: 'Compute' },
   { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
   { id: 'container-platform', icon: imgContainerPlatform, label: 'Capsis' },
+  { id: 'capsis-neo', icon: imgContainerPlatform, label: 'Capsis (Neo)' },
   { id: 'aegis-container', icon: imgContainer, label: 'Aegis Container' },
   { id: 'metis-container', icon: imgMetisContainer, label: 'Metis Container' },
   { id: 'app-catalog', icon: imgAppCatalog, label: 'App Catalog' },
@@ -1155,6 +1156,7 @@ type AppId =
   | 'storage-member'
   | 'container'
   | 'container-platform'
+  | 'capsis-neo'
   | 'aegis-container'
   | 'metis-container'
   | 'agent'
@@ -1264,14 +1266,17 @@ function AppRoutes({ appId }: { appId: AppId }) {
     case 'container':
     case 'aegis-container':
     case 'metis-container':
-    case 'container-platform': {
+    case 'container-platform':
+    case 'capsis-neo': {
       const containerMode = appId as ContainerMode;
       return (
         <ContainerModeContext.Provider
           value={{
             mode: containerMode,
             isMetis: containerMode === 'metis-container',
-            isPlatform: containerMode === 'container-platform',
+            isPlatform:
+              containerMode === 'container-platform' || containerMode === 'capsis-neo',
+            isNeo: containerMode === 'capsis-neo',
           }}
         >
           <AppCatalogModeContext.Provider value={{ isStandalone: false }}>
@@ -2273,6 +2278,11 @@ export function DesktopPage() {
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
     'container-platform': {
       name: 'Capsis',
+      icon: imgContainerPlatform,
+      initialPath: '/container',
+    },
+    'capsis-neo': {
+      name: 'Capsis (Neo)',
       icon: imgContainerPlatform,
       initialPath: '/container',
     },
