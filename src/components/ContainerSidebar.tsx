@@ -230,11 +230,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
         ? 'Metis Container'
         : mode === 'container-platform'
           ? 'Capsis'
-          : 'Container';
+          : mode === 'capsis-neo'
+            ? 'Capsis (Neo)'
+            : 'Container';
   const appIcon =
     mode === 'metis-container'
       ? metisContainerIcon
-      : mode === 'container-platform'
+      : mode === 'container-platform' || mode === 'capsis-neo'
         ? containerPlatformIcon
         : containerIcon;
   const osRef = useRef<React.ComponentRef<typeof OverlayScrollbarsComponent>>(null);

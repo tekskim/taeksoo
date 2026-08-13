@@ -34,6 +34,7 @@ import {
   Tab,
   PageShell,
   WizardSummary,
+  InlineMessage,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
@@ -250,7 +251,7 @@ const mockKeyPairs: KeyPairRow[] = [
 export function CreateClusterPage() {
   const navigate = useNavigate();
   const isV2 = useIsV2();
-  const { isPlatform } = useContainerMode();
+  const { isPlatform, isNeo } = useContainerMode();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
@@ -269,7 +270,13 @@ export function CreateClusterPage() {
   const [tenantNetworkSearch, setTenantNetworkSearch] = useState('');
 
   // Node Configuration
-  const [nodeType, setNodeType] = useState<'instance' | 'baremetal'>('instance');
+  // Neo Cloud는 베어메탈 위에만 올라간다(CAPSIS-D-45) — 고를 것이 없으므로 고정한다.
+  const [nodeType, setNodeType] = useState<'instance' | 'baremetal'>(
+    isNeo ? 'baremetal' : 'instance'
+  );
+
+  // Usage — 킥오프 방향은 만들 때 고르는 쪽 우선, 만든 뒤 변경도 가능(CAPSIS-D-30 개정 대상)
+  const [usage, setUsage] = useState<'General' | 'Metis' | 'Maxis' | 'later'>('General');
 
   // Control planes
   const [cpImage, setCpImage] = useState('ubuntu-24.04-tk-base');
@@ -565,6 +572,16 @@ export function CreateClusterPage() {
       <div className="flex gap-6">
         {/* Left Column - Form */}
         <div className="flex-1 flex flex-col gap-[16px]">
+          {/* Neo Cloud는 Aegis(오픈스택)가 없어 만들기 전 준비 과정이 다르다 — 아직 설계되지 않았다.
+              리뷰에서 이 구간을 무엇으로 채울지 확인한다(CAPSIS-D-45, spec §GAP). */}
+          {isNeo && (
+            <InlineMessage variant="warning">
+              Neo Cloud has no Aegis underneath, so the steps before a cluster can be created are
+              not designed yet — which bare-metal machines are available, how they are registered,
+              and how the network is prepared. The fields below still come from the OpenStack-based
+              form and are placeholders. This is the biggest open item for Capsis.
+            </InlineMessage>
+          )}
           {/* Basic Information */}
           <SectionCard className="pb-4">
             <SectionCard.Header title="Basic information" />
@@ -629,31 +646,70 @@ export function CreateClusterPage() {
                   </FormField.Control>
                 </FormField>
 
-                {/* Cluster Type — CP 모드에서는 기반 선택 안내(D-29): VM=CPU 중심, BM=GPU·CPU */}
+                {/* Cluster Type — CP 모드에서는 기반 선택 안내(D-29): VM=CPU 중심, BM=GPU·CPU
+                    Neo Cloud는 베어메탈 위에만 올라가므로 고를 것이 없다(CAPSIS-D-45) */}
                 <FormField required>
                   <FormField.Label>Cluster type</FormField.Label>
-                  {isPlatform && (
+                  {isNeo ? (
                     <FormField.Description>
-                      Choose the foundation the cluster runs on. Instance (VM) suits CPU workloads,
-                      while BareMetal supports GPU as well as CPU. Everything else in this form is
-                      the same for both — only the background provisioning differs.
+                      Neo Cloud runs on bare metal only, so there is nothing to choose here.
                     </FormField.Description>
+                  ) : (
+                    isPlatform && (
+                      <FormField.Description>
+                        Choose the foundation the cluster runs on. Instance (VM) suits CPU
+                        workloads, while BareMetal supports GPU as well as CPU. Everything else in
+                        this form is the same for both — only the background provisioning differs.
+                      </FormField.Description>
+                    )
                   )}
                   <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                    <RadioGroup
-                      value={nodeType}
-                      onChange={(value) => {
-                        const next = value as 'instance' | 'baremetal';
-                        setNodeType(next);
-                        setNodeFlavor('');
-                        setNodeFlavorFilter(next === 'baremetal' ? 'baremetal' : 'vcpu');
-                      }}
-                    >
-                      <Radio value="instance" label="Instance" />
-                      <Radio value="baremetal" label="BareMetal" />
-                    </RadioGroup>
+                    {isNeo ? (
+                      <span className="text-[length:var(--font-size-body-md)] text-[var(--color-text-default)]">
+                        BareMetal
+                      </span>
+                    ) : (
+                      <RadioGroup
+                        value={nodeType}
+                        onChange={(value) => {
+                          const next = value as 'instance' | 'baremetal';
+                          setNodeType(next);
+                          setNodeFlavor('');
+                          setNodeFlavorFilter(next === 'baremetal' ? 'baremetal' : 'vcpu');
+                        }}
+                      >
+                        <Radio value="instance" label="Instance" />
+                        <Radio value="baremetal" label="BareMetal" />
+                      </RadioGroup>
+                    )}
                   </FormField.Control>
                 </FormField>
+
+                {/* Usage — 킥오프에서 나온 방향: 만들 때 고르는 쪽을 우선하되 나중에 바꿀 수도 있다.
+                    현행 정본 CAPSIS-D-30("만든 뒤에 고른다")과 어긋나므로 이 화면으로 판정을 받는다. */}
+                {isPlatform && (
+                  <FormField required>
+                    <FormField.Label>Usage</FormField.Label>
+                    <FormField.Description>
+                      Pick what this cluster is for. When the cluster is ready, the agent inside it
+                      installs the packages that usage needs and registers them. You can also skip
+                      this now and assign it later from the cluster list or detail page.
+                    </FormField.Description>
+                    <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                      <RadioGroup
+                        value={usage}
+                        onChange={(value) =>
+                          setUsage(value as 'General' | 'Metis' | 'Maxis' | 'later')
+                        }
+                      >
+                        <Radio value="General" label="General — no product packages" />
+                        <Radio value="Metis" label="Metis — serving workloads" />
+                        <Radio value="Maxis" label="Maxis — training workloads" />
+                        <Radio value="later" label="Decide after the cluster is created" />
+                      </RadioGroup>
+                    </FormField.Control>
+                  </FormField>
+                )}
 
                 {/* Description */}
                 <FormField>

@@ -5,19 +5,27 @@ export type ContainerMode =
   | 'default'
   | 'aegis-container'
   | 'metis-container'
-  | 'container-platform';
+  | 'container-platform'
+  | 'capsis-neo';
 
 interface ContainerModeContextValue {
   mode: ContainerMode;
   isMetis: boolean;
   /** Merged Container Platform (D-26): Aegis UI + registered clusters + managed-by, no App Catalog. */
   isPlatform: boolean;
+  /**
+   * Neo Cloud용 Capsis (CAPSIS-D-45·D-46).
+   * Private용과 별개 서비스이고, 다른 것은 클러스터를 만들기까지의 경로다 —
+   * 클러스터 안으로 들어간 뒤의 K8s 화면은 같으므로 isPlatform도 함께 켠다.
+   */
+  isNeo: boolean;
 }
 
 const ContainerModeContext = createContext<ContainerModeContextValue>({
   mode: 'default',
   isMetis: false,
   isPlatform: false,
+  isNeo: false,
 });
 
 export function useContainerMode(): ContainerModeContextValue {
@@ -28,7 +36,10 @@ const MODE_STORAGE_KEY = 'thaki:container-mode';
 
 function isSelectableMode(value: string | null): value is ContainerMode {
   return (
-    value === 'metis-container' || value === 'aegis-container' || value === 'container-platform'
+    value === 'metis-container' ||
+    value === 'aegis-container' ||
+    value === 'container-platform' ||
+    value === 'capsis-neo'
   );
 }
 
@@ -70,7 +81,8 @@ export function ContainerModeFromUrlProvider({ children }: { children: React.Rea
     () => ({
       mode,
       isMetis: mode === 'metis-container',
-      isPlatform: mode === 'container-platform',
+      isPlatform: mode === 'container-platform' || mode === 'capsis-neo',
+      isNeo: mode === 'capsis-neo',
     }),
     [mode]
   );

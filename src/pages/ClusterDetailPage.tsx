@@ -91,7 +91,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     name: 'Cluster1',
     status: 'Provisioned',
     kubernetesVersion: 'v1.34',
-    containerNetwork: 'Kube OVN',
+    containerNetwork: 'Cilium',
     createdAt: 'Nov 11, 2026 08:30:18',
     networking: {
       externalNetwork: 'extnet-01',
@@ -118,7 +118,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     name: 'ClusterName',
     status: 'Failed',
     kubernetesVersion: 'v1.33.4',
-    containerNetwork: 'Kube OVN',
+    containerNetwork: 'Cilium',
     createdAt: 'Oct 6, 2026 21:25:53',
     networking: {
       externalNetwork: 'extnet-02',
@@ -145,7 +145,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     name: 'Cluster3',
     status: 'Provisioning',
     kubernetesVersion: 'v1.33.4',
-    containerNetwork: 'Kube OVN',
+    containerNetwork: 'Cilium',
     createdAt: 'Oct 5, 2026 14:12:36',
     networking: {
       externalNetwork: 'extnet-03',
@@ -172,7 +172,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     name: 'Cluster4',
     status: 'Deleting',
     kubernetesVersion: 'v1.33.1',
-    containerNetwork: 'Kube OVN',
+    containerNetwork: 'Cilium',
     createdAt: 'Sep 20, 2026 09:15:42',
     networking: {
       externalNetwork: 'extnet-04',
@@ -199,7 +199,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     name: 'Cluster5',
     status: 'Unknown',
     kubernetesVersion: 'v1.31.0',
-    containerNetwork: 'Kube OVN',
+    containerNetwork: 'Cilium',
     createdAt: 'Aug 14, 2026 16:45:10',
     networking: {
       externalNetwork: 'extnet-05',
@@ -226,7 +226,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     name: 'Cluster6',
     status: 'Updating',
     kubernetesVersion: 'v1.33.4',
-    containerNetwork: 'Kube OVN',
+    containerNetwork: 'Cilium',
     createdAt: 'Jun 5, 2026 15:42:33',
     networking: {
       externalNetwork: 'extnet-06',
@@ -338,7 +338,7 @@ export function ClusterDetailPage() {
     name: 'tk-test',
     status: 'Provisioned',
     kubernetesVersion: 'v1.34',
-    containerNetwork: 'Kube OVN',
+    containerNetwork: 'Cilium',
     createdAt: 'Jul 25, 2026 10:32:16',
     networking: {
       externalNetwork: 'extnet-01',
@@ -651,7 +651,7 @@ export function ClusterDetailPage() {
             <ClusterOverviewTab
               data={overviewData}
               onAssignUsage={() => {
-                setPendingUsage('General');
+                setPendingUsage(assignedUsage ?? 'General');
                 setIsAssignUsageOpen(true);
               }}
               onEditChannel={() => {
@@ -1004,8 +1004,12 @@ export function ClusterDetailPage() {
       <Modal
         isOpen={isAssignUsageOpen}
         onClose={() => setIsAssignUsageOpen(false)}
-        title="Assign usage"
-        description="Choose what this cluster is used for. The agent installs and registers the required packages for the selected usage."
+        title={assignedUsage ? 'Change usage' : 'Assign usage'}
+        description={
+          assignedUsage
+            ? `This cluster is currently used for ${assignedUsage}. Changing it makes the agent install a different set of packages.`
+            : 'Choose what this cluster is used for. The agent installs and registers the required packages for the selected usage.'
+        }
       >
         <VStack gap={4}>
           <FormField label="Usage" required>
@@ -1025,6 +1029,12 @@ export function ClusterDetailPage() {
               editing is available through Edit YAML.
             </InlineMessage>
           )}
+          {assignedUsage && pendingUsage !== assignedUsage && (
+            <InlineMessage variant="warning">
+              Whether the packages installed for {assignedUsage} are removed, and what happens to
+              workloads already running on them, is not decided yet.
+            </InlineMessage>
+          )}
           <HStack gap={2} className="w-full">
             <Button
               variant="secondary"
@@ -1041,7 +1051,7 @@ export function ClusterDetailPage() {
                 setIsAssignUsageOpen(false);
               }}
             >
-              Assign
+              {assignedUsage ? 'Change' : 'Assign'}
             </Button>
           </HStack>
         </VStack>
