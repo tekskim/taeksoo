@@ -46,7 +46,7 @@ const appCards: AppCard[] = [
      구 'Container'(모드 없음) 항목은 Aegis Container와 구분되지 않아 제거했다. */
   {
     id: 'container-platform',
-    title: 'Container Platform',
+    title: 'Capsis',
     iconSrc: ContainerPlatformIcon,
     path: '/container?mode=container-platform',
   },

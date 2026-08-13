@@ -229,7 +229,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       : mode === 'metis-container'
         ? 'Metis Container'
         : mode === 'container-platform'
-          ? 'Container Platform'
+          ? 'Capsis'
           : 'Container';
   const appIcon =
     mode === 'metis-container'
