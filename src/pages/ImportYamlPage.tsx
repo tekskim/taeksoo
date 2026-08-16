@@ -143,8 +143,8 @@ export function ImportYamlPage() {
             Import YAML
           </h1>
           <span className="text-body-md text-[var(--color-text-muted)]">
-            Drag and drop YAML or JSON files into the editor, or paste definitions and separate each
-            one with <code className="font-mono">---</code>.
+            Paste YAML definitions and separate each one with <code className="font-mono">---</code>
+            , or read them from a file.
           </span>
         </VStack>
 
@@ -157,7 +157,12 @@ export function ImportYamlPage() {
           </InlineMessage>
         ) : (
           <>
-            <FormField label="Namespace" required>
+            {/* 이름 자체가 규칙을 드러낸다 — YAML에 metadata.namespace가 있으면
+                그쪽을 따르고, 없을 때만 이 값을 쓴다 (CAPSIS-D-54, 판정은 미결). */}
+            <FormField
+              label="Default namespace"
+              helperText="Used only when a definition does not set metadata.namespace."
+            >
               <Select
                 value={namespace}
                 onChange={setNamespace}
@@ -198,7 +203,7 @@ export function ImportYamlPage() {
 
             <HStack gap={2} className="items-center">
               <Button variant="primary" onClick={handleCreate} disabled={!yamlContent.trim()}>
-                Create
+                Import
               </Button>
               <Button variant="secondary" onClick={() => navigate(-1)}>
                 Cancel
@@ -208,7 +213,7 @@ export function ImportYamlPage() {
                 leftIcon={<IconUpload size={16} stroke={1.5} />}
                 onClick={() => fileInputRef.current?.click()}
               >
-                Upload file
+                Read from File
               </Button>
               <input
                 ref={fileInputRef}
