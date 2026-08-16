@@ -56,6 +56,12 @@ import {
   setActiveCpClusterId,
 } from '@/pages/containerActiveCluster';
 import { useSavedViews } from '@/pages/containerSavedViews';
+import {
+  useDashboardLayout,
+  dashboardMenuGroup,
+  dashboardMenuLabel,
+  clusterEntryPath,
+} from '@/pages/containerDashboardLayout';
 
 /* ----------------------------------------
    Container Sidebar Component
@@ -220,6 +226,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
   const location = useLocation();
   const navigate = useNavigate();
   const savedViews = useSavedViews();
+  const dashboardLayout = useDashboardLayout();
   const isDesktopWindow = useIsDesktopWindow();
   const desktopControls = useDesktopWindowControls();
   const { mode, isMetis, isPlatform } = useContainerMode();
@@ -367,7 +374,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   active={cluster.id === getActiveCpCluster().id && activeIconSection === 'cluster'}
                   onClick={() => {
                     setActiveCpClusterId(cluster.id);
-                    navigate('/container/dashboard');
+                    navigate(clusterEntryPath(dashboardLayout, cluster.id));
                   }}
                   tooltip={
                     cluster.dedicated ? `${cluster.name} (Metis/Maxis dedicated)` : cluster.name
@@ -380,7 +387,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   icon={<IconAffiliate size={16} stroke={1.5} />}
                   iconText={cluster.iconText || undefined}
                   active={idx === 0 && activeIconSection === 'cluster'}
-                  onClick={() => navigate('/container/dashboard')}
+                  onClick={() => navigate(clusterEntryPath(dashboardLayout, cluster.id))}
                   tooltip={cluster.name}
                 />
               ))}
@@ -491,12 +498,15 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   )}
                   {/* Cluster Section */}
                   <MenuSection title="Cluster" defaultOpen={true}>
-                    <MenuItem
-                      icon={<IconLayoutDashboard size={16} stroke={1.5} />}
-                      label="Dashboard"
-                      href="/container/dashboard"
-                      active={isActive('/container/dashboard')}
-                    />
+                    {/* 대시보드 자리 — CAPSIS-D-53 안건 A. B안일 때만 여기 */}
+                    {dashboardMenuGroup(dashboardLayout) === 'cluster' && (
+                      <MenuItem
+                        icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+                        label={dashboardMenuLabel(dashboardLayout)}
+                        href="/container/dashboard"
+                        active={isActive('/container/dashboard')}
+                      />
+                    )}
                     <MenuItem
                       icon={<IconFolders size={16} stroke={1.5} />}
                       label="Namespaces"
@@ -519,6 +529,15 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
                   {/* Workloads Section */}
                   <MenuSection title="Workloads" defaultOpen={true}>
+                    {/* 대시보드 자리 — CAPSIS-D-53 안건 A. A안(제품 현행)일 때만 여기 */}
+                    {dashboardMenuGroup(dashboardLayout) === 'workloads' && (
+                      <MenuItem
+                        icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+                        label={dashboardMenuLabel(dashboardLayout)}
+                        href="/container/dashboard"
+                        active={isActive('/container/dashboard')}
+                      />
+                    )}
                     <MenuItem
                       icon={<IconRocket size={16} stroke={1.5} />}
                       label="Deployments"

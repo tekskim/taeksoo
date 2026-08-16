@@ -46,6 +46,7 @@ import {
 } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
 import { getContainerStatusTheme } from './containerStatusUtils';
+import { useDashboardLayout, hasClusterOverviewTab } from './containerDashboardLayout';
 
 /* ----------------------------------------
    Types
@@ -283,9 +284,13 @@ export function ClusterDetailPage() {
   const [regeneratedToken, setRegeneratedToken] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   /* Overview is a Container Platform addition (D-34). Aegis/Metis mode screens
-     stay unchanged (D-26), so those modes keep landing on Networking. */
+     stay unchanged (D-26), so those modes keep landing on Networking.
+     대시보드를 어디에 둘지는 아직 미결이라(CAPSIS-D-53 안건 A) C안일 때만
+     이 탭을 보여준다 — A·B안에서는 대시보드가 별도 화면으로 있다. */
   const { isPlatform } = useContainerMode();
-  const activeTab = searchParams.get('tab') || (isPlatform ? 'overview' : 'networking');
+  const dashboardLayout = useDashboardLayout();
+  const showOverviewTab = isPlatform && hasClusterOverviewTab(dashboardLayout);
+  const activeTab = searchParams.get('tab') || (showOverviewTab ? 'overview' : 'networking');
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Usage assignment (D-30) — the list row action already exists; the detail
@@ -597,6 +602,46 @@ export function ClusterDetailPage() {
                 value={clusterData.containerNetwork}
               />
               <DetailHeader.InfoCard label="Created at" value={clusterData.createdAt} />
+              {/* 용도 지정 진입점 — CAPSIS-D-30. 대시보드를 어디에 두든(안건 A)
+                  이 진입점은 클러스터 상세에 있어야 하므로 탭 바깥 헤더에 둔다. */}
+              {isPlatform && (
+                <DetailHeader.InfoCard
+                  label="Usage"
+                  value={
+                    overviewData.usage ? (
+                      <Badge
+                        theme={
+                          overviewData.usage === 'Metis'
+                            ? 'yellow'
+                            : overviewData.usage === 'Maxis'
+                              ? 'green'
+                              : 'blue'
+                        }
+                        type="subtle"
+                        size="sm"
+                      >
+                        {overviewData.usage}
+                      </Badge>
+                    ) : (
+                      <HStack gap={2} className="items-center">
+                        <Badge theme="gray" type="subtle" size="sm">
+                          Unassigned
+                        </Badge>
+                        <Button
+                          variant="tertiary"
+                          size="sm"
+                          onClick={() => {
+                            setPendingUsage('General');
+                            setIsAssignUsageOpen(true);
+                          }}
+                        >
+                          Assign usage
+                        </Button>
+                      </HStack>
+                    )
+                  }
+                />
+              )}
             </DetailHeader.InfoGrid>
           </DetailHeader>
 
@@ -641,7 +686,7 @@ export function ClusterDetailPage() {
         {/* Tabs Section */}
         <Tabs value={activeTab} onChange={setActiveTab}>
           <TabList>
-            {isPlatform && <Tab value="overview">Overview</Tab>}
+            {showOverviewTab && <Tab value="overview">Overview</Tab>}
             <Tab value="networking">Networking</Tab>
             <Tab value="node-config">Node configuration</Tab>
             <Tab value="service-account-token">Access token</Tab>
