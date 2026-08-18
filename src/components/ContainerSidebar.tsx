@@ -236,7 +236,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       : mode === 'metis-container'
         ? 'Metis Container'
         : mode === 'container-platform'
-          ? 'Capsis'
+          ? ''
           : 'Container';
   const appIcon =
     mode === 'metis-container'
@@ -498,7 +498,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   )}
                   {/* Cluster Section */}
                   <MenuSection title="Cluster" defaultOpen={true}>
-                    {/* 대시보드 자리 — CAPSIS-D-53 안건 A. B안일 때만 여기 */}
+                    {/* 대시보드 자리 — -D-53 안건 A. B안일 때만 여기 */}
                     {dashboardMenuGroup(dashboardLayout) === 'cluster' && (
                       <MenuItem
                         icon={<IconLayoutDashboard size={16} stroke={1.5} />}
@@ -529,7 +529,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
                   {/* Workloads Section */}
                   <MenuSection title="Workloads" defaultOpen={true}>
-                    {/* 대시보드 자리 — CAPSIS-D-53 안건 A. A안(제품 현행)일 때만 여기 */}
+                    {/* 대시보드 자리 — -D-53 안건 A. A안(제품 현행)일 때만 여기 */}
                     {dashboardMenuGroup(dashboardLayout) === 'workloads' && (
                       <MenuItem
                         icon={<IconLayoutDashboard size={16} stroke={1.5} />}
@@ -576,24 +576,29 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                     />
                   </MenuSection>
 
-                  {/* App Catalog Section - Metis 모드·Container Platform(→ Hub, D-25)에서 미노출 */}
-                  {!isMetis && !isPlatform && (
+                  {/* App Catalog Section — Metis 모드에서 미노출.
+                      (Container Platform)에서는 카탈로그만 빠지고 설치된 것은 남는다:
+                      -D-25("App Catalog는 Hub로")를 CAPSIS-D-38이 카탈로그 원천에 한정했고,
+                      설치 위저드·GitOps 배포·Installed Apps는 Capsis 소관으로 남겼다(FR-10). */}
+                  {!isMetis && (
                     <MenuSection title="App Catalog" defaultOpen={true}>
-                      <MenuItem
-                        icon={<IconApps size={16} stroke={1.5} />}
-                        label="Catalog"
-                        href="/container/catalog"
-                        active={isActive('/container/catalog')}
-                      />
+                      {!isPlatform && (
+                        <MenuItem
+                          icon={<IconApps size={16} stroke={1.5} />}
+                          label="Catalog"
+                          href="/container/catalog"
+                          active={isActive('/container/catalog')}
+                        />
+                      )}
                       <MenuItem
                         icon={<IconPackage size={16} stroke={1.5} />}
-                        label="Installed apps"
+                        label="Apps"
                         href="/container/installed-apps"
                         active={isActive('/container/installed-apps')}
                       />
                       <MenuItem
                         icon={<IconShieldLock size={16} stroke={1.5} />}
-                        label="Installed operators"
+                        label="Operators"
                         href="/container/installed-operators"
                         active={isActive('/container/installed-operators')}
                       />
