@@ -10,16 +10,8 @@
    are untouched — D-26 ② keeps the current IA and UI.
    ---------------------------------------- */
 
-import {
-  VStack,
-  HStack,
-  Badge,
-  Button,
-  SectionCard,
-  InlineMessage,
-  Tooltip,
-} from '@/design-system';
-import { IconChevronRight, IconPencil } from '@tabler/icons-react';
+import { VStack, HStack, Badge, SectionCard } from '@/design-system';
+import { IconChevronRight } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
 export type ClusterUsage = 'General' | 'Metis' | 'Maxis';
@@ -91,72 +83,11 @@ export function ClusterOverviewTab({ data, onAssignUsage, onEditChannel, onUpdat
 
   return (
     <VStack gap={4} className="pt-4">
-      {/* ---------- 1. Update ---------- */}
-      <SectionCard>
-        <SectionCard.Header title="Update" />
-        <VStack gap={4} className="px-4 pb-4">
-          <HStack gap={8} className="items-start flex-wrap">
-            <VStack gap={1}>
-              <span className="text-body-sm text-[var(--color-text-muted)]">Current version</span>
-              <span className="text-body-md font-medium text-[var(--color-text-default)]">
-                {data.version}
-              </span>
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-body-sm text-[var(--color-text-muted)]">Update channel</span>
-              <HStack gap={1} className="items-center">
-                <span className="text-body-md font-medium text-[var(--color-text-default)]">
-                  {data.channel}
-                </span>
-                <Tooltip content="Change channel" position="top">
-                  <button
-                    type="button"
-                    onClick={onEditChannel}
-                    aria-label="Change update channel"
-                    className="p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-                  >
-                    <IconPencil size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                  </button>
-                </Tooltip>
-              </HStack>
-            </VStack>
-          </HStack>
-
-          {/* Version path — current and target as points on a line ([CCONT-01]) */}
-          {!isLatest && (
-            <div className="pt-1">
-              <div className="flex items-center gap-0 max-w-[520px]">
-                <VStack gap={2} className="items-center shrink-0">
-                  <span className="text-body-sm font-medium text-[var(--color-text-default)]">
-                    {data.version}
-                  </span>
-                  <span className="size-3 rounded-full bg-[var(--color-action-primary)]" />
-                </VStack>
-                <div className="flex-1 h-0.5 bg-[var(--color-border-default)] mt-[26px] mx-2" />
-                <VStack gap={2} className="items-center shrink-0">
-                  <span className="text-body-sm font-medium text-[var(--color-text-default)]">
-                    {targetVersion}
-                  </span>
-                  <span className="size-3 rounded-full border-2 border-[var(--color-action-primary)] bg-[var(--color-surface-default)]" />
-                </VStack>
-              </div>
-              <span className="block text-body-sm text-[var(--color-text-muted)] mt-2">
-                {data.reachableVersions.length === 1
-                  ? '1 version available on this channel.'
-                  : `${data.reachableVersions.length} versions available on this channel.`}
-              </span>
-            </div>
-          )}
-
-          {blockedReason && <InlineMessage variant="info">{blockedReason}</InlineMessage>}
-
-          <HStack>
-            <Button variant="primary" size="sm" disabled={!!blockedReason} onClick={onUpdate}>
-              Update cluster
-            </Button>
-          </HStack>
-        </VStack>
-      </SectionCard>
+      {/* ---------- 1. Update — 보류 (CAPSIS-D-52) ----------
+         버전을 올리려면 노드를 한 대씩 비웠다가 다시 넣어야 하는데 그
+         노드 드레인이 범위 밖이라(CAPSIS-D-33 G3) 화면 하나로 끝나지
+         않는다. 지금 클러스터 버전을 어떻게 올리고 있는지도 확인되지
+         않았다. 정의는 화면 정의서에 남겨 두었다. ---------- */}
 
       {/* ---------- 2. Status ---------- */}
       <SectionCard>
@@ -193,25 +124,7 @@ export function ClusterOverviewTab({ data, onAssignUsage, onEditChannel, onUpdat
             }
           />
         )}
-        <SectionCard.DataRow
-          label="Usage"
-          value={
-            data.usage ? (
-              <Badge theme={USAGE_THEME[data.usage]} type="subtle" size="sm">
-                {data.usage}
-              </Badge>
-            ) : (
-              <HStack gap={2} className="items-center">
-                <Badge theme="gray" type="subtle" size="sm">
-                  Unassigned
-                </Badge>
-                <Button variant="tertiary" size="sm" onClick={onAssignUsage}>
-                  Assign usage
-                </Button>
-              </HStack>
-            )
-          }
-        />
+        {/* Usage는 탭 바깥 헤더로 옮겼다 — 배치안과 무관하게 상세에 있어야 하므로 */}
       </SectionCard>
 
       {/* ---------- 3. Inventory ---------- */}

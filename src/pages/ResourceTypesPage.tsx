@@ -39,9 +39,9 @@ import { IconDotsVertical } from '@tabler/icons-react';
 
 export interface ResourceTypeRow {
   id: string;
-  /** Full CRD name, e.g. applications.argoproj.io */
+  /** Full CRD name, e.g. clusters.postgresql.cnpg.io */
   name: string;
-  /** Kind an instance uses, e.g. Application */
+  /** Kind an instance uses, e.g. Cluster */
   kind: string;
   group: string;
   scope: 'Namespaced' | 'Cluster';
@@ -50,40 +50,56 @@ export interface ResourceTypeRow {
 }
 
 /* Inline mock. Standard K8s kinds are deliberately absent — they already have
-   dedicated list screens ([CCONT-07]). */
+   dedicated list screens ([CCONT-07]).
+
+   예시는 **오퍼레이터로 설치한 앱이 만드는 자원**으로 둔다 (CAPSIS-D-55·D-56).
+   App Catalog에 CNPG Operator·kafka-operator가 실재하고, 그 앱들이 자기만의
+   자원 종류를 만든다. 그 자원에는 폼도 목록 화면도 없어서 여기가 유일한
+   조회 경로다.
+
+   ⚠ ArgoCD Application·AppProject과 Knative Service·Revision은 예시에서 뺐다.
+   ArgoCD 쪽은 설치 상태라 Installed Apps가 답할 문제로 넘어갔고(CAPSIS-D-55),
+   Knative는 우리 문서·코드 어디에도 근거가 없어 확인되지 않았다(CAPSIS-D-50). */
 export const RESOURCE_TYPES: ResourceTypeRow[] = [
   {
-    id: 'applications-argoproj',
-    name: 'applications.argoproj.io',
-    kind: 'Application',
-    group: 'argoproj.io',
-    scope: 'Namespaced',
-    instances: 14,
-  },
-  {
-    id: 'appprojects-argoproj',
-    name: 'appprojects.argoproj.io',
-    kind: 'AppProject',
-    group: 'argoproj.io',
+    id: 'clusters-cnpg',
+    name: 'clusters.postgresql.cnpg.io',
+    kind: 'Cluster',
+    group: 'postgresql.cnpg.io',
     scope: 'Namespaced',
     instances: 3,
   },
   {
-    id: 'services-knative',
-    name: 'services.serving.knative.dev',
-    kind: 'Service',
-    group: 'serving.knative.dev',
+    id: 'backups-cnpg',
+    name: 'backups.postgresql.cnpg.io',
+    kind: 'Backup',
+    group: 'postgresql.cnpg.io',
     scope: 'Namespaced',
-    instances: 6,
-    managedBy: 'Metis',
+    instances: 12,
   },
   {
-    id: 'revisions-knative',
-    name: 'revisions.serving.knative.dev',
-    kind: 'Revision',
-    group: 'serving.knative.dev',
+    id: 'kafkas-strimzi',
+    name: 'kafkas.kafka.strimzi.io',
+    kind: 'Kafka',
+    group: 'kafka.strimzi.io',
     scope: 'Namespaced',
-    instances: 21,
+    instances: 2,
+  },
+  {
+    id: 'kafkatopics-strimzi',
+    name: 'kafkatopics.kafka.strimzi.io',
+    kind: 'KafkaTopic',
+    group: 'kafka.strimzi.io',
+    scope: 'Namespaced',
+    instances: 27,
+  },
+  {
+    id: 'milvus-zilliz',
+    name: 'milvusclusters.milvus.io',
+    kind: 'MilvusCluster',
+    group: 'milvus.io',
+    scope: 'Namespaced',
+    instances: 1,
     managedBy: 'Metis',
   },
   {

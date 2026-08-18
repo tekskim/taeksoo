@@ -39,6 +39,7 @@ import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { useAvailableUsages, USAGE_LABELS, type ClusterUsage } from '@/pages/containerEntitlement';
 
 /* ----------------------------------------
    Types
@@ -271,6 +272,11 @@ export function CreateClusterPage() {
   // Node Configuration
   const [nodeType, setNodeType] = useState<'instance' | 'baremetal'>('instance');
 
+  /* 용도 — 클러스터를 만들 때 고른다(CAPSIS-D-57·D-60 ①).
+     보이는 선택지는 이 사용자가 쓸 수 있는 것만이다(CAPSIS-D-61). */
+  const availableUsages = useAvailableUsages();
+  const [usage, setUsage] = useState<ClusterUsage>(availableUsages[0]);
+
   // Control planes
   const [cpImage, setCpImage] = useState('ubuntu-24.04-tk-base');
   const [cpFlavor, setCpFlavor] = useState('th-tiny');
@@ -488,6 +494,7 @@ export function CreateClusterPage() {
       selectedTenantNetwork,
       selectedSubnet,
       nodeType,
+      usage,
       cpImage,
       cpFlavor,
       cpNodeCount,
@@ -654,6 +661,30 @@ export function CreateClusterPage() {
                     </RadioGroup>
                   </FormField.Control>
                 </FormField>
+
+                {/* Usage — 만들 때 고른다(D-57·D-60 ①). 보이는 선택지는 이용 조건을 따른다(D-61).
+                    Neo Cloud 화면에는 이 필드를 두지 않는다 — 고를 것이 하나뿐이다. */}
+                {isPlatform && (
+                  <FormField required>
+                    <FormField.Label>Usage</FormField.Label>
+                    <FormField.Description>
+                      Choose what this cluster is for. Dedicated clusters (Metis, Maxis) have the
+                      in-cluster agent install the packages that product needs, and their resource
+                      create entry points stay hidden — App Catalog apps can still be installed.
+                      {availableUsages.length < 3 && ' Options you cannot use are not listed.'}
+                    </FormField.Description>
+                    <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                      <RadioGroup
+                        value={usage}
+                        onChange={(value) => setUsage(value as ClusterUsage)}
+                      >
+                        {availableUsages.map((option) => (
+                          <Radio key={option} value={option} label={USAGE_LABELS[option]} />
+                        ))}
+                      </RadioGroup>
+                    </FormField.Control>
+                  </FormField>
+                )}
 
                 {/* Description */}
                 <FormField>

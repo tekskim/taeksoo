@@ -46,25 +46,22 @@ interface InstanceRow {
 
 /* Inline mock keyed by resource type id. */
 const INSTANCES: Record<string, InstanceRow[]> = {
-  'applications-argoproj': [
-    { id: 'a1', name: 'milvus-standalone', namespace: 'apps', createdAt: 'Jul 24, 2026 09:12' },
-    { id: 'a2', name: 'kafka-cluster', namespace: 'apps', createdAt: 'Jul 22, 2026 14:03' },
-    { id: 'a3', name: 'seaweedfs', namespace: 'apps', createdAt: 'Jul 19, 2026 11:47' },
+  'clusters-cnpg': [
+    { id: 'g1', name: 'orders-db', namespace: 'apps', createdAt: 'Jul 24, 2026 09:12' },
+    { id: 'g2', name: 'billing-db', namespace: 'apps', createdAt: 'Jul 22, 2026 14:03' },
+    { id: 'g3', name: 'analytics-db', namespace: 'data', createdAt: 'Jul 19, 2026 11:47' },
   ],
-  'services-knative': [
+  'kafkatopics-strimzi': [
+    { id: 'k1', name: 'events.orders', namespace: 'apps', createdAt: 'Jul 27, 2026 08:30' },
+    { id: 'k2', name: 'events.audit', namespace: 'apps', createdAt: 'Jul 26, 2026 17:22' },
+  ],
+  'milvus-zilliz': [
     {
-      id: 's1',
-      name: 'llama-3-8b-instruct',
+      id: 'm1',
+      name: 'metis-vector-store',
       namespace: 'metis-serving',
       managedBy: 'Metis',
       createdAt: 'Jul 27, 2026 08:30',
-    },
-    {
-      id: 's2',
-      name: 'embed-bge-m3',
-      namespace: 'metis-serving',
-      managedBy: 'Metis',
-      createdAt: 'Jul 26, 2026 17:22',
     },
   ],
   'pytorchjobs-kubeflow': [
