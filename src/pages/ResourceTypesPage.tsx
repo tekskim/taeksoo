@@ -20,6 +20,7 @@ import {
   FilterSearchInput,
   ListToolbar,
   PageShell,
+  PageHeader,
   Pagination,
   Table,
   TabBar,
@@ -34,107 +35,16 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { managedByColumn, type WorkloadManagedBy } from '@/pages/containerManagedBy';
-import { IconDotsVertical } from '@tabler/icons-react';
-
-export interface ResourceTypeRow {
-  id: string;
-  /** Full CRD name, e.g. clusters.postgresql.cnpg.io */
-  name: string;
-  /** Kind an instance uses, e.g. Cluster */
-  kind: string;
-  group: string;
-  scope: 'Namespaced' | 'Cluster';
-  instances: number;
-  managedBy?: WorkloadManagedBy;
-}
-
-/* Inline mock. Standard K8s kinds are deliberately absent — they already have
-   dedicated list screens ([CCONT-07]).
-
-   예시는 **오퍼레이터로 설치한 앱이 만드는 자원**으로 둔다 (CAPSIS-D-55·D-56).
-   App Catalog에 CNPG Operator·kafka-operator가 실재하고, 그 앱들이 자기만의
-   자원 종류를 만든다. 그 자원에는 폼도 목록 화면도 없어서 여기가 유일한
-   조회 경로다.
-
-   ⚠ ArgoCD Application·AppProject과 Knative Service·Revision은 예시에서 뺐다.
-   ArgoCD 쪽은 설치 상태라 Installed Apps가 답할 문제로 넘어갔고(CAPSIS-D-55),
-   Knative는 우리 문서·코드 어디에도 근거가 없어 확인되지 않았다(CAPSIS-D-50). */
-export const RESOURCE_TYPES: ResourceTypeRow[] = [
-  {
-    id: 'clusters-cnpg',
-    name: 'clusters.postgresql.cnpg.io',
-    kind: 'Cluster',
-    group: 'postgresql.cnpg.io',
-    scope: 'Namespaced',
-    instances: 3,
-  },
-  {
-    id: 'backups-cnpg',
-    name: 'backups.postgresql.cnpg.io',
-    kind: 'Backup',
-    group: 'postgresql.cnpg.io',
-    scope: 'Namespaced',
-    instances: 12,
-  },
-  {
-    id: 'kafkas-strimzi',
-    name: 'kafkas.kafka.strimzi.io',
-    kind: 'Kafka',
-    group: 'kafka.strimzi.io',
-    scope: 'Namespaced',
-    instances: 2,
-  },
-  {
-    id: 'kafkatopics-strimzi',
-    name: 'kafkatopics.kafka.strimzi.io',
-    kind: 'KafkaTopic',
-    group: 'kafka.strimzi.io',
-    scope: 'Namespaced',
-    instances: 27,
-  },
-  {
-    id: 'milvus-zilliz',
-    name: 'milvusclusters.milvus.io',
-    kind: 'MilvusCluster',
-    group: 'milvus.io',
-    scope: 'Namespaced',
-    instances: 1,
-    managedBy: 'Metis',
-  },
-  {
-    id: 'pytorchjobs-kubeflow',
-    name: 'pytorchjobs.kubeflow.org',
-    kind: 'PyTorchJob',
-    group: 'kubeflow.org',
-    scope: 'Namespaced',
-    instances: 9,
-    managedBy: 'Maxis',
-  },
-  {
-    id: 'workqueues-kueue',
-    name: 'workloads.kueue.x-k8s.io',
-    kind: 'Workload',
-    group: 'kueue.x-k8s.io',
-    scope: 'Namespaced',
-    instances: 31,
-    managedBy: 'Maxis',
-  },
-  {
-    id: 'clusterpolicies-nvidia',
-    name: 'clusterpolicies.nvidia.com',
-    kind: 'ClusterPolicy',
-    group: 'nvidia.com',
-    scope: 'Cluster',
-    instances: 1,
-  },
-];
+import { managedByColumn } from '@/pages/containerManagedBy';
+import { RESOURCE_TYPES, type ResourceTypeRow } from '@/pages/containerResourceTypesData';
+import { IconDotsCircleHorizontal } from '@tabler/icons-react';
 
 const PER_PAGE = 10;
 
 export function ResourceTypesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 248 : 48;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [page, setPage] = useState(1);
   const { tabs, activeTabId, closeTab, selectTab, moveTab, addNewTab } = useTabs();
@@ -208,29 +118,37 @@ export function ResourceTypesPage() {
     managedByColumn<ResourceTypeRow>(),
     {
       key: '_action',
-      label: '',
+      label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       resizable: false,
       render: (_, row) => {
         // [CCONT-08] — no create, no form edit. View and YAML only at this level.
         const items: ContextMenuItem[] = [
           {
+            id: 'view-instances',
             label: 'View instances',
             onClick: () => navigate(`/container/resource-types/${row.id}`),
           },
-          { label: 'View YAML', onClick: () => undefined },
+          { id: 'view-yaml', label: 'View YAML', onClick: () => undefined },
         ];
         return (
-          <ContextMenu items={items} trigger="click" align="right">
-            <button
-              type="button"
-              aria-label={`Actions for ${row.kind}`}
-              className="p-1 rounded hover:bg-[var(--color-surface-muted)]"
-            >
-              <IconDotsVertical size={16} stroke={1.5} />
-            </button>
-          </ContextMenu>
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={items} trigger="click" align="right">
+              <button
+                type="button"
+                aria-label={`Actions for ${row.kind}`}
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
+              </button>
+            </ContextMenu>
+          </div>
         );
       },
     },
@@ -241,6 +159,7 @@ export function ResourceTypesPage() {
       sidebar={
         <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       }
+      sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
@@ -273,13 +192,11 @@ export function ResourceTypesPage() {
     >
       <VStack gap={4}>
         <VStack gap={1}>
-          <h1 className="text-heading-xl font-semibold text-[var(--color-text-default)]">
-            Resource types
-          </h1>
-          <span className="text-body-md text-[var(--color-text-muted)]">
+          <PageHeader title="Resource types" />
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Custom resource kinds defined in this cluster. Standard Kubernetes kinds have their own
             screens.
-          </span>
+          </p>
         </VStack>
 
         <ListToolbar

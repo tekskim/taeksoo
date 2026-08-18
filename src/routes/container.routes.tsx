@@ -78,25 +78,6 @@ const PersistentVolumeClaimDetailPage = lazy(
   () => import('@/pages/PersistentVolumeClaimDetailPage')
 );
 const StorageClassesPage = lazy(() => import('@/pages/StorageClassesPage'));
-// OpenShift 4.22 벤치마크 후속 — 프로토타입 반영 3종
-const ContainerVolumeSnapshotsPage = lazy(() => import('@/pages/ContainerVolumeSnapshotsPage'));
-const ContainerUserDefinedNetworksPage = lazy(
-  () => import('@/pages/ContainerUserDefinedNetworksPage')
-);
-const ContainerImagesPage = lazy(() => import('@/pages/ContainerImagesPage'));
-const ContainerVolumeSnapshotDetailPage = lazy(
-  () => import('@/pages/ContainerVolumeSnapshotDetailPage')
-);
-const ContainerUserDefinedNetworkDetailPage = lazy(
-  () => import('@/pages/ContainerUserDefinedNetworkDetailPage')
-);
-const ContainerImageDetailPage = lazy(() => import('@/pages/ContainerImageDetailPage'));
-const CreateVolumeSnapshotPage = lazy(() => import('@/pages/CreateVolumeSnapshotPage'));
-const CreateVolumeSnapshotYamlPage = lazy(() => import('@/pages/CreateVolumeSnapshotYamlPage'));
-const CreateUserDefinedNetworkPage = lazy(() => import('@/pages/CreateUserDefinedNetworkPage'));
-const CreateUserDefinedNetworkYamlPage = lazy(
-  () => import('@/pages/CreateUserDefinedNetworkYamlPage')
-);
 const CreateStorageClassPage = lazy(() => import('@/pages/CreateStorageClassPage'));
 const CreateStorageClassYamlPage = lazy(() => import('@/pages/CreateStorageClassYamlPage'));
 const EditStorageClassYamlPage = lazy(() => import('@/pages/EditStorageClassYamlPage'));
@@ -144,6 +125,10 @@ const InstalledAppEditPage = lazy(() => import('@/pages/InstalledAppEditPage'));
 const AppEditPage = lazy(() => import('@/pages/AppEditPage'));
 const InstalledOperatorsPage = lazy(() => import('@/pages/InstalledOperatorsPage'));
 const InstalledOperatorDetailPage = lazy(() => import('@/pages/InstalledOperatorDetailPage'));
+// 추가 검토 기능 중 채택된 것 — Import YAML(P1) · 커스텀 리소스 조회(P1)
+const ImportYamlPage = lazy(() => import('@/pages/ImportYamlPage'));
+const ResourceTypesPage = lazy(() => import('@/pages/ResourceTypesPage'));
+const ResourceTypeInstancesPage = lazy(() => import('@/pages/ResourceTypeInstancesPage'));
 
 export const containerRoutes = (
   <>
@@ -266,31 +251,6 @@ export const containerRoutes = (
       element={<EditPersistentVolumeClaimYamlPage />}
     />
     <Route path="/container/pvc/:pvcId" element={<PersistentVolumeClaimDetailPage />} />
-    <Route path="/container/volume-snapshots" element={<ContainerVolumeSnapshotsPage />} />
-    <Route path="/container/volume-snapshots/create" element={<CreateVolumeSnapshotPage />} />
-    <Route
-      path="/container/volume-snapshots/create-yaml"
-      element={<CreateVolumeSnapshotYamlPage />}
-    />
-    <Route
-      path="/container/volume-snapshots/:snapshotId"
-      element={<ContainerVolumeSnapshotDetailPage />}
-    />
-    <Route path="/container/user-defined-networks" element={<ContainerUserDefinedNetworksPage />} />
-    <Route
-      path="/container/user-defined-networks/create"
-      element={<CreateUserDefinedNetworkPage />}
-    />
-    <Route
-      path="/container/user-defined-networks/create-yaml"
-      element={<CreateUserDefinedNetworkYamlPage />}
-    />
-    <Route
-      path="/container/user-defined-networks/:networkId"
-      element={<ContainerUserDefinedNetworkDetailPage />}
-    />
-    <Route path="/container/container-images" element={<ContainerImagesPage />} />
-    <Route path="/container/container-images/:imageId" element={<ContainerImageDetailPage />} />
     <Route path="/container/storage-classes" element={<StorageClassesPage />} />
     <Route path="/container/storage-classes/create" element={<CreateStorageClassPage />} />
     <Route path="/container/storage-classes/create-v2" element={<CreateStorageClassPage />} />
@@ -385,6 +345,9 @@ export const containerRoutes = (
     <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
+    <Route path="/container/import-yaml" element={<ImportYamlPage />} />
+    <Route path="/container/resource-types" element={<ResourceTypesPage />} />
+    <Route path="/container/resource-types/:typeId" element={<ResourceTypeInstancesPage />} />
     <Route path="/container/*" element={<Navigate to="/container" replace />} />
   </>
 );

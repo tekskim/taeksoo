@@ -20,6 +20,7 @@ import {
   HStack,
   InlineMessage,
   PageShell,
+  PageHeader,
   Select,
   TabBar,
   TopBar,
@@ -79,6 +80,7 @@ function parseDefinitions(yaml: string, fallbackNamespace: string): ImportResult
 export function ImportYamlPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 248 : 48;
   const [yamlContent, setYamlContent] = useState(PLACEHOLDER);
   const [namespace, setNamespace] = useState('default');
   const [results, setResults] = useState<ImportResult[] | null>(null);
@@ -107,6 +109,7 @@ export function ImportYamlPage() {
       sidebar={
         <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       }
+      sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
@@ -137,15 +140,13 @@ export function ImportYamlPage() {
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
-      <VStack gap={4} className="max-w-[1100px]">
+      <VStack gap={4}>
         <VStack gap={1}>
-          <h1 className="text-heading-xl font-semibold text-[var(--color-text-default)]">
-            Import YAML
-          </h1>
-          <span className="text-body-md text-[var(--color-text-muted)]">
+          <PageHeader title="Import YAML" />
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Paste YAML definitions and separate each one with <code className="font-mono">---</code>
             , or read them from a file.
-          </span>
+          </p>
         </VStack>
 
         {isDedicated ? (
@@ -209,7 +210,7 @@ export function ImportYamlPage() {
                 Cancel
               </Button>
               <Button
-                variant="tertiary"
+                variant="ghost"
                 leftIcon={<IconUpload size={16} stroke={1.5} />}
                 onClick={() => fileInputRef.current?.click()}
               >

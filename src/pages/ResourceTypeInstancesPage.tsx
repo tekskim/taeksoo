@@ -18,6 +18,7 @@ import {
   FilterSearchInput,
   ListToolbar,
   PageShell,
+  PageHeader,
   Pagination,
   Table,
   TabBar,
@@ -32,58 +33,9 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { managedByColumn, type WorkloadManagedBy } from '@/pages/containerManagedBy';
-import { RESOURCE_TYPES } from '@/pages/ResourceTypesPage';
-import { IconDotsVertical } from '@tabler/icons-react';
-
-interface InstanceRow {
-  id: string;
-  name: string;
-  namespace?: string;
-  managedBy?: WorkloadManagedBy;
-  createdAt: string;
-}
-
-/* Inline mock keyed by resource type id. */
-const INSTANCES: Record<string, InstanceRow[]> = {
-  'clusters-cnpg': [
-    { id: 'g1', name: 'orders-db', namespace: 'apps', createdAt: 'Jul 24, 2026 09:12' },
-    { id: 'g2', name: 'billing-db', namespace: 'apps', createdAt: 'Jul 22, 2026 14:03' },
-    { id: 'g3', name: 'analytics-db', namespace: 'data', createdAt: 'Jul 19, 2026 11:47' },
-  ],
-  'kafkatopics-strimzi': [
-    { id: 'k1', name: 'events.orders', namespace: 'apps', createdAt: 'Jul 27, 2026 08:30' },
-    { id: 'k2', name: 'events.audit', namespace: 'apps', createdAt: 'Jul 26, 2026 17:22' },
-  ],
-  'milvus-zilliz': [
-    {
-      id: 'm1',
-      name: 'metis-vector-store',
-      namespace: 'metis-serving',
-      managedBy: 'Metis',
-      createdAt: 'Jul 27, 2026 08:30',
-    },
-  ],
-  'pytorchjobs-kubeflow': [
-    {
-      id: 'p1',
-      name: 'finetune-qwen-0729',
-      namespace: 'maxis-train',
-      managedBy: 'Maxis',
-      createdAt: 'Jul 29, 2026 02:10',
-    },
-    {
-      id: 'p2',
-      name: 'pretrain-run-14',
-      namespace: 'maxis-train',
-      managedBy: 'Maxis',
-      createdAt: 'Jul 28, 2026 21:55',
-    },
-  ],
-  'clusterpolicies-nvidia': [
-    { id: 'c1', name: 'gpu-cluster-policy', createdAt: 'Jun 15, 2026 07:41' },
-  ],
-};
+import { managedByColumn } from '@/pages/containerManagedBy';
+import { RESOURCE_TYPES, instancesOf, type InstanceRow } from '@/pages/containerResourceTypesData';
+import { IconDotsCircleHorizontal } from '@tabler/icons-react';
 
 const PER_PAGE = 10;
 
@@ -91,13 +43,14 @@ export function ResourceTypeInstancesPage() {
   const navigate = useNavigate();
   const { typeId } = useParams<{ typeId: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 248 : 48;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [page, setPage] = useState(1);
   const [pendingDelete, setPendingDelete] = useState<InstanceRow | null>(null);
   const { tabs, activeTabId, closeTab, selectTab, moveTab, addNewTab } = useTabs();
 
   const resourceType = RESOURCE_TYPES.find((t) => t.id === typeId);
-  const rows = (typeId && INSTANCES[typeId]) || [];
+  const rows = instancesOf(typeId);
 
   const filtered = useMemo(
     () =>
@@ -151,25 +104,37 @@ export function ResourceTypeInstancesPage() {
     },
     {
       key: '_action',
-      label: '',
+      label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       resizable: false,
       render: (_, row) => {
         const items: ContextMenuItem[] = [
-          { label: 'View YAML', onClick: () => undefined },
-          { label: 'Delete', onClick: () => setPendingDelete(row), variant: 'danger' },
+          { id: 'view-yaml', label: 'View YAML', onClick: () => undefined },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => setPendingDelete(row),
+          },
         ];
         return (
-          <ContextMenu items={items} trigger="click" align="right">
-            <button
-              type="button"
-              aria-label={`Actions for ${row.name}`}
-              className="p-1 rounded hover:bg-[var(--color-surface-muted)]"
-            >
-              <IconDotsVertical size={16} stroke={1.5} />
-            </button>
-          </ContextMenu>
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={items} trigger="click" align="right">
+              <button
+                type="button"
+                aria-label={`Actions for ${row.name}`}
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
+              </button>
+            </ContextMenu>
+          </div>
         );
       },
     },
@@ -182,6 +147,7 @@ export function ResourceTypeInstancesPage() {
       sidebar={
         <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       }
+      sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
@@ -215,10 +181,10 @@ export function ResourceTypeInstancesPage() {
     >
       <VStack gap={4}>
         <VStack gap={1}>
-          <h1 className="text-heading-xl font-semibold text-[var(--color-text-default)]">{kind}</h1>
-          <span className="text-body-md text-[var(--color-text-muted)]">
+          <PageHeader title={kind} />
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             {resourceType?.name ?? 'Unknown resource type'}
-          </span>
+          </p>
         </VStack>
 
         <ListToolbar
