@@ -284,7 +284,7 @@ export function ClusterManagementPage() {
                   value === undefined
                     ? 'Usage not assigned yet — choose General, Metis, or Maxis after creation'
                     : value === 'General'
-                      ? 'General-purpose cluster, managed in Capsis'
+                      ? 'General-purpose cluster, managed in Container platform'
                       : `Dedicated to ${value} workloads — required packages are installed by the in-cluster agent`
                 }
               >
@@ -614,7 +614,7 @@ export function ClusterManagementPage() {
           isOpen={registerOpen}
           onClose={() => setRegisterOpen(false)}
           title="Register cluster"
-          description="Bring an existing cluster under Capsis management. Registered clusters join the list alongside clusters provisioned here."
+          description="Bring an existing cluster under Container platform management. Registered clusters join the list alongside clusters provisioned here."
         >
           <VStack gap={3} className="w-[520px] max-w-full">
             <VStack gap={1}>
