@@ -27,11 +27,7 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
-import {
-  ClusterOverviewTab,
-  type ClusterUsage,
-  type ClusterOverviewData,
-} from '@/components/ClusterOverviewTab';
+import type { ClusterUsage, ClusterOverviewData } from '@/components/ClusterOverviewTab';
 import { useTabs } from '@/contexts/TabContext';
 import { useContainerMode } from '@/contexts/ContainerModeContext';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -46,7 +42,8 @@ import {
 } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
 import { getContainerStatusTheme } from './containerStatusUtils';
-import { useDashboardLayout, hasClusterOverviewTab } from './containerDashboardLayout';
+import { HAS_CLUSTER_CONDITIONS_TAB } from './containerDashboardLayout';
+import { ClusterConditionsTab, type ClusterCondition } from '@/components/ClusterConditionsTab';
 
 /* ----------------------------------------
    Types
@@ -283,14 +280,13 @@ export function ClusterDetailPage() {
   const [isRegenerateTokenOpen, setIsRegenerateTokenOpen] = useState(false);
   const [regeneratedToken, setRegeneratedToken] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  /* Overview is a Container Platform addition (D-34). Aegis/Metis mode screens
-     stay unchanged (D-26), so those modes keep landing on Networking.
-     대시보드를 어디에 둘지는 아직 미결이라(CAPSIS-D-53 안건 A) C안일 때만
-     이 탭을 보여준다 — A·B안에서는 대시보드가 별도 화면으로 있다. */
+  /* 상세에는 Overview 탭을 두지 않는다 (CAPSIS-D-73) — 자원 개수·용량·컨트롤
+     플레인 상태 같은 「지금 도는 상태」는 대시보드가 전담하고, 상세는 「어떻게
+     만들어졌는가」를 맡는다. Rancher가 두 화면을 가르는 방식을 그대로 따랐다.
+     상세에 새로 만드는 것은 Conditions 탭 하나다. Aegis/Metis 모드는 무변경(D-26). */
   const { isPlatform } = useContainerMode();
-  const dashboardLayout = useDashboardLayout();
-  const showOverviewTab = isPlatform && hasClusterOverviewTab(dashboardLayout);
-  const activeTab = searchParams.get('tab') || (showOverviewTab ? 'overview' : 'networking');
+  const showConditionsTab = isPlatform && HAS_CLUSTER_CONDITIONS_TAB;
+  const activeTab = searchParams.get('tab') || 'networking';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Usage assignment (D-30) — the list row action already exists; the detail
@@ -399,6 +395,20 @@ export function ClusterDetailPage() {
   /* Overview tab data (D-34). Inline mock — reachableVersions is what the
      channel exposes above the current version; an empty list means "latest"
      and the screen says so instead of just disabling the button ([CCONT-03]). */
+  /* Conditions 탭 목업 (CAPSIS-D-73). 어떤 조건이 오는지는 아직 확인되지 않아
+     Rancher의 칼럼 구성만 따랐다 — 화면 정의서 §GAP. */
+  const clusterConditions: ClusterCondition[] = [
+    { type: 'Ready', status: 'True', updatedAt: '2026-08-19 09:12' },
+    { type: 'Provisioned', status: 'True', updatedAt: '2026-05-02 14:31' },
+    { type: 'Updated', status: 'True', updatedAt: '2026-08-11 03:20' },
+    {
+      type: 'AgentDeployed',
+      status: 'Unknown',
+      updatedAt: '2026-08-19 09:12',
+      message: '용도를 지정하면 에이전트를 설치하고 이 값이 채워집니다.',
+    },
+  ];
+
   const overviewData: ClusterOverviewData = {
     version: clusterData.kubernetesVersion,
     reachableVersions: isProvisioned ? ['v1.34.5'] : [],
@@ -686,25 +696,14 @@ export function ClusterDetailPage() {
         {/* Tabs Section */}
         <Tabs value={activeTab} onChange={setActiveTab}>
           <TabList>
-            {showOverviewTab && <Tab value="overview">Overview</Tab>}
             <Tab value="networking">Networking</Tab>
             <Tab value="node-config">Node configuration</Tab>
             <Tab value="service-account-token">Access token</Tab>
+            {showConditionsTab && <Tab value="conditions">Conditions</Tab>}
           </TabList>
 
-          <TabPanel value="overview">
-            <ClusterOverviewTab
-              data={overviewData}
-              onAssignUsage={() => {
-                setPendingUsage('General');
-                setIsAssignUsageOpen(true);
-              }}
-              onEditChannel={() => {
-                setPendingChannel(updateChannel);
-                setIsChannelOpen(true);
-              }}
-              onUpdate={() => setIsUpdateOpen(true)}
-            />
+          <TabPanel value="conditions">
+            <ClusterConditionsTab conditions={clusterConditions} />
           </TabPanel>
 
           <TabPanel value="networking">

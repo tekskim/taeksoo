@@ -304,8 +304,9 @@ import { ClusterManagementPage } from '@/pages/ClusterManagementPage';
 import { ClusterDetailPage } from '@/pages/ClusterDetailPage';
 import { ImportYamlPage } from '@/pages/ImportYamlPage';
 import { ResourceTypesPage } from '@/pages/ResourceTypesPage';
-import { ResourceTypeInstancesPage } from '@/pages/ResourceTypeInstancesPage';
+import { ResourceTypeDetailPage } from '@/pages/ResourceTypeDetailPage';
 import { CreateClusterPage } from '@/pages/CreateClusterPage';
+import { CreateClusterDraftPage } from '@/pages/CreateClusterDraftPage';
 import CatalogPage from '@/pages/CatalogPage';
 import InstalledAppsPage from '@/pages/InstalledAppsPage';
 import InstalledAppDetailPage from '@/pages/InstalledAppDetailPage';
@@ -1135,10 +1136,14 @@ function AppRoutes() {
         <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
         <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
         <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
+        <Route
+          path="/container/cluster-management/create-draft"
+          element={<CreateClusterDraftPage />}
+        />
         <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
         <Route path="/container/import-yaml" element={<ImportYamlPage />} />
         <Route path="/container/resource-types" element={<ResourceTypesPage />} />
-        <Route path="/container/resource-types/:typeId" element={<ResourceTypeInstancesPage />} />
+        <Route path="/container/resource-types/:typeId" element={<ResourceTypeDetailPage />} />
         <Route path="/container/*" element={<NotFoundPage />} />
 
         {/* Log Routes */}

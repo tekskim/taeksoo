@@ -1,10 +1,10 @@
 /* ----------------------------------------
    커스텀 리소스 종류와 그 인스턴스 (CorePlan CAPSIS-D-55·D-56)
 
-   두 화면이 같은 데이터를 본다 — 종류 목록(ResourceTypesPage)과 인스턴스
-   목록(ResourceTypeInstancesPage). 전에는 두 화면이 각자 데이터를 들고 있어서
-   종류 목록의 개수와 실제 인스턴스 개수가 서로 어긋났다. 그래서 인스턴스를
-   한 곳에 두고, 종류 목록의 개수는 그 길이에서 뽑아 쓴다.
+   두 화면이 같은 데이터를 본다 — 종류 목록(ResourceTypesPage)과 종류
+   상세(ResourceTypeDetailPage)의 Instances 탭. 전에는 두 화면이 각자 데이터를
+   들고 있어서 종류 목록의 개수와 실제 인스턴스 개수가 서로 어긋났다. 그래서
+   인스턴스를 한 곳에 두고, 종류 목록의 개수는 그 길이에서 뽑아 쓴다.
 
    예시는 **오퍼레이터로 설치한 앱이 만드는 자원**으로 둔다. App Catalog에
    CNPG Operator·kafka-operator가 실재하고, 그 앱들이 자기만의 자원 종류를
@@ -30,6 +30,14 @@ export interface ResourceTypeDefinition {
   group: string;
   scope: 'Namespaced' | 'Cluster';
   managedBy?: WorkloadManagedBy;
+  /* 아래 둘은 종류 상세의 Overview 탭이 쓴다 (CAPSIS-D-63).
+     화면 정의서 03 §화면 2 — 「이 종류가 무엇인지」에 버전과 만든
+     오퍼레이터를 넣기로 했다. 어디까지 보여줄지는 아직 미결이라
+     스키마 요약은 넣지 않았다(문서 §GAP). */
+  /** 이 종류가 제공하는 API 버전. 앞이 저장 버전(storage)이다. */
+  versions: string[];
+  /** 이 종류를 만든 오퍼레이터. 앱 이름으로 적는다. */
+  operator?: string;
 }
 
 /** 화면이 그리는 행. 종류 정보에 인스턴스 개수를 더한 것이다. */
@@ -53,6 +61,8 @@ const DEFINITIONS: ResourceTypeDefinition[] = [
     kind: 'Cluster',
     group: 'postgresql.cnpg.io',
     scope: 'Namespaced',
+    versions: ['v1'],
+    operator: 'CNPG Operator',
   },
   {
     id: 'backups-cnpg',
@@ -60,6 +70,8 @@ const DEFINITIONS: ResourceTypeDefinition[] = [
     kind: 'Backup',
     group: 'postgresql.cnpg.io',
     scope: 'Namespaced',
+    versions: ['v1'],
+    operator: 'CNPG Operator',
   },
   {
     id: 'kafkas-strimzi',
@@ -67,6 +79,8 @@ const DEFINITIONS: ResourceTypeDefinition[] = [
     kind: 'Kafka',
     group: 'kafka.strimzi.io',
     scope: 'Namespaced',
+    versions: ['v1beta2'],
+    operator: 'kafka-operator',
   },
   {
     id: 'kafkatopics-strimzi',
@@ -74,6 +88,8 @@ const DEFINITIONS: ResourceTypeDefinition[] = [
     kind: 'KafkaTopic',
     group: 'kafka.strimzi.io',
     scope: 'Namespaced',
+    versions: ['v1beta2'],
+    operator: 'kafka-operator',
   },
   {
     id: 'milvus-zilliz',
@@ -82,6 +98,8 @@ const DEFINITIONS: ResourceTypeDefinition[] = [
     group: 'milvus.io',
     scope: 'Namespaced',
     managedBy: 'Metis',
+    versions: ['v1beta1'],
+    operator: 'Milvus Operator',
   },
   {
     id: 'pytorchjobs-kubeflow',
@@ -90,6 +108,8 @@ const DEFINITIONS: ResourceTypeDefinition[] = [
     group: 'kubeflow.org',
     scope: 'Namespaced',
     managedBy: 'Maxis',
+    versions: ['v1'],
+    operator: 'Training Operator',
   },
   {
     id: 'workqueues-kueue',
@@ -98,6 +118,8 @@ const DEFINITIONS: ResourceTypeDefinition[] = [
     group: 'kueue.x-k8s.io',
     scope: 'Namespaced',
     managedBy: 'Maxis',
+    versions: ['v1beta1'],
+    operator: 'Kueue',
   },
   {
     id: 'clusterpolicies-nvidia',
@@ -105,6 +127,8 @@ const DEFINITIONS: ResourceTypeDefinition[] = [
     kind: 'ClusterPolicy',
     group: 'nvidia.com',
     scope: 'Cluster',
+    versions: ['v1'],
+    operator: 'NVIDIA GPU Operator',
   },
 ];
 
@@ -351,3 +375,44 @@ export const RESOURCE_TYPES: ResourceTypeRow[] = DEFINITIONS.map((definition) =>
   ...definition,
   instances: instancesOf(definition.id).length,
 }));
+
+/* CRD 정의 — 종류 상세의 YAML 탭이 읽기 전용으로 보여준다.
+   실제로는 API에서 받아 오지만, 목업에서는 종류 정보로 만들어 낸다.
+   스키마 본문은 종류마다 달라 여기서는 형태만 보여주고 생략 표시를 둔다. */
+export function crdYamlOf(def: ResourceTypeDefinition): string {
+  const plural = def.name.split('.')[0];
+  const listKind = `${def.kind}List`;
+  const versions = def.versions
+    .map(
+      (version, index) => `    - name: ${version}
+      served: true
+      storage: ${index === 0}
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              # Desired state. The operator defines these fields.
+            status:
+              type: object
+              # Current state. This is where a failing app reports why.`
+    )
+    .join('\n');
+
+  return `apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: ${def.name}
+${def.operator ? `  labels:\n    app.kubernetes.io/managed-by: ${def.operator}\n` : ''}spec:
+  group: ${def.group}
+  scope: ${def.scope}
+  names:
+    plural: ${plural}
+    singular: ${def.kind.toLowerCase()}
+    kind: ${def.kind}
+    listKind: ${listKind}
+  versions:
+${versions}
+`;
+}
