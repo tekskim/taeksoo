@@ -34,24 +34,26 @@ interface Props {
   conditions: ClusterCondition[];
 }
 
+// 폭은 CSS 값으로 넘긴다. Table이 column.width를 style.width에 그대로 쓰기 때문에
+// Tailwind 클래스(w-[220px])를 넣으면 무시되어 헤더와 셀의 폭이 어긋난다.
 const COLUMNS: TableColumn<ClusterCondition>[] = [
-  { key: 'type', label: 'Type', width: 'w-[220px]', minWidth: 'min-w-[220px]' },
+  { key: 'type', label: 'Type', width: '220px', minWidth: '220px' },
   {
     key: 'status',
     label: 'Status',
-    width: 'w-[120px]',
-    minWidth: 'min-w-[120px]',
+    width: '120px',
+    minWidth: '120px',
     render: (_value: unknown, row: ClusterCondition) => (
       <Badge theme={STATUS_THEME[row.status]}>{row.status}</Badge>
     ),
   },
-  { key: 'updatedAt', label: 'Updated', width: 'w-[180px]', minWidth: 'min-w-[180px]' },
-  { key: 'message', label: 'Message', flex: 1, minWidth: 'min-w-[240px]' },
+  { key: 'updatedAt', label: 'Updated', width: '180px', minWidth: '180px' },
+  { key: 'message', label: 'Message', flex: 1, minWidth: '240px' },
 ];
 
 export function ClusterConditionsTab({ conditions }: Props) {
   return (
-    <VStack gap="4">
+    <VStack gap={4}>
       <Table columns={COLUMNS} data={conditions} rowKey="type" />
     </VStack>
   );

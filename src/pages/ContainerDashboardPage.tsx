@@ -432,9 +432,9 @@ export function ContainerDashboardPage() {
       {dedicated && (
         <div className="mb-6">
           <InlineMessage variant="info">
-            Metis/Maxis dedicated cluster — workloads are created by the products. You can view and
-            operate resources here (Edit YAML, delete); creating resources is disabled. The agent
-            stack runs in tkai-* namespaces.
+            AI Inference/AI Training dedicated cluster — workloads are created by the products. You
+            can view and operate resources here (Edit YAML, delete); creating resources is disabled.
+            The agent stack runs in tkai-* namespaces.
           </InlineMessage>
         </div>
       )}

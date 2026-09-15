@@ -370,7 +370,9 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                     navigate(clusterEntryPath());
                   }}
                   tooltip={
-                    cluster.dedicated ? `${cluster.name} (Metis/Maxis dedicated)` : cluster.name
+                    cluster.dedicated
+                      ? `${cluster.name} (AI Inference/AI Training dedicated)`
+                      : cluster.name
                   }
                 />
               ))

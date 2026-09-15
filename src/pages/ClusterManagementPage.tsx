@@ -36,6 +36,7 @@ import {
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { USAGE_DISPLAY } from '@/pages/containerEntitlement';
 
 /* ----------------------------------------
    Types
@@ -56,6 +57,8 @@ interface Cluster {
   foundation?: 'VM' | 'Bare metal';
   /** Container Platform 전용(D-30): 생성 후 사용자가 선택하는 용도. 미지정이면 undefined. */
   usage?: 'General' | 'Metis' | 'Maxis';
+  /** 화면에 찍는 용도 이름(USAGE_DISPLAY). 표 셀의 title에도 이 값이 쓰인다. */
+  usageLabel?: string;
 }
 
 type ClusterUsage = NonNullable<Cluster['usage']>;
@@ -213,7 +216,10 @@ export function ClusterManagementPage() {
 
   // Container Platform은 전용 클러스터까지 한 목록; 다른 모드는 기존 그대로.
   const allClusters = (isPlatform ? [...mockClusters, ...dedicatedClusters] : mockClusters).map(
-    (c) => (usageOverrides[c.id] ? { ...c, usage: usageOverrides[c.id] } : c)
+    (c) => {
+      const usage = usageOverrides[c.id] ?? c.usage;
+      return { ...c, usage, usageLabel: usage ? USAGE_DISPLAY[usage] : undefined };
+    }
   );
 
   // Pagination
@@ -268,31 +274,34 @@ export function ClusterManagementPage() {
     ...(isPlatform
       ? ([
           {
-            key: 'usage',
+            key: 'usageLabel',
             label: 'Type',
             width: fixedColumns.statusLabel,
             sortable: false,
-            // 표기는 용도 기준(D-28 유지): General = 범용, Metis/Maxis = 전용.
+            // 표기는 용도 기준(D-28 유지): General = 범용, AI Inference/AI Training = 전용. 화면 글자는 USAGE_DISPLAY.
             // 용도는 생성 후 선택하므로(D-30) 지정 전에는 Unassigned.
-            render: (value: Cluster['usage']) => (
-              <Tooltip
-                content={
-                  value === undefined
-                    ? 'Usage not assigned yet — choose General, Metis, or Maxis after creation'
-                    : value === 'General'
-                      ? 'General-purpose cluster, managed in Container platform'
-                      : `Dedicated to ${value} workloads — required packages are installed by the in-cluster agent`
-                }
-              >
-                <Badge
-                  theme={value === undefined ? 'gray' : USAGE_THEME[value]}
-                  type="subtle"
-                  size="sm"
+            render: (_value: unknown, row: Cluster) => {
+              const value = row.usage;
+              return (
+                <Tooltip
+                  content={
+                    value === undefined
+                      ? 'Usage not assigned yet — choose General, AI Inference, or AI Training after creation'
+                      : value === 'General'
+                        ? 'General-purpose cluster, managed in Container platform'
+                        : `Dedicated to ${USAGE_DISPLAY[value]} workloads — required packages are installed by the in-cluster agent`
+                  }
                 >
-                  {value ?? 'Unassigned'}
-                </Badge>
-              </Tooltip>
-            ),
+                  <Badge
+                    theme={value === undefined ? 'gray' : USAGE_THEME[value]}
+                    type="subtle"
+                    size="sm"
+                  >
+                    {value ? USAGE_DISPLAY[value] : 'Unassigned'}
+                  </Badge>
+                </Tooltip>
+              );
+            },
           },
           {
             key: 'foundation',
@@ -607,14 +616,14 @@ export function ClusterManagementPage() {
               <Radio value="General" label="General — use it freely for any workload" />
               <Radio
                 value="Metis"
-                label="Metis — dedicated to Metis (inference serving) workloads"
+                label="AI Inference — dedicated to inference serving workloads"
               />
-              <Radio value="Maxis" label="Maxis — dedicated to Maxis (training) workloads" />
+              <Radio value="Maxis" label="AI Training — dedicated to training workloads" />
             </RadioGroup>
             <InlineMessage variant="info">
               {assignChoice === 'General'
                 ? 'No additional packages are required for a general-purpose cluster.'
-                : `The in-cluster agent pulls and installs the packages ${assignChoice} needs, and the deployed components are registered. The agent stack runs in tkai-* namespaces.`}
+                : `The in-cluster agent pulls and installs the packages ${USAGE_DISPLAY[assignChoice]} needs, and the deployed components are registered. The agent stack runs in tkai-* namespaces.`}
             </InlineMessage>
             <div className="flex justify-end gap-2">
               <Button variant="secondary" size="sm" onClick={() => setAssignTarget(null)}>

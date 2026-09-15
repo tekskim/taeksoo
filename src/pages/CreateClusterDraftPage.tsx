@@ -164,8 +164,8 @@ const USAGE_OPTION_LABELS: Record<ClusterUsage, { title: string; detail: string 
     title: 'General purpose',
     detail: 'General workloads — decide what to run after the cluster exists',
   },
-  Metis: { title: 'Metis', detail: 'Inference and serving only' },
-  Maxis: { title: 'Maxis', detail: 'Training only' },
+  Metis: { title: 'AI Inference', detail: 'Inference and serving only' },
+  Maxis: { title: 'AI Training', detail: 'Training only' },
 };
 
 /* ----------------------------------------

@@ -32,7 +32,7 @@ export const ENTITLEMENTS: {
   {
     id: 'all',
     label: '둘 다 — Private Cloud + AI 플랫폼',
-    summary: 'General · Metis · Maxis 셋 다 보인다',
+    summary: 'General · AI Inference · AI Training 셋 다 보인다',
   },
   {
     id: 'private',
@@ -42,7 +42,7 @@ export const ENTITLEMENTS: {
   {
     id: 'ai',
     label: 'AI 플랫폼만',
-    summary: 'Metis · Maxis만 보인다',
+    summary: 'AI Inference · AI Training만 보인다',
   },
 ];
 
@@ -52,10 +52,18 @@ const USAGE_BY_ENTITLEMENT: Record<Entitlement, ClusterUsage[]> = {
   ai: ['Metis', 'Maxis'],
 };
 
+/** 화면에 찍는 용도 이름. 저장 값은 Metis·Maxis 그대로 두고, 앱 이름(AI Inference·AI Training)으로 보여준다 —
+    화면에 뜨는 이름에는 서비스 이름을 붙이지 않는다(COREPLAN-D-31). */
+export const USAGE_DISPLAY: Record<ClusterUsage, string> = {
+  General: 'General',
+  Metis: 'AI Inference',
+  Maxis: 'AI Training',
+};
+
 export const USAGE_LABELS: Record<ClusterUsage, string> = {
   General: 'General — general purpose workloads',
-  Metis: 'Metis — inference and serving',
-  Maxis: 'Maxis — training',
+  Metis: 'AI Inference — inference and serving',
+  Maxis: 'AI Training — training',
 };
 
 const DEFAULT_ENTITLEMENT: Entitlement = 'all';
