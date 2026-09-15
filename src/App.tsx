@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { TabProvider } from '@/contexts/TabContext';
 import { ContainerModeFromUrlProvider } from '@/contexts/ContainerModeContext';
@@ -1501,10 +1501,15 @@ function AppWithTabs() {
   );
 }
 
+// 정적 파일로 내보낼 때(VITE_ROUTER=hash) 서버 없이도 주소가 살아 있도록 해시 라우터를 쓴다.
+// thaki-core-plan 05-docs에 두는 Capsis 목업 빌드가 이 모드다.
+const useHashRouter = import.meta.env.VITE_ROUTER === 'hash';
+const Router = useHashRouter ? HashRouter : BrowserRouter;
+
 function App() {
   return (
     <DarkModeProvider>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <Router basename={useHashRouter ? undefined : import.meta.env.BASE_URL}>
         <ProjectProvider>
           <SidebarProvider>
             <ToastProvider>
@@ -1516,7 +1521,7 @@ function App() {
             </ToastProvider>
           </SidebarProvider>
         </ProjectProvider>
-      </BrowserRouter>
+      </Router>
     </DarkModeProvider>
   );
 }
