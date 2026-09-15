@@ -50,8 +50,8 @@ interface Cluster {
   memory: string;
   pods: string;
   createdAt: string;
-  /** Container Platform 모드 전용(D-27): created = CP에서 생성/삭제, registered = 등록으로 편입. */
-  type?: 'created' | 'registered';
+  /** Container Platform 모드 전용. 등록(registered) 편입은 CAPSIS-D-83으로 폐기돼 created만 남는다. */
+  type?: 'created';
   /** Container Platform 전용(D-29): 생성 시 선택한 기반. */
   foundation?: 'VM' | 'Bare metal';
   /** Container Platform 전용(D-30): 생성 후 사용자가 선택하는 용도. 미지정이면 undefined. */
@@ -147,8 +147,8 @@ const mockClusters: Cluster[] = [
 
 // Container Platform에서만 보이는 Metis/Maxis 전용 클러스터.
 // D-30(소륜님 미팅): 전용 클러스터도 CP가 직접 프로비저닝하고, 용도는 생성 후 선택한다.
-// 등록(registered)으로 편입된 행도 존치 — 외부 클러스터 등록 절차(D-27)의 존치 여부는 미결(GAP).
-const registeredClusters: Cluster[] = [
+// 외부 클러스터 등록 절차는 CAPSIS-D-83으로 폐기됐다. 전용 클러스터도 Capsis가 만든 것(created)이다.
+const dedicatedClusters: Cluster[] = [
   {
     id: 'cluster-reg-001',
     name: 'metis-train-a100',
@@ -182,14 +182,11 @@ const registeredClusters: Cluster[] = [
     memory: '256 GiB',
     pods: '9/110',
     createdAt: 'Jun 30, 2026 09:05:19',
-    type: 'registered',
+    type: 'created',
     foundation: 'VM',
     usage: 'Maxis',
   },
 ];
-
-const AGENT_INSTALL_COMMAND =
-  'curl -sfL https://cp.thakicloud.io/agent/install.sh | sh -s -- --token <registration-token>';
 
 /* ----------------------------------------
    Component
@@ -204,7 +201,6 @@ export function ClusterManagementPage() {
   const [selectedClusters, setSelectedClusters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
-  const [registerOpen, setRegisterOpen] = useState(false);
   // 용도 지정(D-30): 생성 후 선택. 목업에서는 지정 결과를 로컬 상태로 반영한다.
   const [usageOverrides, setUsageOverrides] = useState<Record<string, ClusterUsage>>({});
   const [assignTarget, setAssignTarget] = useState<Cluster | null>(null);
@@ -215,8 +211,8 @@ export function ClusterManagementPage() {
     updateActiveTabLabel('Clusters');
   }, [updateActiveTabLabel]);
 
-  // Container Platform은 CP 프로비저닝 + 등록 편입이 한 목록; 다른 모드는 기존 그대로.
-  const allClusters = (isPlatform ? [...mockClusters, ...registeredClusters] : mockClusters).map(
+  // Container Platform은 전용 클러스터까지 한 목록; 다른 모드는 기존 그대로.
+  const allClusters = (isPlatform ? [...mockClusters, ...dedicatedClusters] : mockClusters).map(
     (c) => (usageOverrides[c.id] ? { ...c, usage: usageOverrides[c.id] } : c)
   );
 
@@ -383,20 +379,12 @@ export function ClusterManagementPage() {
                 window.dispatchEvent(new CustomEvent('open-cluster-appearance', { detail: row.id }))
               ),
           },
-          // 등록형은 삭제 대신 등록 해제(D-27) — 클러스터 자체는 CP 밖에서 만들고 지운다.
-          row.type === 'registered'
-            ? {
-                id: 'deregister',
-                label: 'Deregister',
-                status: 'danger' as const,
-                onClick: () => console.log('Deregister', row.name),
-              }
-            : {
-                id: 'delete',
-                label: 'Delete',
-                status: 'danger' as const,
-                onClick: () => console.log('Delete', row.name),
-              },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger' as const,
+            onClick: () => console.log('Delete', row.name),
+          },
         ];
 
         return (
@@ -486,11 +474,6 @@ export function ClusterManagementPage() {
           actions={
             !isMetis ? (
               <>
-                {isPlatform && (
-                  <Button variant="secondary" size="md" onClick={() => setRegisterOpen(true)}>
-                    Register cluster
-                  </Button>
-                )}
                 <ContextMenu items={createMenuItems} trigger="click" align="right">
                   <Button
                     variant="primary"
@@ -607,45 +590,6 @@ export function ClusterManagementPage() {
           onSelectionChange={isMetis ? undefined : setSelectedClusters}
         />
       </VStack>
-
-      {/* Register cluster — 등록형 편입 진입점 (Container Platform 전용, D-27) */}
-      {isPlatform && (
-        <Modal
-          isOpen={registerOpen}
-          onClose={() => setRegisterOpen(false)}
-          title="Register cluster"
-          description="Bring an existing cluster under Container platform management. Registered clusters join the list alongside clusters provisioned here."
-        >
-          <VStack gap={3} className="w-[520px] max-w-full">
-            <VStack gap={1}>
-              <span className="text-label-md text-[var(--color-text-default)]">Manual</span>
-              <span className="text-body-sm text-[var(--color-text-muted)]">
-                Run the agent install command on the target cluster. The agent reports facts
-                (version, nodes, capacity); you only declare intent metadata.
-              </span>
-              <code className="text-body-sm font-mono bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] rounded-md px-3 py-2 break-all">
-                {AGENT_INSTALL_COMMAND}
-              </code>
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-label-md text-[var(--color-text-default)]">Automated</span>
-              <span className="text-body-sm text-[var(--color-text-muted)]">
-                Provisioning pipelines can register clusters automatically with the same agent, no
-                manual step required.
-              </span>
-            </VStack>
-            <InlineMessage variant="info">
-              The Metis/Maxis agent stack deploys into tkai-* namespaces and appears in workload
-              lists like any other resource.
-            </InlineMessage>
-            <div className="flex justify-end gap-2">
-              <Button variant="secondary" size="sm" onClick={() => setRegisterOpen(false)}>
-                Close
-              </Button>
-            </div>
-          </VStack>
-        </Modal>
-      )}
 
       {/* Assign usage — 용도는 생성 후 선택(D-30, Container Platform 전용) */}
       {isPlatform && (
