@@ -28,12 +28,22 @@ import {
   WizardSummary,
   Tooltip,
   FilterSearchInput,
+  SearchInput,
+  EmptyState,
   Badge,
   ConfirmModal,
   InlineMessage,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
-import { HUB_POD_TEMPLATES, toFormResources, type HubPodTemplate } from './hubPodTemplatesMock';
+import {
+  HUB_POD_TEMPLATES,
+  imageRepository,
+  toFormResources,
+  type HubPodTemplate,
+} from './hubPodTemplatesMock';
+
+// 템플릿 카드 한 쪽에 두 줄(4개씩) — AI Inference Deploy New Pod와 같다
+const HUB_TEMPLATES_PER_PAGE = 8;
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -1177,12 +1187,15 @@ export function CreatePodPage() {
   // 이미지는 두 방식으로 넣는다 — Custom(주소 직접 입력) / Hub Pod Template(목록에서 고르기).
   // AI Inference · AI Training Create 페이지와 같은 방식이다(CAPSIS-D-85 · AIINF-D-24 · AITRN-D-23).
   // Hub에서 템플릿을 골라 Install로 들어오면(?hubTemplate=<id>) 그 템플릿이 골라진 채로 열린다(HUB-D-163).
-  // 이미지를 템플릿과 다르게 바꾸면 템플릿 출처를 끊고 Custom으로 돌아간다.
+  // 이미지 주소는 Custom image 탭에서만 고친다. Custom image로 돌아가면 템플릿 출처를 끊는다.
   const [imageSource, setImageSource] = useState<Record<string, 'custom' | 'hub'>>({});
   const [hubTemplates, setHubTemplates] = useState<Record<string, HubPodTemplate | undefined>>(
     {}
   );
   // 이미 입력한 값이 있을 때 템플릿을 고르면 덮어쓰기 전에 확인한다
+  // 템플릿 카드 목록의 검색어 · 쪽 번호(컨테이너마다 따로)
+  const [templateSearch, setTemplateSearch] = useState<Record<string, string>>({});
+  const [templatePage, setTemplatePage] = useState<Record<string, number>>({});
   const [pendingTemplate, setPendingTemplate] = useState<{
     containerId: string;
     template: HubPodTemplate;
@@ -4431,24 +4444,24 @@ export function CreatePodPage() {
                         <VStack gap={6}>
                           {hubNotFound && containerId === 'container-0' && (
                             <InlineMessage variant="warning">
-                              The Pod Template could not be found. It may have been deleted or made
+                              The template could not be found. It may have been deleted or made
                               private.
                             </InlineMessage>
                           )}
-                          <VStack gap={2}>
+                          <VStack gap={3}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Container Image{' '}
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                {(imageSource[containerId] ?? 'custom') === 'hub'
-                                  ? 'Pod Template from the private Hub. It fills the image, command, environment variables, resources, and security context.'
-                                  : 'Image address as registry/repository:tag or @digest. If no registry host is given, Docker Hub is used.'}
+                                The container image used to create and run the pod.
                               </span>
                             </VStack>
-                            <RadioGroup
-                              direction="horizontal"
+                            {/* AI Inference Deploy New Pod와 같은 양식 — 두 방식을 탭으로 고르고, 아래 상자에서 입력한다 */}
+                            <Tabs
+                              variant="boxed"
+                              size="sm"
                               value={imageSource[containerId] ?? 'custom'}
                               onChange={(val) => {
                                 setImageSource((prev) => ({
@@ -4456,83 +4469,170 @@ export function CreatePodPage() {
                                   [containerId]: val as 'custom' | 'hub',
                                 }));
                                 if (val === 'hub') setHubNotFound(false);
-                                // Custom으로 돌아가면 템플릿 출처를 끊는다. 입력된 값은 그대로 둔다.
+                                // Custom image로 돌아가면 템플릿 출처를 끊는다. 입력된 값은 그대로 둔다.
                                 if (val === 'custom') {
                                   setHubTemplates((prev) => ({ ...prev, [containerId]: undefined }));
                                 }
                               }}
                             >
-                              <Radio value="custom" label="Custom" />
-                              <Radio
-                                value="hub"
-                                disabled={config.containerType === 'init'}
-                                label={
-                                  config.containerType === 'init' ? (
-                                    <HStack gap={1} align="center">
-                                      <span>Hub Pod Template</span>
-                                      <Tooltip
-                                        content="Pod Templates apply to standard containers only."
-                                        position="right"
-                                      >
-                                        <IconInfoCircle
-                                          size={14}
-                                          className="text-[var(--color-text-subtle)]"
-                                        />
-                                      </Tooltip>
-                                    </HStack>
+                              <TabList>
+                                <Tab value="custom">Custom image</Tab>
+                                <Tab value="hub" disabled={config.containerType === 'init'}>
+                                  {config.containerType === 'init' ? (
+                                    <Tooltip
+                                      content="Templates apply to standard containers only."
+                                      position="right"
+                                    >
+                                      <HStack gap={1} align="center">
+                                        <span>Select template</span>
+                                        <IconInfoCircle size={14} />
+                                      </HStack>
+                                    </Tooltip>
                                   ) : (
-                                    'Hub Pod Template'
-                                  )
-                                }
-                              />
-                            </RadioGroup>
-                            {(imageSource[containerId] ?? 'custom') === 'hub' && (
-                              <VStack gap={2}>
-                                <Select
-                                  options={hubOptions.map((t) => ({
-                                    value: t.id,
-                                    label: `${t.name} · ${t.publisher}`,
-                                  }))}
-                                  placeholder={
-                                    hubListState === 'empty'
-                                      ? 'No Pod Templates available'
-                                      : 'Select Pod Template'
-                                  }
-                                  value={hubTemplates[containerId]?.id ?? ''}
-                                  onChange={(val) => selectHubTemplate(containerId, val)}
-                                  disabled={hubOptions.length === 0}
-                                  fullWidth
-                                />
-                                {hubListState === 'error' && (
-                                  <InlineMessage variant="error">
-                                    Pod Templates could not be loaded from the private Hub.
-                                  </InlineMessage>
-                                )}
-                              </VStack>
+                                    'Select template'
+                                  )}
+                                </Tab>
+                              </TabList>
+                            </Tabs>
+                            {(imageSource[containerId] ?? 'custom') === 'custom' ? (
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 w-full">
+                                <VStack gap={3}>
+                                  <VStack gap={1}>
+                                    <span className="text-heading-h6 text-[var(--color-text-default)]">
+                                      Custom image
+                                    </span>
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
+                                      Image address as registry/repository:tag or @digest. If no
+                                      registry host is given, Docker Hub is used.
+                                    </span>
+                                  </VStack>
+                                  <Input
+                                    placeholder="registry.example.com/project/app:1.0"
+                                    fullWidth
+                                    value={config.image || ''}
+                                    onChange={(e) => {
+                                      const image = e.target.value;
+                                      updateContainerConfig(containerId, { image });
+                                      if (image) setHubNotFound(false);
+                                    }}
+                                  />
+                                </VStack>
+                              </div>
+                            ) : (
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 w-full">
+                                <VStack gap={4}>
+                                  <VStack gap={1}>
+                                    <span className="text-heading-h6 text-[var(--color-text-default)]">
+                                      Select template
+                                    </span>
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
+                                      Choose a template from the private Hub. It fills the image,
+                                      command, environment variables, resources, and security
+                                      context.
+                                    </span>
+                                  </VStack>
+                                  {hubListState === 'error' ? (
+                                    <InlineMessage variant="error">
+                                      Templates could not be loaded from the private Hub.
+                                    </InlineMessage>
+                                  ) : hubOptions.length === 0 ? (
+                                    <EmptyState
+                                      variant="inline"
+                                      title="No templates available"
+                                      description="No templates are available in the private Hub."
+                                    />
+                                  ) : (
+                                    (() => {
+                                      const query = (templateSearch[containerId] ?? '').toLowerCase();
+                                      const filtered = hubOptions.filter(
+                                        (t) =>
+                                          t.name.toLowerCase().includes(query) ||
+                                          t.image.toLowerCase().includes(query)
+                                      );
+                                      const totalPages = Math.max(
+                                        1,
+                                        Math.ceil(filtered.length / HUB_TEMPLATES_PER_PAGE)
+                                      );
+                                      const page = Math.min(templatePage[containerId] ?? 1, totalPages);
+                                      const paged = filtered.slice(
+                                        (page - 1) * HUB_TEMPLATES_PER_PAGE,
+                                        page * HUB_TEMPLATES_PER_PAGE
+                                      );
+                                      return (
+                                        <VStack gap={3}>
+                                          <HStack gap={3} align="center">
+                                            <SearchInput
+                                              placeholder="Search templates"
+                                              size="sm"
+                                              className="w-[240px]"
+                                              value={templateSearch[containerId] ?? ''}
+                                              onChange={(e) => {
+                                                setTemplateSearch((prev) => ({
+                                                  ...prev,
+                                                  [containerId]: e.target.value,
+                                                }));
+                                                setTemplatePage((prev) => ({ ...prev, [containerId]: 1 }));
+                                              }}
+                                            />
+                                            <Pagination
+                                              currentPage={page}
+                                              totalPages={totalPages}
+                                              onPageChange={(p) =>
+                                                setTemplatePage((prev) => ({ ...prev, [containerId]: p }))
+                                              }
+                                            />
+                                          </HStack>
+                                          {paged.length === 0 ? (
+                                            <span className="text-body-md text-[var(--color-text-subtle)]">
+                                              No templates match your search.
+                                            </span>
+                                          ) : (
+                                            <div className="grid grid-cols-4 gap-3">
+                                              {paged.map((t) => {
+                                                const selected = hubTemplates[containerId]?.id === t.id;
+                                                return (
+                                                  <button
+                                                    key={t.id}
+                                                    type="button"
+                                                    onClick={() => selectHubTemplate(containerId, t.id)}
+                                                    className={`text-left w-full bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border p-4 flex flex-col gap-3 transition-colors ${
+                                                      selected
+                                                        ? 'border-[var(--color-border-focus)] ring-1 ring-[var(--color-border-focus)]'
+                                                        : 'border-[var(--color-border-default)] hover:border-[var(--color-border-strong)]'
+                                                    }`}
+                                                  >
+                                                    <VStack gap={1}>
+                                                      <span className="text-heading-h6 text-[var(--color-text-default)]">
+                                                        {t.name}
+                                                      </span>
+                                                      <span className="text-body-md text-[var(--color-text-subtle)] truncate">
+                                                        {imageRepository(t.image)}
+                                                      </span>
+                                                    </VStack>
+                                                    <span className="self-start">
+                                                      <Badge variant="info" size="sm">
+                                                        {t.publisher}
+                                                      </Badge>
+                                                    </span>
+                                                  </button>
+                                                );
+                                              })}
+                                            </div>
+                                          )}
+                                        </VStack>
+                                      );
+                                    })()
+                                  )}
+                                </VStack>
+                              </div>
                             )}
-                            <Input
-                              placeholder="registry.example.com/project/app:1.0"
-                              fullWidth
-                              value={config.image || ''}
-                              onChange={(e) => {
-                                const image = e.target.value;
-                                updateContainerConfig(containerId, { image });
-                                if (image) setHubNotFound(false);
-                                const template = hubTemplates[containerId];
-                                // 이미지를 템플릿과 다르게 바꾸면 출처를 끊고 Custom으로 돌아간다
-                                if (template && image !== template.image) {
-                                  setHubTemplates((prev) => ({ ...prev, [containerId]: undefined }));
-                                  setImageSource((prev) => ({ ...prev, [containerId]: 'custom' }));
-                                }
-                              }}
-                            />
                           </VStack>
                           <ConfirmModal
                             isOpen={pendingTemplate?.containerId === containerId}
                             onClose={() => setPendingTemplate(null)}
                             title="Replace entered values?"
                             description="The values entered in this container will be replaced with the values of the selected template."
-                            infoLabel="Hub Pod Template"
+                            infoLabel="Template"
                             infoValue={
                               pendingTemplate
                                 ? `${pendingTemplate.template.name} · ${pendingTemplate.template.publisher}`

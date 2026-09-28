@@ -6,6 +6,7 @@
  * - 권장 자원 요구량은 최소 CPU 코어 · 최소 메모리(GB)다. 폼에는 requests에 넣고 limits는 2배로 채운다(CAPSIS-D-87).
  * - Capsis용 템플릿에는 GPU가 없다(CAPSIS-D-88).
  * - 볼륨은 새 PVC의 용량과 마운트 경로가 된다. 컨테이너 디스크는 Capsis에서 쓰지 않는다(CAPSIS-D-89).
+ * - Capsis용 템플릿 목록은 아직 정해지지 않았다. 아래 여섯 개는 화면을 보여 주기 위한 예시다.
  *
  * 진입 주소
  * - Hub에서 Install: /container/pods/create?hubTemplate=<id>
@@ -73,7 +74,69 @@ export const HUB_POD_TEMPLATES: Record<string, HubPodTemplate> = {
     runAsUser: '101',
     runAsNonRoot: true,
   },
+  redis: {
+    id: 'redis',
+    name: 'Redis',
+    publisher: 'thakicloud',
+    image:
+      'harbor.example.com/thaki-apps/redis@sha256:2b4d6f8a0c1e3a5c7e9b1d3f5a7c9e0b2d4f6a8c0e1b3d5f7a9c1e3b5d7f9a0c',
+    command: '',
+    args: '',
+    ports: [{ name: 'redis', containerPort: '6379', protocol: 'TCP' }],
+    envVars: [],
+    resources: { cpuCores: 0.25, memoryGB: 0.25 },
+    volume: { name: 'data', sizeGi: 5, mountPath: '/data' },
+    runAsUser: '999',
+    runAsNonRoot: true,
+  },
+  mysql: {
+    id: 'mysql',
+    name: 'MySQL',
+    publisher: 'thakicloud',
+    image:
+      'harbor.example.com/thaki-apps/mysql@sha256:7c9e1b3d5f7a9c1e3b5d7f9a0c2e4a6c8e0b2d4f6a8c0e2b4d6f8a0c1e3a5c7e',
+    command: '',
+    args: '',
+    ports: [{ name: 'mysql', containerPort: '3306', protocol: 'TCP' }],
+    envVars: [{ name: 'MYSQL_DATABASE', value: 'app' }],
+    resources: { cpuCores: 0.5, memoryGB: 1 },
+    volume: { name: 'data', sizeGi: 10, mountPath: '/var/lib/mysql' },
+    runAsUser: '999',
+    runAsNonRoot: true,
+  },
+  mongodb: {
+    id: 'mongodb',
+    name: 'MongoDB',
+    publisher: 'community',
+    image:
+      'harbor.example.com/community/mongo@sha256:0e2b4d6f8a0c1e3a5c7e9b1d3f5a7c9e0b2d4f6a8c0e1b3d5f7a9c1e3b5d7f9a',
+    command: '',
+    args: '',
+    ports: [{ name: 'mongodb', containerPort: '27017', protocol: 'TCP' }],
+    envVars: [],
+    resources: { cpuCores: 0.5, memoryGB: 1 },
+    volume: { name: 'data', sizeGi: 10, mountPath: '/data/db' },
+    runAsUser: '999',
+    runAsNonRoot: true,
+  },
+  rabbitmq: {
+    id: 'rabbitmq',
+    name: 'RabbitMQ',
+    publisher: 'community',
+    image:
+      'harbor.example.com/community/rabbitmq@sha256:5a7c9e1b3d5f7a9c1e3b5d7f9a0c2e4a6c8e0b2d4f6a8c0e2b4d6f8a0c1e3a5c',
+    command: '',
+    args: '',
+    ports: [{ name: 'amqp', containerPort: '5672', protocol: 'TCP' }],
+    envVars: [],
+    resources: { cpuCores: 0.5, memoryGB: 0.5 },
+    runAsUser: '999',
+    runAsNonRoot: true,
+  },
 };
+
+/** 카드에 보이는 이미지 저장소 경로 — digest는 뺀다 */
+export const imageRepository = (image: string) => image.split('@')[0];
 
 /** 권장 자원 요구량 → 폼 값(CAPSIS-D-87). limits는 requests의 2배, CPU 128,000m · 메모리 512GiB를 넘지 않는다 */
 export const toFormResources = (r: HubPodTemplate['resources']) => {
