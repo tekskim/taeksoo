@@ -1,12 +1,16 @@
 /**
- * 프라이빗 Hub에서 Pod Template을 골라 Install하면 Capsis Create Pod로 넘어오는 값(mock).
+ * 프라이빗 Hub의 Pod Template(mock) — Capsis Pod 만들기가 받아 쓰는 값.
  *
- * - HUB-D-229 ③ · CAPSIS-D-85: Hub에서 시작한 경우에만 템플릿 값이 채워진다.
- *   Capsis Create Pod 안에는 템플릿을 고르는 UI가 없다(D-85 후반부 개정 방향).
- * - 채우는 값은 [HUB-20]의 여섯 — 이미지 주소 · 포트 · 볼륨 · 환경 변수 · 자원 요구량 · 실행 사용자.
- * - 이미지는 회사가 Harbor에 넣은 주소를 digest로 고정한다(HUB-D-223). 호스트는 아직 정해지지 않아 예시 값이다.
+ * 화면 정의서: coreplan 03-private-cloud/04-capsis/01-capsis/02-screens/12-pod-create-v1.0.md
+ * - 이미지는 회사가 Harbor에 넣은 주소를 digest로 고정한다(HUB-D-223). 호스트는 예시 값이다.
+ * - 권장 자원 요구량은 최소 CPU 코어 · 최소 메모리(GB)다. 폼에는 requests에 넣고 limits는 2배로 채운다(CAPSIS-D-87).
+ * - Capsis용 템플릿에는 GPU가 없다(CAPSIS-D-88).
+ * - 볼륨은 새 PVC의 용량과 마운트 경로가 된다. 컨테이너 디스크는 Capsis에서 쓰지 않는다(CAPSIS-D-89).
  *
- * 진입 주소: /container/pods/create?hubTemplate=<id>
+ * 진입 주소
+ * - Hub에서 Install: /container/pods/create?hubTemplate=<id>
+ * - 템플릿을 찾을 수 없음(Case A): ?hubTemplate=<없는 id>
+ * - 목록 불러오기 실패(Case B): ?hubList=error · 빈 목록: ?hubList=empty
  */
 
 export interface HubPodTemplatePort {
@@ -24,8 +28,12 @@ export interface HubPodTemplate {
   args: string;
   ports: HubPodTemplatePort[];
   envVars: { name: string; value: string }[];
-  volumeMounts: { name: string; mountPath: string }[];
-  resources: { cpuRequest: string; cpuLimit: string; memoryRequest: string; memoryLimit: string };
+  /** 권장 자원 요구량 — 최소 CPU 코어 · 최소 메모리(GB) */
+  resources: { cpuCores: number; memoryGB: number };
+  /** 볼륨 디스크 — 크기(GiB)와 마운트 경로. 없으면 볼륨을 만들지 않는다 */
+  volume?: { name: string; sizeGi: number; mountPath: string };
+  /** 컨테이너 디스크(GiB) — Capsis에서는 쓰지 않는다(CAPSIS-D-89) */
+  containerDiskGi?: number;
   runAsUser: string;
   runAsNonRoot: boolean;
 }
@@ -44,8 +52,9 @@ export const HUB_POD_TEMPLATES: Record<string, HubPodTemplate> = {
       { name: 'POSTGRES_DB', value: 'app' },
       { name: 'PGDATA', value: '/var/lib/postgresql/data/pgdata' },
     ],
-    volumeMounts: [{ name: 'data', mountPath: '/var/lib/postgresql/data' }],
-    resources: { cpuRequest: '500', cpuLimit: '1000', memoryRequest: '512', memoryLimit: '1024' },
+    resources: { cpuCores: 0.5, memoryGB: 0.5 },
+    volume: { name: 'data', sizeGi: 10, mountPath: '/var/lib/postgresql/data' },
+    containerDiskGi: 5,
     runAsUser: '999',
     runAsNonRoot: true,
   },
@@ -59,9 +68,21 @@ export const HUB_POD_TEMPLATES: Record<string, HubPodTemplate> = {
     args: '',
     ports: [{ name: 'http', containerPort: '8080', protocol: 'TCP' }],
     envVars: [],
-    volumeMounts: [],
-    resources: { cpuRequest: '100', cpuLimit: '500', memoryRequest: '128', memoryLimit: '256' },
+    resources: { cpuCores: 0.1, memoryGB: 0.125 },
+    containerDiskGi: 5,
     runAsUser: '101',
     runAsNonRoot: true,
   },
+};
+
+/** 권장 자원 요구량 → 폼 값(CAPSIS-D-87). limits는 requests의 2배, CPU 128,000m · 메모리 512GiB를 넘지 않는다 */
+export const toFormResources = (r: HubPodTemplate['resources']) => {
+  const cpuRequest = Math.round(r.cpuCores * 1000);
+  const memoryRequest = Math.round(r.memoryGB * 1024);
+  return {
+    cpuRequest: String(cpuRequest),
+    cpuLimit: String(Math.min(cpuRequest * 2, 128000)),
+    memoryRequest: String(memoryRequest),
+    memoryLimit: String(Math.min(memoryRequest * 2, 512 * 1024)),
+  };
 };

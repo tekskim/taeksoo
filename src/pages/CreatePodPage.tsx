@@ -30,9 +30,10 @@ import {
   FilterSearchInput,
   Badge,
   ConfirmModal,
+  InlineMessage,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
-import { HUB_POD_TEMPLATES, type HubPodTemplate } from './hubPodTemplatesMock';
+import { HUB_POD_TEMPLATES, toFormResources, type HubPodTemplate } from './hubPodTemplatesMock';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -1161,7 +1162,16 @@ export function CreatePodPage() {
   // Active form tab (Pod, Container-X)
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'pod';
-  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+  // 탭만 바꾸고 mode 등 다른 파라미터는 남긴다
+  const setActiveTab = (tab: string) =>
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.set('tab', tab);
+        return next;
+      },
+      { replace: true }
+    );
   const tabListRef = useRef<HTMLDivElement>(null);
 
   // 이미지는 두 방식으로 넣는다 — Custom(주소 직접 입력) / Hub Pod Template(목록에서 고르기).
@@ -1190,7 +1200,8 @@ export function CreatePodPage() {
         config.memoryLimit ||
         config.runAsUser ||
         (config.envVars || []).some((e) => e.name || e.value) ||
-        (config.volumeMounts || []).length
+        (config.volumeMounts || []).length ||
+        (config.selectedVolumes || []).length
     );
 
   const applyHubTemplate = (containerId: string, template: HubPodTemplate) => {
@@ -1210,14 +1221,41 @@ export function CreatePodPage() {
         listeningPort: '',
       })),
       envVars: template.envVars.map((e) => ({ ...e, type: 'value' as const })),
-      volumeMounts: template.volumeMounts.map((v) => ({ ...v, subPath: '', readOnly: false })),
-      cpuRequest: template.resources.cpuRequest,
-      cpuLimit: template.resources.cpuLimit,
-      memoryRequest: template.resources.memoryRequest,
-      memoryLimit: template.resources.memoryLimit,
+      // 권장 자원 요구량 — requests에 기본값, limits에 그 2배(CAPSIS-D-87)
+      ...toFormResources(template.resources),
       runAsUser: template.runAsUser,
       runAsNonRoot: template.runAsNonRoot,
+      // 볼륨 — 새 PVC를 Pod 탭 Storage에 만들고 여기서 마운트한다(CAPSIS-D-89)
+      selectedVolumes: template.volume
+        ? [
+            {
+              volumeName: template.volume.name,
+              volumeType: 'create-pvc',
+              mounts: [{ mountPath: template.volume.mountPath, subPath: '', readOnly: false }],
+            },
+          ]
+        : [],
     });
+    if (template.volume) {
+      const vol = template.volume;
+      // PVC 이름은 템플릿을 고를 때 한 번만 채우고 고정한다
+      const pvcName = `${name || template.id}-${vol.name}`;
+      setVolumes((prev) => [
+        {
+          type: 'create-pvc' as const,
+          volumeName: vol.name,
+          pvcName,
+          useExistingPV: false,
+          storageClass: 'standard',
+          capacity: String(vol.sizeGi),
+          persistentVolume: '',
+          accessModes: { readWriteOnce: true, readOnlyMany: false, readWriteMany: false },
+          readOnly: false,
+        },
+        ...prev.filter((v) => v.volumeName !== vol.name),
+      ]);
+    }
+    setHubNotFound(false);
     setImageSource((prev) => ({ ...prev, [containerId]: 'hub' }));
     setHubTemplates((prev) => ({ ...prev, [containerId]: template }));
   };
@@ -1235,12 +1273,19 @@ export function CreatePodPage() {
   };
 
   const hubTemplateId = useRef(searchParams.get('hubTemplate')).current;
+  // 목록 상태 시연용 — ?hubList=error(불러오기 실패, Case B) · ?hubList=empty(빈 목록)
+  const hubListState = useRef(searchParams.get('hubList')).current as 'error' | 'empty' | null;
+  const hubOptions =
+    hubListState === 'error' || hubListState === 'empty' ? [] : Object.values(HUB_POD_TEMPLATES);
+  // Hub에서 넘어온 템플릿을 찾을 수 없음(Case A)
+  const [hubNotFound, setHubNotFound] = useState(false);
 
   useEffect(() => {
-    const template = hubTemplateId ? HUB_POD_TEMPLATES[hubTemplateId] : undefined;
-    if (!template) return;
+    if (!hubTemplateId) return;
+    const template = HUB_POD_TEMPLATES[hubTemplateId];
     const containerId = 'container-0';
-    applyHubTemplate(containerId, template);
+    if (template) applyHubTemplate(containerId, template);
+    else setHubNotFound(true);
     // mode 등 다른 파라미터는 남기고 탭만 컨테이너로 옮긴다
     setSearchParams(
       (prev) => {
@@ -4328,11 +4373,16 @@ export function CreatePodPage() {
                           <VStack gap={2}>
                             <RadioGroup
                               value={config.containerType || 'standard'}
-                              onChange={(val) =>
+                              onChange={(val) => {
                                 updateContainerConfig(containerId, {
                                   containerType: val as 'init' | 'standard',
-                                })
-                              }
+                                });
+                                // Init container에는 템플릿을 적용하지 않는다 — 선택만 풀고 값은 그대로 둔다
+                                if (val === 'init') {
+                                  setHubTemplates((prev) => ({ ...prev, [containerId]: undefined }));
+                                  setImageSource((prev) => ({ ...prev, [containerId]: 'custom' }));
+                                }
+                              }}
                             >
                               <Radio
                                 value="init"
@@ -4379,6 +4429,12 @@ export function CreatePodPage() {
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content>
                         <VStack gap={6}>
+                          {hubNotFound && containerId === 'container-0' && (
+                            <InlineMessage variant="warning">
+                              The Pod Template could not be found. It may have been deleted or made
+                              private.
+                            </InlineMessage>
+                          )}
                           <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4399,6 +4455,7 @@ export function CreatePodPage() {
                                   ...prev,
                                   [containerId]: val as 'custom' | 'hub',
                                 }));
+                                if (val === 'hub') setHubNotFound(false);
                                 // Custom으로 돌아가면 템플릿 출처를 끊는다. 입력된 값은 그대로 둔다.
                                 if (val === 'custom') {
                                   setHubTemplates((prev) => ({ ...prev, [containerId]: undefined }));
@@ -4406,19 +4463,52 @@ export function CreatePodPage() {
                               }}
                             >
                               <Radio value="custom" label="Custom" />
-                              <Radio value="hub" label="Hub Pod Template" />
+                              <Radio
+                                value="hub"
+                                disabled={config.containerType === 'init'}
+                                label={
+                                  config.containerType === 'init' ? (
+                                    <HStack gap={1} align="center">
+                                      <span>Hub Pod Template</span>
+                                      <Tooltip
+                                        content="Pod Templates apply to standard containers only."
+                                        position="right"
+                                      >
+                                        <IconInfoCircle
+                                          size={14}
+                                          className="text-[var(--color-text-subtle)]"
+                                        />
+                                      </Tooltip>
+                                    </HStack>
+                                  ) : (
+                                    'Hub Pod Template'
+                                  )
+                                }
+                              />
                             </RadioGroup>
                             {(imageSource[containerId] ?? 'custom') === 'hub' && (
-                              <Select
-                                options={Object.values(HUB_POD_TEMPLATES).map((t) => ({
-                                  value: t.id,
-                                  label: `${t.name} · ${t.publisher}`,
-                                }))}
-                                placeholder="Select a template"
-                                value={hubTemplates[containerId]?.id ?? ''}
-                                onChange={(val) => selectHubTemplate(containerId, val)}
-                                fullWidth
-                              />
+                              <VStack gap={2}>
+                                <Select
+                                  options={hubOptions.map((t) => ({
+                                    value: t.id,
+                                    label: `${t.name} · ${t.publisher}`,
+                                  }))}
+                                  placeholder={
+                                    hubListState === 'empty'
+                                      ? 'No Pod Templates available'
+                                      : 'Select Pod Template'
+                                  }
+                                  value={hubTemplates[containerId]?.id ?? ''}
+                                  onChange={(val) => selectHubTemplate(containerId, val)}
+                                  disabled={hubOptions.length === 0}
+                                  fullWidth
+                                />
+                                {hubListState === 'error' && (
+                                  <InlineMessage variant="error">
+                                    Pod Templates could not be loaded from the private Hub.
+                                  </InlineMessage>
+                                )}
+                              </VStack>
                             )}
                             <Input
                               placeholder="registry.example.com/project/app:1.0"
@@ -4427,6 +4517,7 @@ export function CreatePodPage() {
                               onChange={(e) => {
                                 const image = e.target.value;
                                 updateContainerConfig(containerId, { image });
+                                if (image) setHubNotFound(false);
                                 const template = hubTemplates[containerId];
                                 // 이미지를 템플릿과 다르게 바꾸면 출처를 끊고 Custom으로 돌아간다
                                 if (template && image !== template.image) {
