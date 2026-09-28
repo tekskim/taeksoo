@@ -29,8 +29,10 @@ import {
   Tooltip,
   FilterSearchInput,
   Badge,
+  ConfirmModal,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
+import { HUB_POD_TEMPLATES, type HubPodTemplate } from './hubPodTemplatesMock';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -1161,6 +1163,95 @@ export function CreatePodPage() {
   const activeTab = searchParams.get('tab') || 'pod';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const tabListRef = useRef<HTMLDivElement>(null);
+
+  // 이미지는 두 방식으로 넣는다 — Custom(주소 직접 입력) / Hub Pod Template(목록에서 고르기).
+  // AI Inference · AI Training Create 페이지와 같은 방식이다(CAPSIS-D-85 · AIINF-D-24 · AITRN-D-23).
+  // Hub에서 템플릿을 골라 Install로 들어오면(?hubTemplate=<id>) 그 템플릿이 골라진 채로 열린다(HUB-D-163).
+  // 이미지를 템플릿과 다르게 바꾸면 템플릿 출처를 끊고 Custom으로 돌아간다.
+  const [imageSource, setImageSource] = useState<Record<string, 'custom' | 'hub'>>({});
+  const [hubTemplates, setHubTemplates] = useState<Record<string, HubPodTemplate | undefined>>(
+    {}
+  );
+  // 이미 입력한 값이 있을 때 템플릿을 고르면 덮어쓰기 전에 확인한다
+  const [pendingTemplate, setPendingTemplate] = useState<{
+    containerId: string;
+    template: HubPodTemplate;
+  } | null>(null);
+
+  const hasEnteredValues = (config: (typeof containerConfigs)[string]) =>
+    Boolean(
+      config.image ||
+        config.command ||
+        config.args ||
+        config.workingDir ||
+        config.cpuRequest ||
+        config.cpuLimit ||
+        config.memoryRequest ||
+        config.memoryLimit ||
+        config.runAsUser ||
+        (config.envVars || []).some((e) => e.name || e.value) ||
+        (config.volumeMounts || []).length
+    );
+
+  const applyHubTemplate = (containerId: string, template: HubPodTemplate) => {
+    updateContainerConfig(containerId, {
+      name: containerConfigs[containerId]?.name || template.id,
+      image: template.image,
+      command: template.command,
+      args: template.args,
+      ports: template.ports.map((p, i) => ({
+        id: `hub-port-${i}`,
+        serviceType: 'none',
+        name: p.name,
+        containerPort: p.containerPort,
+        protocol: p.protocol,
+        hostPort: '',
+        hostIP: '',
+        listeningPort: '',
+      })),
+      envVars: template.envVars.map((e) => ({ ...e, type: 'value' as const })),
+      volumeMounts: template.volumeMounts.map((v) => ({ ...v, subPath: '', readOnly: false })),
+      cpuRequest: template.resources.cpuRequest,
+      cpuLimit: template.resources.cpuLimit,
+      memoryRequest: template.resources.memoryRequest,
+      memoryLimit: template.resources.memoryLimit,
+      runAsUser: template.runAsUser,
+      runAsNonRoot: template.runAsNonRoot,
+    });
+    setImageSource((prev) => ({ ...prev, [containerId]: 'hub' }));
+    setHubTemplates((prev) => ({ ...prev, [containerId]: template }));
+  };
+
+  const selectHubTemplate = (containerId: string, templateId: string) => {
+    const template = HUB_POD_TEMPLATES[templateId];
+    if (!template) return;
+    const config = containerConfigs[containerId];
+    const current = hubTemplates[containerId];
+    if (config && hasEnteredValues(config) && current?.id !== template.id) {
+      setPendingTemplate({ containerId, template });
+      return;
+    }
+    applyHubTemplate(containerId, template);
+  };
+
+  const hubTemplateId = useRef(searchParams.get('hubTemplate')).current;
+
+  useEffect(() => {
+    const template = hubTemplateId ? HUB_POD_TEMPLATES[hubTemplateId] : undefined;
+    if (!template) return;
+    const containerId = 'container-0';
+    applyHubTemplate(containerId, template);
+    // mode 등 다른 파라미터는 남기고 탭만 컨테이너로 옮긴다
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.set('tab', containerId);
+        return next;
+      },
+      { replace: true }
+    );
+    // 진입할 때 한 번만 채운다
+  }, []);
 
   // Build inner tabs for the form
   const formTabs = [
@@ -4295,29 +4386,82 @@ export function CreatePodPage() {
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
+                                {(imageSource[containerId] ?? 'custom') === 'hub'
+                                  ? 'Pod Template from the private Hub. It fills the image, command, environment variables, resources, and security context.'
+                                  : 'Image address as registry/repository:tag or @digest. If no registry host is given, Docker Hub is used.'}
                               </span>
                             </VStack>
+                            <RadioGroup
+                              direction="horizontal"
+                              value={imageSource[containerId] ?? 'custom'}
+                              onChange={(val) => {
+                                setImageSource((prev) => ({
+                                  ...prev,
+                                  [containerId]: val as 'custom' | 'hub',
+                                }));
+                                // Custom으로 돌아가면 템플릿 출처를 끊는다. 입력된 값은 그대로 둔다.
+                                if (val === 'custom') {
+                                  setHubTemplates((prev) => ({ ...prev, [containerId]: undefined }));
+                                }
+                              }}
+                            >
+                              <Radio value="custom" label="Custom" />
+                              <Radio value="hub" label="Hub Pod Template" />
+                            </RadioGroup>
+                            {(imageSource[containerId] ?? 'custom') === 'hub' && (
+                              <Select
+                                options={Object.values(HUB_POD_TEMPLATES).map((t) => ({
+                                  value: t.id,
+                                  label: `${t.name} · ${t.publisher}`,
+                                }))}
+                                placeholder="Select a template"
+                                value={hubTemplates[containerId]?.id ?? ''}
+                                onChange={(val) => selectHubTemplate(containerId, val)}
+                                fullWidth
+                              />
+                            )}
                             <Input
-                              placeholder="nginx:latest"
+                              placeholder="registry.example.com/project/app:1.0"
                               fullWidth
                               value={config.image || ''}
-                              onChange={(e) =>
-                                updateContainerConfig(containerId, {
-                                  image: e.target.value,
-                                })
-                              }
+                              onChange={(e) => {
+                                const image = e.target.value;
+                                updateContainerConfig(containerId, { image });
+                                const template = hubTemplates[containerId];
+                                // 이미지를 템플릿과 다르게 바꾸면 출처를 끊고 Custom으로 돌아간다
+                                if (template && image !== template.image) {
+                                  setHubTemplates((prev) => ({ ...prev, [containerId]: undefined }));
+                                  setImageSource((prev) => ({ ...prev, [containerId]: 'custom' }));
+                                }
+                              }}
                             />
                           </VStack>
+                          <ConfirmModal
+                            isOpen={pendingTemplate?.containerId === containerId}
+                            onClose={() => setPendingTemplate(null)}
+                            title="Replace entered values?"
+                            description="The values entered in this container will be replaced with the values of the selected template."
+                            infoLabel="Hub Pod Template"
+                            infoValue={
+                              pendingTemplate
+                                ? `${pendingTemplate.template.name} · ${pendingTemplate.template.publisher}`
+                                : ''
+                            }
+                            confirmText="Replace"
+                            onConfirm={() => {
+                              if (pendingTemplate) {
+                                applyHubTemplate(pendingTemplate.containerId, pendingTemplate.template);
+                              }
+                              setPendingTemplate(null);
+                            }}
+                          />
                           <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Policy
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
+                                When the node pulls the image — every time, only when it is not on the node, or never.
                               </span>
                             </VStack>
                             <Select
@@ -4341,8 +4485,7 @@ export function CreatePodPage() {
                                 Pull Secrets
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
+                                Secret holding credentials for a private registry. It must be in the same namespace as the pod.
                               </span>
                             </VStack>
                             <Select
@@ -4375,8 +4518,7 @@ export function CreatePodPage() {
                                 Command
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
+                                Overrides the image entrypoint. If empty, the image default is used.
                               </span>
                             </VStack>
                             <Input
@@ -4396,8 +4538,7 @@ export function CreatePodPage() {
                                 Arguments
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
+                                Arguments passed to the command. If empty, the image default is used.
                               </span>
                             </VStack>
                             <Input
@@ -4417,8 +4558,7 @@ export function CreatePodPage() {
                                 WorkingDir
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
+                                Working directory inside the container. If empty, the image default is used.
                               </span>
                             </VStack>
                             <Input
@@ -4438,8 +4578,7 @@ export function CreatePodPage() {
                                 Stdin
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
+                                Keeps standard input open for the container.
                               </span>
                             </VStack>
                             <Select
@@ -4693,8 +4832,7 @@ export function CreatePodPage() {
                               Service Account Name
                             </span>
                             <span className="text-body-md text-[var(--color-text-subtle)]">
-                              The period allowed after receiving a termination request before the
-                              pod is forcibly terminated.
+                              Service account the pod runs as. It must be in the same namespace as the pod.
                             </span>
                           </VStack>
                           <Input
