@@ -3,10 +3,9 @@
  *
  * 화면 정의서: coreplan 03-private-cloud/04-capsis/01-capsis/02-screens/12-pod-create-v1.0.md
  * - 이미지는 회사가 Harbor에 넣은 주소를 digest로 고정한다(HUB-D-223). 호스트는 예시 값이다.
- * - 권장 자원 요구량은 최소 CPU 코어 · 최소 메모리(GB)다. 폼에는 requests에만 넣고 limits는 비워 둔다(CAPSIS-D-87).
- * - 템플릿에 없는 값은 채우지 않는다. 폼에 원래 기본값이 있는 칸은 그 값을 쓴다(화면 12 §2-2).
- * - Capsis용 템플릿에는 GPU가 없다(CAPSIS-D-88).
- * - 볼륨은 새 PVC의 용량과 마운트 경로가 된다. 컨테이너 디스크는 Capsis에서 쓰지 않는다(CAPSIS-D-89).
+ * - Create Pod에 채우는 값은 이미지 주소와 환경 변수뿐이다(CAPSIS-D-91). 나머지 칸은 폼 기본값을 쓴다.
+ * - 자원은 채우지 않는다(CAPSIS-D-87). 아래 resources · ports · runAsUser 등은 템플릿 원본 예시로만 남겨 둔다.
+ * - 볼륨 디스크 크기가 있으면 Pod 탭 Storage에 새 PVC 하나를 넣는다. 이름 · 용량 · 마운트는 사용자가 넣는다(CAPSIS-D-89).
  * - Capsis용 템플릿 목록은 아직 정해지지 않았다. 아래 여섯 개는 화면을 보여 주기 위한 예시다.
  *
  * 진입 주소

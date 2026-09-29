@@ -59,6 +59,8 @@ interface PodData {
   labels: Record<string, string>;
   annotations: Record<string, string>;
   containers: string[];
+  /** Hub Pod Template으로 만든 Pod의 템플릿 이름 — managed by hub 라벨에서 읽는다(CAPSIS-D-92) */
+  hubTemplate?: string;
 }
 
 interface ContainerRow {
@@ -100,6 +102,25 @@ interface EventRow {
    ---------------------------------------- */
 
 const mockPodData: Record<string, PodData> = {
+  'hub-postgresql': {
+    id: 'hub-postgresql',
+    name: 'orders-db',
+    status: 'Running',
+    namespace: 'default',
+    podIP: '10.76.0.41',
+    createdAt: 'Nov 10, 2026 09:40:12',
+    workload: '-',
+    workloadType: 'Pod',
+    node: 'worker-node-1',
+    // 라벨 키와 값 형식은 개발이 정한다. 아래는 예시다
+    labels: {
+      'thaki.io/managed-by': 'hub',
+      'thaki.io/hub-template': 'PostgreSQL',
+    },
+    annotations: {},
+    containers: ['container-0'],
+    hubTemplate: 'PostgreSQL',
+  },
   '1': {
     id: '1',
     name: 'podName',
@@ -867,6 +888,9 @@ export function PodDetailPage() {
             />
             <DetailHeader.InfoCard label="Pod IP" value={pod.podIP} copyable />
             <DetailHeader.InfoCard label="Created at" value={pod.createdAt} />
+            {pod.hubTemplate && (
+              <DetailHeader.InfoCard label="Template" value={pod.hubTemplate} />
+            )}
           </DetailHeader.InfoGrid>
 
           {/* Second row: Workload, Node, Labels, Annotations */}

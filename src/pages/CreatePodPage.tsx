@@ -38,7 +38,6 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import {
   HUB_POD_TEMPLATES,
   imageRepository,
-  toFormResources,
   type HubPodTemplate,
 } from './hubPodTemplatesMock';
 
@@ -46,6 +45,22 @@ import {
 const HUB_TEMPLATES_PER_PAGE = 8;
 // 제품 폼과 같다 — 이 값을 고르면 storageClassName을 비워 보내 클러스터 기본값이 적용된다
 const DEFAULT_STORAGE_CLASS = '__default_storage_class__';
+// 제품 폼(managedServiceUtils)과 같은 규칙 — {워크로드}-{컨테이너}-{포트 이름}-svc를 DNS 이름 꼴로 맞춘다
+const buildManagedServiceNamePreview = (workload: string, container: string, port: string) => {
+  const v = `${workload}-${container}-${port}-svc`
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return (v || 'managed-service').slice(0, 63);
+};
+// 제품 폼(servicePortUtils)과 같은 선택지. 새 줄의 기본값은 Do not create a service다
+const SERVICE_TYPE_OPTIONS = [
+  { value: 'DoNotCreateService', label: 'Do not create a service' },
+  { value: 'ClusterIP', label: 'Cluster IP' },
+  { value: 'NodePort', label: 'Node port' },
+  { value: 'LoadBalancer', label: 'Load Balancer' },
+];
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -764,7 +779,14 @@ function ScalingPolicySection({
    Main Page Component
    ---------------------------------------- */
 
+// Hub 진입 주소(hubTemplate · hubList)가 바뀌면 폼을 새로 연다 — 같은 화면에서 주소만 바꿔 들어와도 진입할 때처럼 채워지게
 export function CreatePodPage() {
+  const [searchParams] = useSearchParams();
+  const entryKey = `${searchParams.get('hubTemplate') ?? ''}|${searchParams.get('hubList') ?? ''}`;
+  return <CreatePodForm key={entryKey} />;
+}
+
+function CreatePodForm() {
   const navigate = useNavigate();
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -1203,71 +1225,63 @@ export function CreatePodPage() {
     template: HubPodTemplate;
   } | null>(null);
 
+  // 템플릿이 채우는 값은 이미지 주소와 환경 변수뿐이라(CAPSIS-D-91), 덮어쓸 값이 있는지도 이 둘로 본다
   const hasEnteredValues = (config: (typeof containerConfigs)[string]) =>
-    Boolean(
-      config.image ||
-        config.command ||
-        config.args ||
-        config.workingDir ||
-        config.cpuRequest ||
-        config.cpuLimit ||
-        config.memoryRequest ||
-        config.memoryLimit ||
-        config.runAsUser ||
-        (config.envVars || []).some((e) => e.name || e.value) ||
-        (config.volumeMounts || []).length ||
-        (config.selectedVolumes || []).length
-    );
+    Boolean(config.image || (config.envVars || []).some((e) => e.name || e.value));
+
+  // 라디오 버튼을 바꿀 때 지울 값이 있으면 확인 창을 띄운다(CAPSIS-D-90 ④)
+  const [pendingSource, setPendingSource] = useState<{
+    containerId: string;
+    next: 'custom' | 'hub';
+    toInit?: boolean;
+  } | null>(null);
+  // Hub 흐름에서 새 PVC는 한 번만 넣는다(CAPSIS-D-89)
+  const hubPvcAdded = useRef(false);
+
+  const applySourceChange = (containerId: string, next: 'custom' | 'hub', toInit?: boolean) => {
+    updateContainerConfig(containerId, {
+      image: '',
+      envVars: [],
+      ...(toInit ? { containerType: 'init' as const } : {}),
+    });
+    setHubTemplates((prev) => ({ ...prev, [containerId]: undefined }));
+    setImageSource((prev) => ({ ...prev, [containerId]: next }));
+    setHubNotFound(false);
+  };
+
+  const requestSourceChange = (containerId: string, next: 'custom' | 'hub', toInit?: boolean) => {
+    const config = containerConfigs[containerId];
+    const hasValues = Boolean(hubTemplates[containerId]) || (config && hasEnteredValues(config));
+    if (hasValues) {
+      setPendingSource({ containerId, next, toInit });
+      return;
+    }
+    applySourceChange(containerId, next, toInit);
+  };
 
   const applyHubTemplate = (containerId: string, template: HubPodTemplate) => {
+    // 템플릿이 채우는 값은 이미지 주소와 환경 변수뿐이다. 나머지 칸은 폼 기본값 그대로다(CAPSIS-D-91)
     updateContainerConfig(containerId, {
-      name: containerConfigs[containerId]?.name || template.id,
       image: template.image,
-      command: template.command,
-      args: template.args,
-      ports: template.ports.map((p, i) => ({
-        id: `hub-port-${i}`,
-        serviceType: 'none',
-        name: p.name,
-        containerPort: p.containerPort,
-        protocol: p.protocol,
-        hostPort: '',
-        hostIP: '',
-        listeningPort: '',
-      })),
       envVars: template.envVars.map((e) => ({ ...e, type: 'value' as const })),
-      // 권장 자원 요구량 — requests에만 넣고 limits는 비워 둔다(CAPSIS-D-87)
-      ...toFormResources(template.resources),
-      runAsUser: template.runAsUser,
-      runAsNonRoot: template.runAsNonRoot,
-      // 볼륨 — 새 PVC를 Pod 탭 Storage에 만들고 여기서 마운트한다(CAPSIS-D-89)
-      selectedVolumes: template.volume
-        ? [
-            {
-              volumeName: template.volume.name,
-              volumeType: 'create-pvc',
-              mounts: [{ mountPath: template.volume.mountPath, subPath: '', readOnly: false }],
-            },
-          ]
-        : [],
     });
-    if (template.volume) {
-      const vol = template.volume;
-      // 템플릿 값은 Volume Name · Capacity · 마운트 경로뿐이다. PVC 이름은 템플릿 값도 폼 기본값도 없어 비워 두고,
-      // Storage Class · Access Modes는 폼 기본값을 쓴다(CAPSIS-D-89)
+    // 볼륨 디스크 크기가 있는 템플릿이면 Pod 탭 Storage에 새 PVC 하나를 넣는다.
+    // 폼 기본값(Default Storage Class · Single node read-write)만 갖고, 이름 · 용량 · 마운트는 사용자가 넣는다(CAPSIS-D-89)
+    if (template.volume && !hubPvcAdded.current) {
+      hubPvcAdded.current = true;
       setVolumes((prev) => [
         {
           type: 'create-pvc' as const,
-          volumeName: vol.name,
+          volumeName: '',
           pvcName: '',
           useExistingPV: false,
           storageClass: DEFAULT_STORAGE_CLASS,
-          capacity: String(vol.sizeGi),
+          capacity: '',
           persistentVolume: '',
           accessModes: { readWriteOnce: true, readOnlyMany: false, readWriteMany: false },
           readOnly: false,
         },
-        ...prev.filter((v) => v.volumeName !== vol.name),
+        ...prev,
       ]);
     }
     setHubNotFound(false);
@@ -1301,11 +1315,11 @@ export function CreatePodPage() {
     const containerId = 'container-0';
     if (template) applyHubTemplate(containerId, template);
     else setHubNotFound(true);
-    // mode 등 다른 파라미터는 남기고 탭만 컨테이너로 옮긴다
+    // Hub에서 넘어오면 Pod 탭이 먼저 열린다(CAPSIS-D-91). mode 등 다른 파라미터는 남긴다
     setSearchParams(
       (prev) => {
         const next = new URLSearchParams(prev);
-        next.set('tab', containerId);
+        next.set('tab', 'pod');
         return next;
       },
       { replace: true }
@@ -4390,14 +4404,15 @@ export function CreatePodPage() {
                             <RadioGroup
                               value={config.containerType || 'standard'}
                               onChange={(val) => {
+                                // Init container에는 템플릿을 쓰지 않는다. 템플릿을 쓰던 중이면
+                                // 라디오 버튼을 바꿀 때와 같은 확인을 받는다(CAPSIS-D-90 ⑤)
+                                if (val === 'init' && (imageSource[containerId] ?? 'custom') === 'hub') {
+                                  requestSourceChange(containerId, 'custom', true);
+                                  return;
+                                }
                                 updateContainerConfig(containerId, {
                                   containerType: val as 'init' | 'standard',
                                 });
-                                // Init container에는 템플릿을 적용하지 않는다 — 선택만 풀고 값은 그대로 둔다
-                                if (val === 'init') {
-                                  setHubTemplates((prev) => ({ ...prev, [containerId]: undefined }));
-                                  setImageSource((prev) => ({ ...prev, [containerId]: 'custom' }));
-                                }
                               }}
                             >
                               <Radio
@@ -4461,27 +4476,21 @@ export function CreatePodPage() {
                                 The container image used to create and run the pod.
                               </span>
                             </VStack>
-                            {/* AI Inference Deploy New Pod와 같은 양식 — 두 방식을 탭으로 고르고, 아래 상자에서 입력한다 */}
-                            <Tabs
-                              variant="boxed"
-                              size="sm"
+                            {/* 두 방식은 서로 별개라 라디오 버튼으로 고른다(CAPSIS-D-90 ①). 고른 쪽의 입력만 아래에 열린다 */}
+                            <RadioGroup
                               value={imageSource[containerId] ?? 'custom'}
                               onChange={(val) => {
-                                setImageSource((prev) => ({
-                                  ...prev,
-                                  [containerId]: val as 'custom' | 'hub',
-                                }));
-                                if (val === 'hub') setHubNotFound(false);
-                                // Custom image로 돌아가면 템플릿 출처를 끊는다. 입력된 값은 그대로 둔다.
-                                if (val === 'custom') {
-                                  setHubTemplates((prev) => ({ ...prev, [containerId]: undefined }));
-                                }
+                                const next = val as 'custom' | 'hub';
+                                if (next === (imageSource[containerId] ?? 'custom')) return;
+                                requestSourceChange(containerId, next);
                               }}
                             >
-                              <TabList>
-                                <Tab value="custom">Custom image</Tab>
-                                <Tab value="hub" disabled={config.containerType === 'init'}>
-                                  {config.containerType === 'init' ? (
+                              <Radio value="custom" label="Custom image" />
+                              <Radio
+                                value="hub"
+                                disabled={config.containerType === 'init'}
+                                label={
+                                  config.containerType === 'init' ? (
                                     <Tooltip
                                       content="Templates apply to standard containers only."
                                       position="right"
@@ -4493,10 +4502,27 @@ export function CreatePodPage() {
                                     </Tooltip>
                                   ) : (
                                     'Select template'
-                                  )}
-                                </Tab>
-                              </TabList>
-                            </Tabs>
+                                  )
+                                }
+                              />
+                            </RadioGroup>
+                            <ConfirmModal
+                              isOpen={pendingSource?.containerId === containerId}
+                              onClose={() => setPendingSource(null)}
+                              title="Change image source?"
+                              description="The image and environment variables entered in this container will be cleared."
+                              confirmText="Change"
+                              onConfirm={() => {
+                                if (pendingSource) {
+                                  applySourceChange(
+                                    pendingSource.containerId,
+                                    pendingSource.next,
+                                    pendingSource.toInit
+                                  );
+                                }
+                                setPendingSource(null);
+                              }}
+                            />
                             {(imageSource[containerId] ?? 'custom') === 'custom' ? (
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 w-full">
                                 <VStack gap={3}>
@@ -4529,9 +4555,8 @@ export function CreatePodPage() {
                                       Select template
                                     </span>
                                     <span className="text-body-md text-[var(--color-text-subtle)]">
-                                      Choose a template from the private Hub. It fills the image,
-                                      command, environment variables, resources, and security
-                                      context.
+                                      Choose a template from the private Hub. It fills the image
+                                      and environment variables.
                                     </span>
                                   </VStack>
                                   {hubListState === 'error' ? (
@@ -4697,6 +4722,165 @@ export function CreatePodPage() {
                               fullWidth
                             />
                           </VStack>
+                        </VStack>
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    {/* Networking Section — 제품 폼(ContainerNetworkingSection)과 같은 칸. 템플릿 포트가 여기에 채워진다 */}
+                    <SectionCard className="pb-4">
+                      <SectionCard.Header title="Networking" />
+                      <SectionCard.Content>
+                        <VStack gap={3}>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            Define a Service to expose the container, or define a non-Kubernetes network port that the new service will run when the app on the container is expected to run.
+                          </span>
+                          {(config.ports || []).map((port, portIndex) => {
+                            const updatePort = (patch: Partial<typeof port>) =>
+                              updateContainerConfig(containerId, {
+                                ports: (config.ports || []).map((p, i) =>
+                                  i === portIndex ? { ...p, ...patch } : p
+                                ),
+                              });
+                            const showListeningPort =
+                              port.serviceType === 'NodePort' || port.serviceType === 'LoadBalancer';
+                            return (
+                              <div
+                                key={port.id}
+                                className="rounded-md border border-[var(--color-border-default)] p-3 flex flex-col gap-2"
+                              >
+                                <div className="grid grid-cols-[1fr_1fr_1fr_20px] items-start gap-2">
+                                  <VStack gap={1}>
+                                    <span className="text-label-md text-[var(--color-text-default)]">Service type <span className="text-[var(--color-state-danger)]">*</span></span>
+                                    <Select
+                                      options={SERVICE_TYPE_OPTIONS}
+                                      value={port.serviceType}
+                                      onChange={(val) => updatePort({ serviceType: val })}
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <VStack gap={1}>
+                                    <span className="text-label-md text-[var(--color-text-default)]">Name <span className="text-[var(--color-state-danger)]">*</span></span>
+                                    <Input
+                                      fullWidth
+                                      value={port.name}
+                                      onChange={(e) => updatePort({ name: e.target.value })}
+                                    />
+                                  </VStack>
+                                  <VStack gap={1}>
+                                    <span className="text-label-md text-[var(--color-text-default)]">Private container port <span className="text-[var(--color-state-danger)]">*</span></span>
+                                    <NumberInput
+                                      width="full"
+                                      min={1}
+                                      max={65535}
+                                      placeholder="e.g. 8080"
+                                      value={port.containerPort ? Number(port.containerPort) : undefined}
+                                      onChange={(v) => updatePort({ containerPort: Number.isFinite(v) ? String(v) : '' })}
+                                    />
+                                  </VStack>
+                                  <button
+                                    type="button"
+                                    aria-label="Remove networking row"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    onClick={() =>
+                                      updateContainerConfig(containerId, {
+                                        ports: (config.ports || []).filter((_, i) => i !== portIndex),
+                                      })
+                                    }
+                                  >
+                                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                                  </button>
+                                </div>
+                                <div className="grid grid-cols-[1fr_1fr_1fr_20px] items-start gap-2">
+                                  <VStack gap={1}>
+                                    <span className="text-label-md text-[var(--color-text-default)]">Protocol <span className="text-[var(--color-state-danger)]">*</span></span>
+                                    <Select
+                                      options={[
+                                        { value: 'TCP', label: 'TCP' },
+                                        { value: 'UDP', label: 'UDP' },
+                                      ]}
+                                      value={port.protocol}
+                                      onChange={(val) => updatePort({ protocol: val })}
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <VStack gap={1}>
+                                    <span className="text-label-md text-[var(--color-text-default)]">Public host port</span>
+                                    <NumberInput
+                                      width="full"
+                                      min={1}
+                                      max={65535}
+                                      placeholder="e.g. 80"
+                                      value={port.hostPort ? Number(port.hostPort) : undefined}
+                                      onChange={(v) => updatePort({ hostPort: Number.isFinite(v) ? String(v) : '' })}
+                                    />
+                                  </VStack>
+                                  <VStack gap={1}>
+                                    <span className="text-label-md text-[var(--color-text-default)]">Host IP</span>
+                                    <Input
+                                      fullWidth
+                                      placeholder="e.g. 1111"
+                                      value={port.hostIP}
+                                      onChange={(e) => updatePort({ hostIP: e.target.value })}
+                                    />
+                                  </VStack>
+                                  <div />
+                                </div>
+                                {port.serviceType !== 'DoNotCreateService' && port.name.trim() && (
+                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                    Generated Service Name:{' '}
+                                    <span className="font-medium text-[var(--color-text-default)]">
+                                      {buildManagedServiceNamePreview(
+                                        name.trim() || 'workload',
+                                        config.name?.trim() || 'container-0',
+                                        port.name.trim()
+                                      )}
+                                    </span>
+                                  </span>
+                                )}
+                                {showListeningPort && (
+                                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] items-start gap-2">
+                                    <VStack gap={1}>
+                                      <span className="text-label-md text-[var(--color-text-default)]">Listening port</span>
+                                      <NumberInput
+                                        width="full"
+                                        min={1}
+                                        max={65535}
+                                        placeholder="e.g. 30080"
+                                        value={port.listeningPort ? Number(port.listeningPort) : undefined}
+                                        onChange={(v) => updatePort({ listeningPort: Number.isFinite(v) ? String(v) : '' })}
+                                      />
+                                    </VStack>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={() =>
+                                updateContainerConfig(containerId, {
+                                  ports: [
+                                    ...(config.ports || []),
+                                    {
+                                      id: `port-${Date.now()}`,
+                                      serviceType: 'DoNotCreateService',
+                                      name: '',
+                                      containerPort: '',
+                                      protocol: 'TCP',
+                                      hostPort: '',
+                                      hostIP: '',
+                                      listeningPort: '',
+                                    },
+                                  ],
+                                })
+                              }
+                            >
+                              Add Port or Service
+                            </Button>
+                          </div>
                         </VStack>
                       </SectionCard.Content>
                     </SectionCard>
