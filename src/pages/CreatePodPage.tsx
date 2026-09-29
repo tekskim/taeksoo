@@ -44,6 +44,8 @@ import {
 
 // 템플릿 카드 한 쪽에 두 줄(4개씩) — AI Inference Deploy New Pod와 같다
 const HUB_TEMPLATES_PER_PAGE = 8;
+// 제품 폼과 같다 — 이 값을 고르면 storageClassName을 비워 보내 클러스터 기본값이 적용된다
+const DEFAULT_STORAGE_CLASS = '__default_storage_class__';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -1234,7 +1236,7 @@ export function CreatePodPage() {
         listeningPort: '',
       })),
       envVars: template.envVars.map((e) => ({ ...e, type: 'value' as const })),
-      // 권장 자원 요구량 — requests에 기본값, limits에 그 2배(CAPSIS-D-87)
+      // 권장 자원 요구량 — requests에만 넣고 limits는 비워 둔다(CAPSIS-D-87)
       ...toFormResources(template.resources),
       runAsUser: template.runAsUser,
       runAsNonRoot: template.runAsNonRoot,
@@ -1251,15 +1253,15 @@ export function CreatePodPage() {
     });
     if (template.volume) {
       const vol = template.volume;
-      // PVC 이름은 템플릿을 고를 때 한 번만 채우고 고정한다
-      const pvcName = `${name || template.id}-${vol.name}`;
+      // 템플릿 값은 Volume Name · Capacity · 마운트 경로뿐이다. PVC 이름은 템플릿 값도 폼 기본값도 없어 비워 두고,
+      // Storage Class · Access Modes는 폼 기본값을 쓴다(CAPSIS-D-89)
       setVolumes((prev) => [
         {
           type: 'create-pvc' as const,
           volumeName: vol.name,
-          pvcName,
+          pvcName: '',
           useExistingPV: false,
-          storageClass: 'standard',
+          storageClass: DEFAULT_STORAGE_CLASS,
           capacity: String(vol.sizeGi),
           persistentVolume: '',
           accessModes: { readWriteOnce: true, readOnlyMany: false, readWriteMany: false },
@@ -1495,10 +1497,10 @@ export function CreatePodPage() {
             volumeName: '',
             pvcName: '',
             useExistingPV: false,
-            storageClass: '',
+            storageClass: DEFAULT_STORAGE_CLASS,
             capacity: '',
             persistentVolume: '',
-            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+            accessModes: { readWriteOnce: true, readOnlyMany: false, readWriteMany: false },
             readOnly: false,
           },
         ]);
@@ -3696,6 +3698,7 @@ export function CreatePodPage() {
                                           </span>
                                           <Select
                                             options={[
+                                              { value: DEFAULT_STORAGE_CLASS, label: 'Default Storage Class' },
                                               { value: 'standard', label: 'standard' },
                                               { value: 'fast', label: 'fast' },
                                             ]}
@@ -4630,7 +4633,7 @@ export function CreatePodPage() {
                           <ConfirmModal
                             isOpen={pendingTemplate?.containerId === containerId}
                             onClose={() => setPendingTemplate(null)}
-                            title="Replace entered values?"
+                            title="Apply template?"
                             description="The values entered in this container will be replaced with the values of the selected template."
                             infoLabel="Template"
                             infoValue={
@@ -4638,7 +4641,7 @@ export function CreatePodPage() {
                                 ? `${pendingTemplate.template.name} · ${pendingTemplate.template.publisher}`
                                 : ''
                             }
-                            confirmText="Replace"
+                            confirmText="Apply"
                             onConfirm={() => {
                               if (pendingTemplate) {
                                 applyHubTemplate(pendingTemplate.containerId, pendingTemplate.template);

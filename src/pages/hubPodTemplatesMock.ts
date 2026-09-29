@@ -3,7 +3,8 @@
  *
  * 화면 정의서: coreplan 03-private-cloud/04-capsis/01-capsis/02-screens/12-pod-create-v1.0.md
  * - 이미지는 회사가 Harbor에 넣은 주소를 digest로 고정한다(HUB-D-223). 호스트는 예시 값이다.
- * - 권장 자원 요구량은 최소 CPU 코어 · 최소 메모리(GB)다. 폼에는 requests에 넣고 limits는 2배로 채운다(CAPSIS-D-87).
+ * - 권장 자원 요구량은 최소 CPU 코어 · 최소 메모리(GB)다. 폼에는 requests에만 넣고 limits는 비워 둔다(CAPSIS-D-87).
+ * - 템플릿에 없는 값은 채우지 않는다. 폼에 원래 기본값이 있는 칸은 그 값을 쓴다(화면 12 §2-2).
  * - Capsis용 템플릿에는 GPU가 없다(CAPSIS-D-88).
  * - 볼륨은 새 PVC의 용량과 마운트 경로가 된다. 컨테이너 디스크는 Capsis에서 쓰지 않는다(CAPSIS-D-89).
  * - Capsis용 템플릿 목록은 아직 정해지지 않았다. 아래 여섯 개는 화면을 보여 주기 위한 예시다.
@@ -138,14 +139,14 @@ export const HUB_POD_TEMPLATES: Record<string, HubPodTemplate> = {
 /** 카드에 보이는 이미지 저장소 경로 — digest는 뺀다 */
 export const imageRepository = (image: string) => image.split('@')[0];
 
-/** 권장 자원 요구량 → 폼 값(CAPSIS-D-87). limits는 requests의 2배, CPU 128,000m · 메모리 512GiB를 넘지 않는다 */
+/** 권장 자원 요구량 → 폼 값(CAPSIS-D-87). requests에만 넣고 limits는 비워 둔다 */
 export const toFormResources = (r: HubPodTemplate['resources']) => {
   const cpuRequest = Math.round(r.cpuCores * 1000);
   const memoryRequest = Math.round(r.memoryGB * 1024);
   return {
     cpuRequest: String(cpuRequest),
-    cpuLimit: String(Math.min(cpuRequest * 2, 128000)),
+    cpuLimit: '',
     memoryRequest: String(memoryRequest),
-    memoryLimit: String(Math.min(memoryRequest * 2, 512 * 1024)),
+    memoryLimit: '',
   };
 };
