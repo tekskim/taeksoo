@@ -370,9 +370,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                     navigate(clusterEntryPath());
                   }}
                   tooltip={
-                    cluster.dedicated
-                      ? `${cluster.name} (AI Workload dedicated)`
-                      : cluster.name
+                    cluster.dedicated ? `${cluster.name} (AI Workload dedicated)` : cluster.name
                   }
                 />
               ))
