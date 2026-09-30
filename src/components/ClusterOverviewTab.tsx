@@ -14,7 +14,8 @@ import { VStack, HStack, Badge, SectionCard } from '@/design-system';
 import { IconChevronRight } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
-export type ClusterUsage = 'General' | 'Metis' | 'Maxis';
+/** 클러스터 용도 (CorePlan CAPSIS-D-94). AI Inference · AI Training은 클러스터를 나눠 쓰지 않아 AI Workload 하나다. */
+export type ClusterUsage = 'General' | 'AI Workload';
 
 export interface ClusterOverviewData {
   /** Current Kubernetes version, e.g. "v1.34.1" */
@@ -41,10 +42,9 @@ export interface ClusterOverviewData {
   recentEvents: { at: string; message: string }[];
 }
 
-const USAGE_THEME: Record<ClusterUsage, 'blue' | 'yellow' | 'green'> = {
+const USAGE_THEME: Record<ClusterUsage, 'blue' | 'yellow'> = {
   General: 'blue',
-  Metis: 'yellow',
-  Maxis: 'green',
+  'AI Workload': 'yellow',
 };
 
 const BUSY_STATUSES = ['Provisioning', 'Updating', 'Deleting'];

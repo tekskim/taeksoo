@@ -56,18 +56,17 @@ interface Cluster {
   /** Container Platform 전용(D-29): 생성 시 선택한 기반. */
   foundation?: 'VM' | 'Bare metal';
   /** Container Platform 전용(D-30): 생성 후 사용자가 선택하는 용도. 미지정이면 undefined. */
-  usage?: 'General' | 'Metis' | 'Maxis';
+  usage?: 'General' | 'AI Workload';
   /** 화면에 찍는 용도 이름(USAGE_DISPLAY). 표 셀의 title에도 이 값이 쓰인다. */
   usageLabel?: string;
 }
 
 type ClusterUsage = NonNullable<Cluster['usage']>;
 
-const USAGE_THEME: Record<ClusterUsage, 'blue' | 'green' | 'yellow'> = {
+const USAGE_THEME: Record<ClusterUsage, 'blue' | 'yellow'> = {
   General: 'blue',
-  // managed-by 배지(containerManagedBy.tsx)와 같은 색: Maxis=green, Metis=yellow
-  Maxis: 'green',
-  Metis: 'yellow',
+  // CAPSIS-D-94: AI Inference · AI Training은 클러스터를 나눠 쓰지 않아 용도가 하나다. 옛 Metis 색을 잇는다.
+  'AI Workload': 'yellow',
 };
 
 /* ----------------------------------------
@@ -148,7 +147,7 @@ const mockClusters: Cluster[] = [
   },
 ];
 
-// Container Platform에서만 보이는 Metis/Maxis 전용 클러스터.
+// Container Platform에서만 보이는 AI Workload 전용 클러스터(CAPSIS-D-94).
 // D-30(소륜님 미팅): 전용 클러스터도 CP가 직접 프로비저닝하고, 용도는 생성 후 선택한다.
 // 외부 클러스터 등록 절차는 CAPSIS-D-83으로 폐기됐다. 전용 클러스터도 Capsis가 만든 것(created)이다.
 const dedicatedClusters: Cluster[] = [
@@ -162,7 +161,7 @@ const dedicatedClusters: Cluster[] = [
     pods: '24/110',
     createdAt: 'May 2, 2026 10:12:44',
     foundation: 'Bare metal',
-    usage: 'Maxis',
+    usage: 'AI Workload',
   },
   {
     id: 'cluster-reg-002',
@@ -174,7 +173,7 @@ const dedicatedClusters: Cluster[] = [
     pods: '15/110',
     createdAt: 'Apr 18, 2026 16:40:02',
     foundation: 'Bare metal',
-    usage: 'Metis',
+    usage: 'AI Workload',
   },
   {
     id: 'cluster-reg-003',
@@ -187,7 +186,7 @@ const dedicatedClusters: Cluster[] = [
     createdAt: 'Jun 30, 2026 09:05:19',
     type: 'created',
     foundation: 'VM',
-    usage: 'Maxis',
+    usage: 'AI Workload',
   },
 ];
 
@@ -278,7 +277,7 @@ export function ClusterManagementPage() {
             label: 'Type',
             width: fixedColumns.statusLabel,
             sortable: false,
-            // 표기는 용도 기준(D-28 유지): General = 범용, AI Inference/AI Training = 전용. 화면 글자는 USAGE_DISPLAY.
+            // 표기는 용도 기준(CAPSIS-D-94): General = 범용, AI Workload = 전용.
             // 용도는 생성 후 선택하므로(D-30) 지정 전에는 Unassigned.
             render: (_value: unknown, row: Cluster) => {
               const value = row.usage;
@@ -286,7 +285,7 @@ export function ClusterManagementPage() {
                 <Tooltip
                   content={
                     value === undefined
-                      ? 'Usage not assigned yet — choose General, AI Inference, or AI Training after creation'
+                      ? 'Usage not assigned yet — choose General or AI Workload after creation'
                       : value === 'General'
                         ? 'General-purpose cluster, managed in Container platform'
                         : `Dedicated to ${USAGE_DISPLAY[value]} workloads — required packages are installed by the in-cluster agent`
@@ -615,10 +614,9 @@ export function ClusterManagementPage() {
             >
               <Radio value="General" label="General — use it freely for any workload" />
               <Radio
-                value="Metis"
-                label="AI Inference — dedicated to inference serving workloads"
+                value="AI Workload"
+                label="AI Workload — dedicated to AI inference and training workloads"
               />
-              <Radio value="Maxis" label="AI Training — dedicated to training workloads" />
             </RadioGroup>
             <InlineMessage variant="info">
               {assignChoice === 'General'

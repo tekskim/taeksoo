@@ -618,13 +618,7 @@ export function ClusterDetailPage() {
                   value={
                     overviewData.usage ? (
                       <Badge
-                        theme={
-                          overviewData.usage === 'Metis'
-                            ? 'yellow'
-                            : overviewData.usage === 'Maxis'
-                              ? 'green'
-                              : 'blue'
-                        }
+                        theme={overviewData.usage === 'AI Workload' ? 'yellow' : 'blue'}
                         type="subtle"
                         size="sm"
                       >
@@ -919,8 +913,7 @@ export function ClusterDetailPage() {
               onChange={(value) => setPendingUsage(value as ClusterUsage)}
               options={[
                 { value: 'General', label: 'General — general purpose workloads' },
-                { value: 'Metis', label: 'AI Inference — inference and serving' },
-                { value: 'Maxis', label: 'AI Training — training' },
+                { value: 'AI Workload', label: 'AI Workload — AI inference and training' },
               ]}
             />
           </FormField>

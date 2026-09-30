@@ -141,21 +141,13 @@ const USAGE_PRESETS: Record<ClusterUsage, UsagePreset> = {
     collapseLabels: false,
     agentPackages: [],
   },
-  Metis: {
+  'AI Workload': {
     lockedKubernetesVersion: 'v1.33',
     lockedContainerNetwork: 'cilium',
-    lockReason: 'Verified by Metis',
+    lockReason: 'Verified for AI workloads',
     acceleratorRequired: true,
     collapseLabels: true,
-    agentPackages: ['Metis serving agent', 'gpu-operator or vllm-rbln'],
-  },
-  Maxis: {
-    lockedKubernetesVersion: 'v1.33',
-    lockedContainerNetwork: 'cilium',
-    lockReason: 'Verified by Maxis',
-    acceleratorRequired: true,
-    collapseLabels: true,
-    agentPackages: ['Maxis training agent', 'gpu-operator', 'Kueue'],
+    agentPackages: ['AI workload agent', 'gpu-operator or vllm-rbln', 'Kueue'],
   },
 };
 
@@ -164,8 +156,7 @@ const USAGE_OPTION_LABELS: Record<ClusterUsage, { title: string; detail: string 
     title: 'General purpose',
     detail: 'General workloads — decide what to run after the cluster exists',
   },
-  Metis: { title: 'AI Inference', detail: 'Inference and serving only' },
-  Maxis: { title: 'AI Training', detail: 'Training only' },
+  'AI Workload': { title: 'AI Workload', detail: 'AI inference and training only' },
 };
 
 /* ----------------------------------------
@@ -468,9 +459,6 @@ export function CreateClusterDraftPage() {
     }
     if (!nextPreset.acceleratorRequired) {
       setAccelerator('none');
-    } else if (next === 'Maxis') {
-      // 학습은 여러 장을 묶어 쓰기 때문에 GPU가 기본이다.
-      setAccelerator('gpu');
     }
     // 가속기가 바뀌면 워커 후보가 달라진다. 고른 것을 비운다.
     setWorkerNodeIds([]);
@@ -753,7 +741,7 @@ export function CreateClusterDraftPage() {
                   Decide this first. It changes what you can pick below and what the in-cluster
                   agent installs
                   {preset.agentPackages.length > 0 && ` — ${preset.agentPackages.join(', ')}`}.
-                  {availableUsages.length < 3 && ' Usages you cannot use are not listed.'}
+                  {availableUsages.length < 2 && ' Usages you cannot use are not listed.'}
                 </FormField.Description>
                 <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                   <RadioGroup
@@ -810,7 +798,7 @@ export function CreateClusterDraftPage() {
                   </FormField.Label>
                   <FormField.Description>
                     {preset.lockedKubernetesVersion
-                      ? `Set to the version ${usage} has verified. The value stays visible so you can still see what the cluster was built with.`
+                      ? `Set to the version verified for ${usage} clusters. The value stays visible so you can still see what the cluster was built with.`
                       : 'Choose the Kubernetes version the agent will install. The latest supported version is recommended unless you need a specific one.'}
                   </FormField.Description>
                   <FormField.Control>
@@ -1011,7 +999,7 @@ export function CreateClusterDraftPage() {
                     Rebellions packages for NPU. Picking one narrows the node list below to machines
                     that have it.
                     {preset.acceleratorRequired
-                      ? ` A ${usage} cluster must pick one.`
+                      ? ` ${usage} clusters must pick one.`
                       : ' General purpose clusters may skip it.'}
                   </FormField.Description>
                   <FormField.Control className="mt-[var(--primitive-spacing-3)]">

@@ -371,7 +371,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   }}
                   tooltip={
                     cluster.dedicated
-                      ? `${cluster.name} (AI Inference/AI Training dedicated)`
+                      ? `${cluster.name} (AI Workload dedicated)`
                       : cluster.name
                   }
                 />

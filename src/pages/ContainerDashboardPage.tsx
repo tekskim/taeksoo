@@ -432,7 +432,7 @@ export function ContainerDashboardPage() {
       {dedicated && (
         <div className="mb-6">
           <InlineMessage variant="info">
-            AI Inference/AI Training dedicated cluster — workloads are created by the products. You
+            AI Workload dedicated cluster — workloads are created by AI Inference and AI Training. You
             can view and operate resources here (Edit YAML, delete); creating resources is disabled.
             The agent stack runs in tkai-* namespaces.
           </InlineMessage>
