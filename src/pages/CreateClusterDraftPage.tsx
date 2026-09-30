@@ -470,7 +470,7 @@ export function CreateClusterDraftPage() {
   const cpNodeTotal = cpNodeIds.length;
   const workerNodeTotal = workerNodeIds.length;
   const cpComplete = cpNodeTotal === cpNodeCount;
-  /* AI Workload 클러스터는 GPU 또는 NPU가 달린 워커를 최소 한 대 포함해야 한다([CAPSIS-19], CAPSIS-D-98).
+  /* AI Workload 클러스터는 GPU 또는 NPU가 달린 워커를 최소 한 대 포함해야 한다([CAPSIS-19], CAPSIS-D-100).
      CPU 워커를 섞는 것은 된다. 컨트롤 플레인의 가속기는 세지 않는다. */
   const hasAcceleratorWorker = workerNodeIds.some(
     (id) => (mockRegisteredNodes.find((n) => n.id === id)?.accelerator ?? '—') !== '—'
