@@ -36,6 +36,7 @@ import {
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 import { useContainerMode } from '@/contexts/ContainerModeContext';
+import { USAGE_DISPLAY } from '@/pages/containerEntitlement';
 
 /* ----------------------------------------
    Types
@@ -50,21 +51,22 @@ interface Cluster {
   memory: string;
   pods: string;
   createdAt: string;
-  /** Container Platform 모드 전용(D-27): created = CP에서 생성/삭제, registered = 등록으로 편입. */
-  type?: 'created' | 'registered';
+  /** Container Platform 모드 전용. 등록(registered) 편입은 CAPSIS-D-83으로 폐기돼 created만 남는다. */
+  type?: 'created';
   /** Container Platform 전용(D-29): 생성 시 선택한 기반. */
   foundation?: 'VM' | 'Bare metal';
   /** Container Platform 전용(D-30): 생성 후 사용자가 선택하는 용도. 미지정이면 undefined. */
-  usage?: 'General' | 'Metis' | 'Maxis';
+  usage?: 'General' | 'AI Workload';
+  /** 화면에 찍는 용도 이름(USAGE_DISPLAY). 표 셀의 title에도 이 값이 쓰인다. */
+  usageLabel?: string;
 }
 
 type ClusterUsage = NonNullable<Cluster['usage']>;
 
-const USAGE_THEME: Record<ClusterUsage, 'blue' | 'green' | 'yellow'> = {
+const USAGE_THEME: Record<ClusterUsage, 'blue' | 'yellow'> = {
   General: 'blue',
-  // managed-by 배지(containerManagedBy.tsx)와 같은 색: Maxis=green, Metis=yellow
-  Maxis: 'green',
-  Metis: 'yellow',
+  // CAPSIS-D-94: AI Inference · AI Training은 클러스터를 나눠 쓰지 않아 용도가 하나다. 옛 Metis 색을 잇는다.
+  'AI Workload': 'yellow',
 };
 
 /* ----------------------------------------
@@ -145,10 +147,10 @@ const mockClusters: Cluster[] = [
   },
 ];
 
-// Container Platform에서만 보이는 Metis/Maxis 전용 클러스터.
+// Container Platform에서만 보이는 AI Workload 전용 클러스터(CAPSIS-D-94).
 // D-30(소륜님 미팅): 전용 클러스터도 CP가 직접 프로비저닝하고, 용도는 생성 후 선택한다.
-// 등록(registered)으로 편입된 행도 존치 — 외부 클러스터 등록 절차(D-27)의 존치 여부는 미결(GAP).
-const registeredClusters: Cluster[] = [
+// 외부 클러스터 등록 절차는 CAPSIS-D-83으로 폐기됐다. 전용 클러스터도 Capsis가 만든 것(created)이다.
+const dedicatedClusters: Cluster[] = [
   {
     id: 'cluster-reg-001',
     name: 'metis-train-a100',
@@ -159,7 +161,7 @@ const registeredClusters: Cluster[] = [
     pods: '24/110',
     createdAt: 'May 2, 2026 10:12:44',
     foundation: 'Bare metal',
-    usage: 'Maxis',
+    usage: 'AI Workload',
   },
   {
     id: 'cluster-reg-002',
@@ -171,7 +173,7 @@ const registeredClusters: Cluster[] = [
     pods: '15/110',
     createdAt: 'Apr 18, 2026 16:40:02',
     foundation: 'Bare metal',
-    usage: 'Metis',
+    usage: 'AI Workload',
   },
   {
     id: 'cluster-reg-003',
@@ -182,14 +184,11 @@ const registeredClusters: Cluster[] = [
     memory: '256 GiB',
     pods: '9/110',
     createdAt: 'Jun 30, 2026 09:05:19',
-    type: 'registered',
+    type: 'created',
     foundation: 'VM',
-    usage: 'Maxis',
+    usage: 'AI Workload',
   },
 ];
-
-const AGENT_INSTALL_COMMAND =
-  'curl -sfL https://cp.thakicloud.io/agent/install.sh | sh -s -- --token <registration-token>';
 
 /* ----------------------------------------
    Component
@@ -204,7 +203,6 @@ export function ClusterManagementPage() {
   const [selectedClusters, setSelectedClusters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
-  const [registerOpen, setRegisterOpen] = useState(false);
   // 용도 지정(D-30): 생성 후 선택. 목업에서는 지정 결과를 로컬 상태로 반영한다.
   const [usageOverrides, setUsageOverrides] = useState<Record<string, ClusterUsage>>({});
   const [assignTarget, setAssignTarget] = useState<Cluster | null>(null);
@@ -215,9 +213,12 @@ export function ClusterManagementPage() {
     updateActiveTabLabel('Clusters');
   }, [updateActiveTabLabel]);
 
-  // Container Platform은 CP 프로비저닝 + 등록 편입이 한 목록; 다른 모드는 기존 그대로.
-  const allClusters = (isPlatform ? [...mockClusters, ...registeredClusters] : mockClusters).map(
-    (c) => (usageOverrides[c.id] ? { ...c, usage: usageOverrides[c.id] } : c)
+  // Container Platform은 전용 클러스터까지 한 목록; 다른 모드는 기존 그대로.
+  const allClusters = (isPlatform ? [...mockClusters, ...dedicatedClusters] : mockClusters).map(
+    (c) => {
+      const usage = usageOverrides[c.id] ?? c.usage;
+      return { ...c, usage, usageLabel: usage ? USAGE_DISPLAY[usage] : undefined };
+    }
   );
 
   // Pagination
@@ -272,31 +273,34 @@ export function ClusterManagementPage() {
     ...(isPlatform
       ? ([
           {
-            key: 'usage',
+            key: 'usageLabel',
             label: 'Type',
             width: fixedColumns.statusLabel,
             sortable: false,
-            // 표기는 용도 기준(D-28 유지): General = 범용, Metis/Maxis = 전용.
+            // 표기는 용도 기준(CAPSIS-D-94): General = 범용, AI Workload = 전용.
             // 용도는 생성 후 선택하므로(D-30) 지정 전에는 Unassigned.
-            render: (value: Cluster['usage']) => (
-              <Tooltip
-                content={
-                  value === undefined
-                    ? 'Usage not assigned yet — choose General, Metis, or Maxis after creation'
-                    : value === 'General'
-                      ? 'General-purpose cluster, managed in Capsis'
-                      : `Dedicated to ${value} workloads — required packages are installed by the in-cluster agent`
-                }
-              >
-                <Badge
-                  theme={value === undefined ? 'gray' : USAGE_THEME[value]}
-                  type="subtle"
-                  size="sm"
+            render: (_value: unknown, row: Cluster) => {
+              const value = row.usage;
+              return (
+                <Tooltip
+                  content={
+                    value === undefined
+                      ? 'Usage not assigned yet — choose General or AI Workload after creation'
+                      : value === 'General'
+                        ? 'General-purpose cluster, managed in Container platform'
+                        : `Dedicated to ${USAGE_DISPLAY[value]} workloads — required packages are installed by the in-cluster agent`
+                  }
                 >
-                  {value ?? 'Unassigned'}
-                </Badge>
-              </Tooltip>
-            ),
+                  <Badge
+                    theme={value === undefined ? 'gray' : USAGE_THEME[value]}
+                    type="subtle"
+                    size="sm"
+                  >
+                    {value ? USAGE_DISPLAY[value] : 'Unassigned'}
+                  </Badge>
+                </Tooltip>
+              );
+            },
           },
           {
             key: 'foundation',
@@ -383,20 +387,12 @@ export function ClusterManagementPage() {
                 window.dispatchEvent(new CustomEvent('open-cluster-appearance', { detail: row.id }))
               ),
           },
-          // 등록형은 삭제 대신 등록 해제(D-27) — 클러스터 자체는 CP 밖에서 만들고 지운다.
-          row.type === 'registered'
-            ? {
-                id: 'deregister',
-                label: 'Deregister',
-                status: 'danger' as const,
-                onClick: () => console.log('Deregister', row.name),
-              }
-            : {
-                id: 'delete',
-                label: 'Delete',
-                status: 'danger' as const,
-                onClick: () => console.log('Delete', row.name),
-              },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger' as const,
+            onClick: () => console.log('Delete', row.name),
+          },
         ];
 
         return (
@@ -486,11 +482,6 @@ export function ClusterManagementPage() {
           actions={
             !isMetis ? (
               <>
-                {isPlatform && (
-                  <Button variant="secondary" size="md" onClick={() => setRegisterOpen(true)}>
-                    Register cluster
-                  </Button>
-                )}
                 <ContextMenu items={createMenuItems} trigger="click" align="right">
                   <Button
                     variant="primary"
@@ -608,45 +599,6 @@ export function ClusterManagementPage() {
         />
       </VStack>
 
-      {/* Register cluster — 등록형 편입 진입점 (Container Platform 전용, D-27) */}
-      {isPlatform && (
-        <Modal
-          isOpen={registerOpen}
-          onClose={() => setRegisterOpen(false)}
-          title="Register cluster"
-          description="Bring an existing cluster under Capsis management. Registered clusters join the list alongside clusters provisioned here."
-        >
-          <VStack gap={3} className="w-[520px] max-w-full">
-            <VStack gap={1}>
-              <span className="text-label-md text-[var(--color-text-default)]">Manual</span>
-              <span className="text-body-sm text-[var(--color-text-muted)]">
-                Run the agent install command on the target cluster. The agent reports facts
-                (version, nodes, capacity); you only declare intent metadata.
-              </span>
-              <code className="text-body-sm font-mono bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] rounded-md px-3 py-2 break-all">
-                {AGENT_INSTALL_COMMAND}
-              </code>
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-label-md text-[var(--color-text-default)]">Automated</span>
-              <span className="text-body-sm text-[var(--color-text-muted)]">
-                Provisioning pipelines can register clusters automatically with the same agent, no
-                manual step required.
-              </span>
-            </VStack>
-            <InlineMessage variant="info">
-              The Metis/Maxis agent stack deploys into tkai-* namespaces and appears in workload
-              lists like any other resource.
-            </InlineMessage>
-            <div className="flex justify-end gap-2">
-              <Button variant="secondary" size="sm" onClick={() => setRegisterOpen(false)}>
-                Close
-              </Button>
-            </div>
-          </VStack>
-        </Modal>
-      )}
-
       {/* Assign usage — 용도는 생성 후 선택(D-30, Container Platform 전용) */}
       {isPlatform && (
         <Modal
@@ -662,15 +614,14 @@ export function ClusterManagementPage() {
             >
               <Radio value="General" label="General — use it freely for any workload" />
               <Radio
-                value="Metis"
-                label="Metis — dedicated to Metis (inference serving) workloads"
+                value="AI Workload"
+                label="AI Workload — dedicated to AI inference and training workloads"
               />
-              <Radio value="Maxis" label="Maxis — dedicated to Maxis (training) workloads" />
             </RadioGroup>
             <InlineMessage variant="info">
               {assignChoice === 'General'
                 ? 'No additional packages are required for a general-purpose cluster.'
-                : `The in-cluster agent pulls and installs the packages ${assignChoice} needs, and the deployed components are registered. The agent stack runs in tkai-* namespaces.`}
+                : `The in-cluster agent pulls and installs the packages ${USAGE_DISPLAY[assignChoice]} needs, and the deployed components are registered. The agent stack runs in tkai-* namespaces.`}
             </InlineMessage>
             <div className="flex justify-end gap-2">
               <Button variant="secondary" size="sm" onClick={() => setAssignTarget(null)}>

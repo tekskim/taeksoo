@@ -125,13 +125,18 @@ export function ResourceTypesPage() {
       resizable: false,
       render: (_, row) => {
         // [CCONT-08] — no create, no form edit. View and YAML only at this level.
+        // 인스턴스는 종류 상세의 탭이라 진입점이 「상세 보기」 하나다.
         const items: ContextMenuItem[] = [
           {
-            id: 'view-instances',
-            label: 'View instances',
+            id: 'view-details',
+            label: 'View details',
             onClick: () => navigate(`/container/resource-types/${row.id}`),
           },
-          { id: 'view-yaml', label: 'View YAML', onClick: () => undefined },
+          {
+            id: 'view-yaml',
+            label: 'View YAML',
+            onClick: () => navigate(`/container/resource-types/${row.id}?tab=yaml`),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>

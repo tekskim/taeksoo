@@ -77,6 +77,10 @@ const sections: CreatePageSection[] = [
     links: [
       { label: 'Create Cluster', path: '/container/cluster-management/create' },
       {
+        label: 'Create Cluster — 가안 (등록된 노드에서 고르기)',
+        path: '/container/cluster-management/create-draft',
+      },
+      {
         label: 'Create Namespace',
         path: '/container/namespaces/create',
         yaml: '/container/namespaces/create-yaml',

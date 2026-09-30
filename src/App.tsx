@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { TabProvider } from '@/contexts/TabContext';
 import { ContainerModeFromUrlProvider } from '@/contexts/ContainerModeContext';
@@ -304,8 +304,9 @@ import { ClusterManagementPage } from '@/pages/ClusterManagementPage';
 import { ClusterDetailPage } from '@/pages/ClusterDetailPage';
 import { ImportYamlPage } from '@/pages/ImportYamlPage';
 import { ResourceTypesPage } from '@/pages/ResourceTypesPage';
-import { ResourceTypeInstancesPage } from '@/pages/ResourceTypeInstancesPage';
+import { ResourceTypeDetailPage } from '@/pages/ResourceTypeDetailPage';
 import { CreateClusterPage } from '@/pages/CreateClusterPage';
+import { CreateClusterDraftPage } from '@/pages/CreateClusterDraftPage';
 import CatalogPage from '@/pages/CatalogPage';
 import InstalledAppsPage from '@/pages/InstalledAppsPage';
 import InstalledAppDetailPage from '@/pages/InstalledAppDetailPage';
@@ -1135,10 +1136,14 @@ function AppRoutes() {
         <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
         <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
         <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
+        <Route
+          path="/container/cluster-management/create-draft"
+          element={<CreateClusterDraftPage />}
+        />
         <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
         <Route path="/container/import-yaml" element={<ImportYamlPage />} />
         <Route path="/container/resource-types" element={<ResourceTypesPage />} />
-        <Route path="/container/resource-types/:typeId" element={<ResourceTypeInstancesPage />} />
+        <Route path="/container/resource-types/:typeId" element={<ResourceTypeDetailPage />} />
         <Route path="/container/*" element={<NotFoundPage />} />
 
         {/* Log Routes */}
@@ -1496,10 +1501,15 @@ function AppWithTabs() {
   );
 }
 
+// 정적 파일로 내보낼 때(VITE_ROUTER=hash) 서버 없이도 주소가 살아 있도록 해시 라우터를 쓴다.
+// thaki-core-plan 05-docs에 두는 Capsis 목업 빌드가 이 모드다.
+const useHashRouter = import.meta.env.VITE_ROUTER === 'hash';
+const Router = useHashRouter ? HashRouter : BrowserRouter;
+
 function App() {
   return (
     <DarkModeProvider>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <Router basename={useHashRouter ? undefined : import.meta.env.BASE_URL}>
         <ProjectProvider>
           <SidebarProvider>
             <ToastProvider>
@@ -1511,7 +1521,7 @@ function App() {
             </ToastProvider>
           </SidebarProvider>
         </ProjectProvider>
-      </BrowserRouter>
+      </Router>
     </DarkModeProvider>
   );
 }

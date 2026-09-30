@@ -1,7 +1,16 @@
-<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Container Platform">
-  <rect width="128" height="128" rx="28" fill="#1E5FD1"/>
-  <!-- Stacked isometric layers: one read-only plane over many container sources -->
-  <path d="M64 30 L100 48 L64 66 L28 48 Z" fill="#FFFFFF"/>
-  <path d="M28 62 L64 80 L100 62 L100 68 L64 86 L28 68 Z" fill="#FFFFFF" fill-opacity="0.7"/>
-  <path d="M28 78 L64 96 L100 78 L100 84 L64 102 L28 84 Z" fill="#FFFFFF" fill-opacity="0.45"/>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Capsis">
+  <!--
+    Capsis 앱 아이콘. 원본은 tds_ssot 브랜드 페이지(public/lab/capsis-brand.html · src/pages/brandMarkData.ts).
+    규격: 둥근 타일 + Pop Cyan 라디얼 그라디언트(#6FC8F7 → #2AA8F2), 마크는 Deep Navy(#05253A), 마크 높이는 타일의 약 58%.
+  -->
+  <defs>
+    <radialGradient id="capsis-tile" gradientUnits="userSpaceOnUse" cx="41" cy="33" r="154">
+      <stop offset="0" stop-color="#6FC8F7"/>
+      <stop offset="1" stop-color="#2AA8F2"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#capsis-tile)"/>
+  <svg x="32" y="29.5" width="64" height="69" viewBox="0 0 190 205">
+    <path fill="#05253A" d="M85.2842 106.723V205L52.334 185.969V87.6915L85.2842 106.723ZM137.616 77.0255V175.303L104.666 194.334V96.0567L19.2754 46.6124L52.2256 27.5812L137.616 77.0255ZM32.9502 76.6661V174.943L7.99805 160.531C3.04899 157.673 0.000104625 152.392 0 146.677V57.6349L32.9502 76.6661ZM96.5488 2.14464C101.506 -0.718424 107.615 -0.714583 112.569 2.15441L181.971 42.3478C186.91 45.2086 189.952 50.4851 189.952 56.1935V136.012C189.952 141.727 186.903 147.009 181.954 149.867L157.002 164.279V66.0021L71.6113 16.548L96.5488 2.14464Z"/>
+  </svg>
 </svg>

@@ -121,6 +121,19 @@ const dedicatedPods: PodRow[] = [
 ];
 
 const podsData: PodRow[] = [
+  // Hub Pod Template(PostgreSQL)으로 만든 Pod — Managed by에 Hub가 보이고 Edit config가 비활성이다(CAPSIS-D-92 · D-93)
+  {
+    id: 'hub-postgresql',
+    status: 'Running',
+    name: 'orders-db',
+    namespace: 'default',
+    managedBy: 'Hub',
+    image: 'harbor.example.com/thaki-apps/postgres@sha256:4f2c9e1b7a3d',
+    ready: '1/1',
+    restarts: 0,
+    ip: '10.76.0.41',
+    createdAt: 'Nov 10, 2026 09:40:12',
+  },
   {
     id: '1',
     status: 'Running',
@@ -345,6 +358,13 @@ export function PodsPage() {
       id: 'view-logs',
       label: 'View logs',
       onClick: () => handleViewLogs(row.name),
+    },
+    {
+      // 제품 행 메뉴와 같은 이름. Managed by Hub Pod는 편집할 수 없다(CAPSIS-D-93)
+      id: 'edit-config',
+      label: 'Edit config',
+      disabled: row.managedBy === 'Hub',
+      onClick: () => console.log('Edit config:', row.id),
     },
     {
       id: 'edit-yaml',

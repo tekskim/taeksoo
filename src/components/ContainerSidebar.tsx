@@ -10,7 +10,7 @@ import {
   HStack,
   FormField,
   Input,
-  Badge,
+  Tooltip,
 } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
@@ -53,9 +53,8 @@ import {
   setActiveCpClusterId,
 } from '@/pages/containerActiveCluster';
 import {
-  useDashboardLayout,
-  dashboardMenuGroup,
-  dashboardMenuLabel,
+  DASHBOARD_PATH,
+  DASHBOARD_MENU_LABEL,
   clusterEntryPath,
 } from '@/pages/containerDashboardLayout';
 
@@ -221,7 +220,6 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
   const { isDark } = useDarkMode();
   const location = useLocation();
   const navigate = useNavigate();
-  const dashboardLayout = useDashboardLayout();
   const isDesktopWindow = useIsDesktopWindow();
   const desktopControls = useDesktopWindowControls();
   const { mode, isMetis, isPlatform } = useContainerMode();
@@ -369,10 +367,12 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   active={cluster.id === getActiveCpCluster().id && activeIconSection === 'cluster'}
                   onClick={() => {
                     setActiveCpClusterId(cluster.id);
-                    navigate(clusterEntryPath(dashboardLayout, cluster.id));
+                    navigate(clusterEntryPath());
                   }}
                   tooltip={
-                    cluster.dedicated ? `${cluster.name} (Metis/Maxis dedicated)` : cluster.name
+                    cluster.dedicated
+                      ? `${cluster.name} (AI Workload dedicated)`
+                      : cluster.name
                   }
                 />
               ))
@@ -382,7 +382,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   icon={<IconAffiliate size={16} stroke={1.5} />}
                   iconText={cluster.iconText || undefined}
                   active={idx === 0 && activeIconSection === 'cluster'}
-                  onClick={() => navigate(clusterEntryPath(dashboardLayout, cluster.id))}
+                  onClick={() => navigate(clusterEntryPath())}
                   tooltip={cluster.name}
                 />
               ))}
@@ -422,22 +422,32 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             </button>
           </div>
 
-          {/* Active cluster identity (Container Platform mode, D-27) */}
+          {/* Active cluster identity (Container Platform mode, D-27).
+              용도(General·Metis·Maxis)는 여기서 보여주지 않는다 — 목록·상세가 보여준다.
+              이름은 비활성 입력칸에 담아 아래 메뉴가 어느 클러스터 것인지 묶어 보이게 한다. */}
           {isPlatform && activeIconSection === 'cluster' && (
-            <div className="px-3 pb-1 flex items-center gap-1.5 min-w-0">
-              <span
-                className="text-body-xs text-[var(--color-text-subtle)] truncate"
-                title={getActiveCpCluster().name}
+            <div className="px-3 pb-2">
+              {/* 표시 전용이라 포커스 링을 두지 않는다. 전역 :focus-visible 규칙이 클릭 시
+                  outline을 그리고, transition-all 때문에 outline 색이 진한 색에서 투명으로
+                  넘어가며 잠깐 보인다. 평소·포커스 모두 투명 outline으로 고정해 변화를 없앤다.
+                  탭 순서에서도 뺀다. */}
+              {/* 긴 이름은 잘리므로 전체 이름은 디자인 시스템 Tooltip으로 보여준다.
+                  네이티브 title 툴팁은 이 환경에서 뜨지 않았다. Tooltip 래퍼가 inline-flex라
+                  style로 폭을 채운다. */}
+              <Tooltip
+                content={getActiveCpCluster().name}
+                position="bottom"
+                style={{ width: '100%' }}
               >
-                {getActiveCpCluster().name}
-              </span>
-              <Badge
-                theme={getActiveCpCluster().dedicated ? 'gray' : 'blue'}
-                type="subtle"
-                size="sm"
-              >
-                {getActiveCpCluster().dedicated ? 'Metis/Maxis' : 'General'}
-              </Badge>
+                <Input
+                  size="sm"
+                  fullWidth
+                  readOnly
+                  tabIndex={-1}
+                  className="outline-none focus:outline-none focus-visible:outline-none"
+                  value={getActiveCpCluster().name}
+                />
+              </Tooltip>
             </div>
           )}
 
@@ -475,15 +485,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 <>
                   {/* Cluster Section */}
                   <MenuSection title="Cluster" defaultOpen={true}>
-                    {/* 대시보드 자리 — -D-53 안건 A. B안일 때만 여기 */}
-                    {dashboardMenuGroup(dashboardLayout) === 'cluster' && (
-                      <MenuItem
-                        icon={<IconLayoutDashboard size={16} stroke={1.5} />}
-                        label={dashboardMenuLabel(dashboardLayout)}
-                        href="/container/dashboard"
-                        active={isActive('/container/dashboard')}
-                      />
-                    )}
+                    {/* 대시보드는 Cluster 묶음 맨 위에 Dashboard로 둔다 (CAPSIS-D-70) */}
+                    <MenuItem
+                      icon={<IconLayoutDashboard size={16} stroke={1.5} />}
+                      label={DASHBOARD_MENU_LABEL}
+                      href={DASHBOARD_PATH}
+                      active={isActive(DASHBOARD_PATH)}
+                    />
                     <MenuItem
                       icon={<IconFolders size={16} stroke={1.5} />}
                       label="Namespaces"
@@ -506,15 +514,6 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
                   {/* Workloads Section */}
                   <MenuSection title="Workloads" defaultOpen={true}>
-                    {/* 대시보드 자리 — -D-53 안건 A. A안(제품 현행)일 때만 여기 */}
-                    {dashboardMenuGroup(dashboardLayout) === 'workloads' && (
-                      <MenuItem
-                        icon={<IconLayoutDashboard size={16} stroke={1.5} />}
-                        label={dashboardMenuLabel(dashboardLayout)}
-                        href="/container/dashboard"
-                        active={isActive('/container/dashboard')}
-                      />
-                    )}
                     <MenuItem
                       icon={<IconRocket size={16} stroke={1.5} />}
                       label="Deployments"
@@ -553,11 +552,13 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                     />
                   </MenuSection>
 
-                  {/* App Catalog Section — Metis 모드에서 미노출.
-                      (Container Platform)에서는 카탈로그만 빠지고 설치된 것은 남는다:
-                      -D-25("App Catalog는 Hub로")를 CAPSIS-D-38이 카탈로그 원천에 한정했고,
-                      설치 위저드·GitOps 배포·Installed Apps는 Capsis 소관으로 남겼다(FR-10). */}
-                  {!isMetis && (
+                  {/* App Catalog Section — Metis 모드와 Capsis 모드에서 미노출.
+                      Capsis에서는 묶음째 뺀다: Hub Apps가 파드 하나로 뜨는 앱만 올리게 되면서
+                      (HUB-D-206) 설치 위저드·Installed Apps·Installed Operators의 자리가 없어진다.
+                      Hub에서 넘어온 앱은 Pod 만들기 화면으로 가고, 설치된 것은 Pods 목록에서 본다.
+                      결정은 HUB-D-211(D-206 ③ 개정)·CAPSIS-D-82(D-38 개정)로 로그에 올렸다(2026-09-15).
+                      Aegis 모드는 그대로다. */}
+                  {!isMetis && !isPlatform && (
                     <MenuSection title="App Catalog" defaultOpen={true}>
                       {!isPlatform && (
                         <MenuItem

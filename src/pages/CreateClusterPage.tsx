@@ -668,10 +668,10 @@ export function CreateClusterPage() {
                   <FormField required>
                     <FormField.Label>Usage</FormField.Label>
                     <FormField.Description>
-                      Choose what this cluster is for. Dedicated clusters (Metis, Maxis) have the
-                      in-cluster agent install the packages that product needs, and their resource
-                      create entry points stay hidden — App Catalog apps can still be installed.
-                      {availableUsages.length < 3 && ' Options you cannot use are not listed.'}
+                      Choose what this cluster is for. AI Workload clusters have the in-cluster
+                      agent install the packages AI inference and training need, and their resource
+                      create entry points stay hidden.
+                      {availableUsages.length < 2 && ' Options you cannot use are not listed.'}
                     </FormField.Description>
                     <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                       <RadioGroup

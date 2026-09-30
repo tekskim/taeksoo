@@ -49,3 +49,6 @@ icon-drop/
 cap_*.cjs
 public/delete_modal_cap.png
 public/delete_modal_full_cap.png
+
+# 도구가 만드는 로컬 파일 (머신 ID·사용량 기록)
+.thaki-secretary/

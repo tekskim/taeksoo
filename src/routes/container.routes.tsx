@@ -116,6 +116,7 @@ const EditPodDisruptionBudgetYamlPage = lazy(
 const PodDisruptionBudgetDetailPage = lazy(() => import('@/pages/PodDisruptionBudgetDetailPage'));
 const ClusterManagementPage = lazy(() => import('@/pages/ClusterManagementPage'));
 const CreateClusterPage = lazy(() => import('@/pages/CreateClusterPage'));
+const CreateClusterDraftPage = lazy(() => import('@/pages/CreateClusterDraftPage'));
 const ClusterDetailPage = lazy(() => import('@/pages/ClusterDetailPage'));
 const CatalogPage = lazy(() => import('@/pages/CatalogPage'));
 const InstalledAppsPage = lazy(() => import('@/pages/InstalledAppsPage'));
@@ -128,7 +129,7 @@ const InstalledOperatorDetailPage = lazy(() => import('@/pages/InstalledOperator
 // 추가 검토 기능 중 채택된 것 — Import YAML(P1) · 커스텀 리소스 조회(P1)
 const ImportYamlPage = lazy(() => import('@/pages/ImportYamlPage'));
 const ResourceTypesPage = lazy(() => import('@/pages/ResourceTypesPage'));
-const ResourceTypeInstancesPage = lazy(() => import('@/pages/ResourceTypeInstancesPage'));
+const ResourceTypeDetailPage = lazy(() => import('@/pages/ResourceTypeDetailPage'));
 
 export const containerRoutes = (
   <>
@@ -344,10 +345,11 @@ export const containerRoutes = (
     <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
     <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
+    <Route path="/container/cluster-management/create-draft" element={<CreateClusterDraftPage />} />
     <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
     <Route path="/container/import-yaml" element={<ImportYamlPage />} />
     <Route path="/container/resource-types" element={<ResourceTypesPage />} />
-    <Route path="/container/resource-types/:typeId" element={<ResourceTypeInstancesPage />} />
+    <Route path="/container/resource-types/:typeId" element={<ResourceTypeDetailPage />} />
     <Route path="/container/*" element={<Navigate to="/container" replace />} />
   </>
 );

@@ -154,9 +154,11 @@ const DESKTOP_ICONS_META = [
   { id: 'ai-platform', icon: imgAi, label: 'AI Platform' },
   { id: 'compute', icon: imgCompute, label: 'Compute' },
   { id: 'agent', icon: imgAgent, label: 'Agent Studio' },
-  { id: 'container-platform', icon: imgContainerPlatform, label: 'Capsis' },
-  { id: 'aegis-container', icon: imgContainer, label: 'Aegis Container' },
-  { id: 'metis-container', icon: imgMetisContainer, label: 'Metis Container' },
+  /* 통합 후의 바탕화면이다 — Aegis Container와 Metis Container 자리에
+     Container platform 하나만 둔다. 두 앱은 앱 정의(APP_META)에 그대로 남겨 두었으니
+     주소에 `?mode=aegis-container`·`?mode=metis-container`를 붙이면
+     통합 전 화면을 그대로 열어 비교할 수 있다 (CAPSIS-D-26 ②). */
+  { id: 'container-platform', icon: imgContainerPlatform, label: 'Container platform' },
   { id: 'app-catalog', icon: imgAppCatalog, label: 'App Catalog' },
   { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
   { id: 'storage-member', icon: imgStorage, label: 'Storage - Member' },
@@ -2272,7 +2274,7 @@ export function DesktopPage() {
     },
     container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
     'container-platform': {
-      name: 'Capsis',
+      name: 'Container platform',
       icon: imgContainerPlatform,
       initialPath: '/container',
     },

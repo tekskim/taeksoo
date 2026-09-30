@@ -9,11 +9,13 @@ import { Badge, fixedColumns, type TableColumn } from '@/design-system';
    the managing product.
    ---------------------------------------- */
 
-export type WorkloadManagedBy = 'Maxis' | 'Metis';
+// Hub — Hub Pod Template으로 만든 Pod. Pod의 managed by hub 라벨에서 받아 온다(CAPSIS-D-92)
+export type WorkloadManagedBy = 'Maxis' | 'Metis' | 'Hub';
 
-const MANAGED_BY_THEME: Record<WorkloadManagedBy, 'green' | 'yellow'> = {
+const MANAGED_BY_THEME: Record<WorkloadManagedBy, 'green' | 'yellow' | 'blue'> = {
   Maxis: 'green',
   Metis: 'yellow',
+  Hub: 'blue',
 };
 
 export function managedByColumn<T extends { managedBy?: WorkloadManagedBy }>(): TableColumn<T> {
