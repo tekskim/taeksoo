@@ -43,10 +43,11 @@ const appCards: AppCard[] = [
   },
   /* Container 계열 3종은 같은 앱을 모드로 가른다(ContainerModeContext).
      `?mode=`를 넘기지 않으면 전부 default로 떨어져 같은 화면이 되므로 반드시 붙인다.
-     구 'Container'(모드 없음) 항목은 Aegis Container와 구분되지 않아 제거했다. */
+     구 'Container'(모드 없음) 항목은 Aegis Container와 구분되지 않아 제거했다.
+     표시 이름은 CAPSIS-D-98로 'Container'다. */
   {
     id: 'container-platform',
-    title: 'Container platform',
+    title: 'Container',
     iconSrc: ContainerPlatformIcon,
     path: '/container?mode=container-platform',
   },

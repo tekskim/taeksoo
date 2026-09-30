@@ -287,7 +287,7 @@ export function ClusterManagementPage() {
                     value === undefined
                       ? 'Usage not assigned yet — choose General or AI Workload after creation'
                       : value === 'General'
-                        ? 'General-purpose cluster, managed in Container platform'
+                        ? 'General-purpose cluster, managed in Container'
                         : `Dedicated to ${USAGE_DISPLAY[value]} workloads — required packages are installed by the in-cluster agent`
                   }
                 >
