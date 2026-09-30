@@ -2,7 +2,7 @@
    Active cluster (Container Platform mode only, CorePlan D-27/D-28/D-30)
 
    The merged app keeps the existing icon-sidebar cluster switching. In CP mode
-   the icons represent one General cluster and one Metis/Maxis dedicated
+   the icons represent one General cluster and one AI Workload dedicated
    cluster. Since D-30, dedicated clusters are provisioned by CP itself and
    their usage is assigned after creation. Workload pages read the active
    cluster to decide which mock data to show and whether creation is
@@ -17,7 +17,7 @@
 export interface CpCluster {
   id: string;
   name: string;
-  /** true = usage assigned to Metis/Maxis (dedicated, D-30) */
+  /** true = usage assigned to AI Workload (dedicated, CAPSIS-D-94) */
   dedicated: boolean;
   iconText?: string;
 }

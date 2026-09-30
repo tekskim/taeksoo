@@ -25,13 +25,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  IconX,
-  IconCirclePlus,
-  IconInfoCircle,
-  IconHelpCircle,
-  IconLock,
-} from '@tabler/icons-react';
+import { IconX, IconCirclePlus, IconInfoCircle, IconHelpCircle } from '@tabler/icons-react';
 import {
   Button,
   Breadcrumb,
@@ -54,12 +48,10 @@ import {
   Tooltip,
   PageShell,
   WizardSummary,
-  InlineMessage,
   Badge,
   Disclosure,
   DisclosureTrigger,
   DisclosurePanel,
-  fixedColumns,
   columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
@@ -75,11 +67,9 @@ import { useAvailableUsages, type ClusterUsage } from '@/pages/containerEntitlem
 type NodeSource = 'vm' | 'baremetal';
 
 /** 워커에 붙일 가속기. 에이전트가 까는 것이 이 값에 따라 갈린다. */
-type Accelerator = 'none' | 'gpu' | 'npu';
-
 /**
- * 노드 하나를 고를 수 있는지.
- * `available`만 고를 수 있다. 에이전트가 없거나 닿지 않으면 쿠버네티스를 깔 방법이 없다.
+ * 노드의 상태. 화면에는 보여 주지 않고, `available`인 노드만 목록에 올린다.
+ * 에이전트가 없거나 닿지 않거나 다른 클러스터가 쓰면 쿠버네티스를 깔 수 없다.
  */
 type NodeStatus = 'available' | 'in-use' | 'agent-missing' | 'unreachable';
 
@@ -124,11 +114,6 @@ interface Annotation {
    ---------------------------------------- */
 
 interface UsagePreset {
-  lockedKubernetesVersion?: string;
-  lockedContainerNetwork?: string;
-  lockReason?: string;
-  /** 가속기를 반드시 골라야 하는가 */
-  acceleratorRequired: boolean;
   /** Labels & annotations를 접어 둘 것인가 */
   collapseLabels: boolean;
   /** 클러스터 안 에이전트가 깔 것 */
@@ -137,24 +122,20 @@ interface UsagePreset {
 
 const USAGE_PRESETS: Record<ClusterUsage, UsagePreset> = {
   General: {
-    acceleratorRequired: false,
     collapseLabels: false,
     agentPackages: [],
   },
+  // AI Inference와 AI Training은 같은 클러스터를 함께 쓴다(CAPSIS-D-94). 둘이 쓰는 것을 모두 깐다.
   'AI Workload': {
-    lockedKubernetesVersion: 'v1.33',
-    lockedContainerNetwork: 'cilium',
-    lockReason: 'Verified for AI workloads',
-    acceleratorRequired: true,
-    collapseLabels: true,
+    collapseLabels: false,
     agentPackages: ['AI workload agent', 'gpu-operator or vllm-rbln', 'Kueue'],
   },
 };
 
 const USAGE_OPTION_LABELS: Record<ClusterUsage, { title: string; detail: string }> = {
   General: {
-    title: 'General purpose',
-    detail: 'General workloads — decide what to run after the cluster exists',
+    title: 'General',
+    detail: 'General workloads',
   },
   'AI Workload': { title: 'AI Workload', detail: 'AI inference and training only' },
 };
@@ -365,20 +346,6 @@ const mockRegisteredNodes: RegisteredNode[] = [
   },
 ];
 
-const NODE_STATUS_LABEL: Record<NodeStatus, string> = {
-  available: 'Available',
-  'in-use': 'In use',
-  'agent-missing': 'No agent',
-  unreachable: 'Unreachable',
-};
-
-const NODE_STATUS_THEME: Record<NodeStatus, 'green' | 'gray' | 'yellow' | 'red'> = {
-  available: 'green',
-  'in-use': 'gray',
-  'agent-missing': 'yellow',
-  unreachable: 'red',
-};
-
 const NODE_SOURCE_LABEL: Record<NodeSource, string> = {
   vm: 'Virtual machine',
   baremetal: 'Bare metal',
@@ -395,11 +362,18 @@ const NODE_SOURCE_ORIGIN: Record<NodeSource, string> = {
    ---------------------------------------- */
 
 /** 이 값이 왜 잠겼는지 알려 주는 배지. */
-function LockedBadge({ reason }: { reason: string }) {
+/** 칸 제목 옆 info 아이콘. 설명은 제목 아래에 늘어놓지 않고 이 툴팁에 둔다. */
+function InfoLabel({ label, required, tip }: { label: string; required?: boolean; tip: string }) {
   return (
-    <Badge theme="gray" size="sm" leftIcon={<IconLock size={12} stroke={1.5} />}>
-      {reason}
-    </Badge>
+    <span className="inline-flex items-center gap-1 align-middle">
+      <span>
+        {label}
+        {required && <span className="ml-0.5 text-[var(--color-state-danger)]">*</span>}
+      </span>
+      <Tooltip content={tip} position="right">
+        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+      </Tooltip>
+    </span>
   );
 }
 
@@ -429,11 +403,13 @@ export function CreateClusterDraftPage() {
   /* 고른 노드 */
   const [cpNodeIds, setCpNodeIds] = useState<string[]>([]);
   const [workerNodeIds, setWorkerNodeIds] = useState<string[]>([]);
+  // 노드 수를 먼저 정하고, 표에서는 그 수만큼만 고른다. 허용값은 현행과 같은 1·3·5·7([ACONT-42]).
+  const [cpNodeCount, setCpNodeCount] = useState(3);
+  const [workerNodeCount, setWorkerNodeCount] = useState(1);
   const [cpSearch, setCpSearch] = useState('');
   const [workerSearch, setWorkerSearch] = useState('');
 
   /* 설치 옵션 */
-  const [accelerator, setAccelerator] = useState<Accelerator>('none');
   const [etcdDiskType, setEtcdDiskType] = useState<'external' | 'local'>('external');
   const [etcdVolumeType, setEtcdVolumeType] = useState('ceph');
   const [etcdVolumeSize, setEtcdVolumeSize] = useState(10);
@@ -450,18 +426,6 @@ export function CreateClusterDraftPage() {
 
   const handleUsageChange = useCallback((next: ClusterUsage) => {
     setUsage(next);
-    const nextPreset = USAGE_PRESETS[next];
-    if (nextPreset.lockedKubernetesVersion) {
-      setKubernetesVersion(nextPreset.lockedKubernetesVersion);
-    }
-    if (nextPreset.lockedContainerNetwork) {
-      setContainerNetwork(nextPreset.lockedContainerNetwork);
-    }
-    if (!nextPreset.acceleratorRequired) {
-      setAccelerator('none');
-    }
-    // 가속기가 바뀌면 워커 후보가 달라진다. 고른 것을 비운다.
-    setWorkerNodeIds([]);
   }, []);
 
   /** 노드를 가져오는 곳이 바뀌면 고른 것을 비운다. 다른 목록에서 고른 것이기 때문이다. */
@@ -480,33 +444,31 @@ export function CreateClusterDraftPage() {
     [nodeSource]
   );
 
-  /** 컨트롤 플레인 후보. 가속기는 워커 쪽 문제라 여기서는 거르지 않는다. */
-  const cpCandidates = useMemo(
-    () => sourceNodes.filter((n) => matchesSearch(n, cpSearch)),
-    [sourceNodes, cpSearch]
+  /** 고를 수 있는 노드만 목록에 올린다 — 에이전트가 등록돼 있고, 닿고, 다른 클러스터가 쓰지 않는 것. */
+  const availableNodes = useMemo(
+    () => sourceNodes.filter((n) => n.status === 'available'),
+    [sourceNodes]
   );
 
-  /** 워커 후보. 가속기를 골랐으면 그것이 달린 노드만 남긴다. */
-  const workerCandidates = useMemo(() => {
-    const byAccelerator = sourceNodes.filter((n) => {
-      if (accelerator === 'gpu') return n.accelerator.includes('NVIDIA');
-      if (accelerator === 'npu') return n.accelerator.includes('Rebellions');
-      return true;
-    });
-    return byAccelerator.filter((n) => matchesSearch(n, workerSearch));
-  }, [sourceNodes, accelerator, workerSearch]);
+  /** 컨트롤 플레인 후보. 가속기는 워커 쪽 문제라 여기서는 거르지 않는다. 워커로 고른 노드는 뺀다. */
+  const cpCandidates = useMemo(
+    () => availableNodes.filter((n) => !workerNodeIds.includes(n.id) && matchesSearch(n, cpSearch)),
+    [availableNodes, workerNodeIds, cpSearch]
+  );
+
+  /** 워커 후보. 컨트롤 플레인으로 고른 노드는 뺀다.
+      가속기는 따로 고르지 않는다 — 고른 노드에 달린 가속기(표의 Accelerator 칼럼)로 에이전트가 설치할 것을 정한다. */
+  const workerCandidates = useMemo(
+    () => availableNodes.filter((n) => !cpNodeIds.includes(n.id) && matchesSearch(n, workerSearch)),
+    [availableNodes, cpNodeIds, workerSearch]
+  );
 
   const cpNodeTotal = cpNodeIds.length;
   const workerNodeTotal = workerNodeIds.length;
-  const cpCountIsEven = cpNodeTotal > 0 && cpNodeTotal % 2 === 0;
+  const cpComplete = cpNodeTotal === cpNodeCount;
+  const workerComplete = workerNodeTotal === workerNodeCount;
 
   /** 고른 노드가 여러 플랫폼에 걸쳐 있는가. OpenStack 의존성이 미결이라 알려만 준다. */
-  const mixedPlatforms = useMemo(() => {
-    const picked = [...cpNodeIds, ...workerNodeIds]
-      .map((id) => mockRegisteredNodes.find((n) => n.id === id)?.platform)
-      .filter(Boolean);
-    return new Set(picked).size > 1;
-  }, [cpNodeIds, workerNodeIds]);
 
   /* ----------------------------------------
      Labels & annotations 편집
@@ -538,29 +500,32 @@ export function CreateClusterDraftPage() {
 
   const nodeColumns: TableColumn<RegisteredNode>[] = [
     { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.hostname },
-    { key: 'platform', label: 'Platform', flex: 1, minWidth: columnMinWidths.vendor },
     { key: 'spec', label: 'Spec', flex: 1, minWidth: columnMinWidths.description },
     { key: 'accelerator', label: 'Accelerator', flex: 1, minWidth: columnMinWidths.deviceName },
     { key: 'ip', label: 'IP', flex: 1, minWidth: columnMinWidths.ip },
-    {
-      key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'center',
-      resizable: false,
-      render: (_v, row) => (
-        <Badge theme={NODE_STATUS_THEME[row.status]} size="sm">
-          {NODE_STATUS_LABEL[row.status]}
-        </Badge>
-      ),
-    },
   ];
 
-  /** 고를 수 있는 노드인가. 에이전트가 없거나 닿지 않으면 쿠버네티스를 깔 방법이 없다. */
+  /** 정한 노드 수를 채우면 더 고를 수 없다. 이미 고른 것은 풀 수 있다. */
   const isNodeSelectableFor = (role: 'cp' | 'worker') => (row: RegisteredNode) => {
-    if (row.status !== 'available') return false;
-    const takenByOther = role === 'cp' ? workerNodeIds : cpNodeIds;
-    return !takenByOther.includes(row.id);
+    const selected = role === 'cp' ? cpNodeIds : workerNodeIds;
+    const limit = role === 'cp' ? cpNodeCount : workerNodeCount;
+    return selected.includes(row.id) || selected.length < limit;
+  };
+
+  /** 노드 수를 줄이면 넘치는 선택은 뒤에서부터 푼다. 1·3·5·7만 허용한다. */
+  const toOddCount = (v: number) => {
+    const clamped = Math.min(7, Math.max(1, v));
+    return clamped % 2 === 0 ? clamped - 1 : clamped;
+  };
+  const changeNodeCount = (role: 'cp' | 'worker', v: number) => {
+    const next = toOddCount(v);
+    if (role === 'cp') {
+      setCpNodeCount(next);
+      setCpNodeIds((ids) => ids.slice(0, next));
+    } else {
+      setWorkerNodeCount(next);
+      setWorkerNodeIds((ids) => ids.slice(0, next));
+    }
   };
 
   /* ----------------------------------------
@@ -576,7 +541,6 @@ export function CreateClusterDraftPage() {
       nodeSource,
       cpNodeIds,
       workerNodeIds,
-      accelerator,
       etcdDiskType,
       etcdVolumeType,
       etcdVolumeSize,
@@ -600,75 +564,100 @@ export function CreateClusterDraftPage() {
     const search = isCp ? cpSearch : workerSearch;
     const setSearch = isCp ? setCpSearch : setWorkerSearch;
 
+    const count = isCp ? cpNodeCount : workerNodeCount;
+
     return (
-      <FormField>
-        <FormField.Label>
-          <span className="inline-flex items-center gap-1 align-middle">
-            <span>
-              Nodes
-              <span className="ml-0.5 text-[var(--color-state-danger)]">*</span>
-            </span>
-            <Tooltip
-              content="Pick from machines that are already registered. The number you pick is the node count."
-              position="right"
-            >
-              <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
-            </Tooltip>
-          </span>
-        </FormField.Label>
-        <FormField.Description>
-          {isCp
-            ? 'Pick the machines that will run the control plane. etcd quorum requires an odd number.'
-            : 'Pick the machines that will run the workloads.'}{' '}
-          Only nodes with the agent registered, and not already taken by the other role, can be
-          picked.
-        </FormField.Description>
-        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-          <VStack gap={3}>
-            <SearchInput
-              placeholder="Search nodes by attributes"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-[var(--search-input-width)]"
-            />
-            <Pagination
-              currentPage={1}
-              totalPages={1}
-              onPageChange={() => {}}
-              totalItems={candidates.length}
-              selectedCount={selectedIds.length}
-            />
-            <Table
-              columns={nodeColumns}
-              data={candidates}
-              rowKey="id"
-              selectable
-              selectionType="checkbox"
-              selectedKeys={selectedIds}
-              onSelectionChange={setSelectedIds}
-              isRowSelectable={isNodeSelectableFor(role)}
-              emptyMessage={
-                !isCp && accelerator !== 'none'
-                  ? 'No registered node has that accelerator. Prepare one first, or change the accelerator.'
-                  : `No registered node to display. Prepare machines in ${NODE_SOURCE_ORIGIN[nodeSource]} and install the agent first.`
+      <VStack gap={6}>
+        <FormField>
+          <FormField.Label>
+            <InfoLabel
+              label="Node count"
+              required
+              tip={
+                isCp
+                  ? 'An odd number of control plane nodes is required to maintain etcd quorum.'
+                  : 'Specify how many worker nodes to include in the cluster.'
               }
             />
-            <SelectionIndicator
-              selectedItems={selectedIds.map((id) => ({
-                id,
-                label: mockRegisteredNodes.find((n) => n.id === id)?.name ?? id,
-              }))}
-              emptyText="No node selected"
-              onRemove={(id) => setSelectedIds(selectedIds.filter((v) => v !== id))}
+          </FormField.Label>
+          <FormField.Control>
+            <HStack gap={3} align="center">
+              <Slider
+                min={1}
+                max={7}
+                step={2}
+                value={count}
+                onChange={(v) => changeNodeCount(role, v)}
+              />
+              <NumberInput
+                value={count}
+                onChange={(v) => changeNodeCount(role, v)}
+                min={1}
+                max={7}
+                step={2}
+                width="xs"
+              />
+            </HStack>
+          </FormField.Control>
+        </FormField>
+
+        <FormField>
+          <FormField.Label>
+            <InfoLabel
+              label="Nodes"
+              required
+              tip={
+                (isCp
+                  ? 'Machines that run the control plane. '
+                  : 'Machines that run the workloads. ') +
+                'Only machines with the agent registered, reachable, and not used by another cluster or the other role are listed. Pick as many as the node count.'
+              }
             />
-            {isCp && cpCountIsEven && (
-              <InlineMessage variant="warning">
-                Control plane nodes must be an odd number. {cpNodeTotal} are selected.
-              </InlineMessage>
-            )}
-          </VStack>
-        </FormField.Control>
-      </FormField>
+          </FormField.Label>
+          <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+            <VStack gap={3}>
+              <SearchInput
+                placeholder="Search nodes by attributes"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-[var(--search-input-width)]"
+              />
+              <HStack gap={3} align="center" className="w-full justify-between">
+                <Pagination
+                  currentPage={1}
+                  totalPages={1}
+                  onPageChange={() => {}}
+                  totalItems={candidates.length}
+                  selectedCount={selectedIds.length}
+                />
+                {/* 고른 수 / 정한 노드 수 — 표 위에서 바로 보이게 한다 */}
+                <span className="text-body-md text-[var(--color-text-subtle)] shrink-0">
+                  {selectedIds.length} / {count} nodes
+                </span>
+              </HStack>
+              <Table
+                columns={nodeColumns}
+                data={candidates}
+                rowKey="id"
+                selectable
+                selectionType="checkbox"
+                selectedKeys={selectedIds}
+                onSelectionChange={setSelectedIds}
+                isRowSelectable={isNodeSelectableFor(role)}
+                emptyMessage="No available nodes."
+              />
+              <SelectionIndicator
+                selectedItems={selectedIds.map((id) => ({
+                  id,
+                  label: mockRegisteredNodes.find((n) => n.id === id)?.name ?? id,
+                }))}
+                emptyText="No node selected"
+                onRemove={(id) => setSelectedIds(selectedIds.filter((v) => v !== id))}
+              />
+            </VStack>
+          </FormField.Control>
+        </FormField>
+      </VStack>
     );
   };
 
@@ -720,10 +709,6 @@ export function CreateClusterDraftPage() {
         <h1 className="text-heading-h4 leading-7 font-semibold text-[var(--color-text-default)]">
           Create cluster
         </h1>
-        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-          Build a cluster from machines that already exist. The agent on each machine installs
-          Kubernetes — this form does not create the machines.
-        </p>
       </VStack>
 
       <div className="flex gap-6">
@@ -735,14 +720,20 @@ export function CreateClusterDraftPage() {
           <SectionCard className="pb-4">
             <SectionCard.Header title="Usage type" />
             <SectionCard.Content>
-              <FormField required>
-                <FormField.Label>What is this cluster for</FormField.Label>
-                <FormField.Description>
-                  Decide this first. It changes what you can pick below and what the in-cluster
-                  agent installs
-                  {preset.agentPackages.length > 0 && ` — ${preset.agentPackages.join(', ')}`}.
-                  {availableUsages.length < 2 && ' Usages you cannot use are not listed.'}
-                </FormField.Description>
+              <FormField>
+                <FormField.Label>
+                  <InfoLabel
+                    label="Usage type"
+                    required
+                    tip={
+                      'The usage decides what the in-cluster agent installs' +
+                      (preset.agentPackages.length > 0
+                        ? ` — ${preset.agentPackages.join(', ')}.`
+                        : '.') +
+                      (availableUsages.length < 2 ? ' Usages you cannot use are not listed.' : '')
+                    }
+                  />
+                </FormField.Label>
                 <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                   <RadioGroup
                     value={usage}
@@ -787,43 +778,32 @@ export function CreateClusterDraftPage() {
                   </FormField.Control>
                 </FormField>
 
-                <FormField required>
+                <FormField>
                   <FormField.Label>
-                    <span className="inline-flex items-center gap-2 align-middle">
-                      Kubernetes version
-                      {preset.lockedKubernetesVersion && (
-                        <LockedBadge reason={preset.lockReason ?? 'Set by the usage'} />
-                      )}
-                    </span>
+                    <InfoLabel
+                      label="Kubernetes version"
+                      required
+                      tip="The Kubernetes version the agent installs. The latest supported version is recommended unless you need a specific one."
+                    />
                   </FormField.Label>
-                  <FormField.Description>
-                    {preset.lockedKubernetesVersion
-                      ? `Set to the version verified for ${usage} clusters. The value stays visible so you can still see what the cluster was built with.`
-                      : 'Choose the Kubernetes version the agent will install. The latest supported version is recommended unless you need a specific one.'}
-                  </FormField.Description>
                   <FormField.Control>
                     <Select
                       options={kubernetesVersionOptions}
                       value={kubernetesVersion}
                       onChange={setKubernetesVersion}
                       fullWidth
-                      disabled={Boolean(preset.lockedKubernetesVersion)}
                     />
                   </FormField.Control>
                 </FormField>
 
-                <FormField required>
+                <FormField>
                   <FormField.Label>
-                    <span className="inline-flex items-center gap-2 align-middle">
-                      Container network
-                      {preset.lockedContainerNetwork && (
-                        <LockedBadge reason={preset.lockReason ?? 'Set by the usage'} />
-                      )}
-                    </span>
+                    <InfoLabel
+                      label="Container network"
+                      required
+                      tip="Cilium is the only supported CNI plugin. It is selected automatically."
+                    />
                   </FormField.Label>
-                  <FormField.Description>
-                    Cilium is the only supported CNI plugin. It is selected automatically.
-                  </FormField.Description>
                   <FormField.Control>
                     <Select
                       options={containerNetworkOptions}
@@ -855,56 +835,45 @@ export function CreateClusterDraftPage() {
             <SectionCard.Header title="Node source" />
             <SectionCard.Content>
               <VStack gap={4}>
-                <FormField required>
-                  <FormField.Label>Where the nodes come from</FormField.Label>
-                  <FormField.Description>
-                    Both run Linux and take the same agent, so everything after this is the same.
-                    Only the machines you can pick change.
-                  </FormField.Description>
+                <FormField>
+                  <FormField.Label>
+                    <InfoLabel
+                      label="Node source"
+                      required
+                      tip="This form does not create machines. It lists virtual machines prepared in Compute or bare metal registered through Cloud Builder, with the agent installed. Both run Linux and take the same agent, so only the machines you can pick change."
+                    />
+                  </FormField.Label>
                   <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                     <RadioGroup
                       value={nodeSource}
                       onChange={(value) => handleNodeSourceChange(value as NodeSource)}
                     >
-                      <Radio value="vm" label="Virtual machine — prepared in Compute beforehand" />
-                      <Radio
-                        value="baremetal"
-                        label="Bare metal — registered through Cloud Builder"
-                      />
+                      <Radio value="vm" label="Virtual machine" />
+                      <Radio value="baremetal" label="Bare metal" />
                     </RadioGroup>
                   </FormField.Control>
                 </FormField>
-
-                <InlineMessage variant="info">
-                  This form does not create machines. Prepare them in{' '}
-                  {NODE_SOURCE_ORIGIN[nodeSource]}, install the agent, and they appear in the lists
-                  below.
-                </InlineMessage>
               </VStack>
             </SectionCard.Content>
           </SectionCard>
 
           {/* ④ Control plane */}
           <SectionCard className="pb-4">
-            <SectionCard.Header
-              title="Control plane"
-              actions={
-                <Badge theme="gray" size="sm">
-                  {NODE_SOURCE_LABEL[nodeSource]}
-                </Badge>
-              }
-            />
+            <SectionCard.Header title="Control plane" />
             <SectionCard.Content>
               <VStack gap={6}>
                 {renderNodePicker('cp')}
 
                 <div className="h-px bg-[var(--color-border-default)]" />
 
-                <FormField required>
-                  <FormField.Label>etcd disk</FormField.Label>
-                  <FormField.Description>
-                    Choose where the agent puts etcd data when it installs Kubernetes.
-                  </FormField.Description>
+                <FormField>
+                  <FormField.Label>
+                    <InfoLabel
+                      label="etcd disk"
+                      required
+                      tip="Where the agent puts etcd data when it installs Kubernetes."
+                    />
+                  </FormField.Label>
                   <FormField.Control>
                     <RadioGroup
                       value={etcdDiskType}
@@ -982,47 +951,9 @@ export function CreateClusterDraftPage() {
 
           {/* ⑤ Worker nodes */}
           <SectionCard className="pb-4">
-            <SectionCard.Header
-              title="Worker nodes"
-              actions={
-                <Badge theme="gray" size="sm">
-                  {NODE_SOURCE_LABEL[nodeSource]}
-                </Badge>
-              }
-            />
+            <SectionCard.Header title="Worker nodes" />
             <SectionCard.Content>
-              <VStack gap={6}>
-                <FormField required={preset.acceleratorRequired}>
-                  <FormField.Label>Accelerator</FormField.Label>
-                  <FormField.Description>
-                    What the in-cluster agent installs depends on this — gpu-operator for GPU, the
-                    Rebellions packages for NPU. Picking one narrows the node list below to machines
-                    that have it.
-                    {preset.acceleratorRequired
-                      ? ` ${usage} clusters must pick one.`
-                      : ' General purpose clusters may skip it.'}
-                  </FormField.Description>
-                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                    <RadioGroup
-                      value={accelerator}
-                      onChange={(value) => {
-                        setAccelerator(value as Accelerator);
-                        setWorkerNodeIds([]);
-                      }}
-                    >
-                      {!preset.acceleratorRequired && (
-                        <Radio value="none" label="None — CPU only" />
-                      )}
-                      <Radio value="gpu" label="GPU — NVIDIA (gpu-operator)" />
-                      <Radio value="npu" label="NPU — Rebellions ATOM (vllm-rbln)" />
-                    </RadioGroup>
-                  </FormField.Control>
-                </FormField>
-
-                <div className="h-px bg-[var(--color-border-default)]" />
-
-                {renderNodePicker('worker')}
-              </VStack>
+              <VStack gap={6}>{renderNodePicker('worker')}</VStack>
             </SectionCard.Content>
           </SectionCard>
 
@@ -1035,7 +966,7 @@ export function CreateClusterDraftPage() {
                   <DisclosureTrigger>
                     <span className="inline-flex items-center gap-2">
                       <span className="text-label-md text-[var(--color-text-default)]">
-                        Open this if you want to add labels or annotations yourself
+                        Labels ({labels.length}) · Annotations ({annotations.length})
                       </span>
                       <Badge theme="gray" size="sm">
                         Collapsed for {usage} clusters
@@ -1078,26 +1009,23 @@ export function CreateClusterDraftPage() {
           <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
             <WizardSummary
               items={[
-                { key: 'usage', label: `Usage type — ${usage}`, status: 'done' },
+                // TDS Floating Card Configuration 영역 — 섹션 이름과 상태 아이콘만 둔다. 고른 값은 넣지 않는다.
+                { key: 'usage', label: 'Usage type', status: 'done' },
                 {
                   key: 'basic',
-                  label: clusterName ? `Name — ${clusterName}` : 'Basic information',
+                  label: 'Basic information',
                   status: clusterName ? 'done' : 'active',
                 },
-                {
-                  key: 'source',
-                  label: `Node source — ${NODE_SOURCE_LABEL[nodeSource]}`,
-                  status: 'done',
-                },
+                { key: 'source', label: 'Node source', status: 'done' },
                 {
                   key: 'cp',
-                  label: `Control plane — ${cpNodeTotal} nodes`,
-                  status: cpNodeTotal > 0 && !cpCountIsEven ? 'done' : 'active',
+                  label: 'Control plane',
+                  status: cpComplete ? 'done' : 'active',
                 },
                 {
                   key: 'worker',
-                  label: `Worker — ${workerNodeTotal} nodes`,
-                  status: workerNodeTotal > 0 ? 'done' : 'active',
+                  label: 'Worker nodes',
+                  status: workerComplete ? 'done' : 'active',
                 },
                 {
                   key: 'labels',
@@ -1107,13 +1035,6 @@ export function CreateClusterDraftPage() {
               ]}
             />
 
-            {mixedPlatforms && (
-              <InlineMessage variant="warning">
-                The selected nodes come from more than one platform. Make sure they reach the same
-                network.
-              </InlineMessage>
-            )}
-
             <HStack gap={2} className="w-full justify-end">
               <Button variant="secondary" onClick={handleCancel}>
                 Cancel
@@ -1122,9 +1043,7 @@ export function CreateClusterDraftPage() {
                 variant="primary"
                 onClick={handleCreate}
                 className="flex-1 min-w-[80px]"
-                disabled={
-                  !clusterName || cpNodeTotal === 0 || cpCountIsEven || workerNodeTotal === 0
-                }
+                disabled={!clusterName || !cpComplete || !workerComplete}
               >
                 Create
               </Button>
