@@ -1247,12 +1247,15 @@ function renderLabelsEditor({
   return (
     <VStack gap={6}>
       <VStack gap={3}>
-        <VStack gap={1.5}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Specify the labels used to identify and categorize the resource.
-          </p>
-        </VStack>
+        <span className="inline-flex items-center gap-1 text-label-lg text-[var(--color-text-default)]">
+          Labels
+          <Tooltip
+            content="Specify the labels used to identify and categorize the resource."
+            position="right"
+          >
+            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+          </Tooltip>
+        </span>
         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
           <VStack gap={1.5}>
             {rows(labels, 'label', updateLabel, removeLabel)}
@@ -1271,12 +1274,15 @@ function renderLabelsEditor({
       </VStack>
 
       <VStack gap={3}>
-        <VStack gap={1.5}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-            Specify the annotations used to provide additional metadata for the resource.
-          </p>
-        </VStack>
+        <span className="inline-flex items-center gap-1 text-label-lg text-[var(--color-text-default)]">
+          Annotations
+          <Tooltip
+            content="Specify the annotations used to provide additional metadata for the resource."
+            position="right"
+          >
+            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+          </Tooltip>
+        </span>
         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
           <VStack gap={1.5}>
             {rows(annotations, 'annotation', updateAnnotation, removeAnnotation)}

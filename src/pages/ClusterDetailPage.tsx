@@ -65,6 +65,64 @@ const STEP_STATE_THEME: Record<StepState, 'gray' | 'blue' | 'green' | 'red'> = {
   done: 'green',
   failed: 'red',
 };
+/* Capsis 모드의 Node configuration 탭 — 노드를 골라 만들므로(CAPSIS-D-74) Image·Flavor 대신
+   고른 노드를 보여 준다. 칼럼은 만들기 화면의 노드 표와 같다(화면 정의서 07 §3-2). */
+interface ClusterNodeRow {
+  id: string;
+  name: string;
+  spec: string;
+  accelerator: string;
+  ip: string;
+}
+const clusterNodeColumns: TableColumn<ClusterNodeRow>[] = [
+  { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name },
+  { key: 'spec', label: 'Spec', flex: 1, minWidth: columnMinWidths.description },
+  { key: 'accelerator', label: 'Accelerator', flex: 1, minWidth: columnMinWidths.name },
+  { key: 'ip', label: 'IP', flex: 1, minWidth: columnMinWidths.ip },
+];
+/** 목업 클러스터(예전부터 목록에 있던 것)에 붙일 노드 — 만들기 개정안으로 만든 클러스터는 고른 노드를 쓴다. */
+const defaultClusterNodes: { controlPlane: ClusterNodeRow[]; workers: ClusterNodeRow[] } = {
+  controlPlane: [
+    {
+      id: 'm-cp-1',
+      name: 'prod-cp-01',
+      spec: '4 vCPU · 8 GiB · 40 GiB',
+      accelerator: '—',
+      ip: '10.62.1.11',
+    },
+    {
+      id: 'm-cp-2',
+      name: 'prod-cp-02',
+      spec: '4 vCPU · 8 GiB · 40 GiB',
+      accelerator: '—',
+      ip: '10.62.1.12',
+    },
+    {
+      id: 'm-cp-3',
+      name: 'prod-cp-03',
+      spec: '4 vCPU · 8 GiB · 40 GiB',
+      accelerator: '—',
+      ip: '10.62.1.13',
+    },
+  ],
+  workers: [
+    {
+      id: 'm-wk-1',
+      name: 'prod-wk-01',
+      spec: '16 vCPU · 64 GiB · 200 GiB',
+      accelerator: 'NVIDIA A10 × 1',
+      ip: '10.62.1.21',
+    },
+    {
+      id: 'm-wk-2',
+      name: 'prod-wk-02',
+      spec: '8 vCPU · 32 GiB · 100 GiB',
+      accelerator: '—',
+      ip: '10.62.1.22',
+    },
+  ],
+};
+
 const installationColumns: TableColumn<ProvisioningNode>[] = [
   { key: 'name', label: 'Node', flex: 1, minWidth: columnMinWidths.name },
   { key: 'role', label: 'Role', flex: 1, minWidth: columnMinWidths.name },
@@ -377,6 +435,16 @@ export function ClusterDetailPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
 
+  /* Capsis 모드에서 목록(ClusterManagementPage)의 목업 클러스터와 이름·용도를 맞춘다.
+     지원하는 CNI는 Cilium 하나라 Container network도 Cilium으로 보인다. */
+  const platformListMock: Record<string, { name: string; usage?: ClusterUsage }> = {
+    'cluster-001': { name: 'production-kubernetes-high-availability-cluster', usage: 'General' },
+    'cluster-002': { name: 'staging-development-testing-environment-cluster', usage: 'General' },
+    'cluster-003': { name: 'production-microservices-platform-cluster' },
+    'cluster-004': { name: 'staging-integration-testing-environment-cluster', usage: 'General' },
+    'cluster-005': { name: 'development-sandbox-experimental-cluster' },
+  };
+
   // 만들기 개정안으로 방금 만든 클러스터면 그 값을 쓴다(목업 전용 상태).
   const createdClusters = useCreatedClusters();
   const created = createdClusters.find((c) => c.id === clusterId);
@@ -409,7 +477,13 @@ export function ClusterDetailPage() {
           },
           iconText: '',
         }
-      : mockClusterDetails[clusterId]
+      : isPlatform && mockClusterDetails[clusterId] && platformListMock[clusterId]
+        ? {
+            ...mockClusterDetails[clusterId],
+            name: platformListMock[clusterId].name,
+            containerNetwork: 'Cilium',
+          }
+        : mockClusterDetails[clusterId]
     : null;
 
   // Default cluster for demo
@@ -495,7 +569,10 @@ export function ClusterDetailPage() {
     reachableVersions: isProvisioned ? ['v1.34.5'] : [],
     channel: updateChannel,
     status: clusterData.status,
-    usage: assignedUsage ?? created?.usage,
+    usage:
+      assignedUsage ??
+      created?.usage ??
+      (isPlatform ? platformListMock[clusterId ?? '']?.usage : undefined),
     controlPlaneHealthy: isProvisioned,
     nodesReady: isProvisioned ? 4 : 0,
     nodesTotal: 4,
@@ -871,45 +948,94 @@ export function ClusterDetailPage() {
           </TabPanel>
 
           <TabPanel value="node-config">
-            <VStack gap={6}>
-              {/* Node Configuration Card */}
-              <SectionCard>
-                <SectionCard.Header title="Node configuration" />
-                <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Node type"
-                    value={clusterData.nodeConfiguration.nodeType}
-                  />
-                </SectionCard.Content>
-              </SectionCard>
+            {isPlatform ? (
+              <VStack gap={6}>
+                <SectionCard>
+                  <SectionCard.Header title="Node configuration" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Node source"
+                      value={
+                        created
+                          ? created.nodeSource === 'vm'
+                            ? 'Virtual machine'
+                            : 'Bare metal'
+                          : 'Virtual machine'
+                      }
+                    />
+                    <SectionCard.DataRow label="etcd" value={clusterData.controlPlanes.etcd} />
+                  </SectionCard.Content>
+                </SectionCard>
+                <SectionCard>
+                  <SectionCard.Header title="Control plane" />
+                  <SectionCard.Content>
+                    <Table
+                      columns={clusterNodeColumns}
+                      data={
+                        created
+                          ? created.nodes.filter((n) => n.role === 'Control plane')
+                          : defaultClusterNodes.controlPlane
+                      }
+                      rowKey="id"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+                <SectionCard>
+                  <SectionCard.Header title="Worker nodes" />
+                  <SectionCard.Content>
+                    <Table
+                      columns={clusterNodeColumns}
+                      data={
+                        created
+                          ? created.nodes.filter((n) => n.role === 'Worker')
+                          : defaultClusterNodes.workers
+                      }
+                      rowKey="id"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            ) : (
+              <VStack gap={6}>
+                {/* Node Configuration Card */}
+                <SectionCard>
+                  <SectionCard.Header title="Node configuration" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Node type"
+                      value={clusterData.nodeConfiguration.nodeType}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-              {/* Control Planes Card */}
-              <SectionCard>
-                <SectionCard.Header title="Control planes" />
-                <SectionCard.Content>
-                  <SectionCard.DataRow label="Image" value={clusterData.controlPlanes.image} />
-                  <SectionCard.DataRow label="Flavor" value={clusterData.controlPlanes.flavor} />
-                  <SectionCard.DataRow
-                    label="Node count"
-                    value={clusterData.controlPlanes.nodeCount.toString()}
-                  />
-                  <SectionCard.DataRow label="etcd" value={clusterData.controlPlanes.etcd} />
-                </SectionCard.Content>
-              </SectionCard>
+                {/* Control Planes Card */}
+                <SectionCard>
+                  <SectionCard.Header title="Control planes" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Image" value={clusterData.controlPlanes.image} />
+                    <SectionCard.DataRow label="Flavor" value={clusterData.controlPlanes.flavor} />
+                    <SectionCard.DataRow
+                      label="Node count"
+                      value={clusterData.controlPlanes.nodeCount.toString()}
+                    />
+                    <SectionCard.DataRow label="etcd" value={clusterData.controlPlanes.etcd} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-              {/* Nodes Card */}
-              <SectionCard>
-                <SectionCard.Header title="Nodes" />
-                <SectionCard.Content>
-                  <SectionCard.DataRow label="Image" value={clusterData.nodes.image} />
-                  <SectionCard.DataRow label="Flavor" value={clusterData.nodes.flavor} />
-                  <SectionCard.DataRow
-                    label="Node count"
-                    value={clusterData.nodes.nodeCount.toString()}
-                  />
-                </SectionCard.Content>
-              </SectionCard>
-            </VStack>
+                {/* Nodes Card */}
+                <SectionCard>
+                  <SectionCard.Header title="Nodes" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Image" value={clusterData.nodes.image} />
+                    <SectionCard.DataRow label="Flavor" value={clusterData.nodes.flavor} />
+                    <SectionCard.DataRow
+                      label="Node count"
+                      value={clusterData.nodes.nodeCount.toString()}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            )}
           </TabPanel>
 
           <TabPanel value="service-account-token">
