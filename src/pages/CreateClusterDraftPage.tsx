@@ -53,6 +53,7 @@ import {
   DisclosureTrigger,
   DisclosurePanel,
   Modal,
+  InlineMessage,
   columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
@@ -469,7 +470,15 @@ export function CreateClusterDraftPage() {
   const cpNodeTotal = cpNodeIds.length;
   const workerNodeTotal = workerNodeIds.length;
   const cpComplete = cpNodeTotal === cpNodeCount;
-  const workerComplete = workerNodeTotal === workerNodeCount;
+  /* AI Workload 클러스터는 GPU 또는 NPU가 달린 워커를 최소 한 대 포함해야 한다([CAPSIS-19], CAPSIS-D-98).
+     CPU 워커를 섞는 것은 된다. 컨트롤 플레인의 가속기는 세지 않는다. */
+  const hasAcceleratorWorker = workerNodeIds.some(
+    (id) => (mockRegisteredNodes.find((n) => n.id === id)?.accelerator ?? '—') !== '—'
+  );
+  const acceleratorMissing =
+    usage === 'AI Workload' && workerNodeTotal > 0 && !hasAcceleratorWorker;
+  const workerComplete =
+    workerNodeTotal === workerNodeCount && !(usage === 'AI Workload' && !hasAcceleratorWorker);
 
   /** 고른 노드가 여러 플랫폼에 걸쳐 있는가. OpenStack 의존성이 미결이라 알려만 준다. */
 
@@ -638,7 +647,10 @@ export function CreateClusterDraftPage() {
                 (isCp
                   ? 'Machines that run the control plane. '
                   : 'Machines that run the workloads. ') +
-                'Only machines with the agent registered, reachable, and not used by another cluster or the other role are listed. Pick as many as the node count.'
+                'Only machines with the agent registered, reachable, and not used by another cluster or the other role are listed. Pick as many as the node count.' +
+                (!isCp && usage === 'AI Workload'
+                  ? ' An AI Workload cluster needs at least one worker with a GPU or NPU. CPU-only workers can be added alongside.'
+                  : '')
               }
             />
           </FormField.Label>
@@ -682,6 +694,11 @@ export function CreateClusterDraftPage() {
                 emptyText="No node selected"
                 onRemove={(id) => setSelectedIds(selectedIds.filter((v) => v !== id))}
               />
+              {!isCp && acceleratorMissing && (
+                <InlineMessage variant="warning">
+                  An AI Workload cluster needs at least one worker with a GPU or NPU.
+                </InlineMessage>
+              )}
             </VStack>
           </FormField.Control>
         </FormField>
