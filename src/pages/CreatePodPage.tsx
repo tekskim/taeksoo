@@ -35,11 +35,7 @@ import {
   InlineMessage,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
-import {
-  HUB_POD_TEMPLATES,
-  imageRepository,
-  type HubPodTemplate,
-} from './hubPodTemplatesMock';
+import { HUB_POD_TEMPLATES, imageRepository, type HubPodTemplate } from './hubPodTemplatesMock';
 
 // 템플릿 카드 한 쪽에 두 줄(4개씩) — AI Inference Deploy New Pod와 같다
 const HUB_TEMPLATES_PER_PAGE = 8;
@@ -1213,9 +1209,7 @@ function CreatePodForm() {
   // Hub에서 템플릿을 골라 Install로 들어오면(?hubTemplate=<id>) 그 템플릿이 골라진 채로 열린다(HUB-D-163).
   // 이미지 주소는 Custom image 탭에서만 고친다. Custom image로 돌아가면 템플릿 출처를 끊는다.
   const [imageSource, setImageSource] = useState<Record<string, 'custom' | 'hub'>>({});
-  const [hubTemplates, setHubTemplates] = useState<Record<string, HubPodTemplate | undefined>>(
-    {}
-  );
+  const [hubTemplates, setHubTemplates] = useState<Record<string, HubPodTemplate | undefined>>({});
   // 이미 입력한 값이 있을 때 템플릿을 고르면 덮어쓰기 전에 확인한다
   // 템플릿 카드 목록의 검색어 · 쪽 번호(컨테이너마다 따로)
   const [templateSearch, setTemplateSearch] = useState<Record<string, string>>({});
@@ -3712,7 +3706,10 @@ function CreatePodForm() {
                                           </span>
                                           <Select
                                             options={[
-                                              { value: DEFAULT_STORAGE_CLASS, label: 'Default Storage Class' },
+                                              {
+                                                value: DEFAULT_STORAGE_CLASS,
+                                                label: 'Default Storage Class',
+                                              },
                                               { value: 'standard', label: 'standard' },
                                               { value: 'fast', label: 'fast' },
                                             ]}
@@ -4406,7 +4403,10 @@ function CreatePodForm() {
                               onChange={(val) => {
                                 // Init container에는 템플릿을 쓰지 않는다. 템플릿을 쓰던 중이면
                                 // 라디오 버튼을 바꿀 때와 같은 확인을 받는다(CAPSIS-D-90 ⑤)
-                                if (val === 'init' && (imageSource[containerId] ?? 'custom') === 'hub') {
+                                if (
+                                  val === 'init' &&
+                                  (imageSource[containerId] ?? 'custom') === 'hub'
+                                ) {
                                   requestSourceChange(containerId, 'custom', true);
                                   return;
                                 }
@@ -4555,8 +4555,8 @@ function CreatePodForm() {
                                       Select template
                                     </span>
                                     <span className="text-body-md text-[var(--color-text-subtle)]">
-                                      Choose a template from the private Hub. It fills the image
-                                      and environment variables.
+                                      Choose a template from the private Hub. It fills the image and
+                                      environment variables.
                                     </span>
                                   </VStack>
                                   {hubListState === 'error' ? (
@@ -4571,7 +4571,9 @@ function CreatePodForm() {
                                     />
                                   ) : (
                                     (() => {
-                                      const query = (templateSearch[containerId] ?? '').toLowerCase();
+                                      const query = (
+                                        templateSearch[containerId] ?? ''
+                                      ).toLowerCase();
                                       const filtered = hubOptions.filter(
                                         (t) =>
                                           t.name.toLowerCase().includes(query) ||
@@ -4581,7 +4583,10 @@ function CreatePodForm() {
                                         1,
                                         Math.ceil(filtered.length / HUB_TEMPLATES_PER_PAGE)
                                       );
-                                      const page = Math.min(templatePage[containerId] ?? 1, totalPages);
+                                      const page = Math.min(
+                                        templatePage[containerId] ?? 1,
+                                        totalPages
+                                      );
                                       const paged = filtered.slice(
                                         (page - 1) * HUB_TEMPLATES_PER_PAGE,
                                         page * HUB_TEMPLATES_PER_PAGE
@@ -4599,14 +4604,20 @@ function CreatePodForm() {
                                                   ...prev,
                                                   [containerId]: e.target.value,
                                                 }));
-                                                setTemplatePage((prev) => ({ ...prev, [containerId]: 1 }));
+                                                setTemplatePage((prev) => ({
+                                                  ...prev,
+                                                  [containerId]: 1,
+                                                }));
                                               }}
                                             />
                                             <Pagination
                                               currentPage={page}
                                               totalPages={totalPages}
                                               onPageChange={(p) =>
-                                                setTemplatePage((prev) => ({ ...prev, [containerId]: p }))
+                                                setTemplatePage((prev) => ({
+                                                  ...prev,
+                                                  [containerId]: p,
+                                                }))
                                               }
                                             />
                                           </HStack>
@@ -4617,12 +4628,15 @@ function CreatePodForm() {
                                           ) : (
                                             <div className="grid grid-cols-4 gap-3">
                                               {paged.map((t) => {
-                                                const selected = hubTemplates[containerId]?.id === t.id;
+                                                const selected =
+                                                  hubTemplates[containerId]?.id === t.id;
                                                 return (
                                                   <button
                                                     key={t.id}
                                                     type="button"
-                                                    onClick={() => selectHubTemplate(containerId, t.id)}
+                                                    onClick={() =>
+                                                      selectHubTemplate(containerId, t.id)
+                                                    }
                                                     className={`text-left w-full bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border p-4 flex flex-col gap-3 transition-colors ${
                                                       selected
                                                         ? 'border-[var(--color-border-focus)] ring-1 ring-[var(--color-border-focus)]'
@@ -4669,7 +4683,10 @@ function CreatePodForm() {
                             confirmText="Apply"
                             onConfirm={() => {
                               if (pendingTemplate) {
-                                applyHubTemplate(pendingTemplate.containerId, pendingTemplate.template);
+                                applyHubTemplate(
+                                  pendingTemplate.containerId,
+                                  pendingTemplate.template
+                                );
                               }
                               setPendingTemplate(null);
                             }}
@@ -4680,7 +4697,8 @@ function CreatePodForm() {
                                 Pull Policy
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                When the node pulls the image — every time, only when it is not on the node, or never.
+                                When the node pulls the image — every time, only when it is not on
+                                the node, or never.
                               </span>
                             </VStack>
                             <Select
@@ -4704,7 +4722,8 @@ function CreatePodForm() {
                                 Pull Secrets
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                Secret holding credentials for a private registry. It must be in the same namespace as the pod.
+                                Secret holding credentials for a private registry. It must be in the
+                                same namespace as the pod.
                               </span>
                             </VStack>
                             <Select
@@ -4732,7 +4751,9 @@ function CreatePodForm() {
                       <SectionCard.Content>
                         <VStack gap={3}>
                           <span className="text-body-md text-[var(--color-text-subtle)]">
-                            Define a Service to expose the container, or define a non-Kubernetes network port that the new service will run when the app on the container is expected to run.
+                            Define a Service to expose the container, or define a non-Kubernetes
+                            network port that the new service will run when the app on the container
+                            is expected to run.
                           </span>
                           {(config.ports || []).map((port, portIndex) => {
                             const updatePort = (patch: Partial<typeof port>) =>
@@ -4742,7 +4763,8 @@ function CreatePodForm() {
                                 ),
                               });
                             const showListeningPort =
-                              port.serviceType === 'NodePort' || port.serviceType === 'LoadBalancer';
+                              port.serviceType === 'NodePort' ||
+                              port.serviceType === 'LoadBalancer';
                             return (
                               <div
                                 key={port.id}
@@ -4750,7 +4772,10 @@ function CreatePodForm() {
                               >
                                 <div className="grid grid-cols-[1fr_1fr_1fr_20px] items-start gap-2">
                                   <VStack gap={1}>
-                                    <span className="text-label-md text-[var(--color-text-default)]">Service type <span className="text-[var(--color-state-danger)]">*</span></span>
+                                    <span className="text-label-md text-[var(--color-text-default)]">
+                                      Service type{' '}
+                                      <span className="text-[var(--color-state-danger)]">*</span>
+                                    </span>
                                     <Select
                                       options={SERVICE_TYPE_OPTIONS}
                                       value={port.serviceType}
@@ -4759,7 +4784,10 @@ function CreatePodForm() {
                                     />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-label-md text-[var(--color-text-default)]">Name <span className="text-[var(--color-state-danger)]">*</span></span>
+                                    <span className="text-label-md text-[var(--color-text-default)]">
+                                      Name{' '}
+                                      <span className="text-[var(--color-state-danger)]">*</span>
+                                    </span>
                                     <Input
                                       fullWidth
                                       value={port.name}
@@ -4767,14 +4795,23 @@ function CreatePodForm() {
                                     />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-label-md text-[var(--color-text-default)]">Private container port <span className="text-[var(--color-state-danger)]">*</span></span>
+                                    <span className="text-label-md text-[var(--color-text-default)]">
+                                      Private container port{' '}
+                                      <span className="text-[var(--color-state-danger)]">*</span>
+                                    </span>
                                     <NumberInput
                                       width="full"
                                       min={1}
                                       max={65535}
                                       placeholder="e.g. 8080"
-                                      value={port.containerPort ? Number(port.containerPort) : undefined}
-                                      onChange={(v) => updatePort({ containerPort: Number.isFinite(v) ? String(v) : '' })}
+                                      value={
+                                        port.containerPort ? Number(port.containerPort) : undefined
+                                      }
+                                      onChange={(v) =>
+                                        updatePort({
+                                          containerPort: Number.isFinite(v) ? String(v) : '',
+                                        })
+                                      }
                                     />
                                   </VStack>
                                   <button
@@ -4783,16 +4820,25 @@ function CreatePodForm() {
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     onClick={() =>
                                       updateContainerConfig(containerId, {
-                                        ports: (config.ports || []).filter((_, i) => i !== portIndex),
+                                        ports: (config.ports || []).filter(
+                                          (_, i) => i !== portIndex
+                                        ),
                                       })
                                     }
                                   >
-                                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                                    <IconX
+                                      size={16}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
                                   </button>
                                 </div>
                                 <div className="grid grid-cols-[1fr_1fr_1fr_20px] items-start gap-2">
                                   <VStack gap={1}>
-                                    <span className="text-label-md text-[var(--color-text-default)]">Protocol <span className="text-[var(--color-state-danger)]">*</span></span>
+                                    <span className="text-label-md text-[var(--color-text-default)]">
+                                      Protocol{' '}
+                                      <span className="text-[var(--color-state-danger)]">*</span>
+                                    </span>
                                     <Select
                                       options={[
                                         { value: 'TCP', label: 'TCP' },
@@ -4804,18 +4850,26 @@ function CreatePodForm() {
                                     />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-label-md text-[var(--color-text-default)]">Public host port</span>
+                                    <span className="text-label-md text-[var(--color-text-default)]">
+                                      Public host port
+                                    </span>
                                     <NumberInput
                                       width="full"
                                       min={1}
                                       max={65535}
                                       placeholder="e.g. 80"
                                       value={port.hostPort ? Number(port.hostPort) : undefined}
-                                      onChange={(v) => updatePort({ hostPort: Number.isFinite(v) ? String(v) : '' })}
+                                      onChange={(v) =>
+                                        updatePort({
+                                          hostPort: Number.isFinite(v) ? String(v) : '',
+                                        })
+                                      }
                                     />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-label-md text-[var(--color-text-default)]">Host IP</span>
+                                    <span className="text-label-md text-[var(--color-text-default)]">
+                                      Host IP
+                                    </span>
                                     <Input
                                       fullWidth
                                       placeholder="e.g. 1111"
@@ -4840,14 +4894,24 @@ function CreatePodForm() {
                                 {showListeningPort && (
                                   <div className="grid grid-cols-[1fr_1fr_1fr_20px] items-start gap-2">
                                     <VStack gap={1}>
-                                      <span className="text-label-md text-[var(--color-text-default)]">Listening port</span>
+                                      <span className="text-label-md text-[var(--color-text-default)]">
+                                        Listening port
+                                      </span>
                                       <NumberInput
                                         width="full"
                                         min={1}
                                         max={65535}
                                         placeholder="e.g. 30080"
-                                        value={port.listeningPort ? Number(port.listeningPort) : undefined}
-                                        onChange={(v) => updatePort({ listeningPort: Number.isFinite(v) ? String(v) : '' })}
+                                        value={
+                                          port.listeningPort
+                                            ? Number(port.listeningPort)
+                                            : undefined
+                                        }
+                                        onChange={(v) =>
+                                          updatePort({
+                                            listeningPort: Number.isFinite(v) ? String(v) : '',
+                                          })
+                                        }
                                       />
                                     </VStack>
                                   </div>
@@ -4916,7 +4980,8 @@ function CreatePodForm() {
                                 Arguments
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                Arguments passed to the command. If empty, the image default is used.
+                                Arguments passed to the command. If empty, the image default is
+                                used.
                               </span>
                             </VStack>
                             <Input
@@ -4936,7 +5001,8 @@ function CreatePodForm() {
                                 WorkingDir
                               </span>
                               <span className="text-body-md text-[var(--color-text-subtle)]">
-                                Working directory inside the container. If empty, the image default is used.
+                                Working directory inside the container. If empty, the image default
+                                is used.
                               </span>
                             </VStack>
                             <Input
@@ -5210,7 +5276,8 @@ function CreatePodForm() {
                               Service Account Name
                             </span>
                             <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Service account the pod runs as. It must be in the same namespace as the pod.
+                              Service account the pod runs as. It must be in the same namespace as
+                              the pod.
                             </span>
                           </VStack>
                           <Input

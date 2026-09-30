@@ -888,9 +888,7 @@ export function PodDetailPage() {
             />
             <DetailHeader.InfoCard label="Pod IP" value={pod.podIP} copyable />
             <DetailHeader.InfoCard label="Created at" value={pod.createdAt} />
-            {pod.hubTemplate && (
-              <DetailHeader.InfoCard label="Template" value={pod.hubTemplate} />
-            )}
+            {pod.hubTemplate && <DetailHeader.InfoCard label="Template" value={pod.hubTemplate} />}
           </DetailHeader.InfoGrid>
 
           {/* Second row: Workload, Node, Labels, Annotations */}
