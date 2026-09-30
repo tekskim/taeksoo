@@ -22,6 +22,9 @@ import {
   Select,
   CopyButton,
   ConfirmModal,
+  Table,
+  columnMinWidths,
+  fixedColumns,
   type ContextMenuItem,
   type StatusType,
 } from '@/design-system';
@@ -37,6 +40,53 @@ import { Tooltip } from '@/design-system';
 import { getContainerStatusTheme } from './containerStatusUtils';
 import { HAS_CLUSTER_CONDITIONS_TAB } from './containerDashboardLayout';
 import { ClusterConditionsTab, type ClusterCondition } from '@/components/ClusterConditionsTab';
+import type { TableColumn } from '@/design-system/components/Table/Table';
+import {
+  INSTALL_STEPS,
+  useCreatedClusters,
+  progressLabel,
+  retryCluster,
+  deleteCluster,
+  type ProvisioningNode,
+  type StepState,
+} from '@/pages/capsisProvisioningStore';
+
+/* 만들기 개정안으로 만든 클러스터의 설치 진행(목업). 단계 이름은 가안이다 —
+   에이전트가 무엇을 단계로 보고하는지는 에이전트 설계가 정한다. */
+const STEP_STATE_LABEL: Record<StepState, string> = {
+  waiting: 'Waiting',
+  running: 'In progress',
+  done: 'Done',
+  failed: 'Failed',
+};
+const STEP_STATE_THEME: Record<StepState, 'gray' | 'blue' | 'green' | 'red'> = {
+  waiting: 'gray',
+  running: 'blue',
+  done: 'green',
+  failed: 'red',
+};
+const installationColumns: TableColumn<ProvisioningNode>[] = [
+  { key: 'name', label: 'Node', flex: 1, minWidth: columnMinWidths.name },
+  { key: 'role', label: 'Role', flex: 1, minWidth: columnMinWidths.name },
+  { key: 'ip', label: 'IP', flex: 1, minWidth: columnMinWidths.ip },
+  {
+    key: 'step',
+    label: 'Step',
+    flex: 2,
+    minWidth: columnMinWidths.description,
+    render: (_v, row) => `${row.step + 1} / ${INSTALL_STEPS.length} · ${INSTALL_STEPS[row.step]}`,
+  },
+  {
+    key: 'state',
+    label: 'Status',
+    width: fixedColumns.statusLabel,
+    render: (_v, row) => (
+      <Badge theme={STEP_STATE_THEME[row.state]} type="subtle" size="sm">
+        {STEP_STATE_LABEL[row.state]}
+      </Badge>
+    ),
+  },
+];
 
 /* ----------------------------------------
    Types
@@ -280,7 +330,8 @@ export function ClusterDetailPage() {
      상세에 새로 만드는 것은 Conditions 탭 하나다. Aegis/Metis 모드는 무변경(D-26). */
   const { isPlatform } = useContainerMode();
   const showConditionsTab = isPlatform && HAS_CLUSTER_CONDITIONS_TAB;
-  const activeTab = searchParams.get('tab') || 'networking';
+  const activeTab =
+    searchParams.get('tab') || (clusterId?.startsWith('capsis-') ? 'installation' : 'networking');
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Usage assignment (D-30) — the list row action already exists; the detail
@@ -326,8 +377,40 @@ export function ClusterDetailPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
 
+  // 만들기 개정안으로 방금 만든 클러스터면 그 값을 쓴다(목업 전용 상태).
+  const createdClusters = useCreatedClusters();
+  const created = createdClusters.find((c) => c.id === clusterId);
+
   // Get cluster data
-  const cluster = clusterId ? mockClusterDetails[clusterId] : null;
+  const cluster = clusterId
+    ? created
+      ? {
+          id: created.id,
+          name: created.name,
+          status: created.status,
+          kubernetesVersion: created.kubernetesVersion,
+          containerNetwork:
+            created.containerNetwork === 'cilium' ? 'Cilium' : created.containerNetwork,
+          createdAt: created.createdAt,
+          networking: { externalNetwork: '-', tenantNetwork: '-', subnet: '-' },
+          nodeConfiguration: {
+            nodeType: created.nodeSource === 'vm' ? 'Virtual machine' : 'Bare metal',
+          },
+          controlPlanes: {
+            image: '-',
+            flavor: '-',
+            nodeCount: created.nodes.filter((n) => n.role === 'Control plane').length,
+            etcd: 'External',
+          },
+          nodes: {
+            image: '-',
+            flavor: '-',
+            nodeCount: created.nodes.filter((n) => n.role === 'Worker').length,
+          },
+          iconText: '',
+        }
+      : mockClusterDetails[clusterId]
+    : null;
 
   // Default cluster for demo
   const clusterData = cluster || {
@@ -412,7 +495,7 @@ export function ClusterDetailPage() {
     reachableVersions: isProvisioned ? ['v1.34.5'] : [],
     channel: updateChannel,
     status: clusterData.status,
-    usage: assignedUsage,
+    usage: assignedUsage ?? created?.usage,
     controlPlaneHealthy: isProvisioned,
     nodesReady: isProvisioned ? 4 : 0,
     nodesTotal: 4,
@@ -470,11 +553,17 @@ export function ClusterDetailPage() {
       : []),
     ...(isFailed
       ? [
-          {
-            id: 'reprovision',
-            label: 'Reprovision',
-            onClick: () => console.log('Reprovision'),
-          },
+          created
+            ? {
+                id: 'retry',
+                label: 'Retry',
+                onClick: () => retryCluster(created.id),
+              }
+            : {
+                id: 'reprovision',
+                label: 'Reprovision',
+                onClick: () => console.log('Reprovision'),
+              },
         ]
       : []),
     {
@@ -494,7 +583,14 @@ export function ClusterDetailPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger' as const,
-            onClick: () => console.log('Delete'),
+            onClick: () => {
+              if (created) {
+                deleteCluster(created.id);
+                navigate('/container/cluster-management');
+              } else {
+                console.log('Delete');
+              }
+            },
           },
         ]
       : []),
@@ -586,7 +682,7 @@ export function ClusterDetailPage() {
                   </Tooltip>
                   {isProvisioning && (
                     <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      Control plane initializing
+                      {created ? progressLabel(created) : 'Control plane initializing'}
                     </span>
                   )}
                   {isDeleting && (
@@ -654,7 +750,33 @@ export function ClusterDetailPage() {
             </InlineMessage>
           )}
 
-          {isFailed && (
+          {isFailed && created && (
+            <InlineMessage variant="error">
+              <VStack gap={2}>
+                <span>
+                  {progressLabel(created)}.{' '}
+                  {created.nodes.find((n) => n.state === 'failed')?.message}
+                </span>
+                <HStack gap={2}>
+                  <Button variant="secondary" size="sm" onClick={() => retryCluster(created.id)}>
+                    Retry
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => {
+                      deleteCluster(created.id);
+                      navigate('/container/cluster-management');
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </HStack>
+              </VStack>
+            </InlineMessage>
+          )}
+
+          {isFailed && !created && (
             <InlineMessage variant="error">
               Cluster provisioning failed at control plane initializing.{' '}
               <a
@@ -688,11 +810,42 @@ export function ClusterDetailPage() {
         {/* Tabs Section */}
         <Tabs value={activeTab} onChange={setActiveTab}>
           <TabList>
+            {created && <Tab value="installation">Installation</Tab>}
             <Tab value="networking">Networking</Tab>
             <Tab value="node-config">Node configuration</Tab>
             <Tab value="service-account-token">Access token</Tab>
             {showConditionsTab && <Tab value="conditions">Conditions</Tab>}
           </TabList>
+
+          {created && (
+            <TabPanel value="installation">
+              <SectionCard>
+                <SectionCard.Header title="Nodes" />
+                <SectionCard.Content>
+                  <Table columns={installationColumns} data={created.nodes} rowKey="id" />
+                </SectionCard.Content>
+              </SectionCard>
+              {created.usagePackages && (
+                <SectionCard className="mt-4">
+                  <SectionCard.Header title="AI Workload packages" />
+                  <SectionCard.Content>
+                    <HStack gap={2} className="items-center">
+                      <Badge
+                        theme={STEP_STATE_THEME[created.usagePackages.state]}
+                        type="subtle"
+                        size="sm"
+                      >
+                        {STEP_STATE_LABEL[created.usagePackages.state]}
+                      </Badge>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        Installed after all nodes are ready.
+                      </span>
+                    </HStack>
+                  </SectionCard.Content>
+                </SectionCard>
+              )}
+            </TabPanel>
+          )}
 
           <TabPanel value="conditions">
             <ClusterConditionsTab conditions={clusterConditions} />

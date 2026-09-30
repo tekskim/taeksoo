@@ -37,6 +37,7 @@ import {
 import { getContainerStatusTheme } from './containerStatusUtils';
 import { useContainerMode } from '@/contexts/ContainerModeContext';
 import { USAGE_DISPLAY } from '@/pages/containerEntitlement';
+import { useCreatedClusters, progressLabel } from '@/pages/capsisProvisioningStore';
 
 /* ----------------------------------------
    Types
@@ -59,6 +60,8 @@ interface Cluster {
   usage?: 'General' | 'AI Workload';
   /** 화면에 찍는 용도 이름(USAGE_DISPLAY). 표 셀의 title에도 이 값이 쓰인다. */
   usageLabel?: string;
+  /** 만들기 개정안으로 만든 클러스터의 진행 문구 — 상태 배지 툴팁에 쓴다 */
+  progress?: string;
 }
 
 type ClusterUsage = NonNullable<Cluster['usage']>;
@@ -213,13 +216,30 @@ export function ClusterManagementPage() {
     updateActiveTabLabel('Clusters');
   }, [updateActiveTabLabel]);
 
+  // 만들기 개정안에서 방금 만든 클러스터 — 목록 맨 위에 올린다(목업 전용 상태).
+  const createdClusters = useCreatedClusters();
+  const createdRows: Cluster[] = createdClusters.map((c) => ({
+    id: c.id,
+    name: c.name,
+    status: c.status,
+    kubernetesVersion: c.kubernetesVersion,
+    cpu: '-',
+    memory: '-',
+    pods: '-',
+    createdAt: c.createdAt,
+    type: 'created',
+    foundation: c.nodeSource === 'vm' ? 'VM' : 'Bare metal',
+    usage: c.usage,
+    progress: progressLabel(c),
+  }));
+
   // Container Platform은 전용 클러스터까지 한 목록; 다른 모드는 기존 그대로.
-  const allClusters = (isPlatform ? [...mockClusters, ...dedicatedClusters] : mockClusters).map(
-    (c) => {
-      const usage = usageOverrides[c.id] ?? c.usage;
-      return { ...c, usage, usageLabel: usage ? USAGE_DISPLAY[usage] : undefined };
-    }
-  );
+  const allClusters = (
+    isPlatform ? [...createdRows, ...mockClusters, ...dedicatedClusters] : mockClusters
+  ).map((c) => {
+    const usage = usageOverrides[c.id] ?? c.usage;
+    return { ...c, usage, usageLabel: usage ? USAGE_DISPLAY[usage] : undefined };
+  });
 
   // Pagination
   const rowsPerPage = 10;
@@ -239,8 +259,8 @@ export function ClusterManagementPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      render: (status) => (
-        <Tooltip content={status}>
+      render: (status, row) => (
+        <Tooltip content={row.progress ?? status}>
           <Badge
             theme={getContainerStatusTheme(status)}
             type="subtle"
@@ -430,7 +450,13 @@ export function ClusterManagementPage() {
     {
       id: 'create-form',
       label: 'Create as form',
-      onClick: () => navigate('/container/cluster-management/create'),
+      // Capsis는 노드를 골라 만드는 개정안으로 간다(CAPSIS-D-74). Aegis Container는 현행 폼 그대로.
+      onClick: () =>
+        navigate(
+          isPlatform
+            ? '/container/cluster-management/create-draft'
+            : '/container/cluster-management/create'
+        ),
     },
   ];
 

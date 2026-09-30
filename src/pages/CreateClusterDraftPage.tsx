@@ -52,12 +52,14 @@ import {
   Disclosure,
   DisclosureTrigger,
   DisclosurePanel,
+  Modal,
   columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useAvailableUsages, type ClusterUsage } from '@/pages/containerEntitlement';
+import { createCluster, useCreatedClusters } from '@/pages/capsisProvisioningStore';
 
 /* ----------------------------------------
    Types
@@ -66,7 +68,6 @@ import { useAvailableUsages, type ClusterUsage } from '@/pages/containerEntitlem
 /** Capsis가 고르는 것은 이 하나뿐이다 — VM에서 가져올 것이냐, 베어메탈에서 가져올 것이냐. */
 type NodeSource = 'vm' | 'baremetal';
 
-/** 워커에 붙일 가속기. 에이전트가 까는 것이 이 값에 따라 갈린다. */
 /**
  * 노드의 상태. 화면에는 보여 주지 않고, `available`인 노드만 목록에 올린다.
  * 에이전트가 없거나 닿지 않거나 다른 클러스터가 쓰면 쿠버네티스를 깔 수 없다.
@@ -445,10 +446,12 @@ export function CreateClusterDraftPage() {
   );
 
   /** 고를 수 있는 노드만 목록에 올린다 — 에이전트가 등록돼 있고, 닿고, 다른 클러스터가 쓰지 않는 것. */
-  const availableNodes = useMemo(
-    () => sourceNodes.filter((n) => n.status === 'available'),
-    [sourceNodes]
-  );
+  // 목업에서 방금 만든 클러스터가 고른 노드도 「다른 클러스터가 쓰는 노드」로 본다.
+  const createdClusters = useCreatedClusters();
+  const availableNodes = useMemo(() => {
+    const taken = new Set(createdClusters.flatMap((c) => c.nodes.map((n) => n.id)));
+    return sourceNodes.filter((n) => n.status === 'available' && !taken.has(n.id));
+  }, [sourceNodes, createdClusters]);
 
   /** 컨트롤 플레인 후보. 가속기는 워커 쪽 문제라 여기서는 거르지 않는다. 워커로 고른 노드는 뺀다. */
   const cpCandidates = useMemo(
@@ -532,21 +535,46 @@ export function CreateClusterDraftPage() {
      Actions
      ---------------------------------------- */
 
+  /* 배포 확인 — 에이전트가 권한을 올릴 때 쓸 sudo 비밀번호를 여기서 받는다(CAPSIS-D-79).
+     폼에 두지 않는 이유: 이 값은 이번 배포에만 쓰고 저장하지 않으므로, 폼을 채우는 동안
+     들고 있지 않고 누르는 순간에만 받는다. 노드는 사용자가 따로 만든 VM이라 값이 다를 수 있다. */
+  const [isDeployOpen, setIsDeployOpen] = useState(false);
+  const [passwordScope, setPasswordScope] = useState<'same' | 'per-node'>('same');
+  const [sharedPassword, setSharedPassword] = useState('');
+  const [nodePasswords, setNodePasswords] = useState<Record<string, string>>({});
+  const pickedNodes = [...cpNodeIds, ...workerNodeIds]
+    .map((id) => mockRegisteredNodes.find((n) => n.id === id))
+    .filter((n): n is RegisteredNode => Boolean(n));
+  const passwordsReady =
+    passwordScope === 'same'
+      ? sharedPassword.length > 0
+      : pickedNodes.every((n) => (nodePasswords[n.id] ?? '').length > 0);
+
   const handleCreate = () => {
-    console.log('Creating cluster (draft):', {
+    setSharedPassword('');
+    setNodePasswords({});
+    setPasswordScope('same');
+    setIsDeployOpen(true);
+  };
+
+  const handleDeploy = () => {
+    const toInput = (id: string) => {
+      const n = mockRegisteredNodes.find((m) => m.id === id)!;
+      return { id: n.id, name: n.name, spec: n.spec, accelerator: n.accelerator, ip: n.ip };
+    };
+    createCluster({
+      name: clusterName,
       usage,
-      clusterName,
+      nodeSource,
       kubernetesVersion,
       containerNetwork,
-      nodeSource,
-      cpNodeIds,
-      workerNodeIds,
-      etcdDiskType,
-      etcdVolumeType,
-      etcdVolumeSize,
-      labels,
-      annotations,
+      controlPlane: cpNodeIds.map(toInput),
+      workers: workerNodeIds.map(toInput),
     });
+    // 받은 비밀번호는 넘긴 뒤 바로 비운다 — 저장하지 않는다.
+    setSharedPassword('');
+    setNodePasswords({});
+    setIsDeployOpen(false);
     navigate('/container/cluster-management');
   };
 
@@ -1051,6 +1079,78 @@ export function CreateClusterDraftPage() {
           </div>
         </div>
       </div>
+
+      {/* ---------- 배포 확인 — sudo 비밀번호 ---------- */}
+      <Modal
+        isOpen={isDeployOpen}
+        onClose={() => setIsDeployOpen(false)}
+        title="Deploy cluster"
+        description={`The agent installs Kubernetes on ${pickedNodes.length} nodes.`}
+      >
+        <VStack gap={4} className="w-[520px] max-w-full">
+          <FormField>
+            <FormField.Label>
+              <InfoLabel
+                label="Sudo password"
+                required
+                tip="The agent runs without root. It uses this password only for the steps that need elevated privileges. The password is used for this deployment and is not stored."
+              />
+            </FormField.Label>
+            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+              <RadioGroup
+                value={passwordScope}
+                onChange={(value) => setPasswordScope(value as 'same' | 'per-node')}
+              >
+                <Radio value="same" label="Same password for all nodes" />
+                <Radio value="per-node" label="Different password per node" />
+              </RadioGroup>
+            </FormField.Control>
+          </FormField>
+
+          {passwordScope === 'same' ? (
+            <Input
+              type="password"
+              placeholder="Enter the sudo password"
+              value={sharedPassword}
+              onChange={(e) => setSharedPassword(e.target.value)}
+              fullWidth
+            />
+          ) : (
+            <VStack gap={3}>
+              {pickedNodes.map((n) => (
+                <FormField key={n.id}>
+                  <FormField.Label>{n.name}</FormField.Label>
+                  <FormField.Control>
+                    <Input
+                      type="password"
+                      placeholder="Enter the sudo password"
+                      value={nodePasswords[n.id] ?? ''}
+                      onChange={(e) =>
+                        setNodePasswords((prev) => ({ ...prev, [n.id]: e.target.value }))
+                      }
+                      fullWidth
+                    />
+                  </FormField.Control>
+                </FormField>
+              ))}
+            </VStack>
+          )}
+
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" className="flex-1" onClick={() => setIsDeployOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              className="flex-1"
+              disabled={!passwordsReady}
+              onClick={handleDeploy}
+            >
+              Deploy
+            </Button>
+          </HStack>
+        </VStack>
+      </Modal>
     </PageShell>
   );
 }
