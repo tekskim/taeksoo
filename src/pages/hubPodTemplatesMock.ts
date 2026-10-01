@@ -5,7 +5,7 @@
  * - 이미지는 회사가 Harbor에 넣은 주소를 digest로 고정한다(HUB-D-223). 호스트는 예시 값이다.
  * - Create Pod에 채우는 값은 이미지 주소와 환경 변수뿐이다(CAPSIS-D-91). 나머지 칸은 폼 기본값을 쓴다.
  * - 자원은 채우지 않는다(CAPSIS-D-87). 아래 resources · ports · runAsUser 등은 템플릿 원본 예시로만 남겨 둔다.
- * - 볼륨 디스크 크기가 있으면 Pod 탭 Storage에 새 PVC 하나를 넣는다. 이름 · 용량 · 마운트는 사용자가 넣는다(CAPSIS-D-89).
+ * - 볼륨도 채우지 않는다. 볼륨이 필요하면 사용자가 Pod 탭 Storage에서 직접 더한다(CAPSIS-D-101). 아래 volume도 원본 예시로만 남겨 둔다.
  * - Capsis용 템플릿 목록은 아직 정해지지 않았다. 아래 여섯 개는 화면을 보여 주기 위한 예시다.
  *
  * 진입 주소
@@ -31,7 +31,7 @@ export interface HubPodTemplate {
   envVars: { name: string; value: string }[];
   /** 권장 자원 요구량 — 최소 CPU 코어 · 최소 메모리(GB) */
   resources: { cpuCores: number; memoryGB: number };
-  /** 볼륨 디스크 — 크기(GiB)와 마운트 경로. 없으면 볼륨을 만들지 않는다 */
+  /** 볼륨 디스크 — 크기(GiB)와 마운트 경로. Capsis에서는 쓰지 않는다(CAPSIS-D-101) */
   volume?: { name: string; sizeGi: number; mountPath: string };
   /** 컨테이너 디스크(GiB) — Capsis에서는 쓰지 않는다(CAPSIS-D-89) */
   containerDiskGi?: number;
