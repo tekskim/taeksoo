@@ -1229,9 +1229,6 @@ function CreatePodForm() {
     next: 'custom' | 'hub';
     toInit?: boolean;
   } | null>(null);
-  // Hub 흐름에서 새 PVC는 한 번만 넣는다(CAPSIS-D-89)
-  const hubPvcAdded = useRef(false);
-
   const applySourceChange = (containerId: string, next: 'custom' | 'hub', toInit?: boolean) => {
     updateContainerConfig(containerId, {
       image: '',
@@ -1259,25 +1256,7 @@ function CreatePodForm() {
       image: template.image,
       envVars: template.envVars.map((e) => ({ ...e, type: 'value' as const })),
     });
-    // 볼륨 디스크 크기가 있는 템플릿이면 Pod 탭 Storage에 새 PVC 하나를 넣는다.
-    // 폼 기본값(Default Storage Class · Single node read-write)만 갖고, 이름 · 용량 · 마운트는 사용자가 넣는다(CAPSIS-D-89)
-    if (template.volume && !hubPvcAdded.current) {
-      hubPvcAdded.current = true;
-      setVolumes((prev) => [
-        {
-          type: 'create-pvc' as const,
-          volumeName: '',
-          pvcName: '',
-          useExistingPV: false,
-          storageClass: DEFAULT_STORAGE_CLASS,
-          capacity: '',
-          persistentVolume: '',
-          accessModes: { readWriteOnce: true, readOnlyMany: false, readWriteMany: false },
-          readOnly: false,
-        },
-        ...prev,
-      ]);
-    }
+    // 볼륨은 넣지 않는다. 볼륨이 필요하면 사용자가 Pod 탭 Storage에서 직접 더한다(CAPSIS-D-101)
     setHubNotFound(false);
     setImageSource((prev) => ({ ...prev, [containerId]: 'hub' }));
     setHubTemplates((prev) => ({ ...prev, [containerId]: template }));
